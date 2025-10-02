@@ -91,7 +91,8 @@ Always respond with valid JSON in this exact format:
         "mrr": "Monthly recurring revenue if mentioned (number only, no currency)"
     },
     "product": "Product name mentioned (Gmail, Outlook, WhatsApp, etc.)",
-    "theme": "Large overarching theme (User Experience, Performance, Security, Integrations, Mobile, Analytics, Automation, Customization, etc.)",
+    "functional_area": "Specific functional area - use the core term only",
+    "theme": "Broader business theme (Productivity, Compliance, Customer Experience, Operational Efficiency, Data Management, etc.)",
     "category": "High-level category (Core Features, Integrations, UI/UX, Performance, Security, Mobile, Analytics, Administration)",
     "priority": "low/medium/high",
     "urgency": "low/medium/high",
@@ -190,9 +191,10 @@ ADDITIONAL CONTEXT:
         confidences = [r.get('confidence', 0) for r in results if r.get('is_feature_request', False)]
         avg_confidence = sum(confidences) / len(confidences) if confidences else 0
         
-        # Count categories and themes
+        # Count categories, themes, functional areas, and products
         categories = {}
         themes = {}
+        functional_areas = {}
         products = {}
         
         for result in results:
@@ -204,6 +206,10 @@ ADDITIONAL CONTEXT:
                 # Count themes
                 theme = result.get('theme', 'Unknown')
                 themes[theme] = themes.get(theme, 0) + 1
+                
+                # Count functional areas
+                functional_area = result.get('functional_area', 'Unknown')
+                functional_areas[functional_area] = functional_areas.get(functional_area, 0) + 1
                 
                 # Count products
                 product = result.get('product', 'Unknown')
@@ -218,6 +224,7 @@ ADDITIONAL CONTEXT:
             "average_confidence": avg_confidence,
             "categories": categories,
             "themes": themes,
+            "functional_areas": functional_areas,
             "products": products
         }
 

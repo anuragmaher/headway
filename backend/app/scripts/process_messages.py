@@ -132,6 +132,13 @@ async def process_integration_messages(integration_id: str, limit: int = 10) -> 
                 result = ai_processing_service.process_message(message)
                 results.append(result)
                 
+                # Print detailed result for each message
+                print("\n" + "="*80)
+                print(f"MESSAGE {i}/{len(messages)} RESULT")
+                print("="*80)
+                print(json.dumps(result, indent=2, default=str))
+                print("="*80)
+                
                 # Log key insights
                 if result.get('is_feature_request', False):
                     logger.info(f"  ✅ Feature request detected - {result.get('feature_title', 'No title')}")
@@ -140,6 +147,11 @@ async def process_integration_messages(integration_id: str, limit: int = 10) -> 
                     
             except Exception as e:
                 logger.error(f"  ⚠️ Failed to process message {message.id}: {e}")
+                results.append({
+                    "message_id": str(message.id),
+                    "error": str(e),
+                    "is_feature_request": False
+                })
         
         # Print summary statistics
         stats = ai_processing_service.get_processing_stats(results)
@@ -243,6 +255,13 @@ async def process_unprocessed_messages(limit: int = 10) -> bool:
                 result = ai_processing_service.process_message(message)
                 results.append(result)
                 
+                # Print detailed result for each message
+                print("\n" + "="*80)
+                print(f"MESSAGE {i}/{len(messages)} RESULT")
+                print("="*80)
+                print(json.dumps(result, indent=2, default=str))
+                print("="*80)
+                
                 # Log key insights
                 if result.get('is_feature_request', False):
                     logger.info(f"  ✅ Feature request: {result.get('feature_title', 'No title')}")
@@ -253,6 +272,11 @@ async def process_unprocessed_messages(limit: int = 10) -> bool:
                     
             except Exception as e:
                 logger.error(f"  ⚠️ Failed to process message {message.id}: {e}")
+                results.append({
+                    "message_id": str(message.id),
+                    "error": str(e),
+                    "is_feature_request": False
+                })
         
         # Print summary
         stats = ai_processing_service.get_processing_stats(results)
