@@ -25,6 +25,13 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLoading: true, error: null });
         
         try {
+          // Check for demo credentials
+          if (credentials.email === 'demo@headwayhq.com' && credentials.password === 'demo123') {
+            // Use demo login instead of API call
+            await get().demoLogin();
+            return;
+          }
+
           // Send form data to match backend expectations
           const formData = new FormData();
           formData.append('username', credentials.email);
@@ -150,6 +157,49 @@ export const useAuthStore = create<AuthStore>()(
         set({ error: null });
       },
 
+      demoLogin: async () => {
+        set({ isLoading: true, error: null });
+        
+        try {
+          // Create demo user data
+          const demoUser: User = {
+            id: 'demo-user-1',
+            email: 'demo@headwayhq.com',
+            first_name: 'Demo',
+            last_name: 'User',
+            company_name: 'HeadwayHQ Demo',
+            company_id: 'demo-company-1',
+            is_active: true,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            onboarding_completed: true,
+          };
+
+          const demoTokens: AuthTokens = {
+            access_token: 'demo-access-token',
+            refresh_token: 'demo-refresh-token',
+            token_type: 'bearer',
+          };
+
+          // Simulate API delay
+          await new Promise(resolve => setTimeout(resolve, 1000));
+
+          set({
+            user: demoUser,
+            tokens: demoTokens,
+            isAuthenticated: true,
+            isLoading: false,
+            error: null,
+          });
+        } catch (error) {
+          set({
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Demo login failed',
+          });
+          throw error;
+        }
+      },
+
       setUser: (user: User) => {
         set({ user });
       },
@@ -206,6 +256,7 @@ export const useAuthActions = () => useAuthStore((state) => ({
   logout: state.logout,
   refreshToken: state.refreshToken,
   clearError: state.clearError,
+  demoLogin: state.demoLogin,
   setUser: state.setUser,
   updateUserProfile: state.updateUserProfile,
 }));

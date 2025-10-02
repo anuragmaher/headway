@@ -2,7 +2,7 @@
  * Main dashboard page for authenticated users
  */
 
-import { Box, Typography, Grid, Card, CardContent, Chip, Button, alpha, useTheme, Paper } from '@mui/material';
+import { Box, Typography, Grid, Card, CardContent, Chip, Button, alpha, useTheme } from '@mui/material';
 import { Settings as SettingsIcon, Add as AddIcon, TrendingUp, Category, FeaturedPlayList, Speed } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useUser } from '@/features/auth/store/auth-store';
@@ -125,7 +125,7 @@ export function DashboardPage(): JSX.Element {
               icon: Speed,
               color: theme.palette.error.main 
             },
-          ].map((stat, index) => (
+          ].map((stat) => (
             <Grid item xs={12} sm={6} lg={3} key={stat.title}>
               <Card sx={{
                 p: 2,

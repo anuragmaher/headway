@@ -10,9 +10,7 @@ export interface User {
   company_id: string;
   company_name: string;
   job_title?: string;
-  role: string;
   is_active: boolean;
-  theme_preference: 'light' | 'dark';
   onboarding_completed: boolean;
   created_at: string;
   updated_at?: string;
@@ -23,7 +21,7 @@ export interface AuthTokens {
   access_token: string;
   refresh_token: string;
   token_type: string;
-  expires_in: number;
+  expires_in?: number;
 }
 
 export interface LoginRequest {
@@ -52,6 +50,7 @@ export interface AuthActions {
   logout: () => void;
   refreshToken: () => Promise<void>;
   clearError: () => void;
+  demoLogin: () => Promise<void>;
   setUser: (user: User) => void;
   updateUserProfile: (updates: Partial<User>) => Promise<void>;
 }

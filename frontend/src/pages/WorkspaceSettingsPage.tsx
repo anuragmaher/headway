@@ -2,7 +2,7 @@
  * Workspace settings page for managing workspace-wide configurations
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Typography,
@@ -14,19 +14,22 @@ import {
   Button,
   Divider,
   Chip,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
   IconButton,
   Alert,
+  alpha,
+  useTheme,
+  Avatar,
+  LinearProgress,
 } from '@mui/material';
 import {
   Settings as SettingsIcon,
   Add as AddIcon,
-  Delete as DeleteIcon,
-  CheckCircle as CheckCircleIcon,
-  Error as ErrorIcon,
+  DataUsage as DataUsageIcon,
+  Security as SecurityIcon,
+  Notifications as NotificationsIcon,
+  Sync as SyncIcon,
+  CloudSync as CloudSyncIcon,
+  MoreVert as MoreVertIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useUser } from '@/features/auth/store/auth-store';
@@ -41,6 +44,7 @@ interface DataSource {
 
 export function WorkspaceSettingsPage(): JSX.Element {
   const user = useUser();
+  const theme = useTheme();
   const [autoSync, setAutoSync] = useState(true);
   const [emailNotifications, setEmailNotifications] = useState(true);
   
@@ -61,94 +65,213 @@ export function WorkspaceSettingsPage(): JSX.Element {
     }
   ]);
 
-  const getStatusColor = (status: DataSource['status']) => {
-    switch (status) {
-      case 'connected': return 'success';
-      case 'disconnected': return 'default';
-      case 'error': return 'error';
-      default: return 'default';
-    }
-  };
 
-  const getStatusIcon = (status: DataSource['status']) => {
-    switch (status) {
-      case 'connected': return <CheckCircleIcon color="success" />;
-      case 'error': return <ErrorIcon color="error" />;
-      default: return <SettingsIcon color="disabled" />;
+  const getConnectorIcon = (name: string) => {
+    switch (name.toLowerCase()) {
+      case 'slack': return '💬';
+      case 'gmail': return '📧';
+      case 'microsoft teams': return '🟣';
+      case 'discord': return '🟦';
+      case 'intercom': return '💭';
+      case 'zendesk': return '🎫';
+      case 'api webhook': return '🔗';
+      default: return '🔧';
     }
   };
 
   return (
     <AdminLayout>
       <Box>
-        <Typography variant="h4" gutterBottom>
-          Workspace Settings
-        </Typography>
-        
-        <Typography variant="body1" color="text.secondary" paragraph>
-          Manage your workspace's data sources, connectors, and preferences.
-        </Typography>
+        {/* Header */}
+        <Box sx={{ 
+          mb: 4,
+          p: 4,
+          borderRadius: 4,
+          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+          border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+          position: 'relative',
+          overflow: 'hidden',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: -50,
+            right: -50,
+            width: 100,
+            height: 100,
+            borderRadius: '50%',
+            background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+            filter: 'blur(20px)',
+          },
+        }}>
+          <Box sx={{ position: 'relative', zIndex: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+              <Box sx={{
+                width: 48,
+                height: 48,
+                borderRadius: 2,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
+              }}>
+                <SettingsIcon sx={{ color: 'white', fontSize: 24 }} />
+              </Box>
+              <Box>
+                <Typography variant="h4" sx={{ fontWeight: 800, mb: 0.5 }}>
+                  Workspace Settings
+                </Typography>
+                <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  Manage data sources, integrations, and workspace preferences
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
 
         <Grid container spacing={3}>
-          {/* Data Sources */}
+          {/* Connected Data Sources */}
           <Grid item xs={12} lg={8}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                  <Typography variant="h6">
-                    Data Sources & Connectors
-                  </Typography>
+            <Card sx={{
+              borderRadius: 3,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+              backdropFilter: 'blur(10px)',
+              border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+              transition: 'all 0.3s ease-in-out',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: `0 8px 30px ${alpha(theme.palette.primary.main, 0.1)}`,
+              },
+            }}>
+              <CardContent sx={{ p: 4 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <DataUsageIcon sx={{ color: theme.palette.success.main, fontSize: 28 }} />
+                    <Box>
+                      <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                        Connected Data Sources
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {dataSources.filter(s => s.status === 'connected').length} active connections
+                      </Typography>
+                    </Box>
+                  </Box>
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     startIcon={<AddIcon />}
-                    size="small"
+                    sx={{
+                      borderRadius: 2,
+                      background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`,
+                      '&:hover': { transform: 'translateY(-1px)' },
+                    }}
                   >
                     Add Source
                   </Button>
                 </Box>
                 
-                <Typography variant="body2" color="text.secondary" paragraph>
-                  Connect external platforms to automatically collect and analyze feature requests.
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6 }}>
+                  Connect external platforms to automatically collect and analyze feature requests from your team and customers.
                 </Typography>
 
-                <List>
-                  {dataSources.map((source, index) => (
-                    <React.Fragment key={source.id}>
-                      <ListItem>
-                        <Box sx={{ mr: 2 }}>
-                          {getStatusIcon(source.status)}
-                        </Box>
-                        <ListItemText
-                          primary={source.name}
-                          secondary={
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                <Box sx={{ mb: 3 }}>
+                  <LinearProgress
+                    variant="determinate"
+                    value={(dataSources.filter(s => s.status === 'connected').length / dataSources.length) * 100}
+                    sx={{
+                      height: 6,
+                      borderRadius: 3,
+                      bgcolor: alpha(theme.palette.success.main, 0.1),
+                      '& .MuiLinearProgress-bar': {
+                        borderRadius: 3,
+                        background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`,
+                      },
+                    }}
+                  />
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                    Integration Progress: {dataSources.filter(s => s.status === 'connected').length} of {dataSources.length} sources connected
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {dataSources.map((source) => (
+                    <Box key={source.id} sx={{
+                      p: 3,
+                      borderRadius: 3,
+                      background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                      border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        transform: 'translateX(4px)',
+                        boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.1)}`,
+                      },
+                    }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
+                          <Box sx={{
+                            width: 48,
+                            height: 48,
+                            borderRadius: 2,
+                            background: source.status === 'connected' 
+                              ? `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`
+                              : `linear-gradient(135deg, ${alpha(theme.palette.grey[500], 0.3)} 0%, ${alpha(theme.palette.grey[500], 0.1)} 100%)`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '1.5rem',
+                          }}>
+                            {source.type === 'slack' ? '💬' : '📧'}
+                          </Box>
+                          <Box sx={{ flex: 1 }}>
+                            <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
+                              {source.name}
+                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                               <Chip
                                 label={source.status}
                                 size="small"
-                                color={getStatusColor(source.status)}
-                                variant="outlined"
+                                sx={{
+                                  bgcolor: source.status === 'connected' 
+                                    ? alpha(theme.palette.success.main, 0.1)
+                                    : alpha(theme.palette.grey[500], 0.1),
+                                  color: source.status === 'connected' 
+                                    ? theme.palette.success.main
+                                    : theme.palette.grey[600],
+                                  fontWeight: 600,
+                                  textTransform: 'capitalize',
+                                }}
                               />
                               {source.lastSync && (
                                 <Typography variant="caption" color="text.secondary">
+                                  <SyncIcon sx={{ fontSize: 12, mr: 0.5 }} />
                                   Last sync: {source.lastSync}
                                 </Typography>
                               )}
                             </Box>
-                          }
-                        />
-                        <ListItemSecondaryAction>
-                          <IconButton edge="end" size="small">
-                            <DeleteIcon />
-                          </IconButton>
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                      {index < dataSources.length - 1 && <Divider />}
-                    </React.Fragment>
+                          </Box>
+                        </Box>
+                        <IconButton 
+                          sx={{ 
+                            borderRadius: 2,
+                            '&:hover': { bgcolor: alpha(theme.palette.error.main, 0.1) }
+                          }}
+                        >
+                          <MoreVertIcon />
+                        </IconButton>
+                      </Box>
+                    </Box>
                   ))}
-                </List>
+                </Box>
 
                 {dataSources.length === 0 && (
-                  <Alert severity="info" sx={{ mt: 2 }}>
+                  <Alert 
+                    severity="info" 
+                    sx={{ 
+                      mt: 2,
+                      borderRadius: 2,
+                      background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.1)} 0%, ${alpha(theme.palette.info.main, 0.05)} 100%)`,
+                      border: `1px solid ${alpha(theme.palette.info.main, 0.2)}`,
+                    }}
+                  >
                     No data sources connected. Add your first source to start collecting feedback in this workspace.
                   </Alert>
                 )}
@@ -156,86 +279,209 @@ export function WorkspaceSettingsPage(): JSX.Element {
             </Card>
           </Grid>
 
-          {/* Company Settings */}
+          {/* Workspace Settings Sidebar */}
           <Grid item xs={12} lg={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  General Settings
-                </Typography>
-                
-                <Box sx={{ mt: 2 }}>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={autoSync}
-                        onChange={(e) => setAutoSync(e.target.checked)}
-                      />
-                    }
-                    label="Auto-sync data sources"
-                  />
-                  <Typography variant="caption" display="block" color="text.secondary">
-                    Automatically sync new data every hour
-                  </Typography>
-                </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              {/* General Settings */}
+              <Card sx={{
+                borderRadius: 3,
+                background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                backdropFilter: 'blur(10px)',
+                border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: `0 8px 30px ${alpha(theme.palette.warning.main, 0.1)}`,
+                },
+              }}>
+                <CardContent sx={{ p: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                    <NotificationsIcon sx={{ color: theme.palette.warning.main }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      Preferences
+                    </Typography>
+                  </Box>
+                  
+                  <Box sx={{ 
+                    p: 2, 
+                    borderRadius: 2, 
+                    bgcolor: alpha(theme.palette.warning.main, 0.05),
+                    border: `1px solid ${alpha(theme.palette.warning.main, 0.1)}`,
+                    mb: 2
+                  }}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={autoSync}
+                          onChange={(e) => setAutoSync(e.target.checked)}
+                          sx={{
+                            '& .MuiSwitch-thumb': {
+                              bgcolor: autoSync ? theme.palette.success.main : theme.palette.grey[400],
+                            },
+                          }}
+                        />
+                      }
+                      label={
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            Auto-sync data sources
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Automatically sync new data every hour
+                          </Typography>
+                        </Box>
+                      }
+                    />
+                  </Box>
 
-                <Box sx={{ mt: 2 }}>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={emailNotifications}
-                        onChange={(e) => setEmailNotifications(e.target.checked)}
-                      />
-                    }
-                    label="Email notifications"
-                  />
-                  <Typography variant="caption" display="block" color="text.secondary">
-                    Send weekly summaries and alerts
-                  </Typography>
-                </Box>
+                  <Box sx={{ 
+                    p: 2, 
+                    borderRadius: 2, 
+                    bgcolor: alpha(theme.palette.info.main, 0.05),
+                    border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
+                  }}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={emailNotifications}
+                          onChange={(e) => setEmailNotifications(e.target.checked)}
+                          sx={{
+                            '& .MuiSwitch-thumb': {
+                              bgcolor: emailNotifications ? theme.palette.success.main : theme.palette.grey[400],
+                            },
+                          }}
+                        />
+                      }
+                      label={
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            Email notifications
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Send weekly summaries and alerts
+                          </Typography>
+                        </Box>
+                      }
+                    />
+                  </Box>
+                </CardContent>
+              </Card>
 
-                <Divider sx={{ my: 3 }} />
+              {/* Workspace Information */}
+              <Card sx={{
+                borderRadius: 3,
+                background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                backdropFilter: 'blur(10px)',
+                border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: `0 8px 30px ${alpha(theme.palette.primary.main, 0.1)}`,
+                },
+              }}>
+                <CardContent sx={{ p: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                    <SecurityIcon sx={{ color: theme.palette.primary.main }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      Workspace Info
+                    </Typography>
+                  </Box>
 
-                <Typography variant="subtitle2" gutterBottom>
-                  Workspace Information
-                </Typography>
-                
-                <Typography variant="body2" color="text.secondary">
-                  <strong>Workspace:</strong> {user?.company_name || 'Not available'}
-                </Typography>
-                
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                  <strong>Admin:</strong> {user?.first_name} {user?.last_name}
-                </Typography>
-                
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                  <strong>Workspace ID:</strong> {user?.company_id || 'Not available'}
-                </Typography>
+                  <Box sx={{ 
+                    p: 3, 
+                    borderRadius: 2, 
+                    bgcolor: alpha(theme.palette.background.paper, 0.5),
+                    border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                    mb: 3
+                  }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                      <Avatar sx={{ 
+                        width: 40, 
+                        height: 40,
+                        background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100())`,
+                        fontSize: '1rem',
+                        fontWeight: 700,
+                      }}>
+                        {user?.company_name?.[0] || 'W'}
+                      </Avatar>
+                      <Box>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                          {user?.company_name || 'HeadwayHQ Demo'}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Workspace
+                        </Typography>
+                      </Box>
+                    </Box>
+                    
+                    <Divider sx={{ my: 2 }} />
+                    
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                          ADMIN
+                        </Typography>
+                        <Typography variant="caption">
+                          {user?.first_name} {user?.last_name}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                          WORKSPACE ID
+                        </Typography>
+                        <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>
+                          {user?.company_id || 'demo-workspace-1'}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
 
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{ mt: 3 }}
-                >
-                  Save Changes
-                </Button>
-              </CardContent>
-            </Card>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    sx={{
+                      borderRadius: 2,
+                      background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                      '&:hover': { 
+                        transform: 'translateY(-1px)',
+                        boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
+                      },
+                    }}
+                  >
+                    Save Changes
+                  </Button>
+                </CardContent>
+              </Card>
+            </Box>
           </Grid>
 
           {/* Available Connectors */}
           <Grid item xs={12}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Available Connectors
-                </Typography>
-                
-                <Typography variant="body2" color="text.secondary" paragraph>
-                  Connect these platforms to automatically collect feature requests and feedback.
-                </Typography>
+            <Card sx={{
+              borderRadius: 3,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100())`,
+              backdropFilter: 'blur(10px)',
+              border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+              transition: 'all 0.3s ease-in-out',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: `0 8px 30px ${alpha(theme.palette.info.main, 0.1)}`,
+              },
+            }}>
+              <CardContent sx={{ p: 4 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                  <CloudSyncIcon sx={{ color: theme.palette.info.main, fontSize: 28 }} />
+                  <Box>
+                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                      Available Connectors
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Expand your data collection with these integrations
+                    </Typography>
+                  </Box>
+                </Box>
 
-                <Grid container spacing={2}>
+                <Grid container spacing={3}>
                   {[
                     { name: 'Slack', description: 'Monitor channels for feature requests', available: true },
                     { name: 'Gmail', description: 'Track feature requests from customer emails', available: true },
@@ -245,19 +491,55 @@ export function WorkspaceSettingsPage(): JSX.Element {
                     { name: 'Zendesk', description: 'Analyze support tickets', available: false },
                     { name: 'API Webhook', description: 'Custom integration endpoint', available: false },
                   ].map((connector) => (
-                    <Grid item xs={12} sm={6} md={4} key={connector.name}>
-                      <Card variant="outlined">
-                        <CardContent sx={{ textAlign: 'center' }}>
-                          <Typography variant="h6" gutterBottom>
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={connector.name}>
+                      <Card sx={{
+                        borderRadius: 3,
+                        background: connector.available 
+                          ? `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.1)} 0%, ${alpha(theme.palette.success.main, 0.05)} 100%)`
+                          : `linear-gradient(135deg, ${alpha(theme.palette.grey[500], 0.1)} 0%, ${alpha(theme.palette.grey[500], 0.05)} 100%)`,
+                        border: connector.available
+                          ? `1px solid ${alpha(theme.palette.success.main, 0.2)}`
+                          : `1px solid ${alpha(theme.palette.grey[500], 0.2)}`,
+                        transition: 'all 0.3s ease-in-out',
+                        '&:hover': connector.available ? {
+                          transform: 'translateY(-4px)',
+                          boxShadow: `0 8px 30px ${alpha(theme.palette.success.main, 0.2)}`,
+                        } : {},
+                      }}>
+                        <CardContent sx={{ p: 3, textAlign: 'center' }}>
+                          <Box sx={{
+                            width: 48,
+                            height: 48,
+                            borderRadius: 2,
+                            background: connector.available
+                              ? `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`
+                              : `linear-gradient(135deg, ${alpha(theme.palette.grey[500], 0.3)} 0%, ${alpha(theme.palette.grey[500], 0.1)} 100%)`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            mx: 'auto',
+                            mb: 2,
+                            fontSize: '1.5rem',
+                          }}>
+                            {getConnectorIcon(connector.name)}
+                          </Box>
+                          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
                             {connector.name}
                           </Typography>
-                          <Typography variant="body2" color="text.secondary" paragraph>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.5 }}>
                             {connector.description}
                           </Typography>
                           <Button
-                            variant={connector.available ? "outlined" : "disabled"}
+                            variant={connector.available ? "contained" : "outlined"}
                             size="small"
                             disabled={!connector.available}
+                            sx={connector.available ? {
+                              background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`,
+                              '&:hover': { transform: 'translateY(-1px)' },
+                            } : {
+                              borderColor: alpha(theme.palette.grey[500], 0.3),
+                              color: theme.palette.grey[500],
+                            }}
                           >
                             {connector.available ? 'Connect' : 'Coming Soon'}
                           </Button>
