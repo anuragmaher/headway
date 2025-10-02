@@ -3,8 +3,9 @@ Authentication schemas for request/response validation
 """
 
 from pydantic import BaseModel, EmailStr, Field
-from typing import Optional
+from typing import Optional, Union
 from datetime import datetime
+from uuid import UUID
 
 
 class UserBase(BaseModel):
@@ -62,7 +63,7 @@ class UserUpdate(BaseModel):
 
 class UserInDB(UserBase):
     """Schema for user in database (includes hashed password)"""
-    id: str
+    id: Union[UUID, str]
     hashed_password: str
     onboarding_completed: bool = False
     created_at: datetime
@@ -75,9 +76,9 @@ class UserInDB(UserBase):
 
 class User(UserBase):
     """Schema for user response (no password)"""
-    id: str
-    company_id: str
-    company_name: str
+    id: Union[UUID, str]
+    company_id: Optional[Union[UUID, str]] = None
+    company_name: Optional[str] = None
     onboarding_completed: bool = False
     created_at: datetime
     updated_at: Optional[datetime] = None

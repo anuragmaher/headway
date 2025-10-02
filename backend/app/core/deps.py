@@ -10,21 +10,23 @@ from typing import Optional
 from app.core.database import get_db
 from app.core.security import verify_token
 from app.models.user import User
+from app.models.workspace import Workspace
 from app.services.auth_service import AuthService
-from app.services.supabase_auth_service import SupabaseAuthService
 
 # Security scheme for JWT tokens
 security = HTTPBearer()
 
 
 def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security)
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
 ) -> dict:
     """
-    Get current authenticated user from JWT token using Supabase.
+    Get current authenticated user from JWT token using PostgreSQL database.
     
     Args:
         credentials: HTTP authorization credentials
+        db: Database session
         
     Returns:
         Current User dict
@@ -45,8 +47,8 @@ def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # Get user from Supabase
-    auth_service = SupabaseAuthService()
+    # Get user from database
+    auth_service = AuthService(db)
     user = auth_service.get_user_by_id(user_id)
     
     if user is None:
@@ -56,14 +58,29 @@ def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    if not user.get('is_active', False):
+    if not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Inactive user",
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    return user
+    # Convert User model to dict for compatibility
+    return {
+        "id": str(user.id),
+        "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "job_title": user.job_title,
+        "company_id": str(user.company_id),
+        "role": user.role,
+        "is_active": user.is_active,
+        "theme_preference": user.theme_preference,
+        "onboarding_completed": user.onboarding_completed,
+        "created_at": user.created_at,
+        "updated_at": user.updated_at,
+        "last_login_at": user.last_login_at
+    }
 
 
 def get_current_active_user(
@@ -84,7 +101,8 @@ def get_current_active_user(
 def get_current_user_optional(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(
         HTTPBearer(auto_error=False)
-    )
+    ),
+    db: Session = Depends(get_db)
 ) -> Optional[dict]:
     """
     Get current user if token provided, otherwise return None.
@@ -92,6 +110,7 @@ def get_current_user_optional(
     
     Args:
         credentials: Optional HTTP authorization credentials
+        db: Database session
         
     Returns:
         Current User dict if authenticated, None otherwise
@@ -106,13 +125,28 @@ def get_current_user_optional(
         if user_id is None:
             return None
         
-        auth_service = SupabaseAuthService()
+        auth_service = AuthService(db)
         user = auth_service.get_user_by_id(user_id)
         
-        if user is None or not user.get('is_active', False):
+        if user is None or not user.is_active:
             return None
             
-        return user
+        # Convert User model to dict for compatibility
+        return {
+            "id": str(user.id),
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "job_title": user.job_title,
+            "company_id": str(user.company_id),
+            "role": user.role,
+            "is_active": user.is_active,
+            "theme_preference": user.theme_preference,
+            "onboarding_completed": user.onboarding_completed,
+            "created_at": user.created_at,
+            "updated_at": user.updated_at,
+            "last_login_at": user.last_login_at
+        }
         
     except Exception:
         return None
@@ -142,11 +176,47 @@ def require_onboarding_completed(
     return current_user
 
 
-def get_auth_service() -> SupabaseAuthService:
+def get_current_user_with_workspace(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+) -> dict:
     """
-    Get SupabaseAuthService instance.
+    Get current user with workspace information.
+    Creates a default workspace if the user doesn't have one.
+    
+    Args:
+        current_user: Current authenticated user
+        db: Database session
         
     Returns:
-        SupabaseAuthService instance
+        Current User dict with workspace_id added
     """
-    return SupabaseAuthService()
+    import uuid
+    
+    # Check if user has a workspace
+    workspace = db.query(Workspace).filter(
+        Workspace.owner_id == current_user['id']
+    ).first()
+    
+    if not workspace:
+        # Create a default workspace for the user
+        workspace = Workspace(
+            id=uuid.uuid4(),
+            name=f"{current_user['first_name']}'s Workspace",
+            slug=f"{current_user['first_name'].lower()}-workspace-{str(uuid.uuid4())[:8]}",
+            company_id=current_user['company_id'],
+            owner_id=current_user['id'],
+            is_active=True
+        )
+        
+        db.add(workspace)
+        db.commit()
+        db.refresh(workspace)
+    
+    # Add workspace_id to user dict
+    current_user_with_workspace = current_user.copy()
+    current_user_with_workspace['workspace_id'] = str(workspace.id)
+    
+    return current_user_with_workspace
+
+

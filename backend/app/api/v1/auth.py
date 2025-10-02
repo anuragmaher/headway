@@ -6,8 +6,8 @@ from fastapi import APIRouter, Depends, HTTPException, status, Form, Request
 import logging
 import traceback
 
-from app.core.deps import get_current_user, get_auth_service
-from app.services.supabase_auth_service import SupabaseAuthService
+from app.core.deps import get_current_user, get_db
+from app.services.auth_service import AuthService
 from app.schemas.auth import (
     UserCreate,
     UserUpdate,
@@ -24,7 +24,7 @@ router = APIRouter()
 @router.post("/register", response_model=UserSchema, status_code=status.HTTP_201_CREATED)
 async def register(
     user_data: UserCreate,
-    auth_service: SupabaseAuthService = Depends(get_auth_service)
+    db = Depends(get_db)
 ) -> UserSchema:
     """
     Register a new user account.
@@ -43,9 +43,10 @@ async def register(
         logging.info(f"Registration attempt for email: {user_data.email}")
         logging.info(f"Registration data: company={user_data.company_name}, size={user_data.company_size}")
         
+        auth_service = AuthService(db)
         user = auth_service.register_user(user_data)
-        logging.info(f"User registered successfully: {user['email']}")
-        return UserSchema(**user)
+        logging.info(f"User registered successfully: {user.email}")
+        return UserSchema.from_orm(user)
         
     except HTTPException as e:
         logging.error(f"HTTP exception during registration: {e.detail}")
@@ -66,9 +67,9 @@ async def register(
 
 @router.post("/login", response_model=Token)
 async def login(
-    auth_service: SupabaseAuthService = Depends(get_auth_service),
     username: str = Form(None),
-    password: str = Form(None)
+    password: str = Form(None),
+    db = Depends(get_db)
 ) -> Token:
     """
     Authenticate user and return access tokens.
@@ -94,6 +95,7 @@ async def login(
     # Create LoginRequest object from form data
     login_data = LoginRequest(email=username, password=password)
     
+    auth_service = AuthService(db)
     user = auth_service.authenticate_user(login_data)
     
     if not user:
@@ -110,7 +112,7 @@ async def login(
 @router.post("/login-json", response_model=Token)
 async def login_json(
     login_data: LoginRequest,
-    auth_service: SupabaseAuthService = Depends(get_auth_service)
+    db = Depends(get_db)
 ) -> Token:
     """
     Authenticate user with JSON data.
@@ -125,6 +127,7 @@ async def login_json(
     Raises:
         HTTPException: If credentials are invalid
     """
+    auth_service = AuthService(db)
     user = auth_service.authenticate_user(login_data)
     
     if not user:
@@ -141,7 +144,7 @@ async def login_json(
 @router.post("/refresh", response_model=Token)
 async def refresh_token(
     refresh_data: RefreshTokenRequest,
-    auth_service: SupabaseAuthService = Depends(get_auth_service)
+    db = Depends(get_db)
 ) -> Token:
     """
     Refresh access token using refresh token.
@@ -156,6 +159,7 @@ async def refresh_token(
     Raises:
         HTTPException: If refresh token is invalid
     """
+    auth_service = AuthService(db)
     tokens = auth_service.refresh_access_token(refresh_data.refresh_token)
     return Token(**tokens)
 
@@ -180,7 +184,7 @@ async def get_current_user_info(
 async def update_current_user(
     user_data: UserUpdate,
     current_user: dict = Depends(get_current_user),
-    auth_service: SupabaseAuthService = Depends(get_auth_service)
+    db = Depends(get_db)
 ) -> UserSchema:
     """
     Update current user information.
@@ -193,15 +197,16 @@ async def update_current_user(
     Returns:
         Updated user information
     """
+    auth_service = AuthService(db)
     updated_user = auth_service.update_user(current_user['id'], user_data)
-    return UserSchema(**updated_user)
+    return UserSchema.model_validate(updated_user)
 
 
 @router.post("/change-password", status_code=status.HTTP_200_OK)
 async def change_password(
     password_data: ChangePasswordRequest,
     current_user: dict = Depends(get_current_user),
-    auth_service: SupabaseAuthService = Depends(get_auth_service)
+    db = Depends(get_db)
 ) -> dict:
     """
     Change current user password.
@@ -217,6 +222,7 @@ async def change_password(
     Raises:
         HTTPException: If current password is incorrect
     """
+    auth_service = AuthService(db)
     auth_service.change_password(
         current_user['id'],
         password_data.current_password,
@@ -229,7 +235,7 @@ async def change_password(
 @router.post("/complete-onboarding", response_model=UserSchema)
 async def complete_onboarding(
     current_user: dict = Depends(get_current_user),
-    auth_service: SupabaseAuthService = Depends(get_auth_service)
+    db = Depends(get_db)
 ) -> UserSchema:
     """
     Mark current user onboarding as completed.
@@ -241,8 +247,9 @@ async def complete_onboarding(
     Returns:
         Updated user information with onboarding completed
     """
+    auth_service = AuthService(db)
     updated_user = auth_service.complete_onboarding(current_user['id'])
-    return UserSchema(**updated_user)
+    return UserSchema.model_validate(updated_user)
 
 
 @router.post("/logout", status_code=status.HTTP_200_OK)

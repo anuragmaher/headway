@@ -20,8 +20,9 @@ class Settings(BaseSettings):
     # Redis Configuration
     REDIS_URL: str = "redis://localhost:6379/0"
     
-    # Anthropic AI
+    # AI Integration
     ANTHROPIC_API_KEY: Optional[str] = None
+    OPENAI_API_KEY: Optional[str] = None
     
     # Slack Integration
     SLACK_CLIENT_ID: Optional[str] = None
