@@ -84,8 +84,8 @@ export function WorkspaceSettingsPage(): JSX.Element {
       <Box>
         {/* Header */}
         <Box sx={{ 
-          mb: 4,
-          p: 4,
+          mb: 3,
+          p: 3,
           borderRadius: 2,
           background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
           border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
@@ -143,9 +143,9 @@ export function WorkspaceSettingsPage(): JSX.Element {
                 boxShadow: `0 8px 30px ${alpha(theme.palette.primary.main, 0.1)}`,
               },
             }}>
-              <CardContent sx={{ p: 4 }}>
+              <CardContent sx={{ p: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                     <DataUsageIcon sx={{ color: theme.palette.success.main, fontSize: 28 }} />
                     <Box>
                       <Typography variant="h6" sx={{ fontWeight: 700 }}>
@@ -192,10 +192,10 @@ export function WorkspaceSettingsPage(): JSX.Element {
                   </Typography>
                 </Box>
 
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                   {dataSources.map((source) => (
                     <Box key={source.id} sx={{
-                      p: 3,
+                      p: 2,
                       borderRadius: 1,
                       background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
                       border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -225,7 +225,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
                             <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
                               {source.name}
                             </Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                               <Chip
                                 label={source.status}
                                 size="small"
@@ -281,7 +281,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
 
           {/* Workspace Settings Sidebar */}
           <Grid item xs={12} lg={4}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               {/* General Settings */}
               <Card sx={{
                 borderRadius: 1,
@@ -294,8 +294,8 @@ export function WorkspaceSettingsPage(): JSX.Element {
                   boxShadow: `0 8px 30px ${alpha(theme.palette.warning.main, 0.1)}`,
                 },
               }}>
-                <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                <CardContent sx={{ p: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
                     <NotificationsIcon sx={{ color: theme.palette.warning.main }} />
                     <Typography variant="h6" sx={{ fontWeight: 600 }}>
                       Preferences
@@ -379,8 +379,8 @@ export function WorkspaceSettingsPage(): JSX.Element {
                   boxShadow: `0 8px 30px ${alpha(theme.palette.primary.main, 0.1)}`,
                 },
               }}>
-                <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                <CardContent sx={{ p: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
                     <SecurityIcon sx={{ color: theme.palette.primary.main }} />
                     <Typography variant="h6" sx={{ fontWeight: 600 }}>
                       Workspace Info
@@ -388,7 +388,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
                   </Box>
 
                   <Box sx={{ 
-                    p: 3, 
+                    p: 2, 
                     borderRadius: 2, 
                     bgcolor: alpha(theme.palette.background.paper, 0.5),
                     border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -468,7 +468,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
                 boxShadow: `0 8px 30px ${alpha(theme.palette.info.main, 0.1)}`,
               },
             }}>
-              <CardContent sx={{ p: 4 }}>
+              <CardContent sx={{ p: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                   <CloudSyncIcon sx={{ color: theme.palette.info.main, fontSize: 28 }} />
                   <Box>
@@ -506,7 +506,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
                           boxShadow: `0 8px 30px ${alpha(theme.palette.success.main, 0.2)}`,
                         } : {},
                       }}>
-                        <CardContent sx={{ p: 3, textAlign: 'center' }}>
+                        <CardContent sx={{ p: 2, textAlign: 'center' }}>
                           <Box sx={{
                             width: 48,
                             height: 48,

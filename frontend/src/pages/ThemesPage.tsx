@@ -289,8 +289,8 @@ export function ThemesPage(): JSX.Element {
       <Box>
         {/* Header */}
         <Box sx={{ 
-          mb: 4,
-          p: 4,
+          mb: 3,
+          p: 3,
           borderRadius: 2,
           background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.1)} 0%, ${alpha(theme.palette.secondary.main, 0.05)} 100%)`,
           border: `1px solid ${alpha(theme.palette.secondary.main, 0.1)}`,
@@ -310,7 +310,7 @@ export function ThemesPage(): JSX.Element {
         }}>
           <Box sx={{ position: 'relative', zIndex: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <Box sx={{
                   width: 48,
                   height: 48,
@@ -349,7 +349,7 @@ export function ThemesPage(): JSX.Element {
         </Box>
 
         {/* Stats Overview */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid container spacing={2} sx={{ mb: 3 }}>
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{
               borderRadius: 1,
@@ -358,8 +358,8 @@ export function ThemesPage(): JSX.Element {
               transition: 'all 0.3s ease-in-out',
               '&:hover': { transform: 'translateY(-2px)' },
             }}>
-              <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <CardContent sx={{ p: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                   <Box sx={{
                     width: 40,
                     height: 40,
@@ -392,8 +392,8 @@ export function ThemesPage(): JSX.Element {
               transition: 'all 0.3s ease-in-out',
               '&:hover': { transform: 'translateY(-2px)' },
             }}>
-              <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <CardContent sx={{ p: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                   <Box sx={{
                     width: 40,
                     height: 40,
@@ -426,8 +426,8 @@ export function ThemesPage(): JSX.Element {
               transition: 'all 0.3s ease-in-out',
               '&:hover': { transform: 'translateY(-2px)' },
             }}>
-              <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <CardContent sx={{ p: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                   <Box sx={{
                     width: 40,
                     height: 40,
@@ -460,8 +460,8 @@ export function ThemesPage(): JSX.Element {
               transition: 'all 0.3s ease-in-out',
               '&:hover': { transform: 'translateY(-2px)' },
             }}>
-              <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <CardContent sx={{ p: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                   <Box sx={{
                     width: 40,
                     height: 40,
@@ -488,7 +488,7 @@ export function ThemesPage(): JSX.Element {
         </Grid>
 
         {/* Main Content */}
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           {/* Themes List */}
           <Grid item xs={12} lg={8}>
             <Card sx={{
@@ -497,8 +497,8 @@ export function ThemesPage(): JSX.Element {
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
             }}>
-              <CardContent sx={{ p: 4 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+              <CardContent sx={{ p: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
                   <CategoryIcon sx={{ color: theme.palette.primary.main }} />
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     All Themes
@@ -513,7 +513,7 @@ export function ThemesPage(): JSX.Element {
                   />
                 </Box>
 
-                <Grid container spacing={3}>
+                <Grid container spacing={2}>
                   {themes.map((themeItem) => (
                     <Grid item xs={12} sm={6} key={themeItem.id}>
                       <Card sx={{
@@ -531,7 +531,7 @@ export function ThemesPage(): JSX.Element {
                       }}
                       onClick={() => setSelectedThemeId(themeItem.id)}
                       >
-                        <CardContent sx={{ p: 3 }}>
+                        <CardContent sx={{ p: 2 }}>
                           <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
                               <Box sx={{
@@ -629,7 +629,7 @@ export function ThemesPage(): JSX.Element {
                           </Box>
 
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                 <FeatureIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
                                 <Typography variant="caption" color="text.secondary">
@@ -676,8 +676,8 @@ export function ThemesPage(): JSX.Element {
               position: 'sticky',
               top: 24,
             }}>
-              <CardContent sx={{ p: 4 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+              <CardContent sx={{ p: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
                   <AnalyticsIcon sx={{ color: theme.palette.info.main }} />
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     Theme Details
@@ -687,13 +687,13 @@ export function ThemesPage(): JSX.Element {
                 {selectedTheme && (
                   <Box>
                     <Box sx={{ 
-                      p: 3, 
+                      p: 2, 
                       borderRadius: 1, 
                       background: `linear-gradient(135deg, ${alpha(selectedTheme.color, 0.1)} 0%, ${alpha(selectedTheme.color, 0.05)} 100%)`,
                       border: `1px solid ${alpha(selectedTheme.color, 0.2)}`,
                       mb: 3
                     }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
                         <Box sx={{
                           width: 16,
                           height: 16,
@@ -710,7 +710,7 @@ export function ThemesPage(): JSX.Element {
                       </Typography>
                     </Box>
 
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mb: 2 }}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
                           OWNER
@@ -826,7 +826,7 @@ export function ThemesPage(): JSX.Element {
           </DialogTitle>
           
           <DialogContent sx={{ pt: 2 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <TextField
                 label="Theme Name"
                 value={formData.name}
@@ -845,7 +845,7 @@ export function ThemesPage(): JSX.Element {
                 required
               />
 
-              <Box sx={{ display: 'flex', gap: 2 }}>
+              <Box sx={{ display: 'flex', gap: 1.5 }}>
                 <FormControl sx={{ flex: 1 }}>
                   <InputLabel>Priority</InputLabel>
                   <Select
@@ -892,7 +892,7 @@ export function ThemesPage(): JSX.Element {
             </Box>
           </DialogContent>
 
-          <DialogActions sx={{ p: 3, pt: 2 }}>
+          <DialogActions sx={{ p: 2, pt: 1.5 }}>
             <Button onClick={handleCloseDialog}>
               Cancel
             </Button>

@@ -558,8 +558,8 @@ export function FeaturesPage(): JSX.Element {
       <Box>
         {/* Header */}
         <Box sx={{ 
-          mb: 4,
-          p: 3,
+          mb: 3,
+          p: 2,
           borderRadius: 1,
           background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
           border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
@@ -601,7 +601,7 @@ export function FeaturesPage(): JSX.Element {
         </Box>
 
         {/* 3-Column Layout */}
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           {/* Column 1: Themes */}
           <Grid item xs={12} lg={3}>
             <Card sx={{
@@ -612,8 +612,8 @@ export function FeaturesPage(): JSX.Element {
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
             }}>
               <CardContent sx={{ p: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                <Box sx={{ p: 3, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box sx={{ p: 1.5, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                     <CategoryIcon sx={{ color: theme.palette.primary.main }} />
                     <Typography variant="h6" sx={{ fontWeight: 600 }}>
                       Themes
@@ -694,8 +694,8 @@ export function FeaturesPage(): JSX.Element {
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
             }}>
               <CardContent sx={{ p: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                <Box sx={{ p: 3, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box sx={{ p: 1.5, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                     <FeatureIcon sx={{ color: theme.palette.success.main }} />
                     <Typography variant="h6" sx={{ fontWeight: 600 }}>
                       Features
@@ -743,7 +743,7 @@ export function FeaturesPage(): JSX.Element {
                           </Box>
                         </Box>
                         
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.4 }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, lineHeight: 1.4 }}>
                           {feature.description}
                         </Typography>
                         
@@ -818,8 +818,8 @@ export function FeaturesPage(): JSX.Element {
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
             }}>
               <CardContent sx={{ p: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                <Box sx={{ p: 3, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <Box sx={{ p: 1.5, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
                     <TrendingIcon sx={{ color: theme.palette.warning.main }} />
                     <Typography variant="h6" sx={{ fontWeight: 600 }}>
                       Feature Details
@@ -845,9 +845,9 @@ export function FeaturesPage(): JSX.Element {
                   </Box>
                 </Box>
                 
-                <Box sx={{ flexGrow: 1, overflow: 'auto', p: 3 }}>
+                <Box sx={{ flexGrow: 1, overflow: 'auto', p: 1.5 }}>
                   {/* Status and Priority */}
-                  <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+                  <Box sx={{ display: 'flex', gap: 1.5, mb: 2 }}>
                     <Box sx={{ flex: 1 }}>
                       <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
                         STATUS
@@ -880,7 +880,7 @@ export function FeaturesPage(): JSX.Element {
                   </Box>
 
                   {/* Progress */}
-                  <Box sx={{ mb: 3 }}>
+                  <Box sx={{ mb: 2 }}>
                     <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
                       PROGRESS
                     </Typography>
@@ -904,7 +904,7 @@ export function FeaturesPage(): JSX.Element {
                   </Box>
 
                   {/* Description */}
-                  <Box sx={{ mb: 3 }}>
+                  <Box sx={{ mb: 2 }}>
                     <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
                       DESCRIPTION
                     </Typography>
@@ -914,7 +914,7 @@ export function FeaturesPage(): JSX.Element {
                   </Box>
 
                   {/* Mentions Stats */}
-                  <Box sx={{ display: 'flex', gap: 3, mb: 3 }}>
+                  <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Typography variant="h6" sx={{ fontWeight: 700 }}>
                         {selectedFeature.totalMentions}
@@ -949,8 +949,8 @@ export function FeaturesPage(): JSX.Element {
                     <Box sx={{ mt: 1 }}>
                       {selectedFeature.recentFeedback.map((feedback) => (
                         <Box key={feedback.id} sx={{ 
-                          mb: 2, 
-                          p: 2, 
+                          mb: 1.5, 
+                          p: 1.5, 
                           borderRadius: 2, 
                           bgcolor: alpha(theme.palette.background.paper, 0.5),
                           border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,

@@ -19,8 +19,8 @@ export function DashboardPage(): JSX.Element {
       <Box>
         {/* Hero Section */}
         <Box sx={{ 
-          mb: 4,
-          p: 4,
+          mb: 3,
+          p: 3,
           borderRadius: 2,
           background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
           border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
@@ -51,7 +51,7 @@ export function DashboardPage(): JSX.Element {
                 Welcome back!
               </Typography>
               
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
                 <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 500 }}>
                   Your product intelligence platform for managing feature requests and themes.
                 </Typography>
@@ -78,7 +78,7 @@ export function DashboardPage(): JSX.Element {
               onClick={() => navigate(ROUTES.SETTINGS_WORKSPACE)}
               sx={{
                 borderRadius: 1,
-                px: 3,
+                px: 2,
                 py: 1.5,
                 background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
                 boxShadow: `0 8px 30px ${alpha(theme.palette.primary.main, 0.3)}`,
@@ -95,7 +95,7 @@ export function DashboardPage(): JSX.Element {
         </Box>
 
         {/* Stats Cards */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid container spacing={2} sx={{ mb: 3 }}>
           {[
             { 
               title: 'Total Requests', 
@@ -121,7 +121,7 @@ export function DashboardPage(): JSX.Element {
           ].map((stat) => (
             <Grid item xs={12} sm={6} md={4} key={stat.title}>
               <Card sx={{
-                p: 2,
+                p: 1.5,
                 borderRadius: 1,
                 background: `linear-gradient(135deg, ${alpha(stat.color, 0.1)} 0%, ${alpha(stat.color, 0.05)} 100%)`,
                 border: `1px solid ${alpha(stat.color, 0.1)}`,
@@ -131,7 +131,7 @@ export function DashboardPage(): JSX.Element {
                   boxShadow: `0 12px 40px ${alpha(stat.color, 0.2)}`,
                 },
               }}>
-                <CardContent sx={{ p: '16px !important' }}>
+                <CardContent sx={{ p: '12px !important' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
                     <Box sx={{
                       width: 48,
@@ -171,7 +171,7 @@ export function DashboardPage(): JSX.Element {
         </Grid>
 
         {/* Main Content Grid */}
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
             <Card sx={{
               borderRadius: 1,
@@ -184,8 +184,8 @@ export function DashboardPage(): JSX.Element {
                 boxShadow: `0 8px 30px ${alpha(theme.palette.primary.main, 0.1)}`,
               },
             }}>
-              <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+              <CardContent sx={{ p: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
                   <Category sx={{ color: theme.palette.primary.main }} />
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     Themes
@@ -210,8 +210,8 @@ export function DashboardPage(): JSX.Element {
                 boxShadow: `0 8px 30px ${alpha(theme.palette.success.main, 0.1)}`,
               },
             }}>
-              <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+              <CardContent sx={{ p: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
                   <FeaturedPlayList sx={{ color: theme.palette.success.main }} />
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     Features
@@ -236,8 +236,8 @@ export function DashboardPage(): JSX.Element {
                 boxShadow: `0 8px 30px ${alpha(theme.palette.warning.main, 0.1)}`,
               },
             }}>
-              <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+              <CardContent sx={{ p: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
                   <TrendingUp sx={{ color: theme.palette.warning.main }} />
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     Analytics
@@ -271,7 +271,7 @@ export function DashboardPage(): JSX.Element {
               filter: 'blur(15px)',
             },
           }}>
-            <CardContent sx={{ p: 4, position: 'relative', zIndex: 1 }}>
+            <CardContent sx={{ p: 3, position: 'relative', zIndex: 1 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   <Box sx={{
@@ -297,7 +297,7 @@ export function DashboardPage(): JSX.Element {
                   onClick={() => navigate(ROUTES.SETTINGS_WORKSPACE)}
                   sx={{
                     borderRadius: 1,
-                    px: 3,
+                    px: 2,
                     py: 1.5,
                     background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`,
                     boxShadow: `0 8px 30px ${alpha(theme.palette.success.main, 0.3)}`,
@@ -323,7 +323,7 @@ export function DashboardPage(): JSX.Element {
                   'Prioritize development based on mention frequency',
                 ].map((item, index) => (
                   <Grid item xs={12} sm={6} key={index}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderRadius: 2, background: alpha(theme.palette.success.main, 0.05) }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 1.5, borderRadius: 2, background: alpha(theme.palette.success.main, 0.05) }}>
                       <Box sx={{
                         width: 24,
                         height: 24,
