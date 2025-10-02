@@ -2,7 +2,7 @@
  * Protected route component that requires authentication
  */
 
-import React from 'react';
+
 import { Navigate, useLocation } from 'react-router-dom';
 import { useIsAuthenticated, useUser } from '../store/auth-store';
 import { ROUTES } from '@/lib/constants/routes';

@@ -2,7 +2,6 @@
  * Empty state component with theme support
  */
 
-import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { SvgIconComponent } from '@mui/icons-material';
 

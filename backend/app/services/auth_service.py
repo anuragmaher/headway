@@ -29,7 +29,7 @@ class AuthService:
     
     def register_user(self, user_data: UserCreate) -> User:
         """
-        Register a new user.
+        Register a new user and optionally create a new company.
         
         Args:
             user_data: User creation data
@@ -51,16 +51,45 @@ class AuthService:
                 detail="Email already registered"
             )
         
-        # Check if company name already exists
-        existing_company = self.db.query(User).filter(
-            User.company_name == user_data.company_name
+        # Extract domain from email for company association
+        email_domain = user_data.email.split('@')[1].lower()
+        
+        # Check if company exists by name
+        existing_company = self.db.query(Company).filter(
+            Company.name == user_data.company_name
         ).first()
         
+        company = None
+        user_role = "member"  # Default role
+        
         if existing_company:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Company name already taken. Please choose a different name."
+            # Company exists - check if user's email domain matches
+            if existing_company.domain and existing_company.domain != email_domain:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Email domain '{email_domain}' does not match company domain '{existing_company.domain}'"
+                )
+            company = existing_company
+        else:
+            # Create new company
+            company = Company(
+                name=user_data.company_name,
+                size=user_data.company_size,
+                domain=email_domain,
+                is_active=True,
+                subscription_plan="free"
             )
+            user_role = "owner"  # First user in company becomes owner
+            
+            try:
+                self.db.add(company)
+                self.db.flush()  # Get the company ID without committing
+            except IntegrityError:
+                self.db.rollback()
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Company name already taken. Please choose a different name."
+                )
         
         # Hash password
         hashed_password = get_password_hash(user_data.password)
@@ -70,9 +99,9 @@ class AuthService:
             email=user_data.email,
             first_name=user_data.first_name,
             last_name=user_data.last_name,
-            company_name=user_data.company_name,
-            company_size=user_data.company_size,
             job_title=user_data.job_title,
+            company_id=company.id,
+            role=user_role,
             hashed_password=hashed_password,
             theme_preference=user_data.theme_preference,
             is_active=True,
@@ -90,8 +119,6 @@ class AuthService:
             error_detail = "Failed to create user"
             if "email" in str(e.orig).lower():
                 error_detail = "Email already registered"
-            elif "company_name" in str(e.orig).lower():
-                error_detail = "Company name already taken. Please choose a different name."
             
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,

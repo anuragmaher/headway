@@ -148,7 +148,7 @@ export function RegisterPage(): JSX.Element {
               Get Started
             </Typography>
             <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 3 }}>
-              Create your HeadwayHQ account
+              Create your HeadwayHQ account. If your company exists, you'll join it automatically.
             </Typography>
 
             {error && (
@@ -215,7 +215,7 @@ export function RegisterPage(): JSX.Element {
                 value={form.companyName}
                 onChange={handleChange('companyName')}
                 disabled={loading}
-                helperText="This name must be unique across all companies"
+                helperText="Enter your existing company name or create a new one"
               />
 
               <Grid container spacing={2}>

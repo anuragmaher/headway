@@ -3,7 +3,7 @@
  */
 
 import { useEffect } from 'react';
-import { useThemeStore, useThemeMode, useThemeActions } from '@/shared/store/theme-store';
+import { useThemeStore } from '@/shared/store/theme-store';
 import { ThemeMode } from '@/shared/types/theme.types';
 
 interface UseThemeReturn {
@@ -16,8 +16,10 @@ interface UseThemeReturn {
 }
 
 export function useTheme(): UseThemeReturn {
-  const mode = useThemeMode();
-  const { setTheme, toggleTheme, initializeTheme } = useThemeActions();
+  const mode = useThemeStore((state) => state.mode);
+  const setTheme = useThemeStore((state) => state.setTheme);
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
+  const initializeTheme = useThemeStore((state) => state.initializeTheme);
 
   // Initialize theme on first load
   useEffect(() => {

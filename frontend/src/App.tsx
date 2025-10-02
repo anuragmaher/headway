@@ -1,4 +1,3 @@
-import React from 'react';
 import { ThemeProvider } from '@/shared/components/ThemeProvider';
 import { AppRouter } from '@/lib/router/AppRouter';
 

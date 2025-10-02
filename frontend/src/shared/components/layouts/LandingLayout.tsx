@@ -2,7 +2,7 @@
  * Layout for public pages (landing, login, register)
  */
 
-import React from 'react';
+
 import { Box, Container, AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';

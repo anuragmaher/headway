@@ -70,7 +70,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isMobile } = useResponsive();
+  const { } = useResponsive();
   const { logout } = useAuthActions();
   const user = useUser();
 

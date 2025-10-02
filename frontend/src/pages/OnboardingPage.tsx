@@ -2,7 +2,6 @@
  * Onboarding page for new users
  */
 
-import React from 'react';
 import { Box, Typography, Card, CardContent } from '@mui/material';
 import { AdminLayout } from '@/shared/components/layouts';
 

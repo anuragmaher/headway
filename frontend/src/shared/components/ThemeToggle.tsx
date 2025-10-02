@@ -2,7 +2,7 @@
  * Theme toggle component for switching between light and dark modes
  */
 
-import React from 'react';
+
 import { IconButton, Tooltip } from '@mui/material';
 import { LightMode, DarkMode } from '@mui/icons-material';
 import { useThemeMode, useThemeActions } from '@/shared/store/theme-store';

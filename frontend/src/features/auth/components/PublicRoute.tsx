@@ -2,7 +2,7 @@
  * Public route component that redirects authenticated users
  */
 
-import React from 'react';
+
 import { Navigate } from 'react-router-dom';
 import { useIsAuthenticated, useUser } from '../store/auth-store';
 import { ROUTES } from '@/lib/constants/routes';

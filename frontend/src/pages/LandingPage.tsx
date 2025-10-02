@@ -2,7 +2,6 @@
  * Landing page for public visitors
  */
 
-import React from 'react';
 import { 
   Box, 
   Container, 

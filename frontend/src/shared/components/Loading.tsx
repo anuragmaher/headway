@@ -2,7 +2,7 @@
  * Loading component with theme support
  */
 
-import React from 'react';
+
 import { Box, CircularProgress, Typography } from '@mui/material';
 
 interface LoadingProps {

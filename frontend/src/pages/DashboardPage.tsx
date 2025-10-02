@@ -2,7 +2,6 @@
  * Main dashboard page for authenticated users
  */
 
-import React from 'react';
 import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
 import { AdminLayout } from '@/shared/components/layouts';
 
