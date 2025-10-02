@@ -2,7 +2,7 @@
  * Workspace settings page for managing workspace-wide configurations
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -20,6 +20,21 @@ import {
   useTheme,
   Avatar,
   LinearProgress,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Checkbox,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  CircularProgress,
+  Snackbar,
 } from '@mui/material';
 import {
   Settings as SettingsIcon,
@@ -30,9 +45,15 @@ import {
   Sync as SyncIcon,
   CloudSync as CloudSyncIcon,
   MoreVert as MoreVertIcon,
+  ExpandMore as ExpandMoreIcon,
+  Close as CloseIcon,
+  Lock as LockIcon,
+  Public as PublicIcon,
+  Group as GroupIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useUser } from '@/features/auth/store/auth-store';
+import { slackService, type SlackChannel, type SlackIntegration } from '@/services/slack';
 
 interface DataSource {
   id: string;
@@ -40,6 +61,8 @@ interface DataSource {
   type: 'slack' | 'gmail' | 'teams' | 'discord' | 'api';
   status: 'connected' | 'disconnected' | 'error';
   lastSync?: string;
+  channels?: SlackChannel[];
+  userToken?: string;
 }
 
 export function WorkspaceSettingsPage(): JSX.Element {
@@ -47,29 +70,86 @@ export function WorkspaceSettingsPage(): JSX.Element {
   const theme = useTheme();
   const [autoSync, setAutoSync] = useState(true);
   const [emailNotifications, setEmailNotifications] = useState(true);
+  const [expandedSections, setExpandedSections] = useState({
+    dataSources: true,
+    preferences: false,
+    workspaceInfo: false,
+    availableConnectors: false,
+  });
+
+  // Slack connection dialog state
+  const [slackDialogOpen, setSlackDialogOpen] = useState(false);
+  const [slackTokens, setSlackTokens] = useState({
+    userToken: '',
+  });
+  const [availableChannels, setAvailableChannels] = useState<SlackChannel[]>([]);
+  const [selectedChannels, setSelectedChannels] = useState<string[]>([]);
+  const [isLoadingChannels, setIsLoadingChannels] = useState(false);
+  const [connectionStep, setConnectionStep] = useState<'tokens' | 'channels'>('tokens');
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [slackIntegrations, setSlackIntegrations] = useState<SlackIntegration[]>([]);
+  const [teamInfo, setTeamInfo] = useState<{ team_id: string; team_name: string } | null>(null);
+  const [channelSearch, setChannelSearch] = useState('');
+  const [isLoadingIntegrations, setIsLoadingIntegrations] = useState(true);
+
+  // Load integrations on component mount
+  useEffect(() => {
+    loadSlackIntegrations();
+  }, []);
+
+  const loadSlackIntegrations = async () => {
+    try {
+      setIsLoadingIntegrations(true);
+      const integrations = await slackService.getIntegrations();
+      setSlackIntegrations(integrations);
+    } catch (error) {
+      console.error('Failed to load Slack integrations:', error);
+    } finally {
+      setIsLoadingIntegrations(false);
+    }
+  };
+
+  const handleAccordionChange = (section: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: isExpanded,
+    }));
+  };
   
-  // Mock data sources - will be replaced with real API calls
-  const [dataSources] = useState<DataSource[]>([
+  // Convert SlackIntegrations to DataSource format for UI
+  const dataSources: DataSource[] = [
+    // Slack integrations
+    ...slackIntegrations.map(integration => ({
+      id: integration.id,
+      name: integration.team_name,
+      type: 'slack' as const,
+      status: integration.status === 'pending' || integration.status === 'connected' ? 'connected' as const : 'disconnected' as const,
+      lastSync: integration.last_synced ? 'Just now' : undefined,
+      channels: integration.channels
+    })),
+    // Static Gmail entry (placeholder)
     {
-      id: '1',
-      name: 'Slack Workspace',
-      type: 'slack',
-      status: 'connected',
-      lastSync: '2 hours ago'
-    },
-    {
-      id: '2',
+      id: 'gmail-placeholder',
       name: 'Gmail Integration',
       type: 'gmail',
       status: 'disconnected'
     }
-  ]);
+  ];
 
 
   const getConnectorIcon = (name: string) => {
     switch (name.toLowerCase()) {
-      case 'slack': return '💬';
-      case 'gmail': return '📧';
+      case 'slack': return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.528 2.528 0 0 1 2.522-2.523h2.52v2.523zM6.313 15.165a2.528 2.528 0 0 1 2.521-2.523 2.528 2.528 0 0 1 2.521 2.523v6.312A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.523v-6.312zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.528 2.528 0 0 1-2.52-2.521V2.522A2.528 2.528 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zM15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.528 2.528 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.528 2.528 0 0 1-2.52-2.523 2.528 2.528 0 0 1 2.52-2.52h6.313A2.528 2.528 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/>
+        </svg>
+      );
+      case 'gmail': return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+        </svg>
+      );
       case 'microsoft teams': return '🟣';
       case 'discord': return '🟦';
       case 'intercom': return '💭';
@@ -78,6 +158,85 @@ export function WorkspaceSettingsPage(): JSX.Element {
       default: return '🔧';
     }
   };
+
+  // Slack connection handlers
+  const handleSlackConnect = () => {
+    setSlackDialogOpen(true);
+    setConnectionStep('tokens');
+    setSlackTokens({ userToken: '' });
+    setSelectedChannels([]);
+    setAvailableChannels([]);
+    setChannelSearch('');
+  };
+
+  const handleSlackTokensNext = async () => {
+    if (!slackTokens.userToken) {
+      return;
+    }
+
+    setIsLoadingChannels(true);
+    setError(null);
+
+    try {
+      const response = await slackService.validateTokensAndGetChannels({
+        user_token: slackTokens.userToken,
+      });
+
+      setAvailableChannels(response.channels);
+      setTeamInfo({ team_id: response.team_id, team_name: response.team_name });
+      setConnectionStep('channels');
+    } catch (error: any) {
+      console.error('Failed to fetch Slack channels:', error);
+      setError(error.response?.data?.detail || 'Failed to validate tokens or fetch channels');
+    } finally {
+      setIsLoadingChannels(false);
+    }
+  };
+
+  const handleChannelToggle = (channelId: string) => {
+    setSelectedChannels(prev => {
+      if (prev.includes(channelId)) {
+        return prev.filter(id => id !== channelId);
+      } else if (prev.length < 5) {
+        return [...prev, channelId];
+      }
+      return prev;
+    });
+  };
+
+  const handleSlackConnectionComplete = async () => {
+    if (selectedChannels.length === 0) {
+      return;
+    }
+
+    setIsConnecting(true);
+    setError(null);
+
+    try {
+      await slackService.connectWorkspace({
+        user_token: slackTokens.userToken,
+        selected_channels: selectedChannels,
+      });
+
+      // Reload integrations to reflect the new connection
+      await loadSlackIntegrations();
+
+      setSlackDialogOpen(false);
+    } catch (error: any) {
+      console.error('Failed to connect Slack:', error);
+      setError(error.response?.data?.detail || 'Failed to connect Slack workspace');
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
+
+  // Filter channels based on search
+  const filteredChannels = availableChannels.filter(channel =>
+    channel.name.toLowerCase().includes(channelSearch.toLowerCase()) ||
+    channel.purpose?.toLowerCase().includes(channelSearch.toLowerCase()) ||
+    channel.topic?.toLowerCase().includes(channelSearch.toLowerCase())
+  );
 
   return (
     <AdminLayout>
@@ -129,46 +288,64 @@ export function WorkspaceSettingsPage(): JSX.Element {
           </Box>
         </Box>
 
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           {/* Connected Data Sources */}
           <Grid item xs={12} lg={8}>
-            <Card sx={{
-              borderRadius: 1,
-              background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
-              backdropFilter: 'blur(10px)',
-              border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-              transition: 'all 0.3s ease-in-out',
-              '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow: `0 8px 30px ${alpha(theme.palette.primary.main, 0.1)}`,
-              },
-            }}>
-              <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                    <DataUsageIcon sx={{ color: theme.palette.success.main, fontSize: 28 }} />
-                    <Box>
-                      <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                        Connected Data Sources
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {dataSources.filter(s => s.status === 'connected').length} active connections
-                      </Typography>
-                    </Box>
+            <Accordion
+              expanded={expandedSections.dataSources}
+              onChange={handleAccordionChange('dataSources')}
+              sx={{
+                borderRadius: 1,
+                background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                backdropFilter: 'blur(10px)',
+                border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                boxShadow: 'none',
+                '&:before': { display: 'none' },
+                '&.Mui-expanded': {
+                  margin: 0,
+                },
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                sx={{
+                  p: 2,
+                  '& .MuiAccordionSummary-content': {
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  },
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                  <DataUsageIcon sx={{ color: theme.palette.success.main, fontSize: 28 }} />
+                  <Box>
+                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                      Connected Data Sources
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {isLoadingIntegrations ? (
+                        'Loading...'
+                      ) : (
+                        `${dataSources.filter(s => s.status === 'connected').length} active connections`
+                      )}
+                    </Typography>
                   </Box>
-                  <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    sx={{
-                      borderRadius: 2,
-                      background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`,
-                      '&:hover': { transform: 'translateY(-1px)' },
-                    }}
-                  >
-                    Add Source
-                  </Button>
                 </Box>
-                
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={(e) => e.stopPropagation()}
+                  sx={{
+                    borderRadius: 2,
+                    background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`,
+                    '&:hover': { transform: 'translateY(-1px)' },
+                  }}
+                >
+                  Add Source
+                </Button>
+              </AccordionSummary>
+              
+              <AccordionDetails sx={{ pt: 0, px: 2, pb: 2 }}>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6 }}>
                   Connect external platforms to automatically collect and analyze feature requests from your team and customers.
                 </Typography>
@@ -188,12 +365,57 @@ export function WorkspaceSettingsPage(): JSX.Element {
                     }}
                   />
                   <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                    Integration Progress: {dataSources.filter(s => s.status === 'connected').length} of {dataSources.length} sources connected
+                    {isLoadingIntegrations ? (
+                      'Loading integrations...'
+                    ) : (
+                      `Integration Progress: ${dataSources.filter(s => s.status === 'connected').length} of ${dataSources.length} sources connected`
+                    )}
                   </Typography>
                 </Box>
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                  {dataSources.map((source) => (
+                  {isLoadingIntegrations ? (
+                    // Shimmer loading state
+                    Array.from({ length: 2 }).map((_, index) => (
+                      <Box key={`shimmer-${index}`} sx={{
+                        p: 2,
+                        borderRadius: 1,
+                        background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                        animation: 'pulse 1.5s ease-in-out infinite',
+                        '@keyframes pulse': {
+                          '0%': { opacity: 1 },
+                          '50%': { opacity: 0.4 },
+                          '100%': { opacity: 1 },
+                        },
+                      }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <Box sx={{
+                            width: 48,
+                            height: 48,
+                            borderRadius: 2,
+                            background: alpha(theme.palette.grey[500], 0.2),
+                          }} />
+                          <Box sx={{ flex: 1 }}>
+                            <Box sx={{
+                              height: 20,
+                              width: '60%',
+                              borderRadius: 1,
+                              background: alpha(theme.palette.grey[500], 0.2),
+                              mb: 1,
+                            }} />
+                            <Box sx={{
+                              height: 16,
+                              width: '40%',
+                              borderRadius: 1,
+                              background: alpha(theme.palette.grey[500], 0.15),
+                            }} />
+                          </Box>
+                        </Box>
+                      </Box>
+                    ))
+                  ) : (
+                    dataSources.map((source) => (
                     <Box key={source.id} sx={{
                       p: 2,
                       borderRadius: 1,
@@ -219,7 +441,15 @@ export function WorkspaceSettingsPage(): JSX.Element {
                             justifyContent: 'center',
                             fontSize: '1.5rem',
                           }}>
-                            {source.type === 'slack' ? '💬' : '📧'}
+{source.type === 'slack' ? (
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                                <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.528 2.528 0 0 1 2.522-2.523h2.52v2.523zM6.313 15.165a2.528 2.528 0 0 1 2.521-2.523 2.528 2.528 0 0 1 2.521 2.523v6.312A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.523v-6.312zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.528 2.528 0 0 1-2.52-2.521V2.522A2.528 2.528 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zM15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.528 2.528 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.528 2.528 0 0 1-2.52-2.523 2.528 2.528 0 0 1 2.52-2.52h6.313A2.528 2.528 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/>
+                              </svg>
+                            ) : (
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                                <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+                              </svg>
+                            )}
                           </Box>
                           <Box sx={{ flex: 1 }}>
                             <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
@@ -259,10 +489,11 @@ export function WorkspaceSettingsPage(): JSX.Element {
                         </IconButton>
                       </Box>
                     </Box>
-                  ))}
+                  ))
+                  )}
                 </Box>
 
-                {dataSources.length === 0 && (
+                {!isLoadingIntegrations && dataSources.length === 0 && (
                   <Alert 
                     severity="info" 
                     sx={{ 
@@ -275,33 +506,42 @@ export function WorkspaceSettingsPage(): JSX.Element {
                     No data sources connected. Add your first source to start collecting feedback in this workspace.
                   </Alert>
                 )}
-              </CardContent>
-            </Card>
+              </AccordionDetails>
+            </Accordion>
           </Grid>
 
           {/* Workspace Settings Sidebar */}
           <Grid item xs={12} lg={4}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {/* General Settings */}
-              <Card sx={{
-                borderRadius: 1,
-                background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
-                backdropFilter: 'blur(10px)',
-                border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                transition: 'all 0.3s ease-in-out',
-                '&:hover': {
-                  transform: 'translateY(-2px)',
-                  boxShadow: `0 8px 30px ${alpha(theme.palette.warning.main, 0.1)}`,
-                },
-              }}>
-                <CardContent sx={{ p: 2 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+              {/* Preferences */}
+              <Accordion
+                expanded={expandedSections.preferences}
+                onChange={handleAccordionChange('preferences')}
+                sx={{
+                  borderRadius: 1,
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                  backdropFilter: 'blur(10px)',
+                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  boxShadow: 'none',
+                  '&:before': { display: 'none' },
+                  '&.Mui-expanded': {
+                    margin: 0,
+                  },
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  sx={{ p: 2 }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                     <NotificationsIcon sx={{ color: theme.palette.warning.main }} />
                     <Typography variant="h6" sx={{ fontWeight: 600 }}>
                       Preferences
                     </Typography>
                   </Box>
-                  
+                </AccordionSummary>
+                
+                <AccordionDetails sx={{ pt: 0, px: 2, pb: 2 }}>
                   <Box sx={{ 
                     p: 2, 
                     borderRadius: 2, 
@@ -364,29 +604,38 @@ export function WorkspaceSettingsPage(): JSX.Element {
                       }
                     />
                   </Box>
-                </CardContent>
-              </Card>
+                </AccordionDetails>
+              </Accordion>
 
               {/* Workspace Information */}
-              <Card sx={{
-                borderRadius: 1,
-                background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
-                backdropFilter: 'blur(10px)',
-                border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                transition: 'all 0.3s ease-in-out',
-                '&:hover': {
-                  transform: 'translateY(-2px)',
-                  boxShadow: `0 8px 30px ${alpha(theme.palette.primary.main, 0.1)}`,
-                },
-              }}>
-                <CardContent sx={{ p: 2 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+              <Accordion
+                expanded={expandedSections.workspaceInfo}
+                onChange={handleAccordionChange('workspaceInfo')}
+                sx={{
+                  borderRadius: 1,
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                  backdropFilter: 'blur(10px)',
+                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  boxShadow: 'none',
+                  '&:before': { display: 'none' },
+                  '&.Mui-expanded': {
+                    margin: 0,
+                  },
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  sx={{ p: 2 }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                     <SecurityIcon sx={{ color: theme.palette.primary.main }} />
                     <Typography variant="h6" sx={{ fontWeight: 600 }}>
                       Workspace Info
                     </Typography>
                   </Box>
-
+                </AccordionSummary>
+                
+                <AccordionDetails sx={{ pt: 0, px: 2, pb: 2 }}>
                   <Box sx={{ 
                     p: 2, 
                     borderRadius: 2, 
@@ -450,26 +699,33 @@ export function WorkspaceSettingsPage(): JSX.Element {
                   >
                     Save Changes
                   </Button>
-                </CardContent>
-              </Card>
+                </AccordionDetails>
+              </Accordion>
             </Box>
           </Grid>
 
           {/* Available Connectors */}
           <Grid item xs={12}>
-            <Card sx={{
-              borderRadius: 1,
-              background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100())`,
-              backdropFilter: 'blur(10px)',
-              border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-              transition: 'all 0.3s ease-in-out',
-              '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow: `0 8px 30px ${alpha(theme.palette.info.main, 0.1)}`,
-              },
-            }}>
-              <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+            <Accordion
+              expanded={expandedSections.availableConnectors}
+              onChange={handleAccordionChange('availableConnectors')}
+              sx={{
+                borderRadius: 1,
+                background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                backdropFilter: 'blur(10px)',
+                border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                boxShadow: 'none',
+                '&:before': { display: 'none' },
+                '&.Mui-expanded': {
+                  margin: 0,
+                },
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                sx={{ p: 2 }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   <CloudSyncIcon sx={{ color: theme.palette.info.main, fontSize: 28 }} />
                   <Box>
                     <Typography variant="h6" sx={{ fontWeight: 700 }}>
@@ -480,7 +736,9 @@ export function WorkspaceSettingsPage(): JSX.Element {
                     </Typography>
                   </Box>
                 </Box>
-
+              </AccordionSummary>
+              
+              <AccordionDetails sx={{ pt: 0, px: 2, pb: 2 }}>
                 <Grid container spacing={3}>
                   {[
                     { name: 'Slack', description: 'Monitor channels for feature requests', available: true },
@@ -520,6 +778,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
                             mx: 'auto',
                             mb: 2,
                             fontSize: '1.5rem',
+                            color: 'white',
                           }}>
                             {getConnectorIcon(connector.name)}
                           </Box>
@@ -533,6 +792,11 @@ export function WorkspaceSettingsPage(): JSX.Element {
                             variant={connector.available ? "contained" : "outlined"}
                             size="small"
                             disabled={!connector.available}
+                            onClick={() => {
+                              if (connector.available && connector.name === 'Slack') {
+                                handleSlackConnect();
+                              }
+                            }}
                             sx={connector.available ? {
                               background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`,
                               '&:hover': { transform: 'translateY(-1px)' },
@@ -548,10 +812,244 @@ export function WorkspaceSettingsPage(): JSX.Element {
                     </Grid>
                   ))}
                 </Grid>
-              </CardContent>
-            </Card>
+              </AccordionDetails>
+            </Accordion>
           </Grid>
         </Grid>
+
+        {/* Slack Connection Dialog */}
+        <Dialog
+          open={slackDialogOpen}
+          onClose={() => setSlackDialogOpen(false)}
+          maxWidth="lg"
+          fullWidth
+          sx={{
+            '& .MuiDialog-paper': {
+              borderRadius: 2,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.95)} 0%, ${alpha(theme.palette.background.paper, 0.8)} 100%)`,
+              backdropFilter: 'blur(10px)',
+            },
+          }}
+        >
+          <DialogTitle sx={{ pb: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box sx={{
+                width: 40,
+                height: 40,
+                borderRadius: 2,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                  <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.528 2.528 0 0 1 2.522-2.523h2.52v2.523zM6.313 15.165a2.528 2.528 0 0 1 2.521-2.523 2.528 2.528 0 0 1 2.521 2.523v6.312A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.523v-6.312zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.528 2.528 0 0 1-2.52-2.521V2.522A2.528 2.528 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zM15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.528 2.528 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.528 2.528 0 0 1-2.52-2.523 2.528 2.528 0 0 1 2.52-2.52h6.313A2.528 2.528 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/>
+                </svg>
+              </Box>
+              <Box>
+                <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                  Connect Slack Workspace
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {connectionStep === 'tokens' ? 'Enter your Slack tokens' : `Select channels from ${teamInfo?.team_name || 'your workspace'}`}
+                </Typography>
+              </Box>
+              <IconButton
+                onClick={() => setSlackDialogOpen(false)}
+                sx={{ ml: 'auto' }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </DialogTitle>
+
+          <DialogContent sx={{ pt: 2 }}>
+            {error && (
+              <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
+                {error}
+              </Alert>
+            )}
+
+            {connectionStep === 'tokens' && (
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                  To connect your Slack workspace, you'll need your user token. This token allows HeadwayHQ to read messages from your selected channels.
+                </Typography>
+
+                <TextField
+                  label="User Token (xoxp-...)"
+                  value={slackTokens.userToken}
+                  onChange={(e) => setSlackTokens(prev => ({ ...prev, userToken: e.target.value }))}
+                  fullWidth
+                  placeholder="xoxp-your-user-token"
+                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+                />
+
+              </Box>
+            )}
+
+            {connectionStep === 'channels' && (
+              <Box>
+                {isLoadingChannels ? (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 4 }}>
+                    <CircularProgress size={40} sx={{ mb: 2 }} />
+                    <Typography variant="body2" color="text.secondary">
+                      Loading channels from {teamInfo?.team_name}...
+                    </Typography>
+                  </Box>
+                ) : (
+                  <>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6 }}>
+                      Select up to 5 channels to monitor for feature requests and customer feedback.
+                    </Typography>
+
+                    <TextField
+                      placeholder="Search channels..."
+                      value={channelSearch}
+                      onChange={(e) => setChannelSearch(e.target.value)}
+                      fullWidth
+                      size="small"
+                      sx={{ 
+                        mb: 2,
+                        '& .MuiOutlinedInput-root': { 
+                          borderRadius: 2,
+                          bgcolor: alpha(theme.palette.background.paper, 0.8)
+                        }
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <Box sx={{ mr: 1, display: 'flex', alignItems: 'center' }}>
+                            🔍
+                          </Box>
+                        ),
+                      }}
+                    />
+
+                    <Box sx={{ maxHeight: 400, overflow: 'auto' }}>
+                      {filteredChannels.length === 0 ? (
+                        <Box sx={{ 
+                          display: 'flex', 
+                          flexDirection: 'column', 
+                          alignItems: 'center', 
+                          py: 4,
+                          color: 'text.secondary'
+                        }}>
+                          <Typography variant="body2" sx={{ mb: 1 }}>
+                            No channels found
+                          </Typography>
+                          <Typography variant="caption">
+                            Try adjusting your search terms
+                          </Typography>
+                        </Box>
+                      ) : (
+                        <List>
+                          {filteredChannels.map((channel) => (
+                          <ListItem
+                            key={channel.id}
+                            sx={{
+                              borderRadius: 2,
+                              mb: 1,
+                              border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                              background: selectedChannels.includes(channel.id)
+                                ? alpha(theme.palette.primary.main, 0.1)
+                                : 'transparent',
+                            }}
+                          >
+                            <ListItemIcon>
+                              <Checkbox
+                                checked={selectedChannels.includes(channel.id)}
+                                onChange={() => handleChannelToggle(channel.id)}
+                                disabled={!selectedChannels.includes(channel.id) && selectedChannels.length >= 5}
+                              />
+                            </ListItemIcon>
+                            <ListItemIcon>
+                              {channel.is_private ? <LockIcon /> : <PublicIcon />}
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={`#${channel.name}`}
+                              secondary={
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                                  <GroupIcon sx={{ fontSize: 14 }} />
+                                  <Typography variant="caption">
+                                    {channel.member_count || 0} members
+                                  </Typography>
+                                  {channel.purpose && (
+                                    <Typography variant="caption" sx={{ ml: 1 }}>
+                                      • {channel.purpose}
+                                    </Typography>
+                                  )}
+                                </Box>
+                              }
+                            />
+                          </ListItem>
+                          ))}
+                        </List>
+                      )}
+                    </Box>
+
+                    <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="caption" color="text.secondary">
+                        Selected: {selectedChannels.length}/5 channels
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Showing {filteredChannels.length} of {availableChannels.length} channels
+                      </Typography>
+                    </Box>
+                  </Box>
+                  </>
+                )}
+              </Box>
+            )}
+          </DialogContent>
+
+          <DialogActions sx={{ p: 3, pt: 2 }}>
+            <Button
+              onClick={() => setSlackDialogOpen(false)}
+              sx={{ borderRadius: 2 }}
+            >
+              Cancel
+            </Button>
+            
+            {connectionStep === 'tokens' ? (
+              <Button
+                variant="contained"
+                onClick={handleSlackTokensNext}
+                disabled={!slackTokens.userToken || isLoadingChannels}
+                sx={{
+                  borderRadius: 2,
+                  background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                }}
+              >
+                {isLoadingChannels ? <CircularProgress size={20} /> : 'Next'}
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                onClick={handleSlackConnectionComplete}
+                disabled={selectedChannels.length === 0 || isConnecting}
+                sx={{
+                  borderRadius: 2,
+                  background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100())`,
+                }}
+              >
+                {isConnecting ? <CircularProgress size={20} /> : 'Connect'}
+              </Button>
+            )}
+          </DialogActions>
+        </Dialog>
+
+        {/* Error Snackbar */}
+        <Snackbar
+          open={!!error}
+          autoHideDuration={6000}
+          onClose={() => setError(null)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+          <Alert onClose={() => setError(null)} severity="error" sx={{ borderRadius: 2 }}>
+            {error}
+          </Alert>
+        </Snackbar>
       </Box>
     </AdminLayout>
   );

@@ -19,7 +19,9 @@ import {
   ListItemIcon,
   Avatar,
   IconButton,
-  LinearProgress,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
@@ -28,6 +30,7 @@ import {
   MoreVert as MoreVertIcon,
   Add as AddIcon,
   FilterList as FilterIcon,
+  ExpandMore as ExpandMoreIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
 
@@ -75,6 +78,13 @@ interface FeatureDetail {
     timestamp: string;
     source: 'slack' | 'gmail' | 'manual';
   }>;
+  competitiveAnalysis: Array<{
+    id: string;
+    name: string;
+    status: 'available' | 'beta' | 'enterprise' | 'planned' | 'not-available';
+    since?: string;
+    notes?: string;
+  }>;
   assignee?: string;
   createdAt: string;
   updatedAt: string;
@@ -86,6 +96,9 @@ export function FeaturesPage(): JSX.Element {
   const theme = useTheme();
   const [selectedThemeId, setSelectedThemeId] = useState<string>('1');
   const [selectedFeatureId, setSelectedFeatureId] = useState<string>('1');
+  const [descriptionExpanded, setDescriptionExpanded] = useState<boolean>(false);
+  const [competitiveExpanded, setCompetitiveExpanded] = useState<boolean>(false);
+  const [feedbackExpanded, setFeedbackExpanded] = useState<boolean>(false);
 
   // Mock themes data
   const themes: Theme[] = [
@@ -516,6 +529,39 @@ export function FeaturesPage(): JSX.Element {
         source: 'slack',
       },
     ],
+    competitiveAnalysis: [
+      {
+        id: '1',
+        name: 'Notion',
+        status: 'available',
+        since: '2022',
+        notes: 'Full dark mode with system sync'
+      },
+      {
+        id: '2',
+        name: 'Linear',
+        status: 'beta',
+        notes: 'Currently in testing phase'
+      },
+      {
+        id: '3',
+        name: 'Asana',
+        status: 'enterprise',
+        notes: 'Available for Enterprise plans only'
+      },
+      {
+        id: '4',
+        name: 'Monday.com',
+        status: 'not-available',
+        notes: 'No dark mode available'
+      },
+      {
+        id: '5',
+        name: 'ClickUp',
+        status: 'planned',
+        notes: 'Planned for Q2 2024'
+      }
+    ],
     assignee: 'John Doe',
     createdAt: '2024-01-15',
     updatedAt: '2024-01-20',
@@ -879,40 +925,6 @@ export function FeaturesPage(): JSX.Element {
                     </Box>
                   </Box>
 
-                  {/* Progress */}
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                      PROGRESS
-                    </Typography>
-                    <Box sx={{ mt: 1 }}>
-                      <LinearProgress
-                        variant="determinate"
-                        value={selectedFeature.status === 'completed' ? 100 : 
-                               selectedFeature.status === 'review' ? 80 :
-                               selectedFeature.status === 'in-progress' ? 50 : 20}
-                        sx={{
-                          height: 6,
-                          borderRadius: 1,
-                          bgcolor: alpha(theme.palette.primary.main, 0.1),
-                          '& .MuiLinearProgress-bar': {
-                            borderRadius: 1,
-                            bgcolor: getStatusColor(selectedFeature.status),
-                          },
-                        }}
-                      />
-                    </Box>
-                  </Box>
-
-                  {/* Description */}
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                      DESCRIPTION
-                    </Typography>
-                    <Typography variant="body2" sx={{ mt: 1, lineHeight: 1.6 }}>
-                      {selectedFeature.fullDescription}
-                    </Typography>
-                  </Box>
-
                   {/* Mentions Stats */}
                   <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -941,50 +953,238 @@ export function FeaturesPage(): JSX.Element {
                     </Box>
                   </Box>
 
-                  {/* Recent Feedback */}
-                  <Box>
-                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                      RECENT FEEDBACK
-                    </Typography>
-                    <Box sx={{ mt: 1 }}>
-                      {selectedFeature.recentFeedback.map((feedback) => (
-                        <Box key={feedback.id} sx={{ 
-                          mb: 1.5, 
-                          p: 1.5, 
-                          borderRadius: 2, 
-                          bgcolor: alpha(theme.palette.background.paper, 0.5),
-                          border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                        }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                            <Avatar sx={{ width: 24, height: 24, fontSize: '0.7rem' }}>
-                              {feedback.author[0]}
-                            </Avatar>
-                            <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                              {feedback.author}
-                            </Typography>
-                            <Chip
-                              label={feedback.company}
-                              size="small"
-                              sx={{
-                                height: 16,
-                                fontSize: '0.6rem',
-                                bgcolor: alpha(theme.palette.primary.main, 0.1),
-                                color: theme.palette.primary.main,
-                              }}
-                            />
-                            <Typography variant="caption">
-                              {getSourceIcon(feedback.source)}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              {feedback.timestamp}
-                            </Typography>
-                          </Box>
-                          <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
-                            {feedback.message}
-                          </Typography>
+                  {/* Description Accordion */}
+                  <Box sx={{ mb: 2 }}>
+                    <Accordion 
+                      expanded={descriptionExpanded} 
+                      onChange={() => setDescriptionExpanded(!descriptionExpanded)}
+                      sx={{
+                        bgcolor: 'transparent',
+                        boxShadow: 'none',
+                        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                        borderRadius: 1,
+                        '&:before': { display: 'none' },
+                        '& .MuiAccordionSummary-root': {
+                          minHeight: 'auto',
+                          padding: '8px 12px',
+                          '&.Mui-expanded': {
+                            minHeight: 'auto',
+                          },
+                        },
+                        '& .MuiAccordionDetails-root': {
+                          padding: '0 12px 12px 12px',
+                        },
+                      }}
+                    >
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon sx={{ fontSize: 16, color: 'text.secondary' }} />}
+                      >
+                        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                          📝 DESCRIPTION
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Typography variant="body2" sx={{ lineHeight: 1.6, color: 'text.primary' }}>
+                          {selectedFeature.fullDescription}
+                        </Typography>
+                      </AccordionDetails>
+                    </Accordion>
+                  </Box>
+
+
+                  {/* Competitive Analysis Accordion */}
+                  <Box sx={{ mb: 2 }}>
+                    <Accordion 
+                      expanded={competitiveExpanded} 
+                      onChange={() => setCompetitiveExpanded(!competitiveExpanded)}
+                      sx={{
+                        bgcolor: 'transparent',
+                        boxShadow: 'none',
+                        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                        borderRadius: 1,
+                        '&:before': { display: 'none' },
+                        '& .MuiAccordionSummary-root': {
+                          minHeight: 'auto',
+                          padding: '8px 12px',
+                          '&.Mui-expanded': {
+                            minHeight: 'auto',
+                          },
+                        },
+                        '& .MuiAccordionDetails-root': {
+                          padding: '0 12px 12px 12px',
+                        },
+                      }}
+                    >
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon sx={{ fontSize: 16, color: 'text.secondary' }} />}
+                      >
+                        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                          📊 COMPETITIVE ANALYSIS
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          {selectedFeature.competitiveAnalysis.map((competitor) => {
+                            const getStatusColor = (status: string) => {
+                              switch (status) {
+                                case 'available': return theme.palette.success.main;
+                                case 'beta': return theme.palette.info.main;
+                                case 'enterprise': return theme.palette.warning.main;
+                                case 'planned': return theme.palette.secondary.main;
+                                case 'not-available': return theme.palette.error.main;
+                                default: return theme.palette.grey[500];
+                              }
+                            };
+
+                            const getStatusIcon = (status: string) => {
+                              switch (status) {
+                                case 'available': return '✅';
+                                case 'beta': return '🔄';
+                                case 'enterprise': return '🏢';
+                                case 'planned': return '📅';
+                                case 'not-available': return '❌';
+                                default: return '❓';
+                              }
+                            };
+
+                            const getStatusText = (status: string) => {
+                              switch (status) {
+                                case 'available': return competitor.since ? `Available since ${competitor.since}` : 'Available';
+                                case 'beta': return 'In Beta';
+                                case 'enterprise': return 'Enterprise only';
+                                case 'planned': return 'Planned';
+                                case 'not-available': return 'Not available';
+                                default: return status;
+                              }
+                            };
+
+                            return (
+                              <Box 
+                                key={competitor.id} 
+                                sx={{ 
+                                  display: 'flex', 
+                                  alignItems: 'center', 
+                                  justifyContent: 'space-between',
+                                  p: 1.5, 
+                                  borderRadius: 1, 
+                                  bgcolor: alpha(theme.palette.background.paper, 0.5),
+                                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                                  '&:hover': {
+                                    bgcolor: alpha(getStatusColor(competitor.status), 0.05),
+                                  },
+                                  transition: 'all 0.2s ease-in-out',
+                                }}
+                              >
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                    {getStatusIcon(competitor.status)} {competitor.name}
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                  <Typography 
+                                    variant="caption" 
+                                    sx={{ 
+                                      color: getStatusColor(competitor.status),
+                                      fontWeight: 600,
+                                      fontSize: '0.7rem'
+                                    }}
+                                  >
+                                    {getStatusText(competitor.status)}
+                                  </Typography>
+                                  <Button
+                                    size="small"
+                                    variant="text"
+                                    sx={{ 
+                                      minWidth: 'auto',
+                                      fontSize: '0.7rem',
+                                      color: theme.palette.primary.main,
+                                      textTransform: 'none',
+                                      fontWeight: 500
+                                    }}
+                                  >
+                                    View Details →
+                                  </Button>
+                                </Box>
+                              </Box>
+                            );
+                          })}
                         </Box>
-                      ))}
-                    </Box>
+                      </AccordionDetails>
+                    </Accordion>
+                  </Box>
+
+                  {/* Recent Feedback Accordion */}
+                  <Box>
+                    <Accordion 
+                      expanded={feedbackExpanded} 
+                      onChange={() => setFeedbackExpanded(!feedbackExpanded)}
+                      sx={{
+                        bgcolor: 'transparent',
+                        boxShadow: 'none',
+                        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                        borderRadius: 1,
+                        '&:before': { display: 'none' },
+                        '& .MuiAccordionSummary-root': {
+                          minHeight: 'auto',
+                          padding: '8px 12px',
+                          '&.Mui-expanded': {
+                            minHeight: 'auto',
+                          },
+                        },
+                        '& .MuiAccordionDetails-root': {
+                          padding: '0 12px 12px 12px',
+                        },
+                      }}
+                    >
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon sx={{ fontSize: 16, color: 'text.secondary' }} />}
+                      >
+                        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                          💬 RECENT FEEDBACK
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Box>
+                          {selectedFeature.recentFeedback.map((feedback) => (
+                            <Box key={feedback.id} sx={{ 
+                              mb: 1.5, 
+                              p: 1.5, 
+                              borderRadius: 1, 
+                              bgcolor: alpha(theme.palette.background.paper, 0.5),
+                              border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                            }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                                <Avatar sx={{ width: 24, height: 24, fontSize: '0.7rem' }}>
+                                  {feedback.author[0]}
+                                </Avatar>
+                                <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                                  {feedback.author}
+                                </Typography>
+                                <Chip
+                                  label={feedback.company}
+                                  size="small"
+                                  sx={{
+                                    height: 16,
+                                    fontSize: '0.6rem',
+                                    bgcolor: alpha(theme.palette.primary.main, 0.1),
+                                    color: theme.palette.primary.main,
+                                  }}
+                                />
+                                <Typography variant="caption">
+                                  {getSourceIcon(feedback.source)}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                  {feedback.timestamp}
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
+                                {feedback.message}
+                              </Typography>
+                            </Box>
+                          ))}
+                        </Box>
+                      </AccordionDetails>
+                    </Accordion>
                   </Box>
                 </Box>
               </CardContent>

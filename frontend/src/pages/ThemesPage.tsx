@@ -76,7 +76,7 @@ export function ThemesPage(): JSX.Element {
   const [formData, setFormData] = useState<ThemeFormData>({
     name: '',
     description: '',
-    color: theme.palette.primary.main,
+    color: alpha(theme.palette.text.primary, 0.6),
     priority: 'medium',
     status: 'active',
     tags: '',
@@ -88,7 +88,7 @@ export function ThemesPage(): JSX.Element {
       id: '1',
       name: 'User Experience',
       description: 'Improvements to user interface and user experience across the platform',
-      color: theme.palette.primary.main,
+      color: alpha(theme.palette.text.primary, 0.7),
       featureCount: 12,
       totalMentions: 234,
       slackMentions: 142,
@@ -106,7 +106,7 @@ export function ThemesPage(): JSX.Element {
       id: '2',
       name: 'Performance',
       description: 'Speed optimizations and performance improvements for better user experience',
-      color: theme.palette.success.main,
+      color: alpha(theme.palette.text.primary, 0.65),
       featureCount: 8,
       totalMentions: 189,
       slackMentions: 118,
@@ -124,7 +124,7 @@ export function ThemesPage(): JSX.Element {
       id: '3',
       name: 'Integrations',
       description: 'Third-party integrations and API connections to enhance platform capabilities',
-      color: theme.palette.warning.main,
+      color: alpha(theme.palette.text.primary, 0.6),
       featureCount: 15,
       totalMentions: 167,
       slackMentions: 94,
@@ -142,7 +142,7 @@ export function ThemesPage(): JSX.Element {
       id: '4',
       name: 'Security',
       description: 'Security enhancements and privacy improvements to protect user data',
-      color: theme.palette.error.main,
+      color: alpha(theme.palette.text.primary, 0.55),
       featureCount: 6,
       totalMentions: 145,
       slackMentions: 88,
@@ -160,7 +160,7 @@ export function ThemesPage(): JSX.Element {
       id: '5',
       name: 'Mobile',
       description: 'Mobile app features and responsive design improvements for mobile users',
-      color: theme.palette.info.main,
+      color: alpha(theme.palette.text.primary, 0.5),
       featureCount: 9,
       totalMentions: 123,
       slackMentions: 74,
@@ -178,7 +178,7 @@ export function ThemesPage(): JSX.Element {
       id: '6',
       name: 'Analytics',
       description: 'Advanced analytics and reporting features for better insights',
-      color: theme.palette.secondary.main,
+      color: alpha(theme.palette.text.primary, 0.45),
       featureCount: 4,
       totalMentions: 98,
       slackMentions: 58,
@@ -230,7 +230,7 @@ export function ThemesPage(): JSX.Element {
       setFormData({
         name: '',
         description: '',
-        color: theme.palette.primary.main,
+        color: alpha(theme.palette.text.primary, 0.6),
         priority: 'medium',
         status: 'active',
         tags: '',
@@ -292,8 +292,8 @@ export function ThemesPage(): JSX.Element {
           mb: 3,
           p: 3,
           borderRadius: 2,
-          background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.1)} 0%, ${alpha(theme.palette.secondary.main, 0.05)} 100%)`,
-          border: `1px solid ${alpha(theme.palette.secondary.main, 0.1)}`,
+          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+          border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
           position: 'relative',
           overflow: 'hidden',
           '&::before': {
@@ -304,7 +304,7 @@ export function ThemesPage(): JSX.Element {
             width: 100,
             height: 100,
             borderRadius: '50%',
-            background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.1)} 0%, ${alpha(theme.palette.secondary.main, 0.05)} 100%)`,
+            background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
             filter: 'blur(20px)',
           },
         }}>
@@ -315,11 +315,11 @@ export function ThemesPage(): JSX.Element {
                   width: 48,
                   height: 48,
                   borderRadius: 2,
-                  background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.secondary.dark} 100%)`,
+                  background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: `0 4px 20px ${alpha(theme.palette.secondary.main, 0.3)}`,
+                  boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
                 }}>
                   <CategoryIcon sx={{ color: 'white', fontSize: 24 }} />
                 </Box>
@@ -338,7 +338,7 @@ export function ThemesPage(): JSX.Element {
                 onClick={() => handleOpenDialog()}
                 sx={{
                   borderRadius: 2,
-                  background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.secondary.dark} 100%)`,
+                  background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
                   '&:hover': { transform: 'translateY(-1px)' },
                 }}
               >
@@ -353,7 +353,7 @@ export function ThemesPage(): JSX.Element {
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{
               borderRadius: 1,
-              background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.06)} 0%, ${alpha(theme.palette.primary.main, 0.03)} 100%)`,
               border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
               transition: 'all 0.3s ease-in-out',
               '&:hover': { transform: 'translateY(-2px)' },
@@ -387,7 +387,7 @@ export function ThemesPage(): JSX.Element {
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{
               borderRadius: 1,
-              background: `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.1)} 0%, ${alpha(theme.palette.success.main, 0.05)} 100%)`,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.06)} 0%, ${alpha(theme.palette.success.main, 0.03)} 100%)`,
               border: `1px solid ${alpha(theme.palette.success.main, 0.1)}`,
               transition: 'all 0.3s ease-in-out',
               '&:hover': { transform: 'translateY(-2px)' },
@@ -421,7 +421,7 @@ export function ThemesPage(): JSX.Element {
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{
               borderRadius: 1,
-              background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.1)} 0%, ${alpha(theme.palette.warning.main, 0.05)} 100%)`,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.06)} 0%, ${alpha(theme.palette.warning.main, 0.03)} 100%)`,
               border: `1px solid ${alpha(theme.palette.warning.main, 0.1)}`,
               transition: 'all 0.3s ease-in-out',
               '&:hover': { transform: 'translateY(-2px)' },
@@ -455,7 +455,7 @@ export function ThemesPage(): JSX.Element {
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{
               borderRadius: 1,
-              background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.1)} 0%, ${alpha(theme.palette.info.main, 0.05)} 100%)`,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.06)} 0%, ${alpha(theme.palette.info.main, 0.03)} 100%)`,
               border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
               transition: 'all 0.3s ease-in-out',
               '&:hover': { transform: 'translateY(-2px)' },
@@ -518,15 +518,15 @@ export function ThemesPage(): JSX.Element {
                     <Grid item xs={12} sm={6} key={themeItem.id}>
                       <Card sx={{
                         borderRadius: 1,
-                        background: `linear-gradient(135deg, ${alpha(themeItem.color, 0.1)} 0%, ${alpha(themeItem.color, 0.05)} 100%)`,
+                        background: `linear-gradient(135deg, ${alpha(themeItem.color, 0.04)} 0%, ${alpha(themeItem.color, 0.02)} 100%)`,
                         border: selectedThemeId === themeItem.id 
                           ? `2px solid ${themeItem.color}`
-                          : `1px solid ${alpha(themeItem.color, 0.2)}`,
+                          : `1px solid ${alpha(themeItem.color, 0.08)}`,
                         cursor: 'pointer',
                         transition: 'all 0.3s ease-in-out',
                         '&:hover': {
                           transform: 'translateY(-4px)',
-                          boxShadow: `0 8px 30px ${alpha(themeItem.color, 0.2)}`,
+                          boxShadow: `0 8px 30px ${alpha(themeItem.color, 0.08)}`,
                         },
                       }}
                       onClick={() => setSelectedThemeId(themeItem.id)}
@@ -539,7 +539,7 @@ export function ThemesPage(): JSX.Element {
                                 height: 12,
                                 borderRadius: '50%',
                                 bgcolor: themeItem.color,
-                                boxShadow: `0 2px 8px ${alpha(themeItem.color, 0.3)}`,
+                                boxShadow: `0 2px 8px ${alpha(themeItem.color, 0.15)}`,
                               }} />
                               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                                 {themeItem.name}
@@ -594,7 +594,7 @@ export function ThemesPage(): JSX.Element {
                               sx={{
                                 height: 6,
                                 borderRadius: 1,
-                                bgcolor: alpha(themeItem.color, 0.1),
+                                bgcolor: alpha(themeItem.color, 0.05),
                                 '& .MuiLinearProgress-bar': {
                                   borderRadius: 1,
                                   bgcolor: themeItem.color,
@@ -689,8 +689,8 @@ export function ThemesPage(): JSX.Element {
                     <Box sx={{ 
                       p: 2, 
                       borderRadius: 1, 
-                      background: `linear-gradient(135deg, ${alpha(selectedTheme.color, 0.1)} 0%, ${alpha(selectedTheme.color, 0.05)} 100%)`,
-                      border: `1px solid ${alpha(selectedTheme.color, 0.2)}`,
+                      background: `linear-gradient(135deg, ${alpha(selectedTheme.color, 0.04)} 0%, ${alpha(selectedTheme.color, 0.02)} 100%)`,
+                      border: `1px solid ${alpha(selectedTheme.color, 0.08)}`,
                       mb: 3
                     }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
@@ -699,7 +699,7 @@ export function ThemesPage(): JSX.Element {
                           height: 16,
                           borderRadius: '50%',
                           bgcolor: selectedTheme.color,
-                          boxShadow: `0 2px 8px ${alpha(selectedTheme.color, 0.3)}`,
+                          boxShadow: `0 2px 8px ${alpha(selectedTheme.color, 0.15)}`,
                         }} />
                         <Typography variant="h6" sx={{ fontWeight: 700 }}>
                           {selectedTheme.name}
@@ -750,7 +750,7 @@ export function ThemesPage(): JSX.Element {
                             label={tag}
                             size="small"
                             sx={{
-                              bgcolor: alpha(selectedTheme.color, 0.1),
+                              bgcolor: alpha(selectedTheme.color, 0.05),
                               color: selectedTheme.color,
                               fontSize: '0.7rem',
                             }}
@@ -767,11 +767,11 @@ export function ThemesPage(): JSX.Element {
                         onClick={() => handleOpenDialog(selectedTheme)}
                         sx={{
                           flex: 1,
-                          borderColor: alpha(selectedTheme.color, 0.3),
+                          borderColor: alpha(selectedTheme.color, 0.2),
                           color: selectedTheme.color,
                           '&:hover': { 
                             borderColor: selectedTheme.color,
-                            bgcolor: alpha(selectedTheme.color, 0.05),
+                            bgcolor: alpha(selectedTheme.color, 0.03),
                           },
                         }}
                       >
