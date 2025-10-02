@@ -5,9 +5,13 @@ import os
 from dotenv import load_dotenv
 
 from app.core.config import settings
+from app.core.database import create_all_tables
 
 # Load environment variables
 load_dotenv()
+
+# Note: Database table creation should be handled separately in production
+# For serverless deployments, consider using Supabase migrations or a separate setup script
 
 app = FastAPI(
     title="HeadwayHQ API",

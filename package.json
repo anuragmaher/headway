@@ -1,0 +1,16 @@
+{
+  "name": "headwayhq",
+  "version": "1.0.0",
+  "description": "Product Intelligence Platform",
+  "scripts": {
+    "build": "cd frontend && npm ci && npm run build",
+    "dev": "concurrently \"cd frontend && npm run dev\" \"cd backend && source venv/bin/activate && uvicorn app.main:app --reload --host 0.0.0.0 --port 8000\"",
+    "install-deps": "cd frontend && npm ci && cd ../backend && pip install -r requirements.txt"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
