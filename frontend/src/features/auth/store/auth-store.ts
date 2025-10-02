@@ -25,14 +25,14 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLoading: true, error: null });
         
         try {
-          // This will be implemented when we create the API client
-          // For now, we'll simulate the API call
-          const response = await fetch('/api/v1/auth/login', {
+          // Send form data to match backend expectations
+          const formData = new FormData();
+          formData.append('username', credentials.email);
+          formData.append('password', credentials.password);
+
+          const response = await fetch('http://localhost:8000/api/v1/auth/login', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(credentials),
+            body: formData,
           });
 
           if (!response.ok) {
@@ -42,7 +42,7 @@ export const useAuthStore = create<AuthStore>()(
           const tokens: AuthTokens = await response.json();
 
           // Get user info
-          const userResponse = await fetch('/api/v1/auth/me', {
+          const userResponse = await fetch('http://localhost:8000/api/v1/auth/me', {
             headers: {
               'Authorization': `Bearer ${tokens.access_token}`,
             },

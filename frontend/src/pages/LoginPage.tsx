@@ -15,6 +15,8 @@ import {
   CircularProgress
 } from '@mui/material';
 import { LandingLayout } from '@/shared/components/layouts';
+import { useAuthActions, useAuth } from '@/features/auth/store/auth-store';
+import { useNavigate } from 'react-router-dom';
 
 interface LoginForm {
   email: string;
@@ -26,8 +28,10 @@ export function LoginPage(): JSX.Element {
     email: '',
     password: ''
   });
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { login } = useAuthActions();
+  const { isLoading } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (field: keyof LoginForm) => (
     event: React.ChangeEvent<HTMLInputElement>
@@ -41,33 +45,16 @@ export function LoginPage(): JSX.Element {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
-    setLoading(true);
     setError(null);
 
     try {
-      const formData = new FormData();
-      formData.append('username', form.email);
-      formData.append('password', form.password);
-
-      const response = await fetch('http://localhost:8000/api/v1/auth/login', {
-        method: 'POST',
-        body: formData,
+      await login({
+        email: form.email,
+        password: form.password,
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('access_token', data.access_token);
-        localStorage.setItem('refresh_token', data.refresh_token);
-        window.location.href = '/dashboard';
-      } else {
-        const errorData = await response.json();
-        setError(errorData.detail || 'Login failed');
-      }
+      navigate('/dashboard');
     } catch (err) {
-      setError('Network error. Please try again.');
-    } finally {
-      setLoading(false);
+      setError(err instanceof Error ? err.message : 'Login failed');
     }
   };
 
@@ -115,7 +102,7 @@ export function LoginPage(): JSX.Element {
                 type="email"
                 value={form.email}
                 onChange={handleChange('email')}
-                disabled={loading}
+                disabled={isLoading}
                 autoFocus
               />
               <TextField
@@ -129,16 +116,16 @@ export function LoginPage(): JSX.Element {
                 autoComplete="current-password"
                 value={form.password}
                 onChange={handleChange('password')}
-                disabled={loading}
+                disabled={isLoading}
               />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                disabled={loading}
+                disabled={isLoading}
               >
-                {loading ? (
+                {isLoading ? (
                   <CircularProgress size={24} />
                 ) : (
                   'Sign In'

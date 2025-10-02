@@ -8,8 +8,12 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from app.core.config import settings
 
-# Password hashing context
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Password hashing context - using pbkdf2_sha256 temporarily to avoid bcrypt issues
+pwd_context = CryptContext(
+    schemes=["pbkdf2_sha256"], 
+    deprecated="auto",
+    pbkdf2_sha256__default_rounds=29000
+)
 
 
 def create_access_token(
@@ -144,6 +148,10 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     Returns:
         True if password matches, False otherwise
     """
+    # bcrypt has a limit of 72 bytes for passwords
+    if len(plain_password.encode('utf-8')) > 72:
+        plain_password = plain_password.encode('utf-8')[:72].decode('utf-8', errors='ignore')
+    
     return pwd_context.verify(plain_password, hashed_password)
 
 
@@ -157,6 +165,10 @@ def get_password_hash(password: str) -> str:
     Returns:
         Hashed password string
     """
+    # bcrypt has a limit of 72 bytes for passwords
+    if len(password.encode('utf-8')) > 72:
+        password = password.encode('utf-8')[:72].decode('utf-8', errors='ignore')
+    
     return pwd_context.hash(password)
 
 

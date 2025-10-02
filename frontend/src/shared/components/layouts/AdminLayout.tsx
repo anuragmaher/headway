@@ -20,6 +20,8 @@ import {
   Menu,
   MenuItem,
   Chip,
+  alpha,
+  useTheme,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -59,9 +61,9 @@ const navigationItems = [
     path: ROUTES.THEMES,
   },
   {
-    text: 'Settings',
+    text: 'Workspace Settings',
     icon: <SettingsIcon />,
-    path: ROUTES.SETTINGS,
+    path: ROUTES.SETTINGS_WORKSPACE,
   },
 ];
 
@@ -70,6 +72,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const theme = useTheme();
   const { } = useResponsive();
   const { logout } = useAuthActions();
   const user = useUser();
@@ -93,51 +96,96 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   };
 
   const drawer = (
-    <Box>
+    <Box sx={{ 
+      height: '100%', 
+      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
+      backdropFilter: 'blur(10px)',
+    }}>
       {/* Logo and branding */}
-      <Box sx={{ p: 2 }}>
-        <Typography variant="h6" sx={{ fontWeight: 700, color: 'primary.main' }}>
-          HeadwayHQ
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Product Intelligence
-        </Typography>
+      <Box sx={{ 
+        p: 3, 
+        borderBottom: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+      }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <Box sx={{
+            width: 40,
+            height: 40,
+            borderRadius: 2,
+            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
+          }}>
+            <Typography variant="h6" sx={{ color: 'white', fontWeight: 800 }}>
+              H
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary', fontSize: '1.1rem' }}>
+              HeadwayHQ
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.75rem' }}>
+              Product Intelligence
+            </Typography>
+          </Box>
+        </Box>
       </Box>
 
-      <Divider />
-
       {/* Navigation */}
-      <List>
+      <List sx={{ px: 2, py: 3 }}>
         {navigationItems.map((item) => {
           const isActive = location.pathname === item.path || 
                           location.pathname.startsWith(item.path + '/');
           
           return (
-            <ListItem key={item.text} disablePadding>
+            <ListItem key={item.text} disablePadding sx={{ mb: 1 }}>
               <ListItemButton
                 component={RouterLink}
                 to={item.path}
                 selected={isActive}
                 sx={{
-                  mx: 1,
-                  mb: 0.5,
-                  borderRadius: 1,
+                  borderRadius: 2,
+                  py: 1.2,
+                  px: 2,
+                  transition: 'all 0.2s ease-in-out',
+                  position: 'relative',
                   '&.Mui-selected': {
-                    bgcolor: 'primary.main',
-                    color: 'primary.contrastText',
+                    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.15)} 0%, ${alpha(theme.palette.primary.main, 0.1)} 100%)`,
+                    color: theme.palette.primary.main,
+                    fontWeight: 600,
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      left: 0,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      width: 4,
+                      height: '60%',
+                      borderRadius: '0 4px 4px 0',
+                      background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                      boxShadow: `2px 0 8px ${alpha(theme.palette.primary.main, 0.3)}`,
+                    },
                     '&:hover': {
-                      bgcolor: 'primary.dark',
+                      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.2)} 0%, ${alpha(theme.palette.primary.main, 0.15)} 100%)`,
+                      transform: 'translateX(2px)',
                     },
                     '& .MuiListItemIcon-root': {
-                      color: 'primary.contrastText',
+                      color: theme.palette.primary.main,
                     },
+                  },
+                  '&:hover': {
+                    bgcolor: alpha(theme.palette.primary.main, 0.05),
+                    transform: 'translateX(2px)',
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
-                    color: isActive ? 'inherit' : 'text.secondary',
-                    minWidth: 40,
+                    color: isActive ? 'inherit' : theme.palette.text.secondary,
+                    minWidth: 36,
+                    transition: 'all 0.2s ease-in-out',
                   }}
                 >
                   {item.icon}
@@ -145,8 +193,9 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
                 <ListItemText 
                   primary={item.text}
                   primaryTypographyProps={{
-                    fontSize: '0.875rem',
-                    fontWeight: isActive ? 600 : 400,
+                    fontSize: '0.9rem',
+                    fontWeight: isActive ? 600 : 500,
+                    letterSpacing: '0.01em',
                   }}
                 />
               </ListItemButton>
@@ -155,34 +204,55 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
         })}
       </List>
 
-      <Divider sx={{ mt: 2 }} />
-
       {/* User info */}
       {user && (
-        <Box sx={{ p: 2, mt: 'auto' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-            <Avatar sx={{ width: 32, height: 32, fontSize: '0.875rem' }}>
-              {user.full_name?.[0] || user.email[0].toUpperCase()}
+        <Box sx={{ 
+          p: 2, 
+          mt: 'auto',
+          borderTop: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.03)} 0%, ${alpha(theme.palette.primary.main, 0.01)} 100%)`,
+        }}>
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 1.5,
+            p: 1.5,
+            borderRadius: 2,
+            background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+            backdropFilter: 'blur(10px)',
+            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          }}>
+            <Avatar sx={{ 
+              width: 40, 
+              height: 40, 
+              fontSize: '0.9rem',
+              background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+              boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
+            }}>
+              {user.first_name?.[0] || user.email[0].toUpperCase()}
             </Avatar>
             <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-              <Typography variant="body2" noWrap>
-                {user.full_name || user.email}
+              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.85rem' }} noWrap>
+                {`${user.first_name} ${user.last_name}` || user.email}
               </Typography>
-              <Typography variant="caption" color="text.secondary" noWrap>
+              <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }} noWrap>
                 {user.email}
               </Typography>
+              <Box sx={{ mt: 0.5 }}>
+                <Chip 
+                  label={user.company_name || 'Workspace'}
+                  size="small"
+                  sx={{ 
+                    height: 20,
+                    fontSize: '0.7rem',
+                    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+                    color: theme.palette.primary.main,
+                    border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                  }}
+                />
+              </Box>
             </Box>
           </Box>
-          
-          {!user.onboarding_completed && (
-            <Chip 
-              label="Complete Setup" 
-              size="small" 
-              color="warning"
-              sx={{ mt: 1 }}
-              onClick={() => navigate(ROUTES.ONBOARDING)}
-            />
-          )}
         </Box>
       )}
     </Box>
@@ -193,10 +263,15 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
       {/* App Bar */}
       <AppBar
         position="fixed"
+        elevation={0}
         sx={{
           width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
           ml: { sm: `${DRAWER_WIDTH}px` },
           zIndex: (theme) => theme.zIndex.drawer + 1,
+          background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)} 0%, ${alpha(theme.palette.background.paper, 0.7)} 100%)`,
+          backdropFilter: 'blur(20px)',
+          borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          color: theme.palette.text.primary,
         }}
       >
         <Toolbar>
@@ -210,22 +285,42 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
             <MenuIcon />
           </IconButton>
 
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" noWrap component="div" sx={{ 
+            flexGrow: 1, 
+            fontWeight: 600, 
+            fontSize: '1.1rem',
+            color: theme.palette.text.primary,
+          }}>
             {navigationItems.find(item => 
               location.pathname === item.path || location.pathname.startsWith(item.path + '/')
             )?.text || 'HeadwayHQ'}
           </Typography>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <ThemeToggle />
             
             <IconButton
-              color="inherit"
               onClick={handleProfileMenuOpen}
               aria-label="account menu"
+              sx={{
+                p: 0.5,
+                borderRadius: 2,
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                },
+              }}
             >
-              <Avatar sx={{ width: 32, height: 32 }}>
-                {user?.full_name?.[0] || user?.email[0].toUpperCase()}
+              <Avatar sx={{ 
+                width: 36, 
+                height: 36,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
+                fontSize: '0.9rem',
+                fontWeight: 600,
+              }}>
+                {user?.first_name?.[0] || user?.email[0].toUpperCase()}
               </Avatar>
             </IconButton>
 
@@ -243,11 +338,11 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
                 </ListItemIcon>
                 Profile
               </MenuItem>
-              <MenuItem onClick={() => navigate(ROUTES.SETTINGS)}>
+              <MenuItem onClick={() => navigate(ROUTES.SETTINGS_WORKSPACE)}>
                 <ListItemIcon>
                   <SettingsIcon fontSize="small" />
                 </ListItemIcon>
-                Settings
+                Workspace Settings
               </MenuItem>
               <Divider />
               <MenuItem onClick={handleLogout}>
@@ -307,11 +402,24 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
           p: 3,
           width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
           minHeight: '100vh',
-          bgcolor: 'background.default',
+          background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.9)} 100%)`,
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: `radial-gradient(circle at 20% 20%, ${alpha(theme.palette.primary.main, 0.03)} 0%, transparent 50%), radial-gradient(circle at 80% 80%, ${alpha(theme.palette.secondary.main, 0.02)} 0%, transparent 50%)`,
+            pointerEvents: 'none',
+          },
         }}
       >
         <Toolbar /> {/* Spacer for AppBar */}
-        {children}
+        <Box sx={{ position: 'relative', zIndex: 1 }}>
+          {children}
+        </Box>
       </Box>
     </Box>
   );

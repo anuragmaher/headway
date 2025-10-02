@@ -557,7 +557,9 @@ export function LandingPage(): JSX.Element {
       <Box 
         sx={{ 
           py: { xs: 8, md: 12 }, 
-          background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+          background: theme.palette.mode === 'dark' 
+            ? `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.8)}, ${alpha(theme.palette.secondary.main, 0.8)})` 
+            : `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
           color: 'white',
           position: 'relative',
           overflow: 'hidden',
@@ -611,15 +613,16 @@ export function LandingPage(): JSX.Element {
                 component={RouterLink}
                 to={ROUTES.REGISTER}
                 sx={{ 
-                  bgcolor: 'white',
-                  color: theme.palette.primary.main,
+                  bgcolor: theme.palette.mode === 'dark' ? 'grey.900' : 'white',
+                  color: theme.palette.mode === 'dark' ? 'white' : theme.palette.primary.main,
                   px: 4, 
                   py: 2,
                   fontSize: '1.1rem',
                   fontWeight: 600,
                   borderRadius: '12px',
+                  border: theme.palette.mode === 'dark' ? '2px solid rgba(255,255,255,0.2)' : 'none',
                   '&:hover': {
-                    bgcolor: 'grey.100',
+                    bgcolor: theme.palette.mode === 'dark' ? 'grey.800' : 'grey.100',
                     transform: 'translateY(-2px)',
                   },
                   transition: 'all 0.3s ease'

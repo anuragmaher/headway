@@ -5,7 +5,12 @@
 export interface User {
   id: string;
   email: string;
-  full_name?: string;
+  first_name: string;
+  last_name: string;
+  company_id: string;
+  company_name: string;
+  job_title?: string;
+  role: string;
   is_active: boolean;
   theme_preference: 'light' | 'dark';
   onboarding_completed: boolean;

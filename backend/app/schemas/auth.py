@@ -77,6 +77,7 @@ class User(UserBase):
     """Schema for user response (no password)"""
     id: str
     company_id: str
+    company_name: str
     onboarding_completed: bool = False
     created_at: datetime
     updated_at: Optional[datetime] = None
@@ -91,6 +92,7 @@ class User(UserBase):
                 "first_name": "John",
                 "last_name": "Doe",
                 "company_id": "987e6543-e21b-32d1-a654-426614174000",
+                "company_name": "Acme Corporation",
                 "job_title": "Product Manager",
                 "role": "owner",
                 "is_active": True,

@@ -11,24 +11,23 @@ from app.core.database import get_db
 from app.core.security import verify_token
 from app.models.user import User
 from app.services.auth_service import AuthService
+from app.services.supabase_auth_service import SupabaseAuthService
 
 # Security scheme for JWT tokens
 security = HTTPBearer()
 
 
 def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db)
-) -> User:
+    credentials: HTTPAuthorizationCredentials = Depends(security)
+) -> dict:
     """
-    Get current authenticated user from JWT token.
+    Get current authenticated user from JWT token using Supabase.
     
     Args:
         credentials: HTTP authorization credentials
-        db: Database session
         
     Returns:
-        Current User object
+        Current User dict
         
     Raises:
         HTTPException: If token invalid or user not found
@@ -46,8 +45,8 @@ def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # Get user from database
-    auth_service = AuthService(db)
+    # Get user from Supabase
+    auth_service = SupabaseAuthService()
     user = auth_service.get_user_by_id(user_id)
     
     if user is None:
@@ -57,7 +56,7 @@ def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    if not user.is_active:
+    if not user.get('is_active', False):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Inactive user",
@@ -68,8 +67,8 @@ def get_current_user(
 
 
 def get_current_active_user(
-    current_user: User = Depends(get_current_user)
-) -> User:
+    current_user: dict = Depends(get_current_user)
+) -> dict:
     """
     Get current active user (alias for clarity).
     
@@ -77,7 +76,7 @@ def get_current_active_user(
         current_user: Current user from get_current_user dependency
         
     Returns:
-        Current active User object
+        Current active User dict
     """
     return current_user
 
@@ -85,19 +84,17 @@ def get_current_active_user(
 def get_current_user_optional(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(
         HTTPBearer(auto_error=False)
-    ),
-    db: Session = Depends(get_db)
-) -> Optional[User]:
+    )
+) -> Optional[dict]:
     """
     Get current user if token provided, otherwise return None.
     Useful for endpoints that work with or without authentication.
     
     Args:
         credentials: Optional HTTP authorization credentials
-        db: Database session
         
     Returns:
-        Current User object if authenticated, None otherwise
+        Current User dict if authenticated, None otherwise
     """
     if credentials is None:
         return None
@@ -109,10 +106,10 @@ def get_current_user_optional(
         if user_id is None:
             return None
         
-        auth_service = AuthService(db)
+        auth_service = SupabaseAuthService()
         user = auth_service.get_user_by_id(user_id)
         
-        if user is None or not user.is_active:
+        if user is None or not user.get('is_active', False):
             return None
             
         return user
@@ -122,8 +119,8 @@ def get_current_user_optional(
 
 
 def require_onboarding_completed(
-    current_user: User = Depends(get_current_user)
-) -> User:
+    current_user: dict = Depends(get_current_user)
+) -> dict:
     """
     Require that the current user has completed onboarding.
     
@@ -131,12 +128,12 @@ def require_onboarding_completed(
         current_user: Current authenticated user
         
     Returns:
-        Current User object
+        Current User dict
         
     Raises:
         HTTPException: If onboarding not completed
     """
-    if not current_user.onboarding_completed:
+    if not current_user.get('onboarding_completed', False):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Onboarding not completed. Please complete onboarding first."
@@ -145,14 +142,11 @@ def require_onboarding_completed(
     return current_user
 
 
-def get_auth_service(db: Session = Depends(get_db)) -> AuthService:
+def get_auth_service() -> SupabaseAuthService:
     """
-    Get AuthService instance with database session.
-    
-    Args:
-        db: Database session
+    Get SupabaseAuthService instance.
         
     Returns:
-        AuthService instance
+        SupabaseAuthService instance
     """
-    return AuthService(db)
+    return SupabaseAuthService()

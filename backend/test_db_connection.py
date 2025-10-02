@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simple script to test Supabase database connection
+Simple script to test Supabase client connection
 """
 
 import os
@@ -14,38 +14,59 @@ load_dotenv()
 sys.path.append(os.path.join(os.path.dirname(__file__), 'app'))
 
 from app.core.config import settings
-from sqlalchemy import create_engine, text
+from app.core.supabase_client import get_supabase_client
 
-def test_connection():
-    """Test database connection with provided URL"""
-    print("🔗 Testing Supabase database connection...")
-    print(f"Database URL (masked): {settings.DATABASE_URL[:30]}...")
+def test_supabase_connection():
+    """Test Supabase client connection"""
+    print("🔗 Testing Supabase client connection...")
+    print(f"Supabase URL: {settings.SUPABASE_URL}")
+    print(f"Supabase Key (masked): {settings.SUPABASE_KEY[:20]}...")
     
     try:
-        # For now, test with a mock connection string that doesn't need a password
-        test_url = "postgresql://postgres:dummy_password@aws-0-us-west-1.pooler.supabase.com:6543/postgres"
+        # Get Supabase client
+        supabase = get_supabase_client()
         
-        print("\n⚠️  Note: You need to set the correct database password in your .env file")
-        print("The PASSWORD placeholder in DATABASE_URL needs to be replaced with your actual Supabase database password")
-        print("\nYou can find the password in your Supabase dashboard under Settings > Database")
+        # Test connection with a simple health check
+        # Just calling the auth API to verify the connection works
+        auth_user = supabase.auth.get_user()
         
-        engine = create_engine(test_url, echo=False)
+        print("✅ Supabase client connection successful!")
+        print("   API endpoint is accessible and credentials are valid")
         
-        # Test connection
-        with engine.connect() as connection:
-            result = connection.execute(text("SELECT 1 as test"))
-            test_value = result.fetchone()[0]
-            if test_value == 1:
-                print("✅ Database connection successful!")
-                return True
-                
+        # Try to list any existing tables by attempting to query them
+        # This will tell us if we have any tables created yet
+        common_tables = ['users', 'companies', 'workspaces', 'themes', 'features']
+        existing_tables = []
+        
+        for table_name in common_tables:
+            try:
+                result = supabase.table(table_name).select('*').limit(1).execute()
+                existing_tables.append(table_name)
+            except Exception:
+                # Table doesn't exist or we don't have access
+                pass
+        
+        if existing_tables:
+            print(f"\n📋 Existing tables found:")
+            for table in existing_tables:
+                print(f"  - {table}")
+        else:
+            print("\n💡 No application tables found yet. You need to create them:")
+            print("  1. Go to Supabase dashboard > SQL Editor")
+            print("  2. Run the table creation SQL scripts")
+            print("  3. Or use the init_db.py script to create them")
+            print(f"\n📝 Tables to create: {', '.join(common_tables)}")
+        
+        return True
+        
     except Exception as e:
-        print(f"❌ Database connection failed: {e}")
-        print("\n💡 Next steps:")
-        print("1. Get your database password from Supabase dashboard")
-        print("2. Update DATABASE_URL in .env file with the correct password")
-        print("3. Run this script again to test the connection")
+        print(f"❌ Supabase client connection failed: {e}")
+        print("\n💡 Troubleshooting:")
+        print("1. Check your SUPABASE_URL in .env file")
+        print("2. Check your SUPABASE_KEY in .env file")
+        print("3. Verify network connectivity")
+        print("4. Make sure your Supabase project is active")
         return False
 
 if __name__ == "__main__":
-    test_connection()
+    test_supabase_connection()

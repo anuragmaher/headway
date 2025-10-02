@@ -15,8 +15,7 @@ This project is configured for serverless deployment to Vercel with both fronten
 Set these in your Vercel project dashboard (Settings > Environment Variables):
 
 ```env
-# Database - Supabase
-DATABASE_URL=postgresql://postgres.wyoakbnxehosonecuovy:YOUR_ACTUAL_DB_PASSWORD@aws-0-us-west-1.pooler.supabase.com:6543/postgres
+# Database - Supabase (only URL and key needed!)
 SUPABASE_URL=https://wyoakbnxehosonecuovy.supabase.co
 SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5b2FrYm54ZWhvc29uZWN1b3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA1NjI2MTYsImV4cCI6MjA0NjEzODYxNn0.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5b2FrYm54ZWhvc29uZWN1b3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA1NjI2MTYsImV4cCI6MjA0NjEzODYxNn0
 
@@ -36,11 +35,11 @@ CORS_ORIGINS=https://your-vercel-domain.vercel.app,https://headwayhq.com
 
 ### Deployment Steps
 
-1. **Get Database Password**
+1. **Create Database Tables**
    - Go to your Supabase dashboard
-   - Navigate to Settings > Database
-   - Copy the database password
-   - Update the `YOUR_ACTUAL_DB_PASSWORD` in the DATABASE_URL
+   - Navigate to SQL Editor
+   - Copy the contents of `backend/sql/create_tables.sql`
+   - Paste and execute the SQL to create all tables
 
 2. **Deploy to Vercel**
    ```bash
@@ -52,10 +51,10 @@ CORS_ORIGINS=https://your-vercel-domain.vercel.app,https://headwayhq.com
    # - Set build settings if prompted
    ```
 
-3. **Initialize Database**
+3. **Test Connection** (Optional)
    ```bash
-   # After deployment, run this to create tables
-   python scripts/init_db.py
+   # Test Supabase connection locally
+   cd backend && python test_db_connection.py
    ```
 
 ### Project Structure
