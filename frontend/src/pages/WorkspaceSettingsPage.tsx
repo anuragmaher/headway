@@ -86,7 +86,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
         <Box sx={{ 
           mb: 4,
           p: 4,
-          borderRadius: 4,
+          borderRadius: 2,
           background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
           border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
           position: 'relative',
@@ -133,7 +133,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
           {/* Connected Data Sources */}
           <Grid item xs={12} lg={8}>
             <Card sx={{
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -179,10 +179,10 @@ export function WorkspaceSettingsPage(): JSX.Element {
                     value={(dataSources.filter(s => s.status === 'connected').length / dataSources.length) * 100}
                     sx={{
                       height: 6,
-                      borderRadius: 3,
+                      borderRadius: 1,
                       bgcolor: alpha(theme.palette.success.main, 0.1),
                       '& .MuiLinearProgress-bar': {
-                        borderRadius: 3,
+                        borderRadius: 1,
                         background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`,
                       },
                     }}
@@ -196,7 +196,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
                   {dataSources.map((source) => (
                     <Box key={source.id} sx={{
                       p: 3,
-                      borderRadius: 3,
+                      borderRadius: 1,
                       background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
                       border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                       transition: 'all 0.2s ease-in-out',
@@ -284,7 +284,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               {/* General Settings */}
               <Card sx={{
-                borderRadius: 3,
+                borderRadius: 1,
                 background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
                 backdropFilter: 'blur(10px)',
                 border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -369,7 +369,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
 
               {/* Workspace Information */}
               <Card sx={{
-                borderRadius: 3,
+                borderRadius: 1,
                 background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
                 backdropFilter: 'blur(10px)',
                 border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -458,7 +458,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
           {/* Available Connectors */}
           <Grid item xs={12}>
             <Card sx={{
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100())`,
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -493,7 +493,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
                   ].map((connector) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={connector.name}>
                       <Card sx={{
-                        borderRadius: 3,
+                        borderRadius: 1,
                         background: connector.available 
                           ? `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.1)} 0%, ${alpha(theme.palette.success.main, 0.05)} 100%)`
                           : `linear-gradient(135deg, ${alpha(theme.palette.grey[500], 0.1)} 0%, ${alpha(theme.palette.grey[500], 0.05)} 100%)`,

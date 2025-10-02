@@ -35,7 +35,6 @@ import {
   TrendingUp as TrendingIcon,
   FeaturedPlayList as FeatureIcon,
   Close as CloseIcon,
-  Star as StarIcon,
   Analytics as AnalyticsIcon,
   Speed as SpeedIcon,
 } from '@mui/icons-material';
@@ -47,7 +46,10 @@ interface Theme {
   description: string;
   color: string;
   featureCount: number;
-  totalVotes: number;
+  totalMentions: number;
+  slackMentions: number;
+  emailMentions: number;
+  competitors: number;
   priority: 'high' | 'medium' | 'low';
   status: 'active' | 'archived' | 'planning';
   createdAt: string;
@@ -88,7 +90,10 @@ export function ThemesPage(): JSX.Element {
       description: 'Improvements to user interface and user experience across the platform',
       color: theme.palette.primary.main,
       featureCount: 12,
-      totalVotes: 234,
+      totalMentions: 234,
+      slackMentions: 142,
+      emailMentions: 67,
+      competitors: 25,
       priority: 'high',
       status: 'active',
       createdAt: '2024-01-15',
@@ -103,7 +108,10 @@ export function ThemesPage(): JSX.Element {
       description: 'Speed optimizations and performance improvements for better user experience',
       color: theme.palette.success.main,
       featureCount: 8,
-      totalVotes: 189,
+      totalMentions: 189,
+      slackMentions: 118,
+      emailMentions: 52,
+      competitors: 19,
       priority: 'high',
       status: 'active',
       createdAt: '2024-01-10',
@@ -118,7 +126,10 @@ export function ThemesPage(): JSX.Element {
       description: 'Third-party integrations and API connections to enhance platform capabilities',
       color: theme.palette.warning.main,
       featureCount: 15,
-      totalVotes: 167,
+      totalMentions: 167,
+      slackMentions: 94,
+      emailMentions: 55,
+      competitors: 18,
       priority: 'medium',
       status: 'active',
       createdAt: '2024-01-08',
@@ -133,7 +144,10 @@ export function ThemesPage(): JSX.Element {
       description: 'Security enhancements and privacy improvements to protect user data',
       color: theme.palette.error.main,
       featureCount: 6,
-      totalVotes: 145,
+      totalMentions: 145,
+      slackMentions: 88,
+      emailMentions: 42,
+      competitors: 15,
       priority: 'high',
       status: 'active',
       createdAt: '2024-01-12',
@@ -148,7 +162,10 @@ export function ThemesPage(): JSX.Element {
       description: 'Mobile app features and responsive design improvements for mobile users',
       color: theme.palette.info.main,
       featureCount: 9,
-      totalVotes: 123,
+      totalMentions: 123,
+      slackMentions: 74,
+      emailMentions: 35,
+      competitors: 14,
       priority: 'medium',
       status: 'planning',
       createdAt: '2024-01-05',
@@ -163,7 +180,10 @@ export function ThemesPage(): JSX.Element {
       description: 'Advanced analytics and reporting features for better insights',
       color: theme.palette.secondary.main,
       featureCount: 4,
-      totalVotes: 98,
+      totalMentions: 98,
+      slackMentions: 58,
+      emailMentions: 28,
+      competitors: 12,
       priority: 'low',
       status: 'planning',
       createdAt: '2024-01-03',
@@ -234,7 +254,10 @@ export function ThemesPage(): JSX.Element {
       status: formData.status,
       tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
       featureCount: editingTheme?.featureCount || 0,
-      totalVotes: editingTheme?.totalVotes || 0,
+      totalMentions: editingTheme?.totalMentions || 0,
+      slackMentions: editingTheme?.slackMentions || 0,
+      emailMentions: editingTheme?.emailMentions || 0,
+      competitors: editingTheme?.competitors || 0,
       progress: editingTheme?.progress || 0,
       owner: editingTheme?.owner || 'Current User',
       createdAt: editingTheme?.createdAt || new Date().toISOString().split('T')[0],
@@ -258,7 +281,7 @@ export function ThemesPage(): JSX.Element {
   };
 
   const totalFeatures = themes.reduce((acc, t) => acc + t.featureCount, 0);
-  const totalVotes = themes.reduce((acc, t) => acc + t.totalVotes, 0);
+  const totalMentions = themes.reduce((acc, t) => acc + t.totalMentions, 0);
   const activeThemes = themes.filter(t => t.status === 'active').length;
 
   return (
@@ -268,7 +291,7 @@ export function ThemesPage(): JSX.Element {
         <Box sx={{ 
           mb: 4,
           p: 4,
-          borderRadius: 4,
+          borderRadius: 2,
           background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.1)} 0%, ${alpha(theme.palette.secondary.main, 0.05)} 100%)`,
           border: `1px solid ${alpha(theme.palette.secondary.main, 0.1)}`,
           position: 'relative',
@@ -329,7 +352,7 @@ export function ThemesPage(): JSX.Element {
         <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
               border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
               transition: 'all 0.3s ease-in-out',
@@ -363,7 +386,7 @@ export function ThemesPage(): JSX.Element {
 
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.1)} 0%, ${alpha(theme.palette.success.main, 0.05)} 100%)`,
               border: `1px solid ${alpha(theme.palette.success.main, 0.1)}`,
               transition: 'all 0.3s ease-in-out',
@@ -397,7 +420,7 @@ export function ThemesPage(): JSX.Element {
 
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.1)} 0%, ${alpha(theme.palette.warning.main, 0.05)} 100%)`,
               border: `1px solid ${alpha(theme.palette.warning.main, 0.1)}`,
               transition: 'all 0.3s ease-in-out',
@@ -431,7 +454,7 @@ export function ThemesPage(): JSX.Element {
 
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.1)} 0%, ${alpha(theme.palette.info.main, 0.05)} 100%)`,
               border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
               transition: 'all 0.3s ease-in-out',
@@ -452,10 +475,10 @@ export function ThemesPage(): JSX.Element {
                   </Box>
                   <Box>
                     <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                      {totalVotes}
+                      {totalMentions}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Total Votes
+                      Total Mentions
                     </Typography>
                   </Box>
                 </Box>
@@ -469,7 +492,7 @@ export function ThemesPage(): JSX.Element {
           {/* Themes List */}
           <Grid item xs={12} lg={8}>
             <Card sx={{
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -494,7 +517,7 @@ export function ThemesPage(): JSX.Element {
                   {themes.map((themeItem) => (
                     <Grid item xs={12} sm={6} key={themeItem.id}>
                       <Card sx={{
-                        borderRadius: 3,
+                        borderRadius: 1,
                         background: `linear-gradient(135deg, ${alpha(themeItem.color, 0.1)} 0%, ${alpha(themeItem.color, 0.05)} 100%)`,
                         border: selectedThemeId === themeItem.id 
                           ? `2px solid ${themeItem.color}`
@@ -570,10 +593,10 @@ export function ThemesPage(): JSX.Element {
                               value={themeItem.progress}
                               sx={{
                                 height: 6,
-                                borderRadius: 3,
+                                borderRadius: 1,
                                 bgcolor: alpha(themeItem.color, 0.1),
                                 '& .MuiLinearProgress-bar': {
-                                  borderRadius: 3,
+                                  borderRadius: 1,
                                   bgcolor: themeItem.color,
                                 },
                               }}
@@ -613,10 +636,15 @@ export function ThemesPage(): JSX.Element {
                                   {themeItem.featureCount}
                                 </Typography>
                               </Box>
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                <StarIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
-                                <Typography variant="caption" color="text.secondary">
-                                  {themeItem.totalVotes}
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                                  💬 {themeItem.slackMentions}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                                  📧 {themeItem.emailMentions}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                                  🏢 {themeItem.competitors}
                                 </Typography>
                               </Box>
                             </Box>
@@ -641,7 +669,7 @@ export function ThemesPage(): JSX.Element {
           {/* Theme Details Sidebar */}
           <Grid item xs={12} lg={4}>
             <Card sx={{
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -660,7 +688,7 @@ export function ThemesPage(): JSX.Element {
                   <Box>
                     <Box sx={{ 
                       p: 3, 
-                      borderRadius: 3, 
+                      borderRadius: 1, 
                       background: `linear-gradient(135deg, ${alpha(selectedTheme.color, 0.1)} 0%, ${alpha(selectedTheme.color, 0.05)} 100%)`,
                       border: `1px solid ${alpha(selectedTheme.color, 0.2)}`,
                       mb: 3
@@ -777,7 +805,7 @@ export function ThemesPage(): JSX.Element {
           fullWidth
           PaperProps={{
             sx: {
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.95)} 0%, ${alpha(theme.palette.background.paper, 0.9)} 100())`,
               backdropFilter: 'blur(20px)',
             }

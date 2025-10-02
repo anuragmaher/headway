@@ -111,7 +111,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
           <Box sx={{
             width: 40,
             height: 40,
-            borderRadius: 2,
+            borderRadius: 1,
             background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
             display: 'flex',
             alignItems: 'center',
@@ -146,7 +146,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
                 to={item.path}
                 selected={isActive}
                 sx={{
-                  borderRadius: 2,
+                  borderRadius: 1,
                   py: 1.2,
                   px: 2,
                   transition: 'all 0.2s ease-in-out',
@@ -217,7 +217,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
             alignItems: 'center', 
             gap: 1.5,
             p: 1.5,
-            borderRadius: 2,
+            borderRadius: 1,
             background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
             backdropFilter: 'blur(10px)',
             border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -304,7 +304,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
               aria-label="account menu"
               sx={{
                 p: 0.5,
-                borderRadius: 2,
+                borderRadius: 1,
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
                   transform: 'scale(1.05)',

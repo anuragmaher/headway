@@ -19,15 +19,12 @@ import {
   ListItemIcon,
   Avatar,
   IconButton,
-  Badge,
   LinearProgress,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
   FeaturedPlayList as FeatureIcon,
   TrendingUp as TrendingIcon,
-  Comment as CommentIcon,
-  ThumbUp as ThumbUpIcon,
   MoreVert as MoreVertIcon,
   Add as AddIcon,
   FilterList as FilterIcon,
@@ -50,8 +47,10 @@ interface Feature {
   themeId: string;
   status: 'backlog' | 'in-progress' | 'review' | 'completed';
   priority: 'high' | 'medium' | 'low';
-  votes: number;
-  comments: number;
+  totalMentions: number;
+  slackMentions: number;
+  emailMentions: number;
+  competitors: number;
   assignee?: string;
   createdAt: string;
   source: 'slack' | 'gmail' | 'manual';
@@ -64,12 +63,17 @@ interface FeatureDetail {
   fullDescription: string;
   status: 'backlog' | 'in-progress' | 'review' | 'completed';
   priority: 'high' | 'medium' | 'low';
-  votes: number;
-  comments: Array<{
+  totalMentions: number;
+  slackMentions: number;
+  emailMentions: number;
+  competitors: number;
+  recentFeedback: Array<{
     id: string;
     author: string;
+    company: string;
     message: string;
     timestamp: string;
+    source: 'slack' | 'gmail' | 'manual';
   }>;
   assignee?: string;
   createdAt: string;
@@ -137,8 +141,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '1',
       status: 'in-progress',
       priority: 'high',
-      votes: 45,
-      comments: 12,
+      totalMentions: 45,
+      slackMentions: 28,
+      emailMentions: 12,
+      competitors: 5,
       assignee: 'John Doe',
       createdAt: '2024-01-15',
       source: 'slack',
@@ -150,8 +156,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '1',
       status: 'backlog',
       priority: 'medium',
-      votes: 32,
-      comments: 8,
+      totalMentions: 32,
+      slackMentions: 18,
+      emailMentions: 11,
+      competitors: 3,
       createdAt: '2024-01-12',
       source: 'gmail',
     },
@@ -162,8 +170,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '1',
       status: 'review',
       priority: 'low',
-      votes: 28,
-      comments: 15,
+      totalMentions: 28,
+      slackMentions: 15,
+      emailMentions: 8,
+      competitors: 5,
       assignee: 'Jane Smith',
       createdAt: '2024-01-10',
       source: 'manual',
@@ -175,8 +185,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '1',
       status: 'completed',
       priority: 'medium',
-      votes: 67,
-      comments: 22,
+      totalMentions: 67,
+      slackMentions: 42,
+      emailMentions: 18,
+      competitors: 7,
       assignee: 'Mike Johnson',
       createdAt: '2024-01-08',
       source: 'slack',
@@ -188,8 +200,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '1',
       status: 'backlog',
       priority: 'medium',
-      votes: 38,
-      comments: 9,
+      totalMentions: 38,
+      slackMentions: 22,
+      emailMentions: 12,
+      competitors: 4,
       createdAt: '2024-01-14',
       source: 'slack',
     },
@@ -202,8 +216,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '2',
       status: 'in-progress',
       priority: 'high',
-      votes: 52,
-      comments: 18,
+      totalMentions: 52,
+      slackMentions: 31,
+      emailMentions: 15,
+      competitors: 6,
       assignee: 'Sarah Wilson',
       createdAt: '2024-01-16',
       source: 'manual',
@@ -215,8 +231,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '2',
       status: 'completed',
       priority: 'high',
-      votes: 89,
-      comments: 25,
+      totalMentions: 89,
+      slackMentions: 58,
+      emailMentions: 23,
+      competitors: 8,
       assignee: 'David Chen',
       createdAt: '2024-01-05',
       source: 'gmail',
@@ -228,8 +246,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '2',
       status: 'review',
       priority: 'high',
-      votes: 73,
-      comments: 31,
+      totalMentions: 73,
+      slackMentions: 45,
+      emailMentions: 19,
+      competitors: 9,
       assignee: 'Emily Rodriguez',
       createdAt: '2024-01-09',
       source: 'slack',
@@ -241,8 +261,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '2',
       status: 'backlog',
       priority: 'medium',
-      votes: 34,
-      comments: 12,
+      totalMentions: 34,
+      slackMentions: 20,
+      emailMentions: 10,
+      competitors: 4,
       createdAt: '2024-01-11',
       source: 'manual',
     },
@@ -255,8 +277,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '3',
       status: 'in-progress',
       priority: 'high',
-      votes: 91,
-      comments: 34,
+      totalMentions: 91,
+      slackMentions: 67,
+      emailMentions: 18,
+      competitors: 6,
       assignee: 'Alex Turner',
       createdAt: '2024-01-17',
       source: 'slack',
@@ -268,8 +292,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '3',
       status: 'backlog',
       priority: 'medium',
-      votes: 26,
-      comments: 7,
+      totalMentions: 26,
+      slackMentions: 12,
+      emailMentions: 11,
+      competitors: 3,
       createdAt: '2024-01-13',
       source: 'gmail',
     },
@@ -280,8 +306,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '3',
       status: 'backlog',
       priority: 'high',
-      votes: 78,
-      comments: 29,
+      totalMentions: 78,
+      slackMentions: 45,
+      emailMentions: 25,
+      competitors: 8,
       createdAt: '2024-01-18',
       source: 'manual',
     },
@@ -292,8 +320,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '3',
       status: 'backlog',
       priority: 'medium',
-      votes: 43,
-      comments: 16,
+      totalMentions: 43,
+      slackMentions: 22,
+      emailMentions: 16,
+      competitors: 5,
       createdAt: '2024-01-19',
       source: 'gmail',
     },
@@ -304,8 +334,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '3',
       status: 'review',
       priority: 'low',
-      votes: 21,
-      comments: 5,
+      totalMentions: 21,
+      slackMentions: 14,
+      emailMentions: 5,
+      competitors: 2,
       assignee: 'Lisa Park',
       createdAt: '2024-01-07',
       source: 'slack',
@@ -319,8 +351,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '4',
       status: 'in-progress',
       priority: 'high',
-      votes: 94,
-      comments: 42,
+      totalMentions: 94,
+      slackMentions: 58,
+      emailMentions: 26,
+      competitors: 10,
       assignee: 'Robert Kim',
       createdAt: '2024-01-20',
       source: 'manual',
@@ -332,8 +366,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '4',
       status: 'backlog',
       priority: 'high',
-      votes: 67,
-      comments: 23,
+      totalMentions: 67,
+      slackMentions: 38,
+      emailMentions: 22,
+      competitors: 7,
       createdAt: '2024-01-21',
       source: 'slack',
     },
@@ -344,8 +380,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '4',
       status: 'backlog',
       priority: 'medium',
-      votes: 38,
-      comments: 14,
+      totalMentions: 38,
+      slackMentions: 22,
+      emailMentions: 12,
+      competitors: 4,
       createdAt: '2024-01-22',
       source: 'gmail',
     },
@@ -356,8 +394,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '4',
       status: 'completed',
       priority: 'high',
-      votes: 82,
-      comments: 28,
+      totalMentions: 82,
+      slackMentions: 48,
+      emailMentions: 24,
+      competitors: 10,
       assignee: 'Jennifer Lee',
       createdAt: '2024-01-03',
       source: 'manual',
@@ -371,8 +411,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '5',
       status: 'backlog',
       priority: 'high',
-      votes: 156,
-      comments: 67,
+      totalMentions: 156,
+      slackMentions: 89,
+      emailMentions: 52,
+      competitors: 15,
       createdAt: '2024-01-23',
       source: 'slack',
     },
@@ -383,8 +425,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '5',
       status: 'in-progress',
       priority: 'high',
-      votes: 89,
-      comments: 35,
+      totalMentions: 89,
+      slackMentions: 54,
+      emailMentions: 26,
+      competitors: 9,
       assignee: 'Chris Johnson',
       createdAt: '2024-01-24',
       source: 'gmail',
@@ -396,8 +440,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '5',
       status: 'backlog',
       priority: 'medium',
-      votes: 52,
-      comments: 19,
+      totalMentions: 52,
+      slackMentions: 32,
+      emailMentions: 15,
+      competitors: 5,
       createdAt: '2024-01-25',
       source: 'slack',
     },
@@ -408,8 +454,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '5',
       status: 'backlog',
       priority: 'low',
-      votes: 31,
-      comments: 11,
+      totalMentions: 31,
+      slackMentions: 18,
+      emailMentions: 9,
+      competitors: 4,
       createdAt: '2024-01-26',
       source: 'manual',
     },
@@ -420,8 +468,10 @@ export function FeaturesPage(): JSX.Element {
       themeId: '5',
       status: 'review',
       priority: 'medium',
-      votes: 44,
-      comments: 16,
+      totalMentions: 44,
+      slackMentions: 26,
+      emailMentions: 13,
+      competitors: 5,
       assignee: 'Maria Garcia',
       createdAt: '2024-01-27',
       source: 'gmail',
@@ -436,25 +486,34 @@ export function FeaturesPage(): JSX.Element {
     fullDescription: 'Implement a comprehensive dark mode theme that adapts all UI components, reduces eye strain during night usage, and provides users with theme preference options. This should include automatic theme switching based on system preferences and manual toggle controls.',
     status: 'in-progress',
     priority: 'high',
-    votes: 45,
-    comments: [
+    totalMentions: 45,
+    slackMentions: 28,
+    emailMentions: 12,
+    competitors: 5,
+    recentFeedback: [
       {
         id: '1',
         author: 'Sarah Wilson',
+        company: 'TechCorp',
         message: 'This would be really helpful for night-time usage!',
         timestamp: '2 hours ago',
+        source: 'slack',
       },
       {
         id: '2',
         author: 'David Chen',
+        company: 'StartupXYZ',
         message: 'Please make sure it works well with all the charts and graphs.',
         timestamp: '5 hours ago',
+        source: 'gmail',
       },
       {
         id: '3',
         author: 'Emily Rodriguez',
+        company: 'Enterprise Inc',
         message: 'Can we also add an auto-switch based on time of day?',
         timestamp: '1 day ago',
+        source: 'slack',
       },
     ],
     assignee: 'John Doe',
@@ -501,7 +560,7 @@ export function FeaturesPage(): JSX.Element {
         <Box sx={{ 
           mb: 4,
           p: 3,
-          borderRadius: 3,
+          borderRadius: 1,
           background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
           border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
         }}>
@@ -547,7 +606,7 @@ export function FeaturesPage(): JSX.Element {
           <Grid item xs={12} lg={3}>
             <Card sx={{
               height: 'calc(100vh - 280px)',
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -629,7 +688,7 @@ export function FeaturesPage(): JSX.Element {
           <Grid item xs={12} lg={4}>
             <Card sx={{
               height: 'calc(100vh - 280px)',
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -714,15 +773,18 @@ export function FeaturesPage(): JSX.Element {
                           
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                              <ThumbUpIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
-                              <Typography variant="caption" color="text.secondary">
-                                {feature.votes}
+                              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                                💬 {feature.slackMentions}
                               </Typography>
                             </Box>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                              <CommentIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
-                              <Typography variant="caption" color="text.secondary">
-                                {feature.comments}
+                              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                                📧 {feature.emailMentions}
+                              </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                                🏢 {feature.competitors}
                               </Typography>
                             </Box>
                           </Box>
@@ -750,7 +812,7 @@ export function FeaturesPage(): JSX.Element {
           <Grid item xs={12} lg={5}>
             <Card sx={{
               height: 'calc(100vh - 280px)',
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -830,10 +892,10 @@ export function FeaturesPage(): JSX.Element {
                                selectedFeature.status === 'in-progress' ? 50 : 20}
                         sx={{
                           height: 6,
-                          borderRadius: 3,
+                          borderRadius: 1,
                           bgcolor: alpha(theme.palette.primary.main, 0.1),
                           '& .MuiLinearProgress-bar': {
-                            borderRadius: 3,
+                            borderRadius: 1,
                             bgcolor: getStatusColor(selectedFeature.status),
                           },
                         }}
@@ -851,30 +913,42 @@ export function FeaturesPage(): JSX.Element {
                     </Typography>
                   </Box>
 
-                  {/* Engagement Stats */}
+                  {/* Mentions Stats */}
                   <Box sx={{ display: 'flex', gap: 3, mb: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Badge badgeContent={selectedFeature.votes} color="primary">
-                        <ThumbUpIcon sx={{ color: 'text.secondary' }} />
-                      </Badge>
-                      <Typography variant="body2" color="text.secondary">Votes</Typography>
+                      <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                        {selectedFeature.totalMentions}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">Total Mentions</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Badge badgeContent={selectedFeature.comments.length} color="secondary">
-                        <CommentIcon sx={{ color: 'text.secondary' }} />
-                      </Badge>
-                      <Typography variant="body2" color="text.secondary">Comments</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                        💬 {selectedFeature.slackMentions}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">Slack</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                        📧 {selectedFeature.emailMentions}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">Email</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                        🏢 {selectedFeature.competitors}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">Competitors</Typography>
                     </Box>
                   </Box>
 
-                  {/* Recent Comments */}
+                  {/* Recent Feedback */}
                   <Box>
                     <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                      RECENT COMMENTS
+                      RECENT FEEDBACK
                     </Typography>
                     <Box sx={{ mt: 1 }}>
-                      {selectedFeature.comments.map((comment) => (
-                        <Box key={comment.id} sx={{ 
+                      {selectedFeature.recentFeedback.map((feedback) => (
+                        <Box key={feedback.id} sx={{ 
                           mb: 2, 
                           p: 2, 
                           borderRadius: 2, 
@@ -883,17 +957,30 @@ export function FeaturesPage(): JSX.Element {
                         }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                             <Avatar sx={{ width: 24, height: 24, fontSize: '0.7rem' }}>
-                              {comment.author[0]}
+                              {feedback.author[0]}
                             </Avatar>
                             <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                              {comment.author}
+                              {feedback.author}
+                            </Typography>
+                            <Chip
+                              label={feedback.company}
+                              size="small"
+                              sx={{
+                                height: 16,
+                                fontSize: '0.6rem',
+                                bgcolor: alpha(theme.palette.primary.main, 0.1),
+                                color: theme.palette.primary.main,
+                              }}
+                            />
+                            <Typography variant="caption">
+                              {getSourceIcon(feedback.source)}
                             </Typography>
                             <Typography variant="caption" color="text.secondary">
-                              {comment.timestamp}
+                              {feedback.timestamp}
                             </Typography>
                           </Box>
                           <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
-                            {comment.message}
+                            {feedback.message}
                           </Typography>
                         </Box>
                       ))}

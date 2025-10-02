@@ -3,7 +3,7 @@
  */
 
 import { Box, Typography, Grid, Card, CardContent, Chip, Button, alpha, useTheme } from '@mui/material';
-import { Settings as SettingsIcon, Add as AddIcon, TrendingUp, Category, FeaturedPlayList, Speed } from '@mui/icons-material';
+import { Settings as SettingsIcon, Add as AddIcon, TrendingUp, Category, FeaturedPlayList } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useUser } from '@/features/auth/store/auth-store';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +21,7 @@ export function DashboardPage(): JSX.Element {
         <Box sx={{ 
           mb: 4,
           p: 4,
-          borderRadius: 4,
+          borderRadius: 2,
           background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
           border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
           position: 'relative',
@@ -77,7 +77,7 @@ export function DashboardPage(): JSX.Element {
               startIcon={<SettingsIcon />}
               onClick={() => navigate(ROUTES.SETTINGS_WORKSPACE)}
               sx={{
-                borderRadius: 3,
+                borderRadius: 1,
                 px: 3,
                 py: 1.5,
                 background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
@@ -118,18 +118,11 @@ export function DashboardPage(): JSX.Element {
               icon: TrendingUp,
               color: theme.palette.warning.main 
             },
-            { 
-              title: 'Response Time', 
-              value: '2.4h', 
-              change: '-15%', 
-              icon: Speed,
-              color: theme.palette.error.main 
-            },
           ].map((stat) => (
-            <Grid item xs={12} sm={6} lg={3} key={stat.title}>
+            <Grid item xs={12} sm={6} md={4} key={stat.title}>
               <Card sx={{
                 p: 2,
-                borderRadius: 3,
+                borderRadius: 1,
                 background: `linear-gradient(135deg, ${alpha(stat.color, 0.1)} 0%, ${alpha(stat.color, 0.05)} 100%)`,
                 border: `1px solid ${alpha(stat.color, 0.1)}`,
                 transition: 'all 0.3s ease-in-out',
@@ -181,7 +174,7 @@ export function DashboardPage(): JSX.Element {
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
             <Card sx={{
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -207,7 +200,7 @@ export function DashboardPage(): JSX.Element {
           
           <Grid item xs={12} md={4}>
             <Card sx={{
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -233,7 +226,7 @@ export function DashboardPage(): JSX.Element {
           
           <Grid item xs={12} md={4}>
             <Card sx={{
-              borderRadius: 3,
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -261,7 +254,7 @@ export function DashboardPage(): JSX.Element {
         {/* Getting Started Section */}
         <Box sx={{ mt: 4 }}>
           <Card sx={{
-            borderRadius: 4,
+            borderRadius: 2,
             background: `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.1)} 0%, ${alpha(theme.palette.success.main, 0.05)} 100%)`,
             border: `1px solid ${alpha(theme.palette.success.main, 0.1)}`,
             position: 'relative',
@@ -303,7 +296,7 @@ export function DashboardPage(): JSX.Element {
                   startIcon={<AddIcon />}
                   onClick={() => navigate(ROUTES.SETTINGS_WORKSPACE)}
                   sx={{
-                    borderRadius: 3,
+                    borderRadius: 1,
                     px: 3,
                     py: 1.5,
                     background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`,
@@ -323,11 +316,11 @@ export function DashboardPage(): JSX.Element {
               </Typography>
               <Grid container spacing={2}>
                 {[
-                  'Connect your Slack workspace to monitor feature requests',
+                  'Connect your Slack workspace to capture feature mentions',
                   'Organize feedback into themes and categories',
-                  'Track feature requests and their details',
-                  'Analyze trends in customer feedback',
-                  'Prioritize development based on user demand',
+                  'Track feature mentions across all communication channels',
+                  'Analyze mention trends and competitive intelligence',
+                  'Prioritize development based on mention frequency',
                 ].map((item, index) => (
                   <Grid item xs={12} sm={6} key={index}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, borderRadius: 2, background: alpha(theme.palette.success.main, 0.05) }}>
