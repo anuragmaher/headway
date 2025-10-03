@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     # JWT Configuration
     JWT_SECRET_KEY: str = "your-super-secret-jwt-key-change-in-production"
     JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 525600  # 365 days (1 year)
     EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
     
     # Redis Configuration

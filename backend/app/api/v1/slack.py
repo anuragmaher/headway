@@ -209,7 +209,7 @@ async def get_slack_integrations(
                 "name": integration.name,
                 "team_name": integration.external_team_name,
                 "team_id": integration.external_team_id,
-                "status": integration.sync_status,
+                "status": "connected" if integration.is_active else "disconnected",
                 "last_synced": integration.last_synced_at.isoformat() if integration.last_synced_at else None,
                 "channels": channels,
                 "created_at": integration.created_at.isoformat()

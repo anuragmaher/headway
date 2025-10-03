@@ -31,6 +31,8 @@ import {
   Logout as LogoutIcon,
   Person as PersonIcon,
   BusinessCenter as FeaturesIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
 } from '@mui/icons-material';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
@@ -39,6 +41,7 @@ import { ROUTES } from '@/lib/constants/routes';
 import { useResponsive } from '@/shared/utils/responsive';
 
 const DRAWER_WIDTH = 280;
+const DRAWER_WIDTH_COLLAPSED = 72;
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -69,6 +72,7 @@ const navigationItems = [
 
 export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(true); // Start collapsed by default
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -79,6 +83,10 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const handleDrawerCollapse = () => {
+    setCollapsed(!collapsed);
   };
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -100,14 +108,27 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
       height: '100%', 
       background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
       backdropFilter: 'blur(10px)',
+      width: collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH,
+      transition: 'width 0.3s ease-in-out',
     }}>
       {/* Logo and branding */}
       <Box sx={{ 
-        p: 3, 
+        p: collapsed ? 1.5 : 3, 
         borderBottom: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
         background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        transition: 'all 0.3s ease-in-out',
+        position: 'relative',
       }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: collapsed ? 0 : 1.5,
+          flex: 1,
+          justifyContent: collapsed ? 'center' : 'flex-start',
+        }}>
           <Box sx={{
             width: 40,
             height: 40,
@@ -122,19 +143,74 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
               H
             </Typography>
           </Box>
-          <Box>
-            <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary', fontSize: '1.1rem' }}>
-              HeadwayHQ
-            </Typography>
-            <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.75rem' }}>
-              Product Intelligence
-            </Typography>
-          </Box>
+          {!collapsed && (
+            <Box>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary', fontSize: '1.1rem' }}>
+                HeadwayHQ
+              </Typography>
+              <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.75rem' }}>
+                Product Intelligence
+              </Typography>
+            </Box>
+          )}
         </Box>
+        
+        {/* Collapse toggle button - only show on desktop */}
+        {!collapsed && (
+          <IconButton
+            onClick={handleDrawerCollapse}
+            sx={{
+              display: { xs: 'none', sm: 'flex' },
+              width: 32,
+              height: 32,
+              bgcolor: alpha(theme.palette.background.paper, 0.8),
+              backdropFilter: 'blur(10px)',
+              border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
+              '&:hover': {
+                bgcolor: alpha(theme.palette.primary.main, 0.1),
+                transform: 'scale(1.1)',
+              },
+              transition: 'all 0.2s ease-in-out',
+            }}
+          >
+            <ChevronLeftIcon fontSize="small" />
+          </IconButton>
+        )}
       </Box>
+      
+      {/* Expand button positioned within the drawer for collapsed state */}
+      {collapsed && (
+        <Box sx={{ 
+          position: 'absolute', 
+          top: 16, 
+          right: -12, 
+          zIndex: 1000 
+        }}>
+          <IconButton
+            onClick={handleDrawerCollapse}
+            sx={{
+              display: { xs: 'none', sm: 'flex' },
+              width: 24,
+              height: 24,
+              bgcolor: theme.palette.primary.main,
+              color: 'white',
+              border: `2px solid ${theme.palette.background.paper}`,
+              boxShadow: `0 2px 8px ${alpha(theme.palette.common.black, 0.3)}`,
+              '&:hover': {
+                bgcolor: theme.palette.primary.dark,
+                transform: 'scale(1.1)',
+                boxShadow: `0 4px 12px ${alpha(theme.palette.common.black, 0.4)}`,
+              },
+              transition: 'all 0.2s ease-in-out',
+            }}
+          >
+            <ChevronRightIcon sx={{ fontSize: 16 }} />
+          </IconButton>
+        </Box>
+      )}
 
       {/* Navigation */}
-      <List sx={{ px: 2, py: 3 }}>
+      <List sx={{ px: collapsed ? 1 : 2, py: 3 }}>
         {navigationItems.map((item) => {
           const isActive = location.pathname === item.path || 
                           location.pathname.startsWith(item.path + '/');
@@ -148,9 +224,11 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
                 sx={{
                   borderRadius: 1,
                   py: 1.2,
-                  px: 2,
+                  px: collapsed ? 1.5 : 2,
                   transition: 'all 0.2s ease-in-out',
                   position: 'relative',
+                  justifyContent: collapsed ? 'center' : 'flex-start',
+                  minHeight: 48,
                   '&.Mui-selected': {
                     background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.15)} 0%, ${alpha(theme.palette.primary.main, 0.1)} 100%)`,
                     color: theme.palette.primary.main,
@@ -169,7 +247,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
                     },
                     '&:hover': {
                       background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.2)} 0%, ${alpha(theme.palette.primary.main, 0.15)} 100%)`,
-                      transform: 'translateX(2px)',
+                      transform: collapsed ? 'scale(1.05)' : 'translateX(2px)',
                     },
                     '& .MuiListItemIcon-root': {
                       color: theme.palette.primary.main,
@@ -177,27 +255,31 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
                   },
                   '&:hover': {
                     bgcolor: alpha(theme.palette.primary.main, 0.05),
-                    transform: 'translateX(2px)',
+                    transform: collapsed ? 'scale(1.05)' : 'translateX(2px)',
                   },
                 }}
+                title={collapsed ? item.text : undefined} // Show tooltip when collapsed
               >
                 <ListItemIcon
                   sx={{
                     color: isActive ? 'inherit' : theme.palette.text.secondary,
-                    minWidth: 36,
+                    minWidth: collapsed ? 0 : 36,
+                    mr: collapsed ? 0 : 2,
                     transition: 'all 0.2s ease-in-out',
                   }}
                 >
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText 
-                  primary={item.text}
-                  primaryTypographyProps={{
-                    fontSize: '0.9rem',
-                    fontWeight: isActive ? 600 : 500,
-                    letterSpacing: '0.01em',
-                  }}
-                />
+                {!collapsed && (
+                  <ListItemText 
+                    primary={item.text}
+                    primaryTypographyProps={{
+                      fontSize: '0.9rem',
+                      fontWeight: isActive ? 600 : 500,
+                      letterSpacing: '0.01em',
+                    }}
+                  />
+                )}
               </ListItemButton>
             </ListItem>
           );
@@ -207,7 +289,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
       {/* User info */}
       {user && (
         <Box sx={{ 
-          p: 2, 
+          p: collapsed ? 1 : 2, 
           mt: 'auto',
           borderTop: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
           background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.03)} 0%, ${alpha(theme.palette.primary.main, 0.01)} 100%)`,
@@ -215,43 +297,46 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
           <Box sx={{ 
             display: 'flex', 
             alignItems: 'center', 
-            gap: 1.5,
-            p: 1.5,
+            gap: collapsed ? 0 : 1.5,
+            p: collapsed ? 1 : 1.5,
             borderRadius: 1,
             background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
             backdropFilter: 'blur(10px)',
             border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+            justifyContent: collapsed ? 'center' : 'flex-start',
           }}>
             <Avatar sx={{ 
-              width: 40, 
-              height: 40, 
+              width: collapsed ? 36 : 40, 
+              height: collapsed ? 36 : 40, 
               fontSize: '0.9rem',
               background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
               boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
             }}>
               {user.first_name?.[0] || user.email[0].toUpperCase()}
             </Avatar>
-            <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-              <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.85rem' }} noWrap>
-                {`${user.first_name} ${user.last_name}` || user.email}
-              </Typography>
-              <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }} noWrap>
-                {user.email}
-              </Typography>
-              <Box sx={{ mt: 0.5 }}>
-                <Chip 
-                  label={user.company_name || 'Workspace'}
-                  size="small"
-                  sx={{ 
-                    height: 20,
-                    fontSize: '0.7rem',
-                    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
-                    color: theme.palette.primary.main,
-                    border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                  }}
-                />
+            {!collapsed && (
+              <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.85rem' }} noWrap>
+                  {`${user.first_name} ${user.last_name}` || user.email}
+                </Typography>
+                <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }} noWrap>
+                  {user.email}
+                </Typography>
+                <Box sx={{ mt: 0.5 }}>
+                  <Chip 
+                    label={user.company_name || 'Workspace'}
+                    size="small"
+                    sx={{ 
+                      height: 20,
+                      fontSize: '0.7rem',
+                      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+                      color: theme.palette.primary.main,
+                      border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                    }}
+                  />
+                </Box>
               </Box>
-            </Box>
+            )}
           </Box>
         </Box>
       )}
@@ -265,8 +350,9 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
         position="fixed"
         elevation={0}
         sx={{
-          width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
-          ml: { sm: `${DRAWER_WIDTH}px` },
+          width: { sm: `calc(100% - ${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px)` },
+          ml: { sm: `${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px` },
+          transition: 'all 0.3s ease-in-out',
           zIndex: (theme) => theme.zIndex.drawer + 1,
           background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)} 0%, ${alpha(theme.palette.background.paper, 0.7)} 100%)`,
           backdropFilter: 'blur(20px)',
@@ -359,7 +445,11 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
       {/* Drawer */}
       <Box
         component="nav"
-        sx={{ width: { sm: DRAWER_WIDTH }, flexShrink: { sm: 0 } }}
+        sx={{ 
+          width: { sm: collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH }, 
+          flexShrink: { sm: 0 },
+          transition: 'width 0.3s ease-in-out',
+        }}
       >
         <Drawer
           variant="temporary"
@@ -385,7 +475,8 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
             display: { xs: 'none', sm: 'block' },
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
-              width: DRAWER_WIDTH,
+              width: collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH,
+              transition: 'width 0.3s ease-in-out',
             },
           }}
           open
@@ -400,7 +491,8 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
         sx={{
           flexGrow: 1,
           p: 2,
-          width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+          width: { sm: `calc(100% - ${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px)` },
+          transition: 'all 0.3s ease-in-out',
           minHeight: '100vh',
           background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.9)} 100%)`,
           position: 'relative',
