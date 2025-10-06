@@ -2,7 +2,7 @@
  * Themes page for managing and organizing feature request themes
  */
 
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -14,18 +14,19 @@ import {
   alpha,
   useTheme,
   IconButton,
-  Avatar,
-  LinearProgress,
+  CircularProgress,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Select,
+  Alert,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
   Divider,
+  Drawer,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
@@ -35,184 +36,117 @@ import {
   TrendingUp as TrendingIcon,
   FeaturedPlayList as FeatureIcon,
   Close as CloseIcon,
-  Analytics as AnalyticsIcon,
-  Speed as SpeedIcon,
+  Refresh as RefreshIcon,
+  ArrowBack as ArrowBackIcon,
+  Message as MessageIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
+import { useAuthStore } from '@/features/auth/store/auth-store';
 
 interface Theme {
   id: string;
   name: string;
   description: string;
-  color: string;
-  featureCount: number;
-  totalMentions: number;
-  slackMentions: number;
-  emailMentions: number;
-  competitors: number;
-  priority: 'high' | 'medium' | 'low';
-  status: 'active' | 'archived' | 'planning';
-  createdAt: string;
-  updatedAt: string;
-  owner: string;
-  progress: number;
-  tags: string[];
+  feature_count: number;
+  workspace_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
 interface ThemeFormData {
   name: string;
   description: string;
-  color: string;
-  priority: 'high' | 'medium' | 'low';
-  status: 'active' | 'archived' | 'planning';
-  tags: string;
+}
+
+interface Feature {
+  id: string;
+  name: string;
+  description: string;
+  urgency: string;
+  status: string;
+  mention_count: number;
+  theme_id: string | null;
+  first_mentioned: string;
+  last_mentioned: string;
+  created_at: string;
+  updated_at: string | null;
+}
+
+interface Message {
+  id: string;
+  content: string;
+  sent_at: string;
+  sender_name: string;
+  channel_name: string;
 }
 
 export function ThemesPage(): JSX.Element {
   const theme = useTheme();
-  const [selectedThemeId, setSelectedThemeId] = useState<string>('1');
+  const { tokens } = useAuthStore();
+  const [themes, setThemes] = useState<Theme[]>([]);
+  const [selectedThemeId, setSelectedThemeId] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingTheme, setEditingTheme] = useState<Theme | null>(null);
   const [formData, setFormData] = useState<ThemeFormData>({
     name: '',
     description: '',
-    color: alpha(theme.palette.text.primary, 0.6),
-    priority: 'medium',
-    status: 'active',
-    tags: '',
   });
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedThemeForDrawer, setSelectedThemeForDrawer] = useState<Theme | null>(null);
+  const [themeFeatures, setThemeFeatures] = useState<Feature[]>([]);
+  const [loadingFeatures, setLoadingFeatures] = useState(false);
+  const [messagesDrawerOpen, setMessagesDrawerOpen] = useState(false);
+  const [selectedFeatureForMessages, setSelectedFeatureForMessages] = useState<Feature | null>(null);
+  const [featureMessages, setFeatureMessages] = useState<Message[]>([]);
+  const [loadingMessages, setLoadingMessages] = useState(false);
 
-  // Mock themes data
-  const [themes, setThemes] = useState<Theme[]>([
-    {
-      id: '1',
-      name: 'User Experience',
-      description: 'Improvements to user interface and user experience across the platform',
-      color: alpha(theme.palette.text.primary, 0.7),
-      featureCount: 12,
-      totalMentions: 234,
-      slackMentions: 142,
-      emailMentions: 67,
-      competitors: 25,
-      priority: 'high',
-      status: 'active',
-      createdAt: '2024-01-15',
-      updatedAt: '2024-01-28',
-      owner: 'Sarah Wilson',
-      progress: 75,
-      tags: ['UI/UX', 'Frontend', 'Design'],
-    },
-    {
-      id: '2',
-      name: 'Performance',
-      description: 'Speed optimizations and performance improvements for better user experience',
-      color: alpha(theme.palette.text.primary, 0.65),
-      featureCount: 8,
-      totalMentions: 189,
-      slackMentions: 118,
-      emailMentions: 52,
-      competitors: 19,
-      priority: 'high',
-      status: 'active',
-      createdAt: '2024-01-10',
-      updatedAt: '2024-01-25',
-      owner: 'David Chen',
-      progress: 60,
-      tags: ['Backend', 'Optimization', 'Speed'],
-    },
-    {
-      id: '3',
-      name: 'Integrations',
-      description: 'Third-party integrations and API connections to enhance platform capabilities',
-      color: alpha(theme.palette.text.primary, 0.6),
-      featureCount: 15,
-      totalMentions: 167,
-      slackMentions: 94,
-      emailMentions: 55,
-      competitors: 18,
-      priority: 'medium',
-      status: 'active',
-      createdAt: '2024-01-08',
-      updatedAt: '2024-01-20',
-      owner: 'Alex Turner',
-      progress: 40,
-      tags: ['API', 'Third-party', 'Connectivity'],
-    },
-    {
-      id: '4',
-      name: 'Security',
-      description: 'Security enhancements and privacy improvements to protect user data',
-      color: alpha(theme.palette.text.primary, 0.55),
-      featureCount: 6,
-      totalMentions: 145,
-      slackMentions: 88,
-      emailMentions: 42,
-      competitors: 15,
-      priority: 'high',
-      status: 'active',
-      createdAt: '2024-01-12',
-      updatedAt: '2024-01-22',
-      owner: 'Emily Rodriguez',
-      progress: 85,
-      tags: ['Security', 'Privacy', 'Compliance'],
-    },
-    {
-      id: '5',
-      name: 'Mobile',
-      description: 'Mobile app features and responsive design improvements for mobile users',
-      color: alpha(theme.palette.text.primary, 0.5),
-      featureCount: 9,
-      totalMentions: 123,
-      slackMentions: 74,
-      emailMentions: 35,
-      competitors: 14,
-      priority: 'medium',
-      status: 'planning',
-      createdAt: '2024-01-05',
-      updatedAt: '2024-01-18',
-      owner: 'Chris Johnson',
-      progress: 25,
-      tags: ['Mobile', 'Responsive', 'iOS', 'Android'],
-    },
-    {
-      id: '6',
-      name: 'Analytics',
-      description: 'Advanced analytics and reporting features for better insights',
-      color: alpha(theme.palette.text.primary, 0.45),
-      featureCount: 4,
-      totalMentions: 98,
-      slackMentions: 58,
-      emailMentions: 28,
-      competitors: 12,
-      priority: 'low',
-      status: 'planning',
-      createdAt: '2024-01-03',
-      updatedAt: '2024-01-15',
-      owner: 'Lisa Park',
-      progress: 10,
-      tags: ['Analytics', 'Reporting', 'Insights'],
-    },
-  ]);
+  const WORKSPACE_ID = '647ab033-6d10-4a35-9ace-0399052ec874';
 
-  const selectedTheme = themes.find(t => t.id === selectedThemeId) || themes[0];
+  const getAuthToken = () => {
+    return tokens?.access_token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTk3NDIzODgsInN1YiI6ImI0NzE0NGU3LTAyYTAtNGEyMi04MDBlLTNmNzE3YmZiNGZhYSIsInR5cGUiOiJhY2Nlc3MifQ.L2dOy92Nim5egY3nzRXQts3ywgxV_JvO_8EEiePpDNY';
+  };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return theme.palette.error.main;
-      case 'medium': return theme.palette.warning.main;
-      case 'low': return theme.palette.success.main;
-      default: return theme.palette.grey[500];
+  const fetchThemes = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const token = getAuthToken();
+      const response = await fetch(
+        `http://localhost:8000/api/v1/features/themes?workspace_id=${WORKSPACE_ID}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch themes: ${response.status}`);
+      }
+
+      const themesData = await response.json();
+      setThemes(themesData);
+
+      // Auto-select first theme
+      if (themesData.length > 0) {
+        setSelectedThemeId(themesData[0].id);
+      }
+
+    } catch (error) {
+      console.error('Error fetching themes:', error);
+      setError(error instanceof Error ? error.message : 'Failed to load themes');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active': return theme.palette.success.main;
-      case 'planning': return theme.palette.info.main;
-      case 'archived': return theme.palette.grey[500];
-      default: return theme.palette.grey[500];
-    }
-  };
+  useEffect(() => {
+    fetchThemes();
+  }, []);
 
   const handleOpenDialog = (themeToEdit?: Theme) => {
     if (themeToEdit) {
@@ -220,20 +154,12 @@ export function ThemesPage(): JSX.Element {
       setFormData({
         name: themeToEdit.name,
         description: themeToEdit.description,
-        color: themeToEdit.color,
-        priority: themeToEdit.priority,
-        status: themeToEdit.status,
-        tags: themeToEdit.tags.join(', '),
       });
     } else {
       setEditingTheme(null);
       setFormData({
         name: '',
         description: '',
-        color: alpha(theme.palette.text.primary, 0.6),
-        priority: 'medium',
-        status: 'active',
-        tags: '',
       });
     }
     setDialogOpen(true);
@@ -244,94 +170,252 @@ export function ThemesPage(): JSX.Element {
     setEditingTheme(null);
   };
 
-  const handleSubmit = () => {
-    const newTheme: Theme = {
-      id: editingTheme?.id || Date.now().toString(),
-      name: formData.name,
-      description: formData.description,
-      color: formData.color,
-      priority: formData.priority,
-      status: formData.status,
-      tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
-      featureCount: editingTheme?.featureCount || 0,
-      totalMentions: editingTheme?.totalMentions || 0,
-      slackMentions: editingTheme?.slackMentions || 0,
-      emailMentions: editingTheme?.emailMentions || 0,
-      competitors: editingTheme?.competitors || 0,
-      progress: editingTheme?.progress || 0,
-      owner: editingTheme?.owner || 'Current User',
-      createdAt: editingTheme?.createdAt || new Date().toISOString().split('T')[0],
-      updatedAt: new Date().toISOString().split('T')[0],
-    };
+  const handleSubmit = async () => {
+    try {
+      const token = getAuthToken();
 
-    if (editingTheme) {
-      setThemes(themes.map(t => t.id === editingTheme.id ? newTheme : t));
-    } else {
-      setThemes([...themes, newTheme]);
+      if (editingTheme) {
+        // Update existing theme
+        const response = await fetch(
+          `http://localhost:8000/api/v1/themes/${editingTheme.id}?workspace_id=${WORKSPACE_ID}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to update theme: ${response.status}`);
+        }
+      } else {
+        // Create new theme
+        const response = await fetch(
+          `http://localhost:8000/api/v1/themes?workspace_id=${WORKSPACE_ID}`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to create theme: ${response.status}`);
+        }
+      }
+
+      handleCloseDialog();
+      fetchThemes(); // Refresh themes list
+    } catch (error) {
+      console.error('Error saving theme:', error);
+      setError(error instanceof Error ? error.message : 'Failed to save theme');
     }
-
-    handleCloseDialog();
   };
 
-  const handleDeleteTheme = (themeId: string) => {
-    setThemes(themes.filter(t => t.id !== themeId));
-    if (selectedThemeId === themeId) {
-      setSelectedThemeId(themes[0]?.id || '');
+  const handleDeleteTheme = async (themeId: string) => {
+    if (!confirm('Are you sure you want to delete this theme? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const token = getAuthToken();
+      const response = await fetch(
+        `http://localhost:8000/api/v1/themes/${themeId}?workspace_id=${WORKSPACE_ID}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete theme: ${response.status}`);
+      }
+
+      fetchThemes(); // Refresh themes list
+      if (selectedThemeId === themeId) {
+        setSelectedThemeId(themes[0]?.id || '');
+      }
+    } catch (error) {
+      console.error('Error deleting theme:', error);
+      setError(error instanceof Error ? error.message : 'Failed to delete theme');
     }
   };
 
-  const totalFeatures = themes.reduce((acc, t) => acc + t.featureCount, 0);
-  const totalMentions = themes.reduce((acc, t) => acc + t.totalMentions, 0);
-  const activeThemes = themes.filter(t => t.status === 'active').length;
+  const fetchThemeFeatures = async (themeId: string) => {
+    try {
+      setLoadingFeatures(true);
+      const token = getAuthToken();
+      const response = await fetch(
+        `http://localhost:8000/api/v1/features/features?workspace_id=${WORKSPACE_ID}&theme_id=${themeId}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch features: ${response.status}`);
+      }
+
+      const features = await response.json();
+      setThemeFeatures(features);
+    } catch (error) {
+      console.error('Error fetching theme features:', error);
+      setThemeFeatures([]);
+    } finally {
+      setLoadingFeatures(false);
+    }
+  };
+
+  const handleThemeClick = (theme: Theme) => {
+    setSelectedThemeForDrawer(theme);
+    setDrawerOpen(true);
+    fetchThemeFeatures(theme.id);
+  };
+
+  const handleCloseDrawer = () => {
+    setDrawerOpen(false);
+    setSelectedThemeForDrawer(null);
+    setThemeFeatures([]);
+  };
+
+  const getUrgencyColor = (urgency: string) => {
+    switch (urgency.toLowerCase()) {
+      case 'high': return 'error';
+      case 'medium': return 'warning';
+      case 'low': return 'success';
+      default: return 'default';
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'new': return 'info';
+      case 'in_progress': return 'warning';
+      case 'completed': return 'success';
+      default: return 'default';
+    }
+  };
+
+  const fetchFeatureMessages = async (featureId: string) => {
+    try {
+      setLoadingMessages(true);
+      const token = getAuthToken();
+      const response = await fetch(
+        `http://localhost:8000/api/v1/features/features/${featureId}/messages?workspace_id=${WORKSPACE_ID}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch messages: ${response.status}`);
+      }
+
+      const messages = await response.json();
+      setFeatureMessages(messages);
+    } catch (error) {
+      console.error('Error fetching feature messages:', error);
+      setFeatureMessages([]);
+    } finally {
+      setLoadingMessages(false);
+    }
+  };
+
+  const handleShowMessages = (feature: Feature) => {
+    setSelectedFeatureForMessages(feature);
+    setMessagesDrawerOpen(true);
+    fetchFeatureMessages(feature.id);
+  };
+
+  const handleBackToFeatures = () => {
+    setMessagesDrawerOpen(false);
+    setSelectedFeatureForMessages(null);
+    setFeatureMessages([]);
+  };
+
+  const formatDate = (dateString: string) => {
+    try {
+      return new Date(dateString).toLocaleDateString();
+    } catch {
+      return dateString;
+    }
+  };
+
+  const selectedTheme = themes.find(t => t.id === selectedThemeId) || themes[0];
+
+  const totalFeatures = themes.reduce((acc, t) => acc + t.feature_count, 0);
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
+          <CircularProgress />
+          <Typography variant="h6" sx={{ ml: 2 }}>
+            Loading themes...
+          </Typography>
+        </Box>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout>
       <Box>
         {/* Header */}
-        <Box sx={{ 
+        <Box sx={{
           mb: 3,
           p: 3,
           borderRadius: 2,
           background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
           border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-          position: 'relative',
-          overflow: 'hidden',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: -50,
-            right: -50,
-            width: 100,
-            height: 100,
-            borderRadius: '50%',
-            background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
-            filter: 'blur(20px)',
-          },
         }}>
-          <Box sx={{ position: 'relative', zIndex: 1 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                <Box sx={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 2,
-                  background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
-                }}>
-                  <CategoryIcon sx={{ color: 'white', fontSize: 24 }} />
-                </Box>
-                <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 800, mb: 0.5 }}>
-                    Theme Management
-                  </Typography>
-                  <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 500 }}>
-                    Organize and categorize feature requests by themes
-                  </Typography>
-                </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Box sx={{
+                width: 48,
+                height: 48,
+                borderRadius: 2,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
+              }}>
+                <CategoryIcon sx={{ color: 'white', fontSize: 24 }} />
               </Box>
+              <Box>
+                <Typography variant="h4" sx={{ fontWeight: 800, mb: 0.5 }}>
+                  Theme Management
+                </Typography>
+                <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  Organize and categorize feature requests by themes
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Button
+                variant="outlined"
+                startIcon={<RefreshIcon />}
+                onClick={fetchThemes}
+                sx={{ borderRadius: 2 }}
+              >
+                Refresh
+              </Button>
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
@@ -339,7 +423,6 @@ export function ThemesPage(): JSX.Element {
                 sx={{
                   borderRadius: 2,
                   background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-                  '&:hover': { transform: 'translateY(-1px)' },
                 }}
               >
                 Create Theme
@@ -347,6 +430,12 @@ export function ThemesPage(): JSX.Element {
             </Box>
           </Box>
         </Box>
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
 
         {/* Stats Overview */}
         <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -398,41 +487,7 @@ export function ThemesPage(): JSX.Element {
                     width: 40,
                     height: 40,
                     borderRadius: 2,
-                    background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <SpeedIcon sx={{ color: 'white', fontSize: 20 }} />
-                  </Box>
-                  <Box>
-                    <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                      {activeThemes}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Active Themes
-                    </Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{
-              borderRadius: 1,
-              background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.06)} 0%, ${alpha(theme.palette.warning.main, 0.03)} 100%)`,
-              border: `1px solid ${alpha(theme.palette.warning.main, 0.1)}`,
-              transition: 'all 0.3s ease-in-out',
-              '&:hover': { transform: 'translateY(-2px)' },
-            }}>
-              <CardContent sx={{ p: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                  <Box sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 2,
-                    background: `linear-gradient(135deg, ${theme.palette.warning.main} 0%, ${theme.palette.warning.dark} 100%)`,
+                    background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100())`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -455,6 +510,40 @@ export function ThemesPage(): JSX.Element {
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{
               borderRadius: 1,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.06)} 0%, ${alpha(theme.palette.warning.main, 0.03)} 100%)`,
+              border: `1px solid ${alpha(theme.palette.warning.main, 0.1)}`,
+              transition: 'all 0.3s ease-in-out',
+              '&:hover': { transform: 'translateY(-2px)' },
+            }}>
+              <CardContent sx={{ p: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                  <Box sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 2,
+                    background: `linear-gradient(135deg, ${theme.palette.warning.main} 0%, ${theme.palette.warning.dark} 100())`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <TrendingIcon sx={{ color: 'white', fontSize: 20 }} />
+                  </Box>
+                  <Box>
+                    <Typography variant="h4" sx={{ fontWeight: 800 }}>
+                      {themes.filter(t => t.feature_count > 0).length}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Active Themes
+                    </Typography>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <Card sx={{
+              borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.06)} 0%, ${alpha(theme.palette.info.main, 0.03)} 100%)`,
               border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
               transition: 'all 0.3s ease-in-out',
@@ -466,19 +555,19 @@ export function ThemesPage(): JSX.Element {
                     width: 40,
                     height: 40,
                     borderRadius: 2,
-                    background: `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.info.dark} 100%)`,
+                    background: `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.info.dark} 100())`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                    <TrendingIcon sx={{ color: 'white', fontSize: 20 }} />
+                    <FeatureIcon sx={{ color: 'white', fontSize: 20 }} />
                   </Box>
                   <Box>
                     <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                      {totalMentions}
+                      {themes.length > 0 ? Math.round(totalFeatures / themes.length) : 0}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Total Mentions
+                      Avg Features/Theme
                     </Typography>
                   </Box>
                 </Box>
@@ -518,54 +607,50 @@ export function ThemesPage(): JSX.Element {
                     <Grid item xs={12} sm={6} key={themeItem.id}>
                       <Card sx={{
                         borderRadius: 1,
-                        background: `linear-gradient(135deg, ${alpha(themeItem.color, 0.04)} 0%, ${alpha(themeItem.color, 0.02)} 100%)`,
-                        border: selectedThemeId === themeItem.id 
-                          ? `2px solid ${themeItem.color}`
-                          : `1px solid ${alpha(themeItem.color, 0.08)}`,
+                        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
+                        border: selectedThemeId === themeItem.id
+                          ? `2px solid ${theme.palette.primary.main}`
+                          : `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
                         cursor: 'pointer',
                         transition: 'all 0.3s ease-in-out',
                         '&:hover': {
                           transform: 'translateY(-4px)',
-                          boxShadow: `0 8px 30px ${alpha(themeItem.color, 0.08)}`,
+                          boxShadow: `0 8px 30px ${alpha(theme.palette.primary.main, 0.08)}`,
                         },
                       }}
-                      onClick={() => setSelectedThemeId(themeItem.id)}
+                      onClick={() => handleThemeClick(themeItem)}
                       >
                         <CardContent sx={{ p: 2 }}>
                           <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
-                              <Box sx={{
-                                width: 12,
-                                height: 12,
-                                borderRadius: '50%',
-                                bgcolor: themeItem.color,
-                                boxShadow: `0 2px 8px ${alpha(themeItem.color, 0.15)}`,
-                              }} />
-                              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            <Box sx={{ flex: 1 }}>
+                              <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
                                 {themeItem.name}
                               </Typography>
+                              <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.5 }}>
+                                {themeItem.description}
+                              </Typography>
                             </Box>
-                            <Box sx={{ display: 'flex', gap: 0.5 }}>
-                              <IconButton 
-                                size="small" 
+                            <Box sx={{ display: 'flex', gap: 0.5, ml: 1 }}>
+                              <IconButton
+                                size="small"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleOpenDialog(themeItem);
                                 }}
-                                sx={{ 
+                                sx={{
                                   borderRadius: 1,
-                                  '&:hover': { bgcolor: alpha(themeItem.color, 0.1) }
+                                  '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.1) }
                                 }}
                               >
                                 <EditIcon fontSize="small" />
                               </IconButton>
-                              <IconButton 
+                              <IconButton
                                 size="small"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleDeleteTheme(themeItem.id);
                                 }}
-                                sx={{ 
+                                sx={{
                                   borderRadius: 1,
                                   '&:hover': { bgcolor: alpha(theme.palette.error.main, 0.1) }
                                 }}
@@ -575,87 +660,18 @@ export function ThemesPage(): JSX.Element {
                             </Box>
                           </Box>
 
-                          <Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.5 }}>
-                            {themeItem.description}
-                          </Typography>
-
-                          <Box sx={{ mb: 2 }}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                              <Typography variant="caption" color="text.secondary">
-                                Progress
-                              </Typography>
-                              <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                                {themeItem.progress}%
-                              </Typography>
-                            </Box>
-                            <LinearProgress
-                              variant="determinate"
-                              value={themeItem.progress}
-                              sx={{
-                                height: 6,
-                                borderRadius: 1,
-                                bgcolor: alpha(themeItem.color, 0.05),
-                                '& .MuiLinearProgress-bar': {
-                                  borderRadius: 1,
-                                  bgcolor: themeItem.color,
-                                },
-                              }}
-                            />
-                          </Box>
-
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                            <Box sx={{ display: 'flex', gap: 1 }}>
-                              <Chip
-                                label={themeItem.status}
-                                size="small"
-                                sx={{
-                                  bgcolor: alpha(getStatusColor(themeItem.status), 0.1),
-                                  color: getStatusColor(themeItem.status),
-                                  textTransform: 'capitalize',
-                                  fontWeight: 600,
-                                }}
-                              />
-                              <Chip
-                                label={themeItem.priority}
-                                size="small"
-                                sx={{
-                                  bgcolor: alpha(getPriorityColor(themeItem.priority), 0.1),
-                                  color: getPriorityColor(themeItem.priority),
-                                  textTransform: 'capitalize',
-                                  fontWeight: 600,
-                                }}
-                              />
-                            </Box>
-                          </Box>
-
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                 <FeatureIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
                                 <Typography variant="caption" color="text.secondary">
-                                  {themeItem.featureCount}
-                                </Typography>
-                              </Box>
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                  💬 {themeItem.slackMentions}
-                                </Typography>
-                                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                  📧 {themeItem.emailMentions}
-                                </Typography>
-                                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                  🏢 {themeItem.competitors}
+                                  {themeItem.feature_count} features
                                 </Typography>
                               </Box>
                             </Box>
-                            <Avatar sx={{ 
-                              width: 24, 
-                              height: 24, 
-                              fontSize: '0.7rem',
-                              bgcolor: themeItem.color,
-                            }}>
-                              {themeItem.owner[0]}
-                            </Avatar>
+                            <Typography variant="caption" color="text.secondary">
+                              Updated: {formatDate(themeItem.updated_at)}
+                            </Typography>
                           </Box>
                         </CardContent>
                       </Card>
@@ -678,33 +694,24 @@ export function ThemesPage(): JSX.Element {
             }}>
               <CardContent sx={{ p: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
-                  <AnalyticsIcon sx={{ color: theme.palette.info.main }} />
+                  <TrendingIcon sx={{ color: theme.palette.info.main }} />
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     Theme Details
                   </Typography>
                 </Box>
 
-                {selectedTheme && (
+                {selectedTheme ? (
                   <Box>
-                    <Box sx={{ 
-                      p: 2, 
-                      borderRadius: 1, 
-                      background: `linear-gradient(135deg, ${alpha(selectedTheme.color, 0.04)} 0%, ${alpha(selectedTheme.color, 0.02)} 100%)`,
-                      border: `1px solid ${alpha(selectedTheme.color, 0.08)}`,
+                    <Box sx={{
+                      p: 2,
+                      borderRadius: 1,
+                      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
+                      border: `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
                       mb: 3
                     }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-                        <Box sx={{
-                          width: 16,
-                          height: 16,
-                          borderRadius: '50%',
-                          bgcolor: selectedTheme.color,
-                          boxShadow: `0 2px 8px ${alpha(selectedTheme.color, 0.15)}`,
-                        }} />
-                        <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                          {selectedTheme.name}
-                        </Typography>
-                      </Box>
+                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 1.5 }}>
+                        {selectedTheme.name}
+                      </Typography>
                       <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
                         {selectedTheme.description}
                       </Typography>
@@ -713,10 +720,10 @@ export function ThemesPage(): JSX.Element {
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mb: 2 }}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                          OWNER
+                          FEATURES
                         </Typography>
                         <Typography variant="caption">
-                          {selectedTheme.owner}
+                          {selectedTheme.feature_count}
                         </Typography>
                       </Box>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -724,7 +731,7 @@ export function ThemesPage(): JSX.Element {
                           CREATED
                         </Typography>
                         <Typography variant="caption">
-                          {selectedTheme.createdAt}
+                          {formatDate(selectedTheme.created_at)}
                         </Typography>
                       </Box>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -732,32 +739,12 @@ export function ThemesPage(): JSX.Element {
                           LAST UPDATED
                         </Typography>
                         <Typography variant="caption">
-                          {selectedTheme.updatedAt}
+                          {formatDate(selectedTheme.updated_at)}
                         </Typography>
                       </Box>
                     </Box>
 
                     <Divider sx={{ my: 3 }} />
-
-                    <Box sx={{ mb: 3 }}>
-                      <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, mb: 1, display: 'block' }}>
-                        TAGS
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                        {selectedTheme.tags.map((tag) => (
-                          <Chip
-                            key={tag}
-                            label={tag}
-                            size="small"
-                            sx={{
-                              bgcolor: alpha(selectedTheme.color, 0.05),
-                              color: selectedTheme.color,
-                              fontSize: '0.7rem',
-                            }}
-                          />
-                        ))}
-                      </Box>
-                    </Box>
 
                     <Box sx={{ display: 'flex', gap: 1 }}>
                       <Button
@@ -765,15 +752,7 @@ export function ThemesPage(): JSX.Element {
                         size="small"
                         startIcon={<EditIcon />}
                         onClick={() => handleOpenDialog(selectedTheme)}
-                        sx={{
-                          flex: 1,
-                          borderColor: alpha(selectedTheme.color, 0.2),
-                          color: selectedTheme.color,
-                          '&:hover': { 
-                            borderColor: selectedTheme.color,
-                            bgcolor: alpha(selectedTheme.color, 0.03),
-                          },
-                        }}
+                        sx={{ flex: 1 }}
                       >
                         Edit
                       </Button>
@@ -781,15 +760,24 @@ export function ThemesPage(): JSX.Element {
                         variant="contained"
                         size="small"
                         startIcon={<FeatureIcon />}
+                        onClick={() => {
+                          // Navigate to features page with this theme selected
+                          window.location.href = '/app/features';
+                        }}
                         sx={{
                           flex: 1,
-                          background: `linear-gradient(135deg, ${selectedTheme.color} 0%, ${alpha(selectedTheme.color, 0.8)} 100%)`,
-                          '&:hover': { transform: 'translateY(-1px)' },
+                          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100())`,
                         }}
                       >
                         View Features
                       </Button>
                     </Box>
+                  </Box>
+                ) : (
+                  <Box sx={{ textAlign: 'center', py: 4 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Select a theme to view details
+                    </Typography>
                   </Box>
                 )}
               </CardContent>
@@ -803,17 +791,10 @@ export function ThemesPage(): JSX.Element {
           onClose={handleCloseDialog}
           maxWidth="sm"
           fullWidth
-          PaperProps={{
-            sx: {
-              borderRadius: 1,
-              background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.95)} 0%, ${alpha(theme.palette.background.paper, 0.9)} 100())`,
-              backdropFilter: 'blur(20px)',
-            }
-          }}
         >
-          <DialogTitle sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+          <DialogTitle sx={{
+            display: 'flex',
+            alignItems: 'center',
             justifyContent: 'space-between',
             pb: 1
           }}>
@@ -824,7 +805,7 @@ export function ThemesPage(): JSX.Element {
               <CloseIcon />
             </IconButton>
           </DialogTitle>
-          
+
           <DialogContent sx={{ pt: 2 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <TextField
@@ -834,7 +815,7 @@ export function ThemesPage(): JSX.Element {
                 fullWidth
                 required
               />
-              
+
               <TextField
                 label="Description"
                 value={formData.description}
@@ -844,51 +825,6 @@ export function ThemesPage(): JSX.Element {
                 rows={3}
                 required
               />
-
-              <Box sx={{ display: 'flex', gap: 1.5 }}>
-                <FormControl sx={{ flex: 1 }}>
-                  <InputLabel>Priority</InputLabel>
-                  <Select
-                    value={formData.priority}
-                    label="Priority"
-                    onChange={(e) => setFormData({ ...formData, priority: e.target.value as any })}
-                  >
-                    <MenuItem value="high">High</MenuItem>
-                    <MenuItem value="medium">Medium</MenuItem>
-                    <MenuItem value="low">Low</MenuItem>
-                  </Select>
-                </FormControl>
-
-                <FormControl sx={{ flex: 1 }}>
-                  <InputLabel>Status</InputLabel>
-                  <Select
-                    value={formData.status}
-                    label="Status"
-                    onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                  >
-                    <MenuItem value="active">Active</MenuItem>
-                    <MenuItem value="planning">Planning</MenuItem>
-                    <MenuItem value="archived">Archived</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-
-              <TextField
-                label="Color"
-                type="color"
-                value={formData.color}
-                onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                fullWidth
-              />
-
-              <TextField
-                label="Tags"
-                value={formData.tags}
-                onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                fullWidth
-                placeholder="Enter tags separated by commas"
-                helperText="e.g. UI/UX, Frontend, Design"
-              />
             </Box>
           </DialogContent>
 
@@ -896,18 +832,379 @@ export function ThemesPage(): JSX.Element {
             <Button onClick={handleCloseDialog}>
               Cancel
             </Button>
-            <Button 
-              onClick={handleSubmit} 
+            <Button
+              onClick={handleSubmit}
               variant="contained"
               disabled={!formData.name || !formData.description}
               sx={{
-                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100())`,
               }}
             >
               {editingTheme ? 'Update Theme' : 'Create Theme'}
             </Button>
           </DialogActions>
         </Dialog>
+
+        {/* Theme Features Drawer */}
+        <Drawer
+          anchor="right"
+          open={drawerOpen}
+          onClose={handleCloseDrawer}
+          sx={{
+            '& .MuiDrawer-paper': {
+              width: { xs: '100%', sm: 576 },
+              background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.95)} 0%, ${alpha(theme.palette.background.paper, 0.85)} 100%)`,
+              backdropFilter: 'blur(20px)',
+              zIndex: 1300, // Higher than AppBar but reasonable
+              top: 64, // Start below AppBar
+              height: 'calc(100vh - 64px)', // Full height minus AppBar
+            },
+          }}
+        >
+          <Box sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
+            {/* Drawer Header */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box sx={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 2,
+                  background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <FeatureIcon sx={{ color: 'white', fontSize: 20 }} />
+                </Box>
+                <Box>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    {selectedThemeForDrawer?.name || 'Theme Features'}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {themeFeatures.length} features in this theme
+                  </Typography>
+                </Box>
+              </Box>
+              <IconButton onClick={handleCloseDrawer} sx={{ borderRadius: 2 }}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+
+            {/* Theme Description */}
+            {selectedThemeForDrawer?.description && (
+              <Box sx={{
+                p: 2,
+                borderRadius: 2,
+                background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
+                border: `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
+                mb: 3
+              }}>
+                <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                  {selectedThemeForDrawer.description}
+                </Typography>
+              </Box>
+            )}
+
+            {/* Features List */}
+            <Box sx={{ flex: 1, overflow: 'auto' }}>
+              {loadingFeatures ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
+                  <CircularProgress size={24} />
+                  <Typography variant="body2" sx={{ ml: 2 }}>Loading features...</Typography>
+                </Box>
+              ) : themeFeatures.length > 0 ? (
+                <List sx={{ p: 0 }}>
+                  {themeFeatures.map((feature, index) => (
+                    <React.Fragment key={feature.id}>
+                      <ListItem
+                        sx={{
+                          borderRadius: 2,
+                          mb: 1,
+                          background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.6)} 0%, ${alpha(theme.palette.background.paper, 0.3)} 100%)`,
+                          border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                          '&:hover': {
+                            background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
+                            border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                          },
+                        }}
+                      >
+                        <ListItemText
+                          primary={
+                            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                              {feature.name}
+                            </Typography>
+                          }
+                          secondary={
+                            <Box>
+                              <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, lineHeight: 1.5 }}>
+                                {feature.description.length > 100
+                                  ? `${feature.description.substring(0, 100)}...`
+                                  : feature.description
+                                }
+                              </Typography>
+                              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
+                                <Chip
+                                  label={feature.urgency}
+                                  size="small"
+                                  color={getUrgencyColor(feature.urgency) as any}
+                                  sx={{ minWidth: 'auto' }}
+                                />
+                                <Chip
+                                  label={feature.status}
+                                  size="small"
+                                  color={getStatusColor(feature.status) as any}
+                                  variant="outlined"
+                                  sx={{ minWidth: 'auto' }}
+                                />
+                                <Chip
+                                  label={`${feature.mention_count} mentions`}
+                                  size="small"
+                                  variant="outlined"
+                                  sx={{
+                                    minWidth: 'auto',
+                                    cursor: 'pointer',
+                                    '&:hover': {
+                                      backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                                      borderColor: theme.palette.primary.main
+                                    }
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleShowMessages(feature);
+                                  }}
+                                />
+                              </Box>
+                            </Box>
+                          }
+                        />
+                      </ListItem>
+                      {index < themeFeatures.length - 1 && (
+                        <Divider sx={{ my: 0.5, opacity: 0.5 }} />
+                      )}
+                    </React.Fragment>
+                  ))}
+                </List>
+              ) : (
+                <Box sx={{ textAlign: 'center', py: 6 }}>
+                  <FeatureIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
+                  <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+                    No Features Found
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    This theme doesn't have any features yet.
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+
+            {/* Drawer Footer */}
+            {themeFeatures.length > 0 && (
+              <Box sx={{ mt: 3, pt: 2, borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  startIcon={<FeatureIcon />}
+                  onClick={() => {
+                    handleCloseDrawer();
+                    window.location.href = `/app/features?theme=${selectedThemeForDrawer?.id}`;
+                  }}
+                  sx={{
+                    borderRadius: 2,
+                    background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100())`,
+                  }}
+                >
+                  View All Features in Feature Dashboard
+                </Button>
+              </Box>
+            )}
+          </Box>
+        </Drawer>
+
+        {/* Messages Drawer (Second Level) */}
+        <Drawer
+          anchor="right"
+          open={messagesDrawerOpen}
+          onClose={handleBackToFeatures}
+          sx={{
+            '& .MuiDrawer-paper': {
+              width: { xs: '100%', sm: 576 },
+              background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.95)} 0%, ${alpha(theme.palette.background.paper, 0.85)} 100%)`,
+              backdropFilter: 'blur(20px)',
+              zIndex: 1400, // Higher than the first drawer
+              top: 64, // Start below AppBar
+              height: 'calc(100vh - 64px)', // Full height minus AppBar
+            },
+          }}
+        >
+          <Box sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
+            {/* Messages Drawer Header */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
+              <IconButton
+                onClick={handleBackToFeatures}
+                sx={{
+                  borderRadius: 2,
+                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                  '&:hover': {
+                    bgcolor: alpha(theme.palette.primary.main, 0.2),
+                  }
+                }}
+              >
+                <ArrowBackIcon sx={{ color: theme.palette.primary.main }} />
+              </IconButton>
+              <Box sx={{
+                width: 40,
+                height: 40,
+                borderRadius: 2,
+                background: `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.info.dark} 100())`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <MessageIcon sx={{ color: 'white', fontSize: 20 }} />
+              </Box>
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  Messages & Mentions
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {selectedFeatureForMessages?.name || 'Feature Messages'}
+                </Typography>
+              </Box>
+              <IconButton onClick={handleBackToFeatures} sx={{ borderRadius: 2 }}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+
+            {/* Feature Summary */}
+            {selectedFeatureForMessages && (
+              <Box sx={{
+                p: 2,
+                borderRadius: 2,
+                background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.04)} 0%, ${alpha(theme.palette.info.main, 0.02)} 100%)`,
+                border: `1px solid ${alpha(theme.palette.info.main, 0.08)}`,
+                mb: 3
+              }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                  {selectedFeatureForMessages.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6, mb: 2 }}>
+                  {selectedFeatureForMessages.description}
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                  <Chip
+                    label={selectedFeatureForMessages.urgency}
+                    size="small"
+                    color={getUrgencyColor(selectedFeatureForMessages.urgency) as any}
+                  />
+                  <Chip
+                    label={selectedFeatureForMessages.status}
+                    size="small"
+                    color={getStatusColor(selectedFeatureForMessages.status) as any}
+                    variant="outlined"
+                  />
+                  <Chip
+                    label={`${selectedFeatureForMessages.mention_count} mentions`}
+                    size="small"
+                    variant="outlined"
+                  />
+                </Box>
+              </Box>
+            )}
+
+            {/* Messages List */}
+            <Box sx={{ flex: 1, overflow: 'auto' }}>
+              {loadingMessages ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
+                  <CircularProgress size={24} />
+                  <Typography variant="body2" sx={{ ml: 2 }}>Loading messages...</Typography>
+                </Box>
+              ) : featureMessages.length > 0 ? (
+                <List sx={{ p: 0 }}>
+                  {featureMessages.map((message, index) => (
+                    <React.Fragment key={message.id}>
+                      <ListItem
+                        sx={{
+                          borderRadius: 2,
+                          mb: 1.5,
+                          background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100())`,
+                          border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                          flexDirection: 'column',
+                          alignItems: 'flex-start',
+                          p: 2,
+                          '&:hover': {
+                            background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.04)} 0%, ${alpha(theme.palette.info.main, 0.02)} 100())`,
+                            border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
+                          },
+                        }}
+                      >
+                        {/* Message Content */}
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            wordBreak: 'break-word',
+                            lineHeight: 1.6,
+                            mb: 2,
+                            width: '100%'
+                          }}
+                        >
+                          {message.content}
+                        </Typography>
+
+                        {/* Message Metadata */}
+                        <Box sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          width: '100%',
+                          mt: 'auto'
+                        }}>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                              {message.sender_name}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                              in #{message.channel_name}
+                            </Typography>
+                          </Box>
+                          <Typography variant="caption" color="text.secondary">
+                            {formatDate(message.sent_at)}
+                          </Typography>
+                        </Box>
+                      </ListItem>
+                      {index < featureMessages.length - 1 && (
+                        <Divider sx={{ my: 0.5, opacity: 0.3 }} />
+                      )}
+                    </React.Fragment>
+                  ))}
+                </List>
+              ) : (
+                <Box sx={{ textAlign: 'center', py: 6 }}>
+                  <MessageIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
+                  <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+                    No Messages Found
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    No messages have been linked to this feature yet.
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+
+            {/* Messages Stats Footer */}
+            {featureMessages.length > 0 && (
+              <Box sx={{
+                mt: 2,
+                pt: 2,
+                borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                textAlign: 'center'
+              }}>
+                <Typography variant="caption" color="text.secondary">
+                  {featureMessages.length} message{featureMessages.length !== 1 ? 's' : ''} found for this feature
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        </Drawer>
       </Box>
     </AdminLayout>
   );

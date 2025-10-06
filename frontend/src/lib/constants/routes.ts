@@ -29,6 +29,9 @@ export const ROUTES = {
   THEMES: '/app/themes',
   THEME_DETAIL: '/app/themes/:id',
 
+  // Clustering routes
+  CLUSTERING: '/app/clustering',
+
   // Slack integration routes
   SLACK_CALLBACK: '/app/slack/callback',
   
@@ -64,6 +67,7 @@ export const PROTECTED_ROUTES = [
   ROUTES.FEATURE_DETAIL,
   ROUTES.THEMES,
   ROUTES.THEME_DETAIL,
+  ROUTES.CLUSTERING,
   ROUTES.SLACK_CALLBACK,
 ] as const;
 
@@ -91,6 +95,12 @@ export const ROUTE_METADATA = {
     description: 'Organize features by theme',
     showInNav: true,
     icon: 'CategoryIcon',
+  },
+  [ROUTES.CLUSTERING]: {
+    title: 'AI Intelligence',
+    description: 'AI-powered feature clustering and classification',
+    showInNav: true,
+    icon: 'PsychologyIcon',
   },
   [ROUTES.SETTINGS]: {
     title: 'Settings',

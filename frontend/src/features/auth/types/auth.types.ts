@@ -53,4 +53,6 @@ export interface AuthActions {
   demoLogin: () => Promise<void>;
   setUser: (user: User) => void;
   updateUserProfile: (updates: Partial<User>) => Promise<void>;
+  startTokenRefreshTimer: () => void;
+  stopTokenRefreshTimer: () => void;
 }

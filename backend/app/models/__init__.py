@@ -12,14 +12,18 @@ from app.models.theme import Theme
 from app.models.feature import Feature
 from app.models.integration import Integration
 from app.models.message import Message, feature_messages
+from app.models.clustering import ClusteringRun, DiscoveredCluster, ClassificationSignal
 
 __all__ = [
     "User",
     "Company",
-    "Workspace", 
+    "Workspace",
     "Theme",
     "Feature",
     "Integration",
     "Message",
-    "feature_messages"
+    "feature_messages",
+    "ClusteringRun",
+    "DiscoveredCluster",
+    "ClassificationSignal"
 ]

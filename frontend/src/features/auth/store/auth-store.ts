@@ -68,6 +68,9 @@ export const useAuthStore = create<AuthStore>()(
             isLoading: false,
             error: null,
           });
+
+          // Start automatic token refresh
+          get().startTokenRefreshTimer();
         } catch (error) {
           set({
             isLoading: false,
@@ -110,6 +113,9 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       logout: () => {
+        // Stop automatic token refresh
+        get().stopTokenRefreshTimer();
+
         set({
           user: null,
           tokens: null,
@@ -121,14 +127,14 @@ export const useAuthStore = create<AuthStore>()(
 
       refreshToken: async () => {
         const { tokens } = get();
-        
+
         if (!tokens?.refresh_token) {
           get().logout();
           return;
         }
 
         try {
-          const response = await fetch('/api/v1/auth/refresh', {
+          const response = await fetch('http://localhost:8000/api/v1/auth/refresh', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -191,6 +197,9 @@ export const useAuthStore = create<AuthStore>()(
             isLoading: false,
             error: null,
           });
+
+          // Start automatic token refresh
+          get().startTokenRefreshTimer();
         } catch (error) {
           set({
             isLoading: false,
@@ -206,7 +215,7 @@ export const useAuthStore = create<AuthStore>()(
 
       updateUserProfile: async (updates: Partial<User>) => {
         const { tokens, user } = get();
-        
+
         if (!tokens?.access_token || !user) {
           throw new Error('Not authenticated');
         }
@@ -234,6 +243,37 @@ export const useAuthStore = create<AuthStore>()(
           throw error;
         }
       },
+
+      startTokenRefreshTimer: () => {
+        // Clear existing timer if any
+        const state = get();
+        if ((state as any).refreshTimerId) {
+          clearInterval((state as any).refreshTimerId);
+        }
+
+        // Set up automatic token refresh every 15 minutes
+        const timerId = setInterval(async () => {
+          const currentState = get();
+          if (currentState.isAuthenticated && currentState.tokens?.refresh_token) {
+            try {
+              await currentState.refreshToken();
+            } catch (error) {
+              console.error('Automatic token refresh failed:', error);
+            }
+          }
+        }, 15 * 60 * 1000); // 15 minutes
+
+        // Store timer ID in state for cleanup
+        (get() as any).refreshTimerId = timerId;
+      },
+
+      stopTokenRefreshTimer: () => {
+        const state = get();
+        if ((state as any).refreshTimerId) {
+          clearInterval((state as any).refreshTimerId);
+          delete (state as any).refreshTimerId;
+        }
+      },
     })),
     {
       name: AUTH_STORAGE_KEY,
@@ -259,4 +299,12 @@ export const useAuthActions = () => useAuthStore((state) => ({
   demoLogin: state.demoLogin,
   setUser: state.setUser,
   updateUserProfile: state.updateUserProfile,
+  startTokenRefreshTimer: state.startTokenRefreshTimer,
+  stopTokenRefreshTimer: state.stopTokenRefreshTimer,
 }));
+
+// Start token refresh timer on app load if user is authenticated
+const state = useAuthStore.getState();
+if (state.isAuthenticated && state.tokens?.refresh_token) {
+  state.startTokenRefreshTimer();
+}

@@ -12,11 +12,12 @@ import { LandingPage } from '@/pages/LandingPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
 import { DashboardPage } from '@/pages/DashboardPage';
-import { FeaturesPage } from '@/pages/FeaturesPage';
+import FeaturesPage from '@/pages/FeaturesPage';
 import { ThemesPage } from '@/pages/ThemesPage';
 import { WorkspaceSettingsPage } from '@/pages/WorkspaceSettingsPage';
 import { OnboardingPage } from '@/pages/OnboardingPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
+import { ClusteringPage } from '@/pages/ClusteringPage';
 
 export function AppRouter(): JSX.Element {
   return (
@@ -107,22 +108,27 @@ export function AppRouter(): JSX.Element {
           } 
         />
 
-        <Route 
-          path={ROUTES.FEATURES} 
-          element={
-            <ProtectedRoute>
-              <FeaturesPage />
-            </ProtectedRoute>
-          } 
+        <Route
+          path={ROUTES.FEATURES}
+          element={<FeaturesPage />}
         />
 
-        <Route 
-          path={ROUTES.THEMES} 
+        <Route
+          path={ROUTES.THEMES}
           element={
             <ProtectedRoute>
               <ThemesPage />
             </ProtectedRoute>
-          } 
+          }
+        />
+
+        <Route
+          path={ROUTES.CLUSTERING}
+          element={
+            <ProtectedRoute>
+              <ClusteringPage />
+            </ProtectedRoute>
+          }
         />
 
         {/* Catch-all route */}

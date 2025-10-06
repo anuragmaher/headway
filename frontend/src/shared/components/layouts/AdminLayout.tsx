@@ -31,6 +31,7 @@ import {
   Logout as LogoutIcon,
   Person as PersonIcon,
   BusinessCenter as FeaturesIcon,
+  Psychology as PsychologyIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
 } from '@mui/icons-material';
@@ -62,6 +63,11 @@ const navigationItems = [
     text: 'Themes',
     icon: <CategoryIcon />,
     path: ROUTES.THEMES,
+  },
+  {
+    text: 'AI Intelligence',
+    icon: <PsychologyIcon />,
+    path: ROUTES.CLUSTERING,
   },
   {
     text: 'Workspace Settings',
