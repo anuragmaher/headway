@@ -3,8 +3,6 @@ import {
   Box,
   Typography,
   Grid,
-  Card,
-  CardContent,
   Chip,
   CircularProgress,
   Alert,
@@ -152,11 +150,6 @@ const FeaturesPage: React.FC = () => {
     } catch {
       return dateString;
     }
-  };
-
-  const handleShowMessages = (featureId: string, featureName: string) => {
-    setMessagesModalFeature({ id: featureId, name: featureName });
-    setMessagesModalOpen(true);
   };
 
   const handleCloseMessagesModal = () => {

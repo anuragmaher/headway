@@ -24,7 +24,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Paper,
   Divider,
   Drawer,
   MenuItem,
@@ -35,10 +34,8 @@ import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  TrendingUp as TrendingIcon,
   FeaturedPlayList as FeatureIcon,
   Close as CloseIcon,
-  Refresh as RefreshIcon,
   ArrowBack as ArrowBackIcon,
   Message as MessageIcon,
   ExpandMore as ExpandMoreIcon,
@@ -597,10 +594,6 @@ export function ThemesPage(): JSX.Element {
       </React.Fragment>
     );
   };
-
-  const selectedTheme = themes.find(t => t.id === selectedThemeId) || themes[0];
-
-  const totalFeatures = themes.reduce((acc, t) => acc + t.feature_count, 0);
 
   if (loading) {
     return (

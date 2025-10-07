@@ -3,11 +3,10 @@
  * Provides interface for AI-powered feature clustering and approval workflow
  */
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import {
   Box,
   Typography,
-  Grid,
   Card,
   CardContent,
   Button,
@@ -66,15 +65,6 @@ export function ClusteringPage(): JSX.Element {
 
   const handleTabChange = (_: any, newValue: string) => {
     setCurrentView(newValue as any);
-  };
-
-  const getTabCount = (tab: string) => {
-    switch (tab) {
-      case 'clustering': return runs.length;
-      case 'approval': return pendingClusters.length;
-      case 'signals': return signals.filter(s => s.is_active).length;
-      default: return 0;
-    }
   };
 
   const getTabColor = (tab: string) => {

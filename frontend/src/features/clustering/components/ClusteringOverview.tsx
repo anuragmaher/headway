@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -12,7 +11,6 @@ import {
   ListItemText,
   ListItemIcon,
   useTheme,
-  alpha,
 } from '@mui/material';
 import {
   TrendingUp as TrendingUpIcon,
@@ -30,9 +28,9 @@ interface ClusteringOverviewProps {
   workspaceId: string;
 }
 
-const ClusteringOverview: React.FC<ClusteringOverviewProps> = ({ workspaceId }) => {
+const ClusteringOverview: React.FC<ClusteringOverviewProps> = () => {
   const theme = useTheme();
-  const { runs, pendingClusters, signals, isLoading } = useClusteringStore();
+  const { runs, pendingClusters, signals } = useClusteringStore();
 
   const stats = {
     totalRuns: runs.length,

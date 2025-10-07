@@ -12,7 +12,6 @@ import {
   TableRow,
   Chip,
   Switch,
-  IconButton,
   Tooltip,
   LinearProgress,
   useTheme,
@@ -39,7 +38,7 @@ interface ClassificationSignalsViewProps {
   workspaceId: string;
 }
 
-const ClassificationSignalsView: React.FC<ClassificationSignalsViewProps> = ({ workspaceId }) => {
+const ClassificationSignalsView: React.FC<ClassificationSignalsViewProps> = () => {
   const theme = useTheme();
   const { signals, isLoading, toggleSignal } = useClusteringStore();
 

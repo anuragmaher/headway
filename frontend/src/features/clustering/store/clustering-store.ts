@@ -5,7 +5,6 @@ import type {
   ClusteringState,
   ClusteringRun,
   DiscoveredCluster,
-  ClassificationSignal,
   StartClusteringForm,
   ApprovalForm,
 } from '../types/clustering.types';

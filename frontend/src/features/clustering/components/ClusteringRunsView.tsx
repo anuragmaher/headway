@@ -34,7 +34,7 @@ interface ClusteringRunsViewProps {
   workspaceId: string;
 }
 
-const ClusteringRunsView: React.FC<ClusteringRunsViewProps> = ({ workspaceId }) => {
+const ClusteringRunsView: React.FC<ClusteringRunsViewProps> = () => {
   const theme = useTheme();
   const { runs, isLoading, setSelectedRun, setCurrentView } = useClusteringStore();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -76,12 +76,14 @@ const ClusteringRunsView: React.FC<ClusteringRunsViewProps> = ({ workspaceId }) 
       failed: 'error',
     } as const;
 
+    const statusIcon = getStatusIcon(status);
+
     return (
       <Chip
         label={status.charAt(0).toUpperCase() + status.slice(1)}
         color={colors[status]}
         size="small"
-        icon={getStatusIcon(status)}
+        icon={statusIcon || undefined}
         sx={{ fontWeight: 600 }}
       />
     );

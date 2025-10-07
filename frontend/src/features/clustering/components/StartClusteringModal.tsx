@@ -45,7 +45,7 @@ const StartClusteringModal: React.FC<StartClusteringModalProps> = ({
   const [formErrors, setFormErrors] = useState<Partial<StartClusteringForm>>({});
 
   const handleChange = (field: keyof StartClusteringForm) => (
-    event: React.ChangeEvent<HTMLInputElement> | Event,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | Event,
     value?: number | number[]
   ) => {
     if (field === 'confidence_threshold' && typeof value === 'number') {
@@ -53,7 +53,7 @@ const StartClusteringModal: React.FC<StartClusteringModalProps> = ({
     } else if (field === 'max_messages' && typeof value === 'number') {
       setForm(prev => ({ ...prev, [field]: value }));
     } else if (event && 'target' in event) {
-      const target = event.target as HTMLInputElement;
+      const target = event.target as HTMLInputElement | HTMLTextAreaElement;
       setForm(prev => ({ ...prev, [field]: target.value }));
     }
 
@@ -156,7 +156,7 @@ const StartClusteringModal: React.FC<StartClusteringModalProps> = ({
               fullWidth
               label="Run Name"
               value={form.run_name}
-              onChange={handleChange('run_name')}
+              onChange={(e) => handleChange('run_name')(e)}
               error={!!formErrors.run_name}
               helperText={formErrors.run_name}
               placeholder="e.g., Mobile App Features Analysis"
@@ -178,7 +178,7 @@ const StartClusteringModal: React.FC<StartClusteringModalProps> = ({
               rows={3}
               label="Description"
               value={form.description}
-              onChange={handleChange('description')}
+              onChange={(e) => handleChange('description')(e)}
               error={!!formErrors.description}
               helperText={formErrors.description}
               placeholder="Describe the purpose of this clustering run..."

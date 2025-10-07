@@ -158,7 +158,7 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
               </Box>
             ) : (
               <Box sx={{ maxHeight: '400px', overflow: 'auto' }}>
-                {messages.map((message, index) => (
+                {messages.map((message) => (
                   <Card
                     key={message.id}
                     variant="outlined"

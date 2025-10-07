@@ -35,7 +35,7 @@ interface ClusterApprovalViewProps {
   workspaceId: string;
 }
 
-const ClusterApprovalView: React.FC<ClusterApprovalViewProps> = ({ workspaceId }) => {
+const ClusterApprovalView: React.FC<ClusterApprovalViewProps> = () => {
   const theme = useTheme();
   const {
     pendingClusters,
@@ -77,15 +77,6 @@ const ClusterApprovalView: React.FC<ClusterApprovalViewProps> = ({ workspaceId }
     setShowApprovalModal(true, cluster);
   };
 
-  const getStatusColor = (status: DiscoveredCluster['approval_status']) => {
-    switch (status) {
-      case 'pending': return 'warning';
-      case 'approved': return 'success';
-      case 'rejected': return 'error';
-      case 'modified': return 'info';
-      default: return 'default';
-    }
-  };
 
   const getConfidenceColor = (confidence: number) => {
     if (confidence >= 0.8) return theme.palette.success.main;

@@ -37,7 +37,7 @@ import {
   Message as MessageIcon,
 } from '@mui/icons-material';
 import { useClusteringStore } from '../store/clustering-store';
-import type { ApprovalForm, DiscoveredCluster } from '../types/clustering.types';
+import type { ApprovalForm } from '../types/clustering.types';
 
 interface ClusterApprovalModalProps {
   open: boolean;
@@ -48,7 +48,6 @@ interface ClusterApprovalModalProps {
 const ClusterApprovalModal: React.FC<ClusterApprovalModalProps> = ({
   open,
   onClose,
-  workspaceId,
 }) => {
   const theme = useTheme();
   const {
