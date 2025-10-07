@@ -1,6 +1,12 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:8000');
+// Get API base URL from environment, removing trailing slash
+const envApiUrl = import.meta.env.VITE_API_URL;
+const API_BASE_URL = envApiUrl
+  ? envApiUrl.replace(/\/$/, '') // Remove trailing slash
+  : (import.meta.env.PROD ? '' : 'http://localhost:8000');
+
+// Force rebuild for env var change
 
 // Create axios instance with default config
 const api = axios.create({
