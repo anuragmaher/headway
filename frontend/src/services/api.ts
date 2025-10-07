@@ -4,7 +4,7 @@ import axios from 'axios';
 const envApiUrl = import.meta.env.VITE_API_URL;
 const API_BASE_URL = envApiUrl
   ? envApiUrl.replace(/\/$/, '') // Remove trailing slash
-  : (import.meta.env.PROD ? '' : 'http://localhost:8000');
+  : (import.meta.env.PROD ? '' : 'http://localhost:8056');
 
 // Force rebuild for env var change
 
