@@ -27,6 +27,8 @@ import {
   Paper,
   Divider,
   Drawer,
+  MenuItem,
+  Menu,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
@@ -39,24 +41,15 @@ import {
   Refresh as RefreshIcon,
   ArrowBack as ArrowBackIcon,
   Message as MessageIcon,
+  ExpandMore as ExpandMoreIcon,
+  ChevronRight as ChevronRightIcon,
+  MoreVert as MoreVertIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useAuthStore } from '@/features/auth/store/auth-store';
+import { ThemeData, ThemeFormData } from '@/shared/types/theme.types';
 
-interface Theme {
-  id: string;
-  name: string;
-  description: string;
-  feature_count: number;
-  workspace_id: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface ThemeFormData {
-  name: string;
-  description: string;
-}
+type Theme = ThemeData;
 
 interface Feature {
   id: string;
@@ -70,6 +63,7 @@ interface Feature {
   last_mentioned: string;
   created_at: string;
   updated_at: string | null;
+  data_points?: any[];
 }
 
 interface Message {
@@ -92,6 +86,7 @@ export function ThemesPage(): JSX.Element {
   const [formData, setFormData] = useState<ThemeFormData>({
     name: '',
     description: '',
+    parent_theme_id: null,
   });
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedThemeForDrawer, setSelectedThemeForDrawer] = useState<Theme | null>(null);
@@ -101,8 +96,87 @@ export function ThemesPage(): JSX.Element {
   const [selectedFeatureForMessages, setSelectedFeatureForMessages] = useState<Feature | null>(null);
   const [featureMessages, setFeatureMessages] = useState<Message[]>([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [expandedThemes, setExpandedThemes] = useState<Set<string>>(new Set());
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedThemeForMenu, setSelectedThemeForMenu] = useState<Theme | null>(null);
 
   const WORKSPACE_ID = '647ab033-6d10-4a35-9ace-0399052ec874';
+
+  // Helper function to organize themes hierarchically
+  const buildThemeHierarchy = (themes: Theme[]): Theme[] => {
+    const themeMap = new Map(themes.map(theme => [theme.id, { ...theme, children: [] as Theme[] }]));
+    const rootThemes: Theme[] = [];
+
+    themes.forEach(theme => {
+      const themeWithChildren = themeMap.get(theme.id)!;
+
+      if (theme.parent_theme_id && themeMap.has(theme.parent_theme_id)) {
+        const parent = themeMap.get(theme.parent_theme_id)!;
+        (parent as any).children.push(themeWithChildren);
+      } else {
+        rootThemes.push(themeWithChildren);
+      }
+    });
+
+    // Sort root themes alphabetically by name
+    rootThemes.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Sort children alphabetically for each parent theme
+    rootThemes.forEach(theme => {
+      if ((theme as any).children && (theme as any).children.length > 0) {
+        (theme as any).children.sort((a: Theme, b: Theme) => a.name.localeCompare(b.name));
+      }
+    });
+
+    return rootThemes;
+  };
+
+  const hierarchicalThemes = buildThemeHierarchy(themes);
+
+  // Initialize expanded state - start with all themes collapsed
+  React.useEffect(() => {
+    setExpandedThemes(new Set()); // Empty set = all collapsed
+  }, [themes]);
+
+  const toggleThemeExpansion = (themeId: string) => {
+    setExpandedThemes(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(themeId)) {
+        newSet.delete(themeId);
+      } else {
+        newSet.add(themeId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, theme: Theme) => {
+    event.stopPropagation();
+    setMenuAnchorEl(event.currentTarget);
+    setSelectedThemeForMenu(theme);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
+    setSelectedThemeForMenu(null);
+  };
+
+  const handleMenuAction = (action: 'edit' | 'delete' | 'add-sub') => {
+    if (!selectedThemeForMenu) return;
+
+    switch (action) {
+      case 'edit':
+        handleOpenDialog(selectedThemeForMenu);
+        break;
+      case 'delete':
+        handleDeleteTheme(selectedThemeForMenu.id);
+        break;
+      case 'add-sub':
+        handleOpenDialog(undefined, selectedThemeForMenu.id);
+        break;
+    }
+    handleMenuClose();
+  };
 
   const getAuthToken = () => {
     return tokens?.access_token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTk3NDIzODgsInN1YiI6ImI0NzE0NGU3LTAyYTAtNGEyMi04MDBlLTNmNzE3YmZiNGZhYSIsInR5cGUiOiJhY2Nlc3MifQ.L2dOy92Nim5egY3nzRXQts3ywgxV_JvO_8EEiePpDNY';
@@ -148,18 +222,20 @@ export function ThemesPage(): JSX.Element {
     fetchThemes();
   }, []);
 
-  const handleOpenDialog = (themeToEdit?: Theme) => {
+  const handleOpenDialog = (themeToEdit?: Theme, parentThemeId?: string) => {
     if (themeToEdit) {
       setEditingTheme(themeToEdit);
       setFormData({
         name: themeToEdit.name,
         description: themeToEdit.description,
+        parent_theme_id: themeToEdit.parent_theme_id || null,
       });
     } else {
       setEditingTheme(null);
       setFormData({
         name: '',
         description: '',
+        parent_theme_id: parentThemeId || null,
       });
     }
     setDialogOpen(true);
@@ -177,14 +253,18 @@ export function ThemesPage(): JSX.Element {
       if (editingTheme) {
         // Update existing theme
         const response = await fetch(
-          `http://localhost:8000/api/v1/themes/${editingTheme.id}?workspace_id=${WORKSPACE_ID}`,
+          `http://localhost:8000/api/v1/features/themes/${editingTheme.id}?workspace_id=${WORKSPACE_ID}`,
           {
             method: 'PUT',
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify({
+              name: formData.name,
+              description: formData.description,
+              parent_theme_id: formData.parent_theme_id
+            })
           }
         );
 
@@ -194,14 +274,18 @@ export function ThemesPage(): JSX.Element {
       } else {
         // Create new theme
         const response = await fetch(
-          `http://localhost:8000/api/v1/themes?workspace_id=${WORKSPACE_ID}`,
+          `http://localhost:8000/api/v1/features/themes?workspace_id=${WORKSPACE_ID}`,
           {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify({
+              name: formData.name,
+              description: formData.description,
+              parent_theme_id: formData.parent_theme_id
+            })
           }
         );
 
@@ -226,7 +310,7 @@ export function ThemesPage(): JSX.Element {
     try {
       const token = getAuthToken();
       const response = await fetch(
-        `http://localhost:8000/api/v1/themes/${themeId}?workspace_id=${WORKSPACE_ID}`,
+        `http://localhost:8000/api/v1/features/themes/${themeId}?workspace_id=${WORKSPACE_ID}`,
         {
           method: 'DELETE',
           headers: {
@@ -280,7 +364,6 @@ export function ThemesPage(): JSX.Element {
 
   const handleThemeClick = (theme: Theme) => {
     setSelectedThemeForDrawer(theme);
-    setDrawerOpen(true);
     fetchThemeFeatures(theme.id);
   };
 
@@ -356,6 +439,165 @@ export function ThemesPage(): JSX.Element {
     }
   };
 
+  // Row-based theme renderer with proper hierarchy
+  const renderThemeRow = (themeItem: any, level: number = 0) => {
+    const indentWidth = level * 32; // 32px indent per level
+    const hasChildren = themeItem.children && themeItem.children.length > 0;
+    const isExpanded = expandedThemes.has(themeItem.id);
+
+    return (
+      <React.Fragment key={themeItem.id}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            py: 1,
+            px: 2,
+            ml: indentWidth / 8, // Convert to MUI spacing units
+            borderRadius: 1,
+            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+            background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.03)} 0%, ${alpha(theme.palette.primary.main, 0.01)} 100%)`,
+            cursor: 'pointer',
+            transition: 'all 0.2s ease-in-out',
+            mb: 0.5,
+            position: 'relative',
+            '&:hover': {
+              background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.08)} 0%, ${alpha(theme.palette.primary.main, 0.04)} 100%)`,
+              borderColor: theme.palette.primary.main,
+              transform: 'translateX(4px)',
+              '& .theme-actions': {
+                opacity: 1,
+                visibility: 'visible'
+              }
+            },
+          }}
+          onClick={() => handleThemeClick(themeItem)}
+        >
+          {/* Hierarchy indicator */}
+          {level > 0 && (
+            <Box sx={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 3,
+              bgcolor: '#4FC3F7', // Light blue - more soothing
+              borderRadius: '0 1px 1px 0'
+            }} />
+          )}
+
+          {/* Expand/Collapse button */}
+          {hasChildren && (
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleThemeExpansion(themeItem.id);
+              }}
+              sx={{
+                width: 28,
+                height: 28,
+                mr: 1,
+                color: theme.palette.text.secondary,
+                '&:hover': {
+                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                  color: theme.palette.primary.main
+                }
+              }}
+            >
+              {isExpanded ? (
+                <ExpandMoreIcon sx={{ fontSize: 18 }} />
+              ) : (
+                <ChevronRightIcon sx={{ fontSize: 18 }} />
+              )}
+            </IconButton>
+          )}
+
+          {/* Theme name and info */}
+          <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, fontSize: '0.9rem' }}>
+                {themeItem.name}
+              </Typography>
+            </Box>
+
+          </Box>
+
+          {/* Stats - Right aligned before actions */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 1 }}>
+            {themeItem.feature_count > 0 && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <FeatureIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                <Box sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  bgcolor: alpha(theme.palette.primary.main, 0.2),
+                  color: theme.palette.primary.main,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.75rem',
+                  fontWeight: 600
+                }}>
+                  {themeItem.feature_count}
+                </Box>
+              </Box>
+            )}
+            {themeItem.children && themeItem.children.length > 0 && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <CategoryIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                <Box sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  bgcolor: alpha(theme.palette.secondary.main, 0.2),
+                  color: theme.palette.secondary.main,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.75rem',
+                  fontWeight: 600
+                }}>
+                  {themeItem.children.length}
+                </Box>
+              </Box>
+            )}
+          </Box>
+
+          {/* Actions - Dropdown Menu */}
+          <Box
+            className="theme-actions"
+            sx={{
+              opacity: 0,
+              visibility: 'hidden',
+              transition: 'all 0.2s ease-in-out'
+            }}
+          >
+            <IconButton
+              size="small"
+              onClick={(e) => handleMenuOpen(e, themeItem)}
+              sx={{
+                width: 32,
+                height: 32,
+                bgcolor: alpha(theme.palette.grey[500], 0.1),
+                '&:hover': { bgcolor: alpha(theme.palette.grey[500], 0.2) }
+              }}
+              title="More options"
+            >
+              <MoreVertIcon sx={{ fontSize: 16 }} />
+            </IconButton>
+          </Box>
+        </Box>
+
+        {/* Render sub-themes only when expanded */}
+        {hasChildren && isExpanded && themeItem.children.map((childTheme: any) =>
+          renderThemeRow(childTheme, level + 1)
+        )}
+      </React.Fragment>
+    );
+  };
+
   const selectedTheme = themes.find(t => t.id === selectedThemeId) || themes[0];
 
   const totalFeatures = themes.reduce((acc, t) => acc + t.feature_count, 0);
@@ -377,59 +619,6 @@ export function ThemesPage(): JSX.Element {
     <AdminLayout>
       <Box>
         {/* Header */}
-        <Box sx={{
-          mb: 3,
-          p: 3,
-          borderRadius: 2,
-          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
-          border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-        }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              <Box sx={{
-                width: 48,
-                height: 48,
-                borderRadius: 2,
-                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
-              }}>
-                <CategoryIcon sx={{ color: 'white', fontSize: 24 }} />
-              </Box>
-              <Box>
-                <Typography variant="h4" sx={{ fontWeight: 800, mb: 0.5 }}>
-                  Theme Management
-                </Typography>
-                <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 500 }}>
-                  Organize and categorize feature requests by themes
-                </Typography>
-              </Box>
-            </Box>
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <Button
-                variant="outlined"
-                startIcon={<RefreshIcon />}
-                onClick={fetchThemes}
-                sx={{ borderRadius: 2 }}
-              >
-                Refresh
-              </Button>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={() => handleOpenDialog()}
-                sx={{
-                  borderRadius: 2,
-                  background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-                }}
-              >
-                Create Theme
-              </Button>
-            </Box>
-          </Box>
-        </Box>
 
         {error && (
           <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
@@ -437,346 +626,357 @@ export function ThemesPage(): JSX.Element {
           </Alert>
         )}
 
-        {/* Stats Overview */}
-        <Grid container spacing={2} sx={{ mb: 3 }}>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{
-              borderRadius: 1,
-              background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.06)} 0%, ${alpha(theme.palette.primary.main, 0.03)} 100%)`,
-              border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-              transition: 'all 0.3s ease-in-out',
-              '&:hover': { transform: 'translateY(-2px)' },
-            }}>
-              <CardContent sx={{ p: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                  <Box sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 2,
-                    background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <CategoryIcon sx={{ color: 'white', fontSize: 20 }} />
-                  </Box>
-                  <Box>
-                    <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                      {themes.length}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Total Themes
-                    </Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{
-              borderRadius: 1,
-              background: `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.06)} 0%, ${alpha(theme.palette.success.main, 0.03)} 100%)`,
-              border: `1px solid ${alpha(theme.palette.success.main, 0.1)}`,
-              transition: 'all 0.3s ease-in-out',
-              '&:hover': { transform: 'translateY(-2px)' },
-            }}>
-              <CardContent sx={{ p: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                  <Box sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 2,
-                    background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100())`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <FeatureIcon sx={{ color: 'white', fontSize: 20 }} />
-                  </Box>
-                  <Box>
-                    <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                      {totalFeatures}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Total Features
-                    </Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{
-              borderRadius: 1,
-              background: `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.06)} 0%, ${alpha(theme.palette.warning.main, 0.03)} 100%)`,
-              border: `1px solid ${alpha(theme.palette.warning.main, 0.1)}`,
-              transition: 'all 0.3s ease-in-out',
-              '&:hover': { transform: 'translateY(-2px)' },
-            }}>
-              <CardContent sx={{ p: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                  <Box sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 2,
-                    background: `linear-gradient(135deg, ${theme.palette.warning.main} 0%, ${theme.palette.warning.dark} 100())`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <TrendingIcon sx={{ color: 'white', fontSize: 20 }} />
-                  </Box>
-                  <Box>
-                    <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                      {themes.filter(t => t.feature_count > 0).length}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Active Themes
-                    </Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{
-              borderRadius: 1,
-              background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.06)} 0%, ${alpha(theme.palette.info.main, 0.03)} 100%)`,
-              border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
-              transition: 'all 0.3s ease-in-out',
-              '&:hover': { transform: 'translateY(-2px)' },
-            }}>
-              <CardContent sx={{ p: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                  <Box sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 2,
-                    background: `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.info.dark} 100())`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <FeatureIcon sx={{ color: 'white', fontSize: 20 }} />
-                  </Box>
-                  <Box>
-                    <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                      {themes.length > 0 ? Math.round(totalFeatures / themes.length) : 0}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Avg Features/Theme
-                    </Typography>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-
-        {/* Main Content */}
-        <Grid container spacing={2}>
-          {/* Themes List */}
-          <Grid item xs={12} lg={8}>
+        {/* Split Layout: Themes (30%) and Features (70%) */}
+        <Grid container spacing={2} sx={{ height: 'calc(100vh - 120px)' }}>
+          {/* Themes List - Left 30% */}
+          <Grid item xs={12} lg={3.6}>
             <Card sx={{
               borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+              height: 'calc(100vh - 120px)', // Fixed height for scrolling
             }}>
-              <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
-                  <CategoryIcon sx={{ color: theme.palette.primary.main }} />
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    All Themes
-                  </Typography>
-                  <Chip
-                    label={`${themes.length} themes`}
-                    size="small"
+              <CardContent sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <CategoryIcon sx={{ color: theme.palette.primary.main }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      All Themes
+                    </Typography>
+                  </Box>
+
+                  {/* Add Theme Button */}
+                  <IconButton
+                    onClick={() => handleOpenDialog()}
                     sx={{
+                      width: 36,
+                      height: 36,
                       bgcolor: alpha(theme.palette.primary.main, 0.1),
                       color: theme.palette.primary.main,
+                      '&:hover': {
+                        bgcolor: alpha(theme.palette.primary.main, 0.2),
+                        transform: 'scale(1.05)',
+                      },
+                      transition: 'all 0.2s ease-in-out'
                     }}
-                  />
+                    title="Create New Theme"
+                  >
+                    <AddIcon sx={{ fontSize: 20 }} />
+                  </IconButton>
                 </Box>
 
-                <Grid container spacing={2}>
-                  {themes.map((themeItem) => (
-                    <Grid item xs={12} sm={6} key={themeItem.id}>
-                      <Card sx={{
-                        borderRadius: 1,
-                        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
-                        border: selectedThemeId === themeItem.id
-                          ? `2px solid ${theme.palette.primary.main}`
-                          : `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
-                        cursor: 'pointer',
-                        transition: 'all 0.3s ease-in-out',
-                        '&:hover': {
-                          transform: 'translateY(-4px)',
-                          boxShadow: `0 8px 30px ${alpha(theme.palette.primary.main, 0.08)}`,
-                        },
-                      }}
-                      onClick={() => handleThemeClick(themeItem)}
-                      >
-                        <CardContent sx={{ p: 2 }}>
-                          <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
-                            <Box sx={{ flex: 1 }}>
-                              <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                                {themeItem.name}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.5 }}>
-                                {themeItem.description}
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', gap: 0.5, ml: 1 }}>
-                              <IconButton
-                                size="small"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleOpenDialog(themeItem);
-                                }}
-                                sx={{
-                                  borderRadius: 1,
-                                  '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.1) }
-                                }}
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteTheme(themeItem.id);
-                                }}
-                                sx={{
-                                  borderRadius: 1,
-                                  '&:hover': { bgcolor: alpha(theme.palette.error.main, 0.1) }
-                                }}
-                              >
-                                <DeleteIcon fontSize="small" />
-                              </IconButton>
-                            </Box>
-                          </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', overflow: 'auto', flex: 1 }}>
+                  {/* All Themes Summary Row */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      py: 1,
+                      px: 2,
+                      borderRadius: 1,
+                      border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.08)} 0%, ${alpha(theme.palette.primary.main, 0.04)} 100%)`,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease-in-out',
+                      mb: 1,
+                      '&:hover': {
+                        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.12)} 0%, ${alpha(theme.palette.primary.main, 0.08)} 100%)`,
+                        borderColor: theme.palette.primary.main,
+                        transform: 'translateX(2px)',
+                      },
+                    }}
+                    onClick={() => {
+                      setSelectedThemeForDrawer(null);
+                      // You could implement a function to show all features from all themes
+                    }}
+                  >
+                    {/* All Themes Label */}
+                    <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: '0.9rem', color: theme.palette.primary.main }}>
+                        All Themes
+                      </Typography>
+                    </Box>
 
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                <FeatureIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
-                                <Typography variant="caption" color="text.secondary">
-                                  {themeItem.feature_count} features
-                                </Typography>
-                              </Box>
-                            </Box>
-                            <Typography variant="caption" color="text.secondary">
-                              Updated: {formatDate(themeItem.updated_at)}
-                            </Typography>
-                          </Box>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  ))}
-                </Grid>
+                    {/* Total Features Count */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 1 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <FeatureIcon sx={{ fontSize: 16, color: theme.palette.primary.main }} />
+                        <Box sx={{
+                          width: 22,
+                          height: 22,
+                          borderRadius: '50%',
+                          bgcolor: theme.palette.primary.main,
+                          color: 'white',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '0.75rem',
+                          fontWeight: 600
+                        }}>
+                          {themes.reduce((acc, t) => acc + t.feature_count, 0)}
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  {/* Individual Themes */}
+                  {hierarchicalThemes.map((themeItem) => renderThemeRow(themeItem))}
+                </Box>
               </CardContent>
             </Card>
           </Grid>
 
-          {/* Theme Details Sidebar */}
-          <Grid item xs={12} lg={4}>
+          {/* Features List - Right 70% */}
+          <Grid item xs={12} lg={8.4}>
             <Card sx={{
               borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-              position: 'sticky',
-              top: 24,
+              height: 'calc(100vh - 120px)', // Fixed height for scrolling
             }}>
-              <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
-                  <TrendingIcon sx={{ color: theme.palette.info.main }} />
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    Theme Details
-                  </Typography>
-                </Box>
-
-                {selectedTheme ? (
-                  <Box>
-                    <Box sx={{
-                      p: 2,
-                      borderRadius: 1,
-                      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
-                      border: `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
-                      mb: 3
-                    }}>
-                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 1.5 }}>
-                        {selectedTheme.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
-                        {selectedTheme.description}
-                      </Typography>
-                    </Box>
-
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mb: 2 }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                          FEATURES
-                        </Typography>
-                        <Typography variant="caption">
-                          {selectedTheme.feature_count}
-                        </Typography>
+              <CardContent sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                {selectedThemeForDrawer ? (
+                  <>
+                    {/* Selected Theme Header */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
+                      <Box sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 2,
+                        background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                        <FeatureIcon sx={{ color: 'white', fontSize: 20 }} />
                       </Box>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                          CREATED
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                          {selectedThemeForDrawer.name}
                         </Typography>
-                        <Typography variant="caption">
-                          {formatDate(selectedTheme.created_at)}
-                        </Typography>
-                      </Box>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                          LAST UPDATED
-                        </Typography>
-                        <Typography variant="caption">
-                          {formatDate(selectedTheme.updated_at)}
+                        <Typography variant="body2" color="text.secondary">
+                          {themeFeatures.length} features in this theme
                         </Typography>
                       </Box>
                     </Box>
 
-                    <Divider sx={{ my: 3 }} />
+                    {/* Theme Description */}
+                    {selectedThemeForDrawer.description && (
+                      <Box sx={{
+                        p: 2,
+                        borderRadius: 2,
+                        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
+                        border: `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
+                        mb: 3
+                      }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                          {selectedThemeForDrawer.description}
+                        </Typography>
+                      </Box>
+                    )}
 
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        startIcon={<EditIcon />}
-                        onClick={() => handleOpenDialog(selectedTheme)}
-                        sx={{ flex: 1 }}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant="contained"
-                        size="small"
-                        startIcon={<FeatureIcon />}
-                        onClick={() => {
-                          // Navigate to features page with this theme selected
-                          window.location.href = '/app/features';
-                        }}
-                        sx={{
-                          flex: 1,
-                          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100())`,
-                        }}
-                      >
-                        View Features
-                      </Button>
+                    {/* Features List */}
+                    <Box sx={{ flex: 1, overflow: 'auto' }}>
+                      {loadingFeatures ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
+                          <CircularProgress size={24} />
+                          <Typography variant="body2" sx={{ ml: 2 }}>Loading features...</Typography>
+                        </Box>
+                      ) : themeFeatures.length > 0 ? (
+                        <List sx={{ p: 0 }}>
+                          {themeFeatures.map((feature, index) => (
+                            <React.Fragment key={feature.id}>
+                              <ListItem
+                                sx={{
+                                  borderRadius: 2,
+                                  mb: 1,
+                                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.6)} 0%, ${alpha(theme.palette.background.paper, 0.3)} 100%)`,
+                                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                                  '&:hover': {
+                                    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
+                                    border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                                  },
+                                }}
+                              >
+                                <ListItemText
+                                  primary={
+                                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                                      {feature.name}
+                                    </Typography>
+                                  }
+                                  secondary={
+                                    <Box>
+                                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, lineHeight: 1.5 }}>
+                                        {feature.description.length > 100
+                                          ? `${feature.description.substring(0, 100)}...`
+                                          : feature.description
+                                        }
+                                      </Typography>
+                                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center', mb: 1.5 }}>
+                                        <Chip
+                                          label={feature.urgency}
+                                          size="small"
+                                          color={getUrgencyColor(feature.urgency) as any}
+                                          sx={{ minWidth: 'auto' }}
+                                        />
+                                        <Chip
+                                          label={feature.status}
+                                          size="small"
+                                          color={getStatusColor(feature.status) as any}
+                                          variant="outlined"
+                                          sx={{ minWidth: 'auto' }}
+                                        />
+                                        <Chip
+                                          label={`${feature.mention_count} mentions`}
+                                          size="small"
+                                          variant="outlined"
+                                          sx={{
+                                            minWidth: 'auto',
+                                            cursor: 'pointer',
+                                            '&:hover': {
+                                              backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                                              borderColor: theme.palette.primary.main
+                                            }
+                                          }}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleShowMessages(feature);
+                                          }}
+                                        />
+                                      </Box>
+
+                                      {/* Data Points Section */}
+                                      {feature.data_points && feature.data_points.length > 0 && (
+                                        <Box sx={{ mt: 2 }}>
+                                          <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, mb: 1, display: 'block' }}>
+                                            Extracted Insights:
+                                          </Typography>
+                                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                            {feature.data_points.map((dataPointEntry, index) => (
+                                              <Box key={index} sx={{
+                                                p: 1.5,
+                                                borderRadius: 1,
+                                                background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.04)} 0%, ${alpha(theme.palette.info.main, 0.02)} 100%)`,
+                                                border: `1px solid ${alpha(theme.palette.info.main, 0.08)}`,
+                                              }}>
+                                                {/* Author and timestamp */}
+                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                                                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                                                    {dataPointEntry.author || 'Unknown'}
+                                                  </Typography>
+                                                  <Typography variant="caption" color="text.secondary">
+                                                    {dataPointEntry.timestamp ? new Date(dataPointEntry.timestamp).toLocaleDateString() : ''}
+                                                  </Typography>
+                                                </Box>
+
+                                                {/* Display structured metrics, business metrics, and entities */}
+                                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                                  {dataPointEntry.structured_metrics && Object.keys(dataPointEntry.structured_metrics).length > 0 && (
+                                                    <Box>
+                                                      <Typography variant="caption" color="primary.main" sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
+                                                        📊 Metrics:
+                                                      </Typography>
+                                                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                        {Object.entries(dataPointEntry.structured_metrics).map(([key, value]) => (
+                                                          <Chip
+                                                            key={key}
+                                                            label={`${key}: ${value}`}
+                                                            size="small"
+                                                            variant="outlined"
+                                                            color="primary"
+                                                            sx={{ fontSize: '0.7rem', height: 24 }}
+                                                          />
+                                                        ))}
+                                                      </Box>
+                                                    </Box>
+                                                  )}
+
+                                                  {dataPointEntry.business_metrics && Object.keys(dataPointEntry.business_metrics).length > 0 && (
+                                                    <Box>
+                                                      <Typography variant="caption" color="success.main" sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
+                                                        💰 Business:
+                                                      </Typography>
+                                                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                        {Object.entries(dataPointEntry.business_metrics).map(([key, value]) => (
+                                                          <Chip
+                                                            key={key}
+                                                            label={`${key}: ${value}`}
+                                                            size="small"
+                                                            variant="outlined"
+                                                            color="success"
+                                                            sx={{ fontSize: '0.7rem', height: 24 }}
+                                                          />
+                                                        ))}
+                                                      </Box>
+                                                    </Box>
+                                                  )}
+
+                                                  {dataPointEntry.entities && Object.keys(dataPointEntry.entities).length > 0 && (
+                                                    <Box>
+                                                      <Typography variant="caption" color="info.main" sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
+                                                        🏷️ Entities:
+                                                      </Typography>
+                                                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                        {Object.entries(dataPointEntry.entities).map(([key, value]) => (
+                                                          <Chip
+                                                            key={key}
+                                                            label={`${key}: ${value}`}
+                                                            size="small"
+                                                            variant="outlined"
+                                                            color="info"
+                                                            sx={{ fontSize: '0.7rem', height: 24 }}
+                                                          />
+                                                        ))}
+                                                      </Box>
+                                                    </Box>
+                                                  )}
+                                                </Box>
+                                              </Box>
+                                            ))}
+                                          </Box>
+                                        </Box>
+                                      )}
+                                    </Box>
+                                  }
+                                />
+                              </ListItem>
+                              {index < themeFeatures.length - 1 && (
+                                <Divider sx={{ my: 0.5, opacity: 0.5 }} />
+                              )}
+                            </React.Fragment>
+                          ))}
+                        </List>
+                      ) : (
+                        <Box sx={{ textAlign: 'center', py: 6 }}>
+                          <FeatureIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
+                          <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+                            No Features Found
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            This theme doesn't have any features yet.
+                          </Typography>
+                        </Box>
+                      )}
                     </Box>
-                  </Box>
+                  </>
                 ) : (
-                  <Box sx={{ textAlign: 'center', py: 4 }}>
+                  <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                    textAlign: 'center'
+                  }}>
+                    <FeatureIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
+                    <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+                      Select a Theme
+                    </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Select a theme to view details
+                      Click on a theme from the left to view its features here.
                     </Typography>
                   </Box>
                 )}
@@ -825,6 +1025,24 @@ export function ThemesPage(): JSX.Element {
                 rows={3}
                 required
               />
+
+              <TextField
+                select
+                label="Parent Theme (Optional)"
+                value={formData.parent_theme_id || ''}
+                onChange={(e) => setFormData({ ...formData, parent_theme_id: e.target.value || null })}
+                fullWidth
+                helperText="Select a parent theme to create a sub-theme"
+              >
+                <MenuItem value="">None (Root Theme)</MenuItem>
+                {themes
+                  .filter(t => !t.parent_theme_id && t.id !== editingTheme?.id) // Only show root themes and exclude current theme if editing
+                  .map((parentTheme) => (
+                    <MenuItem key={parentTheme.id} value={parentTheme.id}>
+                      {parentTheme.name}
+                    </MenuItem>
+                  ))}
+              </TextField>
             </Box>
           </DialogContent>
 
@@ -1205,6 +1423,54 @@ export function ThemesPage(): JSX.Element {
             )}
           </Box>
         </Drawer>
+
+        {/* Theme Actions Dropdown Menu */}
+        <Menu
+          anchorEl={menuAnchorEl}
+          open={Boolean(menuAnchorEl)}
+          onClose={handleMenuClose}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          sx={{
+            '& .MuiPaper-root': {
+              borderRadius: 2,
+              minWidth: 160,
+              boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+              border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+            },
+          }}
+        >
+          <MenuItem
+            onClick={() => handleMenuAction('edit')}
+            sx={{ py: 1.5, px: 2 }}
+          >
+            <EditIcon sx={{ fontSize: 18, mr: 1.5, color: 'text.secondary' }} />
+            Edit Theme
+          </MenuItem>
+          {selectedThemeForMenu && !selectedThemeForMenu.parent_theme_id && (
+            <MenuItem
+              onClick={() => handleMenuAction('add-sub')}
+              sx={{ py: 1.5, px: 2 }}
+            >
+              <AddIcon sx={{ fontSize: 18, mr: 1.5, color: 'text.secondary' }} />
+              Add Sub-theme
+            </MenuItem>
+          )}
+          <MenuItem
+            onClick={() => handleMenuAction('delete')}
+            sx={{
+              py: 1.5,
+              px: 2,
+              color: 'error.main',
+              '&:hover': {
+                bgcolor: alpha(theme.palette.error.main, 0.1)
+              }
+            }}
+          >
+            <DeleteIcon sx={{ fontSize: 18, mr: 1.5 }} />
+            Delete Theme
+          </MenuItem>
+        </Menu>
       </Box>
     </AdminLayout>
   );

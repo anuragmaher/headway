@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Text
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import uuid
@@ -9,15 +9,18 @@ from app.core.database import Base
 
 class Feature(Base):
     """Feature model representing extracted feature requests"""
-    
+
     __tablename__ = "features"
-    
+
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     name = Column(String, nullable=False)
     description = Column(Text, nullable=True)
     urgency = Column(String, nullable=False, default="medium")  # low, medium, high, critical
     status = Column(String, nullable=False, default="new")  # new, under-review, planned, shipped
     mention_count = Column(Integer, nullable=False, default=1)
+
+    # Extracted data points from LLM processing
+    data_points = Column(JSONB, nullable=True)  # List of structured data points and insights
     
     # Workspace and theme relationships
     workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), nullable=False)

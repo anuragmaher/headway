@@ -41,3 +41,30 @@ export interface ThemeColors {
   divider: string;
   border: string;
 }
+
+/**
+ * Theme data types for feature categorization
+ */
+export interface ThemeData {
+  id: string;
+  name: string;
+  description: string;
+  feature_count: number;
+  workspace_id: string;
+  created_at: string;
+  updated_at: string;
+  parent_theme_id?: string | null;
+  sub_theme_count?: number;
+  level?: number;
+}
+
+export interface ThemeFormData {
+  name: string;
+  description: string;
+  parent_theme_id?: string | null;
+}
+
+export interface ThemeHierarchy extends ThemeData {
+  children: ThemeHierarchy[];
+  parent?: ThemeHierarchy | null;
+}

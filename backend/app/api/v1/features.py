@@ -21,11 +21,13 @@ router = APIRouter()
 class ThemeCreateRequest(BaseModel):
     name: str
     description: Optional[str] = None
+    parent_theme_id: Optional[str] = None
 
 
 class ThemeUpdateRequest(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
+    parent_theme_id: Optional[str] = None
 
 
 class FeatureResponse(BaseModel):
@@ -40,6 +42,7 @@ class FeatureResponse(BaseModel):
     last_mentioned: str
     created_at: str
     updated_at: Optional[str]
+    data_points: Optional[List[dict]] = None
 
     class Config:
         from_attributes = True
@@ -50,6 +53,9 @@ class ThemeResponse(BaseModel):
     name: str
     description: Optional[str]
     feature_count: int
+    parent_theme_id: Optional[str]
+    sub_theme_count: int = 0
+    level: int = 0  # 0 for root themes, 1 for sub-themes, etc.
 
     class Config:
         from_attributes = True
@@ -69,29 +75,58 @@ class MessageResponse(BaseModel):
 @router.get("/themes", response_model=List[ThemeResponse])
 async def get_themes(
     workspace_id: str,
+    include_sub_themes: bool = True,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
     Get all themes for a workspace with feature counts
+    Returns hierarchical theme structure by default
     """
     try:
+        # Get all themes for the workspace
         themes = db.query(Theme).filter(
             Theme.workspace_id == workspace_id
-        ).all()
+        ).order_by(Theme.parent_theme_id.asc().nullsfirst(), Theme.sort_order.asc()).all()
 
-        # Convert to response format with feature counts
+        def calculate_level(theme, all_themes, memo={}):
+            if theme.id in memo:
+                return memo[theme.id]
+
+            if theme.parent_theme_id is None:
+                memo[theme.id] = 0
+                return 0
+
+            parent = next((t for t in all_themes if t.id == theme.parent_theme_id), None)
+            if parent is None:
+                memo[theme.id] = 0
+                return 0
+
+            level = calculate_level(parent, all_themes, memo) + 1
+            memo[theme.id] = level
+            return level
+
+        # Convert to response format with feature counts and hierarchy info
         theme_responses = []
         for theme in themes:
             feature_count = db.query(Feature).filter(
                 Feature.theme_id == theme.id
             ).count()
 
+            sub_theme_count = db.query(Theme).filter(
+                Theme.parent_theme_id == theme.id
+            ).count()
+
+            level = calculate_level(theme, themes)
+
             theme_responses.append(ThemeResponse(
                 id=str(theme.id),
                 name=theme.name,
                 description=theme.description,
-                feature_count=feature_count
+                feature_count=feature_count,
+                parent_theme_id=str(theme.parent_theme_id) if theme.parent_theme_id else None,
+                sub_theme_count=sub_theme_count,
+                level=level
             ))
 
         return theme_responses
@@ -127,11 +162,26 @@ async def create_theme(
                 detail=f"Theme '{request.name}' already exists"
             )
 
+        # Validate parent theme if provided
+        parent_theme = None
+        if request.parent_theme_id:
+            parent_theme = db.query(Theme).filter(
+                Theme.id == request.parent_theme_id,
+                Theme.workspace_id == workspace_id
+            ).first()
+
+            if not parent_theme:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Parent theme not found"
+                )
+
         # Create new theme
         new_theme = Theme(
             name=request.name,
             description=request.description,
             workspace_id=workspace_id,
+            parent_theme_id=request.parent_theme_id,
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow()
         )
@@ -145,11 +195,22 @@ async def create_theme(
             Feature.theme_id == new_theme.id
         ).count()
 
+        # Calculate sub-theme count
+        sub_theme_count = db.query(Theme).filter(
+            Theme.parent_theme_id == new_theme.id
+        ).count()
+
+        # Calculate level
+        level = 0 if not parent_theme else 1  # Simple calculation for now
+
         return ThemeResponse(
             id=str(new_theme.id),
             name=new_theme.name,
             description=new_theme.description,
-            feature_count=feature_count
+            feature_count=feature_count,
+            parent_theme_id=str(new_theme.parent_theme_id) if new_theme.parent_theme_id else None,
+            sub_theme_count=sub_theme_count,
+            level=level
         )
 
     except HTTPException:
@@ -201,11 +262,33 @@ async def update_theme(
                     detail=f"Theme '{request.name}' already exists"
                 )
 
+        # Validate parent theme if being changed
+        if request.parent_theme_id is not None and request.parent_theme_id != theme.parent_theme_id:
+            if request.parent_theme_id == str(theme.id):
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Theme cannot be its own parent"
+                )
+
+            if request.parent_theme_id:
+                parent_theme = db.query(Theme).filter(
+                    Theme.id == request.parent_theme_id,
+                    Theme.workspace_id == workspace_id
+                ).first()
+
+                if not parent_theme:
+                    raise HTTPException(
+                        status_code=status.HTTP_404_NOT_FOUND,
+                        detail="Parent theme not found"
+                    )
+
         # Update theme fields
         if request.name is not None:
             theme.name = request.name
         if request.description is not None:
             theme.description = request.description
+        if request.parent_theme_id is not None:
+            theme.parent_theme_id = request.parent_theme_id if request.parent_theme_id else None
 
         theme.updated_at = datetime.utcnow()
 
@@ -217,11 +300,25 @@ async def update_theme(
             Feature.theme_id == theme.id
         ).count()
 
+        # Calculate sub-theme count
+        sub_theme_count = db.query(Theme).filter(
+            Theme.parent_theme_id == theme.id
+        ).count()
+
+        # Calculate level
+        level = 0
+        if theme.parent_theme_id:
+            parent = db.query(Theme).filter(Theme.id == theme.parent_theme_id).first()
+            level = 1 if parent else 0
+
         return ThemeResponse(
             id=str(theme.id),
             name=theme.name,
             description=theme.description,
-            feature_count=feature_count
+            feature_count=feature_count,
+            parent_theme_id=str(theme.parent_theme_id) if theme.parent_theme_id else None,
+            sub_theme_count=sub_theme_count,
+            level=level
         )
 
     except HTTPException:
@@ -318,7 +415,8 @@ async def get_features(
                 first_mentioned=feature.first_mentioned.isoformat() if feature.first_mentioned else "",
                 last_mentioned=feature.last_mentioned.isoformat() if feature.last_mentioned else "",
                 created_at=feature.created_at.isoformat() if feature.created_at else "",
-                updated_at=feature.updated_at.isoformat() if feature.updated_at else None
+                updated_at=feature.updated_at.isoformat() if feature.updated_at else None,
+                data_points=feature.data_points if feature.data_points else []
             ))
 
         return feature_responses
@@ -364,7 +462,8 @@ async def get_feature(
             first_mentioned=feature.first_mentioned.isoformat() if feature.first_mentioned else "",
             last_mentioned=feature.last_mentioned.isoformat() if feature.last_mentioned else "",
             created_at=feature.created_at.isoformat() if feature.created_at else "",
-            updated_at=feature.updated_at.isoformat() if feature.updated_at else None
+            updated_at=feature.updated_at.isoformat() if feature.updated_at else None,
+            data_points=feature.data_points if feature.data_points else []
         )
 
     except HTTPException:

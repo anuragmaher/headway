@@ -13,6 +13,7 @@ from app.models.feature import Feature
 from app.models.integration import Integration
 from app.models.message import Message, feature_messages
 from app.models.clustering import ClusteringRun, DiscoveredCluster, ClassificationSignal
+from app.models.workspace_data_point import WorkspaceDataPoint
 
 __all__ = [
     "User",
@@ -25,5 +26,6 @@ __all__ = [
     "feature_messages",
     "ClusteringRun",
     "DiscoveredCluster",
-    "ClassificationSignal"
+    "ClassificationSignal",
+    "WorkspaceDataPoint"
 ]

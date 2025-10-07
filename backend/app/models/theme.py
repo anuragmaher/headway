@@ -22,14 +22,21 @@ class Theme(Base):
     
     # Workspace relationship
     workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), nullable=False)
-    
+
+    # Hierarchical relationship - self-referencing foreign key
+    parent_theme_id = Column(UUID(as_uuid=True), ForeignKey("themes.id"), nullable=True)
+
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
-    
+
     # Relationships
     workspace = relationship("Workspace", back_populates="themes")
     features = relationship("Feature", back_populates="theme", cascade="all, delete-orphan")
+
+    # Hierarchical relationships
+    parent_theme = relationship("Theme", remote_side=[id], back_populates="sub_themes")
+    sub_themes = relationship("Theme", back_populates="parent_theme", cascade="all, delete-orphan")
     
     def __repr__(self) -> str:
         return f"<Theme(id={self.id}, name='{self.name}', workspace_id={self.workspace_id})>"
