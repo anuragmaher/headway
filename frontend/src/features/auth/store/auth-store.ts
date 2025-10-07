@@ -5,6 +5,7 @@
 import { create } from 'zustand';
 import { persist, subscribeWithSelector } from 'zustand/middleware';
 import { AuthState, AuthActions, LoginRequest, RegisterRequest, User, AuthTokens } from '../types/auth.types';
+import { API_BASE_URL } from '../../../config/api.config';
 
 const AUTH_STORAGE_KEY = 'headway-auth';
 
@@ -37,7 +38,7 @@ export const useAuthStore = create<AuthStore>()(
           formData.append('username', credentials.email);
           formData.append('password', credentials.password);
 
-          const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+          const response = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
             method: 'POST',
             body: formData,
           });
@@ -49,7 +50,7 @@ export const useAuthStore = create<AuthStore>()(
           const tokens: AuthTokens = await response.json();
 
           // Get user info
-          const userResponse = await fetch('http://localhost:8000/api/v1/auth/me', {
+          const userResponse = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
             headers: {
               'Authorization': `Bearer ${tokens.access_token}`,
             },
@@ -134,7 +135,7 @@ export const useAuthStore = create<AuthStore>()(
         }
 
         try {
-          const response = await fetch('http://localhost:8000/api/v1/auth/refresh', {
+          const response = await fetch(`${API_BASE_URL}/api/v1/auth/refresh`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

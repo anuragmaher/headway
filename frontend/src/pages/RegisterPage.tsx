@@ -17,6 +17,7 @@ import {
   Grid
 } from '@mui/material';
 import { LandingLayout } from '@/shared/components/layouts';
+import { API_BASE_URL } from '@/config/api.config';
 
 interface RegisterForm {
   email: string;
@@ -93,7 +94,7 @@ export function RegisterPage(): JSX.Element {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/auth/register', {
+      const response = await fetch('${API_BASE_URL}/api/v1/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

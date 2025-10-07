@@ -45,6 +45,7 @@ import {
 import { AdminLayout } from '@/shared/components/layouts';
 import { useAuthStore } from '@/features/auth/store/auth-store';
 import { ThemeData, ThemeFormData } from '@/shared/types/theme.types';
+import { API_BASE_URL } from '@/config/api.config';
 
 type Theme = ThemeData;
 
@@ -186,7 +187,7 @@ export function ThemesPage(): JSX.Element {
 
       const token = getAuthToken();
       const response = await fetch(
-        `http://localhost:8000/api/v1/features/themes?workspace_id=${WORKSPACE_ID}`,
+        `${API_BASE_URL}/api/v1/features/themes?workspace_id=${WORKSPACE_ID}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -250,7 +251,7 @@ export function ThemesPage(): JSX.Element {
       if (editingTheme) {
         // Update existing theme
         const response = await fetch(
-          `http://localhost:8000/api/v1/features/themes/${editingTheme.id}?workspace_id=${WORKSPACE_ID}`,
+          `${API_BASE_URL}/api/v1/features/themes/${editingTheme.id}?workspace_id=${WORKSPACE_ID}`,
           {
             method: 'PUT',
             headers: {
@@ -271,7 +272,7 @@ export function ThemesPage(): JSX.Element {
       } else {
         // Create new theme
         const response = await fetch(
-          `http://localhost:8000/api/v1/features/themes?workspace_id=${WORKSPACE_ID}`,
+          `${API_BASE_URL}/api/v1/features/themes?workspace_id=${WORKSPACE_ID}`,
           {
             method: 'POST',
             headers: {
@@ -307,7 +308,7 @@ export function ThemesPage(): JSX.Element {
     try {
       const token = getAuthToken();
       const response = await fetch(
-        `http://localhost:8000/api/v1/features/themes/${themeId}?workspace_id=${WORKSPACE_ID}`,
+        `${API_BASE_URL}/api/v1/features/themes/${themeId}?workspace_id=${WORKSPACE_ID}`,
         {
           method: 'DELETE',
           headers: {
@@ -336,7 +337,7 @@ export function ThemesPage(): JSX.Element {
       setLoadingFeatures(true);
       const token = getAuthToken();
       const response = await fetch(
-        `http://localhost:8000/api/v1/features/features?workspace_id=${WORKSPACE_ID}&theme_id=${themeId}`,
+        `${API_BASE_URL}/api/v1/features/features?workspace_id=${WORKSPACE_ID}&theme_id=${themeId}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -393,7 +394,7 @@ export function ThemesPage(): JSX.Element {
       setLoadingMessages(true);
       const token = getAuthToken();
       const response = await fetch(
-        `http://localhost:8000/api/v1/features/features/${featureId}/messages?workspace_id=${WORKSPACE_ID}`,
+        `${API_BASE_URL}/api/v1/features/features/${featureId}/messages?workspace_id=${WORKSPACE_ID}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,

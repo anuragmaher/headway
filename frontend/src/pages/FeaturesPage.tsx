@@ -21,6 +21,7 @@ import {
 import FeatureMessagesModal from '../shared/components/FeatureMessagesModal';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useAuthStore } from '@/features/auth/store/auth-store';
+import { API_BASE_URL } from '@/config/api.config';
 
 interface Theme {
   id: string;
@@ -75,7 +76,7 @@ const FeaturesPage: React.FC = () => {
 
       // Fetch themes
       const themesResponse = await fetch(
-        `http://localhost:8000/api/v1/features/themes?workspace_id=${WORKSPACE_ID}`,
+        `${API_BASE_URL}/api/v1/features/themes?workspace_id=${WORKSPACE_ID}`,
         { headers }
       );
 
@@ -88,7 +89,7 @@ const FeaturesPage: React.FC = () => {
 
       // Fetch features
       const featuresResponse = await fetch(
-        `http://localhost:8000/api/v1/features/features?workspace_id=${WORKSPACE_ID}`,
+        `${API_BASE_URL}/api/v1/features/features?workspace_id=${WORKSPACE_ID}`,
         { headers }
       );
 
@@ -169,7 +170,7 @@ const FeaturesPage: React.FC = () => {
       setLoadingMessages(true);
       const token = getAuthToken();
       const response = await fetch(
-        `http://localhost:8000/api/v1/features/features/${featureId}/messages?workspace_id=${WORKSPACE_ID}`,
+        `${API_BASE_URL}/api/v1/features/features/${featureId}/messages?workspace_id=${WORKSPACE_ID}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,

@@ -19,6 +19,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import MessageIcon from '@mui/icons-material/Message';
 import PersonIcon from '@mui/icons-material/Person';
 import TagIcon from '@mui/icons-material/Tag';
+import { API_BASE_URL } from '../../config/api.config';
 
 interface Message {
   id: string;
@@ -69,7 +70,7 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
 
       const token = getAuthToken();
       const response = await fetch(
-        `http://localhost:8000/api/v1/features/features/${featureId}/messages?workspace_id=${workspaceId}`,
+        `${API_BASE_URL}/api/v1/features/features/${featureId}/messages?workspace_id=${workspaceId}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
