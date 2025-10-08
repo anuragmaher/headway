@@ -29,6 +29,10 @@ import {
   MenuItem,
   Menu,
   Skeleton,
+  Select,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
@@ -132,6 +136,21 @@ export function ThemesPage(): JSX.Element {
   };
 
   const hierarchicalThemes = buildThemeHierarchy(themes);
+
+  // Flatten hierarchical themes for dropdown (includes all parent and child themes)
+  const flattenedThemes = React.useMemo(() => {
+    const result: Theme[] = [];
+    const flatten = (themeList: Theme[]) => {
+      themeList.forEach(theme => {
+        result.push(theme);
+        if ((theme as any).children && (theme as any).children.length > 0) {
+          flatten((theme as any).children);
+        }
+      });
+    };
+    flatten(hierarchicalThemes);
+    return result;
+  }, [hierarchicalThemes]);
 
   // Initialize expanded state - start with all themes collapsed
   React.useEffect(() => {
@@ -402,6 +421,42 @@ export function ThemesPage(): JSX.Element {
     setSelectedThemeForDrawer(null);
     setShowingAllFeatures(true);
     fetchAllFeatures();
+  };
+
+  const handleFeatureThemeChange = async (featureId: string, newThemeId: string | null) => {
+    try {
+      const token = getAuthToken();
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/features/features/${featureId}?workspace_id=${WORKSPACE_ID}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            theme_id: newThemeId
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to update feature theme: ${response.status}`);
+      }
+
+      // Refresh the features list
+      if (selectedThemeForDrawer) {
+        fetchThemeFeatures(selectedThemeForDrawer.id);
+      } else if (showingAllFeatures) {
+        fetchAllFeatures();
+      }
+
+      // Refresh themes to update counts
+      fetchThemes();
+    } catch (error) {
+      console.error('Error updating feature theme:', error);
+      setError(error instanceof Error ? error.message : 'Failed to update feature theme');
+    }
   };
 
   const handleCloseDrawer = () => {
@@ -905,53 +960,114 @@ export function ThemesPage(): JSX.Element {
                                   },
                                 }}
                               >
-                                <ListItemText
-                                  primary={
-                                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                                <Box sx={{ width: '100%' }}>
+                                  {/* Title and Theme Selector Row */}
+                                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 2, mb: 1 }}>
+                                    <Typography variant="subtitle2" sx={{ fontWeight: 600, flex: 1 }}>
                                       {feature.name}
                                     </Typography>
-                                  }
-                                  secondaryTypographyProps={{ component: 'div' }}
-                                  secondary={
-                                    <Box>
-                                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, lineHeight: 1.5 }}>
-                                        {feature.description.length > 100
-                                          ? `${feature.description.substring(0, 100)}...`
-                                          : feature.description
-                                        }
-                                      </Typography>
-                                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center', mb: 1.5 }}>
-                                        <Chip
-                                          label={feature.urgency}
-                                          size="small"
-                                          color={getUrgencyColor(feature.urgency) as any}
-                                          sx={{ minWidth: 'auto' }}
-                                        />
-                                        <Chip
-                                          label={feature.status}
-                                          size="small"
-                                          color={getStatusColor(feature.status) as any}
-                                          variant="outlined"
-                                          sx={{ minWidth: 'auto' }}
-                                        />
-                                        <Chip
-                                          label={`${feature.mention_count} mentions`}
-                                          size="small"
-                                          variant="outlined"
-                                          sx={{
-                                            minWidth: 'auto',
-                                            cursor: 'pointer',
-                                            '&:hover': {
-                                              backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                                              borderColor: theme.palette.primary.main
+
+                                    {/* Theme Selector - Top Right */}
+                                    <FormControl size="small" sx={{ minWidth: 180 }}>
+                                      <Select
+                                        value={feature.theme_id || ''}
+                                        onChange={(e) => handleFeatureThemeChange(feature.id, e.target.value || null)}
+                                        displayEmpty
+                                        renderValue={(selected) => {
+                                          if (!selected) {
+                                            return <em>No Theme</em>;
+                                          }
+                                          const selectedTheme = flattenedThemes.find(t => t.id === selected);
+                                          if (!selectedTheme) {
+                                            return <em>Unknown Theme</em>;
+                                          }
+
+                                          // For child themes, show "Parent / Child"
+                                          if (selectedTheme.level > 0 && selectedTheme.parent_theme_id) {
+                                            const parentTheme = flattenedThemes.find(t => t.id === selectedTheme.parent_theme_id);
+                                            if (parentTheme) {
+                                              return <Box component="span">{parentTheme.name} / {selectedTheme.name}</Box>;
                                             }
-                                          }}
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleShowMessages(feature);
-                                          }}
-                                        />
-                                      </Box>
+                                          }
+
+                                          // For root themes, show name only
+                                          return <Box component="span">{selectedTheme.name}</Box>;
+                                        }}
+                                        sx={{
+                                          fontSize: '0.875rem',
+                                          backgroundColor: alpha(theme.palette.background.paper, 0.8),
+                                          '& .MuiOutlinedInput-notchedOutline': {
+                                            borderColor: alpha(theme.palette.divider, 0.3),
+                                          },
+                                          '&:hover .MuiOutlinedInput-notchedOutline': {
+                                            borderColor: alpha(theme.palette.primary.main, 0.5),
+                                          }
+                                        }}
+                                      >
+                                        <MenuItem value="">
+                                          <em>No Theme</em>
+                                        </MenuItem>
+                                        {flattenedThemes.map((themeItem) => {
+                                          // For child themes in dropdown, show "Parent / Child"
+                                          let displayText = themeItem.name;
+                                          if (themeItem.level > 0 && themeItem.parent_theme_id) {
+                                            const parentTheme = flattenedThemes.find(t => t.id === themeItem.parent_theme_id);
+                                            if (parentTheme) {
+                                              displayText = `${parentTheme.name} / ${themeItem.name}`;
+                                            }
+                                          }
+
+                                          return (
+                                            <MenuItem key={themeItem.id} value={themeItem.id}>
+                                              {displayText}
+                                            </MenuItem>
+                                          );
+                                        })}
+                                      </Select>
+                                    </FormControl>
+                                  </Box>
+
+                                  {/* Description */}
+                                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, lineHeight: 1.5 }}>
+                                    {feature.description.length > 100
+                                      ? `${feature.description.substring(0, 100)}...`
+                                      : feature.description
+                                    }
+                                  </Typography>
+
+                                  {/* Status Chips */}
+                                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center', mb: 1.5 }}>
+                                    <Chip
+                                      label={feature.urgency}
+                                      size="small"
+                                      color={getUrgencyColor(feature.urgency) as any}
+                                      sx={{ minWidth: 'auto' }}
+                                    />
+                                    <Chip
+                                      label={feature.status}
+                                      size="small"
+                                      color={getStatusColor(feature.status) as any}
+                                      variant="outlined"
+                                      sx={{ minWidth: 'auto' }}
+                                    />
+                                    <Chip
+                                      label={`${feature.mention_count} mentions`}
+                                      size="small"
+                                      variant="outlined"
+                                      sx={{
+                                        minWidth: 'auto',
+                                        cursor: 'pointer',
+                                        '&:hover': {
+                                          backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                                          borderColor: theme.palette.primary.main
+                                        }
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleShowMessages(feature);
+                                      }}
+                                    />
+                                  </Box>
 
                                       {/* Data Points Section */}
                                       {feature.data_points && feature.data_points.length > 0 && (
@@ -1044,9 +1160,7 @@ export function ThemesPage(): JSX.Element {
                                           </Box>
                                         </Box>
                                       )}
-                                    </Box>
-                                  }
-                                />
+                                </Box>
                               </ListItem>
                               {index < themeFeatures.length - 1 && (
                                 <Divider sx={{ my: 0.5, opacity: 0.5 }} />
