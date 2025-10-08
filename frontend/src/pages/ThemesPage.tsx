@@ -92,6 +92,7 @@ export function ThemesPage(): JSX.Element {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedThemeForDrawer, setSelectedThemeForDrawer] = useState<Theme | null>(null);
   const [showingAllFeatures, setShowingAllFeatures] = useState(false);
+  const [showingSubThemes, setShowingSubThemes] = useState(false);
   const [themeFeatures, setThemeFeatures] = useState<Feature[]>([]);
   const [loadingFeatures, setLoadingFeatures] = useState(false);
   const [messagesDrawerOpen, setMessagesDrawerOpen] = useState(false);
@@ -412,13 +413,23 @@ export function ThemesPage(): JSX.Element {
   const handleThemeClick = (theme: Theme) => {
     setSelectedThemeForDrawer(theme);
     setShowingAllFeatures(false);
-    fetchThemeFeatures(theme.id);
+
+    // If theme has children, show sub-themes first
+    const hasChildren = (theme as any).children && (theme as any).children.length > 0;
+    if (hasChildren) {
+      setShowingSubThemes(true);
+      setThemeFeatures([]);
+    } else {
+      setShowingSubThemes(false);
+      fetchThemeFeatures(theme.id);
+    }
   };
 
   const handleAllThemesClick = () => {
     setSelectedThemeForDrawer(null);
     setShowingAllFeatures(true);
-    fetchAllFeatures();
+    setShowingSubThemes(false);
+    setThemeFeatures([]);
   };
 
   const handleFeatureThemeChange = async (featureId: string, newThemeId: string | null) => {
@@ -555,10 +566,6 @@ export function ThemesPage(): JSX.Element {
               background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.08)} 0%, ${alpha(theme.palette.primary.main, 0.04)} 100%)`,
               borderColor: theme.palette.primary.main,
               transform: 'translateX(4px)',
-              '& .theme-actions': {
-                opacity: 1,
-                visibility: 'visible'
-              }
             },
           }}
           onClick={() => handleThemeClick(themeItem)}
@@ -576,33 +583,6 @@ export function ThemesPage(): JSX.Element {
             }} />
           )}
 
-          {/* Expand/Collapse button */}
-          {hasChildren && (
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleThemeExpansion(themeItem.id);
-              }}
-              sx={{
-                width: 28,
-                height: 28,
-                mr: 1,
-                color: theme.palette.text.secondary,
-                '&:hover': {
-                  bgcolor: alpha(theme.palette.primary.main, 0.1),
-                  color: theme.palette.primary.main
-                }
-              }}
-            >
-              {isExpanded ? (
-                <ExpandMoreIcon sx={{ fontSize: 18 }} />
-              ) : (
-                <ChevronRightIcon sx={{ fontSize: 18 }} />
-              )}
-            </IconButton>
-          )}
-
           {/* Theme name and info */}
           <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
             <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
@@ -613,57 +593,8 @@ export function ThemesPage(): JSX.Element {
 
           </Box>
 
-          {/* Stats - Right aligned before actions */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 1 }}>
-            {themeItem.feature_count > 0 && (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <FeatureIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
-                <Box sx={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: '50%',
-                  bgcolor: alpha(theme.palette.primary.main, 0.2),
-                  color: theme.palette.primary.main,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '0.75rem',
-                  fontWeight: 600
-                }}>
-                  {themeItem.feature_count}
-                </Box>
-              </Box>
-            )}
-            {themeItem.children && themeItem.children.length > 0 && (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <CategoryIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
-                <Box sx={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: '50%',
-                  bgcolor: alpha(theme.palette.secondary.main, 0.2),
-                  color: theme.palette.secondary.main,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '0.75rem',
-                  fontWeight: 600
-                }}>
-                  {themeItem.children.length}
-                </Box>
-              </Box>
-            )}
-          </Box>
-
           {/* Actions - Dropdown Menu */}
-          <Box
-            className="theme-actions"
-            sx={{
-              opacity: 0,
-              visibility: 'hidden',
-              transition: 'all 0.2s ease-in-out'
-            }}
-          >
+          <Box>
             <IconButton
               size="small"
               onClick={(e) => handleMenuOpen(e, themeItem)}
@@ -677,6 +608,34 @@ export function ThemesPage(): JSX.Element {
             >
               <MoreVertIcon sx={{ fontSize: 16 }} />
             </IconButton>
+          </Box>
+
+          {/* Expand/Collapse button - always reserve space */}
+          <Box sx={{ width: 28, height: 28 }}>
+            {hasChildren && (
+              <IconButton
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleThemeExpansion(themeItem.id);
+                }}
+                sx={{
+                  width: 28,
+                  height: 28,
+                  color: theme.palette.text.secondary,
+                  '&:hover': {
+                    bgcolor: alpha(theme.palette.primary.main, 0.1),
+                    color: theme.palette.primary.main
+                  }
+                }}
+              >
+                {isExpanded ? (
+                  <ExpandMoreIcon sx={{ fontSize: 18 }} />
+                ) : (
+                  <ChevronRightIcon sx={{ fontSize: 18 }} />
+                )}
+              </IconButton>
+            )}
           </Box>
         </Box>
 
@@ -902,16 +861,21 @@ export function ThemesPage(): JSX.Element {
                       </Box>
                       <Box sx={{ flex: 1 }}>
                         <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                          {selectedThemeForDrawer ? selectedThemeForDrawer.name : 'All Features'}
+                          {showingAllFeatures ? 'Theme Dashboard' : selectedThemeForDrawer ? selectedThemeForDrawer.name : 'All Features'}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {themeFeatures.length} {selectedThemeForDrawer ? 'features in this theme' : 'total features'}
+                          {showingAllFeatures
+                            ? `${themes.length} themes • ${themes.reduce((acc, t) => acc + t.feature_count, 0)} total features`
+                            : showingSubThemes && selectedThemeForDrawer && (selectedThemeForDrawer as any).children
+                            ? `${(selectedThemeForDrawer as any).children.length} sub-themes`
+                            : `${themeFeatures.length} features`
+                          }
                         </Typography>
                       </Box>
                     </Box>
 
-                    {/* Theme Description */}
-                    {selectedThemeForDrawer?.description && (
+                    {/* Theme Description - only show when displaying features */}
+                    {!showingAllFeatures && !showingSubThemes && selectedThemeForDrawer?.description && (
                       <Box sx={{
                         p: 2,
                         borderRadius: 2,
@@ -925,9 +889,112 @@ export function ThemesPage(): JSX.Element {
                       </Box>
                     )}
 
-                    {/* Features List */}
+                    {/* Dashboard or Features List */}
                     <Box sx={{ flex: 1, overflow: 'auto' }}>
-                      {loadingFeatures ? (
+                      {showingAllFeatures ? (
+                        /* Dashboard View - Show only root theme cards */
+                        <Grid container spacing={2}>
+                          {hierarchicalThemes.map((themeItem) => (
+                            <Grid item xs={12} sm={6} md={4} key={themeItem.id}>
+                              <Card
+                                sx={{
+                                  cursor: 'pointer',
+                                  height: '100%',
+                                  borderRadius: 2,
+                                  background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
+                                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                                  transition: 'all 0.2s',
+                                  '&:hover': {
+                                    transform: 'translateY(-4px)',
+                                    boxShadow: theme.shadows[4],
+                                    border: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+                                  }
+                                }}
+                                onClick={() => handleThemeClick(themeItem)}
+                              >
+                                <CardContent>
+                                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                                    {themeItem.name}
+                                  </Typography>
+                                  {themeItem.description && (
+                                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2, minHeight: 40 }}>
+                                      {themeItem.description.substring(0, 80)}{themeItem.description.length > 80 ? '...' : ''}
+                                    </Typography>
+                                  )}
+                                  <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                      <FeatureIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                                      <Typography variant="body2" fontWeight={600}>
+                                        {themeItem.feature_count}
+                                      </Typography>
+                                      <Typography variant="caption" color="text.secondary">
+                                        features
+                                      </Typography>
+                                    </Box>
+                                    {(themeItem as any).children && (themeItem as any).children.length > 0 && (
+                                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                        <CategoryIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                                        <Typography variant="body2" fontWeight={600}>
+                                          {(themeItem as any).children.length}
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary">
+                                          sub-themes
+                                        </Typography>
+                                      </Box>
+                                    )}
+                                  </Box>
+                                </CardContent>
+                              </Card>
+                            </Grid>
+                          ))}
+                        </Grid>
+                      ) : showingSubThemes && selectedThemeForDrawer && (selectedThemeForDrawer as any).children ? (
+                        /* Sub-themes View - Show child theme cards */
+                        <Grid container spacing={2}>
+                          {(selectedThemeForDrawer as any).children.map((childTheme: any) => (
+                            <Grid item xs={12} sm={6} md={4} key={childTheme.id}>
+                              <Card
+                                sx={{
+                                  cursor: 'pointer',
+                                  height: '100%',
+                                  borderRadius: 2,
+                                  background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.05)} 0%, ${alpha(theme.palette.secondary.main, 0.02)} 100%)`,
+                                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                                  borderLeft: `3px solid ${alpha(theme.palette.secondary.main, 0.5)}`,
+                                  transition: 'all 0.2s',
+                                  '&:hover': {
+                                    transform: 'translateY(-4px)',
+                                    boxShadow: theme.shadows[4],
+                                    border: `1px solid ${alpha(theme.palette.secondary.main, 0.3)}`,
+                                    borderLeft: `3px solid ${theme.palette.secondary.main}`,
+                                  }
+                                }}
+                                onClick={() => handleThemeClick(childTheme)}
+                              >
+                                <CardContent>
+                                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                                    {childTheme.name}
+                                  </Typography>
+                                  {childTheme.description && (
+                                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2, minHeight: 40 }}>
+                                      {childTheme.description.substring(0, 80)}{childTheme.description.length > 80 ? '...' : ''}
+                                    </Typography>
+                                  )}
+                                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 2 }}>
+                                    <FeatureIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                                    <Typography variant="body2" fontWeight={600}>
+                                      {childTheme.feature_count}
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary">
+                                      features
+                                    </Typography>
+                                  </Box>
+                                </CardContent>
+                              </Card>
+                            </Grid>
+                          ))}
+                        </Grid>
+                      ) : loadingFeatures ? (
                         <Box>
                           {[1, 2, 3, 4].map((i) => (
                             <Box key={i} sx={{ mb: 2, p: 2, borderRadius: 2, background: alpha(theme.palette.background.paper, 0.4) }}>

@@ -30,6 +30,12 @@ class ThemeUpdateRequest(BaseModel):
     parent_theme_id: Optional[str] = None
 
 
+class FeatureUpdateRequest(BaseModel):
+    theme_id: Optional[str] = None
+    status: Optional[str] = None
+    urgency: Optional[str] = None
+
+
 class FeatureResponse(BaseModel):
     id: str
     name: str
@@ -490,6 +496,83 @@ async def get_feature(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get feature: {str(e)}"
+        )
+
+
+@router.put("/features/{feature_id}", response_model=FeatureResponse)
+async def update_feature(
+    feature_id: str,
+    request: FeatureUpdateRequest,
+    workspace_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Update a feature (theme_id, status, urgency)
+    """
+    try:
+        # Find the feature
+        feature = db.query(Feature).filter(
+            Feature.id == feature_id,
+            Feature.workspace_id == workspace_id
+        ).first()
+
+        if not feature:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Feature not found"
+            )
+
+        # Validate theme if being updated
+        if request.theme_id is not None:
+            if request.theme_id:  # If not empty string
+                theme = db.query(Theme).filter(
+                    Theme.id == request.theme_id,
+                    Theme.workspace_id == workspace_id
+                ).first()
+
+                if not theme:
+                    raise HTTPException(
+                        status_code=status.HTTP_404_NOT_FOUND,
+                        detail="Theme not found"
+                    )
+
+        # Update fields
+        if request.theme_id is not None:
+            feature.theme_id = request.theme_id if request.theme_id else None
+        if request.status is not None:
+            feature.status = request.status
+        if request.urgency is not None:
+            feature.urgency = request.urgency
+
+        feature.updated_at = datetime.utcnow()
+
+        db.commit()
+        db.refresh(feature)
+
+        return FeatureResponse(
+            id=str(feature.id),
+            name=feature.name,
+            description=feature.description,
+            urgency=feature.urgency,
+            status=feature.status,
+            mention_count=feature.mention_count,
+            theme_id=str(feature.theme_id) if feature.theme_id else None,
+            first_mentioned=feature.first_mentioned.isoformat() if feature.first_mentioned else "",
+            last_mentioned=feature.last_mentioned.isoformat() if feature.last_mentioned else "",
+            created_at=feature.created_at.isoformat() if feature.created_at else "",
+            updated_at=feature.updated_at.isoformat() if feature.updated_at else None,
+            data_points=feature.data_points if feature.data_points else []
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error updating feature {feature_id}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to update feature: {str(e)}"
         )
 
 
