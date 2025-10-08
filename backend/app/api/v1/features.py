@@ -84,10 +84,32 @@ async def get_themes(
     Returns hierarchical theme structure by default
     """
     try:
+        from sqlalchemy import func
+
         # Get all themes for the workspace
         themes = db.query(Theme).filter(
             Theme.workspace_id == workspace_id
         ).order_by(Theme.parent_theme_id.asc().nullsfirst(), Theme.sort_order.asc()).all()
+
+        # Batch query for feature counts - ONE query instead of N
+        feature_counts_query = db.query(
+            Feature.theme_id,
+            func.count(Feature.id).label('count')
+        ).filter(
+            Feature.theme_id.in_([t.id for t in themes])
+        ).group_by(Feature.theme_id).all()
+
+        feature_counts = {str(theme_id): count for theme_id, count in feature_counts_query}
+
+        # Batch query for sub-theme counts - ONE query instead of N
+        sub_theme_counts_query = db.query(
+            Theme.parent_theme_id,
+            func.count(Theme.id).label('count')
+        ).filter(
+            Theme.parent_theme_id.in_([t.id for t in themes])
+        ).group_by(Theme.parent_theme_id).all()
+
+        sub_theme_counts = {str(parent_id): count for parent_id, count in sub_theme_counts_query}
 
         def calculate_level(theme, all_themes, memo={}):
             if theme.id in memo:
@@ -109,18 +131,13 @@ async def get_themes(
         # Convert to response format with feature counts and hierarchy info
         theme_responses = []
         for theme in themes:
-            feature_count = db.query(Feature).filter(
-                Feature.theme_id == theme.id
-            ).count()
-
-            sub_theme_count = db.query(Theme).filter(
-                Theme.parent_theme_id == theme.id
-            ).count()
-
+            theme_id_str = str(theme.id)
+            feature_count = feature_counts.get(theme_id_str, 0)
+            sub_theme_count = sub_theme_counts.get(theme_id_str, 0)
             level = calculate_level(theme, themes)
 
             theme_responses.append(ThemeResponse(
-                id=str(theme.id),
+                id=theme_id_str,
                 name=theme.name,
                 description=theme.description,
                 feature_count=feature_count,
