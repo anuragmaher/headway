@@ -31,8 +31,6 @@ import {
   Skeleton,
   Select,
   FormControl,
-  InputLabel,
-  OutlinedInput,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
@@ -983,7 +981,7 @@ export function ThemesPage(): JSX.Element {
                                           }
 
                                           // For child themes, show "Parent / Child"
-                                          if (selectedTheme.level > 0 && selectedTheme.parent_theme_id) {
+                                          if ((selectedTheme.level ?? 0) > 0 && selectedTheme.parent_theme_id) {
                                             const parentTheme = flattenedThemes.find(t => t.id === selectedTheme.parent_theme_id);
                                             if (parentTheme) {
                                               return <Box component="span">{parentTheme.name} / {selectedTheme.name}</Box>;
@@ -1010,7 +1008,7 @@ export function ThemesPage(): JSX.Element {
                                         {flattenedThemes.map((themeItem) => {
                                           // For child themes in dropdown, show "Parent / Child"
                                           let displayText = themeItem.name;
-                                          if (themeItem.level > 0 && themeItem.parent_theme_id) {
+                                          if ((themeItem.level ?? 0) > 0 && themeItem.parent_theme_id) {
                                             const parentTheme = flattenedThemes.find(t => t.id === themeItem.parent_theme_id);
                                             if (parentTheme) {
                                               displayText = `${parentTheme.name} / ${themeItem.name}`;
