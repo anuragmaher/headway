@@ -88,6 +88,7 @@ export function ThemesPage(): JSX.Element {
   });
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedThemeForDrawer, setSelectedThemeForDrawer] = useState<Theme | null>(null);
+  const [showingAllFeatures, setShowingAllFeatures] = useState(false);
   const [themeFeatures, setThemeFeatures] = useState<Feature[]>([]);
   const [loadingFeatures, setLoadingFeatures] = useState(false);
   const [messagesDrawerOpen, setMessagesDrawerOpen] = useState(false);
@@ -218,6 +219,8 @@ export function ThemesPage(): JSX.Element {
 
   useEffect(() => {
     fetchThemes();
+    // Load all features by default
+    handleAllThemesClick();
   }, []);
 
   const handleOpenDialog = (themeToEdit?: Theme, parentThemeId?: string) => {
@@ -360,9 +363,44 @@ export function ThemesPage(): JSX.Element {
     }
   };
 
+  const fetchAllFeatures = async () => {
+    try {
+      setLoadingFeatures(true);
+      const token = getAuthToken();
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/features/features?workspace_id=${WORKSPACE_ID}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch features: ${response.status}`);
+      }
+
+      const features = await response.json();
+      setThemeFeatures(features);
+    } catch (error) {
+      console.error('Error fetching all features:', error);
+      setThemeFeatures([]);
+    } finally {
+      setLoadingFeatures(false);
+    }
+  };
+
   const handleThemeClick = (theme: Theme) => {
     setSelectedThemeForDrawer(theme);
+    setShowingAllFeatures(false);
     fetchThemeFeatures(theme.id);
+  };
+
+  const handleAllThemesClick = () => {
+    setSelectedThemeForDrawer(null);
+    setShowingAllFeatures(true);
+    fetchAllFeatures();
   };
 
   const handleCloseDrawer = () => {
@@ -681,10 +719,7 @@ export function ThemesPage(): JSX.Element {
                         transform: 'translateX(2px)',
                       },
                     }}
-                    onClick={() => {
-                      setSelectedThemeForDrawer(null);
-                      // You could implement a function to show all features from all themes
-                    }}
+                    onClick={handleAllThemesClick}
                   >
                     {/* All Themes Label */}
                     <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
@@ -732,7 +767,7 @@ export function ThemesPage(): JSX.Element {
               height: 'calc(100vh - 120px)', // Fixed height for scrolling
             }}>
               <CardContent sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                {selectedThemeForDrawer ? (
+                {selectedThemeForDrawer || showingAllFeatures ? (
                   <>
                     {/* Selected Theme Header */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
@@ -749,16 +784,16 @@ export function ThemesPage(): JSX.Element {
                       </Box>
                       <Box sx={{ flex: 1 }}>
                         <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                          {selectedThemeForDrawer.name}
+                          {selectedThemeForDrawer ? selectedThemeForDrawer.name : 'All Features'}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {themeFeatures.length} features in this theme
+                          {themeFeatures.length} {selectedThemeForDrawer ? 'features in this theme' : 'total features'}
                         </Typography>
                       </Box>
                     </Box>
 
                     {/* Theme Description */}
-                    {selectedThemeForDrawer.description && (
+                    {selectedThemeForDrawer?.description && (
                       <Box sx={{
                         p: 2,
                         borderRadius: 2,
@@ -801,6 +836,7 @@ export function ThemesPage(): JSX.Element {
                                       {feature.name}
                                     </Typography>
                                   }
+                                  secondaryTypographyProps={{ component: 'div' }}
                                   secondary={
                                     <Box>
                                       <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, lineHeight: 1.5 }}>
@@ -1146,6 +1182,7 @@ export function ThemesPage(): JSX.Element {
                               {feature.name}
                             </Typography>
                           }
+                          secondaryTypographyProps={{ component: 'div' }}
                           secondary={
                             <Box>
                               <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, lineHeight: 1.5 }}>
