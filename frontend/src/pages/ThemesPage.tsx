@@ -28,6 +28,7 @@ import {
   Drawer,
   MenuItem,
   Menu,
+  Skeleton,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
@@ -637,11 +638,75 @@ export function ThemesPage(): JSX.Element {
   if (loading) {
     return (
       <AdminLayout>
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
-          <CircularProgress />
-          <Typography variant="h6" sx={{ ml: 2 }}>
-            Loading themes...
-          </Typography>
+        <Box>
+          {/* Header Skeleton */}
+          <Box sx={{ mb: 4 }}>
+            <Skeleton variant="text" width={200} height={40} />
+            <Skeleton variant="text" width={300} height={24} sx={{ mt: 1 }} />
+          </Box>
+
+          <Grid container spacing={3}>
+            {/* Left Panel - Themes List Skeleton */}
+            <Grid item xs={12} md={5}>
+              <Card sx={{
+                background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.6)} 100%)`,
+                backdropFilter: 'blur(10px)',
+                border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                height: 'calc(100vh - 120px)',
+              }}>
+                <CardContent sx={{ p: 2 }}>
+                  {/* Header */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                    <Skeleton variant="text" width={150} height={32} />
+                    <Skeleton variant="circular" width={40} height={40} />
+                  </Box>
+
+                  {/* All Themes */}
+                  <Skeleton variant="rounded" width="100%" height={48} sx={{ mb: 2 }} />
+
+                  {/* Theme Items */}
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Skeleton key={i} variant="rounded" width="100%" height={40} sx={{ mb: 1 }} />
+                  ))}
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Right Panel - Features List Skeleton */}
+            <Grid item xs={12} md={7}>
+              <Card sx={{
+                background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.6)} 100%)`,
+                backdropFilter: 'blur(10px)',
+                border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                height: 'calc(100vh - 120px)',
+              }}>
+                <CardContent sx={{ p: 3 }}>
+                  {/* Header */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
+                    <Skeleton variant="rounded" width={40} height={40} />
+                    <Box sx={{ flex: 1 }}>
+                      <Skeleton variant="text" width={150} height={32} />
+                      <Skeleton variant="text" width={120} height={20} />
+                    </Box>
+                  </Box>
+
+                  {/* Feature Items */}
+                  {[1, 2, 3, 4].map((i) => (
+                    <Box key={i} sx={{ mb: 2 }}>
+                      <Skeleton variant="text" width="80%" height={28} />
+                      <Skeleton variant="text" width="100%" height={20} sx={{ mt: 1 }} />
+                      <Skeleton variant="text" width="90%" height={20} />
+                      <Box sx={{ display: 'flex', gap: 1, mt: 1.5 }}>
+                        <Skeleton variant="rounded" width={60} height={24} />
+                        <Skeleton variant="rounded" width={60} height={24} />
+                        <Skeleton variant="rounded" width={80} height={24} />
+                      </Box>
+                    </Box>
+                  ))}
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
         </Box>
       </AdminLayout>
     );
@@ -810,9 +875,19 @@ export function ThemesPage(): JSX.Element {
                     {/* Features List */}
                     <Box sx={{ flex: 1, overflow: 'auto' }}>
                       {loadingFeatures ? (
-                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
-                          <CircularProgress size={24} />
-                          <Typography variant="body2" sx={{ ml: 2 }}>Loading features...</Typography>
+                        <Box>
+                          {[1, 2, 3, 4].map((i) => (
+                            <Box key={i} sx={{ mb: 2, p: 2, borderRadius: 2, background: alpha(theme.palette.background.paper, 0.4) }}>
+                              <Skeleton variant="text" width="80%" height={28} />
+                              <Skeleton variant="text" width="100%" height={20} sx={{ mt: 1 }} />
+                              <Skeleton variant="text" width="90%" height={20} />
+                              <Box sx={{ display: 'flex', gap: 1, mt: 1.5 }}>
+                                <Skeleton variant="rounded" width={60} height={24} />
+                                <Skeleton variant="rounded" width={60} height={24} />
+                                <Skeleton variant="rounded" width={80} height={24} />
+                              </Box>
+                            </Box>
+                          ))}
                         </Box>
                       ) : themeFeatures.length > 0 ? (
                         <List sx={{ p: 0 }}>
@@ -1156,9 +1231,19 @@ export function ThemesPage(): JSX.Element {
             {/* Features List */}
             <Box sx={{ flex: 1, overflow: 'auto' }}>
               {loadingFeatures ? (
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
-                  <CircularProgress size={24} />
-                  <Typography variant="body2" sx={{ ml: 2 }}>Loading features...</Typography>
+                <Box>
+                  {[1, 2, 3, 4].map((i) => (
+                    <Box key={i} sx={{ mb: 2, p: 2, borderRadius: 2, background: alpha(theme.palette.background.paper, 0.4) }}>
+                      <Skeleton variant="text" width="80%" height={28} />
+                      <Skeleton variant="text" width="100%" height={20} sx={{ mt: 1 }} />
+                      <Skeleton variant="text" width="90%" height={20} />
+                      <Box sx={{ display: 'flex', gap: 1, mt: 1.5 }}>
+                        <Skeleton variant="rounded" width={60} height={24} />
+                        <Skeleton variant="rounded" width={60} height={24} />
+                        <Skeleton variant="rounded" width={80} height={24} />
+                      </Box>
+                    </Box>
+                  ))}
                 </Box>
               ) : themeFeatures.length > 0 ? (
                 <List sx={{ p: 0 }}>
