@@ -114,7 +114,7 @@ export function RegisterPage(): JSX.Element {
         const data = await response.json();
         localStorage.setItem('access_token', data.access_token);
         localStorage.setItem('refresh_token', data.refresh_token);
-        window.location.href = '/dashboard';
+        window.location.href = '/app/themes';
       } else {
         const errorData = await response.json();
         setError(errorData.detail || 'Registration failed');

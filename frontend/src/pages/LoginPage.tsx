@@ -58,7 +58,7 @@ export function LoginPage(): JSX.Element {
         email: form.email,
         password: form.password,
       });
-      navigate('/dashboard');
+      navigate('/app/themes');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     }
@@ -68,7 +68,7 @@ export function LoginPage(): JSX.Element {
     setError(null);
     try {
       await demoLogin();
-      navigate('/dashboard');
+      navigate('/app/themes');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Demo login failed');
     }

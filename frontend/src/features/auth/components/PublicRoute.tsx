@@ -25,9 +25,9 @@ export function PublicRoute({
     if (!user.onboarding_completed) {
       return <Navigate to={ROUTES.ONBOARDING} replace />;
     }
-    
-    // Otherwise go to specified redirect or dashboard
-    const destination = redirectTo || ROUTES.DASHBOARD;
+
+    // Otherwise go to specified redirect or themes page
+    const destination = redirectTo || ROUTES.THEMES;
     return <Navigate to={destination} replace />;
   }
 
