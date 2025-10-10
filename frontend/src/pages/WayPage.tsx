@@ -3,7 +3,7 @@
  * Helps users create themes and sub-themes from messages using AI
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Container,
@@ -24,7 +24,6 @@ import {
   Drawer,
   List,
   ListItem,
-  ListItemText,
 } from '@mui/material';
 import {
   Psychology as AiIcon,
@@ -71,10 +70,9 @@ interface EditableCardProps {
   suggestion: ThemeSuggestion;
   onSave: (updated: ThemeSuggestion) => void;
   onCancel: () => void;
-  theme: any;
 }
 
-function EditableCard({ suggestion, onSave, onCancel, theme }: EditableCardProps): JSX.Element {
+function EditableCard({ suggestion, onSave, onCancel }: EditableCardProps): JSX.Element {
   const [editedName, setEditedName] = useState(suggestion.name);
   const [editedDescription, setEditedDescription] = useState(suggestion.description);
 
@@ -387,7 +385,6 @@ export function WayPage(): JSX.Element {
     }
   };
 
-  const pendingSuggestions = suggestions.filter(s => s.status === 'pending');
   const acceptedCount = suggestions.filter(s => s.status === 'accepted').length;
   const rejectedCount = suggestions.filter(s => s.status === 'rejected').length;
 
@@ -550,7 +547,6 @@ export function WayPage(): JSX.Element {
                       suggestion={suggestion}
                       onSave={(updated) => handleSaveEdit(index, updated)}
                       onCancel={() => handleCancelEdit(index)}
-                      theme={theme}
                     />
                   ) : (
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', gap: 2 }}>

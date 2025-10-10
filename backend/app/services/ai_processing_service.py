@@ -7,8 +7,10 @@ from sqlalchemy.orm import Session
 
 from app.models.message import Message
 from app.models.theme import Theme
+from app.models.feature import Feature
 from app.models.data_extraction_field import DataExtractionField
 from app.core.database import get_db
+from sqlalchemy import func
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +76,133 @@ class AIProcessingService:
             "data_fields": field_list
         }
 
+    def _find_similar_feature(
+        self,
+        db: Session,
+        workspace_id: str,
+        theme_name: str,
+        feature_title: str,
+        feature_description: str,
+        message_content: str,
+        similarity_threshold: float = 0.8
+    ) -> Dict[str, Any]:
+        """
+        Use AI to find if the new feature request should be mapped to an existing feature
+
+        Args:
+            db: Database session
+            workspace_id: Workspace ID
+            theme_name: Theme name from AI classification
+            feature_title: New feature title
+            feature_description: New feature description
+            message_content: Original message content
+            similarity_threshold: Minimum similarity score to map (0.0-1.0)
+
+        Returns:
+            Dictionary with mapping decision
+        """
+        try:
+            # Get theme ID
+            theme = db.query(Theme).filter(
+                Theme.workspace_id == workspace_id,
+                func.lower(Theme.name) == func.lower(theme_name)
+            ).first()
+
+            if not theme:
+                return {
+                    "action": "create_new",
+                    "reason": "Theme not found",
+                    "similarity_score": 0.0
+                }
+
+            # Fetch existing features from this theme only
+            existing_features = db.query(Feature).filter(
+                Feature.workspace_id == workspace_id,
+                Feature.theme_id == theme.id
+            ).limit(20).all()  # Limit to 20 most recent features to keep prompt size reasonable
+
+            if not existing_features:
+                return {
+                    "action": "create_new",
+                    "reason": "No existing features in theme",
+                    "similarity_score": 0.0
+                }
+
+            # Build prompt for AI to compare
+            existing_features_text = "\n".join([
+                f"- ID: {feature.id}\n  Name: {feature.name}\n  Description: {feature.description}\n"
+                for feature in existing_features
+            ])
+
+            prompt = f"""You are analyzing if a new feature request should be mapped to an existing feature or created as new.
+
+EXISTING FEATURES IN THIS THEME:
+{existing_features_text}
+
+NEW FEATURE REQUEST:
+Title: {feature_title}
+Description: {feature_description}
+Original Message: {message_content}
+
+Analyze if this new request is similar enough to any existing feature to be mapped to it.
+
+IMPORTANT:
+- Only map if the features are HIGHLY similar (>80% match)
+- Consider: same core functionality, same use case, addressing same problem
+- Minor wording differences should still map
+- Different features should create new
+
+Respond in JSON format:
+{{
+  "action": "map_to_existing" or "create_new",
+  "feature_id": "uuid-here" (only if mapping),
+  "similarity_score": 0.0 to 1.0,
+  "reasoning": "Brief explanation of your decision"
+}}"""
+
+            # Call OpenAI
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an expert at analyzing feature request similarity. Be conservative - only map if features are truly addressing the same core need."
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                temperature=0.1,
+                max_tokens=300,
+                response_format={"type": "json_object"}
+            )
+
+            # Parse response
+            mapping_result = json.loads(response.choices[0].message.content)
+
+            # Apply similarity threshold
+            if mapping_result.get("action") == "map_to_existing":
+                similarity_score = mapping_result.get("similarity_score", 0.0)
+                if similarity_score < similarity_threshold:
+                    logger.info(f"Similarity score {similarity_score} below threshold {similarity_threshold}, creating new feature")
+                    return {
+                        "action": "create_new",
+                        "reason": f"Similarity score {similarity_score} below threshold",
+                        "similarity_score": similarity_score,
+                        "reasoning": mapping_result.get("reasoning")
+                    }
+
+            return mapping_result
+
+        except Exception as e:
+            logger.error(f"Error finding similar feature: {e}")
+            return {
+                "action": "create_new",
+                "reason": f"Error: {str(e)}",
+                "similarity_score": 0.0
+            }
+
     def process_message(self, message: Message, workspace_id: Optional[str] = None) -> Dict[str, Any]:
         """
         Process a single message to extract feature request insights
@@ -117,6 +246,20 @@ class AIProcessingService:
 
             # Parse the response
             result = json.loads(response.choices[0].message.content)
+
+            # If it's a feature request and has a theme, check for similar existing features
+            if result.get('is_feature_request') and result.get('theme') and workspace_id:
+                mapping_result = self._find_similar_feature(
+                    db=db,
+                    workspace_id=workspace_id,
+                    theme_name=result.get('theme'),
+                    feature_title=result.get('feature_title', ''),
+                    feature_description=result.get('feature_description', ''),
+                    message_content=message.content
+                )
+
+                # Add mapping result to the response
+                result['feature_mapping'] = mapping_result
 
             logger.info(f"Successfully processed message {message.id}")
             return result

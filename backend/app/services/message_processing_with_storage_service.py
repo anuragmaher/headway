@@ -59,16 +59,40 @@ class MessageProcessingWithStorageService:
             if theme_name:
                 theme = self._get_or_create_theme(db, workspace_id, theme_name)
 
-            # Step 3: Find existing feature or create new one
-            feature = self._find_or_create_feature(
-                db=db,
-                workspace_id=workspace_id,
-                feature_title=ai_result.get('feature_title', 'Untitled Feature'),
-                feature_description=ai_result.get('feature_description', ''),
-                theme=theme,
-                urgency=ai_result.get('urgency', 'medium'),
-                priority=ai_result.get('priority', 'medium')
-            )
+            # Step 3: Get or create feature based on AI mapping decision
+            feature_mapping = ai_result.get('feature_mapping', {})
+
+            if feature_mapping.get('action') == 'map_to_existing' and feature_mapping.get('feature_id'):
+                # Map to existing feature
+                feature = db.query(Feature).filter(
+                    Feature.id == feature_mapping.get('feature_id'),
+                    Feature.workspace_id == workspace_id
+                ).first()
+
+                if feature:
+                    logger.info(f"Mapping to existing feature {feature.id} (similarity: {feature_mapping.get('similarity_score', 0)})")
+                else:
+                    # Feature not found, create new
+                    logger.warning(f"Feature {feature_mapping.get('feature_id')} not found, creating new")
+                    feature = self._create_new_feature(
+                        db=db,
+                        workspace_id=workspace_id,
+                        feature_title=ai_result.get('feature_title', 'Untitled Feature'),
+                        feature_description=ai_result.get('feature_description', ''),
+                        theme=theme,
+                        urgency=ai_result.get('urgency', 'medium')
+                    )
+            else:
+                # Create new feature
+                logger.info(f"Creating new feature: {feature_mapping.get('reason', 'No similar feature found')}")
+                feature = self._create_new_feature(
+                    db=db,
+                    workspace_id=workspace_id,
+                    feature_title=ai_result.get('feature_title', 'Untitled Feature'),
+                    feature_description=ai_result.get('feature_description', ''),
+                    theme=theme,
+                    urgency=ai_result.get('urgency', 'medium')
+                )
 
             # Step 4: Link message to feature
             if message not in feature.messages:
@@ -127,18 +151,17 @@ class MessageProcessingWithStorageService:
 
         return theme
 
-    def _find_or_create_feature(
+    def _create_new_feature(
         self,
         db: Session,
         workspace_id: str,
         feature_title: str,
         feature_description: str,
         theme: Optional[Theme],
-        urgency: str,
-        priority: str
+        urgency: str
     ) -> Feature:
         """
-        Find existing similar feature or create new one
+        Create a new feature
 
         Args:
             db: Database session
@@ -147,25 +170,10 @@ class MessageProcessingWithStorageService:
             feature_description: Feature description from AI
             theme: Theme object (can be None)
             urgency: Urgency level
-            priority: Priority level
 
         Returns:
-            Feature object (existing or new)
+            Feature object
         """
-        # Try to find existing feature with similar name in the same theme
-        existing_feature = None
-        if theme:
-            existing_feature = db.query(Feature).filter(
-                Feature.workspace_id == workspace_id,
-                Feature.theme_id == theme.id,
-                func.lower(Feature.name).contains(func.lower(feature_title[:20]))  # Match first 20 chars
-            ).first()
-
-        if existing_feature:
-            logger.info(f"Found existing feature: {existing_feature.id}")
-            return existing_feature
-
-        # Create new feature
         new_feature = Feature(
             name=feature_title,
             description=feature_description,
