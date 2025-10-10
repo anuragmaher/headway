@@ -14,7 +14,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from app.core.database import get_db
 from app.models.message import Message
 from app.models.feature import Feature
+from app.models.workspace_data_point import WorkspaceDataPoint
 from app.services.message_processing_with_storage_service import message_processing_with_storage_service
+from sqlalchemy import text
 
 
 def test_deduplication():
@@ -27,18 +29,38 @@ def test_deduplication():
         # Get workspace ID
         workspace_id = "647ab033-6d10-4a35-9ace-0399052ec874"
 
-        # Show existing features count before
-        features_before = db.query(Feature).filter(
-            Feature.workspace_id == workspace_id
-        ).count()
+        # Clean database - delete existing data
+        print("🧹 Cleaning database - deleting existing data...")
 
-        print(f"📊 Features before processing: {features_before}")
+        # 1. Delete workspace data points
+        data_points_deleted = db.query(WorkspaceDataPoint).filter(
+            WorkspaceDataPoint.workspace_id == workspace_id
+        ).delete()
+        print(f"   Deleted {data_points_deleted} workspace data points")
+
+        # 2. Delete feature-message relationships
+        db.execute(text("""
+            DELETE FROM feature_messages
+            WHERE feature_id IN (
+                SELECT id FROM features WHERE workspace_id = :workspace_id
+            )
+        """), {"workspace_id": workspace_id})
+
+        # 3. Delete features
+        features_deleted = db.query(Feature).filter(
+            Feature.workspace_id == workspace_id
+        ).delete()
+        print(f"   Deleted {features_deleted} features")
+
+        db.commit()
+        print()
+
         print("=" * 80)
 
-        # Get a few messages to process
+        # Get ALL messages to process
         messages = db.query(Message).filter(
             Message.workspace_id == workspace_id
-        ).limit(10).all()
+        ).all()
 
         print(f"\n🔄 Processing {len(messages)} messages with AI deduplication...\n")
 
@@ -78,8 +100,8 @@ def test_deduplication():
         ).count()
 
         print("=" * 80)
-        print(f"📊 Features after processing: {features_after}")
-        print(f"📈 New features created: {features_after - features_before}")
+        print(f"📊 Total features created: {features_after}")
+        print(f"📊 Total messages processed: {len(messages)}")
 
         # Show features with mention_count > 1
         popular_features = db.query(Feature).filter(

@@ -31,6 +31,8 @@ import {
   Skeleton,
   Select,
   FormControl,
+  InputLabel,
+  Collapse,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
@@ -44,6 +46,10 @@ import {
   ExpandMore as ExpandMoreIcon,
   ChevronRight as ChevronRightIcon,
   MoreVert as MoreVertIcon,
+  FilterList as FilterListIcon,
+  Sort as SortIcon,
+  Clear as ClearIcon,
+  Search as SearchIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useAuthStore } from '@/features/auth/store/auth-store';
@@ -92,6 +98,7 @@ export function ThemesPage(): JSX.Element {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedThemeForDrawer, setSelectedThemeForDrawer] = useState<Theme | null>(null);
   const [showingAllFeatures, setShowingAllFeatures] = useState(false);
+  const [showingAllFeaturesList, setShowingAllFeaturesList] = useState(false);
   const [showingSubThemes, setShowingSubThemes] = useState(false);
   const [themeFeatures, setThemeFeatures] = useState<Feature[]>([]);
   const [loadingFeatures, setLoadingFeatures] = useState(false);
@@ -102,6 +109,16 @@ export function ThemesPage(): JSX.Element {
   const [expandedThemes, setExpandedThemes] = useState<Set<string>>(new Set());
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedThemeForMenu, setSelectedThemeForMenu] = useState<Theme | null>(null);
+
+  // Sorting and filtering state
+  const [sortBy, setSortBy] = useState<string>('last_mentioned'); // last_mentioned, name, mention_count
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [filterUrgency, setFilterUrgency] = useState<string>('all');
+  const [filterMrrMin, setFilterMrrMin] = useState<string>('');
+  const [filterMrrMax, setFilterMrrMax] = useState<string>('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const WORKSPACE_ID = '647ab033-6d10-4a35-9ace-0399052ec874';
 
@@ -166,6 +183,163 @@ export function ThemesPage(): JSX.Element {
       }
       return newSet;
     });
+  };
+
+  // Helper function to extract data point values
+  const extractDataPointValue = (feature: Feature, key: string): any => {
+    if (!feature.data_points || feature.data_points.length === 0) return null;
+
+    for (const dp of feature.data_points) {
+      // Check business metrics
+      if (dp.business_metrics && key in dp.business_metrics) {
+        return dp.business_metrics[key];
+      }
+      // Check entities
+      if (dp.entities && key in dp.entities) {
+        return dp.entities[key];
+      }
+      // Check structured metrics
+      if (dp.structured_metrics && key in dp.structured_metrics) {
+        return dp.structured_metrics[key];
+      }
+    }
+    return null;
+  };
+
+  // Filter and sort features
+  const filterAndSortFeatures = (features: Feature[]) => {
+    let filtered = [...features];
+
+    // Filter by search query (full text search)
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(f => {
+        // Search in feature name
+        if (f.name.toLowerCase().includes(query)) return true;
+
+        // Search in feature description
+        if (f.description?.toLowerCase().includes(query)) return true;
+
+        // Search in data points
+        if (f.data_points && f.data_points.length > 0) {
+          for (const dp of f.data_points) {
+            // Search in business metrics
+            if (dp.business_metrics) {
+              const metricsStr = JSON.stringify(dp.business_metrics).toLowerCase();
+              if (metricsStr.includes(query)) return true;
+            }
+            // Search in entities
+            if (dp.entities) {
+              const entitiesStr = JSON.stringify(dp.entities).toLowerCase();
+              if (entitiesStr.includes(query)) return true;
+            }
+            // Search in structured metrics
+            if (dp.structured_metrics) {
+              const structuredStr = JSON.stringify(dp.structured_metrics).toLowerCase();
+              if (structuredStr.includes(query)) return true;
+            }
+          }
+        }
+
+        return false;
+      });
+    }
+
+    // Filter by status
+    if (filterStatus !== 'all') {
+      filtered = filtered.filter(f => f.status === filterStatus);
+    }
+
+    // Filter by urgency
+    if (filterUrgency !== 'all') {
+      filtered = filtered.filter(f => f.urgency === filterUrgency);
+    }
+
+    // Filter by MRR range
+    if (filterMrrMin || filterMrrMax) {
+      filtered = filtered.filter(f => {
+        if (!f.data_points) return false;
+
+        // Find MRR value in data points
+        for (const dp of f.data_points) {
+          if (dp.business_metrics && dp.business_metrics.mrr !== undefined) {
+            const mrr = parseFloat(dp.business_metrics.mrr);
+            const min = filterMrrMin ? parseFloat(filterMrrMin) : -Infinity;
+            const max = filterMrrMax ? parseFloat(filterMrrMax) : Infinity;
+            if (mrr >= min && mrr <= max) {
+              return true;
+            }
+          }
+        }
+        return false;
+      });
+    }
+
+    // Sort features
+    filtered.sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortBy) {
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case 'mention_count':
+          comparison = a.mention_count - b.mention_count;
+          break;
+        case 'last_mentioned':
+          comparison = new Date(a.last_mentioned).getTime() - new Date(b.last_mentioned).getTime();
+          break;
+        case 'status': {
+          const statusOrder = { 'new': 1, 'in_progress': 2, 'completed': 3 };
+          const aStatus = statusOrder[a.status as keyof typeof statusOrder] || 999;
+          const bStatus = statusOrder[b.status as keyof typeof statusOrder] || 999;
+          comparison = aStatus - bStatus;
+          break;
+        }
+        case 'urgency': {
+          const urgencyOrder = { 'high': 1, 'medium': 2, 'low': 3 };
+          const aUrgency = urgencyOrder[a.urgency as keyof typeof urgencyOrder] || 999;
+          const bUrgency = urgencyOrder[b.urgency as keyof typeof urgencyOrder] || 999;
+          comparison = aUrgency - bUrgency;
+          break;
+        }
+        case 'mrr': {
+          const aMrr = extractDataPointValue(a, 'mrr');
+          const bMrr = extractDataPointValue(b, 'mrr');
+          const aMrrNum = aMrr ? parseFloat(aMrr) : 0;
+          const bMrrNum = bMrr ? parseFloat(bMrr) : 0;
+          comparison = aMrrNum - bMrrNum;
+          break;
+        }
+        case 'company_name': {
+          const aCompany = extractDataPointValue(a, 'company_name') || '';
+          const bCompany = extractDataPointValue(b, 'company_name') || '';
+          comparison = String(aCompany).localeCompare(String(bCompany));
+          break;
+        }
+        default:
+          comparison = 0;
+      }
+
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+
+    return filtered;
+  };
+
+  const filteredAndSortedFeatures = React.useMemo(
+    () => filterAndSortFeatures(themeFeatures),
+    [themeFeatures, sortBy, sortOrder, filterStatus, filterUrgency, filterMrrMin, filterMrrMax, searchQuery]
+  );
+
+  const clearFilters = () => {
+    setFilterStatus('all');
+    setFilterUrgency('all');
+    setFilterMrrMin('');
+    setFilterMrrMax('');
+    setSortBy('last_mentioned');
+    setSortOrder('desc');
+    setSearchQuery('');
   };
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, theme: Theme) => {
@@ -413,6 +587,7 @@ export function ThemesPage(): JSX.Element {
   const handleThemeClick = (theme: Theme) => {
     setSelectedThemeForDrawer(theme);
     setShowingAllFeatures(false);
+    setShowingAllFeaturesList(false);
 
     // If theme has children, show sub-themes first
     const hasChildren = (theme as any).children && (theme as any).children.length > 0;
@@ -428,8 +603,17 @@ export function ThemesPage(): JSX.Element {
   const handleAllThemesClick = () => {
     setSelectedThemeForDrawer(null);
     setShowingAllFeatures(true);
+    setShowingAllFeaturesList(false);
     setShowingSubThemes(false);
     setThemeFeatures([]);
+  };
+
+  const handleAllFeaturesClick = () => {
+    setSelectedThemeForDrawer(null);
+    setShowingAllFeatures(false);
+    setShowingAllFeaturesList(true);
+    setShowingSubThemes(false);
+    fetchAllFeatures();
   };
 
   const handleFeatureThemeChange = async (featureId: string, newThemeId: string | null) => {
@@ -827,6 +1011,56 @@ export function ThemesPage(): JSX.Element {
                     </Box>
                   </Box>
 
+                  {/* All Features Row */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      py: 1,
+                      px: 2,
+                      borderRadius: 1,
+                      border: `1px solid ${alpha(theme.palette.secondary.main, 0.2)}`,
+                      background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.08)} 0%, ${alpha(theme.palette.secondary.main, 0.04)} 100%)`,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease-in-out',
+                      mb: 1,
+                      '&:hover': {
+                        background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.12)} 0%, ${alpha(theme.palette.secondary.main, 0.08)} 100%)`,
+                        borderColor: theme.palette.secondary.main,
+                        transform: 'translateX(2px)',
+                      },
+                    }}
+                    onClick={handleAllFeaturesClick}
+                  >
+                    {/* All Features Label */}
+                    <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: '0.9rem', color: theme.palette.secondary.main }}>
+                        All Features
+                      </Typography>
+                    </Box>
+
+                    {/* Total Features Count */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 1 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <FeatureIcon sx={{ fontSize: 16, color: theme.palette.secondary.main }} />
+                        <Box sx={{
+                          width: 22,
+                          height: 22,
+                          borderRadius: '50%',
+                          bgcolor: theme.palette.secondary.main,
+                          color: 'white',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '0.75rem',
+                          fontWeight: 600
+                        }}>
+                          {themes.reduce((acc, t) => acc + t.feature_count, 0)}
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+
                   {/* Individual Themes */}
                   {hierarchicalThemes.map((themeItem) => renderThemeRow(themeItem))}
                 </Box>
@@ -844,7 +1078,7 @@ export function ThemesPage(): JSX.Element {
               height: 'calc(100vh - 120px)', // Fixed height for scrolling
             }}>
               <CardContent sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                {selectedThemeForDrawer || showingAllFeatures ? (
+                {selectedThemeForDrawer || showingAllFeatures || showingAllFeaturesList ? (
                   <>
                     {/* Selected Theme Header */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
@@ -861,11 +1095,13 @@ export function ThemesPage(): JSX.Element {
                       </Box>
                       <Box sx={{ flex: 1 }}>
                         <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                          {showingAllFeatures ? 'Theme Dashboard' : selectedThemeForDrawer ? selectedThemeForDrawer.name : 'All Features'}
+                          {showingAllFeatures ? 'Theme Dashboard' : showingAllFeaturesList ? 'All Features' : selectedThemeForDrawer ? selectedThemeForDrawer.name : 'All Features'}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           {showingAllFeatures
                             ? `${themes.length} themes • ${themes.reduce((acc, t) => acc + t.feature_count, 0)} total features`
+                            : showingAllFeaturesList
+                            ? `${themeFeatures.length} features across all themes`
                             : showingSubThemes && selectedThemeForDrawer && (selectedThemeForDrawer as any).children
                             ? `${(selectedThemeForDrawer as any).children.length} sub-themes`
                             : `${themeFeatures.length} features`
@@ -1010,62 +1246,267 @@ export function ThemesPage(): JSX.Element {
                           ))}
                         </Box>
                       ) : themeFeatures.length > 0 ? (
-                        <List sx={{ p: 0 }}>
-                          {themeFeatures.map((feature, index) => (
+                        <>
+                          {/* Filter and Sort Bar */}
+                          <Box sx={{ mb: 2 }}>
+                            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 1 }}>
+                              {/* Search Input */}
+                              <TextField
+                                size="small"
+                                placeholder="Search features..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                InputProps={{
+                                  startAdornment: <SearchIcon sx={{ fontSize: 20, mr: 1, color: 'text.secondary' }} />
+                                }}
+                                sx={{ minWidth: 250 }}
+                              />
+
+                              <Button
+                                size="small"
+                                startIcon={<FilterListIcon />}
+                                onClick={() => setShowFilters(!showFilters)}
+                                variant="outlined"
+                              >
+                                Filters
+                              </Button>
+
+                              {/* Sort Dropdown */}
+                              <FormControl size="small" sx={{ minWidth: 150 }}>
+                                <InputLabel>Sort By</InputLabel>
+                                <Select
+                                  value={sortBy}
+                                  label="Sort By"
+                                  onChange={(e) => setSortBy(e.target.value)}
+                                  startAdornment={<SortIcon sx={{ fontSize: 18, mr: 0.5, color: 'text.secondary' }} />}
+                                >
+                                  <MenuItem value="last_mentioned">Last Mentioned</MenuItem>
+                                  <MenuItem value="mention_count">Mentions</MenuItem>
+                                  <MenuItem value="name">Name</MenuItem>
+                                  <MenuItem value="status">Status</MenuItem>
+                                  <MenuItem value="urgency">Urgency</MenuItem>
+                                  <MenuItem value="mrr">MRR</MenuItem>
+                                  <MenuItem value="company_name">Company Name</MenuItem>
+                                </Select>
+                              </FormControl>
+
+                              {/* Sort Order */}
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                              >
+                                {sortOrder === 'asc' ? '↑ Asc' : '↓ Desc'}
+                              </Button>
+
+                              {/* Clear Filters */}
+                              {(filterStatus !== 'all' || filterUrgency !== 'all' || filterMrrMin || filterMrrMax || searchQuery) && (
+                                <Button
+                                  size="small"
+                                  startIcon={<ClearIcon />}
+                                  onClick={clearFilters}
+                                  color="secondary"
+                                >
+                                  Clear
+                                </Button>
+                              )}
+
+                              <Typography variant="caption" color="text.secondary" sx={{ ml: 'auto' }}>
+                                {filteredAndSortedFeatures.length} of {themeFeatures.length} features
+                              </Typography>
+                            </Box>
+
+                            {/* Collapsible Filter Section */}
+                            <Collapse in={showFilters}>
+                              <Box sx={{
+                                p: 2,
+                                borderRadius: 2,
+                                background: alpha(theme.palette.background.paper, 0.6),
+                                border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                              }}>
+                                <Grid container spacing={2}>
+                                  {/* Status Filter */}
+                                  <Grid item xs={12} sm={6} md={3}>
+                                    <FormControl size="small" fullWidth>
+                                      <InputLabel>Status</InputLabel>
+                                      <Select
+                                        value={filterStatus}
+                                        label="Status"
+                                        onChange={(e) => setFilterStatus(e.target.value)}
+                                      >
+                                        <MenuItem value="all">All</MenuItem>
+                                        <MenuItem value="new">New</MenuItem>
+                                        <MenuItem value="in_progress">In Progress</MenuItem>
+                                        <MenuItem value="completed">Completed</MenuItem>
+                                      </Select>
+                                    </FormControl>
+                                  </Grid>
+
+                                  {/* Urgency Filter */}
+                                  <Grid item xs={12} sm={6} md={3}>
+                                    <FormControl size="small" fullWidth>
+                                      <InputLabel>Urgency</InputLabel>
+                                      <Select
+                                        value={filterUrgency}
+                                        label="Urgency"
+                                        onChange={(e) => setFilterUrgency(e.target.value)}
+                                      >
+                                        <MenuItem value="all">All</MenuItem>
+                                        <MenuItem value="low">Low</MenuItem>
+                                        <MenuItem value="medium">Medium</MenuItem>
+                                        <MenuItem value="high">High</MenuItem>
+                                      </Select>
+                                    </FormControl>
+                                  </Grid>
+
+                                  {/* MRR Min Filter */}
+                                  <Grid item xs={12} sm={6} md={3}>
+                                    <TextField
+                                      size="small"
+                                      fullWidth
+                                      label="MRR Min"
+                                      type="number"
+                                      value={filterMrrMin}
+                                      onChange={(e) => setFilterMrrMin(e.target.value)}
+                                      placeholder="e.g. 100"
+                                    />
+                                  </Grid>
+
+                                  {/* MRR Max Filter */}
+                                  <Grid item xs={12} sm={6} md={3}>
+                                    <TextField
+                                      size="small"
+                                      fullWidth
+                                      label="MRR Max"
+                                      type="number"
+                                      value={filterMrrMax}
+                                      onChange={(e) => setFilterMrrMax(e.target.value)}
+                                      placeholder="e.g. 1000"
+                                    />
+                                  </Grid>
+                                </Grid>
+                              </Box>
+                            </Collapse>
+                          </Box>
+
+                          <List sx={{ p: 0 }}>
+                          {filteredAndSortedFeatures.map((feature, index) => (
                             <React.Fragment key={feature.id}>
                               <ListItem
                                 sx={{
-                                  borderRadius: 2,
+                                  borderRadius: 1.5,
                                   mb: 1,
-                                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.6)} 0%, ${alpha(theme.palette.background.paper, 0.3)} 100%)`,
-                                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                                  p: 1.5,
+                                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)} 0%, ${alpha(theme.palette.background.paper, 0.6)} 100%)`,
+                                  border: `1px solid ${alpha(theme.palette.divider, 0.15)}`,
+                                  transition: 'all 0.2s ease-in-out',
                                   '&:hover': {
-                                    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
-                                    border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                                    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.06)} 0%, ${alpha(theme.palette.primary.main, 0.03)} 100%)`,
+                                    border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                                    transform: 'translateY(-2px)',
+                                    boxShadow: theme.shadows[2],
                                   },
                                 }}
                               >
                                 <Box sx={{ width: '100%' }}>
-                                  {/* Title and Theme Selector Row */}
-                                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 2, mb: 1 }}>
-                                    <Typography variant="subtitle2" sx={{ fontWeight: 600, flex: 1 }}>
+                                  {/* Top Row - Feature Name + Urgency */}
+                                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                                    <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: '0.95rem', flex: 1 }}>
                                       {feature.name}
                                     </Typography>
+                                    <Chip
+                                      label={feature.urgency}
+                                      size="small"
+                                      color={getUrgencyColor(feature.urgency) as any}
+                                      sx={{
+                                        minWidth: 'auto',
+                                        height: 22,
+                                        fontSize: '0.7rem',
+                                        fontWeight: 600,
+                                        ml: 2
+                                      }}
+                                    />
+                                  </Box>
 
-                                    {/* Theme Selector - Top Right */}
-                                    <FormControl size="small" sx={{ minWidth: 180 }}>
+                                  {/* Description */}
+                                  <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ mb: 1.5, lineHeight: 1.5, fontSize: '0.85rem' }}
+                                  >
+                                    {feature.description.length > 150
+                                      ? `${feature.description.substring(0, 150)}...`
+                                      : feature.description
+                                    }
+                                  </Typography>
+
+                                  {/* Status Row - Status, Mentions, Theme */}
+                                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center', mb: 1.5 }}>
+                                    <Chip
+                                      label={feature.status}
+                                      size="small"
+                                      color={getStatusColor(feature.status) as any}
+                                      variant="outlined"
+                                      sx={{ minWidth: 'auto', height: 22, fontSize: '0.7rem' }}
+                                    />
+                                    <Chip
+                                      label={`${feature.mention_count} mentions`}
+                                      size="small"
+                                      variant="outlined"
+                                      sx={{
+                                        minWidth: 'auto',
+                                        height: 22,
+                                        fontSize: '0.7rem',
+                                        cursor: 'pointer',
+                                        '&:hover': {
+                                          backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                                          borderColor: theme.palette.primary.main
+                                        }
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleShowMessages(feature);
+                                      }}
+                                    />
+
+                                    {/* Theme Selector - Compact */}
+                                    <FormControl size="small" sx={{ minWidth: 180, ml: 'auto' }}>
                                       <Select
                                         value={feature.theme_id || ''}
                                         onChange={(e) => handleFeatureThemeChange(feature.id, e.target.value || null)}
                                         displayEmpty
                                         renderValue={(selected) => {
                                           if (!selected) {
-                                            return <em>No Theme</em>;
+                                            return <em style={{ fontSize: '0.75rem' }}>No Theme</em>;
                                           }
                                           const selectedTheme = flattenedThemes.find(t => t.id === selected);
                                           if (!selectedTheme) {
-                                            return <em>Unknown Theme</em>;
+                                            return <em style={{ fontSize: '0.75rem' }}>Unknown Theme</em>;
                                           }
 
                                           // For child themes, show "Parent / Child"
                                           if ((selectedTheme.level ?? 0) > 0 && selectedTheme.parent_theme_id) {
                                             const parentTheme = flattenedThemes.find(t => t.id === selectedTheme.parent_theme_id);
                                             if (parentTheme) {
-                                              return <Box component="span">{parentTheme.name} / {selectedTheme.name}</Box>;
+                                              return <Box component="span" sx={{ fontSize: '0.75rem' }}>{parentTheme.name} / {selectedTheme.name}</Box>;
                                             }
                                           }
 
                                           // For root themes, show name only
-                                          return <Box component="span">{selectedTheme.name}</Box>;
+                                          return <Box component="span" sx={{ fontSize: '0.75rem' }}>{selectedTheme.name}</Box>;
                                         }}
                                         sx={{
-                                          fontSize: '0.875rem',
-                                          backgroundColor: alpha(theme.palette.background.paper, 0.8),
+                                          fontSize: '0.75rem',
+                                          height: 28,
+                                          backgroundColor: alpha(theme.palette.background.paper, 0.5),
                                           '& .MuiOutlinedInput-notchedOutline': {
-                                            borderColor: alpha(theme.palette.divider, 0.3),
+                                            borderColor: alpha(theme.palette.divider, 0.2),
                                           },
                                           '&:hover .MuiOutlinedInput-notchedOutline': {
-                                            borderColor: alpha(theme.palette.primary.main, 0.5),
+                                            borderColor: alpha(theme.palette.primary.main, 0.4),
+                                          },
+                                          '& .MuiSelect-select': {
+                                            py: 0.5,
                                           }
                                         }}
                                       >
@@ -1092,147 +1533,111 @@ export function ThemesPage(): JSX.Element {
                                     </FormControl>
                                   </Box>
 
-                                  {/* Description */}
-                                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, lineHeight: 1.5 }}>
-                                    {feature.description.length > 100
-                                      ? `${feature.description.substring(0, 100)}...`
-                                      : feature.description
-                                    }
-                                  </Typography>
+                                  {/* Extracted Insights Section */}
+                                  {feature.data_points && feature.data_points.length > 0 && (
+                                    <Box sx={{
+                                      mt: 1.5,
+                                      p: 1.5,
+                                      borderRadius: 1.5,
+                                      background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.05)} 0%, ${alpha(theme.palette.info.main, 0.02)} 100%)`,
+                                      border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
+                                    }}>
+                                      <Typography variant="caption" sx={{
+                                        fontWeight: 600,
+                                        mb: 1,
+                                        display: 'block',
+                                        fontSize: '0.7rem',
+                                        color: theme.palette.info.main,
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '0.5px'
+                                      }}>
+                                        📊 Extracted Insights
+                                      </Typography>
+                                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                        {feature.data_points.map((dataPointEntry, dpIndex) => (
+                                          <Box key={dpIndex} sx={{
+                                            p: 1,
+                                            borderRadius: 1,
+                                            background: alpha(theme.palette.background.paper, 0.6),
+                                            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                                          }}>
+                                            {/* Author and timestamp */}
+                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.75 }}>
+                                              <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.7rem', color: theme.palette.text.primary }}>
+                                                {dataPointEntry.author || 'Unknown'}
+                                              </Typography>
+                                              <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.65rem' }}>
+                                                {dataPointEntry.timestamp ? new Date(dataPointEntry.timestamp).toLocaleDateString() : ''}
+                                              </Typography>
+                                            </Box>
 
-                                  {/* Status Chips */}
-                                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center', mb: 1.5 }}>
-                                    <Chip
-                                      label={feature.urgency}
-                                      size="small"
-                                      color={getUrgencyColor(feature.urgency) as any}
-                                      sx={{ minWidth: 'auto' }}
-                                    />
-                                    <Chip
-                                      label={feature.status}
-                                      size="small"
-                                      color={getStatusColor(feature.status) as any}
-                                      variant="outlined"
-                                      sx={{ minWidth: 'auto' }}
-                                    />
-                                    <Chip
-                                      label={`${feature.mention_count} mentions`}
-                                      size="small"
-                                      variant="outlined"
-                                      sx={{
-                                        minWidth: 'auto',
-                                        cursor: 'pointer',
-                                        '&:hover': {
-                                          backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                                          borderColor: theme.palette.primary.main
-                                        }
-                                      }}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleShowMessages(feature);
-                                      }}
-                                    />
-                                  </Box>
+                                            {/* Metrics and Data */}
+                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                              {/* Business Metrics */}
+                                              {dataPointEntry.business_metrics && Object.entries(dataPointEntry.business_metrics).map(([key, value]) => (
+                                                <Chip
+                                                  key={key}
+                                                  label={`${key}: ${value}`}
+                                                  size="small"
+                                                  variant="filled"
+                                                  sx={{
+                                                    fontSize: '0.65rem',
+                                                    height: 20,
+                                                    bgcolor: alpha(theme.palette.success.main, 0.15),
+                                                    color: theme.palette.success.dark,
+                                                    fontWeight: 500,
+                                                  }}
+                                                />
+                                              ))}
 
-                                      {/* Data Points Section */}
-                                      {feature.data_points && feature.data_points.length > 0 && (
-                                        <Box sx={{ mt: 2 }}>
-                                          <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, mb: 1, display: 'block' }}>
-                                            Extracted Insights:
-                                          </Typography>
-                                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                                            {feature.data_points.map((dataPointEntry, index) => (
-                                              <Box key={index} sx={{
-                                                p: 1.5,
-                                                borderRadius: 1,
-                                                background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.04)} 0%, ${alpha(theme.palette.info.main, 0.02)} 100%)`,
-                                                border: `1px solid ${alpha(theme.palette.info.main, 0.08)}`,
-                                              }}>
-                                                {/* Author and timestamp */}
-                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                                                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                                    {dataPointEntry.author || 'Unknown'}
-                                                  </Typography>
-                                                  <Typography variant="caption" color="text.secondary">
-                                                    {dataPointEntry.timestamp ? new Date(dataPointEntry.timestamp).toLocaleDateString() : ''}
-                                                  </Typography>
-                                                </Box>
+                                              {/* Entities */}
+                                              {dataPointEntry.entities && Object.entries(dataPointEntry.entities).map(([key, value]) => (
+                                                <Chip
+                                                  key={key}
+                                                  label={`${key}: ${value}`}
+                                                  size="small"
+                                                  variant="filled"
+                                                  sx={{
+                                                    fontSize: '0.65rem',
+                                                    height: 20,
+                                                    bgcolor: alpha(theme.palette.info.main, 0.15),
+                                                    color: theme.palette.info.dark,
+                                                    fontWeight: 500,
+                                                  }}
+                                                />
+                                              ))}
 
-                                                {/* Display structured metrics, business metrics, and entities */}
-                                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                                                  {dataPointEntry.structured_metrics && Object.keys(dataPointEntry.structured_metrics).length > 0 && (
-                                                    <Box>
-                                                      <Typography variant="caption" color="primary.main" sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
-                                                        📊 Metrics:
-                                                      </Typography>
-                                                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                                        {Object.entries(dataPointEntry.structured_metrics).map(([key, value]) => (
-                                                          <Chip
-                                                            key={key}
-                                                            label={`${key}: ${value}`}
-                                                            size="small"
-                                                            variant="outlined"
-                                                            color="primary"
-                                                            sx={{ fontSize: '0.7rem', height: 24 }}
-                                                          />
-                                                        ))}
-                                                      </Box>
-                                                    </Box>
-                                                  )}
-
-                                                  {dataPointEntry.business_metrics && Object.keys(dataPointEntry.business_metrics).length > 0 && (
-                                                    <Box>
-                                                      <Typography variant="caption" color="success.main" sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
-                                                        💰 Business:
-                                                      </Typography>
-                                                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                                        {Object.entries(dataPointEntry.business_metrics).map(([key, value]) => (
-                                                          <Chip
-                                                            key={key}
-                                                            label={`${key}: ${value}`}
-                                                            size="small"
-                                                            variant="outlined"
-                                                            color="success"
-                                                            sx={{ fontSize: '0.7rem', height: 24 }}
-                                                          />
-                                                        ))}
-                                                      </Box>
-                                                    </Box>
-                                                  )}
-
-                                                  {dataPointEntry.entities && Object.keys(dataPointEntry.entities).length > 0 && (
-                                                    <Box>
-                                                      <Typography variant="caption" color="info.main" sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}>
-                                                        🏷️ Entities:
-                                                      </Typography>
-                                                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                                        {Object.entries(dataPointEntry.entities).map(([key, value]) => (
-                                                          <Chip
-                                                            key={key}
-                                                            label={`${key}: ${value}`}
-                                                            size="small"
-                                                            variant="outlined"
-                                                            color="info"
-                                                            sx={{ fontSize: '0.7rem', height: 24 }}
-                                                          />
-                                                        ))}
-                                                      </Box>
-                                                    </Box>
-                                                  )}
-                                                </Box>
-                                              </Box>
-                                            ))}
+                                              {/* Structured Metrics */}
+                                              {dataPointEntry.structured_metrics && Object.entries(dataPointEntry.structured_metrics).map(([key, value]) => (
+                                                <Chip
+                                                  key={key}
+                                                  label={`${key}: ${value}`}
+                                                  size="small"
+                                                  variant="filled"
+                                                  sx={{
+                                                    fontSize: '0.65rem',
+                                                    height: 20,
+                                                    bgcolor: alpha(theme.palette.primary.main, 0.15),
+                                                    color: theme.palette.primary.dark,
+                                                    fontWeight: 500,
+                                                  }}
+                                                />
+                                              ))}
+                                            </Box>
                                           </Box>
-                                        </Box>
-                                      )}
+                                        ))}
+                                      </Box>
+                                    </Box>
+                                  )}
                                 </Box>
                               </ListItem>
-                              {index < themeFeatures.length - 1 && (
-                                <Divider sx={{ my: 0.5, opacity: 0.5 }} />
+                              {index < filteredAndSortedFeatures.length - 1 && (
+                                <Divider sx={{ my: 0.5, opacity: 0.3 }} />
                               )}
                             </React.Fragment>
                           ))}
-                        </List>
+                          </List>
+                        </>
                       ) : (
                         <Box sx={{ textAlign: 'center', py: 6 }}>
                           <FeatureIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
