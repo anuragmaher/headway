@@ -2,7 +2,7 @@
  * Insights Dashboard page showing key metrics and analytics
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -14,7 +14,6 @@ import {
   alpha,
   useTheme,
   LinearProgress,
-  CircularProgress,
   Table,
   TableBody,
   TableCell,
@@ -26,9 +25,6 @@ import {
 } from '@mui/material';
 import {
   Warning as WarningIcon,
-  Block as BlockIcon,
-  Lightbulb as InsightIcon,
-  MonetizationOn as MoneyIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useAuthStore } from '@/features/auth/store/auth-store';
