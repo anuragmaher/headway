@@ -721,3 +721,241 @@ async def get_feature_messages(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get feature messages: {str(e)}"
         )
+
+
+# Helper function to get feature MRR and metadata
+def _get_feature_mrr_data(feature: Feature, data_points: list) -> dict:
+    """Extract MRR and metadata for a feature"""
+    feature_mrr = 0
+    customer_name = "Unknown"
+    product = "Unknown"
+
+    feature_data_points = [dp for dp in data_points if str(dp.feature_id) == str(feature.id)]
+
+    for dp in feature_data_points:
+        if dp.data_point_category == 'business_metrics' and dp.data_point_key == 'mrr':
+            if dp.numeric_value:
+                feature_mrr += float(dp.numeric_value)
+
+        if dp.data_point_category == 'entities':
+            if dp.data_point_key in ['company_name', 'customer_name'] and dp.text_value:
+                customer_name = dp.text_value
+            elif dp.data_point_key == 'product' and dp.text_value:
+                product = dp.text_value
+
+    return {
+        'mrr': feature_mrr,
+        'customer': customer_name,
+        'product': product
+    }
+
+
+@router.get("/dashboard-metrics/summary")
+async def get_dashboard_summary(
+    workspace_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get summary metrics (top 4 cards)"""
+    try:
+        features = db.query(Feature).filter(Feature.workspace_id == workspace_id).all()
+        data_points = db.query(WorkspaceDataPoint).filter(
+            WorkspaceDataPoint.workspace_id == workspace_id
+        ).all()
+
+        total_requests = len(features)
+        total_mrr_impact = 0
+        deal_blockers = 0
+        urgent_items = 0
+
+        for feature in features:
+            mrr_data = _get_feature_mrr_data(feature, data_points)
+            total_mrr_impact += mrr_data['mrr']
+
+            # Count urgent items (high urgency)
+            if feature.urgency and feature.urgency.lower() in ['urgent', 'high']:
+                urgent_items += 1
+
+            # Count deal blockers
+            if feature.status == 'deal_lost' or (feature.urgency and feature.urgency.lower() == 'impending_churn'):
+                deal_blockers += 1
+
+        return {
+            'total_requests': total_requests,
+            'total_mrr_impact': total_mrr_impact,
+            'deal_blockers': deal_blockers,
+            'urgent_items': urgent_items
+        }
+    except Exception as e:
+        logger.error(f"Error getting dashboard summary: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/dashboard-metrics/by-urgency")
+async def get_dashboard_by_urgency(
+    workspace_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get metrics grouped by urgency"""
+    try:
+        features = db.query(Feature).filter(Feature.workspace_id == workspace_id).all()
+        data_points = db.query(WorkspaceDataPoint).filter(
+            WorkspaceDataPoint.workspace_id == workspace_id
+        ).all()
+
+        # Map actual database values to display labels
+        urgency_mapping = {
+            'high': 'urgent',
+            'medium': 'important',
+            'low': 'nice_to_have',
+            'impending_churn': 'impending_churn'
+        }
+
+        by_urgency = {
+            'urgent': {'count': 0, 'mrr': 0},
+            'important': {'count': 0, 'mrr': 0},
+            'nice_to_have': {'count': 0, 'mrr': 0},
+            'impending_churn': {'count': 0, 'mrr': 0}
+        }
+
+        for feature in features:
+            mrr_data = _get_feature_mrr_data(feature, data_points)
+            urgency_key = feature.urgency.lower() if feature.urgency else 'low'
+            mapped_key = urgency_mapping.get(urgency_key, 'nice_to_have')
+
+            if mapped_key in by_urgency:
+                by_urgency[mapped_key]['count'] += 1
+                by_urgency[mapped_key]['mrr'] += mrr_data['mrr']
+
+        return by_urgency
+    except Exception as e:
+        logger.error(f"Error getting urgency metrics: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/dashboard-metrics/by-product")
+async def get_dashboard_by_product(
+    workspace_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get metrics grouped by product"""
+    try:
+        features = db.query(Feature).filter(Feature.workspace_id == workspace_id).all()
+        data_points = db.query(WorkspaceDataPoint).filter(
+            WorkspaceDataPoint.workspace_id == workspace_id
+        ).all()
+
+        by_product = {}
+
+        for feature in features:
+            mrr_data = _get_feature_mrr_data(feature, data_points)
+            product = mrr_data['product']
+
+            if product not in by_product:
+                by_product[product] = {'product': product, 'count': 0, 'mrr': 0}
+            by_product[product]['count'] += 1
+            by_product[product]['mrr'] += mrr_data['mrr']
+
+        return sorted(by_product.values(), key=lambda x: x['count'], reverse=True)[:10]
+    except Exception as e:
+        logger.error(f"Error getting product metrics: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/dashboard-metrics/top-categories")
+async def get_dashboard_top_categories(
+    workspace_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get top feature categories"""
+    try:
+        features = db.query(Feature).filter(Feature.workspace_id == workspace_id).all()
+        data_points = db.query(WorkspaceDataPoint).filter(
+            WorkspaceDataPoint.workspace_id == workspace_id
+        ).all()
+
+        top_categories = {}
+
+        for feature in features:
+            if feature.theme_id:
+                theme = db.query(Theme).filter(Theme.id == feature.theme_id).first()
+                if theme:
+                    mrr_data = _get_feature_mrr_data(feature, data_points)
+                    category = theme.name
+
+                    if category not in top_categories:
+                        top_categories[category] = {'category': category, 'count': 0, 'mrr': 0}
+                    top_categories[category]['count'] += 1
+                    top_categories[category]['mrr'] += mrr_data['mrr']
+
+        return sorted(top_categories.values(), key=lambda x: x['count'], reverse=True)[:10]
+    except Exception as e:
+        logger.error(f"Error getting category metrics: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/dashboard-metrics/critical-attention")
+async def get_dashboard_critical_attention(
+    workspace_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get items requiring critical attention"""
+    try:
+        features = db.query(Feature).filter(Feature.workspace_id == workspace_id).all()
+        data_points = db.query(WorkspaceDataPoint).filter(
+            WorkspaceDataPoint.workspace_id == workspace_id
+        ).all()
+
+        critical_attention = []
+
+        for feature in features:
+            if feature.urgency and feature.urgency.lower() in ['urgent', 'high']:
+                mrr_data = _get_feature_mrr_data(feature, data_points)
+                if mrr_data['mrr'] > 0:
+                    critical_attention.append({
+                        'urgency': 'URGENT' if feature.urgency.lower() in ['urgent', 'high'] else 'IMPORTANT',
+                        'customer': mrr_data['customer'],
+                        'mrr': mrr_data['mrr'],
+                        'feature': feature.name,
+                        'product': mrr_data['product']
+                    })
+
+        return sorted(critical_attention, key=lambda x: x['mrr'], reverse=True)[:5]
+    except Exception as e:
+        logger.error(f"Error getting critical attention: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/dashboard-metrics/top-mrr")
+async def get_dashboard_top_mrr(
+    workspace_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get top 10 requests by MRR impact"""
+    try:
+        features = db.query(Feature).filter(Feature.workspace_id == workspace_id).all()
+        data_points = db.query(WorkspaceDataPoint).filter(
+            WorkspaceDataPoint.workspace_id == workspace_id
+        ).all()
+
+        feature_mrr_list = []
+
+        for feature in features:
+            mrr_data = _get_feature_mrr_data(feature, data_points)
+            feature_mrr_list.append({
+                'customer': mrr_data['customer'],
+                'mrr': mrr_data['mrr'],
+                'urgency': feature.urgency,
+                'feature': feature.name,
+                'product': mrr_data['product']
+            })
+
+        return sorted(feature_mrr_list, key=lambda x: x['mrr'], reverse=True)[:10]
+    except Exception as e:
+        logger.error(f"Error getting top MRR: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
