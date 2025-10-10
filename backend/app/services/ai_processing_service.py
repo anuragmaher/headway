@@ -3,50 +3,110 @@ import logging
 from typing import Dict, Any, Optional, List
 from openai import OpenAI
 import json
+from sqlalchemy.orm import Session
 
 from app.models.message import Message
+from app.models.theme import Theme
+from app.models.data_extraction_field import DataExtractionField
+from app.core.database import get_db
 
 logger = logging.getLogger(__name__)
 
 
 class AIProcessingService:
     """Service for processing messages with AI to extract feature requests and insights"""
-    
+
     def __init__(self):
         """Initialize OpenAI client"""
         api_key = os.getenv('OPENAI_API_KEY')
         if not api_key:
             raise ValueError("OPENAI_API_KEY environment variable is required")
-        
+
         self.client = OpenAI(api_key=api_key)
         self.model = "gpt-4o-mini"  # Cost-effective model for analysis
-    
-    def process_message(self, message: Message) -> Dict[str, Any]:
+
+    def _get_workspace_schemas(self, workspace_id: str, db: Session) -> Dict[str, Any]:
+        """
+        Fetch workspace-specific themes and data extraction fields
+
+        Args:
+            workspace_id: The workspace ID to fetch schemas for
+            db: Database session
+
+        Returns:
+            Dictionary containing themes and data extraction fields
+        """
+        # Fetch themes
+        themes = db.query(Theme).filter(
+            Theme.workspace_id == workspace_id
+        ).all()
+
+        theme_list = []
+        for theme in themes:
+            theme_data = {
+                "id": str(theme.id),
+                "name": theme.name,
+                "description": theme.description
+            }
+            if theme.parent_theme_id:
+                parent = db.query(Theme).filter(Theme.id == theme.parent_theme_id).first()
+                if parent:
+                    theme_data["parent"] = parent.name
+            theme_list.append(theme_data)
+
+        # Fetch data extraction fields
+        data_fields = db.query(DataExtractionField).filter(
+            DataExtractionField.workspace_id == workspace_id,
+            DataExtractionField.is_active == True
+        ).all()
+
+        field_list = []
+        for field in data_fields:
+            field_list.append({
+                "field_name": field.field_name,
+                "field_type": field.field_type,
+                "data_type": field.data_type,
+                "description": field.description
+            })
+
+        return {
+            "themes": theme_list,
+            "data_fields": field_list
+        }
+
+    def process_message(self, message: Message, workspace_id: Optional[str] = None) -> Dict[str, Any]:
         """
         Process a single message to extract feature request insights
-        
+
         Args:
             message: Message object to process
-            
+            workspace_id: The workspace ID to fetch user-defined schemas
+
         Returns:
             Dictionary containing extracted insights
         """
         try:
             logger.info(f"Processing message {message.id} from {message.author_name}")
-            
+
+            # Get database session
+            db = next(get_db())
+
+            # Fetch workspace schemas (themes and data extraction fields)
+            schemas = self._get_workspace_schemas(workspace_id, db) if workspace_id else {"themes": [], "data_fields": []}
+
             # Create the analysis prompt
             prompt = self._create_analysis_prompt(message)
-            
-            # Call OpenAI API
+
+            # Call OpenAI API with dynamic system prompt
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
                     {
                         "role": "system",
-                        "content": self._get_system_prompt()
+                        "content": self._get_system_prompt(schemas)
                     },
                     {
-                        "role": "user", 
+                        "role": "user",
                         "content": prompt
                     }
                 ],
@@ -54,13 +114,13 @@ class AIProcessingService:
                 max_tokens=1000,
                 response_format={"type": "json_object"}
             )
-            
+
             # Parse the response
             result = json.loads(response.choices[0].message.content)
-            
+
             logger.info(f"Successfully processed message {message.id}")
             return result
-            
+
         except Exception as e:
             logger.error(f"Error processing message {message.id}: {e}")
             return {
@@ -68,41 +128,110 @@ class AIProcessingService:
                 "is_feature_request": False,
                 "confidence": 0.0
             }
+        finally:
+            db.close()
     
-    def _get_system_prompt(self) -> str:
-        """Get the system prompt for feature request analysis"""
-        return """You are an AI assistant specialized in analyzing customer messages to extract feature requests and insights for a product team.
+    def _get_system_prompt(self, schemas: Dict[str, Any]) -> str:
+        """
+        Get the system prompt for feature request analysis based on user-defined schemas
+
+        Args:
+            schemas: Dictionary containing themes and data_fields
+
+        Returns:
+            Dynamic system prompt based on workspace configuration
+        """
+        themes = schemas.get("themes", [])
+        data_fields = schemas.get("data_fields", [])
+
+        # Build theme list for prompt
+        theme_descriptions = []
+        if themes:
+            for theme in themes:
+                if "parent" in theme:
+                    theme_descriptions.append(f"  - {theme['name']} (sub-theme of {theme['parent']}): {theme['description']}")
+                else:
+                    theme_descriptions.append(f"  - {theme['name']}: {theme['description']}")
+            themes_section = "Available themes (categorize the request into ONE of these):\n" + "\n".join(theme_descriptions)
+        else:
+            themes_section = "No themes defined yet. Set theme to null."
+
+        # Build data extraction fields for prompt
+        data_field_descriptions = []
+        json_fields = {}
+        if data_fields:
+            for field in data_fields:
+                field_desc = f"  - {field['field_name']} ({field['data_type']}): {field['description']}"
+                data_field_descriptions.append(field_desc)
+
+                # Build JSON field representation
+                if field['data_type'] == 'string':
+                    json_fields[field['field_name'].lower().replace(' ', '_')] = "\"extracted value or null\""
+                elif field['data_type'] == 'number':
+                    json_fields[field['field_name'].lower().replace(' ', '_')] = "number or null"
+                elif field['data_type'] == 'boolean':
+                    json_fields[field['field_name'].lower().replace(' ', '_')] = "true/false or null"
+                elif field['data_type'] == 'date':
+                    json_fields[field['field_name'].lower().replace(' ', '_')] = "\"ISO date string or null\""
+                elif field['data_type'] == 'array':
+                    json_fields[field['field_name'].lower().replace(' ', '_')] = "[\"array\", \"values\"] or null"
+
+            data_fields_section = "Data fields to extract (extract ALL that are mentioned or can be inferred):\n" + "\n".join(data_field_descriptions)
+        else:
+            data_fields_section = "No data extraction fields defined yet."
+            json_fields = {}
+
+        # Build the JSON format string
+        json_format_lines = [
+            "{",
+            "    \"is_feature_request\": boolean,",
+            "    \"confidence\": float (0.0 to 1.0),",
+            "    \"feature_title\": \"Brief title of the feature request\",",
+            "    \"feature_description\": \"Detailed description of what is being requested\","
+        ]
+
+        if themes:
+            json_format_lines.append("    \"theme\": \"Name of the theme from the available themes list (or null if none match)\",")
+
+        if json_fields:
+            json_format_lines.append("    \"extracted_data\": {")
+            field_lines = [f"        \"{key}\": {value}" for key, value in json_fields.items()]
+            json_format_lines.append(",\n".join(field_lines))
+            json_format_lines.append("    },")
+
+        json_format_lines.extend([
+            "    \"priority\": \"low/medium/high\",",
+            "    \"urgency\": \"low/medium/high\",",
+            "    \"business_impact\": \"Description of potential business impact\",",
+            "    \"keywords\": [\"array\", \"of\", \"relevant\", \"keywords\"],",
+            "    \"sentiment\": \"positive/neutral/negative\",",
+            "    \"reasoning\": \"Brief explanation of your analysis\"",
+            "}"
+        ])
+
+        json_format = "\n".join(json_format_lines)
+
+        return f"""You are an AI assistant specialized in analyzing customer messages to extract feature requests and insights for a product team.
 
 Your task is to analyze each message and determine:
 1. Whether it contains a feature request or product feedback
 2. Extract key information about the request
-3. Categorize and prioritize the request
-4. Identify broader themes and patterns
+3. Categorize the request into user-defined themes
+4. Extract specific data fields that the user has configured
+
+{themes_section}
+
+{data_fields_section}
 
 Always respond with valid JSON in this exact format:
-{
-    "is_feature_request": boolean,
-    "confidence": float (0.0 to 1.0),
-    "feature_title": "Brief title of the feature request",
-    "feature_description": "Detailed description of what is being requested",
-    "customer_info": {
-        "name": "Customer/company name if mentioned",
-        "type": "Customer type (existing, prospect, etc.)",
-        "mrr": "Monthly recurring revenue if mentioned (number only, no currency)"
-    },
-    "product": "Product name mentioned (Gmail, Outlook, WhatsApp, etc.)",
-    "functional_area": "Specific functional area - use the core term only",
-    "theme": "Broader business theme (Productivity, Compliance, Customer Experience, Operational Efficiency, Data Management, etc.)",
-    "category": "High-level category (Core Features, Integrations, UI/UX, Performance, Security, Mobile, Analytics, Administration)",
-    "priority": "low/medium/high",
-    "urgency": "low/medium/high",
-    "business_impact": "Description of potential business impact",
-    "keywords": ["array", "of", "relevant", "keywords"],
-    "sentiment": "positive/neutral/negative",
-    "reasoning": "Brief explanation of your analysis"
-}
+{json_format}
 
-Focus on identifying broader themes that can group similar requests together. Use high-level categories that product teams commonly use. Extract MRR as a number if mentioned. Be thorough but concise. If the message is not a feature request, set is_feature_request to false and provide minimal other fields."""
+IMPORTANT INSTRUCTIONS:
+- Only use themes from the provided list. If no theme matches well, set theme to null.
+- Extract ALL data fields that are mentioned or can be reasonably inferred from the message.
+- For numeric fields (like MRR), extract only the number without currency symbols.
+- Be thorough but concise in your analysis.
+- If the message is not a feature request, set is_feature_request to false and provide minimal other fields."""
     
     def _create_analysis_prompt(self, message: Message) -> str:
         """

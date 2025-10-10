@@ -92,7 +92,7 @@ class EnhancedMessageProcessingService:
                 logger.info(f"Attempting AI processing for message {message.id}")
                 result["processing_path"].append("ai_processing")
 
-                ai_result = self.ai_service.process_message(message)
+                ai_result = self.ai_service.process_message(message, workspace_id=workspace_id)
                 result["ai_processing"] = ai_result
 
                 if ai_result.get("is_feature_request", False):
@@ -163,9 +163,11 @@ class EnhancedMessageProcessingService:
 
         logger.info(f"Starting batch processing of {len(messages)} messages")
 
+        # Get workspace_id from first message
+        workspace_id = str(messages[0].workspace_id) if messages else None
+
         # First pass: Try fast classification for all messages
         if use_fast_classification:
-            workspace_id = str(messages[0].workspace_id) if messages else None
 
             if workspace_id:
                 logger.info(f"Attempting fast classification for {len(messages)} messages")
@@ -231,7 +233,7 @@ class EnhancedMessageProcessingService:
                 fast_result = item["fast_result"]
 
                 try:
-                    ai_result = self.ai_service.process_message(message)
+                    ai_result = self.ai_service.process_message(message, workspace_id=workspace_id)
                     ai_fallback_count += 1
 
                     result = {

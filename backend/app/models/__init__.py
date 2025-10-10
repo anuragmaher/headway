@@ -14,6 +14,7 @@ from app.models.integration import Integration
 from app.models.message import Message, feature_messages
 from app.models.clustering import ClusteringRun, DiscoveredCluster, ClassificationSignal
 from app.models.workspace_data_point import WorkspaceDataPoint
+from app.models.data_extraction_field import DataExtractionField
 
 __all__ = [
     "User",
@@ -27,5 +28,6 @@ __all__ = [
     "ClusteringRun",
     "DiscoveredCluster",
     "ClassificationSignal",
-    "WorkspaceDataPoint"
+    "WorkspaceDataPoint",
+    "DataExtractionField"
 ]

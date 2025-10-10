@@ -11,6 +11,7 @@ from app.models.user import User
 from app.models.feature import Feature
 from app.models.theme import Theme
 from app.models.message import Message
+from app.models.workspace_data_point import WorkspaceDataPoint
 
 logger = logging.getLogger(__name__)
 
@@ -76,6 +77,52 @@ class MessageResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+def get_formatted_data_points(db: Session, feature_id: str) -> List[dict]:
+    """
+    Fetch and format data points for a feature from workspace_data_points table
+
+    Returns list of data point entries grouped by message, formatted for frontend display
+    """
+    # Fetch all data points for this feature
+    data_points = db.query(WorkspaceDataPoint).filter(
+        WorkspaceDataPoint.feature_id == feature_id
+    ).order_by(WorkspaceDataPoint.extracted_at.desc()).all()
+
+    if not data_points:
+        return []
+
+    # Group data points by message_id
+    grouped_by_message = {}
+    for dp in data_points:
+        message_id = str(dp.message_id)
+        if message_id not in grouped_by_message:
+            grouped_by_message[message_id] = {
+                'author': dp.author,
+                'timestamp': dp.extracted_at.isoformat() if dp.extracted_at else '',
+                'structured_metrics': {},
+                'business_metrics': {},
+                'entities': {},
+                'other': {}
+            }
+
+        # Get the value
+        value = dp.numeric_value or dp.integer_value or dp.text_value
+
+        # Categorize the data point
+        category = dp.data_point_category
+        if category == 'structured_metrics':
+            grouped_by_message[message_id]['structured_metrics'][dp.data_point_key] = value
+        elif category == 'business_metrics':
+            grouped_by_message[message_id]['business_metrics'][dp.data_point_key] = value
+        elif category == 'entities':
+            grouped_by_message[message_id]['entities'][dp.data_point_key] = value
+        else:
+            grouped_by_message[message_id]['other'][dp.data_point_key] = value
+
+    # Convert to list format expected by frontend
+    return list(grouped_by_message.values())
 
 
 @router.get("/themes", response_model=List[ThemeResponse])
@@ -427,6 +474,9 @@ async def get_features(
         # Convert to response format
         feature_responses = []
         for feature in features:
+            # Fetch formatted data points from workspace_data_points table
+            data_points = get_formatted_data_points(db, str(feature.id))
+
             feature_responses.append(FeatureResponse(
                 id=str(feature.id),
                 name=feature.name,
@@ -439,7 +489,7 @@ async def get_features(
                 last_mentioned=feature.last_mentioned.isoformat() if feature.last_mentioned else "",
                 created_at=feature.created_at.isoformat() if feature.created_at else "",
                 updated_at=feature.updated_at.isoformat() if feature.updated_at else None,
-                data_points=feature.data_points if feature.data_points else []
+                data_points=data_points
             ))
 
         return feature_responses

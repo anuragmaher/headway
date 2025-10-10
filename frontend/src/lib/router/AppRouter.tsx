@@ -18,6 +18,7 @@ import { WorkspaceSettingsPage } from '@/pages/WorkspaceSettingsPage';
 import { OnboardingPage } from '@/pages/OnboardingPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { ClusteringPage } from '@/pages/ClusteringPage';
+import { WayPage } from '@/pages/WayPage';
 
 export function AppRouter(): JSX.Element {
   return (
@@ -61,13 +62,22 @@ export function AppRouter(): JSX.Element {
           } 
         />
         
-        <Route 
-          path={ROUTES.DASHBOARD} 
+        <Route
+          path={ROUTES.DASHBOARD}
           element={
             <ProtectedRoute>
               <DashboardPage />
             </ProtectedRoute>
-          } 
+          }
+        />
+
+        <Route
+          path={ROUTES.WAY}
+          element={
+            <ProtectedRoute>
+              <WayPage />
+            </ProtectedRoute>
+          }
         />
 
         {/* Settings routes - will be implemented later */}

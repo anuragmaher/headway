@@ -34,6 +34,7 @@ import {
   Psychology as PsychologyIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
+  AutoAwesome as WayIcon,
 } from '@mui/icons-material';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
@@ -53,6 +54,11 @@ const navigationItems = [
     text: 'Dashboard',
     icon: <DashboardIcon />,
     path: ROUTES.DASHBOARD,
+  },
+  {
+    text: 'Way',
+    icon: <WayIcon />,
+    path: ROUTES.WAY,
   },
   {
     text: 'Features',

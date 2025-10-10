@@ -13,7 +13,8 @@ export const ROUTES = {
   // Protected routes
   DASHBOARD: '/dashboard',
   ONBOARDING: '/onboarding',
-  
+  WAY: '/app/way',
+
   // Settings routes
   SETTINGS: '/app/settings',
   SETTINGS_PROFILE: '/app/settings/profile',

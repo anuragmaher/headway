@@ -23,23 +23,23 @@ def get_current_user(
 ) -> dict:
     """
     Get current authenticated user from JWT token using PostgreSQL database.
-    
+
     Args:
         credentials: HTTP authorization credentials
         db: Database session
-        
+
     Returns:
         Current User dict
-        
+
     Raises:
         HTTPException: If token invalid or user not found
     """
     # Extract token from credentials
     token = credentials.credentials
-    
+
     # Verify token and get user ID
     user_id = verify_token(token)
-    
+
     if user_id is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
