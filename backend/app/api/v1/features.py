@@ -471,14 +471,58 @@ async def get_features(
 
         features = query.order_by(Feature.last_mentioned.desc()).all()
 
+        if not features:
+            return []
+
+        # OPTIMIZATION: Fetch ALL data points in a single query
+        feature_ids = [str(f.id) for f in features]
+        all_data_points = db.query(WorkspaceDataPoint).filter(
+            WorkspaceDataPoint.feature_id.in_(feature_ids)
+        ).order_by(WorkspaceDataPoint.extracted_at.desc()).all()
+
+        # Group data points by feature_id and message_id
+        data_points_by_feature = {}
+        for dp in all_data_points:
+            feature_id = str(dp.feature_id)
+            message_id = str(dp.message_id)
+
+            if feature_id not in data_points_by_feature:
+                data_points_by_feature[feature_id] = {}
+
+            if message_id not in data_points_by_feature[feature_id]:
+                data_points_by_feature[feature_id][message_id] = {
+                    'author': dp.author,
+                    'timestamp': dp.extracted_at.isoformat() if dp.extracted_at else '',
+                    'structured_metrics': {},
+                    'business_metrics': {},
+                    'entities': {},
+                    'other': {}
+                }
+
+            # Get the value
+            value = dp.numeric_value or dp.integer_value or dp.text_value
+
+            # Categorize the data point
+            category = dp.data_point_category
+            message_data = data_points_by_feature[feature_id][message_id]
+            if category == 'structured_metrics':
+                message_data['structured_metrics'][dp.data_point_key] = value
+            elif category == 'business_metrics':
+                message_data['business_metrics'][dp.data_point_key] = value
+            elif category == 'entities':
+                message_data['entities'][dp.data_point_key] = value
+            else:
+                message_data['other'][dp.data_point_key] = value
+
         # Convert to response format
         feature_responses = []
         for feature in features:
-            # Fetch formatted data points from workspace_data_points table
-            data_points = get_formatted_data_points(db, str(feature.id))
+            feature_id = str(feature.id)
+            # Get data points for this feature (already grouped)
+            data_points = list(data_points_by_feature.get(feature_id, {}).values())
 
             feature_responses.append(FeatureResponse(
-                id=str(feature.id),
+                id=feature_id,
                 name=feature.name,
                 description=feature.description,
                 urgency=feature.urgency,

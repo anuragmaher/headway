@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Text, Table
+from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Text, Table, Index
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -59,6 +59,13 @@ class Message(Base):
         secondary=feature_messages,
         back_populates="messages"
     )
-    
+
+    # Indexes for performance
+    __table_args__ = (
+        Index('idx_messages_workspace', 'workspace_id'),
+        Index('idx_messages_workspace_sent', 'workspace_id', 'sent_at'),
+        Index('idx_messages_workspace_processed', 'workspace_id', 'is_processed'),
+    )
+
     def __repr__(self) -> str:
         return f"<Message(id={self.id}, source='{self.source}', channel='{self.channel_name}')>"
