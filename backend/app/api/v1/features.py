@@ -919,6 +919,7 @@ async def get_all_dashboard_metrics(
 
         # 6. Top MRR (top 10)
         top_mrr = db.query(
+            Feature.id.label('feature_id'),
             Feature.name.label('feature'),
             Feature.urgency,
             func.max(
@@ -993,10 +994,10 @@ async def get_all_dashboard_metrics(
             ],
             'top_mrr': [
                 {
-                    'customer': customer, 'mrr': float(mrr or 0),
+                    'feature_id': str(feature_id), 'customer': customer, 'mrr': float(mrr or 0),
                     'urgency': urgency, 'feature': feature, 'product': product
                 }
-                for feature, urgency, customer, product, mrr in top_mrr
+                for feature_id, feature, urgency, customer, product, mrr in top_mrr
             ]
         }
     except Exception as e:
@@ -1307,6 +1308,7 @@ async def get_dashboard_top_mrr(
 
         # OPTIMIZED: Aggregate in SQL and only fetch top 10
         top_mrr_query = db.query(
+            Feature.id.label('feature_id'),
             Feature.name.label('feature'),
             Feature.urgency,
             func.max(
@@ -1357,13 +1359,14 @@ async def get_dashboard_top_mrr(
 
         return [
             {
+                'feature_id': str(feature_id),
                 'customer': customer,
                 'mrr': float(mrr or 0),
                 'urgency': urgency,
                 'feature': feature,
                 'product': product
             }
-            for feature, urgency, customer, product, mrr in top_mrr_query
+            for feature_id, feature, urgency, customer, product, mrr in top_mrr_query
         ]
     except Exception as e:
         logger.error(f"Error getting top MRR: {e}")

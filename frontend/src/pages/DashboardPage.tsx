@@ -28,7 +28,6 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemText,
 } from '@mui/material';
 import {
   Warning as WarningIcon,
@@ -75,6 +74,7 @@ interface CriticalItem {
 }
 
 interface TopMrrItem {
+  feature_id: string;
   customer: string;
   mrr: number;
   urgency: string;
@@ -183,102 +183,6 @@ export function DashboardPage(): JSX.Element {
     }
   };
 
-  const fetchSummary = async () => {
-    try {
-      const token = getAuthToken();
-      const response = await fetch(
-        `${API_BASE_URL}/api/v1/features/dashboard-metrics/summary?workspace_id=${WORKSPACE_ID}`,
-        { headers: { 'Authorization': `Bearer ${token}` } }
-      );
-      const data = await response.json();
-      setSummary(data);
-    } catch (error) {
-      console.error('Error fetching summary:', error);
-    } finally {
-      setLoadingSummary(false);
-    }
-  };
-
-  const fetchByUrgency = async () => {
-    try {
-      const token = getAuthToken();
-      const response = await fetch(
-        `${API_BASE_URL}/api/v1/features/dashboard-metrics/by-urgency?workspace_id=${WORKSPACE_ID}`,
-        { headers: { 'Authorization': `Bearer ${token}` } }
-      );
-      const data = await response.json();
-      setByUrgency(data);
-    } catch (error) {
-      console.error('Error fetching urgency:', error);
-    } finally {
-      setLoadingUrgency(false);
-    }
-  };
-
-  const fetchByProduct = async () => {
-    try {
-      const token = getAuthToken();
-      const response = await fetch(
-        `${API_BASE_URL}/api/v1/features/dashboard-metrics/by-product?workspace_id=${WORKSPACE_ID}`,
-        { headers: { 'Authorization': `Bearer ${token}` } }
-      );
-      const data = await response.json();
-      setByProduct(data);
-    } catch (error) {
-      console.error('Error fetching product:', error);
-    } finally {
-      setLoadingProduct(false);
-    }
-  };
-
-  const fetchTopCategories = async () => {
-    try {
-      const token = getAuthToken();
-      const response = await fetch(
-        `${API_BASE_URL}/api/v1/features/dashboard-metrics/top-categories?workspace_id=${WORKSPACE_ID}`,
-        { headers: { 'Authorization': `Bearer ${token}` } }
-      );
-      const data = await response.json();
-      setTopCategories(data);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    } finally {
-      setLoadingCategories(false);
-    }
-  };
-
-  const fetchCriticalAttention = async () => {
-    try {
-      const token = getAuthToken();
-      const response = await fetch(
-        `${API_BASE_URL}/api/v1/features/dashboard-metrics/critical-attention?workspace_id=${WORKSPACE_ID}`,
-        { headers: { 'Authorization': `Bearer ${token}` } }
-      );
-      const data = await response.json();
-      setCriticalAttention(data);
-    } catch (error) {
-      console.error('Error fetching critical attention:', error);
-    } finally {
-      setLoadingCritical(false);
-    }
-  };
-
-  const fetchTopMrr = async () => {
-    try {
-      const token = getAuthToken();
-      const response = await fetch(
-        `${API_BASE_URL}/api/v1/features/dashboard-metrics/top-mrr?workspace_id=${WORKSPACE_ID}`,
-        { headers: { 'Authorization': `Bearer ${token}` } }
-      );
-      const data = await response.json();
-      setTopMrr(data);
-    } catch (error) {
-      console.error('Error fetching top MRR:', error);
-    } finally {
-      setLoadingTopMrr(false);
-    }
-  };
-
   // Drawer functions
   const openDrawerWithFilter = async (filterType: FilterType, filterValue: string, title: string) => {
     setDrawerState({
@@ -293,15 +197,26 @@ export function DashboardPage(): JSX.Element {
 
     try {
       const token = getAuthToken();
-      let url = `${API_BASE_URL}/api/v1/features/features?workspace_id=${WORKSPACE_ID}`;
 
-      // Add filter based on type
+      // For category filter, we need to get theme ID first
+      let themeId: string | null = null;
       if (filterType === 'category' && filterValue) {
-        // Find theme ID by name (we need to store theme data or pass IDs)
-        const theme = topCategories.find(c => c.category === filterValue);
-        if (theme) {
-          // We'll need theme IDs - for now fetch all and filter client-side
+        // Fetch themes to find the ID for this category name
+        const themesResponse = await fetch(
+          `${API_BASE_URL}/api/v1/features/themes?workspace_id=${WORKSPACE_ID}`,
+          { headers: { 'Authorization': `Bearer ${token}` } }
+        );
+        const themes = await themesResponse.json();
+        const matchingTheme = themes.find((t: any) => t.name === filterValue);
+        if (matchingTheme) {
+          themeId = matchingTheme.id;
         }
+      }
+
+      // Build URL with appropriate filters
+      let url = `${API_BASE_URL}/api/v1/features/features?workspace_id=${WORKSPACE_ID}`;
+      if (themeId) {
+        url += `&theme_id=${themeId}`;
       }
 
       const response = await fetch(url, {
@@ -384,7 +299,9 @@ export function DashboardPage(): JSX.Element {
     return `$${value.toFixed(0)}`;
   };
 
-  const getUrgencyColor = (urgency: string) => {
+  const getUrgencyColor = (urgency: string | null | undefined) => {
+    if (!urgency) return theme.palette.grey[500];
+
     switch (urgency.toLowerCase()) {
       case 'urgent':
       case 'high':
@@ -567,7 +484,7 @@ export function DashboardPage(): JSX.Element {
                       <Skeleton key={i} variant="rectangular" height={60} />
                     ))}
                   </Box>
-                ) : (
+                ) : byProduct && byProduct.length > 0 ? (
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     {byProduct.slice(0, 5).map((item, index) => {
                       const maxCount = Math.max(...byProduct.map(p => p.count));
@@ -584,6 +501,10 @@ export function DashboardPage(): JSX.Element {
                       );
                     })}
                   </Box>
+                ) : (
+                  <Typography color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                    No product data available
+                  </Typography>
                 )}
               </CardContent>
             </Card>
@@ -604,7 +525,7 @@ export function DashboardPage(): JSX.Element {
                       </Grid>
                     ))}
                   </Grid>
-                ) : (
+                ) : topCategories && topCategories.length > 0 ? (
                   <Grid container spacing={2}>
                     {topCategories.slice(0, 6).map((item, index) => (
                       <Grid item xs={6} key={index}>
@@ -631,6 +552,10 @@ export function DashboardPage(): JSX.Element {
                       </Grid>
                     ))}
                   </Grid>
+                ) : (
+                  <Typography color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                    No category data available
+                  </Typography>
                 )}
               </CardContent>
             </Card>
@@ -638,7 +563,7 @@ export function DashboardPage(): JSX.Element {
         </Grid>
 
         {/* Critical Attention Section */}
-        {!loadingCritical && criticalAttention.length > 0 && (
+        {!loadingCritical && criticalAttention && criticalAttention.length > 0 && (
           <Card sx={{
             mb: 4,
             background: `linear-gradient(135deg, ${alpha(theme.palette.error.main, 0.15)} 0%, ${alpha(theme.palette.error.main, 0.08)} 100%)`,
@@ -691,7 +616,7 @@ export function DashboardPage(): JSX.Element {
                   <Skeleton key={i} variant="rectangular" height={50} sx={{ mb: 1 }} />
                 ))}
               </Box>
-            ) : (
+            ) : topMrr && topMrr.length > 0 ? (
               <TableContainer component={Paper} variant="outlined">
                 <Table>
                   <TableHead>
@@ -705,7 +630,18 @@ export function DashboardPage(): JSX.Element {
                   </TableHead>
                   <TableBody>
                     {topMrr.map((row, index) => (
-                      <TableRow key={index} hover>
+                      <TableRow
+                        key={index}
+                        hover
+                        onClick={() => openFeatureDetail(row.feature_id)}
+                        sx={{
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s',
+                          '&:hover': {
+                            bgcolor: alpha(theme.palette.primary.main, 0.08),
+                          }
+                        }}
+                      >
                         <TableCell>{row.customer}</TableCell>
                         <TableCell>
                           <Typography fontWeight={600}>{formatCurrency(row.mrr)}</Typography>
@@ -730,6 +666,10 @@ export function DashboardPage(): JSX.Element {
                   </TableBody>
                 </Table>
               </TableContainer>
+            ) : (
+              <Typography color="text.secondary" sx={{ textAlign: 'center', py: 4 }}>
+                No MRR data available
+              </Typography>
             )}
           </CardContent>
         </Card>
