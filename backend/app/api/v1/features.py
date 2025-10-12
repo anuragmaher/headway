@@ -872,7 +872,13 @@ async def get_dashboard_top_categories(
 ):
     """Get top feature categories"""
     try:
-        features = db.query(Feature).filter(Feature.workspace_id == workspace_id).all()
+        from sqlalchemy.orm import joinedload
+
+        # FIXED: Use eager loading to fetch themes in ONE query instead of N queries
+        features = db.query(Feature).options(
+            joinedload(Feature.theme)
+        ).filter(Feature.workspace_id == workspace_id).all()
+
         data_points = db.query(WorkspaceDataPoint).filter(
             WorkspaceDataPoint.workspace_id == workspace_id
         ).all()
@@ -880,16 +886,14 @@ async def get_dashboard_top_categories(
         top_categories = {}
 
         for feature in features:
-            if feature.theme_id:
-                theme = db.query(Theme).filter(Theme.id == feature.theme_id).first()
-                if theme:
-                    mrr_data = _get_feature_mrr_data(feature, data_points)
-                    category = theme.name
+            if feature.theme_id and feature.theme:  # theme is now pre-loaded
+                mrr_data = _get_feature_mrr_data(feature, data_points)
+                category = feature.theme.name  # Access pre-loaded relationship
 
-                    if category not in top_categories:
-                        top_categories[category] = {'category': category, 'count': 0, 'mrr': 0}
-                    top_categories[category]['count'] += 1
-                    top_categories[category]['mrr'] += mrr_data['mrr']
+                if category not in top_categories:
+                    top_categories[category] = {'category': category, 'count': 0, 'mrr': 0}
+                top_categories[category]['count'] += 1
+                top_categories[category]['mrr'] += mrr_data['mrr']
 
         return sorted(top_categories.values(), key=lambda x: x['count'], reverse=True)[:10]
     except Exception as e:

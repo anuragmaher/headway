@@ -4,15 +4,15 @@ from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
 
 # Create SQLAlchemy engine for native PostgreSQL connection
-# Optimized for Neon PostgreSQL serverless with cold start handling
+# Optimized for Railway PostgreSQL with connection pooling
 engine = create_engine(
     settings.DATABASE_URL,
     pool_pre_ping=True,  # Test connections before using
-    pool_recycle=60,  # Recycle connections every 60s to prevent cold connections
-    pool_size=5,  # Maintain 5 connections in the pool
-    max_overflow=10,  # Allow up to 10 additional connections when needed
+    pool_recycle=3600,  # Recycle connections every hour (Railway Postgres is stable)
+    pool_size=10,  # Increase pool size for better concurrency
+    max_overflow=20,  # Allow more overflow connections
     connect_args={
-        'connect_timeout': 30,  # 30 second connection timeout
+        'connect_timeout': 10,  # Reduced timeout for faster failure detection
         'keepalives': 1,  # Enable TCP keepalives
         'keepalives_idle': 30,  # Start keepalives after 30s of idle
         'keepalives_interval': 10,  # Send keepalive every 10s
