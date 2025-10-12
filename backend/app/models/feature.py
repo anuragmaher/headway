@@ -19,9 +19,6 @@ class Feature(Base):
     status = Column(String, nullable=False, default="new")  # new, under-review, planned, shipped
     mention_count = Column(Integer, nullable=False, default=1)
 
-    # Extracted data points from LLM processing
-    data_points = Column(JSONB, nullable=True)  # List of structured data points and insights
-
     # Workspace and theme relationships
     workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), nullable=False)
     theme_id = Column(UUID(as_uuid=True), ForeignKey("themes.id"), nullable=True)
