@@ -750,6 +750,260 @@ def _get_feature_mrr_data(feature: Feature, data_points: list) -> dict:
     }
 
 
+@router.get("/dashboard-metrics/all")
+async def get_all_dashboard_metrics(
+    workspace_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get ALL dashboard metrics in a single response - OPTIMIZED for Railway
+
+    This endpoint combines all 6 dashboard metric queries into one response,
+    reducing network latency from 6 HTTPS round-trips to 1.
+    """
+    try:
+        from sqlalchemy import func, case
+
+        # 1. Summary metrics (4 separate scalar queries)
+        total_requests = db.query(func.count(Feature.id)).filter(
+            Feature.workspace_id == workspace_id
+        ).scalar()
+
+        total_mrr_impact = db.query(
+            func.coalesce(func.sum(WorkspaceDataPoint.numeric_value), 0)
+        ).filter(
+            WorkspaceDataPoint.workspace_id == workspace_id,
+            WorkspaceDataPoint.data_point_category == 'business_metrics',
+            WorkspaceDataPoint.data_point_key == 'mrr'
+        ).scalar() or 0
+
+        urgent_items = db.query(func.count(Feature.id)).filter(
+            Feature.workspace_id == workspace_id,
+            func.lower(Feature.urgency).in_(['urgent', 'high'])
+        ).scalar()
+
+        deal_blockers = db.query(func.count(Feature.id)).filter(
+            Feature.workspace_id == workspace_id,
+            (Feature.status == 'deal_lost') | (func.lower(Feature.urgency) == 'impending_churn')
+        ).scalar()
+
+        # 2. By urgency
+        urgency_counts = db.query(
+            func.lower(Feature.urgency).label('urgency'),
+            func.count(Feature.id).label('count')
+        ).filter(
+            Feature.workspace_id == workspace_id
+        ).group_by(func.lower(Feature.urgency)).all()
+
+        mrr_by_feature = db.query(
+            Feature.id.label('feature_id'),
+            Feature.urgency,
+            func.coalesce(func.sum(WorkspaceDataPoint.numeric_value), 0).label('mrr')
+        ).outerjoin(
+            WorkspaceDataPoint,
+            (WorkspaceDataPoint.feature_id == Feature.id) &
+            (WorkspaceDataPoint.data_point_category == 'business_metrics') &
+            (WorkspaceDataPoint.data_point_key == 'mrr')
+        ).filter(
+            Feature.workspace_id == workspace_id
+        ).group_by(Feature.id, Feature.urgency).subquery()
+
+        mrr_by_urgency = db.query(
+            func.lower(mrr_by_feature.c.urgency).label('urgency'),
+            func.sum(mrr_by_feature.c.mrr).label('total_mrr')
+        ).group_by(func.lower(mrr_by_feature.c.urgency)).all()
+
+        urgency_mapping = {
+            'high': 'urgent', 'medium': 'important', 'low': 'nice_to_have',
+            'impending_churn': 'impending_churn', None: 'nice_to_have'
+        }
+
+        by_urgency = {
+            'urgent': {'count': 0, 'mrr': 0}, 'important': {'count': 0, 'mrr': 0},
+            'nice_to_have': {'count': 0, 'mrr': 0}, 'impending_churn': {'count': 0, 'mrr': 0}
+        }
+
+        for urgency, count in urgency_counts:
+            mapped_key = urgency_mapping.get(urgency, 'nice_to_have')
+            by_urgency[mapped_key]['count'] += count
+
+        for urgency, mrr in mrr_by_urgency:
+            mapped_key = urgency_mapping.get(urgency, 'nice_to_have')
+            by_urgency[mapped_key]['mrr'] += float(mrr or 0)
+
+        # 3. By product (top 10)
+        by_product = db.query(
+            func.coalesce(WorkspaceDataPoint.text_value, 'Unknown').label('product'),
+            func.count(func.distinct(Feature.id)).label('count'),
+            func.coalesce(
+                func.sum(case((WorkspaceDataPoint.data_point_key == 'mrr', WorkspaceDataPoint.numeric_value), else_=0)),
+                0
+            ).label('mrr')
+        ).select_from(Feature).outerjoin(
+            WorkspaceDataPoint, WorkspaceDataPoint.feature_id == Feature.id
+        ).filter(
+            Feature.workspace_id == workspace_id,
+            (WorkspaceDataPoint.data_point_category == 'entities') &
+            (WorkspaceDataPoint.data_point_key == 'product') |
+            (WorkspaceDataPoint.id == None)
+        ).group_by(WorkspaceDataPoint.text_value).order_by(
+            func.count(func.distinct(Feature.id)).desc()
+        ).limit(10).all()
+
+        # 4. Top categories (top 10)
+        top_categories = db.query(
+            Theme.name.label('category'),
+            func.count(Feature.id).label('count'),
+            func.coalesce(
+                func.sum(case((WorkspaceDataPoint.data_point_key == 'mrr', WorkspaceDataPoint.numeric_value), else_=0)),
+                0
+            ).label('mrr')
+        ).select_from(Feature).join(Theme, Feature.theme_id == Theme.id).outerjoin(
+            WorkspaceDataPoint,
+            (WorkspaceDataPoint.feature_id == Feature.id) &
+            (WorkspaceDataPoint.data_point_category == 'business_metrics')
+        ).filter(
+            Feature.workspace_id == workspace_id
+        ).group_by(Theme.name).order_by(func.count(Feature.id).desc()).limit(10).all()
+
+        # 5. Critical attention (top 5)
+        critical_attention = db.query(
+            Feature.name.label('feature'),
+            Feature.urgency,
+            func.max(
+                case(
+                    ((WorkspaceDataPoint.data_point_category == 'entities') &
+                     (WorkspaceDataPoint.data_point_key.in_(['company_name', 'customer_name'])),
+                     WorkspaceDataPoint.text_value),
+                    else_='Unknown'
+                )
+            ).label('customer'),
+            func.max(
+                case(
+                    ((WorkspaceDataPoint.data_point_category == 'entities') &
+                     (WorkspaceDataPoint.data_point_key == 'product'),
+                     WorkspaceDataPoint.text_value),
+                    else_='Unknown'
+                )
+            ).label('product'),
+            func.coalesce(
+                func.sum(
+                    case(
+                        ((WorkspaceDataPoint.data_point_category == 'business_metrics') &
+                         (WorkspaceDataPoint.data_point_key == 'mrr'),
+                         WorkspaceDataPoint.numeric_value),
+                        else_=0
+                    )
+                ),
+                0
+            ).label('mrr')
+        ).select_from(Feature).outerjoin(
+            WorkspaceDataPoint, WorkspaceDataPoint.feature_id == Feature.id
+        ).filter(
+            Feature.workspace_id == workspace_id,
+            func.lower(Feature.urgency).in_(['urgent', 'high'])
+        ).group_by(Feature.id, Feature.name, Feature.urgency).having(
+            func.coalesce(
+                func.sum(
+                    case(
+                        ((WorkspaceDataPoint.data_point_category == 'business_metrics') &
+                         (WorkspaceDataPoint.data_point_key == 'mrr'),
+                         WorkspaceDataPoint.numeric_value),
+                        else_=0
+                    )
+                ),
+                0
+            ) > 0
+        ).order_by(func.sum(WorkspaceDataPoint.numeric_value).desc()).limit(5).all()
+
+        # 6. Top MRR (top 10)
+        top_mrr = db.query(
+            Feature.name.label('feature'),
+            Feature.urgency,
+            func.max(
+                case(
+                    ((WorkspaceDataPoint.data_point_category == 'entities') &
+                     (WorkspaceDataPoint.data_point_key.in_(['company_name', 'customer_name'])),
+                     WorkspaceDataPoint.text_value),
+                    else_='Unknown'
+                )
+            ).label('customer'),
+            func.max(
+                case(
+                    ((WorkspaceDataPoint.data_point_category == 'entities') &
+                     (WorkspaceDataPoint.data_point_key == 'product'),
+                     WorkspaceDataPoint.text_value),
+                    else_='Unknown'
+                )
+            ).label('product'),
+            func.coalesce(
+                func.sum(
+                    case(
+                        ((WorkspaceDataPoint.data_point_category == 'business_metrics') &
+                         (WorkspaceDataPoint.data_point_key == 'mrr'),
+                         WorkspaceDataPoint.numeric_value),
+                        else_=0
+                    )
+                ),
+                0
+            ).label('mrr')
+        ).select_from(Feature).outerjoin(
+            WorkspaceDataPoint, WorkspaceDataPoint.feature_id == Feature.id
+        ).filter(
+            Feature.workspace_id == workspace_id
+        ).group_by(Feature.id, Feature.name, Feature.urgency).order_by(
+            func.coalesce(
+                func.sum(
+                    case(
+                        ((WorkspaceDataPoint.data_point_category == 'business_metrics') &
+                         (WorkspaceDataPoint.data_point_key == 'mrr'),
+                         WorkspaceDataPoint.numeric_value),
+                        else_=0
+                    )
+                ),
+                0
+            ).desc()
+        ).limit(10).all()
+
+        # Return everything in one response
+        return {
+            'summary': {
+                'total_requests': total_requests,
+                'total_mrr_impact': float(total_mrr_impact),
+                'deal_blockers': deal_blockers,
+                'urgent_items': urgent_items
+            },
+            'by_urgency': by_urgency,
+            'by_product': [
+                {'product': product, 'count': count, 'mrr': float(mrr or 0)}
+                for product, count, mrr in by_product
+            ],
+            'top_categories': [
+                {'category': category, 'count': count, 'mrr': float(mrr or 0)}
+                for category, count, mrr in top_categories
+            ],
+            'critical_attention': [
+                {
+                    'urgency': 'URGENT' if urgency.lower() in ['urgent', 'high'] else 'IMPORTANT',
+                    'customer': customer, 'mrr': float(mrr or 0),
+                    'feature': feature, 'product': product
+                }
+                for feature, urgency, customer, product, mrr in critical_attention
+            ],
+            'top_mrr': [
+                {
+                    'customer': customer, 'mrr': float(mrr or 0),
+                    'urgency': urgency, 'feature': feature, 'product': product
+                }
+                for feature, urgency, customer, product, mrr in top_mrr
+            ]
+        }
+    except Exception as e:
+        logger.error(f"Error getting all dashboard metrics: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/dashboard-metrics/summary")
 async def get_dashboard_summary(
     workspace_id: str,
