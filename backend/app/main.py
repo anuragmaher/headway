@@ -14,13 +14,48 @@ from app.core.database import create_all_tables
 # Load environment variables
 load_dotenv()
 
-# Test Supabase connection on startup
+# Log startup configuration (with sensitive data masked)
+print("=" * 80)
+print("🚀 HeadwayHQ API Starting...")
+print("=" * 80)
+
+# Mask password in DATABASE_URL for logging
+db_url = settings.DATABASE_URL
+if '@' in db_url and ':' in db_url:
+    # Format: postgresql://user:password@host:port/db
+    parts = db_url.split('@')
+    if len(parts) == 2:
+        user_pass = parts[0].split(':')
+        if len(user_pass) >= 3:
+            masked_url = f"{user_pass[0]}:{user_pass[1]}:****@{parts[1]}"
+        else:
+            masked_url = f"{parts[0].split(':')[0]}:****@{parts[1]}"
+    else:
+        masked_url = "****"
+else:
+    masked_url = db_url[:30] + "****"
+
+print(f"📊 DATABASE_URL: {masked_url}")
+print(f"🌍 ENVIRONMENT: {settings.ENVIRONMENT}")
+print(f"🐛 DEBUG: {settings.DEBUG}")
+print(f"🔑 ANTHROPIC_API_KEY: {'✅ Set' if settings.ANTHROPIC_API_KEY else '❌ Not set'}")
+print(f"🔑 OPENAI_API_KEY: {'✅ Set' if settings.OPENAI_API_KEY else '❌ Not set'}")
+print(f"🔐 JWT_SECRET_KEY: {'✅ Set (custom)' if settings.JWT_SECRET_KEY != 'your-super-secret-jwt-key-change-in-production' else '⚠️  Using default (change in production!)'}")
+print(f"🎯 CORS_ORIGINS: {', '.join(settings.CORS_ORIGINS[:3])}...")
+print(f"🔗 SUPABASE_URL: {settings.SUPABASE_URL[:40]}...")
+print("=" * 80)
+
+# Test database connection on startup
 try:
     from app.core.database import create_all_tables
+    print("🔄 Testing database connection...")
     create_all_tables()
+    print("✅ Database connection successful!")
 except Exception as e:
-    print(f"⚠️  Supabase connection test failed: {e}")
+    print(f"❌ Database connection failed: {e}")
     print("   This is expected if environment variables are not set yet")
+
+print("=" * 80)
 
 app = FastAPI(
     title="HeadwayHQ API",
