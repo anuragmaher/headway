@@ -12,8 +12,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application
 COPY . .
 
+# Make start script executable
+COPY start.sh .
+RUN chmod +x start.sh
+
 # Railway sets PORT env var - default to 8000 for local
 EXPOSE $PORT
 
-# Start uvicorn with PORT from environment
-CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Use bash script to handle PORT env var
+CMD ["./start.sh"]
