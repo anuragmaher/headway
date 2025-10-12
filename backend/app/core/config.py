@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     SUPABASE_KEY: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5b2FrYm54ZWhvc29uZWN1b3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA1NjI2MTYsImV4cCI6MjA0NjEzODYxNn0.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5b2FrYm54ZWhvc29uZWN1b3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA1NjI2MTYsImV4cCI6MjA0NjEzODYxNn0"
     
     # JWT Configuration
-    JWT_SECRET_KEY: str = "your-super-secret-jwt-key-change-in-production"
+    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "your-super-secret-jwt-key-change-in-production")
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 525600  # 365 days (1 year)
     EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
@@ -30,9 +30,9 @@ class Settings(BaseSettings):
     SLACK_REDIRECT_URI: str = "http://localhost:8000/api/v1/slack/callback"
     
     # Environment
-    ENVIRONMENT: str = "development"
-    DEBUG: bool = True
-    
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
+    DEBUG: bool = os.getenv("DEBUG", "true").lower() in ("true", "1", "yes")
+
     # CORS
     CORS_ORIGINS: List[str] = [
         "http://localhost:5173",  # Vite dev server
@@ -40,6 +40,7 @@ class Settings(BaseSettings):
         "http://localhost:5174",  # Alternative dev port
         "https://headwayhq.com",  # Production domain
         "https://www.headwayhq.com",  # Production domain with www
+        "https://headway-ten.vercel.app",  # Vercel deployment
     ]
     
     # Celery Configuration
