@@ -100,14 +100,38 @@ export function DashboardPage(): JSX.Element {
   };
 
   useEffect(() => {
-    // Fetch all metrics independently
-    fetchSummary();
-    fetchByUrgency();
-    fetchByProduct();
-    fetchTopCategories();
-    fetchCriticalAttention();
-    fetchTopMrr();
+    // OPTIMIZED: Fetch all metrics in a single request
+    fetchAllMetrics();
   }, []);
+
+  const fetchAllMetrics = async () => {
+    try {
+      const token = getAuthToken();
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/features/dashboard-metrics/all?workspace_id=${WORKSPACE_ID}`,
+        { headers: { 'Authorization': `Bearer ${token}` } }
+      );
+      const data = await response.json();
+
+      // Update all state at once
+      setSummary(data.summary);
+      setByUrgency(data.by_urgency);
+      setByProduct(data.by_product);
+      setTopCategories(data.top_categories);
+      setCriticalAttention(data.critical_attention);
+      setTopMrr(data.top_mrr);
+    } catch (error) {
+      console.error('Error fetching dashboard metrics:', error);
+    } finally {
+      // Set all loading states to false
+      setLoadingSummary(false);
+      setLoadingUrgency(false);
+      setLoadingProduct(false);
+      setLoadingCategories(false);
+      setLoadingCritical(false);
+      setLoadingTopMrr(false);
+    }
+  };
 
   const fetchSummary = async () => {
     try {
