@@ -756,33 +756,39 @@ async def get_dashboard_summary(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Get summary metrics (top 4 cards)"""
+    """Get summary metrics (top 4 cards) - OPTIMIZED with SQL aggregations"""
     try:
-        features = db.query(Feature).filter(Feature.workspace_id == workspace_id).all()
-        data_points = db.query(WorkspaceDataPoint).filter(
-            WorkspaceDataPoint.workspace_id == workspace_id
-        ).all()
+        from sqlalchemy import func, case
 
-        total_requests = len(features)
-        total_mrr_impact = 0
-        deal_blockers = 0
-        urgent_items = 0
+        # OPTIMIZED: Count features using SQL instead of fetching all
+        total_requests = db.query(func.count(Feature.id)).filter(
+            Feature.workspace_id == workspace_id
+        ).scalar()
 
-        for feature in features:
-            mrr_data = _get_feature_mrr_data(feature, data_points)
-            total_mrr_impact += mrr_data['mrr']
+        # OPTIMIZED: Sum MRR using SQL aggregation instead of Python loop
+        total_mrr_impact = db.query(
+            func.coalesce(func.sum(WorkspaceDataPoint.numeric_value), 0)
+        ).filter(
+            WorkspaceDataPoint.workspace_id == workspace_id,
+            WorkspaceDataPoint.data_point_category == 'business_metrics',
+            WorkspaceDataPoint.data_point_key == 'mrr'
+        ).scalar() or 0
 
-            # Count urgent items (high urgency)
-            if feature.urgency and feature.urgency.lower() in ['urgent', 'high']:
-                urgent_items += 1
+        # OPTIMIZED: Count urgent items using SQL
+        urgent_items = db.query(func.count(Feature.id)).filter(
+            Feature.workspace_id == workspace_id,
+            func.lower(Feature.urgency).in_(['urgent', 'high'])
+        ).scalar()
 
-            # Count deal blockers
-            if feature.status == 'deal_lost' or (feature.urgency and feature.urgency.lower() == 'impending_churn'):
-                deal_blockers += 1
+        # OPTIMIZED: Count deal blockers using SQL
+        deal_blockers = db.query(func.count(Feature.id)).filter(
+            Feature.workspace_id == workspace_id,
+            (Feature.status == 'deal_lost') | (func.lower(Feature.urgency) == 'impending_churn')
+        ).scalar()
 
         return {
             'total_requests': total_requests,
-            'total_mrr_impact': total_mrr_impact,
+            'total_mrr_impact': float(total_mrr_impact),
             'deal_blockers': deal_blockers,
             'urgent_items': urgent_items
         }
@@ -797,21 +803,47 @@ async def get_dashboard_by_urgency(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Get metrics grouped by urgency"""
+    """Get metrics grouped by urgency - OPTIMIZED with SQL aggregations"""
     try:
-        features = db.query(Feature).filter(Feature.workspace_id == workspace_id).all()
-        data_points = db.query(WorkspaceDataPoint).filter(
-            WorkspaceDataPoint.workspace_id == workspace_id
-        ).all()
+        from sqlalchemy import func, case
 
-        # Map actual database values to display labels
+        # OPTIMIZED: Use SQL to count features by urgency and sum MRR in one query
+        urgency_counts = db.query(
+            func.lower(Feature.urgency).label('urgency'),
+            func.count(Feature.id).label('count')
+        ).filter(
+            Feature.workspace_id == workspace_id
+        ).group_by(func.lower(Feature.urgency)).all()
+
+        # Get MRR sum per feature, then group by urgency
+        mrr_by_feature = db.query(
+            Feature.id.label('feature_id'),
+            Feature.urgency,
+            func.coalesce(func.sum(WorkspaceDataPoint.numeric_value), 0).label('mrr')
+        ).outerjoin(
+            WorkspaceDataPoint,
+            (WorkspaceDataPoint.feature_id == Feature.id) &
+            (WorkspaceDataPoint.data_point_category == 'business_metrics') &
+            (WorkspaceDataPoint.data_point_key == 'mrr')
+        ).filter(
+            Feature.workspace_id == workspace_id
+        ).group_by(Feature.id, Feature.urgency).subquery()
+
+        mrr_by_urgency = db.query(
+            func.lower(mrr_by_feature.c.urgency).label('urgency'),
+            func.sum(mrr_by_feature.c.mrr).label('total_mrr')
+        ).group_by(func.lower(mrr_by_feature.c.urgency)).all()
+
+        # Map database values to display labels
         urgency_mapping = {
             'high': 'urgent',
             'medium': 'important',
             'low': 'nice_to_have',
-            'impending_churn': 'impending_churn'
+            'impending_churn': 'impending_churn',
+            None: 'nice_to_have'
         }
 
+        # Initialize result
         by_urgency = {
             'urgent': {'count': 0, 'mrr': 0},
             'important': {'count': 0, 'mrr': 0},
@@ -819,14 +851,15 @@ async def get_dashboard_by_urgency(
             'impending_churn': {'count': 0, 'mrr': 0}
         }
 
-        for feature in features:
-            mrr_data = _get_feature_mrr_data(feature, data_points)
-            urgency_key = feature.urgency.lower() if feature.urgency else 'low'
-            mapped_key = urgency_mapping.get(urgency_key, 'nice_to_have')
+        # Populate counts
+        for urgency, count in urgency_counts:
+            mapped_key = urgency_mapping.get(urgency, 'nice_to_have')
+            by_urgency[mapped_key]['count'] += count
 
-            if mapped_key in by_urgency:
-                by_urgency[mapped_key]['count'] += 1
-                by_urgency[mapped_key]['mrr'] += mrr_data['mrr']
+        # Populate MRR
+        for urgency, mrr in mrr_by_urgency:
+            mapped_key = urgency_mapping.get(urgency, 'nice_to_have')
+            by_urgency[mapped_key]['mrr'] += float(mrr or 0)
 
         return by_urgency
     except Exception as e:
@@ -840,25 +873,44 @@ async def get_dashboard_by_product(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Get metrics grouped by product"""
+    """Get metrics grouped by product - OPTIMIZED with SQL aggregations"""
     try:
-        features = db.query(Feature).filter(Feature.workspace_id == workspace_id).all()
-        data_points = db.query(WorkspaceDataPoint).filter(
-            WorkspaceDataPoint.workspace_id == workspace_id
-        ).all()
+        from sqlalchemy import func, case
 
-        by_product = {}
+        # OPTIMIZED: Group by product in SQL
+        # Get feature count and MRR per product
+        by_product_query = db.query(
+            func.coalesce(WorkspaceDataPoint.text_value, 'Unknown').label('product'),
+            func.count(func.distinct(Feature.id)).label('count'),
+            func.coalesce(
+                func.sum(
+                    case(
+                        (WorkspaceDataPoint.data_point_key == 'mrr', WorkspaceDataPoint.numeric_value),
+                        else_=0
+                    )
+                ),
+                0
+            ).label('mrr')
+        ).select_from(Feature).outerjoin(
+            WorkspaceDataPoint,
+            WorkspaceDataPoint.feature_id == Feature.id
+        ).filter(
+            Feature.workspace_id == workspace_id,
+            (WorkspaceDataPoint.data_point_category == 'entities') &
+            (WorkspaceDataPoint.data_point_key == 'product') |
+            (WorkspaceDataPoint.id == None)  # Include features with no product
+        ).group_by(WorkspaceDataPoint.text_value).order_by(
+            func.count(func.distinct(Feature.id)).desc()
+        ).limit(10).all()
 
-        for feature in features:
-            mrr_data = _get_feature_mrr_data(feature, data_points)
-            product = mrr_data['product']
-
-            if product not in by_product:
-                by_product[product] = {'product': product, 'count': 0, 'mrr': 0}
-            by_product[product]['count'] += 1
-            by_product[product]['mrr'] += mrr_data['mrr']
-
-        return sorted(by_product.values(), key=lambda x: x['count'], reverse=True)[:10]
+        return [
+            {
+                'product': product,
+                'count': count,
+                'mrr': float(mrr or 0)
+            }
+            for product, count, mrr in by_product_query
+        ]
     except Exception as e:
         logger.error(f"Error getting product metrics: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -870,32 +922,44 @@ async def get_dashboard_top_categories(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Get top feature categories"""
+    """Get top feature categories - OPTIMIZED with SQL aggregations"""
     try:
-        from sqlalchemy.orm import joinedload
+        from sqlalchemy import func, case
 
-        # FIXED: Use eager loading to fetch themes in ONE query instead of N queries
-        features = db.query(Feature).options(
-            joinedload(Feature.theme)
-        ).filter(Feature.workspace_id == workspace_id).all()
+        # OPTIMIZED: Use SQL GROUP BY instead of Python aggregation
+        top_categories_query = db.query(
+            Theme.name.label('category'),
+            func.count(Feature.id).label('count'),
+            func.coalesce(
+                func.sum(
+                    case(
+                        (WorkspaceDataPoint.data_point_key == 'mrr', WorkspaceDataPoint.numeric_value),
+                        else_=0
+                    )
+                ),
+                0
+            ).label('mrr')
+        ).select_from(Feature).join(
+            Theme,
+            Feature.theme_id == Theme.id
+        ).outerjoin(
+            WorkspaceDataPoint,
+            (WorkspaceDataPoint.feature_id == Feature.id) &
+            (WorkspaceDataPoint.data_point_category == 'business_metrics')
+        ).filter(
+            Feature.workspace_id == workspace_id
+        ).group_by(Theme.name).order_by(
+            func.count(Feature.id).desc()
+        ).limit(10).all()
 
-        data_points = db.query(WorkspaceDataPoint).filter(
-            WorkspaceDataPoint.workspace_id == workspace_id
-        ).all()
-
-        top_categories = {}
-
-        for feature in features:
-            if feature.theme_id and feature.theme:  # theme is now pre-loaded
-                mrr_data = _get_feature_mrr_data(feature, data_points)
-                category = feature.theme.name  # Access pre-loaded relationship
-
-                if category not in top_categories:
-                    top_categories[category] = {'category': category, 'count': 0, 'mrr': 0}
-                top_categories[category]['count'] += 1
-                top_categories[category]['mrr'] += mrr_data['mrr']
-
-        return sorted(top_categories.values(), key=lambda x: x['count'], reverse=True)[:10]
+        return [
+            {
+                'category': category,
+                'count': count,
+                'mrr': float(mrr or 0)
+            }
+            for category, count, mrr in top_categories_query
+        ]
     except Exception as e:
         logger.error(f"Error getting category metrics: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -907,28 +971,71 @@ async def get_dashboard_critical_attention(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Get items requiring critical attention"""
+    """Get items requiring critical attention - OPTIMIZED with SQL"""
     try:
-        features = db.query(Feature).filter(Feature.workspace_id == workspace_id).all()
-        data_points = db.query(WorkspaceDataPoint).filter(
-            WorkspaceDataPoint.workspace_id == workspace_id
-        ).all()
+        from sqlalchemy import func, case
 
-        critical_attention = []
+        # OPTIMIZED: Filter and aggregate in SQL, only fetch top 5
+        critical_query = db.query(
+            Feature.name.label('feature'),
+            Feature.urgency,
+            func.max(
+                case(
+                    ((WorkspaceDataPoint.data_point_category == 'entities') &
+                     (WorkspaceDataPoint.data_point_key.in_(['company_name', 'customer_name'])),
+                     WorkspaceDataPoint.text_value),
+                    else_='Unknown'
+                )
+            ).label('customer'),
+            func.max(
+                case(
+                    ((WorkspaceDataPoint.data_point_category == 'entities') &
+                     (WorkspaceDataPoint.data_point_key == 'product'),
+                     WorkspaceDataPoint.text_value),
+                    else_='Unknown'
+                )
+            ).label('product'),
+            func.coalesce(
+                func.sum(
+                    case(
+                        ((WorkspaceDataPoint.data_point_category == 'business_metrics') &
+                         (WorkspaceDataPoint.data_point_key == 'mrr'),
+                         WorkspaceDataPoint.numeric_value),
+                        else_=0
+                    )
+                ),
+                0
+            ).label('mrr')
+        ).select_from(Feature).outerjoin(
+            WorkspaceDataPoint,
+            WorkspaceDataPoint.feature_id == Feature.id
+        ).filter(
+            Feature.workspace_id == workspace_id,
+            func.lower(Feature.urgency).in_(['urgent', 'high'])
+        ).group_by(Feature.id, Feature.name, Feature.urgency).having(
+            func.coalesce(
+                func.sum(
+                    case(
+                        ((WorkspaceDataPoint.data_point_category == 'business_metrics') &
+                         (WorkspaceDataPoint.data_point_key == 'mrr'),
+                         WorkspaceDataPoint.numeric_value),
+                        else_=0
+                    )
+                ),
+                0
+            ) > 0
+        ).order_by(func.sum(WorkspaceDataPoint.numeric_value).desc()).limit(5).all()
 
-        for feature in features:
-            if feature.urgency and feature.urgency.lower() in ['urgent', 'high']:
-                mrr_data = _get_feature_mrr_data(feature, data_points)
-                if mrr_data['mrr'] > 0:
-                    critical_attention.append({
-                        'urgency': 'URGENT' if feature.urgency.lower() in ['urgent', 'high'] else 'IMPORTANT',
-                        'customer': mrr_data['customer'],
-                        'mrr': mrr_data['mrr'],
-                        'feature': feature.name,
-                        'product': mrr_data['product']
-                    })
-
-        return sorted(critical_attention, key=lambda x: x['mrr'], reverse=True)[:5]
+        return [
+            {
+                'urgency': 'URGENT' if urgency.lower() in ['urgent', 'high'] else 'IMPORTANT',
+                'customer': customer,
+                'mrr': float(mrr or 0),
+                'feature': feature,
+                'product': product
+            }
+            for feature, urgency, customer, product, mrr in critical_query
+        ]
     except Exception as e:
         logger.error(f"Error getting critical attention: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -940,26 +1047,70 @@ async def get_dashboard_top_mrr(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Get top 10 requests by MRR impact"""
+    """Get top 10 requests by MRR impact - OPTIMIZED with SQL"""
     try:
-        features = db.query(Feature).filter(Feature.workspace_id == workspace_id).all()
-        data_points = db.query(WorkspaceDataPoint).filter(
-            WorkspaceDataPoint.workspace_id == workspace_id
-        ).all()
+        from sqlalchemy import func, case
 
-        feature_mrr_list = []
+        # OPTIMIZED: Aggregate in SQL and only fetch top 10
+        top_mrr_query = db.query(
+            Feature.name.label('feature'),
+            Feature.urgency,
+            func.max(
+                case(
+                    ((WorkspaceDataPoint.data_point_category == 'entities') &
+                     (WorkspaceDataPoint.data_point_key.in_(['company_name', 'customer_name'])),
+                     WorkspaceDataPoint.text_value),
+                    else_='Unknown'
+                )
+            ).label('customer'),
+            func.max(
+                case(
+                    ((WorkspaceDataPoint.data_point_category == 'entities') &
+                     (WorkspaceDataPoint.data_point_key == 'product'),
+                     WorkspaceDataPoint.text_value),
+                    else_='Unknown'
+                )
+            ).label('product'),
+            func.coalesce(
+                func.sum(
+                    case(
+                        ((WorkspaceDataPoint.data_point_category == 'business_metrics') &
+                         (WorkspaceDataPoint.data_point_key == 'mrr'),
+                         WorkspaceDataPoint.numeric_value),
+                        else_=0
+                    )
+                ),
+                0
+            ).label('mrr')
+        ).select_from(Feature).outerjoin(
+            WorkspaceDataPoint,
+            WorkspaceDataPoint.feature_id == Feature.id
+        ).filter(
+            Feature.workspace_id == workspace_id
+        ).group_by(Feature.id, Feature.name, Feature.urgency).order_by(
+            func.coalesce(
+                func.sum(
+                    case(
+                        ((WorkspaceDataPoint.data_point_category == 'business_metrics') &
+                         (WorkspaceDataPoint.data_point_key == 'mrr'),
+                         WorkspaceDataPoint.numeric_value),
+                        else_=0
+                    )
+                ),
+                0
+            ).desc()
+        ).limit(10).all()
 
-        for feature in features:
-            mrr_data = _get_feature_mrr_data(feature, data_points)
-            feature_mrr_list.append({
-                'customer': mrr_data['customer'],
-                'mrr': mrr_data['mrr'],
-                'urgency': feature.urgency,
-                'feature': feature.name,
-                'product': mrr_data['product']
-            })
-
-        return sorted(feature_mrr_list, key=lambda x: x['mrr'], reverse=True)[:10]
+        return [
+            {
+                'customer': customer,
+                'mrr': float(mrr or 0),
+                'urgency': urgency,
+                'feature': feature,
+                'product': product
+            }
+            for feature, urgency, customer, product, mrr in top_mrr_query
+        ]
     except Exception as e:
         logger.error(f"Error getting top MRR: {e}")
         raise HTTPException(status_code=500, detail=str(e))
