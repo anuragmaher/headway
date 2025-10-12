@@ -1,5 +1,8 @@
 FROM python:3.12-slim
 
+# Set Python to run in unbuffered mode (so print statements show up immediately)
+ENV PYTHONUNBUFFERED=1
+
 WORKDIR /app
 
 # Install dependencies
@@ -12,5 +15,5 @@ COPY . .
 # Railway sets PORT env var - default to 8000 for local
 EXPOSE $PORT
 
-# Use python to handle PORT env var expansion
-CMD python -c "import os; os.execlp('uvicorn', 'uvicorn', 'app.main:app', '--host', '0.0.0.0', '--port', os.environ.get('PORT', '8000'))"
+# Start uvicorn with PORT from environment
+CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}

@@ -23,7 +23,7 @@ class UserCreate(UserBase):
     """Schema for user creation"""
     password: str = Field(..., min_length=8, max_length=100)
     company_name: str = Field(..., min_length=2, max_length=100)
-    company_size: str = Field(..., pattern="^(1-10|11-50|51-200|201-1000|1000\+)$")
+    company_size: str = Field(..., pattern=r"^(1-10|11-50|51-200|201-1000|1000\+)$")
     
     class Config:
         schema_extra = {
