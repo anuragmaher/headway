@@ -22,9 +22,18 @@ import {
   TableRow,
   Paper,
   Skeleton,
+  Drawer,
+  IconButton,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
 } from '@mui/material';
 import {
   Warning as WarningIcon,
+  Close as CloseIcon,
+  ArrowBack as ArrowBackIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useAuthStore } from '@/features/auth/store/auth-store';
@@ -73,6 +82,35 @@ interface TopMrrItem {
   product: string;
 }
 
+interface Feature {
+  id: string;
+  name: string;
+  description: string;
+  urgency: string;
+  status: string;
+  mention_count: number;
+  theme_id: string | null;
+  first_mentioned: string;
+  last_mentioned: string;
+  created_at: string;
+  updated_at: string | null;
+  data_points?: any[];
+}
+
+type DrawerView = 'features-list' | 'feature-detail';
+type FilterType = 'category' | 'urgency' | 'product' | 'status' | null;
+
+interface DrawerState {
+  open: boolean;
+  view: DrawerView;
+  filterType: FilterType;
+  filterValue: string | null;
+  features: Feature[];
+  selectedFeature: Feature | null;
+  loading: boolean;
+  title: string;
+}
+
 export function DashboardPage(): JSX.Element {
   const theme = useTheme();
   const { tokens } = useAuthStore();
@@ -92,6 +130,18 @@ export function DashboardPage(): JSX.Element {
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [loadingCritical, setLoadingCritical] = useState(true);
   const [loadingTopMrr, setLoadingTopMrr] = useState(true);
+
+  // Drawer state
+  const [drawerState, setDrawerState] = useState<DrawerState>({
+    open: false,
+    view: 'features-list',
+    filterType: null,
+    filterValue: null,
+    features: [],
+    selectedFeature: null,
+    loading: false,
+    title: '',
+  });
 
   const WORKSPACE_ID = '647ab033-6d10-4a35-9ace-0399052ec874';
 
@@ -229,6 +279,104 @@ export function DashboardPage(): JSX.Element {
     }
   };
 
+  // Drawer functions
+  const openDrawerWithFilter = async (filterType: FilterType, filterValue: string, title: string) => {
+    setDrawerState({
+      ...drawerState,
+      open: true,
+      view: 'features-list',
+      filterType,
+      filterValue,
+      title,
+      loading: true,
+    });
+
+    try {
+      const token = getAuthToken();
+      let url = `${API_BASE_URL}/api/v1/features/features?workspace_id=${WORKSPACE_ID}`;
+
+      // Add filter based on type
+      if (filterType === 'category' && filterValue) {
+        // Find theme ID by name (we need to store theme data or pass IDs)
+        const theme = topCategories.find(c => c.category === filterValue);
+        if (theme) {
+          // We'll need theme IDs - for now fetch all and filter client-side
+        }
+      }
+
+      const response = await fetch(url, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      let features: Feature[] = await response.json();
+
+      // Client-side filtering for urgency and product
+      if (filterType === 'urgency') {
+        features = features.filter(f =>
+          f.urgency.toLowerCase() === filterValue.toLowerCase() ||
+          (filterValue === 'urgent' && f.urgency.toLowerCase() === 'high') ||
+          (filterValue === 'important' && f.urgency.toLowerCase() === 'medium') ||
+          (filterValue === 'nice_to_have' && f.urgency.toLowerCase() === 'low')
+        );
+      }
+
+      setDrawerState(prev => ({
+        ...prev,
+        features,
+        loading: false,
+      }));
+    } catch (error) {
+      console.error('Error fetching features:', error);
+      setDrawerState(prev => ({
+        ...prev,
+        loading: false,
+      }));
+    }
+  };
+
+  const openFeatureDetail = async (featureId: string) => {
+    setDrawerState(prev => ({
+      ...prev,
+      view: 'feature-detail',
+      loading: true,
+    }));
+
+    try {
+      const token = getAuthToken();
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/features/features/${featureId}?workspace_id=${WORKSPACE_ID}`,
+        { headers: { 'Authorization': `Bearer ${token}` } }
+      );
+      const feature: Feature = await response.json();
+
+      setDrawerState(prev => ({
+        ...prev,
+        selectedFeature: feature,
+        loading: false,
+      }));
+    } catch (error) {
+      console.error('Error fetching feature:', error);
+      setDrawerState(prev => ({
+        ...prev,
+        loading: false,
+      }));
+    }
+  };
+
+  const closeDrawer = () => {
+    setDrawerState({
+      ...drawerState,
+      open: false,
+    });
+  };
+
+  const goBackToList = () => {
+    setDrawerState(prev => ({
+      ...prev,
+      view: 'features-list',
+      selectedFeature: null,
+    }));
+  };
+
   const formatCurrency = (value: number) => {
     if (value >= 1000) {
       return `$${(value / 1000).toFixed(0)}K`;
@@ -364,9 +512,25 @@ export function DashboardPage(): JSX.Element {
                     ))}
                   </Box>
                 ) : byUrgency ? (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                     {Object.entries(byUrgency).map(([key, value]) => (
-                      <Box key={key} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Box
+                        key={key}
+                        onClick={() => openDrawerWithFilter('urgency', key, `${key.replace('_', ' ')} Features`)}
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          p: 1.5,
+                          borderRadius: 1,
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          '&:hover': {
+                            bgcolor: alpha(theme.palette.primary.main, 0.08),
+                            transform: 'translateX(4px)',
+                          }
+                        }}
+                      >
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <Box sx={{
                             width: 12,
@@ -444,12 +608,22 @@ export function DashboardPage(): JSX.Element {
                   <Grid container spacing={2}>
                     {topCategories.slice(0, 6).map((item, index) => (
                       <Grid item xs={6} key={index}>
-                        <Box sx={{
-                          p: 2,
-                          borderRadius: 1,
-                          bgcolor: alpha(theme.palette.primary.main, 0.08),
-                          border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`
-                        }}>
+                        <Box
+                          onClick={() => openDrawerWithFilter('category', item.category, `${item.category} Features`)}
+                          sx={{
+                            p: 2,
+                            borderRadius: 1,
+                            bgcolor: alpha(theme.palette.primary.main, 0.08),
+                            border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            '&:hover': {
+                              bgcolor: alpha(theme.palette.primary.main, 0.15),
+                              transform: 'translateY(-2px)',
+                              boxShadow: theme.shadows[4],
+                            }
+                          }}
+                        >
                           <Typography variant="body2" noWrap>{item.category}</Typography>
                           <Typography variant="h6" fontWeight={600}>{item.count}</Typography>
                           <Typography variant="caption" color="text.secondary">{formatCurrency(item.mrr)} MRR</Typography>
@@ -572,6 +746,164 @@ export function DashboardPage(): JSX.Element {
             Export to CSV
           </Button>
         </Box>
+
+        {/* Drawer for Details */}
+        <Drawer
+          anchor="right"
+          open={drawerState.open}
+          onClose={closeDrawer}
+          PaperProps={{
+            sx: { width: { xs: '100%', sm: 500, md: 600 } }
+          }}
+        >
+          <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            {/* Header */}
+            <Box sx={{
+              p: 2,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              borderBottom: `1px solid ${theme.palette.divider}`,
+            }}>
+              {drawerState.view === 'feature-detail' && (
+                <IconButton onClick={goBackToList} size="small">
+                  <ArrowBackIcon />
+                </IconButton>
+              )}
+              <Typography variant="h6" sx={{ flex: 1 }}>
+                {drawerState.view === 'features-list' ? drawerState.title : 'Feature Details'}
+              </Typography>
+              <IconButton onClick={closeDrawer} size="small">
+                <CloseIcon />
+              </IconButton>
+            </Box>
+
+            {/* Content */}
+            <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
+              {drawerState.loading ? (
+                <Box>
+                  {[...Array(5)].map((_, i) => (
+                    <Skeleton key={i} variant="rectangular" height={80} sx={{ mb: 2 }} />
+                  ))}
+                </Box>
+              ) : drawerState.view === 'features-list' ? (
+                // Features List View
+                <List>
+                  {drawerState.features.length === 0 ? (
+                    <Typography color="text.secondary" sx={{ textAlign: 'center', py: 4 }}>
+                      No features found for this filter
+                    </Typography>
+                  ) : (
+                    drawerState.features.map((feature) => (
+                      <ListItem key={feature.id} disablePadding sx={{ mb: 1 }}>
+                        <ListItemButton
+                          onClick={() => openFeatureDetail(feature.id)}
+                          sx={{
+                            borderRadius: 1,
+                            border: `1px solid ${theme.palette.divider}`,
+                            '&:hover': {
+                              bgcolor: alpha(theme.palette.primary.main, 0.08),
+                            }
+                          }}
+                        >
+                          <Box sx={{ width: '100%' }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 1 }}>
+                              <Typography variant="subtitle1" fontWeight={600}>
+                                {feature.name}
+                              </Typography>
+                              <Chip
+                                label={feature.urgency}
+                                size="small"
+                                sx={{
+                                  bgcolor: alpha(getUrgencyColor(feature.urgency), 0.15),
+                                  color: getUrgencyColor(feature.urgency),
+                                }}
+                              />
+                            </Box>
+                            <Typography variant="body2" color="text.secondary" sx={{
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                            }}>
+                              {feature.description || 'No description'}
+                            </Typography>
+                            <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                              <Chip label={`${feature.mention_count} mentions`} size="small" variant="outlined" />
+                              <Chip label={feature.status} size="small" variant="outlined" />
+                            </Box>
+                          </Box>
+                        </ListItemButton>
+                      </ListItem>
+                    ))
+                  )}
+                </List>
+              ) : (
+                // Feature Detail View
+                drawerState.selectedFeature && (
+                  <Box>
+                    <Typography variant="h5" fontWeight={600} gutterBottom>
+                      {drawerState.selectedFeature.name}
+                    </Typography>
+
+                    <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
+                      <Chip
+                        label={drawerState.selectedFeature.urgency}
+                        sx={{
+                          bgcolor: alpha(getUrgencyColor(drawerState.selectedFeature.urgency), 0.15),
+                          color: getUrgencyColor(drawerState.selectedFeature.urgency),
+                        }}
+                      />
+                      <Chip label={drawerState.selectedFeature.status} />
+                      <Chip label={`${drawerState.selectedFeature.mention_count} mentions`} variant="outlined" />
+                    </Box>
+
+                    <Divider sx={{ my: 2 }} />
+
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                      Description
+                    </Typography>
+                    <Typography variant="body1" paragraph>
+                      {drawerState.selectedFeature.description || 'No description available'}
+                    </Typography>
+
+                    <Divider sx={{ my: 2 }} />
+
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                      Timeline
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Typography variant="body2">
+                        <strong>First mentioned:</strong> {new Date(drawerState.selectedFeature.first_mentioned).toLocaleDateString()}
+                      </Typography>
+                      <Typography variant="body2">
+                        <strong>Last mentioned:</strong> {new Date(drawerState.selectedFeature.last_mentioned).toLocaleDateString()}
+                      </Typography>
+                      <Typography variant="body2">
+                        <strong>Created:</strong> {new Date(drawerState.selectedFeature.created_at).toLocaleDateString()}
+                      </Typography>
+                    </Box>
+
+                    {drawerState.selectedFeature.data_points && drawerState.selectedFeature.data_points.length > 0 && (
+                      <>
+                        <Divider sx={{ my: 2 }} />
+                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                          Data Points
+                        </Typography>
+                        <Box sx={{ bgcolor: alpha(theme.palette.primary.main, 0.05), p: 2, borderRadius: 1 }}>
+                          <pre style={{ margin: 0, fontSize: '0.875rem', overflow: 'auto' }}>
+                            {JSON.stringify(drawerState.selectedFeature.data_points, null, 2)}
+                          </pre>
+                        </Box>
+                      </>
+                    )}
+                  </Box>
+                )
+              )}
+            </Box>
+          </Box>
+        </Drawer>
       </Box>
     </AdminLayout>
   );
