@@ -185,6 +185,7 @@ from app.api.v1.clustering import router as clustering_router
 from app.api.v1.classification import router as classification_router
 from app.api.v1.features import router as features_router
 from app.api.v1.way import router as way_router
+from app.api.v1.endpoints.customers import router as customers_router
 
 app.include_router(auth_router, prefix="/api/v1/auth", tags=["authentication"])
 app.include_router(slack_router, prefix="/api/v1/slack", tags=["slack"])
@@ -192,6 +193,7 @@ app.include_router(clustering_router, prefix="/api/v1/clustering", tags=["cluste
 app.include_router(classification_router, prefix="/api/v1/classification", tags=["classification"])
 app.include_router(features_router, prefix="/api/v1/features", tags=["features"])
 app.include_router(way_router, prefix="/api/v1/way", tags=["way"])
+app.include_router(customers_router, prefix="/api/v1/customers", tags=["customers"])
 
 if __name__ == "__main__":
     import uvicorn

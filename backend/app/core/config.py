@@ -28,7 +28,12 @@ class Settings(BaseSettings):
     SLACK_CLIENT_ID: Optional[str] = None
     SLACK_CLIENT_SECRET: Optional[str] = None
     SLACK_REDIRECT_URI: str = "http://localhost:8000/api/v1/slack/callback"
-    
+
+    # Gong Integration
+    GONG_ACCESS_KEY: Optional[str] = None
+    GONG_SECRET_KEY: Optional[str] = None
+    GONG_API_BASE_URL: str = "https://api.gong.io"
+
     # Environment
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     DEBUG: bool = os.getenv("DEBUG", "true").lower() in ("true", "1", "yes")

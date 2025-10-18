@@ -35,6 +35,7 @@ class Message(Base):
     
     # Message metadata
     message_metadata = Column(JSONB, nullable=True)  # Reactions, thread info, attachments, etc.
+    ai_insights = Column(JSONB, nullable=True)  # AI-extracted features, bugs, sentiment, etc.
     thread_id = Column(String, nullable=True)
     is_thread_reply = Column(Boolean, default=False, nullable=False)
     
@@ -45,15 +46,17 @@ class Message(Base):
     # Relationships
     workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), nullable=False)
     integration_id = Column(UUID(as_uuid=True), ForeignKey("integrations.id"), nullable=False)
-    
+    customer_id = Column(UUID(as_uuid=True), ForeignKey("customers.id"), nullable=True)  # Link to customer
+
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
     sent_at = Column(DateTime(timezone=True), nullable=False)  # Original message timestamp
-    
+
     # Relationships
     workspace = relationship("Workspace", back_populates="messages")
     integration = relationship("Integration", back_populates="messages")
+    customer = relationship("Customer", back_populates="messages")
     features = relationship(
         "Feature",
         secondary=feature_messages,
@@ -65,6 +68,8 @@ class Message(Base):
         Index('idx_messages_workspace', 'workspace_id'),
         Index('idx_messages_workspace_sent', 'workspace_id', 'sent_at'),
         Index('idx_messages_workspace_processed', 'workspace_id', 'is_processed'),
+        Index('idx_messages_customer', 'customer_id'),
+        Index('idx_messages_workspace_customer', 'workspace_id', 'customer_id'),
     )
 
     def __repr__(self) -> str:

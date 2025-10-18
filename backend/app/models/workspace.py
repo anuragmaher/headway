@@ -32,6 +32,7 @@ class Workspace(Base):
     features = relationship("Feature", back_populates="workspace", cascade="all, delete-orphan")
     integrations = relationship("Integration", back_populates="workspace", cascade="all, delete-orphan")
     messages = relationship("Message", back_populates="workspace", cascade="all, delete-orphan")
+    customers = relationship("Customer", back_populates="workspace", cascade="all, delete-orphan")
     clustering_runs = relationship("ClusteringRun", back_populates="workspace", cascade="all, delete-orphan")
     classification_signals = relationship("ClassificationSignal", back_populates="workspace", cascade="all, delete-orphan")
     

@@ -74,6 +74,8 @@ class MessageResponse(BaseModel):
     sent_at: str
     sender_name: Optional[str]
     channel_name: Optional[str]
+    customer_name: Optional[str] = None
+    ai_insights: Optional[dict] = None
 
     class Config:
         from_attributes = True
@@ -703,12 +705,15 @@ async def get_feature_messages(
         # Convert to response format
         message_responses = []
         for message in messages:
+            customer_name = message.customer.name if message.customer else None
             message_responses.append(MessageResponse(
                 id=str(message.id),
                 content=message.content,
                 sent_at=message.sent_at.isoformat() if message.sent_at else "",
                 sender_name=message.author_name,
-                channel_name=message.channel_name
+                channel_name=message.channel_name,
+                customer_name=customer_name,
+                ai_insights=message.ai_insights
             ))
 
         return message_responses
