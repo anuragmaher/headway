@@ -373,10 +373,10 @@ export function ExecutiveInsightsPage(): JSX.Element {
               </Grid>
             </Grid>
 
-            {/* Feature Status & Urgency Distribution */}
+            {/* Three Pie Charts in a Row */}
             <Grid container spacing={3} sx={{ mb: 4 }}>
               {/* Status Distribution */}
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={4}>
                 <Card sx={{
                   background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
                   backdropFilter: 'blur(10px)',
@@ -384,10 +384,10 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   height: '100%',
                 }}>
                   <CardContent>
-                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, textAlign: 'center' }}>
                       Features by Status
                     </Typography>
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer width="100%" height={250}>
                       <PieChart>
                         <Pie
                           data={Object.entries(metrics.features_by_status).map(([status, count]) => ({
@@ -396,8 +396,8 @@ export function ExecutiveInsightsPage(): JSX.Element {
                           }))}
                           cx="50%"
                           cy="50%"
-                          innerRadius={60}
-                          outerRadius={100}
+                          innerRadius={40}
+                          outerRadius={80}
                           paddingAngle={2}
                           dataKey="value"
                           label={({ name, value, percent }: { name: string; value: number; percent: number }) =>
@@ -416,7 +416,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
               </Grid>
 
               {/* Urgency Distribution */}
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={4}>
                 <Card sx={{
                   background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
                   backdropFilter: 'blur(10px)',
@@ -424,10 +424,10 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   height: '100%',
                 }}>
                   <CardContent>
-                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, textAlign: 'center' }}>
                       Features by Urgency
                     </Typography>
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer width="100%" height={250}>
                       <PieChart>
                         <Pie
                           data={Object.entries(metrics.features_by_urgency).map(([urgency, count]) => ({
@@ -436,8 +436,8 @@ export function ExecutiveInsightsPage(): JSX.Element {
                           }))}
                           cx="50%"
                           cy="50%"
-                          innerRadius={60}
-                          outerRadius={100}
+                          innerRadius={40}
+                          outerRadius={80}
                           paddingAngle={2}
                           dataKey="value"
                           label={({ name, value, percent }: { name: string; value: number; percent: number }) =>
@@ -454,9 +454,61 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   </CardContent>
                 </Card>
               </Grid>
+
+              {/* Top Themes Distribution */}
+              <Grid item xs={12} md={4}>
+                <Card sx={{
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                  backdropFilter: 'blur(10px)',
+                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  height: '100%',
+                }}>
+                  <CardContent>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 2 }}>
+                      <CategoryIcon sx={{ color: theme.palette.primary.main }} />
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        Top 5 Themes
+                      </Typography>
+                    </Box>
+                    <ResponsiveContainer width="100%" height={250}>
+                      <PieChart>
+                        <Pie
+                          data={metrics.top_themes.map(t => ({
+                            name: t.name,
+                            value: t.feature_count,
+                          }))}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={40}
+                          outerRadius={80}
+                          paddingAngle={2}
+                          dataKey="value"
+                          label={({ name, value }: { name: string; value: number }) =>
+                            `${name}: ${value}`
+                          }
+                        >
+                          {metrics.top_themes.map((_, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={[
+                                theme.palette.primary.main,
+                                theme.palette.secondary.main,
+                                theme.palette.success.main,
+                                theme.palette.warning.main,
+                                theme.palette.info.main,
+                              ][index % 5]}
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+              </Grid>
             </Grid>
 
-            {/* Top Themes */}
+            {/* Top 10 Features by Mentions - Bar Chart */}
             <Grid container spacing={3} sx={{ mb: 4 }}>
               <Grid item xs={12}>
                 <Card sx={{
@@ -466,27 +518,32 @@ export function ExecutiveInsightsPage(): JSX.Element {
                 }}>
                   <CardContent>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-                      <CategoryIcon sx={{ color: theme.palette.primary.main }} />
+                      <HotIcon sx={{ color: theme.palette.error.main }} />
                       <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                        Top 5 Themes by Feature Count
+                        Top 10 Features by Customer Mentions
                       </Typography>
                     </Box>
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer width="100%" height={400}>
                       <BarChart
-                        data={metrics.top_themes.map(t => ({
-                          name: t.name,
-                          features: t.feature_count,
+                        data={topFeatures.map(f => ({
+                          name: f.name.length > 30 ? f.name.substring(0, 30) + '...' : f.name,
+                          mentions: f.mention_count,
                         }))}
-                        layout="vertical"
-                        margin={{ top: 5, right: 30, left: 120, bottom: 5 }}
+                        margin={{ top: 5, right: 30, left: 20, bottom: 80 }}
                       >
                         <CartesianGrid strokeDasharray="3 3" stroke={alpha(theme.palette.divider, 0.2)} />
-                        <XAxis type="number" stroke={theme.palette.text.secondary} />
-                        <YAxis
-                          type="category"
+                        <XAxis
                           dataKey="name"
                           stroke={theme.palette.text.secondary}
-                          width={110}
+                          angle={-45}
+                          textAnchor="end"
+                          height={100}
+                          interval={0}
+                          style={{ fontSize: '12px' }}
+                        />
+                        <YAxis
+                          stroke={theme.palette.text.secondary}
+                          label={{ value: 'Mentions', angle: -90, position: 'insideLeft' }}
                         />
                         <Tooltip
                           contentStyle={{
@@ -495,7 +552,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                             borderRadius: '8px',
                           }}
                         />
-                        <Bar dataKey="features" fill={theme.palette.primary.main} radius={[0, 8, 8, 0]} />
+                        <Bar dataKey="mentions" fill={theme.palette.secondary.main} radius={[8, 8, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </CardContent>
@@ -503,7 +560,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
               </Grid>
             </Grid>
 
-            {/* Top 10 Most Requested Features */}
+            {/* Top 10 Most Requested Features - Table */}
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Card sx={{
@@ -515,7 +572,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
                       <HotIcon sx={{ color: theme.palette.error.main }} />
                       <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                        Top 10 Most Requested Features
+                        Feature Details
                       </Typography>
                     </Box>
                     <TableContainer component={Paper} elevation={0} sx={{ background: 'transparent' }}>
