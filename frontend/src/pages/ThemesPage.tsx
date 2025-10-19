@@ -2071,7 +2071,7 @@ export function ThemesPage(): JSX.Element {
                 </Box>
               ) : featureMessages.length > 0 ? (
                 <Box sx={{ p: 0 }}>
-                  {featureMessages.map((message, index) => {
+                  {featureMessages.map((message) => {
                     // Count insights for summary
                     const insightCounts = {
                       features: message.ai_insights?.feature_requests?.length || 0,
