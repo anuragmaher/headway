@@ -86,8 +86,8 @@ if __name__ == "__main__":
     # Default workspace ID (can be modified or passed as argument)
     workspace_id = "647ab033-6d10-4a35-9ace-0399052ec874"
 
-    # Limit to 10 calls for testing
-    limit = 10
+    # Limit to 50 calls
+    limit = 50
 
     # Run the combined sync and classification
     asyncio.run(sync_and_classify(workspace_id, limit=limit))

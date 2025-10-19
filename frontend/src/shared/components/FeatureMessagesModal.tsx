@@ -13,12 +13,18 @@ import {
   Alert,
   Chip,
   IconButton,
-  Divider
+  Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  alpha,
+  useTheme
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import MessageIcon from '@mui/icons-material/Message';
 import PersonIcon from '@mui/icons-material/Person';
 import TagIcon from '@mui/icons-material/Tag';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { API_BASE_URL } from '../../config/api.config';
 
 interface AIInsights {
@@ -55,6 +61,7 @@ interface Message {
   sender_name: string | null;
   channel_name: string | null;
   customer_name: string | null;
+  customer_email: string | null;
   ai_insights: AIInsights | null;
 }
 
@@ -73,6 +80,7 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
   featureName,
   workspaceId
 }) => {
+  const theme = useTheme();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -193,59 +201,92 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
               </Box>
             ) : (
               <Box sx={{ maxHeight: '400px', overflow: 'auto' }}>
-                {messages.map((message) => (
-                  <Card
-                    key={message.id}
-                    variant="outlined"
-                    sx={{ mb: 2, '&:last-child': { mb: 0 } }}
-                  >
-                    <CardContent>
-                      <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
-                        <Box display="flex" gap={1} flexWrap="wrap">
-                          {message.sender_name && (
-                            <Chip
-                              icon={<PersonIcon />}
-                              label={message.sender_name}
-                              size="small"
-                              variant="outlined"
-                            />
-                          )}
-                          {message.channel_name && (
-                            <Chip
-                              icon={<TagIcon />}
-                              label={message.channel_name}
-                              size="small"
-                              variant="outlined"
-                              color="primary"
-                            />
-                          )}
+                {messages.map((message) => {
+                  // Count insights for summary
+                  const insightCounts = {
+                    features: message.ai_insights?.feature_requests?.length || 0,
+                    bugs: message.ai_insights?.bug_reports?.length || 0,
+                    painPoints: message.ai_insights?.pain_points?.length || 0,
+                  };
+                  const totalInsights = insightCounts.features + insightCounts.bugs + insightCounts.painPoints;
+
+                  return (
+                    <Accordion
+                      key={message.id}
+                      sx={{
+                        mb: 1.5,
+                        background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                        borderRadius: '8px !important',
+                        '&:before': { display: 'none' },
+                        '&:hover': {
+                          background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.04)} 0%, ${alpha(theme.palette.info.main, 0.02)} 100%)`,
+                          border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
+                        },
+                      }}
+                    >
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        sx={{
+                          '& .MuiAccordionSummary-content': {
+                            my: 1.5,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 1,
+                          },
+                        }}
+                      >
+                        {/* Customer Name and Date */}
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
+                          <Box>
+                            <Typography variant="subtitle2" fontWeight="bold" color="primary">
+                              {message.customer_name || 'Unknown Customer'}
+                            </Typography>
+                            {message.customer_email && (
+                              <Typography variant="caption" color="text.secondary" display="block">
+                                {message.customer_email}
+                              </Typography>
+                            )}
+                          </Box>
+                          <Typography variant="caption" color="text.secondary">
+                            {formatDate(message.sent_at)}
+                          </Typography>
                         </Box>
-                        <Typography variant="caption" color="text.secondary">
-                          {formatDate(message.sent_at)}
-                        </Typography>
-                      </Box>
 
-                      <Divider sx={{ my: 1 }} />
+                        {/* Insight Counts */}
+                        {message.ai_insights && totalInsights > 0 && (
+                          <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                            {insightCounts.features > 0 && (
+                              <Chip
+                                label={`${insightCounts.features} feature${insightCounts.features > 1 ? 's' : ''}`}
+                                size="small"
+                                color="info"
+                                variant="outlined"
+                              />
+                            )}
+                            {insightCounts.bugs > 0 && (
+                              <Chip
+                                label={`${insightCounts.bugs} bug${insightCounts.bugs > 1 ? 's' : ''}`}
+                                size="small"
+                                color="error"
+                                variant="outlined"
+                              />
+                            )}
+                            {insightCounts.painPoints > 0 && (
+                              <Chip
+                                label={`${insightCounts.painPoints} pain point${insightCounts.painPoints > 1 ? 's' : ''}`}
+                                size="small"
+                                color="warning"
+                                variant="outlined"
+                              />
+                            )}
+                          </Box>
+                        )}
+                      </AccordionSummary>
 
+                      <AccordionDetails>
                       {message.ai_insights ? (
-                        <Box>
-                          {/* Customer Name Header */}
-                          {message.customer_name && (
-                            <Box mb={2} sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 1,
-                              pb: 1.5,
-                              borderBottom: '1px solid rgba(0, 0, 0, 0.08)'
-                            }}>
-                              <Typography variant="subtitle2" fontWeight="bold" color="primary">
-                                Customer:
-                              </Typography>
-                              <Typography variant="subtitle2" color="text.secondary">
-                                {message.customer_name}
-                              </Typography>
-                            </Box>
-                          )}
+                        <Box sx={{ width: '100%' }}>
 
                           {/* Feature Requests */}
                           {message.ai_insights.feature_requests && message.ai_insights.feature_requests.length > 0 && (
@@ -362,7 +403,7 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
 
                           {/* Key Topics */}
                           {message.ai_insights.key_topics && message.ai_insights.key_topics.length > 0 && (
-                            <Box>
+                            <Box mb={2}>
                               <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
                                 Key Topics:
                               </Typography>
@@ -373,15 +414,47 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
                               </Box>
                             </Box>
                           )}
+
+                          {/* Message Metadata */}
+                          <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            width: '100%',
+                            mt: 2,
+                            pt: 2,
+                            borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`
+                          }}>
+                            <Box display="flex" gap={1} flexWrap="wrap">
+                              {message.sender_name && (
+                                <Chip
+                                  icon={<PersonIcon />}
+                                  label={message.sender_name}
+                                  size="small"
+                                  variant="outlined"
+                                />
+                              )}
+                              {message.channel_name && (
+                                <Chip
+                                  icon={<TagIcon />}
+                                  label={message.channel_name}
+                                  size="small"
+                                  variant="outlined"
+                                  color="primary"
+                                />
+                              )}
+                            </Box>
+                          </Box>
                         </Box>
                       ) : (
                         <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }}>
                           {message.content}
                         </Typography>
                       )}
-                    </CardContent>
-                  </Card>
-                ))}
+                      </AccordionDetails>
+                    </Accordion>
+                  );
+                })}
               </Box>
             )}
           </Box>

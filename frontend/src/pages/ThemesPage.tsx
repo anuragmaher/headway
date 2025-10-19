@@ -33,6 +33,9 @@ import {
   FormControl,
   InputLabel,
   Collapse,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
@@ -107,6 +110,7 @@ interface Message {
   sender_name: string;
   channel_name: string;
   customer_name: string | null;
+  customer_email: string | null;
   ai_insights: AIInsights | null;
 }
 
@@ -2066,44 +2070,94 @@ export function ThemesPage(): JSX.Element {
                   <Typography variant="body2" sx={{ ml: 2 }}>Loading messages...</Typography>
                 </Box>
               ) : featureMessages.length > 0 ? (
-                <List sx={{ p: 0 }}>
-                  {featureMessages.map((message, index) => (
-                    <React.Fragment key={message.id}>
-                      <ListItem
+                <Box sx={{ p: 0 }}>
+                  {featureMessages.map((message, index) => {
+                    // Count insights for summary
+                    const insightCounts = {
+                      features: message.ai_insights?.feature_requests?.length || 0,
+                      bugs: message.ai_insights?.bug_reports?.length || 0,
+                      painPoints: message.ai_insights?.pain_points?.length || 0,
+                    };
+                    const totalInsights = insightCounts.features + insightCounts.bugs + insightCounts.painPoints;
+
+                    return (
+                      <Accordion
+                        key={message.id}
                         sx={{
-                          borderRadius: 2,
                           mb: 1.5,
                           background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100())`,
                           border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                          flexDirection: 'column',
-                          alignItems: 'flex-start',
-                          p: 2,
+                          borderRadius: '8px !important',
+                          '&:before': { display: 'none' },
                           '&:hover': {
                             background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.04)} 0%, ${alpha(theme.palette.info.main, 0.02)} 100())`,
                             border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
                           },
                         }}
                       >
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          sx={{
+                            '& .MuiAccordionSummary-content': {
+                              my: 1.5,
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: 1,
+                            },
+                          }}
+                        >
+                          {/* Customer Name and Date */}
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
+                            <Box>
+                              <Typography variant="subtitle2" fontWeight="bold" color="primary">
+                                {message.customer_name || 'Unknown Customer'}
+                              </Typography>
+                              {message.customer_email && (
+                                <Typography variant="caption" color="text.secondary" display="block">
+                                  {message.customer_email}
+                                </Typography>
+                              )}
+                            </Box>
+                            <Typography variant="caption" color="text.secondary">
+                              {formatDate(message.sent_at)}
+                            </Typography>
+                          </Box>
+
+                          {/* Insight Counts */}
+                          {message.ai_insights && totalInsights > 0 && (
+                            <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                              {insightCounts.features > 0 && (
+                                <Chip
+                                  label={`${insightCounts.features} feature${insightCounts.features > 1 ? 's' : ''}`}
+                                  size="small"
+                                  color="info"
+                                  variant="outlined"
+                                />
+                              )}
+                              {insightCounts.bugs > 0 && (
+                                <Chip
+                                  label={`${insightCounts.bugs} bug${insightCounts.bugs > 1 ? 's' : ''}`}
+                                  size="small"
+                                  color="error"
+                                  variant="outlined"
+                                />
+                              )}
+                              {insightCounts.painPoints > 0 && (
+                                <Chip
+                                  label={`${insightCounts.painPoints} pain point${insightCounts.painPoints > 1 ? 's' : ''}`}
+                                  size="small"
+                                  color="warning"
+                                  variant="outlined"
+                                />
+                              )}
+                            </Box>
+                          )}
+                        </AccordionSummary>
+
+                        <AccordionDetails>
                         {/* Message Content - AI Insights or Transcript */}
                         {message.ai_insights ? (
-                          <Box sx={{ width: '100%', mb: 2 }}>
-                            {/* Customer Name Header */}
-                            {message.customer_name && (
-                              <Box mb={2} sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1,
-                                pb: 1.5,
-                                borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`
-                              }}>
-                                <Typography variant="subtitle2" fontWeight="bold" color="primary">
-                                  Customer:
-                                </Typography>
-                                <Typography variant="subtitle2" color="text.secondary">
-                                  {message.customer_name}
-                                </Typography>
-                              </Box>
-                            )}
+                          <Box sx={{ width: '100%' }}>
 
                             {/* Feature Requests */}
                             {message.ai_insights.feature_requests && message.ai_insights.feature_requests.length > 0 && (
@@ -2220,7 +2274,7 @@ export function ThemesPage(): JSX.Element {
 
                             {/* Key Topics */}
                             {message.ai_insights.key_topics && message.ai_insights.key_topics.length > 0 && (
-                              <Box>
+                              <Box mb={2}>
                                 <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
                                   Key Topics:
                                 </Typography>
@@ -2231,6 +2285,26 @@ export function ThemesPage(): JSX.Element {
                                 </Box>
                               </Box>
                             )}
+
+                            {/* Message Metadata */}
+                            <Box sx={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              width: '100%',
+                              mt: 2,
+                              pt: 2,
+                              borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`
+                            }}>
+                              <Box>
+                                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                                  {message.sender_name}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                                  in #{message.channel_name}
+                                </Typography>
+                              </Box>
+                            </Box>
                           </Box>
                         ) : (
                           <Typography
@@ -2239,42 +2313,17 @@ export function ThemesPage(): JSX.Element {
                             sx={{
                               wordBreak: 'break-word',
                               lineHeight: 1.6,
-                              mb: 2,
-                              width: '100%',
                               whiteSpace: 'pre-wrap'
                             }}
                           >
                             {message.content}
                           </Typography>
                         )}
-
-                        {/* Message Metadata */}
-                        <Box sx={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          width: '100%',
-                          mt: 'auto'
-                        }}>
-                          <Box>
-                            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                              {message.sender_name}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-                              in #{message.channel_name}
-                            </Typography>
-                          </Box>
-                          <Typography variant="caption" color="text.secondary">
-                            {formatDate(message.sent_at)}
-                          </Typography>
-                        </Box>
-                      </ListItem>
-                      {index < featureMessages.length - 1 && (
-                        <Divider sx={{ my: 0.5, opacity: 0.3 }} />
-                      )}
-                    </React.Fragment>
-                  ))}
-                </List>
+                        </AccordionDetails>
+                      </Accordion>
+                    );
+                  })}
+                </Box>
               ) : (
                 <Box sx={{ textAlign: 'center', py: 6 }}>
                   <MessageIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
