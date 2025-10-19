@@ -36,6 +36,8 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  useMediaQuery,
+  Fab,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
@@ -116,8 +118,10 @@ interface Message {
 
 export function ThemesPage(): JSX.Element {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { tokens } = useAuthStore();
   const [themes, setThemes] = useState<Theme[]>([]);
+  const [mobileThemesDrawerOpen, setMobileThemesDrawerOpen] = useState(false);
   const [selectedThemeId, setSelectedThemeId] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -954,9 +958,10 @@ export function ThemesPage(): JSX.Element {
 
 
         {/* Split Layout: Themes (30%) and Features (70%) */}
-        <Grid container spacing={2} sx={{ height: 'calc(100vh - 120px)' }}>
-          {/* Themes List - Left 30% */}
-          <Grid item xs={12} lg={3.6}>
+        <Grid container spacing={2} sx={{ height: { xs: 'auto', md: 'calc(100vh - 120px)' } }}>
+          {/* Themes List - Left 30% - Hidden on mobile */}
+          {!isMobile && (
+          <Grid item xs={12} md={3.6}>
             <Card sx={{
               borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
@@ -1100,15 +1105,16 @@ export function ThemesPage(): JSX.Element {
               </CardContent>
             </Card>
           </Grid>
+          )}
 
           {/* Features List - Right 70% */}
-          <Grid item xs={12} lg={8.4}>
+          <Grid item xs={12} md={isMobile ? 12 : 8.4}>
             <Card sx={{
               borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
               backdropFilter: 'blur(10px)',
               border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-              height: 'calc(100vh - 120px)', // Fixed height for scrolling
+              height: { xs: 'auto', md: 'calc(100vh - 120px)' }, // Fixed height for scrolling on desktop, auto on mobile
             }}>
               <CardContent sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
                 {selectedThemeForDrawer || showingAllFeatures || showingAllFeaturesList ? (
@@ -1706,6 +1712,191 @@ export function ThemesPage(): JSX.Element {
             </Card>
           </Grid>
         </Grid>
+
+        {/* Mobile FAB to open themes drawer */}
+        {isMobile && (
+          <Fab
+            color="primary"
+            aria-label="open themes"
+            onClick={() => setMobileThemesDrawerOpen(true)}
+            sx={{
+              position: 'fixed',
+              bottom: 24,
+              left: 24,
+              zIndex: 1000,
+            }}
+          >
+            <CategoryIcon />
+          </Fab>
+        )}
+
+        {/* Mobile Themes Drawer */}
+        <Drawer
+          anchor="left"
+          open={isMobile && mobileThemesDrawerOpen}
+          onClose={() => setMobileThemesDrawerOpen(false)}
+          sx={{
+            '& .MuiDrawer-paper': {
+              width: '85%',
+              maxWidth: 400,
+              bgcolor: alpha(theme.palette.background.paper, 0.95),
+              backdropFilter: 'blur(10px)',
+            }
+          }}
+        >
+          <Box sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
+            {/* Drawer Header */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <CategoryIcon sx={{ color: theme.palette.primary.main }} />
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  All Themes
+                </Typography>
+              </Box>
+              <IconButton
+                onClick={() => setMobileThemesDrawerOpen(false)}
+                size="small"
+              >
+                <CloseIcon />
+              </IconButton>
+            </Box>
+
+            {/* Themes Content */}
+            <Box sx={{ flex: 1, overflow: 'auto' }}>
+              {/* All Themes Summary Row */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  py: 1,
+                  px: 2,
+                  borderRadius: 1,
+                  border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.08)} 0%, ${alpha(theme.palette.primary.main, 0.04)} 100%)`,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease-in-out',
+                  mb: 1,
+                  '&:hover': {
+                    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.12)} 0%, ${alpha(theme.palette.primary.main, 0.08)} 100%)`,
+                    borderColor: theme.palette.primary.main,
+                    transform: 'translateX(2px)',
+                  },
+                }}
+                onClick={() => {
+                  handleAllThemesClick();
+                  setMobileThemesDrawerOpen(false);
+                }}
+              >
+                <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: '0.9rem', color: theme.palette.primary.main }}>
+                    All Themes
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <FeatureIcon sx={{ fontSize: 16, color: theme.palette.primary.main }} />
+                    <Box sx={{
+                      width: 22,
+                      height: 22,
+                      borderRadius: '50%',
+                      bgcolor: theme.palette.primary.main,
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.75rem',
+                      fontWeight: 600
+                    }}>
+                      {themes.reduce((acc, t) => acc + t.feature_count, 0)}
+                    </Box>
+                  </Box>
+                </Box>
+              </Box>
+
+              {/* All Features Row */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  py: 1,
+                  px: 2,
+                  borderRadius: 1,
+                  border: `1px solid ${alpha(theme.palette.secondary.main, 0.2)}`,
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.08)} 0%, ${alpha(theme.palette.secondary.main, 0.04)} 100%)`,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease-in-out',
+                  mb: 1,
+                  '&:hover': {
+                    background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.12)} 0%, ${alpha(theme.palette.secondary.main, 0.08)} 100%)`,
+                    borderColor: theme.palette.secondary.main,
+                    transform: 'translateX(2px)',
+                  },
+                }}
+                onClick={() => {
+                  handleAllFeaturesClick();
+                  setMobileThemesDrawerOpen(false);
+                }}
+              >
+                <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: '0.9rem', color: theme.palette.secondary.main }}>
+                    All Features
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <FeatureIcon sx={{ fontSize: 16, color: theme.palette.secondary.main }} />
+                    <Box sx={{
+                      width: 22,
+                      height: 22,
+                      borderRadius: '50%',
+                      bgcolor: theme.palette.secondary.main,
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.75rem',
+                      fontWeight: 600
+                    }}>
+                      {themes.reduce((acc, t) => acc + t.feature_count, 0)}
+                    </Box>
+                  </Box>
+                </Box>
+              </Box>
+
+              {/* Add Theme Button */}
+              <Box sx={{ mb: 2 }}>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  startIcon={<AddIcon />}
+                  onClick={() => {
+                    handleOpenDialog();
+                    setMobileThemesDrawerOpen(false);
+                  }}
+                  sx={{
+                    py: 1,
+                    borderColor: alpha(theme.palette.primary.main, 0.3),
+                    color: theme.palette.primary.main,
+                    '&:hover': {
+                      borderColor: theme.palette.primary.main,
+                      bgcolor: alpha(theme.palette.primary.main, 0.05),
+                    }
+                  }}
+                >
+                  Create New Theme
+                </Button>
+              </Box>
+
+              {/* Individual Themes */}
+              <Box
+                onClick={() => setMobileThemesDrawerOpen(false)}
+                sx={{ '& > *': { cursor: 'pointer' } }}
+              >
+                {hierarchicalThemes.map((themeItem) => renderThemeRow(themeItem))}
+              </Box>
+            </Box>
+          </Box>
+        </Drawer>
 
         {/* Create/Edit Theme Dialog */}
         <Dialog
