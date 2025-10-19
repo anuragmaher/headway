@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     SLACK_CLIENT_ID: Optional[str] = None
     SLACK_CLIENT_SECRET: Optional[str] = None
     SLACK_REDIRECT_URI: str = "http://localhost:8000/api/v1/slack/callback"
+    SLACK_WEBHOOK_URL: Optional[str] = None  # For posting feature notifications
 
     # Gong Integration
     GONG_ACCESS_KEY: Optional[str] = None

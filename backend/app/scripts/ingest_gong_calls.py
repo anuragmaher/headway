@@ -31,6 +31,7 @@ from app.models.integration import Integration
 from app.models.message import Message
 from app.models.workspace import Workspace
 from app.models.customer import Customer
+from app.models.theme import Theme
 from app.services.ai_extraction_service import get_ai_extraction_service
 from dotenv import load_dotenv
 
@@ -424,6 +425,24 @@ async def ingest_gong_calls(
 
             logger.info(f"Starting Gong call ingestion for workspace: {workspace.name}")
 
+            # Load themes for context-aware feature extraction
+            themes = db.query(Theme).filter(
+                Theme.workspace_id == workspace_id,
+                Theme.is_default == False  # Exclude "Unclassified" theme
+            ).all()
+
+            themes_list = [
+                {"name": theme.name, "description": theme.description}
+                for theme in themes
+            ]
+
+            if themes_list:
+                logger.info(f"Loaded {len(themes_list)} themes for AI context")
+                for theme in themes_list:
+                    logger.info(f"  - {theme['name']}")
+            else:
+                logger.warning("No themes found - features will be extracted without theme context")
+
             # Get or create Gong integration
             integration = db.query(Integration).filter(
                 and_(
@@ -590,7 +609,8 @@ async def ingest_gong_calls(
                             ai_insights = ai_service.extract_insights(
                                 transcript=transcript_text,
                                 customer_name=customer_name,
-                                customer_mrr=customer_mrr
+                                customer_mrr=customer_mrr,
+                                themes=themes_list if themes_list else None
                             )
 
                             logger.info(

@@ -15,6 +15,7 @@ from app.models.theme import Theme
 from app.models.feature import Feature
 from app.models.message import Message
 from app.core.config import settings
+from app.services.slack_notification_service import SlackNotificationService
 from openai import OpenAI
 from datetime import datetime
 import logging
@@ -56,10 +57,11 @@ Existing Features in this theme:
 Return ONLY a JSON object:
 {{
   "is_duplicate": true/false,
-  "duplicate_feature_id": "ID if duplicate, null otherwise",
+  "duplicate_feature_id": "UUID string of the duplicate feature or null",
   "reasoning": "brief explanation"
 }}
 
+IMPORTANT: If is_duplicate is true, duplicate_feature_id must be the exact UUID from the list above (just the UUID, no prefix).
 Consider features duplicates if they request the same core functionality, even if worded differently.
 """
 
@@ -77,8 +79,12 @@ Consider features duplicates if they request the same core functionality, even i
         result = json.loads(response.choices[0].message.content)
 
         if result.get('is_duplicate') and result.get('duplicate_feature_id'):
-            logger.info(f"Found duplicate: {feature_title} matches existing feature {result['duplicate_feature_id']}")
-            return result['duplicate_feature_id']
+            # Extract UUID from response (handle "ID: uuid" format)
+            duplicate_id = result['duplicate_feature_id']
+            if isinstance(duplicate_id, str) and duplicate_id.startswith('ID: '):
+                duplicate_id = duplicate_id[4:].strip()
+            logger.info(f"Found duplicate: {feature_title} matches existing feature {duplicate_id}")
+            return duplicate_id
 
         return None
 
@@ -91,12 +97,11 @@ def classify_feature_to_theme(
     feature_title: str,
     feature_description: str,
     theme_list: list,
-    unclassified_theme_id: str,
     client: OpenAI
-) -> str:
+) -> str | None:
     """
     Use OpenAI to classify a feature into the best matching theme.
-    Returns theme_id or unclassified_theme_id if no match.
+    Returns theme_id if a good match is found, None otherwise.
     """
     try:
         # Build theme options
@@ -141,17 +146,21 @@ If the feature doesn't clearly fit any theme, return theme_id as null.
         confidence = result.get('confidence', 'low')
         reasoning = result.get('reasoning', '')
 
+        # Handle AI returning string "null" instead of null
+        if theme_id == "null" or theme_id is None:
+            theme_id = None
+
         # Only use the theme if confidence is medium or high
         if theme_id and confidence in ['medium', 'high']:
             logger.info(f"Classified '{feature_title}' to theme {theme_id} ({confidence} confidence)")
             return theme_id
         else:
-            logger.info(f"No good match for '{feature_title}', using Unclassified. Reason: {reasoning}")
-            return unclassified_theme_id
+            logger.info(f"No good match for '{feature_title}', will skip. Reason: {reasoning}")
+            return None
 
     except Exception as e:
         logger.error(f"Error classifying feature to theme: {e}")
-        return unclassified_theme_id
+        return None
 
 
 def classify_features(workspace_id: str):
@@ -165,31 +174,8 @@ def classify_features(workspace_id: str):
         logger.info("STARTING FEATURE CLASSIFICATION")
         logger.info("=" * 80)
 
-        # 1. Get or create "Unclassified" default theme
-        logger.info("\n1. Getting or creating 'Unclassified' theme...")
-        unclassified_theme = db.query(Theme).filter(
-            Theme.workspace_id == workspace_id,
-            Theme.is_default == True
-        ).first()
-
-        if not unclassified_theme:
-            unclassified_theme = Theme(
-                workspace_id=workspace_id,
-                name="Unclassified",
-                description="Features that haven't been categorized yet",
-                color="#9e9e9e",  # Gray color
-                icon="HelpOutlineIcon",
-                is_default=True,
-                sort_order=9999  # Put at the end
-            )
-            db.add(unclassified_theme)
-            db.flush()
-            logger.info(f"✅ Created 'Unclassified' default theme")
-        else:
-            logger.info(f"✅ Using existing 'Unclassified' theme: {unclassified_theme.id}")
-
-        # 2. Get all existing themes (excluding Unclassified) for classification
-        logger.info("\n2. Loading existing themes...")
+        # 1. Get all existing themes for classification
+        logger.info("\n1. Loading existing themes...")
         existing_themes = db.query(Theme).filter(
             Theme.workspace_id == workspace_id,
             Theme.is_default == False
@@ -200,12 +186,16 @@ def classify_features(workspace_id: str):
             for theme in existing_themes
         ]
 
+        if not theme_list:
+            logger.warning("❌ No themes found. Please create themes before running classification.")
+            return
+
         logger.info(f"✅ Found {len(theme_list)} themes for classification")
         for theme in theme_list:
             logger.info(f"   - {theme['name']}")
 
-        # 3. Get all messages with ai_insights
-        logger.info("\n3. Loading messages with AI insights...")
+        # 2. Get all messages with ai_insights
+        logger.info("\n2. Loading messages with AI insights...")
         messages = db.query(Message).filter(
             Message.workspace_id == workspace_id,
             Message.ai_insights.isnot(None)
@@ -224,13 +214,15 @@ def classify_features(workspace_id: str):
 
         client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
+        # Initialize Slack notification service
+        slack_notifier = SlackNotificationService()
+
         features_created = 0
-        features_classified = 0
-        unclassified_count = 0
+        features_skipped = 0
         duplicates_updated = 0
 
-        # 4. Process each message
-        logger.info("\n4. Processing feature requests with intelligent deduplication...")
+        # 3. Process each message
+        logger.info("\n3. Processing feature requests with intelligent deduplication...")
         for msg_idx, msg in enumerate(messages, 1):
             ai_insights = msg.ai_insights
             if not ai_insights:
@@ -244,18 +236,28 @@ def classify_features(workspace_id: str):
                 urgency = feature_data.get('urgency', 'medium')
                 quote = feature_data.get('quote', '')
 
-                # Step 1: Classify into theme first
-                theme_id = None
-                is_unclassified = False
-                if theme_list:
-                    theme_id = classify_feature_to_theme(
-                        title, description, theme_list, str(unclassified_theme.id), client
+                # Check if this message has already been processed for features
+                # (prevents duplicate mentions when running classification multiple times)
+                if msg.features:
+                    # Check if any of the message's features match this title
+                    already_processed = any(
+                        feature.name.lower() == title.lower()
+                        for feature in msg.features
                     )
-                    is_unclassified = (theme_id == str(unclassified_theme.id))
-                else:
-                    # No themes available, use Unclassified
-                    theme_id = str(unclassified_theme.id)
-                    is_unclassified = True
+                    if already_processed:
+                        logger.info(f"   [{msg_idx}/{len(messages)}] ⏭️  Already processed: '{title}' for this message")
+                        continue
+
+                # Step 1: Classify into theme first
+                theme_id = classify_feature_to_theme(
+                    title, description, theme_list, client
+                )
+
+                # If no theme matched, skip this feature
+                if not theme_id:
+                    features_skipped += 1
+                    logger.info(f"   [{msg_idx}/{len(messages)}] ⏭️  Skipped: '{title}' (no matching theme)")
+                    continue
 
                 # Step 2: Get all existing features in this theme
                 existing_features_in_theme = db.query(Feature).filter(
@@ -291,6 +293,34 @@ def classify_features(workspace_id: str):
                             existing_feature.messages.append(msg)
                         duplicates_updated += 1
                         logger.info(f"   [{msg_idx}/{len(messages)}] 🔄 Merged duplicate: '{title}' → '{existing_feature.name}' (mentions: {existing_feature.mention_count})")
+
+                        # Get theme name for notification
+                        theme = db.query(Theme).filter(Theme.id == existing_feature.theme_id).first()
+                        theme_name = theme.name if theme else "Unknown Theme"
+
+                        # Get customer name
+                        customer_name = msg.customer.name if msg.customer else None
+
+                        # Get call details from message metadata
+                        call_id = msg.message_metadata.get('call_id') if msg.message_metadata else None
+                        call_title = msg.message_metadata.get('title') if msg.message_metadata else None
+                        gong_url = f"https://app.gong.io/call?id={call_id}" if call_id else None
+                        message_date = msg.sent_at.strftime('%Y-%m-%d %H:%M') if msg.sent_at else None
+
+                        # Send Slack notification for merged feature
+                        slack_notifier.send_feature_merge_notification(
+                            feature_name=existing_feature.name,
+                            feature_description=description,
+                            theme_name=theme_name,
+                            mention_count=existing_feature.mention_count,
+                            customer_name=customer_name,
+                            quote=quote,
+                            feature_id=str(existing_feature.id),
+                            gong_url=gong_url,
+                            call_title=call_title,
+                            message_date=message_date
+                        )
+
                         continue
 
                 # Step 4: Create new feature (no duplicate found)
@@ -313,32 +343,47 @@ def classify_features(workspace_id: str):
                 new_feature.messages.append(msg)
                 features_created += 1
 
-                # Count classification stats
-                if is_unclassified:
-                    unclassified_count += 1
-                else:
-                    features_classified += 1
+                # Find theme name for logging and notification
+                theme_name = None
+                for theme in theme_list:
+                    if theme['id'] == theme_id:
+                        theme_name = theme['name']
+                        break
 
-                # Find theme name for logging
-                theme_name = "Unclassified" if is_unclassified else None
-                if not theme_name:
-                    for theme in theme_list:
-                        if theme['id'] == theme_id:
-                            theme_name = theme['name']
-                            break
+                logger.info(f"   [{msg_idx}/{len(messages)}] ✨ Created: {title} → {theme_name or 'Unknown'}")
 
-                logger.info(f"   [{msg_idx}/{len(messages)}] ✨ Created: {title} → {theme_name or 'Unclassified'}")
+                # Get customer name
+                customer_name = msg.customer.name if msg.customer else None
+
+                # Get call details from message metadata
+                call_id = msg.message_metadata.get('call_id') if msg.message_metadata else None
+                call_title = msg.message_metadata.get('title') if msg.message_metadata else None
+                gong_url = f"https://app.gong.io/call?id={call_id}" if call_id else None
+                message_date = msg.sent_at.strftime('%Y-%m-%d %H:%M') if msg.sent_at else None
+
+                # Send Slack notification for new feature
+                slack_notifier.send_new_feature_notification(
+                    feature_name=title,
+                    feature_description=description,
+                    theme_name=theme_name or 'Unknown',
+                    urgency=urgency,
+                    customer_name=customer_name,
+                    quote=quote,
+                    feature_id=str(new_feature.id),
+                    gong_url=gong_url,
+                    call_title=call_title,
+                    message_date=message_date
+                )
 
         db.commit()
 
-        # 5. Summary
+        # 4. Summary
         logger.info("\n" + "=" * 80)
         logger.info("CLASSIFICATION COMPLETE")
         logger.info("=" * 80)
         logger.info(f"✅ Features created: {features_created}")
-        logger.info(f"✅ Features classified to themes: {features_classified}")
-        logger.info(f"⚪ Features in Unclassified: {unclassified_count}")
         logger.info(f"🔄 Duplicate features updated: {duplicates_updated}")
+        logger.info(f"⏭️  Features skipped (no theme match): {features_skipped}")
         logger.info("=" * 80 + "\n")
 
     except Exception as e:

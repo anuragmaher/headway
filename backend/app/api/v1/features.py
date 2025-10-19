@@ -75,6 +75,7 @@ class MessageResponse(BaseModel):
     sender_name: Optional[str]
     channel_name: Optional[str]
     customer_name: Optional[str] = None
+    customer_email: Optional[str] = None
     ai_insights: Optional[dict] = None
 
     class Config:
@@ -713,6 +714,7 @@ async def get_feature_messages(
                 sender_name=message.author_name,
                 channel_name=message.channel_name,
                 customer_name=customer_name,
+                customer_email=message.author_email,
                 ai_insights=message.ai_insights
             ))
 

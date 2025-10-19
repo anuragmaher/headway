@@ -38,7 +38,8 @@ class AIExtractionService:
         self,
         transcript: str,
         customer_name: Optional[str] = None,
-        customer_mrr: Optional[float] = None
+        customer_mrr: Optional[float] = None,
+        themes: Optional[List[Dict[str, str]]] = None
     ) -> Dict[str, Any]:
         """
         Extract features, bugs, and insights from a conversation transcript
@@ -47,6 +48,7 @@ class AIExtractionService:
             transcript: The conversation transcript text
             customer_name: Optional customer name for context
             customer_mrr: Optional MRR for prioritization context
+            themes: Optional list of themes to guide feature extraction (only extract features that align with these themes)
 
         Returns:
             Dictionary containing extracted insights
@@ -59,9 +61,17 @@ class AIExtractionService:
             if customer_mrr:
                 context += f"MRR: ${customer_mrr:,.2f}\n"
 
-            # Create the prompt
-            system_prompt = """You are an AI assistant that analyzes customer conversations and extracts actionable insights.
+            # Build themes context
+            themes_context = ""
+            if themes and len(themes) > 0:
+                themes_context = "\n\n**IMPORTANT - Product Themes Context:**\nOur product focuses on these specific themes. ONLY extract feature requests that align with these themes:\n\n"
+                for theme in themes:
+                    themes_context += f"- **{theme['name']}**: {theme['description']}\n"
+                themes_context += "\nDO NOT extract feature requests that fall outside these themes. If a request doesn't fit any theme, skip it.\n"
 
+            # Create the prompt
+            system_prompt = f"""You are an AI assistant that analyzes customer conversations and extracts actionable insights.
+{themes_context}
 Analyze the conversation and extract:
 
 1. **Feature Requests**: NEW features or capabilities that the customer is requesting to be BUILT
@@ -70,6 +80,7 @@ Analyze the conversation and extract:
    - If the customer asks "can you build X?" or "we need X", that's a feature request
    - DO NOT include features that already exist but the customer doesn't know about
    - DO NOT include questions about existing functionality
+   {"- CRITICAL: Feature requests MUST align with one of the product themes listed above" if themes else ""}
 
 2. **Bug Reports**: ACTUAL technical issues, errors, or broken functionality
    - ONLY include things that are genuinely not working as designed
@@ -87,44 +98,45 @@ Analyze the conversation and extract:
 5. **Urgency**: How urgent their requests are (low, medium, high, critical)
 
 Return ONLY a valid JSON object with this exact structure:
-{
+{{
   "feature_requests": [
-    {
+    {{
       "title": "Brief title",
       "description": "What they want and why",
       "urgency": "low|medium|high|critical",
       "quote": "Exact quote from transcript"
-    }
+    }}
   ],
   "bug_reports": [
-    {
+    {{
       "title": "Brief title",
       "description": "What's broken",
       "severity": "low|medium|high|critical",
       "quote": "Exact quote from transcript"
-    }
+    }}
   ],
   "pain_points": [
-    {
+    {{
       "description": "What's causing friction",
       "impact": "How it affects them",
       "quote": "Exact quote from transcript"
-    }
+    }}
   ],
-  "sentiment": {
+  "sentiment": {{
     "overall": "positive|neutral|negative",
     "score": 0.0-1.0,
     "reasoning": "Why this sentiment"
-  },
+  }},
   "key_topics": ["topic1", "topic2"],
   "summary": "One paragraph summary of the conversation"
-}
+}}
 
 IMPORTANT:
 - Be specific and actionable
 - Extract REAL feature requests (new things to build), not questions about existing features
 - Extract REAL bugs (actual technical issues), not user confusion
-- When in doubt, leave it out - better to miss something than include false positives"""
+- When in doubt, leave it out - better to miss something than include false positives
+{"- ONLY extract feature requests that align with the provided product themes - ignore anything outside these themes" if themes else ""}"""
 
             user_prompt = f"""{context}
 
