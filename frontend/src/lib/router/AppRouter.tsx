@@ -19,6 +19,7 @@ import { OnboardingPage } from '@/pages/OnboardingPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { ClusteringPage } from '@/pages/ClusteringPage';
 import { WayPage } from '@/pages/WayPage';
+import { ExecutiveInsightsPage } from '@/pages/ExecutiveInsightsPage';
 
 export function AppRouter(): JSX.Element {
   return (
@@ -137,6 +138,15 @@ export function AppRouter(): JSX.Element {
           element={
             <ProtectedRoute>
               <ClusteringPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.ANALYTICS}
+          element={
+            <ProtectedRoute>
+              <ExecutiveInsightsPage />
             </ProtectedRoute>
           }
         />
