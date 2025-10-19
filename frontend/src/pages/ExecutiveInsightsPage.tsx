@@ -2,7 +2,7 @@
  * Executive Insights Page - High-level analytics and visualizations
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Grid,
