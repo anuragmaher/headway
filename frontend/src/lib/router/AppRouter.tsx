@@ -11,7 +11,6 @@ import { ROUTES } from '@/lib/constants/routes';
 import { LandingPage } from '@/pages/LandingPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
-import { DashboardPage } from '@/pages/DashboardPage';
 import FeaturesPage from '@/pages/FeaturesPage';
 import { ThemesPage } from '@/pages/ThemesPage';
 import { WorkspaceSettingsPage } from '@/pages/WorkspaceSettingsPage';
@@ -67,7 +66,7 @@ export function AppRouter(): JSX.Element {
           path={ROUTES.DASHBOARD}
           element={
             <ProtectedRoute>
-              <DashboardPage />
+              <ExecutiveInsightsPage />
             </ProtectedRoute>
           }
         />
@@ -82,41 +81,41 @@ export function AppRouter(): JSX.Element {
         />
 
         {/* Settings routes - will be implemented later */}
-        <Route 
-          path={ROUTES.SETTINGS} 
+        <Route
+          path={ROUTES.SETTINGS}
           element={
             <ProtectedRoute>
               <Navigate to={ROUTES.SETTINGS_WORKSPACE} replace />
             </ProtectedRoute>
-          } 
+          }
         />
 
         {/* Placeholder routes for future implementation */}
-        <Route 
-          path={ROUTES.SETTINGS_PROFILE} 
+        <Route
+          path={ROUTES.SETTINGS_PROFILE}
           element={
             <ProtectedRoute>
               <div>Settings Profile - To be implemented</div>
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path={ROUTES.SETTINGS_WORKSPACE} 
+        <Route
+          path={ROUTES.SETTINGS_WORKSPACE}
           element={
             <ProtectedRoute>
               <WorkspaceSettingsPage />
             </ProtectedRoute>
-          } 
+          }
         />
 
-        <Route 
-          path={ROUTES.SETTINGS_INTEGRATIONS} 
+        <Route
+          path={ROUTES.SETTINGS_INTEGRATIONS}
           element={
             <ProtectedRoute>
               <div>Settings Integrations - To be implemented</div>
             </ProtectedRoute>
-          } 
+          }
         />
 
         <Route
@@ -138,15 +137,6 @@ export function AppRouter(): JSX.Element {
           element={
             <ProtectedRoute>
               <ClusteringPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path={ROUTES.ANALYTICS}
-          element={
-            <ProtectedRoute>
-              <ExecutiveInsightsPage />
             </ProtectedRoute>
           }
         />

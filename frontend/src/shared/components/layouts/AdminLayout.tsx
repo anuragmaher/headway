@@ -35,7 +35,6 @@ import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   AutoAwesome as WayIcon,
-  BarChart as BarChartIcon,
 } from '@mui/icons-material';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
@@ -75,11 +74,6 @@ const navigationItems = [
     text: 'AI Intelligence',
     icon: <PsychologyIcon />,
     path: ROUTES.CLUSTERING,
-  },
-  {
-    text: 'Executive Insights',
-    icon: <BarChartIcon />,
-    path: ROUTES.ANALYTICS,
   },
   {
     text: 'Workspace Settings',

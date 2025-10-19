@@ -33,9 +33,6 @@ export const ROUTES = {
   // Clustering routes
   CLUSTERING: '/app/clustering',
 
-  // Analytics routes
-  ANALYTICS: '/app/analytics',
-
   // Slack integration routes
   SLACK_CALLBACK: '/app/slack/callback',
   
@@ -72,7 +69,6 @@ export const PROTECTED_ROUTES = [
   ROUTES.THEMES,
   ROUTES.THEME_DETAIL,
   ROUTES.CLUSTERING,
-  ROUTES.ANALYTICS,
   ROUTES.SLACK_CALLBACK,
 ] as const;
 
@@ -85,7 +81,7 @@ export const ROUTE_METADATA = {
   },
   [ROUTES.DASHBOARD]: {
     title: 'Dashboard',
-    description: 'Feature requests and analytics',
+    description: 'Executive insights and analytics',
     showInNav: true,
     icon: 'DashboardIcon',
   },
@@ -106,12 +102,6 @@ export const ROUTE_METADATA = {
     description: 'AI-powered feature clustering and classification',
     showInNav: true,
     icon: 'PsychologyIcon',
-  },
-  [ROUTES.ANALYTICS]: {
-    title: 'Executive Insights',
-    description: 'High-level analytics and trends',
-    showInNav: true,
-    icon: 'BarChartIcon',
   },
   [ROUTES.SETTINGS]: {
     title: 'Settings',
