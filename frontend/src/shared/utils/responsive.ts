@@ -2,8 +2,8 @@
  * Responsive utilities for consistent breakpoints
  */
 
-import { useTheme, useMediaQuery } from '@mui/material';
-import { Breakpoint } from '@mui/material/styles';
+import { useMediaQuery, useTheme } from '@mui/material';
+import type { Breakpoint } from '@mui/material/styles';
 
 export function useResponsive() {
   const theme = useTheme();

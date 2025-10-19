@@ -289,12 +289,14 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
                   {item.icon}
                 </ListItemIcon>
                 {!collapsed && (
-                  <ListItemText 
+                  <ListItemText
                     primary={item.text}
                     primaryTypographyProps={{
-                      fontSize: '0.9rem',
-                      fontWeight: isActive ? 600 : 500,
-                      letterSpacing: '0.01em',
+                      sx: {
+                        fontSize: '0.9rem',
+                        fontWeight: isActive ? 600 : 500,
+                        letterSpacing: '0.01em',
+                      }
                     }}
                   />
                 )}
@@ -371,7 +373,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
           width: { sm: `calc(100% - ${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px)` },
           ml: { sm: `${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px` },
           transition: 'all 0.3s ease-in-out',
-          zIndex: (theme) => theme.zIndex.drawer + 1,
+          zIndex: theme.zIndex.drawer + 1,
           background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)} 0%, ${alpha(theme.palette.background.paper, 0.7)} 100%)`,
           backdropFilter: 'blur(20px)',
           borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,

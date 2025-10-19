@@ -130,7 +130,7 @@ const ClassificationSignalsView: React.FC<ClassificationSignalsViewProps> = () =
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" fontWeight={800} color="primary">
+              <Typography variant="h4" sx={{ fontWeight: 800, color: 'primary.main' }}>
                 {signals.length}
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -142,7 +142,7 @@ const ClassificationSignalsView: React.FC<ClassificationSignalsViewProps> = () =
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" fontWeight={800} color="success.main">
+              <Typography variant="h4" sx={{ fontWeight: 800, color: 'success.main' }}>
                 {signals.filter(s => s.is_active).length}
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -154,7 +154,7 @@ const ClassificationSignalsView: React.FC<ClassificationSignalsViewProps> = () =
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" fontWeight={800} color="info.main">
+              <Typography variant="h4" sx={{ fontWeight: 800, color: 'info.main' }}>
                 {signals.reduce((sum, s) => sum + s.usage_count, 0)}
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -166,7 +166,7 @@ const ClassificationSignalsView: React.FC<ClassificationSignalsViewProps> = () =
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent sx={{ textAlign: 'center' }}>
-              <Typography variant="h4" fontWeight={800} color="warning.main">
+              <Typography variant="h4" sx={{ fontWeight: 800, color: 'warning.main' }}>
                 {signals.filter(s => s.precision && s.precision >= 0.8).length}
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -180,7 +180,7 @@ const ClassificationSignalsView: React.FC<ClassificationSignalsViewProps> = () =
       {/* Signal Type Distribution */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
             Signal Types Distribution
           </Typography>
           <Grid container spacing={2}>
@@ -254,7 +254,7 @@ const ClassificationSignalsView: React.FC<ClassificationSignalsViewProps> = () =
       {/* Signals Table */}
       <Card>
         <CardContent>
-          <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
             Classification Signals ({filteredSignals.length})
           </Typography>
 
@@ -304,7 +304,7 @@ const ClassificationSignalsView: React.FC<ClassificationSignalsViewProps> = () =
                     >
                       <TableCell>
                         <Box>
-                          <Typography variant="body2" fontWeight={600}>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
                             {signal.signal_name}
                           </Typography>
                           {signal.keywords && signal.keywords.length > 0 && (
@@ -340,7 +340,7 @@ const ClassificationSignalsView: React.FC<ClassificationSignalsViewProps> = () =
                       </TableCell>
                       <TableCell>
                         <Box>
-                          <Typography variant="body2" fontWeight={600}>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
                             {signal.target_category}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
@@ -352,7 +352,7 @@ const ClassificationSignalsView: React.FC<ClassificationSignalsViewProps> = () =
                         <Tooltip title={`Priority: ${getPriorityText(signal.priority_weight)}`}>
                           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
                             {getPriorityIcon(signal.priority_weight)}
-                            <Typography variant="body2" fontWeight={600}>
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
                               {getPriorityText(signal.priority_weight)}
                             </Typography>
                           </Box>
@@ -361,7 +361,7 @@ const ClassificationSignalsView: React.FC<ClassificationSignalsViewProps> = () =
                       <TableCell align="center">
                         <Typography
                           variant="body2"
-                          fontWeight={600}
+                          sx={{ fontWeight: 600 }}
                           color={getPerformanceColor(signal.precision)}
                         >
                           {formatPercentage(signal.precision)}
@@ -370,14 +370,14 @@ const ClassificationSignalsView: React.FC<ClassificationSignalsViewProps> = () =
                       <TableCell align="center">
                         <Typography
                           variant="body2"
-                          fontWeight={600}
+                          sx={{ fontWeight: 600 }}
                           color={getPerformanceColor(signal.recall)}
                         >
                           {formatPercentage(signal.recall)}
                         </Typography>
                       </TableCell>
                       <TableCell align="center">
-                        <Typography variant="body2" fontWeight={600}>
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
                           {signal.usage_count.toLocaleString()}
                         </Typography>
                       </TableCell>

@@ -236,11 +236,11 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
                         {/* Customer Name and Date */}
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
                           <Box>
-                            <Typography variant="subtitle2" fontWeight="bold" color="primary">
+                            <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }} color="primary">
                               {message.customer_name || 'Unknown Customer'}
                             </Typography>
                             {message.customer_email && (
-                              <Typography variant="caption" color="text.secondary" display="block">
+                              <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                                 {message.customer_email}
                               </Typography>
                             )}
@@ -288,12 +288,12 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
                           {/* Feature Requests */}
                           {message.ai_insights.feature_requests && message.ai_insights.feature_requests.length > 0 && (
                             <Box mb={2}>
-                              <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }} gutterBottom>
                                 Feature Requests:
                               </Typography>
                               {message.ai_insights.feature_requests.map((feature, idx) => (
                                 <Box key={idx} mb={1.5} pl={2}>
-                                  <Typography variant="body2" fontWeight="600">
+                                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
                                     {feature.title}
                                   </Typography>
                                   <Typography variant="body2" color="text.secondary" paragraph>
@@ -317,12 +317,12 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
                           {/* Bug Reports */}
                           {message.ai_insights.bug_reports && message.ai_insights.bug_reports.length > 0 && (
                             <Box mb={2}>
-                              <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }} gutterBottom>
                                 Bug Reports:
                               </Typography>
                               {message.ai_insights.bug_reports.map((bug, idx) => (
                                 <Box key={idx} mb={1.5} pl={2}>
-                                  <Typography variant="body2" fontWeight="600">
+                                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
                                     {bug.title}
                                   </Typography>
                                   <Typography variant="body2" color="text.secondary" paragraph>
@@ -346,7 +346,7 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
                           {/* Pain Points */}
                           {message.ai_insights.pain_points && message.ai_insights.pain_points.length > 0 && (
                             <Box mb={2}>
-                              <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }} gutterBottom>
                                 Pain Points:
                               </Typography>
                               {message.ai_insights.pain_points.map((pain, idx) => (
@@ -370,10 +370,10 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
                           {/* Summary */}
                           {message.ai_insights.summary && (
                             <Box mb={2}>
-                              <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }} gutterBottom>
                                 Summary:
                               </Typography>
-                              <Typography variant="body2" color="text.secondary" pl={2}>
+                              <Typography variant="body2" color="text.secondary" sx={{ pl: 2 }}>
                                 {message.ai_insights.summary}
                               </Typography>
                             </Box>
@@ -382,7 +382,7 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
                           {/* Sentiment */}
                           {message.ai_insights.sentiment && (
                             <Box mb={2}>
-                              <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }} gutterBottom>
                                 Sentiment:
                               </Typography>
                               <Box pl={2}>
@@ -391,7 +391,7 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
                                   size="small"
                                   color={message.ai_insights.sentiment.overall === 'positive' ? 'success' : message.ai_insights.sentiment.overall === 'negative' ? 'error' : 'default'}
                                 />
-                                <Typography variant="caption" color="text.secondary" display="block" mt={1}>
+                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
                                   {message.ai_insights.sentiment.reasoning}
                                 </Typography>
                               </Box>
@@ -401,7 +401,7 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
                           {/* Key Topics */}
                           {message.ai_insights.key_topics && message.ai_insights.key_topics.length > 0 && (
                             <Box mb={2}>
-                              <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }} gutterBottom>
                                 Key Topics:
                               </Typography>
                               <Box pl={2} display="flex" gap={0.5} flexWrap="wrap">

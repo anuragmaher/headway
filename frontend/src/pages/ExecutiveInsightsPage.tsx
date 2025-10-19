@@ -13,7 +13,6 @@ import {
   useTheme,
   CircularProgress,
   Alert,
-  LinearProgress,
   Chip,
   Table,
   TableBody,
@@ -33,6 +32,19 @@ import {
   LocalFireDepartment as HotIcon,
   CheckCircle as CheckCircleIcon,
 } from '@mui/icons-material';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useAuthStore } from '@/features/auth/store/auth-store';
 import { API_BASE_URL } from '@/config/api.config';
@@ -93,6 +105,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [topFeatures, setTopFeatures] = useState<Feature[]>([]);
+  const [themes, setThemes] = useState<Theme[]>([]);
 
   const getAuthToken = () => {
     return tokens?.access_token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTk3NDIzODgsInN1YiI6ImI0NzE0NGU3LTAyYTAtNGEyMi04MDBlLTNmNzE3YmZiNGZhYSIsInR5cGUiOiJhY2Nlc3MifQ.L2dOy92Nim5egY3nzRXQts3ywgxV_JvO_8EEiePpDNY';
@@ -377,36 +390,30 @@ export function ExecutiveInsightsPage(): JSX.Element {
                     <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
                       Features by Status
                     </Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      {Object.entries(metrics.features_by_status).map(([status, count]) => {
-                        const percentage = (count / metrics.total_features) * 100;
-                        return (
-                          <Box key={status}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                              <Typography variant="body2" sx={{ textTransform: 'capitalize', fontWeight: 500 }}>
-                                {status.replace('_', ' ')}
-                              </Typography>
-                              <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                                {count} ({Math.round(percentage)}%)
-                              </Typography>
-                            </Box>
-                            <LinearProgress
-                              variant="determinate"
-                              value={percentage}
-                              sx={{
-                                height: 8,
-                                borderRadius: 1,
-                                backgroundColor: alpha(getStatusColor(status), 0.2),
-                                '& .MuiLinearProgress-bar': {
-                                  backgroundColor: getStatusColor(status),
-                                  borderRadius: 1,
-                                }
-                              }}
-                            />
-                          </Box>
-                        );
-                      })}
-                    </Box>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <PieChart>
+                        <Pie
+                          data={Object.entries(metrics.features_by_status).map(([status, count]) => ({
+                            name: status.replace('_', ' '),
+                            value: count,
+                          }))}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={100}
+                          paddingAngle={2}
+                          dataKey="value"
+                          label={({ name, value, percent }) =>
+                            `${name}: ${value} (${(percent * 100).toFixed(0)}%)`
+                          }
+                        >
+                          {Object.keys(metrics.features_by_status).map((status, index) => (
+                            <Cell key={`cell-${index}`} fill={getStatusColor(status)} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
                   </CardContent>
                 </Card>
               </Grid>
@@ -423,36 +430,30 @@ export function ExecutiveInsightsPage(): JSX.Element {
                     <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
                       Features by Urgency
                     </Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      {Object.entries(metrics.features_by_urgency).map(([urgency, count]) => {
-                        const percentage = (count / metrics.total_features) * 100;
-                        return (
-                          <Box key={urgency}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                              <Typography variant="body2" sx={{ textTransform: 'capitalize', fontWeight: 500 }}>
-                                {urgency}
-                              </Typography>
-                              <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                                {count} ({Math.round(percentage)}%)
-                              </Typography>
-                            </Box>
-                            <LinearProgress
-                              variant="determinate"
-                              value={percentage}
-                              sx={{
-                                height: 8,
-                                borderRadius: 1,
-                                backgroundColor: alpha(getUrgencyColor(urgency), 0.2),
-                                '& .MuiLinearProgress-bar': {
-                                  backgroundColor: getUrgencyColor(urgency),
-                                  borderRadius: 1,
-                                }
-                              }}
-                            />
-                          </Box>
-                        );
-                      })}
-                    </Box>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <PieChart>
+                        <Pie
+                          data={Object.entries(metrics.features_by_urgency).map(([urgency, count]) => ({
+                            name: urgency,
+                            value: count,
+                          }))}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={100}
+                          paddingAngle={2}
+                          dataKey="value"
+                          label={({ name, value, percent }) =>
+                            `${name}: ${value} (${(percent * 100).toFixed(0)}%)`
+                          }
+                        >
+                          {Object.keys(metrics.features_by_urgency).map((urgency, index) => (
+                            <Cell key={`cell-${index}`} fill={getUrgencyColor(urgency)} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
                   </CardContent>
                 </Card>
               </Grid>
@@ -473,26 +474,33 @@ export function ExecutiveInsightsPage(): JSX.Element {
                         Top 5 Themes by Feature Count
                       </Typography>
                     </Box>
-                    <Grid container spacing={2}>
-                      {metrics.top_themes.map((themeItem, idx) => (
-                        <Grid item xs={12} sm={6} md={2.4} key={idx}>
-                          <Card sx={{
-                            background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
-                            border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                            textAlign: 'center',
-                          }}>
-                            <CardContent>
-                              <Typography variant="h4" sx={{ fontWeight: 700, color: theme.palette.primary.main, mb: 1 }}>
-                                {themeItem.feature_count}
-                              </Typography>
-                              <Typography variant="body2" sx={{ fontWeight: 500 }} noWrap>
-                                {themeItem.name}
-                              </Typography>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      ))}
-                    </Grid>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart
+                        data={metrics.top_themes.map(t => ({
+                          name: t.name,
+                          features: t.feature_count,
+                        }))}
+                        layout="vertical"
+                        margin={{ top: 5, right: 30, left: 120, bottom: 5 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke={alpha(theme.palette.divider, 0.2)} />
+                        <XAxis type="number" stroke={theme.palette.text.secondary} />
+                        <YAxis
+                          type="category"
+                          dataKey="name"
+                          stroke={theme.palette.text.secondary}
+                          width={110}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: theme.palette.background.paper,
+                            border: `1px solid ${theme.palette.divider}`,
+                            borderRadius: '8px',
+                          }}
+                        />
+                        <Bar dataKey="features" fill={theme.palette.primary.main} radius={[0, 8, 8, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
                   </CardContent>
                 </Card>
               </Grid>
