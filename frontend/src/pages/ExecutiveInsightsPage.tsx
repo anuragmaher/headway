@@ -22,7 +22,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Divider,
 } from '@mui/material';
 import {
   TrendingUp as TrendingUpIcon,
@@ -33,7 +32,6 @@ import {
   Timeline as TimelineIcon,
   LocalFireDepartment as HotIcon,
   CheckCircle as CheckCircleIcon,
-  Pending as PendingIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useAuthStore } from '@/features/auth/store/auth-store';
@@ -95,7 +93,6 @@ export function ExecutiveInsightsPage(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [topFeatures, setTopFeatures] = useState<Feature[]>([]);
-  const [themes, setThemes] = useState<Theme[]>([]);
 
   const getAuthToken = () => {
     return tokens?.access_token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTk3NDIzODgsInN1YiI6ImI0NzE0NGU3LTAyYTAtNGEyMi04MDBlLTNmNzE3YmZiNGZhYSIsInR5cGUiOiJhY2Nlc3MifQ.L2dOy92Nim5egY3nzRXQts3ywgxV_JvO_8EEiePpDNY';
