@@ -104,7 +104,8 @@ Return ONLY a valid JSON object with this exact structure:
       "title": "Brief title",
       "description": "What they want and why",
       "urgency": "low|medium|high|critical",
-      "quote": "Exact quote from transcript"
+      "quote": "Exact quote from transcript",
+      "theme": "{f'MUST be one of: {", ".join([t["name"] for t in themes])} (use EXACT name, no variations)' if themes else 'null'}"
     }}
   ],
   "bug_reports": [
@@ -136,7 +137,9 @@ IMPORTANT:
 - Extract REAL feature requests (new things to build), not questions about existing features
 - Extract REAL bugs (actual technical issues), not user confusion
 - When in doubt, leave it out - better to miss something than include false positives
-{"- ONLY extract feature requests that align with the provided product themes - ignore anything outside these themes" if themes else ""}"""
+{"- CRITICAL: For 'theme' field, you MUST use ONLY these EXACT theme names (copy-paste, no variations): " + ", ".join([f'"{t["name"]}"' for t in themes]) if themes else ""}
+{"- If a feature doesn't clearly fit any theme, choose the closest match - DO NOT invent new theme names" if themes else ""}
+{"- Theme names must match EXACTLY - 'AI Features' is correct, 'AI' or 'AI Capabilities' is WRONG" if themes else ""}"""
 
             user_prompt = f"""{context}
 

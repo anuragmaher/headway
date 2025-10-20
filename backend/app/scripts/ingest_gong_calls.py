@@ -20,7 +20,7 @@ from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 from sqlalchemy.orm import Session
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 
 # Add the backend directory to Python path
 backend_dir = Path(__file__).parent.parent.parent
@@ -32,7 +32,9 @@ from app.models.message import Message
 from app.models.workspace import Workspace
 from app.models.customer import Customer
 from app.models.theme import Theme
+from app.models.feature import Feature
 from app.services.ai_extraction_service import get_ai_extraction_service
+from app.services.ai_feature_matching_service import get_ai_feature_matching_service
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -431,10 +433,14 @@ async def ingest_gong_calls(
                 Theme.is_default == False  # Exclude "Unclassified" theme
             ).all()
 
+            # Create dict representation for AI
             themes_list = [
                 {"name": theme.name, "description": theme.description}
                 for theme in themes
             ]
+
+            # Keep original Theme objects for feature creation
+            themes_dict = {theme.name.lower(): theme for theme in themes}
 
             if themes_list:
                 logger.info(f"Loaded {len(themes_list)} themes for AI context")
@@ -483,6 +489,7 @@ async def ingest_gong_calls(
 
             # Process and store calls
             ingested_count = 0
+            skipped_count = 0
 
             for call_data in calls:
                 try:
@@ -504,7 +511,8 @@ async def ingest_gong_calls(
                     ).first()
 
                     if existing_message:
-                        logger.debug(f"Call {call_id} already exists, skipping")
+                        logger.info(f"Skipping call {call_id} (already ingested): {metadata.get('title', 'Untitled Call')}")
+                        skipped_count += 1
                         continue
 
                     # Extract call information from metaData
@@ -656,17 +664,160 @@ async def ingest_gong_calls(
                     )
 
                     db.add(message)
+                    db.commit()  # Commit message first to get ID
                     ingested_count += 1
                     logger.info(f"Ingested call: {title} (ID: {call_id})")
 
+                    # Create features from AI insights immediately
+                    if ai_insights and 'feature_requests' in ai_insights:
+                        feature_requests = ai_insights.get('feature_requests', [])
+                        features_created_count = 0
+                        features_matched_count = 0
+
+                        # Initialize matching service
+                        matching_service = get_ai_feature_matching_service()
+
+                        for feature_data in feature_requests:
+                            feature_title = feature_data.get('title', '')
+                            feature_description = feature_data.get('description', '')
+                            feature_theme = feature_data.get('theme', 'Uncategorized')
+                            feature_urgency = feature_data.get('urgency', 'medium')
+
+                            if not feature_title:
+                                continue
+
+                            # Find matching theme
+                            feature_theme_obj = themes_dict.get(feature_theme.lower()) if feature_theme else None
+
+                            # Validate theme assignment with confidence threshold of 0.8
+                            if feature_theme_obj:
+                                theme_validation = matching_service.validate_theme_assignment(
+                                    feature_title=feature_title,
+                                    feature_description=feature_description,
+                                    suggested_theme=feature_theme_obj.name,
+                                    theme_description=feature_theme_obj.description or ""
+                                )
+
+                                if not theme_validation["is_valid"]:
+                                    logger.info(
+                                        f"  ✗ Skipping feature '{feature_title}' - theme validation failed "
+                                        f"(confidence: {theme_validation['confidence']:.2f} < 0.8). "
+                                        f"Reason: {theme_validation['reasoning']}"
+                                    )
+                                    continue
+                                else:
+                                    logger.info(
+                                        f"  ✓ Theme validated: '{feature_title}' → '{feature_theme_obj.name}' "
+                                        f"(confidence: {theme_validation['confidence']:.2f})"
+                                    )
+                            else:
+                                # No theme found - skip this feature
+                                logger.info(
+                                    f"  ✗ Skipping feature '{feature_title}' - no matching theme found "
+                                    f"(suggested theme: '{feature_theme}')"
+                                )
+                                continue
+
+                            # Get all existing features in the same theme for intelligent matching
+                            existing_features_in_theme = db.query(Feature).filter(
+                                Feature.workspace_id == workspace_id,
+                                Feature.theme_id == (feature_theme_obj.id if feature_theme_obj else None)
+                            ).all()
+
+                            # Prepare data for LLM matching
+                            existing_features_data = [
+                                {
+                                    "id": str(f.id),
+                                    "name": f.name,
+                                    "description": f.description or ""
+                                }
+                                for f in existing_features_in_theme
+                            ]
+
+                            # Use LLM to find matching feature with semantic understanding
+                            match_result = matching_service.find_matching_feature(
+                                new_feature={
+                                    "title": feature_title,
+                                    "description": feature_description
+                                },
+                                existing_features=existing_features_data,
+                                confidence_threshold=0.7
+                            )
+
+                            if match_result["is_duplicate"]:
+                                # Link message to existing feature
+                                existing_feature = db.query(Feature).filter(
+                                    Feature.id == match_result["matching_feature_id"]
+                                ).first()
+
+                                if existing_feature:
+                                    # Add message to feature's messages (many-to-many)
+                                    if message not in existing_feature.messages:
+                                        existing_feature.messages.append(message)
+                                        existing_feature.mention_count = len(existing_feature.messages)
+                                        existing_feature.last_mentioned = message.sent_at
+                                        existing_feature.updated_at = datetime.now(timezone.utc)
+
+                                    features_matched_count += 1
+                                    logger.info(
+                                        f"  ✓ Matched to existing: '{existing_feature.name}' "
+                                        f"(confidence: {match_result['confidence']:.2f}) - {match_result['reasoning']}"
+                                    )
+                                else:
+                                    logger.warning(f"Matching feature {match_result['matching_feature_id']} not found, creating new")
+                                    # Fall through to create new feature
+                                    match_result["is_duplicate"] = False
+
+                            if not match_result["is_duplicate"]:
+                                # Create new feature
+                                new_feature = Feature(
+                                    name=feature_title,
+                                    description=feature_description,
+                                    workspace_id=workspace_id,
+                                    theme_id=feature_theme_obj.id if feature_theme_obj else None,
+                                    status='new',
+                                    urgency=feature_urgency,
+                                    mention_count=1,
+                                    first_mentioned=message.sent_at,
+                                    last_mentioned=message.sent_at
+                                )
+
+                                db.add(new_feature)
+                                db.flush()  # Get the ID
+
+                                # Link message to new feature
+                                new_feature.messages.append(message)
+
+                                features_created_count += 1
+                                logger.info(
+                                    f"  ✓ Created new: '{feature_title}' "
+                                    f"(confidence it's unique: {1.0 - match_result['confidence']:.2f})"
+                                )
+
+                        # Commit all feature changes
+                        if features_created_count > 0 or features_matched_count > 0:
+                            db.commit()
+                            logger.info(
+                                f"  → Created {features_created_count} new features, "
+                                f"matched {features_matched_count} to existing features"
+                            )
+
+                        # Mark message as processed
+                        message.is_processed = True
+                        message.processed_at = datetime.now(timezone.utc)
+                        db.commit()
+
                 except Exception as e:
                     logger.error(f"Error processing call {call_data.get('id', 'unknown')}: {e}")
+                    db.rollback()  # Rollback on error to keep connection healthy
                     continue
 
-            # Commit all messages
+            # Log final summary
             if ingested_count > 0:
-                db.commit()
-                logger.info(f"Successfully committed {ingested_count} calls to database")
+                logger.info(f"Successfully ingested {ingested_count} calls to database")
+
+            if skipped_count > 0:
+                logger.info(f"Skipped {skipped_count} calls that were already ingested")
 
             # Update integration sync status
             integration.last_synced_at = datetime.now(timezone.utc)
