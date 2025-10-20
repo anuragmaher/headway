@@ -63,6 +63,11 @@ interface Feature {
   status: string;
   mention_count: number;
   theme_id: string | null;
+  theme?: {
+    id: string;
+    name: string;
+    description: string;
+  } | null;
   first_mentioned: string;
   last_mentioned: string;
   created_at: string;
@@ -581,6 +586,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                           <TableRow>
                             <TableCell sx={{ fontWeight: 600 }}>#</TableCell>
                             <TableCell sx={{ fontWeight: 600 }}>Feature</TableCell>
+                            <TableCell sx={{ fontWeight: 600 }}>Theme</TableCell>
                             <TableCell sx={{ fontWeight: 600 }}>Mentions</TableCell>
                             <TableCell sx={{ fontWeight: 600 }}>Urgency</TableCell>
                             <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
@@ -598,6 +604,31 @@ export function ExecutiveInsightsPage(): JSX.Element {
                                 <Typography variant="body2" sx={{ fontWeight: 500 }}>
                                   {feature.name}
                                 </Typography>
+                              </TableCell>
+                              <TableCell>
+                                {feature.theme ? (
+                                  <Chip
+                                    label={feature.theme.name}
+                                    size="small"
+                                    sx={{
+                                      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.15)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+                                      color: theme.palette.primary.main,
+                                      border: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+                                      fontWeight: 500,
+                                    }}
+                                  />
+                                ) : (
+                                  <Chip
+                                    label="No Theme"
+                                    size="small"
+                                    sx={{
+                                      background: alpha(theme.palette.text.secondary, 0.1),
+                                      color: theme.palette.text.secondary,
+                                      border: `1px solid ${alpha(theme.palette.text.secondary, 0.3)}`,
+                                      fontWeight: 500,
+                                    }}
+                                  />
+                                )}
                               </TableCell>
                               <TableCell>
                                 <Chip

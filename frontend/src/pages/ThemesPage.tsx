@@ -148,7 +148,7 @@ export function ThemesPage(): JSX.Element {
   const [selectedThemeForMenu, setSelectedThemeForMenu] = useState<Theme | null>(null);
 
   // Sorting and filtering state
-  const [sortBy, setSortBy] = useState<string>('last_mentioned'); // last_mentioned, name, mention_count
+  const [sortBy, setSortBy] = useState<string>('mention_count'); // last_mentioned, name, mention_count
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterUrgency, setFilterUrgency] = useState<string>('all');
