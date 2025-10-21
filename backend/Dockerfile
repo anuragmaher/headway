@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12.3-slim-bookworm
 
 # Set Python to run in unbuffered mode (so print statements show up immediately)
 ENV PYTHONUNBUFFERED=1

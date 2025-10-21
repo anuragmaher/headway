@@ -125,76 +125,17 @@ export function ExecutiveInsightsPage(): JSX.Element {
         'Content-Type': 'application/json',
       };
 
-      // Fetch themes
-      const themesRes = await fetch(
-        `${API_BASE_URL}/api/v1/features/themes?workspace_id=${WORKSPACE_ID}`,
+      // Fetch all executive insights data from optimized endpoint
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/features/executive-insights?workspace_id=${WORKSPACE_ID}`,
         { headers }
       );
-      if (!themesRes.ok) throw new Error('Failed to fetch themes');
-      const themesData = await themesRes.json();
+      if (!response.ok) throw new Error('Failed to fetch executive insights');
+      const data = await response.json();
 
-      // Fetch all features
-      const featuresRes = await fetch(
-        `${API_BASE_URL}/api/v1/features/features?workspace_id=${WORKSPACE_ID}`,
-        { headers }
-      );
-      if (!featuresRes.ok) throw new Error('Failed to fetch features');
-      const featuresData: Feature[] = await featuresRes.json();
-
-      // Calculate metrics
-      const statusCounts = {
-        new: featuresData.filter(f => f.status === 'new').length,
-        in_progress: featuresData.filter(f => f.status === 'in_progress').length,
-        completed: featuresData.filter(f => f.status === 'completed').length,
-        on_hold: featuresData.filter(f => f.status === 'on_hold').length,
-      };
-
-      const urgencyCounts = {
-        critical: featuresData.filter(f => f.urgency === 'critical').length,
-        high: featuresData.filter(f => f.urgency === 'high').length,
-        medium: featuresData.filter(f => f.urgency === 'medium').length,
-        low: featuresData.filter(f => f.urgency === 'low').length,
-      };
-
-      const totalMentions = featuresData.reduce((sum, f) => sum + f.mention_count, 0);
-
-      // Get top themes by feature count
-      const topThemes = themesData
-        .sort((a: Theme, b: Theme) => b.feature_count - a.feature_count)
-        .slice(0, 5)
-        .map((t: Theme) => ({ name: t.name, feature_count: t.feature_count }));
-
-      // Calculate recent activity (this week vs last week)
-      const now = new Date();
-      const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
-
-      const featuresThisWeek = featuresData.filter(f =>
-        new Date(f.created_at) >= oneWeekAgo
-      ).length;
-
-      const featuresLastWeek = featuresData.filter(f =>
-        new Date(f.created_at) >= twoWeeksAgo && new Date(f.created_at) < oneWeekAgo
-      ).length;
-
-      setMetrics({
-        total_features: featuresData.length,
-        total_themes: themesData.length,
-        total_mentions: totalMentions,
-        features_by_status: statusCounts,
-        features_by_urgency: urgencyCounts,
-        top_themes: topThemes,
-        recent_activity: {
-          features_this_week: featuresThisWeek,
-          features_last_week: featuresLastWeek,
-        },
-      });
-
-      // Get top 10 most mentioned features
-      const topMentioned = [...featuresData]
-        .sort((a, b) => b.mention_count - a.mention_count)
-        .slice(0, 10);
-      setTopFeatures(topMentioned);
+      // Set metrics and top features directly from API response
+      setMetrics(data.metrics);
+      setTopFeatures(data.top_features);
 
     } catch (err) {
       console.error('Error fetching data:', err);

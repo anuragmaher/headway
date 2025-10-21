@@ -1378,3 +1378,173 @@ async def get_dashboard_top_mrr(
     except Exception as e:
         logger.error(f"Error getting top MRR: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/executive-insights")
+async def get_executive_insights(
+    workspace_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get executive insights dashboard data - OPTIMIZED with SQL aggregations
+
+    Returns all metrics needed for the Executive Insights page in a single response:
+    - Summary metrics (counts, totals)
+    - Features by status
+    - Features by urgency
+    - Top themes by feature count
+    - Top 10 features by mentions
+    - Recent activity (this week vs last week)
+    """
+    try:
+        from sqlalchemy import func, case
+        from datetime import datetime, timedelta
+
+        # 1. Summary metrics - all in SQL
+        total_features = db.query(func.count(Feature.id)).filter(
+            Feature.workspace_id == workspace_id
+        ).scalar() or 0
+
+        total_themes = db.query(func.count(Theme.id)).filter(
+            Theme.workspace_id == workspace_id
+        ).scalar() or 0
+
+        total_mentions = db.query(func.coalesce(func.sum(Feature.mention_count), 0)).filter(
+            Feature.workspace_id == workspace_id
+        ).scalar() or 0
+
+        # 2. Features by status - aggregated in SQL
+        features_by_status = db.query(
+            Feature.status,
+            func.count(Feature.id).label('count')
+        ).filter(
+            Feature.workspace_id == workspace_id
+        ).group_by(Feature.status).all()
+
+        status_counts = {
+            'new': 0,
+            'in_progress': 0,
+            'completed': 0,
+            'on_hold': 0
+        }
+        for status, count in features_by_status:
+            if status in status_counts:
+                status_counts[status] = count
+
+        # 3. Features by urgency - aggregated in SQL
+        features_by_urgency = db.query(
+            Feature.urgency,
+            func.count(Feature.id).label('count')
+        ).filter(
+            Feature.workspace_id == workspace_id
+        ).group_by(Feature.urgency).all()
+
+        urgency_counts = {
+            'critical': 0,
+            'high': 0,
+            'medium': 0,
+            'low': 0
+        }
+        for urgency, count in features_by_urgency:
+            if urgency in urgency_counts:
+                urgency_counts[urgency] = count
+
+        # 4. Top themes - aggregated in SQL with subquery for accurate feature count
+        top_themes = db.query(
+            Theme.id,
+            Theme.name,
+            func.count(Feature.id).label('feature_count')
+        ).outerjoin(
+            Feature, Feature.theme_id == Theme.id
+        ).filter(
+            Theme.workspace_id == workspace_id
+        ).group_by(
+            Theme.id, Theme.name
+        ).order_by(
+            func.count(Feature.id).desc()
+        ).limit(5).all()
+
+        # 5. Top 10 features by mentions - with theme info
+        top_features = db.query(
+            Feature.id,
+            Feature.name,
+            Feature.description,
+            Feature.urgency,
+            Feature.status,
+            Feature.mention_count,
+            Feature.theme_id,
+            Feature.first_mentioned,
+            Feature.last_mentioned,
+            Feature.created_at,
+            Feature.updated_at,
+            Theme.id.label('theme_id_obj'),
+            Theme.name.label('theme_name'),
+            Theme.description.label('theme_description')
+        ).outerjoin(
+            Theme, Feature.theme_id == Theme.id
+        ).filter(
+            Feature.workspace_id == workspace_id
+        ).order_by(
+            Feature.mention_count.desc()
+        ).limit(10).all()
+
+        # 6. Recent activity - this week vs last week
+        now = datetime.utcnow()
+        one_week_ago = now - timedelta(days=7)
+        two_weeks_ago = now - timedelta(days=14)
+
+        features_this_week = db.query(func.count(Feature.id)).filter(
+            Feature.workspace_id == workspace_id,
+            Feature.created_at >= one_week_ago
+        ).scalar() or 0
+
+        features_last_week = db.query(func.count(Feature.id)).filter(
+            Feature.workspace_id == workspace_id,
+            Feature.created_at >= two_weeks_ago,
+            Feature.created_at < one_week_ago
+        ).scalar() or 0
+
+        # Format response
+        return {
+            'metrics': {
+                'total_features': total_features,
+                'total_themes': total_themes,
+                'total_mentions': total_mentions,
+                'features_by_status': status_counts,
+                'features_by_urgency': urgency_counts,
+                'top_themes': [
+                    {'name': name, 'feature_count': count}
+                    for _, name, count in top_themes
+                ],
+                'recent_activity': {
+                    'features_this_week': features_this_week,
+                    'features_last_week': features_last_week
+                }
+            },
+            'top_features': [
+                {
+                    'id': str(feature.id),
+                    'name': feature.name,
+                    'description': feature.description,
+                    'urgency': feature.urgency,
+                    'status': feature.status,
+                    'mention_count': feature.mention_count,
+                    'theme_id': str(feature.theme_id) if feature.theme_id else None,
+                    'theme': {
+                        'id': str(feature.theme_id_obj),
+                        'name': feature.theme_name,
+                        'description': feature.theme_description
+                    } if feature.theme_id_obj else None,
+                    'first_mentioned': feature.first_mentioned.isoformat() if feature.first_mentioned else None,
+                    'last_mentioned': feature.last_mentioned.isoformat() if feature.last_mentioned else None,
+                    'created_at': feature.created_at.isoformat(),
+                    'updated_at': feature.updated_at.isoformat() if feature.updated_at else None
+                }
+                for feature in top_features
+            ]
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting executive insights: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
