@@ -35,6 +35,7 @@ from app.models.theme import Theme
 from app.models.feature import Feature
 from app.services.ai_extraction_service import get_ai_extraction_service
 from app.services.ai_feature_matching_service import get_ai_feature_matching_service
+from app.services.transcript_ingestion_service import get_transcript_ingestion_service
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -487,6 +488,9 @@ async def ingest_gong_calls(
                 logger.warning("No calls found in the specified date range")
                 return 0
 
+            # Initialize transcript ingestion service
+            transcript_service = get_transcript_ingestion_service(db)
+
             # Process and store calls
             ingested_count = 0
             skipped_count = 0
@@ -499,20 +503,6 @@ async def ingest_gong_calls(
 
                     if not call_id:
                         logger.warning("Call has no ID, skipping")
-                        continue
-
-                    # Check if call already exists
-                    existing_message = db.query(Message).filter(
-                        and_(
-                            Message.external_id == call_id,
-                            Message.integration_id == integration.id,
-                            Message.source == "gong"
-                        )
-                    ).first()
-
-                    if existing_message:
-                        logger.info(f"Skipping call {call_id} (already ingested): {metadata.get('title', 'Untitled Call')}")
-                        skipped_count += 1
                         continue
 
                     # Extract call information from metaData
@@ -542,15 +532,6 @@ async def ingest_gong_calls(
                     if not primary_party and participants:
                         primary_party = participants[0]
 
-                    # Build content from call metadata
-                    content = f"Call: {title}\n"
-                    if duration_seconds:
-                        minutes = duration_seconds // 60
-                        content += f"Duration: {minutes} minutes\n"
-                    if participants:
-                        participant_names = [p['name'] for p in participants]
-                        content += f"Participants: {', '.join(participant_names)}\n"
-
                     # Fetch transcript if requested
                     transcript_data = None
                     transcript_text = ""
@@ -569,8 +550,6 @@ async def ingest_gong_calls(
                                     speaker_map[party_id] = party_name
 
                             if transcript_items:
-                                content += "\n--- Conversation ---\n\n"
-
                                 last_speaker = None
                                 for item in transcript_items:
                                     speaker_id = item.get('speakerId', 'Unknown')
@@ -584,10 +563,8 @@ async def ingest_gong_calls(
                                         if text:
                                             # Add extra newline when speaker changes for better readability
                                             if last_speaker and last_speaker != speaker_name:
-                                                content += "\n"
                                                 transcript_text += "\n"
 
-                                            content += f"{speaker_name}: {text}\n"
                                             transcript_text += f"{speaker_name}: {text}\n"
                                             last_speaker = speaker_name
 
@@ -603,209 +580,43 @@ async def ingest_gong_calls(
                         # Flush to get customer ID
                         db.flush()
 
-                    # Extract features and insights using AI
-                    ai_insights = None
-                    if extract_features and transcript_text:
-                        try:
-                            logger.info(f"Extracting features from call: {title}")
-                            ai_service = get_ai_extraction_service()
+                    # Prepare message metadata
+                    message_metadata = {
+                        "call_id": call_id,
+                        "title": title,
+                        "scheduled": scheduled,
+                        "started": started,
+                        "duration_seconds": duration_seconds,
+                        "participants": participants,
+                        "has_transcript": transcript_data is not None,
+                        "hubspot_context": hubspot_data,  # Extracted HubSpot data
+                        "raw_call_data": call_data,
+                        "transcript_data": transcript_data  # Full JSON response
+                    }
 
-                            # Pass customer context for better extraction
-                            customer_name = customer.name if customer else None
-                            customer_mrr = customer.mrr if customer else None
-
-                            ai_insights = ai_service.extract_insights(
-                                transcript=transcript_text,
-                                customer_name=customer_name,
-                                customer_mrr=customer_mrr,
-                                themes=themes_list if themes_list else None
-                            )
-
-                            logger.info(
-                                f"Extracted {len(ai_insights.get('feature_requests', []))} features, "
-                                f"{len(ai_insights.get('bug_reports', []))} bugs from call {call_id}"
-                            )
-
-                        except Exception as e:
-                            logger.warning(f"Failed to extract AI insights for call {call_id}: {e}")
-                            ai_insights = None
-
-                    # Create message object
-                    message = Message(
+                    # Use transcript ingestion service to handle processing
+                    message_id = transcript_service.ingest_transcript(
+                        workspace_id=workspace_id,
                         external_id=call_id,
-                        content=content,
+                        transcript_text=transcript_text,
                         source="gong",
+                        metadata=message_metadata,
                         channel_name="Gong Calls",
                         channel_id="gong_calls",
                         author_name=primary_party['name'] if primary_party else 'Unknown',
-                        author_id=None,
                         author_email=primary_party.get('email') if primary_party else None,
-                        customer_id=customer.id if customer else None,  # Link to customer
-                        message_metadata={
-                            "call_id": call_id,
-                            "title": title,
-                            "scheduled": scheduled,
-                            "started": started,
-                            "duration_seconds": duration_seconds,
-                            "participants": participants,
-                            "has_transcript": transcript_data is not None,
-                            "transcript_text": transcript_text,  # Clean conversation text
-                            "hubspot_context": hubspot_data,  # Extracted HubSpot data
-                            "raw_call_data": call_data,
-                            "transcript_data": transcript_data  # Full JSON response
-                        },
-                        ai_insights=ai_insights,  # AI-extracted features and bugs in separate column
-                        thread_id=None,
-                        is_thread_reply=False,
-                        workspace_id=workspace_id,
-                        integration_id=integration.id,
+                        author_id=None,
+                        customer_id=customer.id if customer else None,
                         sent_at=call_time,
-                        is_processed=False
+                        integration_id=integration.id,
+                        extract_features=extract_features
                     )
 
-                    db.add(message)
-                    db.commit()  # Commit message first to get ID
-                    ingested_count += 1
-                    logger.info(f"Ingested call: {title} (ID: {call_id})")
-
-                    # Create features from AI insights immediately
-                    if ai_insights and 'feature_requests' in ai_insights:
-                        feature_requests = ai_insights.get('feature_requests', [])
-                        features_created_count = 0
-                        features_matched_count = 0
-
-                        # Initialize matching service
-                        matching_service = get_ai_feature_matching_service()
-
-                        for feature_data in feature_requests:
-                            feature_title = feature_data.get('title', '')
-                            feature_description = feature_data.get('description', '')
-                            feature_theme = feature_data.get('theme', 'Uncategorized')
-                            feature_urgency = feature_data.get('urgency', 'medium')
-
-                            if not feature_title:
-                                continue
-
-                            # Find matching theme
-                            feature_theme_obj = themes_dict.get(feature_theme.lower()) if feature_theme else None
-
-                            # Validate theme assignment with confidence threshold of 0.8
-                            if feature_theme_obj:
-                                theme_validation = matching_service.validate_theme_assignment(
-                                    feature_title=feature_title,
-                                    feature_description=feature_description,
-                                    suggested_theme=feature_theme_obj.name,
-                                    theme_description=feature_theme_obj.description or ""
-                                )
-
-                                if not theme_validation["is_valid"]:
-                                    logger.info(
-                                        f"  ✗ Skipping feature '{feature_title}' - theme validation failed "
-                                        f"(confidence: {theme_validation['confidence']:.2f} < 0.8). "
-                                        f"Reason: {theme_validation['reasoning']}"
-                                    )
-                                    continue
-                                else:
-                                    logger.info(
-                                        f"  ✓ Theme validated: '{feature_title}' → '{feature_theme_obj.name}' "
-                                        f"(confidence: {theme_validation['confidence']:.2f})"
-                                    )
-                            else:
-                                # No theme found - skip this feature
-                                logger.info(
-                                    f"  ✗ Skipping feature '{feature_title}' - no matching theme found "
-                                    f"(suggested theme: '{feature_theme}')"
-                                )
-                                continue
-
-                            # Get all existing features in the same theme for intelligent matching
-                            existing_features_in_theme = db.query(Feature).filter(
-                                Feature.workspace_id == workspace_id,
-                                Feature.theme_id == (feature_theme_obj.id if feature_theme_obj else None)
-                            ).all()
-
-                            # Prepare data for LLM matching
-                            existing_features_data = [
-                                {
-                                    "id": str(f.id),
-                                    "name": f.name,
-                                    "description": f.description or ""
-                                }
-                                for f in existing_features_in_theme
-                            ]
-
-                            # Use LLM to find matching feature with semantic understanding
-                            match_result = matching_service.find_matching_feature(
-                                new_feature={
-                                    "title": feature_title,
-                                    "description": feature_description
-                                },
-                                existing_features=existing_features_data,
-                                confidence_threshold=0.7
-                            )
-
-                            if match_result["is_duplicate"]:
-                                # Link message to existing feature
-                                existing_feature = db.query(Feature).filter(
-                                    Feature.id == match_result["matching_feature_id"]
-                                ).first()
-
-                                if existing_feature:
-                                    # Add message to feature's messages (many-to-many)
-                                    if message not in existing_feature.messages:
-                                        existing_feature.messages.append(message)
-                                        existing_feature.mention_count = len(existing_feature.messages)
-                                        existing_feature.last_mentioned = message.sent_at
-                                        existing_feature.updated_at = datetime.now(timezone.utc)
-
-                                    features_matched_count += 1
-                                    logger.info(
-                                        f"  ✓ Matched to existing: '{existing_feature.name}' "
-                                        f"(confidence: {match_result['confidence']:.2f}) - {match_result['reasoning']}"
-                                    )
-                                else:
-                                    logger.warning(f"Matching feature {match_result['matching_feature_id']} not found, creating new")
-                                    # Fall through to create new feature
-                                    match_result["is_duplicate"] = False
-
-                            if not match_result["is_duplicate"]:
-                                # Create new feature
-                                new_feature = Feature(
-                                    name=feature_title,
-                                    description=feature_description,
-                                    workspace_id=workspace_id,
-                                    theme_id=feature_theme_obj.id if feature_theme_obj else None,
-                                    status='new',
-                                    urgency=feature_urgency,
-                                    mention_count=1,
-                                    first_mentioned=message.sent_at,
-                                    last_mentioned=message.sent_at
-                                )
-
-                                db.add(new_feature)
-                                db.flush()  # Get the ID
-
-                                # Link message to new feature
-                                new_feature.messages.append(message)
-
-                                features_created_count += 1
-                                logger.info(
-                                    f"  ✓ Created new: '{feature_title}' "
-                                    f"(confidence it's unique: {1.0 - match_result['confidence']:.2f})"
-                                )
-
-                        # Commit all feature changes
-                        if features_created_count > 0 or features_matched_count > 0:
-                            db.commit()
-                            logger.info(
-                                f"  → Created {features_created_count} new features, "
-                                f"matched {features_matched_count} to existing features"
-                            )
-
-                        # Mark message as processed
-                        message.is_processed = True
-                        message.processed_at = datetime.now(timezone.utc)
-                        db.commit()
+                    if message_id:
+                        ingested_count += 1
+                        logger.info(f"Ingested call: {title} (ID: {call_id})")
+                    else:
+                        skipped_count += 1
 
                 except Exception as e:
                     logger.error(f"Error processing call {call_data.get('id', 'unknown')}: {e}")

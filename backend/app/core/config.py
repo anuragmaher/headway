@@ -35,6 +35,11 @@ class Settings(BaseSettings):
     GONG_SECRET_KEY: Optional[str] = None
     GONG_API_BASE_URL: str = "https://api.gong.io"
 
+    # Fathom Integration
+    FATHOM_API_TOKEN: Optional[str] = None
+    FATHOM_PROJECT_ID: Optional[str] = None
+    FATHOM_API_BASE_URL: str = "https://api.fathom.com"
+
     # Environment
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     DEBUG: bool = os.getenv("DEBUG", "true").lower() in ("true", "1", "yes")
