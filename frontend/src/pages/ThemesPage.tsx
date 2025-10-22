@@ -798,6 +798,10 @@ export function ThemesPage(): JSX.Element {
               borderColor: theme.palette.primary.main,
               transform: 'translateX(4px)',
             },
+            '&:hover .theme-menu-button': {
+              opacity: 1,
+              visibility: 'visible',
+            }
           }}
           onClick={() => handleThemeClick(themeItem)}
         >
@@ -824,50 +828,53 @@ export function ThemesPage(): JSX.Element {
 
           </Box>
 
-          {/* Actions - Dropdown Menu */}
-          <Box>
+          {/* Actions - Dropdown Menu - Hidden on non-hover */}
+          <IconButton
+            className="theme-menu-button"
+            size="small"
+            onClick={(e) => handleMenuOpen(e, themeItem)}
+            sx={{
+              width: 28,
+              height: 28,
+              opacity: 0,
+              visibility: 'hidden',
+              transition: 'opacity 0.2s ease-in-out, visibility 0.2s ease-in-out',
+              color: theme.palette.text.secondary,
+              '&:hover': {
+                bgcolor: alpha(theme.palette.primary.main, 0.1),
+                color: theme.palette.primary.main
+              }
+            }}
+            title="More options"
+          >
+            <MoreVertIcon sx={{ fontSize: 16 }} />
+          </IconButton>
+
+          {/* Expand/Collapse button */}
+          {hasChildren && (
             <IconButton
               size="small"
-              onClick={(e) => handleMenuOpen(e, themeItem)}
-              sx={{
-                width: 32,
-                height: 32,
-                bgcolor: alpha(theme.palette.grey[500], 0.1),
-                '&:hover': { bgcolor: alpha(theme.palette.grey[500], 0.2) }
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleThemeExpansion(themeItem.id);
               }}
-              title="More options"
+              sx={{
+                width: 28,
+                height: 28,
+                color: theme.palette.text.secondary,
+                '&:hover': {
+                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                  color: theme.palette.primary.main
+                }
+              }}
             >
-              <MoreVertIcon sx={{ fontSize: 16 }} />
+              {isExpanded ? (
+                <ExpandMoreIcon sx={{ fontSize: 18 }} />
+              ) : (
+                <ChevronRightIcon sx={{ fontSize: 18 }} />
+              )}
             </IconButton>
-          </Box>
-
-          {/* Expand/Collapse button - always reserve space */}
-          <Box sx={{ width: 28, height: 28 }}>
-            {hasChildren && (
-              <IconButton
-                size="small"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleThemeExpansion(themeItem.id);
-                }}
-                sx={{
-                  width: 28,
-                  height: 28,
-                  color: theme.palette.text.secondary,
-                  '&:hover': {
-                    bgcolor: alpha(theme.palette.primary.main, 0.1),
-                    color: theme.palette.primary.main
-                  }
-                }}
-              >
-                {isExpanded ? (
-                  <ExpandMoreIcon sx={{ fontSize: 18 }} />
-                ) : (
-                  <ChevronRightIcon sx={{ fontSize: 18 }} />
-                )}
-              </IconButton>
-            )}
-          </Box>
+          )}
         </Box>
 
         {/* Render sub-themes only when expanded */}
@@ -1378,7 +1385,7 @@ export function ThemesPage(): JSX.Element {
               storageKey="themes-page-left-panel-width"
               minWidth={250}
               maxWidth={600}
-              defaultWidth={400}
+              defaultWidth={300}
             >
               <Card sx={{
                 borderRadius: 1,
