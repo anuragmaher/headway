@@ -1251,27 +1251,6 @@ export function ThemesPage(): JSX.Element {
                       </Box>
                     </Box>
 
-                    {/* Theme Description - only show when displaying features */}
-                    {!showingAllFeatures && !showingSubThemes && selectedThemeForDrawer?.description && (
-                      <Box sx={{
-                        p: 2,
-                        borderRadius: 2,
-                        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
-                        border: `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
-                        mb: 3,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 1
-                      }}>
-                        <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6, flex: 1 }}>
-                          Theme Details
-                        </Typography>
-                        <Tooltip title={selectedThemeForDrawer.description} arrow placement="top">
-                          <InfoIcon sx={{ fontSize: 18, color: theme.palette.text.secondary, cursor: 'help', '&:hover': { color: theme.palette.primary.main }, flexShrink: 0 }} />
-                        </Tooltip>
-                      </Box>
-                    )}
-
                     {/* Dashboard or Features List */}
                     <Box sx={{ flex: 1, overflow: 'auto' }}>
                       {showingAllFeatures ? (
@@ -2494,27 +2473,6 @@ export function ThemesPage(): JSX.Element {
                 <CloseIcon />
               </IconButton>
             </Box>
-
-            {/* Theme Description */}
-            {selectedThemeForDrawer?.description && (
-              <Box sx={{
-                p: 2,
-                borderRadius: 2,
-                background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
-                border: `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
-                mb: 3,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1
-              }}>
-                <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6, flex: 1 }}>
-                  Theme Details
-                </Typography>
-                <Tooltip title={selectedThemeForDrawer.description} arrow placement="top">
-                  <InfoIcon sx={{ fontSize: 18, color: theme.palette.text.secondary, cursor: 'help', '&:hover': { color: theme.palette.primary.main }, flexShrink: 0 }} />
-                </Tooltip>
-              </Box>
-            )}
 
             {/* Features List */}
             <Box sx={{ flex: 1, overflow: 'auto' }}>
