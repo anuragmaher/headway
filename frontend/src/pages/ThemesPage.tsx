@@ -2,7 +2,7 @@
  * Themes page for managing and organizing feature request themes
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Typography,
@@ -159,6 +159,12 @@ export function ThemesPage(): JSX.Element {
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  // Resizable mentions layout state
+  const [featuresWidth, setFeaturesWidth] = useState(40); // 40%
+  const [mentionsListWidth, setMentionsListWidth] = useState(20); // 20%
+  const [isResizingMentions, setIsResizingMentions] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const WORKSPACE_ID = '647ab033-6d10-4a35-9ace-0399052ec874';
 
   // Helper function to organize themes hierarchically
@@ -211,6 +217,53 @@ export function ThemesPage(): JSX.Element {
   React.useEffect(() => {
     setExpandedThemes(new Set()); // Empty set = all collapsed
   }, [themes]);
+
+  // Handle resizing of mentions layout panels
+  React.useEffect(() => {
+    if (!isResizingMentions) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+
+      const container = containerRef.current;
+      const rect = container.getBoundingClientRect();
+      const relativeX = e.clientX - rect.left;
+      const containerWidth = rect.width;
+      const totalPercent = 100;
+
+      // Calculate the position after first panel (features)
+      // Features starts at 0, mentions list is after features
+      const featuresPixels = (featuresWidth / 100) * containerWidth;
+
+      // If we're dragging the first divider (between features and mentions)
+      if (e.clientX > rect.left && e.clientX < rect.left + containerWidth) {
+        const newFeaturesWidth = (relativeX / containerWidth) * totalPercent;
+        const remainingWidth = totalPercent - newFeaturesWidth;
+
+        // Set features width and adjust mentions/details proportionally
+        if (newFeaturesWidth >= 20 && newFeaturesWidth <= 60) {
+          setFeaturesWidth(newFeaturesWidth);
+          // Keep mentions list at roughly 20% of remaining space or adjust proportionally
+          const newMentionsWidth = (mentionsListWidth / (totalPercent - featuresWidth)) * remainingWidth;
+          if (newMentionsWidth >= 10 && newMentionsWidth <= remainingWidth - 10) {
+            setMentionsListWidth(newMentionsWidth);
+          }
+        }
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsResizingMentions(false);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizingMentions, featuresWidth, mentionsListWidth]);
 
   const toggleThemeExpansion = (themeId: string) => {
     setExpandedThemes(prev => {
@@ -962,408 +1015,6 @@ export function ThemesPage(): JSX.Element {
     );
   }
 
-  // Show full-page messages view when selected
-  if (showMessagesFullPage && selectedFeatureForMessages) {
-    return (
-      <AdminLayout>
-        <Box sx={{ height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column' }}>
-          {/* Messages View Header */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3, pb: 2, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
-            <IconButton
-              onClick={handleBackFromMessages}
-              sx={{
-                borderRadius: 2,
-                bgcolor: alpha(theme.palette.primary.main, 0.1),
-                '&:hover': {
-                  bgcolor: alpha(theme.palette.primary.main, 0.2),
-                }
-              }}
-            >
-              <ArrowBackIcon sx={{ color: theme.palette.primary.main }} />
-            </IconButton>
-            <Box sx={{
-              width: 40,
-              height: 40,
-              borderRadius: 2,
-              background: `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.info.dark} 100%)`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              <MessageIcon sx={{ color: 'white', fontSize: 20 }} />
-            </Box>
-            <Box sx={{ flex: 1 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                Messages & Mentions
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {selectedFeatureForMessages.name}
-              </Typography>
-            </Box>
-          </Box>
-
-          {/* Feature Summary */}
-          <Box sx={{
-            p: 2,
-            borderRadius: 2,
-            background: `linear-gradient(135deg, ${alpha(theme.palette.info.main, 0.04)} 0%, ${alpha(theme.palette.info.main, 0.02)} 100%)`,
-            border: `1px solid ${alpha(theme.palette.info.main, 0.08)}`,
-            mb: 3
-          }}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-              {selectedFeatureForMessages.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6, mb: 2 }}>
-              {selectedFeatureForMessages.description}
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-              <Chip
-                label={selectedFeatureForMessages.urgency}
-                size="small"
-                color={getUrgencyColor(selectedFeatureForMessages.urgency) as any}
-              />
-              <Chip
-                label={selectedFeatureForMessages.status}
-                size="small"
-                color={getStatusColor(selectedFeatureForMessages.status) as any}
-                variant="outlined"
-              />
-              <Chip
-                label={`${selectedFeatureForMessages.mention_count} mentions`}
-                size="small"
-                variant="outlined"
-              />
-            </Box>
-          </Box>
-
-          {/* Split Panel Messages View */}
-          <Box sx={{ flex: 1, display: 'flex', gap: 2 }}>
-            {/* Left Panel - Messages List (20%) */}
-            <Box sx={{ flex: '0 0 20%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-              <Card sx={{
-                borderRadius: 1,
-                background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
-                border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-              }}>
-                <CardContent sx={{ p: 1.5, flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  {loadingMessages ? (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
-                      <CircularProgress size={24} />
-                    </Box>
-                  ) : featureMessages.length === 0 ? (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
-                      <Typography variant="body2" color="text.secondary">No messages</Typography>
-                    </Box>
-                  ) : (
-                    featureMessages.map((message) => {
-                      // Count insights for summary
-                      const insightCounts = {
-                        features: message.ai_insights?.feature_requests?.length || 0,
-                        bugs: message.ai_insights?.bug_reports?.length || 0,
-                        painPoints: message.ai_insights?.pain_points?.length || 0,
-                      };
-                      const totalInsights = insightCounts.features + insightCounts.bugs + insightCounts.painPoints;
-                      const isSelected = selectedMessageId === message.id;
-
-                      return (
-                        <Box
-                          key={message.id}
-                          onClick={() => setSelectedMessageId(message.id)}
-                          sx={{
-                            p: 1.5,
-                            borderRadius: 1,
-                            cursor: 'pointer',
-                            background: isSelected
-                              ? alpha(theme.palette.primary.main, 0.1)
-                              : 'transparent',
-                            border: isSelected
-                              ? `2px solid ${theme.palette.primary.main}`
-                              : `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-                            transition: 'all 0.2s ease-in-out',
-                            '&:hover': {
-                              background: alpha(theme.palette.primary.main, 0.06),
-                              border: `2px solid ${alpha(theme.palette.primary.main, 0.5)}`,
-                            },
-                          }}
-                        >
-                          {/* Customer Name */}
-                          <Typography variant="subtitle2" fontWeight="bold" color="primary" noWrap>
-                            {message.customer_name || message.sender_name || 'Unknown'}
-                          </Typography>
-
-                          {/* Email */}
-                          <Typography variant="caption" color="text.secondary" noWrap display="block">
-                            {message.customer_email || message.sender_name}
-                          </Typography>
-
-                          {/* Date */}
-                          <Typography variant="caption" color="text.secondary" noWrap display="block" sx={{ mt: 0.5 }}>
-                            {formatDate(message.sent_at)}
-                          </Typography>
-
-                          {/* Insight Counts */}
-                          {totalInsights > 0 && (
-                            <Box sx={{ display: 'flex', gap: 0.25, flexWrap: 'wrap', mt: 0.75 }}>
-                              {insightCounts.features > 0 && (
-                                <Chip
-                                  label={insightCounts.features}
-                                  size="small"
-                                  color="info"
-                                  variant="filled"
-                                  sx={{ height: 20 }}
-                                />
-                              )}
-                              {insightCounts.bugs > 0 && (
-                                <Chip
-                                  label={insightCounts.bugs}
-                                  size="small"
-                                  color="error"
-                                  variant="filled"
-                                  sx={{ height: 20 }}
-                                />
-                              )}
-                              {insightCounts.painPoints > 0 && (
-                                <Chip
-                                  label={insightCounts.painPoints}
-                                  size="small"
-                                  color="warning"
-                                  variant="filled"
-                                  sx={{ height: 20 }}
-                                />
-                              )}
-                            </Box>
-                          )}
-                        </Box>
-                      );
-                    })
-                  )}
-                </CardContent>
-              </Card>
-            </Box>
-
-            {/* Right Panel - Message Details (80%) */}
-            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-              {selectedMessageId && featureMessages.length > 0 ? (
-                (() => {
-                  const selectedMessage = featureMessages.find(m => m.id === selectedMessageId);
-                  if (!selectedMessage) return null;
-
-                  return (
-                    <Card sx={{
-                      borderRadius: 1,
-                      background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
-                      border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                    }}>
-                      <CardContent sx={{ flex: 1, overflow: 'auto', p: 2.5 }}>
-                        {/* Header */}
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2.5, pb: 2, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
-                          <Box>
-                            <Typography variant="h6" fontWeight="bold" color="primary">
-                              {selectedMessage.customer_name || selectedMessage.sender_name || 'Unknown'}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {selectedMessage.customer_email || selectedMessage.sender_name}
-                            </Typography>
-                          </Box>
-                          <Typography variant="caption" color="text.secondary">
-                            {formatDate(selectedMessage.sent_at)}
-                          </Typography>
-                        </Box>
-
-                        {/* Message Content - AI Insights or Transcript */}
-                        {selectedMessage.ai_insights ? (
-                          <Box sx={{ width: '100%' }}>
-                            {/* Feature Requests */}
-                            {selectedMessage.ai_insights.feature_requests && selectedMessage.ai_insights.feature_requests.length > 0 && (
-                              <Box mb={2.5}>
-                                <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                                  Feature Requests:
-                                </Typography>
-                                {selectedMessage.ai_insights.feature_requests.map((feature, idx) => (
-                                  <Box key={idx} mb={1.5} pl={2}>
-                                    <Typography variant="body2" fontWeight="600">
-                                      {feature.title}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary" paragraph>
-                                      {feature.description}
-                                    </Typography>
-                                    <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-                                      "{feature.quote}"
-                                    </Typography>
-                                    <Box mt={0.5}>
-                                      <Chip
-                                        label={feature.urgency}
-                                        size="small"
-                                        color={feature.urgency === 'high' || feature.urgency === 'critical' ? 'error' : feature.urgency === 'medium' ? 'warning' : 'default'}
-                                      />
-                                    </Box>
-                                  </Box>
-                                ))}
-                              </Box>
-                            )}
-
-                            {/* Bug Reports */}
-                            {selectedMessage.ai_insights.bug_reports && selectedMessage.ai_insights.bug_reports.length > 0 && (
-                              <Box mb={2.5}>
-                                <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                                  Bug Reports:
-                                </Typography>
-                                {selectedMessage.ai_insights.bug_reports.map((bug, idx) => (
-                                  <Box key={idx} mb={1.5} pl={2}>
-                                    <Typography variant="body2" fontWeight="600">
-                                      {bug.title}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary" paragraph>
-                                      {bug.description}
-                                    </Typography>
-                                    <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-                                      "{bug.quote}"
-                                    </Typography>
-                                    <Box mt={0.5}>
-                                      <Chip
-                                        label={bug.severity}
-                                        size="small"
-                                        color={bug.severity === 'high' || bug.severity === 'critical' ? 'error' : bug.severity === 'medium' ? 'warning' : 'default'}
-                                      />
-                                    </Box>
-                                  </Box>
-                                ))}
-                              </Box>
-                            )}
-
-                            {/* Pain Points */}
-                            {selectedMessage.ai_insights.pain_points && selectedMessage.ai_insights.pain_points.length > 0 && (
-                              <Box mb={2.5}>
-                                <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                                  Pain Points:
-                                </Typography>
-                                {selectedMessage.ai_insights.pain_points.map((pain, idx) => (
-                                  <Box key={idx} mb={1.5} pl={2}>
-                                    <Typography variant="body2" color="text.secondary">
-                                      {pain.description}
-                                    </Typography>
-                                    <Typography variant="caption" color="text.secondary">
-                                      Impact: {pain.impact}
-                                    </Typography>
-                                    {pain.quote && (
-                                      <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', display: 'block', mt: 0.5 }}>
-                                        "{pain.quote}"
-                                      </Typography>
-                                    )}
-                                  </Box>
-                                ))}
-                              </Box>
-                            )}
-
-                            {/* Summary */}
-                            {selectedMessage.ai_insights.summary && (
-                              <Box mb={2.5}>
-                                <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                                  Summary:
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary" pl={2}>
-                                  {selectedMessage.ai_insights.summary}
-                                </Typography>
-                              </Box>
-                            )}
-
-                            {/* Sentiment */}
-                            {selectedMessage.ai_insights.sentiment && (
-                              <Box mb={2.5}>
-                                <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                                  Sentiment:
-                                </Typography>
-                                <Box pl={2}>
-                                  <Chip
-                                    label={`${selectedMessage.ai_insights.sentiment.overall} (${selectedMessage.ai_insights.sentiment.score})`}
-                                    size="small"
-                                    color={selectedMessage.ai_insights.sentiment.overall === 'positive' ? 'success' : selectedMessage.ai_insights.sentiment.overall === 'negative' ? 'error' : 'default'}
-                                  />
-                                  <Typography variant="caption" color="text.secondary" display="block" mt={1}>
-                                    {selectedMessage.ai_insights.sentiment.reasoning}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                            )}
-
-                            {/* Key Topics */}
-                            {selectedMessage.ai_insights.key_topics && selectedMessage.ai_insights.key_topics.length > 0 && (
-                              <Box mb={2.5}>
-                                <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                                  Key Topics:
-                                </Typography>
-                                <Box pl={2} display="flex" gap={0.5} flexWrap="wrap">
-                                  {selectedMessage.ai_insights.key_topics.map((topic, idx) => (
-                                    <Chip key={idx} label={topic} size="small" variant="outlined" />
-                                  ))}
-                                </Box>
-                              </Box>
-                            )}
-
-                            {/* Message Metadata */}
-                            <Box sx={{
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                              width: '100%',
-                              mt: 2.5,
-                              pt: 2,
-                              borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`
-                            }}>
-                              <Box>
-                                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                  {selectedMessage.sender_name}
-                                </Typography>
-                                <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-                                  in #{selectedMessage.channel_name}
-                                </Typography>
-                              </Box>
-                            </Box>
-                          </Box>
-                        ) : (
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{
-                              wordBreak: 'break-word',
-                              lineHeight: 1.6,
-                              whiteSpace: 'pre-wrap'
-                            }}
-                          >
-                            {selectedMessage.content}
-                          </Typography>
-                        )}
-                      </CardContent>
-                    </Card>
-                  );
-                })()
-              ) : (
-                <Card sx={{
-                  borderRadius: 1,
-                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
-                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                  height: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Select a message to view details
-                  </Typography>
-                </Card>
-              )}
-            </Box>
-          </Box>
-        </Box>
-      </AdminLayout>
-    );
-  }
 
   return (
     <AdminLayout>
@@ -1379,8 +1030,8 @@ export function ThemesPage(): JSX.Element {
 
         {/* Split Layout: Themes (Resizable) and Features (Flexible) */}
         <Box sx={{ display: 'flex', height: { xs: 'auto', md: 'calc(100vh - 120px)' }, gap: 2 }}>
-          {/* Themes List - Left Panel (Resizable) - Hidden on mobile */}
-          {!isMobile && (
+          {/* Themes List - Left Panel (Resizable) - Hidden on mobile or when showing mentions */}
+          {!isMobile && !showMessagesFullPage && (
             <ResizablePanel
               storageKey="themes-page-left-panel-width"
               minWidth={250}
@@ -1534,8 +1185,10 @@ export function ThemesPage(): JSX.Element {
             </ResizablePanel>
           )}
 
-          {/* Features List - Right Panel (Flexible) */}
-          <Box sx={{ flex: 1, display: 'flex', minWidth: 0 }}>
+          {/* Features and Mentions - Right Panels (Flexible) */}
+          <Box ref={containerRef} sx={{ flex: 1, display: 'flex', gap: 2, minWidth: 0 }}>
+            {/* Features List Panel - Dynamic width when showing mentions */}
+            <Box sx={{ flex: showMessagesFullPage ? `0 0 ${featuresWidth}%` : 1, display: 'flex', minWidth: 0 }}>
             <Card sx={{
               borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
@@ -2137,6 +1790,372 @@ export function ThemesPage(): JSX.Element {
                 )}
               </CardContent>
             </Card>
+            </Box>
+
+            {/* Draggable Divider - Between Features and Mentions */}
+            {showMessagesFullPage && selectedFeatureForMessages && (
+              <Box
+                onMouseDown={() => setIsResizingMentions(true)}
+                sx={{
+                  width: 4,
+                  cursor: 'col-resize',
+                  backgroundColor: alpha(theme.palette.divider, 0.5),
+                  transition: isResizingMentions ? 'none' : 'background-color 0.2s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: theme.palette.primary.main,
+                  },
+                  userSelect: 'none',
+                  flex: 'none',
+                }}
+              />
+            )}
+
+            {/* Mentions List Panel - Dynamic width when showing mentions */}
+            {showMessagesFullPage && selectedFeatureForMessages && (
+              <Box sx={{ flex: `0 0 ${mentionsListWidth}%`, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <Card sx={{
+                  borderRadius: 1,
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  height: { xs: 'auto', md: 'calc(100vh - 120px)' },
+                }}>
+                  <CardContent sx={{ p: 1.5, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    {/* Header */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1, mb: 1.5, pb: 1.5, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="caption" fontWeight="bold" color="primary" sx={{ fontSize: '0.75rem' }}>
+                          Mentions
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.65rem' }}>
+                          {featureMessages.length}
+                        </Typography>
+                      </Box>
+                      <IconButton
+                        onClick={handleBackFromMessages}
+                        size="small"
+                        sx={{
+                          color: theme.palette.text.secondary,
+                          '&:hover': {
+                            bgcolor: alpha(theme.palette.primary.main, 0.1),
+                            color: theme.palette.primary.main
+                          }
+                        }}
+                      >
+                        <CloseIcon sx={{ fontSize: 14 }} />
+                      </IconButton>
+                    </Box>
+
+                    {/* Messages List */}
+                    <Box sx={{ flex: 1, overflow: 'auto' }}>
+                        {loadingMessages ? (
+                          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
+                            <CircularProgress size={24} />
+                          </Box>
+                        ) : featureMessages.length === 0 ? (
+                          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
+                            <Typography variant="body2" color="text.secondary">No messages</Typography>
+                          </Box>
+                        ) : (
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
+                            {featureMessages.map((message) => {
+                              const insightCounts = {
+                                features: message.ai_insights?.feature_requests?.length || 0,
+                                bugs: message.ai_insights?.bug_reports?.length || 0,
+                                painPoints: message.ai_insights?.pain_points?.length || 0,
+                              };
+                              const totalInsights = insightCounts.features + insightCounts.bugs + insightCounts.painPoints;
+                              const isSelected = selectedMessageId === message.id;
+
+                              return (
+                                <Box
+                                  key={message.id}
+                                  onClick={() => setSelectedMessageId(message.id)}
+                                  sx={{
+                                    p: 0.75,
+                                    borderRadius: 0.75,
+                                    cursor: 'pointer',
+                                    background: isSelected
+                                      ? alpha(theme.palette.primary.main, 0.1)
+                                      : 'transparent',
+                                    border: isSelected
+                                      ? `1px solid ${theme.palette.primary.main}`
+                                      : `1px solid ${alpha(theme.palette.divider, 0.2)}`,
+                                    transition: 'all 0.2s ease-in-out',
+                                    '&:hover': {
+                                      background: alpha(theme.palette.primary.main, 0.06),
+                                      border: `1px solid ${alpha(theme.palette.primary.main, 0.5)}`,
+                                    },
+                                  }}
+                                >
+                                  <Typography variant="caption" fontWeight="bold" color="primary" noWrap display="block">
+                                    {message.customer_name || message.sender_name || 'Unknown'}
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary" noWrap display="block">
+                                    {message.customer_email || message.sender_name}
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary" noWrap display="block" sx={{ mt: 0.25 }}>
+                                    {formatDate(message.sent_at)}
+                                  </Typography>
+                                  {totalInsights > 0 && (
+                                    <Box sx={{ display: 'flex', gap: 0.25, flexWrap: 'wrap', mt: 0.4 }}>
+                                      {insightCounts.features > 0 && (
+                                        <Chip label={insightCounts.features} size="small" color="info" variant="filled" sx={{ height: 16 }} />
+                                      )}
+                                      {insightCounts.bugs > 0 && (
+                                        <Chip label={insightCounts.bugs} size="small" color="error" variant="filled" sx={{ height: 16 }} />
+                                      )}
+                                      {insightCounts.painPoints > 0 && (
+                                        <Chip label={insightCounts.painPoints} size="small" color="warning" variant="filled" sx={{ height: 16 }} />
+                                      )}
+                                    </Box>
+                                  )}
+                                </Box>
+                              );
+                            })}
+                          </Box>
+                        )}
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Box>
+            )}
+
+            {/* Draggable Divider - Between Mentions and Details */}
+            {showMessagesFullPage && selectedFeatureForMessages && (
+              <Box
+                onMouseDown={() => setIsResizingMentions(true)}
+                sx={{
+                  width: 4,
+                  cursor: 'col-resize',
+                  backgroundColor: alpha(theme.palette.divider, 0.5),
+                  transition: isResizingMentions ? 'none' : 'background-color 0.2s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: theme.palette.primary.main,
+                  },
+                  userSelect: 'none',
+                  flex: 'none',
+                }}
+              />
+            )}
+
+            {/* Message Details Panel - Remaining width when viewing mentions */}
+            {showMessagesFullPage && selectedFeatureForMessages && selectedMessageId && (
+              <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+                <Card sx={{
+                  borderRadius: 1,
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  height: { xs: 'auto', md: 'calc(100vh - 120px)' },
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}>
+                  <CardContent sx={{ flex: 1, overflow: 'auto', p: 2 }}>
+                    {(() => {
+                      const selectedMessage = featureMessages.find(m => m.id === selectedMessageId);
+                      if (!selectedMessage) return null;
+
+                      return (
+                        <Box sx={{ width: '100%' }}>
+                          {/* Header */}
+                          <Box sx={{ mb: 2, pb: 2, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
+                            <Typography variant="body2" fontWeight="bold" color="primary" sx={{ mb: 0.5 }}>
+                              {selectedMessage.customer_name || selectedMessage.sender_name || 'Unknown'}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary" display="block">
+                              {selectedMessage.customer_email || selectedMessage.sender_name}
+                            </Typography>
+                          </Box>
+
+                          {selectedMessage.ai_insights ? (
+                            <Box sx={{ width: '100%' }}>
+                              {/* Feature Requests */}
+                              {selectedMessage.ai_insights.feature_requests && selectedMessage.ai_insights.feature_requests.length > 0 && (
+                                <Box mb={2}>
+                                  <Typography variant="body2" fontWeight="bold" gutterBottom>
+                                    Features:
+                                  </Typography>
+                                  {selectedMessage.ai_insights.feature_requests.map((feature, idx) => (
+                                    <Box key={idx} mb={1.5} pl={1}>
+                                      <Typography variant="body2" fontWeight="600" sx={{ fontSize: '0.9rem' }}>
+                                        {feature.title}
+                                      </Typography>
+                                      <Typography variant="body2" color="text.secondary" paragraph sx={{ fontSize: '0.85rem' }}>
+                                        {feature.description}
+                                      </Typography>
+                                      <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', fontSize: '0.8rem' }}>
+                                        "{feature.quote}"
+                                      </Typography>
+                                      <Box mt={0.5}>
+                                        <Chip
+                                          label={feature.urgency}
+                                          size="small"
+                                          color={feature.urgency === 'high' || feature.urgency === 'critical' ? 'error' : feature.urgency === 'medium' ? 'warning' : 'default'}
+                                          sx={{ fontSize: '0.7rem' }}
+                                        />
+                                      </Box>
+                                    </Box>
+                                  ))}
+                                </Box>
+                              )}
+
+                              {/* Bug Reports */}
+                              {selectedMessage.ai_insights.bug_reports && selectedMessage.ai_insights.bug_reports.length > 0 && (
+                                <Box mb={2}>
+                                  <Typography variant="body2" fontWeight="bold" gutterBottom>
+                                    Bugs:
+                                  </Typography>
+                                  {selectedMessage.ai_insights.bug_reports.map((bug, idx) => (
+                                    <Box key={idx} mb={1.5} pl={1}>
+                                      <Typography variant="body2" fontWeight="600" sx={{ fontSize: '0.9rem' }}>
+                                        {bug.title}
+                                      </Typography>
+                                      <Typography variant="body2" color="text.secondary" paragraph sx={{ fontSize: '0.85rem' }}>
+                                        {bug.description}
+                                      </Typography>
+                                      <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', fontSize: '0.8rem' }}>
+                                        "{bug.quote}"
+                                      </Typography>
+                                      <Box mt={0.5}>
+                                        <Chip
+                                          label={bug.severity}
+                                          size="small"
+                                          color={bug.severity === 'high' || bug.severity === 'critical' ? 'error' : bug.severity === 'medium' ? 'warning' : 'default'}
+                                          sx={{ fontSize: '0.7rem' }}
+                                        />
+                                      </Box>
+                                    </Box>
+                                  ))}
+                                </Box>
+                              )}
+
+                              {/* Pain Points */}
+                              {selectedMessage.ai_insights.pain_points && selectedMessage.ai_insights.pain_points.length > 0 && (
+                                <Box mb={2}>
+                                  <Typography variant="body2" fontWeight="bold" gutterBottom>
+                                    Pain Points:
+                                  </Typography>
+                                  {selectedMessage.ai_insights.pain_points.map((pain, idx) => (
+                                    <Box key={idx} mb={1.5} pl={1}>
+                                      <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
+                                        {pain.description}
+                                      </Typography>
+                                      <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                                        Impact: {pain.impact}
+                                      </Typography>
+                                      {pain.quote && (
+                                        <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', display: 'block', mt: 0.5, fontSize: '0.75rem' }}>
+                                          "{pain.quote}"
+                                        </Typography>
+                                      )}
+                                    </Box>
+                                  ))}
+                                </Box>
+                              )}
+
+                              {/* Summary */}
+                              {selectedMessage.ai_insights.summary && (
+                                <Box mb={2}>
+                                  <Typography variant="body2" fontWeight="bold" gutterBottom>
+                                    Summary:
+                                  </Typography>
+                                  <Typography variant="body2" color="text.secondary" pl={1} sx={{ fontSize: '0.85rem', lineHeight: 1.5 }}>
+                                    {selectedMessage.ai_insights.summary}
+                                  </Typography>
+                                </Box>
+                              )}
+
+                              {/* Sentiment */}
+                              {selectedMessage.ai_insights.sentiment && (
+                                <Box mb={2}>
+                                  <Typography variant="body2" fontWeight="bold" gutterBottom>
+                                    Sentiment:
+                                  </Typography>
+                                  <Box pl={1}>
+                                    <Chip
+                                      label={`${selectedMessage.ai_insights.sentiment.overall} (${selectedMessage.ai_insights.sentiment.score})`}
+                                      size="small"
+                                      color={selectedMessage.ai_insights.sentiment.overall === 'positive' ? 'success' : selectedMessage.ai_insights.sentiment.overall === 'negative' ? 'error' : 'default'}
+                                      sx={{ fontSize: '0.7rem' }}
+                                    />
+                                    <Typography variant="caption" color="text.secondary" display="block" mt={0.5} sx={{ fontSize: '0.75rem' }}>
+                                      {selectedMessage.ai_insights.sentiment.reasoning}
+                                    </Typography>
+                                  </Box>
+                                </Box>
+                              )}
+
+                              {/* Key Topics */}
+                              {selectedMessage.ai_insights.key_topics && selectedMessage.ai_insights.key_topics.length > 0 && (
+                                <Box mb={2}>
+                                  <Typography variant="body2" fontWeight="bold" gutterBottom>
+                                    Key Topics:
+                                  </Typography>
+                                  <Box pl={1} display="flex" gap={0.5} flexWrap="wrap">
+                                    {selectedMessage.ai_insights.key_topics.map((topic, idx) => (
+                                      <Chip key={idx} label={topic} size="small" variant="outlined" sx={{ fontSize: '0.7rem' }} />
+                                    ))}
+                                  </Box>
+                                </Box>
+                              )}
+
+                              {/* Message Metadata */}
+                              <Box sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '100%',
+                                mt: 2,
+                                pt: 2,
+                                borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`
+                              }}>
+                                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, fontSize: '0.75rem' }}>
+                                  {selectedMessage.sender_name}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                                  in #{selectedMessage.channel_name}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          ) : (
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              sx={{
+                                wordBreak: 'break-word',
+                                lineHeight: 1.6,
+                                whiteSpace: 'pre-wrap',
+                                fontSize: '0.85rem'
+                              }}
+                            >
+                              {selectedMessage.content}
+                            </Typography>
+                          )}
+                        </Box>
+                      );
+                    })()}
+                  </CardContent>
+                </Card>
+              </Box>
+            )}
+
+            {/* Close Button for Mentions View - Only shown when viewing mentions but no message selected */}
+            {showMessagesFullPage && selectedFeatureForMessages && !selectedMessageId && (
+              <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 0 }}>
+                <Card sx={{
+                  borderRadius: 1,
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Select a mention to view details
+                  </Typography>
+                </Card>
+              </Box>
+            )}
           </Box>
         </Box>
 
