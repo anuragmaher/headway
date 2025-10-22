@@ -197,7 +197,7 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
                 </Typography>
               </Box>
             ) : (
-              <Box sx={{ maxHeight: '400px', overflow: 'auto' }}>
+              <Box sx={{ overflow: 'auto' }}>
                 {messages.map((message) => {
                   // Count insights for summary
                   const insightCounts = {

@@ -18,16 +18,16 @@ export function LandingLayout({
   showAuth = true 
 }: LandingLayoutProps): JSX.Element {
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
       {/* Header */}
       <AppBar position="static" elevation={0}>
         <Toolbar>
-          <Typography 
-            variant="h6" 
+          <Typography
+            variant="h6"
             component={RouterLink}
             to={ROUTES.HOME}
-            sx={{ 
-              flexGrow: 1, 
+            sx={{
+              flexGrow: 1,
               textDecoration: 'none',
               color: 'inherit',
               fontWeight: 700
@@ -38,10 +38,10 @@ export function LandingLayout({
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <ThemeToggle />
-            
+
             {showAuth && (
               <>
-                <Button 
+                <Button
                   component={RouterLink}
                   to={ROUTES.LOGIN}
                   color="inherit"
@@ -49,7 +49,7 @@ export function LandingLayout({
                 >
                   Sign In
                 </Button>
-                <Button 
+                <Button
                   component={RouterLink}
                   to={ROUTES.REGISTER}
                   variant="contained"
@@ -64,7 +64,7 @@ export function LandingLayout({
       </AppBar>
 
       {/* Main content */}
-      <Box component="main" sx={{ flexGrow: 1 }}>
+      <Box component="main" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         {children}
       </Box>
 
