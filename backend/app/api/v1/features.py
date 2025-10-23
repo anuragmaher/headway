@@ -50,6 +50,7 @@ class FeatureResponse(BaseModel):
     created_at: str
     updated_at: Optional[str]
     data_points: Optional[List[dict]] = None
+    ai_metadata: Optional[dict] = None
 
     class Config:
         from_attributes = True
@@ -536,7 +537,8 @@ async def get_features(
                 last_mentioned=feature.last_mentioned.isoformat() if feature.last_mentioned else "",
                 created_at=feature.created_at.isoformat() if feature.created_at else "",
                 updated_at=feature.updated_at.isoformat() if feature.updated_at else None,
-                data_points=data_points
+                data_points=data_points,
+                ai_metadata=feature.ai_metadata
             ))
 
         return feature_responses
@@ -583,7 +585,8 @@ async def get_feature(
             last_mentioned=feature.last_mentioned.isoformat() if feature.last_mentioned else "",
             created_at=feature.created_at.isoformat() if feature.created_at else "",
             updated_at=feature.updated_at.isoformat() if feature.updated_at else None,
-            data_points=feature.data_points if feature.data_points else []
+            data_points=feature.data_points if feature.data_points else [],
+            ai_metadata=feature.ai_metadata
         )
 
     except HTTPException:
@@ -659,7 +662,8 @@ async def update_feature(
             last_mentioned=feature.last_mentioned.isoformat() if feature.last_mentioned else "",
             created_at=feature.created_at.isoformat() if feature.created_at else "",
             updated_at=feature.updated_at.isoformat() if feature.updated_at else None,
-            data_points=feature.data_points if feature.data_points else []
+            data_points=feature.data_points if feature.data_points else [],
+            ai_metadata=feature.ai_metadata
         )
 
     except HTTPException:

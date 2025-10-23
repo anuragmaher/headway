@@ -366,4 +366,9 @@ Please analyze these messages and return clusters in the specified JSON format."
 
 
 # Global service instance
-llm_clustering_service = LLMClusteringService()
+try:
+    llm_clustering_service = LLMClusteringService()
+except Exception as e:
+    print(f"Warning: Failed to initialize LLMClusteringService: {e}")
+    print("Clustering features will not be available until dependencies are fixed")
+    llm_clustering_service = None

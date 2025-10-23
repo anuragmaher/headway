@@ -49,6 +49,7 @@ class Settings(BaseSettings):
         "http://localhost:5173",  # Vite dev server
         "http://localhost:3000",  # Alternative dev port
         "http://localhost:5174",  # Alternative dev port
+        "http://localhost:5175",  # Alternative dev port
         "https://headwayhq.com",  # Production domain
         "https://www.headwayhq.com",  # Production domain with www
         "https://headway-ten.vercel.app",  # Vercel deployment

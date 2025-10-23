@@ -23,6 +23,9 @@ class Feature(Base):
     workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), nullable=False)
     theme_id = Column(UUID(as_uuid=True), ForeignKey("themes.id"), nullable=True)
 
+    # AI reasoning and metadata
+    ai_metadata = Column(JSONB, nullable=True, default=dict)
+
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)

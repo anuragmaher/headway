@@ -208,6 +208,88 @@ Extract all feature requests, bug reports, and insights from this conversation."
         insights = self.extract_insights(transcript)
         return insights.get('bug_reports', [])
 
+    def check_theme_relevance(
+        self,
+        transcript: str,
+        themes: Optional[List[Dict[str, str]]] = None
+    ) -> Dict[str, Any]:
+        """
+        Check if a transcript is relevant to any of the workspace themes
+
+        Args:
+            transcript: The conversation transcript text
+            themes: List of themes to check against
+
+        Returns:
+            Dictionary with 'is_relevant' (bool) and 'confidence' (float 0-1)
+        """
+        try:
+            if not themes or len(themes) == 0:
+                # No themes defined, so technically relevant to everything
+                return {
+                    'is_relevant': True,
+                    'confidence': 1.0,
+                    'matched_themes': [],
+                    'reasoning': 'No specific themes to filter by'
+                }
+
+            # Build themes list for the prompt
+            themes_text = "\n".join([f"- **{t['name']}**: {t['description']}" for t in themes])
+
+            system_prompt = """You are an AI assistant that analyzes customer conversations to determine if they are relevant to specific product themes.
+
+Analyze the conversation and determine:
+1. If the customer is discussing topics related to ANY of the provided themes
+2. Which specific themes (if any) are being discussed
+3. Your confidence that this conversation is relevant to the product
+
+Return a JSON response with:
+- is_relevant: boolean - true if conversation discusses ANY of the themes
+- confidence: float between 0 and 1 - how confident you are this is relevant
+- matched_themes: list of theme names that are discussed
+- reasoning: brief explanation of your assessment"""
+
+            user_prompt = f"""Here are the product themes:
+
+{themes_text}
+
+Now analyze this conversation and determine if it's relevant to any of these themes:
+
+---
+{transcript[:3000]}  # Limit to first 3000 chars for speed
+---
+
+Respond in JSON format with the structure described above."""
+
+            response = self.client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.2,
+                response_format={"type": "json_object"}
+            )
+
+            result = json.loads(response.choices[0].message.content)
+
+            logger.info(
+                f"Theme relevance check: is_relevant={result.get('is_relevant')}, "
+                f"confidence={result.get('confidence')}, "
+                f"matched_themes={result.get('matched_themes')}"
+            )
+
+            return result
+
+        except Exception as e:
+            logger.error(f"Error checking theme relevance: {e}")
+            return {
+                'is_relevant': True,  # Default to True to not filter out by accident
+                'confidence': 0.5,
+                'matched_themes': [],
+                'reasoning': f'Error checking relevance: {str(e)}'
+            }
+
     def _empty_result(self, error: str = None) -> Dict[str, Any]:
         """Return empty result structure"""
         return {

@@ -98,24 +98,13 @@ class TranscriptIngestionService:
 
             # Extract features and insights using AI
             ai_insights = None
+            should_skip_call = False
+
             if extract_features and transcript_text:
                 try:
-                    logger.info(f"Extracting features from {source} {external_id}")
+                    logger.info(f"Checking theme relevance for {source} {external_id}")
 
-                    # Get customer context if available
-                    customer_name = None
-                    customer_mrr = None
-
-                    if customer_id:
-                        from app.models.customer import Customer
-                        customer = self.db.query(Customer).filter(
-                            Customer.id == customer_id
-                        ).first()
-                        if customer:
-                            customer_name = customer.name
-                            customer_mrr = customer.mrr
-
-                    # Get themes for context-aware extraction
+                    # Get themes for relevance check
                     themes = self.db.query(Theme).filter(
                         Theme.workspace_id == workspace_id,
                         Theme.is_default == False  # Exclude "Unclassified" theme
@@ -126,22 +115,80 @@ class TranscriptIngestionService:
                         for theme in themes
                     ]
 
-                    # Extract insights
-                    ai_insights = self.ai_extraction_service.extract_insights(
+                    # Check if transcript is relevant to any theme
+                    relevance_check = self.ai_extraction_service.check_theme_relevance(
                         transcript=transcript_text,
-                        customer_name=customer_name,
-                        customer_mrr=customer_mrr,
                         themes=themes_list if themes_list else None
                     )
 
-                    logger.info(
-                        f"Extracted {len(ai_insights.get('feature_requests', []))} features, "
-                        f"{len(ai_insights.get('bug_reports', []))} bugs"
-                    )
+                    is_relevant = relevance_check.get('is_relevant', True)
+                    confidence = relevance_check.get('confidence', 0.5)
+                    matched_themes = relevance_check.get('matched_themes', [])
+
+                    if not is_relevant and confidence < 0.5:
+                        # Check if there's a default theme to fall back to
+                        default_theme = self.db.query(Theme).filter(
+                            Theme.workspace_id == workspace_id,
+                            Theme.is_default == True
+                        ).first()
+
+                        if not default_theme:
+                            logger.info(
+                                f"⏭️  SKIPPING {source} {external_id}: Not relevant to any theme "
+                                f"(confidence: {confidence:.2f}) and no default theme available. "
+                                f"Reason: {relevance_check.get('reasoning', 'Unknown')}"
+                            )
+                            should_skip_call = True
+                        else:
+                            logger.info(
+                                f"Low relevance to themes (confidence: {confidence:.2f}), "
+                                f"but using default theme '{default_theme.name}'"
+                            )
+                    else:
+                        if matched_themes:
+                            logger.info(f"✓ Relevant to themes: {', '.join(matched_themes)} (confidence: {confidence:.2f})")
+                        else:
+                            logger.info(f"✓ Relevant to workspace themes (confidence: {confidence:.2f})")
+
+                    # If we're not skipping, extract features
+                    if not should_skip_call:
+                        logger.info(f"Extracting features from {source} {external_id}")
+
+                        # Get customer context if available
+                        customer_name = None
+                        customer_mrr = None
+
+                        if customer_id:
+                            from app.models.customer import Customer
+                            customer = self.db.query(Customer).filter(
+                                Customer.id == customer_id
+                            ).first()
+                            if customer:
+                                customer_name = customer.name
+                                customer_mrr = customer.mrr
+
+                        # Extract insights
+                        ai_insights = self.ai_extraction_service.extract_insights(
+                            transcript=transcript_text,
+                            customer_name=customer_name,
+                            customer_mrr=customer_mrr,
+                            themes=themes_list if themes_list else None
+                        )
+
+                        logger.info(
+                            f"Extracted {len(ai_insights.get('feature_requests', []))} features, "
+                            f"{len(ai_insights.get('bug_reports', []))} bugs"
+                        )
 
                 except Exception as e:
-                    logger.warning(f"Failed to extract AI insights: {e}")
+                    logger.warning(f"Failed to check theme relevance or extract insights: {e}")
                     ai_insights = None
+                    should_skip_call = False  # Don't skip on error, proceed with extraction
+
+            # Skip call if not relevant to any theme
+            if should_skip_call:
+                logger.info(f"Skipped {source} {external_id} - not relevant to workspace themes")
+                return None
 
             # Create message object
             message = Message(
@@ -174,7 +221,8 @@ class TranscriptIngestionService:
                 self._create_features_from_insights(
                     workspace_id=workspace_id,
                     message=message,
-                    ai_insights=ai_insights
+                    ai_insights=ai_insights,
+                    theme_relevance_check=relevance_check if extract_features else None
                 )
 
             # Mark message as processed
@@ -193,7 +241,8 @@ class TranscriptIngestionService:
         self,
         workspace_id: str,
         message: Message,
-        ai_insights: Dict[str, Any]
+        ai_insights: Dict[str, Any],
+        theme_relevance_check: Optional[Dict[str, Any]] = None
     ) -> None:
         """
         Create features from AI insights and handle intelligent matching
@@ -202,6 +251,7 @@ class TranscriptIngestionService:
             workspace_id: Workspace UUID
             message: Message object the features came from
             ai_insights: AI extraction results
+            theme_relevance_check: Optional theme relevance check results
         """
         try:
             feature_requests = ai_insights.get('feature_requests', [])
@@ -232,6 +282,9 @@ class TranscriptIngestionService:
                 feature_theme_obj = themes_dict.get(feature_theme.lower()) if feature_theme else None
 
                 # Validate theme assignment
+                assigned_theme = feature_theme_obj  # Default to suggested theme
+                theme_validation = None
+
                 if feature_theme_obj:
                     theme_validation = self.ai_feature_matching_service.validate_theme_assignment(
                         feature_title=feature_title,
@@ -241,6 +294,7 @@ class TranscriptIngestionService:
                     )
 
                     if not theme_validation["is_valid"]:
+                        # Theme validation failed - SKIP this feature
                         logger.info(
                             f"  ✗ Skipping feature '{feature_title}' - theme validation failed "
                             f"(confidence: {theme_validation['confidence']:.2f} < 0.8). "
@@ -252,19 +306,20 @@ class TranscriptIngestionService:
                             f"  ✓ Theme validated: '{feature_title}' → '{feature_theme_obj.name}' "
                             f"(confidence: {theme_validation['confidence']:.2f})"
                         )
+                        assigned_theme = feature_theme_obj
                 else:
-                    # No theme found - skip this feature
+                    # No matching theme found - SKIP this feature
                     logger.info(
                         f"  ✗ Skipping feature '{feature_title}' - no matching theme found "
                         f"(suggested theme: '{feature_theme}')"
                     )
                     continue
 
-                # Get all existing features in the same theme
+                # Get all existing features in the same theme (using assigned theme)
                 existing_features_in_theme = self.db.query(Feature).filter(
                     Feature.workspace_id == workspace_id,
-                    Feature.theme_id == feature_theme_obj.id
-                ).all()
+                    Feature.theme_id == assigned_theme.id if assigned_theme else None
+                ).all() if assigned_theme else []
 
                 # Prepare data for LLM matching
                 existing_features_data = [
@@ -300,6 +355,20 @@ class TranscriptIngestionService:
                             existing_feature.last_mentioned = message.sent_at
                             existing_feature.updated_at = datetime.now(timezone.utc)
 
+                            # Store matching metadata
+                            if not existing_feature.ai_metadata:
+                                existing_feature.ai_metadata = {}
+                            if "matches" not in existing_feature.ai_metadata:
+                                existing_feature.ai_metadata["matches"] = []
+
+                            existing_feature.ai_metadata["matches"].append({
+                                "matched_title": feature_title,
+                                "matched_description": feature_description,
+                                "confidence": match_result["confidence"],
+                                "reasoning": match_result.get("reasoning", ""),
+                                "matched_at": datetime.now(timezone.utc).isoformat()
+                            })
+
                         features_matched_count += 1
                         logger.info(
                             f"  ✓ Matched to existing: '{existing_feature.name}' "
@@ -313,17 +382,47 @@ class TranscriptIngestionService:
                         match_result["is_duplicate"] = False
 
                 if not match_result["is_duplicate"]:
-                    # Create new feature
+                    # Create new feature (using assigned theme)
+                    # Prepare AI metadata
+                    ai_metadata = {
+                        "extraction_source": "ai_extraction",
+                        "feature_matching": {
+                            "is_unique": not match_result["is_duplicate"],
+                            "confidence": match_result["confidence"],
+                            "reasoning": match_result.get("reasoning", "")
+                        }
+                    }
+
+                    # Add transcript-level theme relevance check metadata
+                    if theme_relevance_check:
+                        ai_metadata["transcript_theme_relevance"] = {
+                            "is_relevant": theme_relevance_check.get("is_relevant", True),
+                            "confidence": theme_relevance_check.get("confidence", 0),
+                            "matched_themes": theme_relevance_check.get("matched_themes", []),
+                            "reasoning": theme_relevance_check.get("reasoning", "")
+                        }
+
+                    # Add theme validation metadata if available
+                    if feature_theme_obj and theme_validation:
+                        ai_metadata["theme_validation"] = {
+                            "suggested_theme": feature_theme,
+                            "assigned_theme": assigned_theme.name if assigned_theme else None,
+                            "confidence": theme_validation.get("confidence", 0),
+                            "is_valid": theme_validation.get("is_valid", False),
+                            "reasoning": theme_validation.get("reasoning", "")
+                        }
+
                     new_feature = Feature(
                         name=feature_title,
                         description=feature_description,
                         workspace_id=workspace_id,
-                        theme_id=feature_theme_obj.id if feature_theme_obj else None,
+                        theme_id=assigned_theme.id if assigned_theme else None,
                         status='new',
                         urgency=feature_urgency,
                         mention_count=1,
                         first_mentioned=message.sent_at,
-                        last_mentioned=message.sent_at
+                        last_mentioned=message.sent_at,
+                        ai_metadata=ai_metadata
                     )
 
                     self.db.add(new_feature)

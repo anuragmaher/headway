@@ -79,6 +79,34 @@ interface Feature {
   created_at: string;
   updated_at: string | null;
   data_points?: any[];
+  ai_metadata?: {
+    extraction_source?: string;
+    transcript_theme_relevance?: {
+      is_relevant: boolean;
+      confidence: number;
+      matched_themes: string[];
+      reasoning: string;
+    };
+    theme_validation?: {
+      suggested_theme: string;
+      assigned_theme: string;
+      confidence: number;
+      is_valid: boolean;
+      reasoning: string;
+    };
+    feature_matching?: {
+      is_unique: boolean;
+      confidence: number;
+      reasoning: string;
+    };
+    matches?: Array<{
+      matched_title: string;
+      matched_description: string;
+      confidence: number;
+      reasoning: string;
+      matched_at: string;
+    }>;
+  };
 }
 
 interface AIInsights {
@@ -317,6 +345,15 @@ export function ThemesPage(): JSX.Element {
         // Search in data points
         if (f.data_points && f.data_points.length > 0) {
           for (const dp of f.data_points) {
+            // Search in customer name
+            if (dp.customer_name?.toLowerCase().includes(query)) return true;
+
+            // Search in customer email
+            if (dp.customer_email?.toLowerCase().includes(query)) return true;
+
+            // Search in sender name
+            if (dp.sender_name?.toLowerCase().includes(query)) return true;
+
             // Search in business metrics
             if (dp.business_metrics) {
               const metricsStr = JSON.stringify(dp.business_metrics).toLowerCase();
@@ -331,6 +368,31 @@ export function ThemesPage(): JSX.Element {
             if (dp.structured_metrics) {
               const structuredStr = JSON.stringify(dp.structured_metrics).toLowerCase();
               if (structuredStr.includes(query)) return true;
+            }
+            // Search in AI insights
+            if (dp.ai_insights) {
+              // Search in feature requests
+              if (dp.ai_insights.feature_requests?.length > 0) {
+                const featuresStr = JSON.stringify(dp.ai_insights.feature_requests).toLowerCase();
+                if (featuresStr.includes(query)) return true;
+              }
+              // Search in bug reports
+              if (dp.ai_insights.bug_reports?.length > 0) {
+                const bugsStr = JSON.stringify(dp.ai_insights.bug_reports).toLowerCase();
+                if (bugsStr.includes(query)) return true;
+              }
+              // Search in pain points
+              if (dp.ai_insights.pain_points?.length > 0) {
+                const painStr = JSON.stringify(dp.ai_insights.pain_points).toLowerCase();
+                if (painStr.includes(query)) return true;
+              }
+              // Search in summary
+              if (dp.ai_insights.summary?.toLowerCase().includes(query)) return true;
+              // Search in key topics
+              if (dp.ai_insights.key_topics?.length > 0) {
+                const topicsStr = JSON.stringify(dp.ai_insights.key_topics).toLowerCase();
+                if (topicsStr.includes(query)) return true;
+              }
             }
           }
         }
@@ -775,6 +837,22 @@ export function ThemesPage(): JSX.Element {
       case 'completed': return 'success';
       default: return 'default';
     }
+  };
+
+  const getConfidenceColor = (confidence: number) => {
+    if (confidence >= 0.8) return '#4caf50'; // Green
+    if (confidence >= 0.5) return '#ff9800'; // Orange
+    return '#f44336'; // Red
+  };
+
+  const getConfidenceLabel = (confidence: number) => {
+    if (confidence >= 0.8) return 'High';
+    if (confidence >= 0.5) return 'Medium';
+    return 'Low';
+  };
+
+  const getThemeValidationConfidence = (feature: Feature) => {
+    return feature.ai_metadata?.theme_validation?.confidence ?? null;
   };
 
   const fetchFeatureMessages = async (featureId: string) => {
@@ -1535,11 +1613,26 @@ export function ThemesPage(): JSX.Element {
                                 }}
                               >
                                 <Box sx={{ width: '100%' }}>
-                                  {/* Top Row - Feature Name + Urgency */}
+                                  {/* Top Row - Feature Name + Confidence + Urgency */}
                                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-                                    <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: '0.95rem', flex: 1 }}>
-                                      {feature.name}
-                                    </Typography>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1 }}>
+                                      <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: '0.95rem' }}>
+                                        {feature.name}
+                                      </Typography>
+                                      {getThemeValidationConfidence(feature) !== null && (
+                                        <Tooltip title={`Theme classification confidence: ${getConfidenceLabel(getThemeValidationConfidence(feature)!)}`}>
+                                          <Box
+                                            sx={{
+                                              width: 8,
+                                              height: 8,
+                                              borderRadius: '50%',
+                                              backgroundColor: getConfidenceColor(getThemeValidationConfidence(feature)!),
+                                              cursor: 'help'
+                                            }}
+                                          />
+                                        </Tooltip>
+                                      )}
+                                    </Box>
                                     <Chip
                                       label={feature.urgency}
                                       size="small"
@@ -1594,6 +1687,22 @@ export function ThemesPage(): JSX.Element {
                                         handleShowMessages(feature);
                                       }}
                                     />
+
+                                    {/* Confidence Chip */}
+                                    {getThemeValidationConfidence(feature) !== null && (
+                                      <Chip
+                                        label={`${Math.round(getThemeValidationConfidence(feature)! * 100)}% confidence`}
+                                        size="small"
+                                        variant="filled"
+                                        sx={{
+                                          minWidth: 'auto',
+                                          height: 22,
+                                          fontSize: '0.7rem',
+                                          backgroundColor: getConfidenceColor(getThemeValidationConfidence(feature)!),
+                                          color: 'white'
+                                        }}
+                                      />
+                                    )}
 
                                     {/* Theme Selector - Compact */}
                                     <FormControl size="small" sx={{ minWidth: 180, ml: 'auto' }}>

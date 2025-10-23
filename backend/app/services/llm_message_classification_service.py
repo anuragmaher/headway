@@ -359,4 +359,9 @@ Respond in JSON format:
 
 
 # Global service instance
-llm_message_classification_service = LLMMessageClassificationService()
+try:
+    llm_message_classification_service = LLMMessageClassificationService()
+except Exception as e:
+    print(f"Warning: Failed to initialize LLMMessageClassificationService: {e}")
+    print("Message classification features will not be available until dependencies are fixed")
+    llm_message_classification_service = None

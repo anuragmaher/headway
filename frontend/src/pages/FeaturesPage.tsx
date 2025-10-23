@@ -16,8 +16,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  SelectChangeEvent
+  SelectChangeEvent,
+  Tooltip,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FeatureMessagesModal from '../shared/components/FeatureMessagesModal';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useAuthStore } from '@/features/auth/store/auth-store';
@@ -42,6 +47,34 @@ interface Feature {
   last_mentioned: string;
   created_at: string;
   updated_at: string | null;
+  ai_metadata?: {
+    extraction_source?: string;
+    transcript_theme_relevance?: {
+      is_relevant: boolean;
+      confidence: number;
+      matched_themes: string[];
+      reasoning: string;
+    };
+    theme_validation?: {
+      suggested_theme: string;
+      assigned_theme: string;
+      confidence: number;
+      is_valid: boolean;
+      reasoning: string;
+    };
+    feature_matching?: {
+      is_unique: boolean;
+      confidence: number;
+      reasoning: string;
+    };
+    matches?: Array<{
+      matched_title: string;
+      matched_description: string;
+      confidence: number;
+      reasoning: string;
+      matched_at: string;
+    }>;
+  };
 }
 
 const FeaturesPage: React.FC = () => {
@@ -143,6 +176,22 @@ const FeaturesPage: React.FC = () => {
       case 'completed': return 'success';
       default: return 'default';
     }
+  };
+
+  const getConfidenceColor = (confidence: number) => {
+    if (confidence >= 0.8) return '#4caf50'; // Green
+    if (confidence >= 0.5) return '#ff9800'; // Orange
+    return '#f44336'; // Red
+  };
+
+  const getConfidenceLabel = (confidence: number) => {
+    if (confidence >= 0.8) return 'High';
+    if (confidence >= 0.5) return 'Medium';
+    return 'Low';
+  };
+
+  const getThemeValidationConfidence = (feature: Feature) => {
+    return feature.ai_metadata?.theme_validation?.confidence ?? null;
   };
 
   const formatDate = (dateString: string) => {
@@ -263,38 +312,66 @@ const FeaturesPage: React.FC = () => {
             </Typography>
             <Paper elevation={1} sx={{ maxHeight: 600, overflow: 'auto' }}>
               <List>
-                {getFilteredFeatures().map((feature) => (
-                  <ListItem
-                    key={feature.id}
-                    button
-                    selected={selectedFeatureId === feature.id}
-                    onClick={() => handleFeatureSelect(feature.id)}
-                    divider
-                  >
-                    <ListItemText
-                      primary={feature.name}
-                      secondary={
-                        <Box>
-                          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                            {feature.description.substring(0, 80)}...
-                          </Typography>
-                          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                            <Chip
-                              label={feature.urgency}
-                              size="small"
-                              color={getUrgencyColor(feature.urgency) as any}
-                            />
-                            <Chip
-                              label={`${feature.mention_count} mentions`}
-                              size="small"
-                              variant="outlined"
-                            />
+                {getFilteredFeatures().map((feature) => {
+                  const themeValidationConfidence = getThemeValidationConfidence(feature);
+                  return (
+                    <ListItem
+                      key={feature.id}
+                      button
+                      selected={selectedFeatureId === feature.id}
+                      onClick={() => handleFeatureSelect(feature.id)}
+                      divider
+                    >
+                      <ListItemText
+                        primary={
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                            <span>{feature.name}</span>
+                            {themeValidationConfidence !== null && (
+                              <Tooltip title={`Theme classification confidence: ${getConfidenceLabel(themeValidationConfidence)}`}>
+                                <Box
+                                  sx={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: '50%',
+                                    backgroundColor: getConfidenceColor(themeValidationConfidence),
+                                    cursor: 'help'
+                                  }}
+                                />
+                              </Tooltip>
+                            )}
                           </Box>
-                        </Box>
-                      }
-                    />
-                  </ListItem>
-                ))}
+                        }
+                        secondary={
+                          <Box>
+                            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                              {feature.description.substring(0, 80)}...
+                            </Typography>
+                            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                              <Chip
+                                label={feature.urgency}
+                                size="small"
+                                color={getUrgencyColor(feature.urgency) as any}
+                              />
+                              <Chip
+                                label={`${feature.mention_count} mentions`}
+                                size="small"
+                                variant="outlined"
+                              />
+                              {themeValidationConfidence !== null && (
+                                <Chip
+                                  label={`${Math.round(themeValidationConfidence * 100)}% confidence`}
+                                  size="small"
+                                  variant="filled"
+                                  sx={{ backgroundColor: getConfidenceColor(themeValidationConfidence), color: 'white' }}
+                                />
+                              )}
+                            </Box>
+                          </Box>
+                        }
+                      />
+                    </ListItem>
+                  );
+                })}
               </List>
             </Paper>
           </Grid>
@@ -346,6 +423,152 @@ const FeaturesPage: React.FC = () => {
                 <Typography variant="body2" color="text.secondary">
                   Created: {formatDate(getSelectedFeature()?.created_at || '')}
                 </Typography>
+
+                {/* AI Classification Details */}
+                {getSelectedFeature()?.ai_metadata && (
+                  <>
+                    <Divider sx={{ my: 2 }} />
+                    <Typography variant="h6" gutterBottom>
+                      AI Classification Details
+                    </Typography>
+
+                    {/* Theme Validation */}
+                    {getSelectedFeature()?.ai_metadata?.theme_validation && (
+                      <Accordion defaultExpanded sx={{ mb: 2 }}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                            <Typography variant="subtitle2">Theme Validation</Typography>
+                            <Chip
+                              label={`${Math.round(getSelectedFeature()?.ai_metadata?.theme_validation?.confidence! * 100)}% confidence`}
+                              size="small"
+                              sx={{
+                                backgroundColor: getConfidenceColor(getSelectedFeature()?.ai_metadata?.theme_validation?.confidence || 0),
+                                color: 'white'
+                              }}
+                            />
+                          </Box>
+                        </AccordionSummary>
+                        <AccordionDetails sx={{ backgroundColor: 'action.hover' }}>
+                          <Box>
+                            <Typography variant="body2" gutterBottom>
+                              <strong>Suggested Theme:</strong> {getSelectedFeature()?.ai_metadata?.theme_validation?.suggested_theme}
+                            </Typography>
+                            <Typography variant="body2" gutterBottom>
+                              <strong>Assigned Theme:</strong> {getSelectedFeature()?.ai_metadata?.theme_validation?.assigned_theme}
+                            </Typography>
+                            <Typography variant="body2" gutterBottom>
+                              <strong>Valid:</strong> {getSelectedFeature()?.ai_metadata?.theme_validation?.is_valid ? '✓ Yes' : '✗ No'}
+                            </Typography>
+                            <Typography variant="body2" gutterBottom sx={{ mt: 1 }}>
+                              <strong>Reasoning:</strong>
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" sx={{ p: 1, backgroundColor: 'background.paper', borderRadius: 1 }}>
+                              {getSelectedFeature()?.ai_metadata?.theme_validation?.reasoning}
+                            </Typography>
+                          </Box>
+                        </AccordionDetails>
+                      </Accordion>
+                    )}
+
+                    {/* Feature Matching */}
+                    {getSelectedFeature()?.ai_metadata?.feature_matching && (
+                      <Accordion sx={{ mb: 2 }}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                            <Typography variant="subtitle2">Feature Matching</Typography>
+                            <Chip
+                              label={`${Math.round(getSelectedFeature()?.ai_metadata?.feature_matching?.confidence! * 100)}% confidence`}
+                              size="small"
+                              sx={{
+                                backgroundColor: getConfidenceColor(getSelectedFeature()?.ai_metadata?.feature_matching?.confidence || 0),
+                                color: 'white'
+                              }}
+                            />
+                          </Box>
+                        </AccordionSummary>
+                        <AccordionDetails sx={{ backgroundColor: 'action.hover' }}>
+                          <Box>
+                            <Typography variant="body2" gutterBottom>
+                              <strong>Is Unique:</strong> {getSelectedFeature()?.ai_metadata?.feature_matching?.is_unique ? '✓ Yes' : '✗ No (Duplicate)'}
+                            </Typography>
+                            <Typography variant="body2" gutterBottom sx={{ mt: 1 }}>
+                              <strong>Reasoning:</strong>
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" sx={{ p: 1, backgroundColor: 'background.paper', borderRadius: 1 }}>
+                              {getSelectedFeature()?.ai_metadata?.feature_matching?.reasoning}
+                            </Typography>
+                          </Box>
+                        </AccordionDetails>
+                      </Accordion>
+                    )}
+
+                    {/* Transcript Theme Relevance */}
+                    {getSelectedFeature()?.ai_metadata?.transcript_theme_relevance && (
+                      <Accordion sx={{ mb: 2 }}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                            <Typography variant="subtitle2">Transcript Theme Relevance</Typography>
+                            <Chip
+                              label={`${Math.round(getSelectedFeature()?.ai_metadata?.transcript_theme_relevance?.confidence! * 100)}% confidence`}
+                              size="small"
+                              sx={{
+                                backgroundColor: getConfidenceColor(getSelectedFeature()?.ai_metadata?.transcript_theme_relevance?.confidence || 0),
+                                color: 'white'
+                              }}
+                            />
+                          </Box>
+                        </AccordionSummary>
+                        <AccordionDetails sx={{ backgroundColor: 'action.hover' }}>
+                          <Box>
+                            <Typography variant="body2" gutterBottom>
+                              <strong>Is Relevant:</strong> {getSelectedFeature()?.ai_metadata?.transcript_theme_relevance?.is_relevant ? '✓ Yes' : '✗ No'}
+                            </Typography>
+                            {getSelectedFeature()?.ai_metadata?.transcript_theme_relevance?.matched_themes && getSelectedFeature()?.ai_metadata?.transcript_theme_relevance?.matched_themes!.length > 0 && (
+                              <Typography variant="body2" gutterBottom>
+                                <strong>Matched Themes:</strong> {getSelectedFeature()?.ai_metadata?.transcript_theme_relevance?.matched_themes!.join(', ')}
+                              </Typography>
+                            )}
+                            <Typography variant="body2" gutterBottom sx={{ mt: 1 }}>
+                              <strong>Reasoning:</strong>
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" sx={{ p: 1, backgroundColor: 'background.paper', borderRadius: 1 }}>
+                              {getSelectedFeature()?.ai_metadata?.transcript_theme_relevance?.reasoning}
+                            </Typography>
+                          </Box>
+                        </AccordionDetails>
+                      </Accordion>
+                    )}
+
+                    {/* Matched Features */}
+                    {getSelectedFeature()?.ai_metadata?.matches && getSelectedFeature()?.ai_metadata?.matches!.length > 0 && (
+                      <Accordion>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                          <Typography variant="subtitle2">Matched to Existing Features ({getSelectedFeature()?.ai_metadata?.matches!.length})</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails sx={{ backgroundColor: 'action.hover' }}>
+                          <Box>
+                            {getSelectedFeature()?.ai_metadata?.matches!.map((match, index) => (
+                              <Box key={index} sx={{ mb: 2, pb: 2, borderBottom: index < getSelectedFeature()?.ai_metadata?.matches!.length! - 1 ? '1px solid #e0e0e0' : 'none' }}>
+                                <Typography variant="body2" gutterBottom>
+                                  <strong>{match.matched_title}</strong>
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary" gutterBottom>
+                                  Confidence: {Math.round(match.confidence * 100)}%
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary" gutterBottom sx={{ mt: 1 }}>
+                                  {match.matched_description}
+                                </Typography>
+                                <Typography variant="body2" gutterBottom sx={{ mt: 1 }}>
+                                  <strong>Reasoning:</strong> {match.reasoning}
+                                </Typography>
+                              </Box>
+                            ))}
+                          </Box>
+                        </AccordionDetails>
+                      </Accordion>
+                    )}
+                  </>
+                )}
               </Paper>
             ) : (
               <Paper elevation={1} sx={{ p: 3, textAlign: 'center' }}>
