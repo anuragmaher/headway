@@ -29,6 +29,10 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface GoogleLoginRequest {
+  credential: string; // Google ID token
+}
+
 export interface RegisterRequest {
   email: string;
   password: string;
@@ -46,6 +50,7 @@ export interface AuthState {
 
 export interface AuthActions {
   login: (credentials: LoginRequest) => Promise<void>;
+  googleLogin: (googleRequest: GoogleLoginRequest) => Promise<void>;
   register: (userData: RegisterRequest) => Promise<void>;
   logout: () => void;
   refreshToken: () => Promise<void>;

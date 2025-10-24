@@ -4,7 +4,7 @@
 
 import { create } from 'zustand';
 import { persist, subscribeWithSelector } from 'zustand/middleware';
-import { AuthState, AuthActions, LoginRequest, RegisterRequest, User, AuthTokens } from '../types/auth.types';
+import { AuthState, AuthActions, LoginRequest, GoogleLoginRequest, RegisterRequest, User, AuthTokens } from '../types/auth.types';
 import { API_BASE_URL } from '../../../config/api.config';
 
 const AUTH_STORAGE_KEY = 'headway-auth';
@@ -24,7 +24,7 @@ export const useAuthStore = create<AuthStore>()(
       // Actions
       login: async (credentials: LoginRequest) => {
         set({ isLoading: true, error: null });
-        
+
         try {
           // Check for demo credentials
           if (credentials.email === 'demo@headwayhq.com' && credentials.password === 'demo123') {
@@ -76,6 +76,57 @@ export const useAuthStore = create<AuthStore>()(
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Login failed',
+          });
+          throw error;
+        }
+      },
+
+      googleLogin: async (googleRequest: GoogleLoginRequest) => {
+        set({ isLoading: true, error: null });
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/v1/auth/login-google`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(googleRequest),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.detail || 'Google login failed');
+          }
+
+          const tokens: AuthTokens = await response.json();
+
+          // Get user info
+          const userResponse = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
+            headers: {
+              'Authorization': `Bearer ${tokens.access_token}`,
+            },
+          });
+
+          if (!userResponse.ok) {
+            throw new Error('Failed to get user info');
+          }
+
+          const user: User = await userResponse.json();
+
+          set({
+            user,
+            tokens,
+            isAuthenticated: true,
+            isLoading: false,
+            error: null,
+          });
+
+          // Start automatic token refresh
+          get().startTokenRefreshTimer();
+        } catch (error) {
+          set({
+            isLoading: false,
+            error: error instanceof Error ? error.message : 'Google login failed',
           });
           throw error;
         }
@@ -293,6 +344,7 @@ export const useUser = () => useAuthStore((state) => state.user);
 export const useIsAuthenticated = () => useAuthStore((state) => state.isAuthenticated);
 export const useAuthActions = () => useAuthStore((state) => ({
   login: state.login,
+  googleLogin: state.googleLogin,
   register: state.register,
   logout: state.logout,
   refreshToken: state.refreshToken,

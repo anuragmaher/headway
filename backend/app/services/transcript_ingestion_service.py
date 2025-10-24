@@ -17,6 +17,7 @@ from app.models.feature import Feature
 from app.models.theme import Theme
 from app.services.ai_extraction_service import get_ai_extraction_service
 from app.services.ai_feature_matching_service import get_ai_feature_matching_service
+from app.services.slack_notification_service import get_slack_notification_service
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +41,7 @@ class TranscriptIngestionService:
         self.db = db
         self.ai_extraction_service = get_ai_extraction_service()
         self.ai_feature_matching_service = get_ai_feature_matching_service()
+        self.slack_notification_service = get_slack_notification_service()
 
     def ingest_transcript(
         self,
@@ -222,7 +224,9 @@ class TranscriptIngestionService:
                     workspace_id=workspace_id,
                     message=message,
                     ai_insights=ai_insights,
-                    theme_relevance_check=relevance_check if extract_features else None
+                    theme_relevance_check=relevance_check if extract_features else None,
+                    source=source,
+                    external_id=external_id
                 )
 
             # Mark message as processed
@@ -242,7 +246,9 @@ class TranscriptIngestionService:
         workspace_id: str,
         message: Message,
         ai_insights: Dict[str, Any],
-        theme_relevance_check: Optional[Dict[str, Any]] = None
+        theme_relevance_check: Optional[Dict[str, Any]] = None,
+        source: str = "unknown",
+        external_id: str = ""
     ) -> None:
         """
         Create features from AI insights and handle intelligent matching
@@ -252,6 +258,8 @@ class TranscriptIngestionService:
             message: Message object the features came from
             ai_insights: AI extraction results
             theme_relevance_check: Optional theme relevance check results
+            source: Source system (e.g., 'gong', 'fathom')
+            external_id: ID of the source transcript/call
         """
         try:
             feature_requests = ai_insights.get('feature_requests', [])
@@ -374,6 +382,16 @@ class TranscriptIngestionService:
                             f"  ✓ Matched to existing: '{existing_feature.name}' "
                             f"(confidence: {match_result['confidence']:.2f}) - {match_result['reasoning']}"
                         )
+
+                        # Send Slack notification
+                        self.slack_notification_service.send_feature_matched_notification(
+                            new_feature_title=feature_title,
+                            existing_feature_name=existing_feature.name,
+                            existing_mention_count=existing_feature.mention_count,
+                            confidence=match_result["confidence"],
+                            source=source,
+                            source_id=external_id
+                        )
                     else:
                         logger.warning(
                             f"Matching feature {match_result['matching_feature_id']} not found, creating new"
@@ -435,6 +453,36 @@ class TranscriptIngestionService:
                     logger.info(
                         f"  ✓ Created new: '{feature_title}' "
                         f"(confidence it's unique: {1.0 - match_result['confidence']:.2f})"
+                    )
+
+                    # Prepare additional AI insights for Slack notification
+                    sentiment = ai_insights.get('sentiment')
+                    key_topics = ai_insights.get('key_topics', [])
+                    quote = feature_data.get('quote', '')
+                    customer_name = message.message_metadata.get('customer_name') if message.message_metadata else None
+
+                    # Extract pain points from ai_insights and format them
+                    pain_points_list = []
+                    if 'pain_points' in ai_insights:
+                        pain_points_list = [
+                            pp.get('description', '')
+                            for pp in ai_insights.get('pain_points', [])[:3]  # Limit to 3
+                        ]
+
+                    # Send Slack notification
+                    self.slack_notification_service.send_feature_created_notification(
+                        feature_name=feature_title,
+                        feature_description=feature_description,
+                        theme_name=assigned_theme.name if assigned_theme else "Uncategorized",
+                        confidence=theme_validation.get("confidence", 0) if theme_validation else 0,
+                        urgency=feature_urgency,
+                        source=source,
+                        source_id=external_id,
+                        sentiment=sentiment,
+                        key_topics=key_topics,
+                        quote=quote,
+                        customer_name=customer_name,
+                        pain_points=pain_points_list
                     )
 
             # Commit all feature changes

@@ -1943,7 +1943,14 @@ export function ThemesPage(): JSX.Element {
                           Mentions
                         </Typography>
                         <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.65rem' }}>
-                          {featureMessages.length}
+                          {searchQuery.trim()
+                            ? featureMessages.filter((m) => {
+                                const query = searchQuery.toLowerCase();
+                                const customerName = (m.customer_name || m.sender_name || '').toLowerCase();
+                                const customerEmail = (m.customer_email || '').toLowerCase();
+                                return customerName.includes(query) || customerEmail.includes(query);
+                              }).length
+                            : featureMessages.length}
                         </Typography>
                       </Box>
                       <IconButton
@@ -1973,7 +1980,18 @@ export function ThemesPage(): JSX.Element {
                           </Box>
                         ) : (
                           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
-                            {featureMessages.map((message) => {
+                            {featureMessages
+                              .filter((message) => {
+                                // Filter mentions by search query
+                                if (!searchQuery.trim()) return true;
+
+                                const query = searchQuery.toLowerCase();
+                                const customerName = (message.customer_name || message.sender_name || '').toLowerCase();
+                                const customerEmail = (message.customer_email || '').toLowerCase();
+
+                                return customerName.includes(query) || customerEmail.includes(query);
+                              })
+                              .map((message) => {
                               const insightCounts = {
                                 features: message.ai_insights?.feature_requests?.length || 0,
                                 bugs: message.ai_insights?.bug_reports?.length || 0,

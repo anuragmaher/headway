@@ -116,29 +116,78 @@ async def login_json(
 ) -> Token:
     """
     Authenticate user with JSON data.
-    
+
     Args:
         login_data: User login credentials (JSON format)
         auth_service: Authentication service instance
-        
+
     Returns:
         JWT access and refresh tokens
-        
+
     Raises:
         HTTPException: If credentials are invalid
     """
     auth_service = AuthService(db)
     user = auth_service.authenticate_user(login_data)
-    
+
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     tokens = auth_service.create_tokens(user)
     return Token(**tokens)
+
+
+@router.post("/login-google", response_model=Token)
+async def login_google(
+    google_data: dict,
+    db = Depends(get_db)
+) -> Token:
+    """
+    Authenticate user with Google ID token.
+
+    Args:
+        google_data: Dictionary containing 'credential' (Google ID token)
+        db: Database session
+
+    Returns:
+        JWT access and refresh tokens
+
+    Raises:
+        HTTPException: If token is invalid or authentication fails
+    """
+    try:
+        credential = google_data.get('credential')
+        if not credential:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Google credential is required"
+            )
+
+        auth_service = AuthService(db)
+        user = auth_service.authenticate_with_google(credential)
+
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Google authentication failed",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+
+        tokens = auth_service.create_tokens(user)
+        return Token(**tokens)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Error during Google login: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error during Google login"
+        )
 
 
 @router.post("/refresh", response_model=Token)

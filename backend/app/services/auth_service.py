@@ -7,6 +7,9 @@ from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException, status
 from datetime import datetime
 from typing import Optional
+from google.auth.transport import requests
+from google.oauth2 import id_token
+import logging
 
 from app.models.user import User
 from app.models.company import Company
@@ -19,6 +22,8 @@ from app.core.security import (
     verify_refresh_token
 )
 from app.core.config import settings
+
+logger = logging.getLogger(__name__)
 
 
 class AuthService:
@@ -128,31 +133,190 @@ class AuthService:
     def authenticate_user(self, login_data: LoginRequest) -> Optional[User]:
         """
         Authenticate a user with email and password.
-        
+
         Args:
             login_data: Login credentials
-            
+
         Returns:
             User object if authentication successful, None otherwise
         """
         user = self.db.query(User).filter(
             User.email == login_data.email
         ).first()
-        
+
         if not user:
             return None
-            
+
         if not user.is_active:
             return None
-            
+
         if not verify_password(login_data.password, user.hashed_password):
             return None
-            
+
         # Update last login time
         user.last_login_at = datetime.utcnow()
         self.db.commit()
-        
+
         return user
+
+    def authenticate_with_google(self, google_token: str) -> Optional[User]:
+        """
+        Authenticate a user with Google ID token.
+        Automatically creates a new user if they don't exist.
+
+        Args:
+            google_token: Google ID token from frontend
+
+        Returns:
+            User object if authentication successful, None otherwise
+
+        Raises:
+            HTTPException: If token is invalid or user creation fails
+        """
+        try:
+            # Verify the Google ID token
+            idinfo = id_token.verify_oauth2_token(
+                google_token,
+                requests.Request()
+            )
+
+            # Get user email from token
+            email = idinfo.get('email')
+            if not email:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Email not found in Google token"
+                )
+
+            # Check if user already exists
+            user = self.db.query(User).filter(User.email == email).first()
+
+            if user:
+                if not user.is_active:
+                    raise HTTPException(
+                        status_code=status.HTTP_401_UNAUTHORIZED,
+                        detail="User account is inactive"
+                    )
+
+                # Update last login time
+                user.last_login_at = datetime.utcnow()
+                self.db.commit()
+                return user
+
+            # Create new user from Google token data
+            first_name = idinfo.get('given_name', '')
+            last_name = idinfo.get('family_name', '')
+            picture_url = idinfo.get('picture', '')
+
+            # Extract domain from email for company association
+            email_domain = email.split('@')[1].lower()
+
+            # Check if company exists by domain
+            existing_company = self.db.query(Company).filter(
+                Company.domain == email_domain
+            ).first()
+
+            if existing_company:
+                # Add user to existing company
+                company = existing_company
+                user_role = "member"
+            else:
+                # Create new company from email domain
+                # Use domain name as company/workspace name (e.g., grexit.com)
+                company_name = email_domain
+                company = Company(
+                    name=company_name,
+                    size="1-10",  # Default size for new workspaces
+                    domain=email_domain,
+                    is_active=True,
+                    subscription_plan="free"
+                )
+                user_role = "owner"
+                logger.info(f"Creating new workspace '{company_name}' for domain '{email_domain}' from Google login")
+
+                try:
+                    self.db.add(company)
+                    self.db.flush()
+                except IntegrityError as e:
+                    self.db.rollback()
+                    logger.warning(f"IntegrityError creating company: {str(e)}")
+                    # Company may have been created by another request, try again
+                    existing_company = self.db.query(Company).filter(
+                        Company.domain == email_domain
+                    ).first()
+                    if existing_company:
+                        company = existing_company
+                        user_role = "member"
+                    else:
+                        # If company still doesn't exist, log the error and create a fallback
+                        logger.error(f"Failed to create or find company for domain {email_domain}: {str(e)}")
+                        # Try with a unique name by appending domain hash
+                        import hashlib
+                        unique_suffix = hashlib.md5(email_domain.encode()).hexdigest()[:8]
+                        fallback_name = f"{company_name}_{unique_suffix}"
+
+                        try:
+                            company = Company(
+                                name=fallback_name,
+                                size="1-10",  # Default size for new workspaces
+                                domain=email_domain,
+                                is_active=True,
+                                subscription_plan="free"
+                            )
+                            self.db.add(company)
+                            self.db.flush()
+                        except Exception as fallback_error:
+                            logger.error(f"Fallback company creation also failed: {str(fallback_error)}")
+                            raise HTTPException(
+                                status_code=status.HTTP_400_BAD_REQUEST,
+                                detail=f"Failed to create company: {str(e)}"
+                            )
+
+            # Create new user with a random password (won't be used)
+            import secrets
+            random_password = secrets.token_urlsafe(32)
+            hashed_password = get_password_hash(random_password)
+
+            user = User(
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                company_id=company.id,
+                role=user_role,
+                hashed_password=hashed_password,
+                is_active=True,
+                onboarding_completed=False
+            )
+
+            try:
+                self.db.add(user)
+                self.db.commit()
+                self.db.refresh(user)
+
+                logger.info(f"New user created via Google OAuth: {email}")
+                return user
+
+            except IntegrityError as e:
+                self.db.rollback()
+                logger.error(f"Failed to create user from Google token: {str(e)}")
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Failed to create user account"
+                )
+
+        except ValueError as e:
+            # Invalid token
+            logger.error(f"Invalid Google token: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid Google token"
+            )
+        except Exception as e:
+            logger.error(f"Error authenticating with Google: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Google authentication failed"
+            )
     
     def get_user_by_id(self, user_id: str) -> Optional[User]:
         """
