@@ -39,6 +39,7 @@ import {
   useMediaQuery,
   Fab,
   Tooltip,
+  LinearProgress,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
@@ -188,6 +189,18 @@ export function ThemesPage(): JSX.Element {
   const [filterMrrMax, setFilterMrrMax] = useState<string>('');
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  // Feature edit modal state
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingFeature, setEditingFeature] = useState<Feature | null>(null);
+  const [editFormData, setEditFormData] = useState({ name: '', description: '' });
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
+
+  // Feature delete state
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [featureToDelete, setFeatureToDelete] = useState<Feature | null>(null);
+  const [deletingFeature, setDeletingFeature] = useState(false);
 
   // Resizable mentions layout state
   const [featuresWidth, setFeaturesWidth] = useState(35); // 35%
@@ -832,6 +845,112 @@ export function ThemesPage(): JSX.Element {
     setDrawerOpen(false);
     setSelectedThemeForDrawer(null);
     setThemeFeatures([]);
+  };
+
+  const handleOpenEditModal = (feature: Feature) => {
+    setEditingFeature(feature);
+    setEditFormData({
+      name: feature.name,
+      description: feature.description
+    });
+    setEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditModalOpen(false);
+    setEditingFeature(null);
+    setEditFormData({ name: '', description: '' });
+    setEditError(null);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingFeature || !editFormData.name.trim()) {
+      setEditError('Feature name cannot be empty');
+      return;
+    }
+
+    try {
+      setSavingEdit(true);
+      setEditError(null);
+      const token = getAuthToken();
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/features/features/${editingFeature.id}?workspace_id=${WORKSPACE_ID}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: editFormData.name,
+            description: editFormData.description
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to update feature: ${response.status}`);
+      }
+
+      const updatedFeature = await response.json();
+      setThemeFeatures(themeFeatures.map(f => f.id === editingFeature.id ? updatedFeature : f));
+      handleCloseEditModal();
+
+      // Refresh themes to update counts if needed
+      fetchThemes();
+    } catch (error) {
+      console.error('Error saving feature:', error);
+      setEditError(error instanceof Error ? error.message : 'Failed to save feature');
+    } finally {
+      setSavingEdit(false);
+    }
+  };
+
+  const handleOpenDeleteConfirm = (feature: Feature) => {
+    setFeatureToDelete(feature);
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleCloseDeleteConfirm = () => {
+    setDeleteConfirmOpen(false);
+    setFeatureToDelete(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!featureToDelete) return;
+
+    try {
+      setDeletingFeature(true);
+      const token = getAuthToken();
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/features/features/${featureToDelete.id}?workspace_id=${WORKSPACE_ID}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete feature: ${response.status}`);
+      }
+
+      // Remove from theme features
+      setThemeFeatures(themeFeatures.filter(f => f.id !== featureToDelete.id));
+      handleCloseDeleteConfirm();
+
+      // Refresh themes to update counts
+      fetchThemes();
+    } catch (error) {
+      console.error('Error deleting feature:', error);
+      alert(error instanceof Error ? error.message : 'Failed to delete feature');
+    } finally {
+      setDeletingFeature(false);
+    }
   };
 
   const getUrgencyColor = (urgency: string) => {
@@ -1622,6 +1741,9 @@ export function ThemesPage(): JSX.Element {
                                     border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
                                     transform: 'translateY(-2px)',
                                     boxShadow: theme.shadows[2],
+                                    '& > div > div:nth-of-type(1) > div:last-child': {
+                                      opacity: 1
+                                    }
                                   },
                                 }}
                               >
@@ -1658,6 +1780,45 @@ export function ThemesPage(): JSX.Element {
                                         ml: 2
                                       }}
                                     />
+                                    <Box
+                                      sx={{
+                                        ml: 'auto',
+                                        display: 'flex',
+                                        gap: 0.5,
+                                        opacity: 0,
+                                        transition: 'opacity 0.2s ease-in-out',
+                                        '_groupHover &': { opacity: 1 }
+                                      }}
+                                    >
+                                      <Tooltip title="Edit feature">
+                                        <IconButton
+                                          size="small"
+                                          onClick={() => handleOpenEditModal(feature)}
+                                          sx={{
+                                            color: theme.palette.primary.main,
+                                            '&:hover': {
+                                              backgroundColor: alpha(theme.palette.primary.main, 0.1)
+                                            }
+                                          }}
+                                        >
+                                          <EditIcon sx={{ fontSize: '1.1rem' }} />
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="Delete feature">
+                                        <IconButton
+                                          size="small"
+                                          onClick={() => handleOpenDeleteConfirm(feature)}
+                                          sx={{
+                                            color: theme.palette.error.main,
+                                            '&:hover': {
+                                              backgroundColor: alpha(theme.palette.error.main, 0.1)
+                                            }
+                                          }}
+                                        >
+                                          <DeleteIcon sx={{ fontSize: '1.1rem' }} />
+                                        </IconButton>
+                                      </Tooltip>
+                                    </Box>
                                   </Box>
 
                                   {/* Description */}
@@ -2787,6 +2948,127 @@ export function ThemesPage(): JSX.Element {
             Delete Theme
           </MenuItem>
         </Menu>
+
+        {/* Feature Edit Modal */}
+        <Dialog
+          open={editModalOpen}
+          onClose={handleCloseEditModal}
+          maxWidth="sm"
+          fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: 2,
+              boxShadow: '0 10px 40px rgba(0,0,0,0.2)',
+            }
+          }}
+        >
+          <DialogTitle sx={{ fontWeight: 600, fontSize: '1.1rem' }}>
+            Edit Feature
+          </DialogTitle>
+          <DialogContent sx={{ pt: 2 }}>
+            {editError && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {editError}
+              </Alert>
+            )}
+            {savingEdit && (
+              <LinearProgress sx={{ mb: 2 }} />
+            )}
+            <TextField
+              autoFocus
+              label="Feature Title"
+              fullWidth
+              value={editFormData.name}
+              onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+              disabled={savingEdit}
+              margin="normal"
+              variant="outlined"
+              required
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 1.5,
+                }
+              }}
+            />
+            <TextField
+              label="Description"
+              fullWidth
+              multiline
+              rows={4}
+              value={editFormData.description}
+              onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+              disabled={savingEdit}
+              margin="normal"
+              variant="outlined"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 1.5,
+                }
+              }}
+            />
+          </DialogContent>
+          <DialogActions sx={{ p: 2 }}>
+            <Button
+              onClick={handleCloseEditModal}
+              disabled={savingEdit}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSaveEdit}
+              variant="contained"
+              disabled={savingEdit || !editFormData.name.trim()}
+            >
+              {savingEdit ? 'Saving...' : 'Save Changes'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog
+          open={deleteConfirmOpen}
+          onClose={handleCloseDeleteConfirm}
+          maxWidth="xs"
+          fullWidth
+        >
+          <DialogTitle sx={{ pb: 1 }}>Delete Feature</DialogTitle>
+          <DialogContent sx={{ pt: 2 }}>
+            <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+              Are you sure you want to delete this feature? This action cannot be undone.
+            </Typography>
+            {featureToDelete && (
+              <Typography
+                variant="body2"
+                sx={{
+                  mt: 2,
+                  p: 1.5,
+                  backgroundColor: alpha(theme.palette.error.main, 0.1),
+                  borderRadius: 1,
+                  border: `1px solid ${alpha(theme.palette.error.main, 0.3)}`,
+                  color: theme.palette.error.main,
+                }}
+              >
+                <strong>Feature:</strong> {featureToDelete.name}
+              </Typography>
+            )}
+          </DialogContent>
+          <DialogActions sx={{ p: 2 }}>
+            <Button
+              onClick={handleCloseDeleteConfirm}
+              disabled={deletingFeature}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmDelete}
+              variant="contained"
+              color="error"
+              disabled={deletingFeature}
+            >
+              {deletingFeature ? 'Deleting...' : 'Delete Feature'}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </AdminLayout>
   );

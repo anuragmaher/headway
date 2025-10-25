@@ -32,6 +32,8 @@ class ThemeUpdateRequest(BaseModel):
 
 
 class FeatureUpdateRequest(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
     theme_id: Optional[str] = None
     status: Optional[str] = None
     urgency: Optional[str] = None
@@ -608,7 +610,7 @@ async def update_feature(
     db: Session = Depends(get_db)
 ):
     """
-    Update a feature (theme_id, status, urgency)
+    Update a feature (name, description, theme_id, status, urgency)
     """
     try:
         # Find the feature
@@ -637,7 +639,19 @@ async def update_feature(
                         detail="Theme not found"
                     )
 
+        # Validate name if being updated
+        if request.name is not None:
+            if not request.name.strip():
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Feature name cannot be empty"
+                )
+
         # Update fields
+        if request.name is not None:
+            feature.name = request.name
+        if request.description is not None:
+            feature.description = request.description
         if request.theme_id is not None:
             feature.theme_id = request.theme_id if request.theme_id else None
         if request.status is not None:
@@ -662,8 +676,8 @@ async def update_feature(
             last_mentioned=feature.last_mentioned.isoformat() if feature.last_mentioned else "",
             created_at=feature.created_at.isoformat() if feature.created_at else "",
             updated_at=feature.updated_at.isoformat() if feature.updated_at else None,
-            data_points=feature.data_points if feature.data_points else [],
-            ai_metadata=feature.ai_metadata
+            data_points=getattr(feature, 'data_points', None) or [],
+            ai_metadata=getattr(feature, 'ai_metadata', None)
         )
 
     except HTTPException:
@@ -674,6 +688,46 @@ async def update_feature(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to update feature: {str(e)}"
+        )
+
+
+@router.delete("/features/{feature_id}")
+async def delete_feature(
+    feature_id: str,
+    workspace_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Delete a feature by ID
+    """
+    try:
+        # Verify the feature exists and belongs to the workspace
+        feature = db.query(Feature).filter(
+            Feature.id == feature_id,
+            Feature.workspace_id == workspace_id
+        ).first()
+
+        if not feature:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Feature not found"
+            )
+
+        # Delete the feature
+        db.delete(feature)
+        db.commit()
+
+        return {"message": f"Feature '{feature.name}' deleted successfully"}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error deleting feature {feature_id}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to delete feature: {str(e)}"
         )
 
 

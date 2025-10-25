@@ -30,6 +30,7 @@ from app.core.config import settings
 from app.models.integration import Integration
 from app.models.workspace import Workspace
 from app.models.workspace_connector import WorkspaceConnector
+from app.models.customer import Customer
 from app.services.fathom_ingestion_service import get_fathom_ingestion_service
 from app.services.transcript_ingestion_service import get_transcript_ingestion_service
 from app.services.workspace_service import WorkspaceService
@@ -44,6 +45,63 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+
+def _get_or_create_customer_from_email(
+    db: Session,
+    workspace_id: str,
+    email: str,
+    user_name: str
+) -> Optional[Customer]:
+    """
+    Get or create a customer from email address by extracting domain.
+
+    This is adapted for Fathom which doesn't have CRM integration like Gong/HubSpot.
+    We use the email domain as the company identifier.
+
+    Args:
+        db: Database session
+        workspace_id: Workspace UUID
+        email: Email address (e.g., user@acme.com)
+        user_name: User/contact name
+
+    Returns:
+        Customer instance or None if email is invalid
+    """
+    if not email or '@' not in email:
+        return None
+
+    # Extract domain from email
+    domain = email.split('@')[1].lower()
+
+    # Try to find existing customer by domain
+    customer = db.query(Customer).filter(
+        and_(
+            Customer.workspace_id == workspace_id,
+            Customer.domain == domain
+        )
+    ).first()
+
+    if customer:
+        # Update last activity timestamp
+        customer.last_activity_at = datetime.now(timezone.utc)
+        return customer
+
+    # Create new customer from email domain
+    # Use domain as company name (e.g., "acme.com" -> "Acme")
+    company_name = domain.split('.')[0].capitalize()
+
+    customer = Customer(
+        workspace_id=workspace_id,
+        name=company_name,
+        domain=domain,
+        external_system='fathom',
+        external_id=domain,  # Use domain as unique ID for Fathom
+        last_activity_at=datetime.now(timezone.utc)
+    )
+    db.add(customer)
+
+    return customer
 
 
 async def ingest_fathom_sessions(
@@ -182,6 +240,19 @@ async def ingest_fathom_sessions(
                     recorded_by = session_data.get('recorded_by', {})
                     user_email = recorded_by.get('email')
                     user_name = recorded_by.get('name') or user_email or 'Unknown'
+
+                    # Extract or create customer from email domain
+                    customer = None
+                    if user_email:
+                        customer = _get_or_create_customer_from_email(
+                            db, workspace_id, user_email, user_name
+                        )
+                        if customer:
+                            # Flush to get customer ID
+                            db.flush()
+                            if not customer.id:
+                                db.refresh(customer)
+
                     # Calculate duration from recording timestamps
                     recording_start = session_data.get('recording_start_time')
                     recording_end = session_data.get('recording_end_time')
@@ -274,7 +345,7 @@ async def ingest_fathom_sessions(
                         author_name=user_name,
                         author_email=user_email,
                         author_id=None,
-                        customer_id=None,  # Could be linked to customer if email matches
+                        customer_id=customer.id if customer else None,
                         sent_at=session_time,
                         integration_id=integration.id,
                         extract_features=extract_features

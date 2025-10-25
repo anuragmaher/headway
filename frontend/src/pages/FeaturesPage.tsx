@@ -20,9 +20,16 @@ import {
   Tooltip,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  LinearProgress
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import EditIcon from '@mui/icons-material/Edit';
 import FeatureMessagesModal from '../shared/components/FeatureMessagesModal';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useAuthStore } from '@/features/auth/store/auth-store';
@@ -88,6 +95,11 @@ const FeaturesPage: React.FC = () => {
   const [messagesModalFeature, setMessagesModalFeature] = useState<{ id: string; name: string } | null>(null);
   const [featureMessages, setFeatureMessages] = useState<any[]>([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingFeature, setEditingFeature] = useState<Feature | null>(null);
+  const [editFormData, setEditFormData] = useState({ name: '', description: '' });
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
 
   const { tokens } = useAuthStore();
   const WORKSPACE_ID = tokens?.workspace_id;
@@ -259,6 +271,67 @@ const FeaturesPage: React.FC = () => {
     fetchFeatureMessages(featureId);
   };
 
+  const handleOpenEditModal = (feature: Feature) => {
+    setEditingFeature(feature);
+    setEditFormData({
+      name: feature.name,
+      description: feature.description || ''
+    });
+    setEditError(null);
+    setEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditModalOpen(false);
+    setEditingFeature(null);
+    setEditFormData({ name: '', description: '' });
+    setEditError(null);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingFeature || !editFormData.name.trim()) {
+      setEditError('Feature name cannot be empty');
+      return;
+    }
+
+    try {
+      setSavingEdit(true);
+      setEditError(null);
+      const token = getAuthToken();
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/features/features/${editingFeature.id}?workspace_id=${WORKSPACE_ID}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: editFormData.name,
+            description: editFormData.description
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to update feature: ${response.status}`);
+      }
+
+      // Update the feature in the list
+      const updatedFeature = await response.json();
+      setFeatures(features.map(f => f.id === editingFeature.id ? updatedFeature : f));
+
+      // Close the modal
+      handleCloseEditModal();
+    } catch (error) {
+      console.error('Error saving feature:', error);
+      setEditError(error instanceof Error ? error.message : 'Failed to save feature');
+    } finally {
+      setSavingEdit(false);
+    }
+  };
+
   if (loading) {
     return (
       <AdminLayout>
@@ -395,9 +468,19 @@ const FeaturesPage: React.FC = () => {
             </Typography>
             {getSelectedFeature() ? (
               <Paper elevation={1} sx={{ p: 3, maxHeight: 600, overflow: 'auto' }}>
-                <Typography variant="h5" gutterBottom>
-                  {getSelectedFeature()?.name}
-                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                  <Typography variant="h5">
+                    {getSelectedFeature()?.name}
+                  </Typography>
+                  <Button
+                    startIcon={<EditIcon />}
+                    size="small"
+                    variant="outlined"
+                    onClick={() => handleOpenEditModal(getSelectedFeature()!)}
+                  >
+                    Edit
+                  </Button>
+                </Box>
 
                 <Box sx={{ mb: 3, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                   <Chip
@@ -655,6 +738,56 @@ const FeaturesPage: React.FC = () => {
             workspaceId={WORKSPACE_ID}
           />
         )}
+
+        {/* Edit Feature Modal */}
+        <Dialog open={editModalOpen} onClose={handleCloseEditModal} maxWidth="sm" fullWidth>
+          <DialogTitle>
+            Edit Feature
+          </DialogTitle>
+          <DialogContent sx={{ pt: 2 }}>
+            {editError && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {editError}
+              </Alert>
+            )}
+            {savingEdit && <LinearProgress sx={{ mb: 2 }} />}
+            <TextField
+              fullWidth
+              label="Feature Title"
+              value={editFormData.name}
+              onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+              disabled={savingEdit}
+              sx={{ mb: 2 }}
+              placeholder="Enter feature title"
+            />
+            <TextField
+              fullWidth
+              label="Description"
+              value={editFormData.description}
+              onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+              disabled={savingEdit}
+              multiline
+              rows={4}
+              placeholder="Enter feature description"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={handleCloseEditModal}
+              disabled={savingEdit}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSaveEdit}
+              variant="contained"
+              color="primary"
+              disabled={savingEdit}
+            >
+              {savingEdit ? 'Saving...' : 'Save'}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </AdminLayout>
   );
