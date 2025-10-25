@@ -52,7 +52,8 @@ async def ingest_fathom_sessions(
     limit: int = 10,
     days_back: int = 7,
     min_duration_seconds: int = 0,
-    extract_features: bool = True
+    extract_features: bool = True,
+    api_token: Optional[str] = None
 ) -> int:
     """
     Ingest sessions from Fathom for a specific workspace
@@ -64,6 +65,7 @@ async def ingest_fathom_sessions(
         days_back: How many days back to fetch sessions
         min_duration_seconds: Minimum session duration to include
         extract_features: Whether to run AI extraction
+        api_token: Fathom API token (optional, uses connector if not provided)
 
     Returns:
         Number of sessions ingested
@@ -78,16 +80,20 @@ async def ingest_fathom_sessions(
             logger.error(f"Workspace {workspace_id} not found")
             return 0
 
-        # Get Fathom credentials from workspace connector
-        workspace_service = WorkspaceService(db)
-        fathom_connector = workspace_service.get_connector_by_type(workspace_id, "fathom")
+        # Use provided credentials or get from workspace connector
+        if not api_token:
+            workspace_service = WorkspaceService(db)
+            fathom_connector = workspace_service.get_connector_by_type(workspace_id, "fathom")
 
-        if not fathom_connector:
-            logger.error(f"Fathom connector not configured for workspace {workspace_id}")
-            logger.error("Please configure Fathom credentials in workspace settings")
-            return 0
+            if not fathom_connector:
+                logger.error(f"Fathom connector not configured for workspace {workspace_id}")
+                logger.error("Please configure Fathom credentials in workspace settings")
+                return 0
 
-        api_token = fathom_connector.fathom_api_token
+            # Extract credentials from JSONB
+            credentials = fathom_connector.credentials or {}
+            api_token = credentials.get('api_token')
+
         fathom_project_id = project_id  # Use provided project_id or fall back to settings
 
         if not api_token:

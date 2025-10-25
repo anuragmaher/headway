@@ -390,7 +390,9 @@ async def ingest_gong_calls(
     limit: int = 10,
     days_back: int = 7,
     fetch_transcripts: bool = True,
-    extract_features: bool = True
+    extract_features: bool = True,
+    access_key: Optional[str] = None,
+    secret_key: Optional[str] = None
 ) -> int:
     """
     Ingest calls from Gong for a specific workspace
@@ -400,6 +402,9 @@ async def ingest_gong_calls(
         limit: Maximum number of calls to fetch
         days_back: How many days back to fetch calls
         fetch_transcripts: Whether to fetch full transcripts
+        extract_features: Whether to extract features with AI
+        access_key: Gong API access key (optional, uses connector if not provided)
+        secret_key: Gong API secret key (optional, uses connector if not provided)
 
     Returns:
         Number of calls ingested
@@ -415,17 +420,20 @@ async def ingest_gong_calls(
                 logger.error(f"Workspace {workspace_id} not found")
                 return 0
 
-            # Get Gong credentials from workspace connector
-            workspace_service = WorkspaceService(db)
-            gong_connector = workspace_service.get_connector_by_type(workspace_id, "gong")
+            # Use provided credentials or get from workspace connector
+            if not access_key or not secret_key:
+                workspace_service = WorkspaceService(db)
+                gong_connector = workspace_service.get_connector_by_type(workspace_id, "gong")
 
-            if not gong_connector:
-                logger.error(f"Gong connector not configured for workspace {workspace_id}")
-                logger.error("Please configure Gong credentials in workspace settings")
-                return 0
+                if not gong_connector:
+                    logger.error(f"Gong connector not configured for workspace {workspace_id}")
+                    logger.error("Please configure Gong credentials in workspace settings")
+                    return 0
 
-            access_key = gong_connector.gong_access_key
-            secret_key = gong_connector.gong_secret_key
+                # Extract credentials from JSONB
+                credentials = gong_connector.credentials or {}
+                access_key = credentials.get('access_key')
+                secret_key = credentials.get('secret_key')
 
             if not access_key or not secret_key:
                 logger.error(f"Gong credentials incomplete for workspace {workspace_id}")
