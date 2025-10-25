@@ -13,6 +13,7 @@ import logging
 
 from app.models.user import User
 from app.models.company import Company
+from app.models.workspace import Workspace
 from app.schemas.auth import UserCreate, UserUpdate, LoginRequest
 from app.core.security import (
     verify_password,
@@ -294,6 +295,28 @@ class AuthService:
                 self.db.refresh(user)
 
                 logger.info(f"New user created via Google OAuth: {email}")
+
+                # Create workspace for new company (only if user is owner)
+                if user_role == "owner":
+                    try:
+                        # Generate slug from company name (domain)
+                        workspace_slug = company_name.replace(".", "-")
+
+                        workspace = Workspace(
+                            name=company_name,
+                            slug=workspace_slug,
+                            company_id=company.id,
+                            owner_id=user.id,
+                            is_active=True
+                        )
+                        self.db.add(workspace)
+                        self.db.commit()
+                        logger.info(f"Workspace '{company_name}' created for user {email}")
+                    except IntegrityError as workspace_error:
+                        self.db.rollback()
+                        logger.warning(f"Failed to create workspace: {str(workspace_error)}")
+                        # Don't fail the login if workspace creation fails, just log it
+
                 return user
 
             except IntegrityError as e:
