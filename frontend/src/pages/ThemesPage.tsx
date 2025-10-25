@@ -33,9 +33,6 @@ import {
   FormControl,
   InputLabel,
   Collapse,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   useMediaQuery,
   Fab,
   Tooltip,
@@ -58,6 +55,7 @@ import {
   Clear as ClearIcon,
   Search as SearchIcon,
   Info as InfoIcon,
+  OpenInNew as OpenInNewIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
 import { ResizablePanel } from '@/shared/components/ResizablePanel';
@@ -79,6 +77,7 @@ interface Feature {
   last_mentioned: string;
   created_at: string;
   updated_at: string | null;
+  match_confidence?: number | null;
   data_points?: any[];
   ai_metadata?: {
     extraction_source?: string;
@@ -146,6 +145,16 @@ interface Message {
   customer_name: string | null;
   customer_email: string | null;
   ai_insights: AIInsights | null;
+  source?: string; // 'gong', 'fathom', 'slack', etc.
+  external_id?: string; // ID for external systems (call_id for Gong, session_id for Fathom)
+  message_metadata?: Record<string, any>; // Recording URL, session details, etc.
+  metadata?: {
+    [key: string]: any;
+    call_id?: string;
+    recording_url?: string;
+    session_id?: string;
+    share_url?: string;
+  };
 }
 
 export function ThemesPage(): JSX.Element {
@@ -201,6 +210,11 @@ export function ThemesPage(): JSX.Element {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [featureToDelete, setFeatureToDelete] = useState<Feature | null>(null);
   const [deletingFeature, setDeletingFeature] = useState(false);
+
+  // Mention delete state
+  const [deleteMentionConfirmOpen, setDeleteMentionConfirmOpen] = useState(false);
+  const [mentionToDelete, setMentionToDelete] = useState<Message | null>(null);
+  const [deletingMention, setDeletingMention] = useState(false);
 
   // Resizable mentions layout state
   const [featuresWidth, setFeaturesWidth] = useState(35); // 35%
@@ -950,6 +964,54 @@ export function ThemesPage(): JSX.Element {
       alert(error instanceof Error ? error.message : 'Failed to delete feature');
     } finally {
       setDeletingFeature(false);
+    }
+  };
+
+  // Delete mention handlers
+  const handleOpenDeleteMentionConfirm = (message: Message) => {
+    setMentionToDelete(message);
+    setDeleteMentionConfirmOpen(true);
+  };
+
+  const handleCloseDeleteMentionConfirm = () => {
+    setDeleteMentionConfirmOpen(false);
+    setMentionToDelete(null);
+  };
+
+  const handleConfirmDeleteMention = async () => {
+    if (!mentionToDelete || !selectedFeatureForMessages) {
+      return;
+    }
+
+    setDeletingMention(true);
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/features/${selectedFeatureForMessages.id}/messages/${mentionToDelete.id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${tokens.access_token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete message: ${response.status}`);
+      }
+
+      // Remove from featureMessages
+      setFeatureMessages(featureMessages.filter(m => m.id !== mentionToDelete.id));
+      handleCloseDeleteMentionConfirm();
+
+      // Clear selected message if it was deleted
+      if (selectedMessageId === mentionToDelete.id) {
+        setSelectedMessageId(null);
+      }
+    } catch (error) {
+      console.error('Error deleting message:', error);
+      alert(error instanceof Error ? error.message : 'Failed to delete message');
+    } finally {
+      setDeletingMention(false);
     }
   };
 
@@ -1729,6 +1791,8 @@ export function ThemesPage(): JSX.Element {
                           {filteredAndSortedFeatures.map((feature, index) => (
                             <React.Fragment key={feature.id}>
                               <ListItem
+                                button
+                                onClick={() => handleShowMessages(feature)}
                                 sx={{
                                   borderRadius: 1.5,
                                   mb: 1,
@@ -1754,6 +1818,21 @@ export function ThemesPage(): JSX.Element {
                                       <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: '0.95rem' }}>
                                         {feature.name}
                                       </Typography>
+                                      {feature.match_confidence !== null && feature.match_confidence !== undefined && (
+                                        <Tooltip title={`Feature match confidence: ${(feature.match_confidence * 100).toFixed(0)}%`}>
+                                          <Chip
+                                            label={`${(feature.match_confidence * 100).toFixed(0)}%`}
+                                            size="small"
+                                            sx={{
+                                              height: 20,
+                                              fontSize: '0.65rem',
+                                              fontWeight: 600,
+                                              backgroundColor: feature.match_confidence >= 0.8 ? '#4caf50' : feature.match_confidence >= 0.6 ? '#ff9800' : '#f44336',
+                                              color: 'white'
+                                            }}
+                                          />
+                                        </Tooltip>
+                                      )}
                                       {getThemeValidationConfidence(feature) !== null && (
                                         <Tooltip title={`Theme classification confidence: ${getConfidenceLabel(getThemeValidationConfidence(feature)!)}`}>
                                           <Box
@@ -1793,7 +1872,10 @@ export function ThemesPage(): JSX.Element {
                                       <Tooltip title="Edit feature">
                                         <IconButton
                                           size="small"
-                                          onClick={() => handleOpenEditModal(feature)}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleOpenEditModal(feature);
+                                          }}
                                           sx={{
                                             color: theme.palette.primary.main,
                                             '&:hover': {
@@ -1807,7 +1889,10 @@ export function ThemesPage(): JSX.Element {
                                       <Tooltip title="Delete feature">
                                         <IconButton
                                           size="small"
-                                          onClick={() => handleOpenDeleteConfirm(feature)}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleOpenDeleteConfirm(feature);
+                                          }}
                                           sx={{
                                             color: theme.palette.error.main,
                                             '&:hover': {
@@ -1858,7 +1943,6 @@ export function ThemesPage(): JSX.Element {
                                       }}
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        handleShowMessages(feature);
                                       }}
                                     />
 
@@ -2189,9 +2273,13 @@ export function ThemesPage(): JSX.Element {
                                       ? `1px solid ${theme.palette.primary.main}`
                                       : `1px solid ${alpha(theme.palette.divider, 0.2)}`,
                                     transition: 'all 0.2s ease-in-out',
+                                    position: 'relative',
                                     '&:hover': {
                                       background: alpha(theme.palette.primary.main, 0.06),
                                       border: `1px solid ${alpha(theme.palette.primary.main, 0.5)}`,
+                                      '& .delete-button': {
+                                        opacity: 1,
+                                      },
                                     },
                                   }}
                                 >
@@ -2217,6 +2305,27 @@ export function ThemesPage(): JSX.Element {
                                       )}
                                     </Box>
                                   )}
+                                  <IconButton
+                                    className="delete-button"
+                                    size="small"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleOpenDeleteMentionConfirm(message);
+                                    }}
+                                    sx={{
+                                      position: 'absolute',
+                                      top: 4,
+                                      right: 4,
+                                      opacity: 0,
+                                      transition: 'opacity 0.2s ease-in-out',
+                                      color: theme.palette.error.main,
+                                      '&:hover': {
+                                        bgcolor: alpha(theme.palette.error.main, 0.1),
+                                      },
+                                    }}
+                                  >
+                                    <DeleteIcon sx={{ fontSize: 16 }} />
+                                  </IconButton>
                                 </Box>
                               );
                             })}
@@ -2266,12 +2375,49 @@ export function ThemesPage(): JSX.Element {
                         <Box sx={{ width: '100%' }}>
                           {/* Header */}
                           <Box sx={{ mb: 2, pb: 2, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
-                            <Typography variant="body2" fontWeight="bold" color="primary" sx={{ mb: 0.5 }}>
-                              {selectedMessage.customer_name || selectedMessage.sender_name || 'Unknown'}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary" display="block">
-                              {selectedMessage.customer_email || selectedMessage.sender_name}
-                            </Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
+                              <Box sx={{ flex: 1 }}>
+                                <Typography variant="body2" fontWeight="bold" color="primary" sx={{ mb: 0.5 }}>
+                                  {selectedMessage.customer_name || selectedMessage.sender_name || 'Unknown'}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary" display="block">
+                                  {selectedMessage.customer_email || selectedMessage.sender_name}
+                                </Typography>
+                              </Box>
+                              {/* Go to Call Button */}
+                              {(() => {
+                                let callUrl: string | null = null;
+                                let buttonText = 'Go to Call';
+
+                                if (selectedMessage.source === 'gong' && selectedMessage.external_id) {
+                                  callUrl = `https://app.gong.io/call/${selectedMessage.external_id}`;
+                                  buttonText = 'View in Gong';
+                                } else if (selectedMessage.source === 'fathom' && selectedMessage.message_metadata?.recording_url) {
+                                  callUrl = selectedMessage.message_metadata.recording_url;
+                                  buttonText = 'View Recording';
+                                }
+
+                                if (callUrl) {
+                                  return (
+                                    <Button
+                                      variant="outlined"
+                                      size="small"
+                                      endIcon={<OpenInNewIcon />}
+                                      onClick={() => window.open(callUrl, '_blank')}
+                                      sx={{
+                                        textTransform: 'none',
+                                        fontSize: '0.75rem',
+                                        py: 0.5,
+                                        px: 1,
+                                      }}
+                                    >
+                                      {buttonText}
+                                    </Button>
+                                  );
+                                }
+                                return null;
+                              })()}
+                            </Box>
                           </Box>
 
                           {selectedMessage.ai_insights ? (
@@ -3066,6 +3212,54 @@ export function ThemesPage(): JSX.Element {
               disabled={deletingFeature}
             >
               {deletingFeature ? 'Deleting...' : 'Delete Feature'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Delete Mention Confirmation Dialog */}
+        <Dialog
+          open={deleteMentionConfirmOpen}
+          onClose={handleCloseDeleteMentionConfirm}
+          maxWidth="xs"
+          fullWidth
+        >
+          <DialogTitle sx={{ pb: 1 }}>Delete Mention</DialogTitle>
+          <DialogContent sx={{ pt: 2 }}>
+            <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+              Are you sure you want to remove this mention from the feature? This action cannot be undone.
+            </Typography>
+            {mentionToDelete && (
+              <Typography
+                variant="body2"
+                sx={{
+                  mt: 2,
+                  p: 1.5,
+                  backgroundColor: alpha(theme.palette.error.main, 0.1),
+                  borderRadius: 1,
+                  border: `1px solid ${alpha(theme.palette.error.main, 0.3)}`,
+                  color: theme.palette.error.main,
+                }}
+              >
+                <strong>From:</strong> {mentionToDelete.customer_name || mentionToDelete.sender_name || 'Unknown'}
+                <br />
+                <strong>Date:</strong> {formatDate(mentionToDelete.sent_at)}
+              </Typography>
+            )}
+          </DialogContent>
+          <DialogActions sx={{ p: 2 }}>
+            <Button
+              onClick={handleCloseDeleteMentionConfirm}
+              disabled={deletingMention}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmDeleteMention}
+              variant="contained"
+              color="error"
+              disabled={deletingMention}
+            >
+              {deletingMention ? 'Deleting...' : 'Delete Mention'}
             </Button>
           </DialogActions>
         </Dialog>

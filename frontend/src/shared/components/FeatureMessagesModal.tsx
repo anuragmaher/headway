@@ -23,6 +23,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import TagIcon from '@mui/icons-material/Tag';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { API_BASE_URL } from '../../config/api.config';
+import { ExternalCallLink } from './ExternalCallLink';
 
 interface AIInsights {
   feature_requests?: Array<{
@@ -60,6 +61,9 @@ interface Message {
   customer_name: string | null;
   customer_email: string | null;
   ai_insights: AIInsights | null;
+  source?: string;
+  external_id?: string;
+  message_metadata?: Record<string, any>;
 }
 
 interface FeatureMessagesModalProps {
@@ -250,35 +254,43 @@ const FeatureMessagesModal: React.FC<FeatureMessagesModalProps> = ({
                           </Typography>
                         </Box>
 
-                        {/* Insight Counts */}
-                        {message.ai_insights && totalInsights > 0 && (
-                          <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
-                            {insightCounts.features > 0 && (
-                              <Chip
-                                label={`${insightCounts.features} feature${insightCounts.features > 1 ? 's' : ''}`}
-                                size="small"
-                                color="info"
-                                variant="outlined"
-                              />
-                            )}
-                            {insightCounts.bugs > 0 && (
-                              <Chip
-                                label={`${insightCounts.bugs} bug${insightCounts.bugs > 1 ? 's' : ''}`}
-                                size="small"
-                                color="error"
-                                variant="outlined"
-                              />
-                            )}
-                            {insightCounts.painPoints > 0 && (
-                              <Chip
-                                label={`${insightCounts.painPoints} pain point${insightCounts.painPoints > 1 ? 's' : ''}`}
-                                size="small"
-                                color="warning"
-                                variant="outlined"
-                              />
-                            )}
-                          </Box>
-                        )}
+                        {/* Insight Counts and External Call Link */}
+                        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
+                          {message.ai_insights && totalInsights > 0 && (
+                            <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                              {insightCounts.features > 0 && (
+                                <Chip
+                                  label={`${insightCounts.features} feature${insightCounts.features > 1 ? 's' : ''}`}
+                                  size="small"
+                                  color="info"
+                                  variant="outlined"
+                                />
+                              )}
+                              {insightCounts.bugs > 0 && (
+                                <Chip
+                                  label={`${insightCounts.bugs} bug${insightCounts.bugs > 1 ? 's' : ''}`}
+                                  size="small"
+                                  color="error"
+                                  variant="outlined"
+                                />
+                              )}
+                              {insightCounts.painPoints > 0 && (
+                                <Chip
+                                  label={`${insightCounts.painPoints} pain point${insightCounts.painPoints > 1 ? 's' : ''}`}
+                                  size="small"
+                                  color="warning"
+                                  variant="outlined"
+                                />
+                              )}
+                            </Box>
+                          )}
+                          <ExternalCallLink
+                            source={message.source}
+                            externalId={message.external_id}
+                            messageMetadata={message.message_metadata}
+                            size="small"
+                          />
+                        </Box>
                       </AccordionSummary>
 
                       <AccordionDetails>

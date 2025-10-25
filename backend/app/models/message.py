@@ -70,6 +70,7 @@ class Message(Base):
         Index('idx_messages_workspace_processed', 'workspace_id', 'is_processed'),
         Index('idx_messages_customer', 'customer_id'),
         Index('idx_messages_workspace_customer', 'workspace_id', 'customer_id'),
+        Index('idx_messages_ai_insights_gin', 'ai_insights', postgresql_using='gin'),  # GIN index for JSONB queries
     )
 
     def __repr__(self) -> str:

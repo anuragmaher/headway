@@ -267,8 +267,13 @@ const FeaturesPage: React.FC = () => {
   };
 
   const handleFeatureSelect = (featureId: string) => {
-    setSelectedFeatureId(featureId);
-    fetchFeatureMessages(featureId);
+    const feature = features.find(f => f.id === featureId);
+    if (feature) {
+      setSelectedFeatureId(featureId);
+      setMessagesModalFeature({ id: feature.id, name: feature.name });
+      setMessagesModalOpen(true);
+      fetchFeatureMessages(featureId);
+    }
   };
 
   const handleOpenEditModal = (feature: Feature) => {

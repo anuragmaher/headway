@@ -8,6 +8,7 @@ with the Base metadata for Alembic migrations.
 from app.models.user import User
 from app.models.company import Company
 from app.models.workspace import Workspace
+from app.models.workspace_connector import WorkspaceConnector
 from app.models.theme import Theme
 from app.models.feature import Feature
 from app.models.integration import Integration
@@ -21,6 +22,7 @@ __all__ = [
     "User",
     "Company",
     "Workspace",
+    "WorkspaceConnector",
     "Theme",
     "Feature",
     "Integration",

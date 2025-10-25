@@ -34,7 +34,7 @@ class AIFeatureMatchingService:
         self,
         new_feature: Dict[str, str],
         existing_features: List[Dict[str, str]],
-        confidence_threshold: float = 0.7
+        confidence_threshold: float = 0.8
     ) -> Dict[str, Any]:
         """
         Use LLM to determine if a new feature matches any existing features

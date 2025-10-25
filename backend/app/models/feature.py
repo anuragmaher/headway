@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Text, Index
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Text, Index, Float
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -22,6 +22,10 @@ class Feature(Base):
     # Workspace and theme relationships
     workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), nullable=False)
     theme_id = Column(UUID(as_uuid=True), ForeignKey("themes.id"), nullable=True)
+
+    # AI matching confidence and extraction metadata
+    match_confidence = Column(Float, nullable=True)  # 0.0-1.0 confidence score from LLM matching
+    extraction_index = Column(Integer, nullable=True)  # Order of extraction from message/call (1st, 2nd, 3rd)
 
     # AI reasoning and metadata
     ai_metadata = Column(JSONB, nullable=True, default=dict)

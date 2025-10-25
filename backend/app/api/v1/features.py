@@ -51,6 +51,7 @@ class FeatureResponse(BaseModel):
     last_mentioned: str
     created_at: str
     updated_at: Optional[str]
+    match_confidence: Optional[float] = None
     data_points: Optional[List[dict]] = None
     ai_metadata: Optional[dict] = None
 
@@ -80,6 +81,9 @@ class MessageResponse(BaseModel):
     customer_name: Optional[str] = None
     customer_email: Optional[str] = None
     ai_insights: Optional[dict] = None
+    source: Optional[str] = None
+    external_id: Optional[str] = None
+    message_metadata: Optional[dict] = None
 
     class Config:
         from_attributes = True
@@ -539,6 +543,7 @@ async def get_features(
                 last_mentioned=feature.last_mentioned.isoformat() if feature.last_mentioned else "",
                 created_at=feature.created_at.isoformat() if feature.created_at else "",
                 updated_at=feature.updated_at.isoformat() if feature.updated_at else None,
+                match_confidence=feature.match_confidence,
                 data_points=data_points,
                 ai_metadata=feature.ai_metadata
             ))
@@ -587,6 +592,7 @@ async def get_feature(
             last_mentioned=feature.last_mentioned.isoformat() if feature.last_mentioned else "",
             created_at=feature.created_at.isoformat() if feature.created_at else "",
             updated_at=feature.updated_at.isoformat() if feature.updated_at else None,
+            match_confidence=feature.match_confidence,
             data_points=feature.data_points if feature.data_points else [],
             ai_metadata=feature.ai_metadata
         )
@@ -676,6 +682,7 @@ async def update_feature(
             last_mentioned=feature.last_mentioned.isoformat() if feature.last_mentioned else "",
             created_at=feature.created_at.isoformat() if feature.created_at else "",
             updated_at=feature.updated_at.isoformat() if feature.updated_at else None,
+            match_confidence=feature.match_confidence,
             data_points=getattr(feature, 'data_points', None) or [],
             ai_metadata=getattr(feature, 'ai_metadata', None)
         )
@@ -773,7 +780,10 @@ async def get_feature_messages(
                 channel_name=message.channel_name,
                 customer_name=customer_name,
                 customer_email=message.author_email,
-                ai_insights=message.ai_insights
+                ai_insights=message.ai_insights,
+                source=message.source,
+                external_id=message.external_id,
+                message_metadata=message.message_metadata
             ))
 
         return message_responses

@@ -80,6 +80,12 @@ Analyze the conversation and extract:
    - If the customer asks "can you build X?" or "we need X", that's a feature request
    - DO NOT include features that already exist but the customer doesn't know about
    - DO NOT include questions about existing functionality
+   - DO NOT include ANY mention of pricing, billing, licensing, contracts, costs, budgets, or financial terms
+   - DO NOT include requests for information, documentation, training, demos, or knowledge base content about existing features
+   - DO NOT include administrative, sales, or support-related inquiries (e.g., "Can you send me pricing?", "What does X cost?", "When will X be available?", "Can I get a demo?")
+   - DO NOT include feature requests about data extraction or information retrieval (these are often disguised pricing/sales inquiries)
+   - CRITICAL: If someone mentions pricing OR information retrieval OR demos in relation to a feature, it's NOT a feature request
+   - DISTINGUISH: "Can you build X?" (feature request) vs "Can you tell me about X?", "How much does X cost?", "When will X ship?", "Can you demo X?" (NOT feature requests)
    {"- CRITICAL: Feature requests MUST align with one of the product themes listed above" if themes else ""}
 
 2. **Bug Reports**: ACTUAL technical issues, errors, or broken functionality

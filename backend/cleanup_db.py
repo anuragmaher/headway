@@ -76,10 +76,10 @@ def cleanup_database():
         messages_deleted = db.query(Message).delete()
         print(f"✓ Deleted {messages_deleted} messages")
 
-        # 8. Delete themes (handles sub-themes via cascade)
-        print("\n[8/8] Deleting themes (including sub-themes)...")
-        themes_deleted = db.query(Theme).delete()
-        print(f"✓ Deleted {themes_deleted} themes")
+        # # 8. Delete themes (handles sub-themes via cascade)
+        # print("\n[8/8] Deleting themes (including sub-themes)...")
+        # themes_deleted = db.query(Theme).delete()
+        # print(f"✓ Deleted {themes_deleted} themes")
 
         # Commit all changes
         db.commit()
@@ -94,7 +94,7 @@ def cleanup_database():
         print(f"  • Clustering runs: {runs_deleted}")
         print(f"  • Features: {features_deleted}")
         print(f"  • Messages: {messages_deleted}")
-        print(f"  • Themes: {themes_deleted}")
+        # print(f"  • Themes: {themes_de/leted}")
         print(f"\n  Total items deleted: {data_points_deleted + relationships_deleted + signals_deleted + clusters_deleted + runs_deleted + features_deleted + messages_deleted + themes_deleted}")
         print("\nPreserved:")
         print("  ✓ Users")

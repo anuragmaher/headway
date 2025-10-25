@@ -277,7 +277,7 @@ class TranscriptIngestionService:
             features_created_count = 0
             features_matched_count = 0
 
-            for feature_data in feature_requests:
+            for extraction_idx, feature_data in enumerate(feature_requests, start=1):
                 feature_title = feature_data.get('title', '').strip()
                 feature_description = feature_data.get('description', '').strip()
                 feature_theme = feature_data.get('theme', 'Uncategorized')
@@ -346,7 +346,7 @@ class TranscriptIngestionService:
                         "description": feature_description
                     },
                     existing_features=existing_features_data,
-                    confidence_threshold=0.7
+                    confidence_threshold=0.8
                 )
 
                 if match_result["is_duplicate"]:
@@ -362,6 +362,9 @@ class TranscriptIngestionService:
                             existing_feature.mention_count = len(existing_feature.messages)
                             existing_feature.last_mentioned = message.sent_at
                             existing_feature.updated_at = datetime.now(timezone.utc)
+
+                            # Store match confidence from LLM matching
+                            existing_feature.match_confidence = match_result["confidence"]
 
                             # Store matching metadata
                             if not existing_feature.ai_metadata:
@@ -384,14 +387,14 @@ class TranscriptIngestionService:
                         )
 
                         # Send Slack notification
-                        self.slack_notification_service.send_feature_matched_notification(
-                            new_feature_title=feature_title,
-                            existing_feature_name=existing_feature.name,
-                            existing_mention_count=existing_feature.mention_count,
-                            confidence=match_result["confidence"],
-                            source=source,
-                            source_id=external_id
-                        )
+                        # self.slack_notification_service.send_feature_matched_notification(
+                        #     new_feature_title=feature_title,
+                        #     existing_feature_name=existing_feature.name,
+                        #     existing_mention_count=existing_feature.mention_count,
+                        #     confidence=match_result["confidence"],
+                        #     source=source,
+                        #     source_id=external_id
+                        # )
                     else:
                         logger.warning(
                             f"Matching feature {match_result['matching_feature_id']} not found, creating new"
@@ -400,6 +403,10 @@ class TranscriptIngestionService:
                         match_result["is_duplicate"] = False
 
                 if not match_result["is_duplicate"]:
+                    # Feature is not a duplicate - create it
+                    # Note: is_duplicate=False means either no existing features or confidence < 80%
+                    # Either way, we should create the feature
+
                     # Create new feature (using assigned theme)
                     # Prepare AI metadata
                     ai_metadata = {
@@ -440,6 +447,8 @@ class TranscriptIngestionService:
                         mention_count=1,
                         first_mentioned=message.sent_at,
                         last_mentioned=message.sent_at,
+                        match_confidence=match_result["confidence"],  # Store LLM match confidence (0-1, higher = more similar)
+                        extraction_index=extraction_idx,  # Track which feature # from this message
                         ai_metadata=ai_metadata
                     )
 
@@ -452,7 +461,7 @@ class TranscriptIngestionService:
                     features_created_count += 1
                     logger.info(
                         f"  ✓ Created new: '{feature_title}' "
-                        f"(confidence it's unique: {1.0 - match_result['confidence']:.2f})"
+                        f"(match confidence: {match_result['confidence']:.2f})"
                     )
 
                     # Prepare additional AI insights for Slack notification
@@ -470,20 +479,20 @@ class TranscriptIngestionService:
                         ]
 
                     # Send Slack notification
-                    self.slack_notification_service.send_feature_created_notification(
-                        feature_name=feature_title,
-                        feature_description=feature_description,
-                        theme_name=assigned_theme.name if assigned_theme else "Uncategorized",
-                        confidence=theme_validation.get("confidence", 0) if theme_validation else 0,
-                        urgency=feature_urgency,
-                        source=source,
-                        source_id=external_id,
-                        sentiment=sentiment,
-                        key_topics=key_topics,
-                        quote=quote,
-                        customer_name=customer_name,
-                        pain_points=pain_points_list
-                    )
+                    # self.slack_notification_service.send_feature_created_notification(
+                    #     feature_name=feature_title,
+                    #     feature_description=feature_description,
+                    #     theme_name=assigned_theme.name if assigned_theme else "Uncategorized",
+                    #     confidence=theme_validation.get("confidence", 0) if theme_validation else 0,
+                    #     urgency=feature_urgency,
+                    #     source=source,
+                    #     source_id=external_id,
+                    #     sentiment=sentiment,
+                    #     key_topics=key_topics,
+                    #     quote=quote,
+                    #     customer_name=customer_name,
+                    #     pain_points=pain_points_list
+                    # )
 
             # Commit all feature changes
             if features_created_count > 0 or features_matched_count > 0:
