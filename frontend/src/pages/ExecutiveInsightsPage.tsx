@@ -100,15 +100,27 @@ interface DashboardMetrics {
   };
 }
 
-const WORKSPACE_ID = '647ab033-6d10-4a35-9ace-0399052ec874';
-
 export function ExecutiveInsightsPage(): JSX.Element {
   const theme = useTheme();
   const { tokens } = useAuthStore();
+  const WORKSPACE_ID = tokens?.workspace_id;
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [topFeatures, setTopFeatures] = useState<Feature[]>([]);
+
+  if (!WORKSPACE_ID) {
+    return (
+      <AdminLayout>
+        <Box sx={{ p: 3 }}>
+          <Alert severity="error">
+            Workspace ID not found. Please log in again.
+          </Alert>
+        </Box>
+      </AdminLayout>
+    );
+  }
 
   const getAuthToken = () => {
     return tokens?.access_token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTk3NDIzODgsInN1YiI6ImI0NzE0NGU3LTAyYTAtNGEyMi04MDBlLTNmNzE3YmZiNGZhYSIsInR5cGUiOiJhY2Nlc3MifQ.L2dOy92Nim5egY3nzRXQts3ywgxV_JvO_8EEiePpDNY';

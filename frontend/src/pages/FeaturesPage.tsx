@@ -90,7 +90,19 @@ const FeaturesPage: React.FC = () => {
   const [loadingMessages, setLoadingMessages] = useState(false);
 
   const { tokens } = useAuthStore();
-  const WORKSPACE_ID = '647ab033-6d10-4a35-9ace-0399052ec874';
+  const WORKSPACE_ID = tokens?.workspace_id;
+
+  if (!WORKSPACE_ID) {
+    return (
+      <AdminLayout>
+        <Box>
+          <Alert severity="error">
+            Workspace ID not found. Please log in again.
+          </Alert>
+        </Box>
+      </AdminLayout>
+    );
+  }
 
   const getAuthToken = () => {
     return tokens?.access_token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTk3NDIzODgsInN1YiI6ImI0NzE0NGU3LTAyYTAtNGEyMi04MDBlLTNmNzE3YmZiNGZhYSIsInR5cGUiOiJhY2Nlc3MifQ.L2dOy92Nim5egY3nzRXQts3ywgxV_JvO_8EEiePpDNY';

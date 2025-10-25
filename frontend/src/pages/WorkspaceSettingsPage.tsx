@@ -52,8 +52,9 @@ import {
   Group as GroupIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
-import { useUser } from '@/features/auth/store/auth-store';
+import { useUser, useAuthStore } from '@/features/auth/store/auth-store';
 import { slackService, type SlackChannel, type SlackIntegration } from '@/services/slack';
+import { connectorService, type ConnectorResponse } from '@/services/connectors';
 
 interface DataSource {
   id: string;
@@ -68,12 +69,14 @@ interface DataSource {
 export function WorkspaceSettingsPage(): JSX.Element {
   const user = useUser();
   const theme = useTheme();
+  const auth = useAuthStore();
   const [autoSync, setAutoSync] = useState(true);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [expandedSections, setExpandedSections] = useState({
     dataSources: true,
     preferences: false,
     workspaceInfo: false,
+    connectors: false,
     availableConnectors: false,
   });
 
@@ -93,9 +96,22 @@ export function WorkspaceSettingsPage(): JSX.Element {
   const [channelSearch, setChannelSearch] = useState('');
   const [isLoadingIntegrations, setIsLoadingIntegrations] = useState(true);
 
-  // Load integrations on component mount
+  // Connector dialog states
+  const [gongDialogOpen, setGongDialogOpen] = useState(false);
+  const [fathomDialogOpen, setFathomDialogOpen] = useState(false);
+  const [gongAccessKey, setGongAccessKey] = useState('');
+  const [gongSecretKey, setGongSecretKey] = useState('');
+  const [fathomApiToken, setFathomApiToken] = useState('');
+  const [isSavingConnectors, setIsSavingConnectors] = useState(false);
+  const [connectorError, setConnectorError] = useState<string | null>(null);
+  const [connectorSuccess, setConnectorSuccess] = useState(false);
+  const [connectors, setConnectors] = useState<ConnectorResponse[]>([]);
+  const [isLoadingConnectors, setIsLoadingConnectors] = useState(true);
+
+  // Load integrations and connectors on component mount
   useEffect(() => {
     loadSlackIntegrations();
+    loadConnectors();
   }, []);
 
   const loadSlackIntegrations = async () => {
@@ -110,6 +126,74 @@ export function WorkspaceSettingsPage(): JSX.Element {
     }
   };
 
+  const loadConnectors = async () => {
+    try {
+      setIsLoadingConnectors(true);
+      const workspaceId = auth.tokens?.workspace_id;
+      if (!workspaceId) return;
+
+      const loadedConnectors = await connectorService.getConnectors(workspaceId);
+      setConnectors(loadedConnectors);
+
+      // Populate form fields with existing connector data
+      const gongConnector = loadedConnectors.find(c => c.connector_type === 'gong');
+      const fathomConnector = loadedConnectors.find(c => c.connector_type === 'fathom');
+
+      if (gongConnector) {
+        setGongAccessKey(gongConnector.gong_access_key || '');
+        setGongSecretKey(gongConnector.gong_secret_key || '');
+      }
+      if (fathomConnector) {
+        setFathomApiToken(fathomConnector.fathom_api_token || '');
+      }
+    } catch (error) {
+      console.error('Failed to load connectors:', error);
+    } finally {
+      setIsLoadingConnectors(false);
+    }
+  };
+
+  const handleSaveConnectors = async () => {
+    if (!user?.workspace_id) return;
+
+    setIsSavingConnectors(true);
+    setConnectorError(null);
+    setConnectorSuccess(false);
+
+    try {
+      // Save Gong connector if credentials are provided
+      if (gongAccessKey && gongSecretKey) {
+        await connectorService.saveConnector(user.workspace_id, {
+          connector_type: 'gong',
+          gong_access_key: gongAccessKey,
+          gong_secret_key: gongSecretKey,
+        });
+      }
+
+      // Save Fathom connector if token is provided
+      if (fathomApiToken) {
+        await connectorService.saveConnector(user.workspace_id, {
+          connector_type: 'fathom',
+          fathom_api_token: fathomApiToken,
+        });
+      }
+
+      setConnectorSuccess(true);
+      // Reload connectors to refresh the UI
+      await loadConnectors();
+
+      // Clear success message after 3 seconds
+      setTimeout(() => setConnectorSuccess(false), 3000);
+    } catch (error: any) {
+      console.error('Failed to save connectors:', error);
+      setConnectorError(
+        error.response?.data?.detail || 'Failed to save connectors. Please try again.'
+      );
+    } finally {
+      setIsSavingConnectors(false);
+    }
+  };
+
   const handleAccordionChange = (section: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
     setExpandedSections(prev => ({
       ...prev,
@@ -117,7 +201,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
     }));
   };
   
-  // Convert SlackIntegrations to DataSource format for UI
+  // Convert SlackIntegrations and Connectors to DataSource format for UI
   const dataSources: DataSource[] = [
     // Slack integrations
     ...slackIntegrations.map(integration => ({
@@ -128,6 +212,20 @@ export function WorkspaceSettingsPage(): JSX.Element {
       lastSync: integration.last_synced ? 'Just now' : undefined,
       channels: integration.channels
     })),
+    // Gong connector
+    ...(connectors.some(c => c.connector_type === 'gong') ? [{
+      id: connectors.find(c => c.connector_type === 'gong')?.id || 'gong',
+      name: '🎤 Gong',
+      type: 'gong' as const,
+      status: 'connected' as const,
+    }] : []),
+    // Fathom connector
+    ...(connectors.some(c => c.connector_type === 'fathom') ? [{
+      id: connectors.find(c => c.connector_type === 'fathom')?.id || 'fathom',
+      name: '📹 Fathom',
+      type: 'fathom' as const,
+      status: 'connected' as const,
+    }] : []),
     // Static Gmail entry (placeholder)
     {
       id: 'gmail-placeholder',
@@ -150,6 +248,8 @@ export function WorkspaceSettingsPage(): JSX.Element {
           <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
         </svg>
       );
+      case 'gong': return '🎤';
+      case 'fathom': return '📹';
       case 'microsoft teams': return '🟣';
       case 'discord': return '🟦';
       case 'intercom': return '💭';
@@ -230,6 +330,84 @@ export function WorkspaceSettingsPage(): JSX.Element {
     }
   };
 
+  // Gong and Fathom connector handlers
+  const handleGongConnect = () => {
+    setGongDialogOpen(true);
+    setGongAccessKey('');
+    setGongSecretKey('');
+    setConnectorError(null);
+  };
+
+  const handleGongSave = async () => {
+    const workspaceId = auth.tokens?.workspace_id;
+    if (!workspaceId) {
+      setConnectorError('Workspace ID not found. Please refresh the page.');
+      return;
+    }
+    if (!gongAccessKey || !gongSecretKey) {
+      setConnectorError('Please enter both Gong Access Key and Secret Key');
+      return;
+    }
+
+    setIsSavingConnectors(true);
+    setConnectorError(null);
+
+    try {
+      await connectorService.saveConnector(workspaceId, {
+        connector_type: 'gong',
+        gong_access_key: gongAccessKey,
+        gong_secret_key: gongSecretKey,
+      });
+
+      setConnectorSuccess(true);
+      setGongDialogOpen(false);
+      await loadConnectors();
+      setTimeout(() => setConnectorSuccess(false), 3000);
+    } catch (error: any) {
+      console.error('Failed to save Gong connector:', error);
+      setConnectorError(error.response?.data?.detail || 'Failed to save Gong connector');
+    } finally {
+      setIsSavingConnectors(false);
+    }
+  };
+
+  const handleFathomConnect = () => {
+    setFathomDialogOpen(true);
+    setFathomApiToken('');
+    setConnectorError(null);
+  };
+
+  const handleFathomSave = async () => {
+    const workspaceId = auth.tokens?.workspace_id;
+    if (!workspaceId) {
+      setConnectorError('Workspace ID not found. Please refresh the page.');
+      return;
+    }
+    if (!fathomApiToken) {
+      setConnectorError('Please enter your Fathom API token');
+      return;
+    }
+
+    setIsSavingConnectors(true);
+    setConnectorError(null);
+
+    try {
+      await connectorService.saveConnector(workspaceId, {
+        connector_type: 'fathom',
+        fathom_api_token: fathomApiToken,
+      });
+
+      setConnectorSuccess(true);
+      setFathomDialogOpen(false);
+      await loadConnectors();
+      setTimeout(() => setConnectorSuccess(false), 3000);
+    } catch (error: any) {
+      console.error('Failed to save Fathom connector:', error);
+      setConnectorError(error.response?.data?.detail || 'Failed to save Fathom connector');
+    } finally {
+      setIsSavingConnectors(false);
+    }
+  };
 
   // Filter channels based on search
   const filteredChannels = availableChannels.filter(channel =>
@@ -701,6 +879,173 @@ export function WorkspaceSettingsPage(): JSX.Element {
                   </Button>
                 </AccordionDetails>
               </Accordion>
+
+              {/* Connectors Configuration */}
+              <Accordion
+                id="connectors-config-accordion"
+                expanded={expandedSections.connectors}
+                onChange={handleAccordionChange('connectors')}
+                sx={{
+                  borderRadius: 1,
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                  backdropFilter: 'blur(10px)',
+                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  boxShadow: 'none',
+                  '&:before': { display: 'none' },
+                  '&.Mui-expanded': {
+                    margin: 0,
+                  },
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  sx={{ p: 2 }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <CloudSyncIcon sx={{ color: theme.palette.primary.main }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      Connectors Configuration
+                    </Typography>
+                  </Box>
+                </AccordionSummary>
+
+                <AccordionDetails sx={{ pt: 0, px: 2, pb: 2 }}>
+                  {isLoadingConnectors ? (
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', py: 4 }}>
+                      <CircularProgress size={40} />
+                    </Box>
+                  ) : (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+                      {/* Gong Connector */}
+                      <Box sx={{
+                        p: 2,
+                        borderRadius: 2,
+                        bgcolor: alpha(theme.palette.primary.main, 0.05),
+                        border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                      }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 2, color: theme.palette.primary.main }}>
+                          🎤 Gong Credentials
+                        </Typography>
+                        <TextField
+                          label="Access Key"
+                          value={gongAccessKey}
+                          onChange={(e) => setGongAccessKey(e.target.value)}
+                          fullWidth
+                          size="small"
+                          type="password"
+                          placeholder="Enter your Gong access key"
+                          sx={{
+                            mb: 1.5,
+                            '& .MuiOutlinedInput-root': { borderRadius: 1.5 }
+                          }}
+                        />
+                        <TextField
+                          label="Secret Key"
+                          value={gongSecretKey}
+                          onChange={(e) => setGongSecretKey(e.target.value)}
+                          fullWidth
+                          size="small"
+                          type="password"
+                          placeholder="Enter your Gong secret key"
+                          sx={{
+                            '& .MuiOutlinedInput-root': { borderRadius: 1.5 }
+                          }}
+                        />
+                      </Box>
+
+                      {/* Fathom Connector */}
+                      <Box sx={{
+                        p: 2,
+                        borderRadius: 2,
+                        bgcolor: alpha(theme.palette.info.main, 0.05),
+                        border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
+                      }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 2, color: theme.palette.info.main }}>
+                          📹 Fathom Credentials
+                        </Typography>
+                        <TextField
+                          label="API Token"
+                          value={fathomApiToken}
+                          onChange={(e) => setFathomApiToken(e.target.value)}
+                          fullWidth
+                          size="small"
+                          type="password"
+                          placeholder="Enter your Fathom API token"
+                          sx={{
+                            '& .MuiOutlinedInput-root': { borderRadius: 1.5 }
+                          }}
+                        />
+                      </Box>
+
+                      {/* Error Alert */}
+                      {connectorError && (
+                        <Alert
+                          severity="error"
+                          sx={{ borderRadius: 1.5 }}
+                          onClose={() => setConnectorError(null)}
+                        >
+                          {connectorError}
+                        </Alert>
+                      )}
+
+                      {/* Save Button */}
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        onClick={handleSaveConnectors}
+                        disabled={isSavingConnectors || ((!gongAccessKey || !gongSecretKey) && !fathomApiToken)}
+                        sx={{
+                          borderRadius: 1.5,
+                          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                          '&:hover': {
+                            transform: 'translateY(-1px)',
+                            boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
+                          },
+                          '&:disabled': {
+                            background: alpha(theme.palette.primary.main, 0.3),
+                          },
+                        }}
+                      >
+                        {isSavingConnectors ? (
+                          <>
+                            <CircularProgress size={20} sx={{ mr: 1 }} />
+                            Saving...
+                          </>
+                        ) : (
+                          'Save Connectors'
+                        )}
+                      </Button>
+
+                      {/* Configured Connectors Status */}
+                      {connectors.length > 0 && (
+                        <Box sx={{ pt: 1 }}>
+                          <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, display: 'block', mb: 1 }}>
+                            CONFIGURED CONNECTORS
+                          </Typography>
+                          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                            {connectors.map(connector => (
+                              <Chip
+                                key={connector.id}
+                                label={connector.connector_type === 'gong' ? '🎤 Gong' : '📹 Fathom'}
+                                size="small"
+                                sx={{
+                                  bgcolor: connector.connector_type === 'gong'
+                                    ? alpha(theme.palette.primary.main, 0.2)
+                                    : alpha(theme.palette.info.main, 0.2),
+                                  color: connector.connector_type === 'gong'
+                                    ? theme.palette.primary.main
+                                    : theme.palette.info.main,
+                                  fontWeight: 600,
+                                }}
+                              />
+                            ))}
+                          </Box>
+                        </Box>
+                      )}
+                    </Box>
+                  )}
+                </AccordionDetails>
+              </Accordion>
             </Box>
           </Grid>
 
@@ -743,6 +1088,8 @@ export function WorkspaceSettingsPage(): JSX.Element {
                   {[
                     { name: 'Slack', description: 'Monitor channels for feature requests', available: true },
                     { name: 'Gmail', description: 'Track feature requests from customer emails', available: true },
+                    { name: 'Gong', description: 'Analyze sales calls and conversations', available: true },
+                    { name: 'Fathom', description: 'Track session recordings and user behavior', available: true },
                     { name: 'Microsoft Teams', description: 'Collect feedback from team conversations', available: false },
                     { name: 'Discord', description: 'Track community suggestions', available: false },
                     { name: 'Intercom', description: 'Import customer feedback', available: false },
@@ -795,6 +1142,10 @@ export function WorkspaceSettingsPage(): JSX.Element {
                             onClick={() => {
                               if (connector.available && connector.name === 'Slack') {
                                 handleSlackConnect();
+                              } else if (connector.available && connector.name === 'Gong') {
+                                handleGongConnect();
+                              } else if (connector.available && connector.name === 'Fathom') {
+                                handleFathomConnect();
                               }
                             }}
                             sx={connector.available ? {
@@ -1039,6 +1390,124 @@ export function WorkspaceSettingsPage(): JSX.Element {
           </DialogActions>
         </Dialog>
 
+        {/* Gong Connector Dialog */}
+        <Dialog
+          open={gongDialogOpen}
+          onClose={() => setGongDialogOpen(false)}
+          maxWidth="sm"
+          fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: 2,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.95)} 0%, ${alpha(theme.palette.background.paper, 0.9)} 100%)`,
+            }
+          }}
+        >
+          <DialogTitle sx={{ fontWeight: 700, fontSize: '1.3rem', pb: 1 }}>
+            🎤 Connect Gong
+          </DialogTitle>
+          <DialogContent sx={{ pt: 2 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Enter your Gong API credentials to connect your account
+            </Typography>
+            {connectorError && (
+              <Alert severity="error" sx={{ mb: 2, borderRadius: 1.5 }}>
+                {connectorError}
+              </Alert>
+            )}
+            <TextField
+              fullWidth
+              label="Access Key"
+              value={gongAccessKey}
+              onChange={(e) => setGongAccessKey(e.target.value)}
+              placeholder="Enter your Gong access key"
+              margin="normal"
+              type="password"
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1.5 } }}
+            />
+            <TextField
+              fullWidth
+              label="Secret Key"
+              value={gongSecretKey}
+              onChange={(e) => setGongSecretKey(e.target.value)}
+              placeholder="Enter your Gong secret key"
+              margin="normal"
+              type="password"
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1.5 } }}
+            />
+          </DialogContent>
+          <DialogActions sx={{ p: 3, pt: 2 }}>
+            <Button onClick={() => setGongDialogOpen(false)} sx={{ borderRadius: 2 }}>
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleGongSave}
+              disabled={isSavingConnectors || !gongAccessKey || !gongSecretKey}
+              sx={{
+                borderRadius: 2,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+              }}
+            >
+              {isSavingConnectors ? <CircularProgress size={20} /> : 'Connect'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Fathom Connector Dialog */}
+        <Dialog
+          open={fathomDialogOpen}
+          onClose={() => setFathomDialogOpen(false)}
+          maxWidth="sm"
+          fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: 2,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.95)} 0%, ${alpha(theme.palette.background.paper, 0.9)} 100%)`,
+            }
+          }}
+        >
+          <DialogTitle sx={{ fontWeight: 700, fontSize: '1.3rem', pb: 1 }}>
+            📹 Connect Fathom
+          </DialogTitle>
+          <DialogContent sx={{ pt: 2 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Enter your Fathom API credentials to connect your account
+            </Typography>
+            {connectorError && (
+              <Alert severity="error" sx={{ mb: 2, borderRadius: 1.5 }}>
+                {connectorError}
+              </Alert>
+            )}
+            <TextField
+              fullWidth
+              label="API Token"
+              value={fathomApiToken}
+              onChange={(e) => setFathomApiToken(e.target.value)}
+              placeholder="Enter your Fathom API token"
+              margin="normal"
+              type="password"
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1.5 } }}
+            />
+          </DialogContent>
+          <DialogActions sx={{ p: 3, pt: 2 }}>
+            <Button onClick={() => setFathomDialogOpen(false)} sx={{ borderRadius: 2 }}>
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleFathomSave}
+              disabled={isSavingConnectors || !fathomApiToken}
+              sx={{
+                borderRadius: 2,
+                background: `linear-gradient(135deg, ${theme.palette.info.main} 0%, ${theme.palette.info.dark} 100%)`,
+              }}
+            >
+              {isSavingConnectors ? <CircularProgress size={20} /> : 'Connect'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
         {/* Error Snackbar */}
         <Snackbar
           open={!!error}
@@ -1048,6 +1517,18 @@ export function WorkspaceSettingsPage(): JSX.Element {
         >
           <Alert onClose={() => setError(null)} severity="error" sx={{ borderRadius: 2 }}>
             {error}
+          </Alert>
+        </Snackbar>
+
+        {/* Success Snackbar for Connectors */}
+        <Snackbar
+          open={connectorSuccess}
+          autoHideDuration={4000}
+          onClose={() => setConnectorSuccess(false)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+          <Alert onClose={() => setConnectorSuccess(false)} severity="success" sx={{ borderRadius: 2 }}>
+            Connectors saved successfully!
           </Alert>
         </Snackbar>
       </Box>

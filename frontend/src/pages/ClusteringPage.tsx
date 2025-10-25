@@ -27,6 +27,7 @@ import {
   AutoFixHigh as MagicIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
+import { useAuthStore } from '@/features/auth/store/auth-store';
 import { useClusteringStore } from '@/features/clustering/store/clustering-store';
 import ClusteringOverview from '@/features/clustering/components/ClusteringOverview';
 import ClusteringRunsView from '@/features/clustering/components/ClusteringRunsView';
@@ -35,11 +36,11 @@ import ClassificationSignalsView from '@/features/clustering/components/Classifi
 import StartClusteringModal from '@/features/clustering/components/StartClusteringModal';
 import ClusterApprovalModal from '@/features/clustering/components/ClusterApprovalModal';
 
-// Mock workspace ID - in real app this would come from auth context
-const WORKSPACE_ID = '647ab033-6d10-4a35-9ace-0399052ec874';
-
 export function ClusteringPage(): JSX.Element {
   const theme = useTheme();
+  const { tokens } = useAuthStore();
+  const WORKSPACE_ID = tokens?.workspace_id;
+
   const {
     currentView,
     setCurrentView,
@@ -56,12 +57,24 @@ export function ClusteringPage(): JSX.Element {
     setShowStartModal,
   } = useClusteringStore();
 
+  if (!WORKSPACE_ID) {
+    return (
+      <AdminLayout>
+        <Box sx={{ p: 3 }}>
+          <Alert severity="error">
+            Workspace ID not found. Please log in again.
+          </Alert>
+        </Box>
+      </AdminLayout>
+    );
+  }
+
   // Load initial data
   useEffect(() => {
     loadClusteringRuns(WORKSPACE_ID);
     loadPendingClusters(WORKSPACE_ID);
     loadClassificationSignals(WORKSPACE_ID);
-  }, []);
+  }, [WORKSPACE_ID, loadClusteringRuns, loadPendingClusters, loadClassificationSignals]);
 
   const handleTabChange = (_: any, newValue: string) => {
     setCurrentView(newValue as any);

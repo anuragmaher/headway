@@ -22,6 +22,7 @@ export interface AuthTokens {
   refresh_token: string;
   token_type: string;
   expires_in?: number;
+  workspace_id?: string; // Default workspace for the user
 }
 
 export interface LoginRequest {

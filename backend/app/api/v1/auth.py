@@ -154,7 +154,7 @@ async def login_google(
         db: Database session
 
     Returns:
-        JWT access and refresh tokens
+        JWT access and refresh tokens with workspace_id
 
     Raises:
         HTTPException: If token is invalid or authentication fails
@@ -178,6 +178,16 @@ async def login_google(
             )
 
         tokens = auth_service.create_tokens(user)
+
+        # Get user's workspace (owner's workspace)
+        from app.models.workspace import Workspace
+        workspace = db.query(Workspace).filter(
+            Workspace.owner_id == user.id
+        ).first()
+
+        if workspace:
+            tokens['workspace_id'] = workspace.id
+
         return Token(**tokens)
 
     except HTTPException:

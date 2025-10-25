@@ -29,8 +29,10 @@ from app.core.database import get_db
 from app.core.config import settings
 from app.models.integration import Integration
 from app.models.workspace import Workspace
+from app.models.workspace_connector import WorkspaceConnector
 from app.services.fathom_ingestion_service import get_fathom_ingestion_service
 from app.services.transcript_ingestion_service import get_transcript_ingestion_service
+from app.services.workspace_service import WorkspaceService
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -67,32 +69,44 @@ async def ingest_fathom_sessions(
         Number of sessions ingested
     """
     try:
-        # Get Fathom credentials from environment
-        api_token = settings.FATHOM_API_TOKEN or os.getenv('FATHOM_API_TOKEN')
-        fathom_project_id = project_id or settings.FATHOM_PROJECT_ID or os.getenv('FATHOM_PROJECT_ID')
+        # Get database session
+        db: Session = next(get_db())
+
+        # Verify workspace exists
+        workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
+        if not workspace:
+            logger.error(f"Workspace {workspace_id} not found")
+            return 0
+
+        # Get Fathom credentials from workspace connector
+        workspace_service = WorkspaceService(db)
+        fathom_connector = workspace_service.get_connector_by_type(workspace_id, "fathom")
+
+        if not fathom_connector:
+            logger.error(f"Fathom connector not configured for workspace {workspace_id}")
+            logger.error("Please configure Fathom credentials in workspace settings")
+            return 0
+
+        api_token = fathom_connector.fathom_api_token
+        fathom_project_id = project_id  # Use provided project_id or fall back to settings
 
         if not api_token:
-            logger.error("Fathom API token not found in environment variables")
-            logger.error("Please set FATHOM_API_TOKEN in .env file")
+            logger.error(f"Fathom API token not configured for workspace {workspace_id}")
             return 0
 
         if not fathom_project_id:
-            logger.error("Fathom project ID not found in environment variables")
-            logger.error("Please set FATHOM_PROJECT_ID in .env file or pass --project-id")
-            return 0
+            # Try to get from settings as fallback
+            fathom_project_id = settings.FATHOM_PROJECT_ID or os.getenv('FATHOM_PROJECT_ID')
+            if not fathom_project_id:
+                logger.error("Fathom project ID not found. Please provide --project-id or set FATHOM_PROJECT_ID")
+                return 0
+
+        logger.info(f"Using Fathom credentials from workspace connector")
 
         # Initialize Fathom service
         fathom_service = get_fathom_ingestion_service(api_token)
 
-        # Get database session
-        db: Session = next(get_db())
-
         try:
-            # Verify workspace exists
-            workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
-            if not workspace:
-                logger.error(f"Workspace {workspace_id} not found")
-                return 0
 
             logger.info(f"Starting Fathom session ingestion for workspace: {workspace.name}")
 

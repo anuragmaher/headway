@@ -38,10 +38,8 @@ import {
   DataObject as DataIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
+import { useAuthStore } from '@/features/auth/store/auth-store';
 import { API_BASE_URL } from '@/config/api.config';
-
-// TODO: Replace with dynamic workspace ID from auth context
-const WORKSPACE_ID = '647ab033-6d10-4a35-9ace-0399052ec874';
 
 interface ThemeSuggestion {
   name: string;
@@ -133,12 +131,27 @@ function EditableCard({ suggestion, onSave, onCancel }: EditableCardProps): JSX.
 
 export function WayPage(): JSX.Element {
   const theme = useTheme();
+  const { tokens } = useAuthStore();
+  const WORKSPACE_ID = tokens?.workspace_id;
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<ThemeSuggestion[]>([]);
   const [dataExtractionSuggestions, setDataExtractionSuggestions] = useState<DataExtractionSuggestion[]>([]);
   const [messageCount, setMessageCount] = useState<number>(0);
+
+  if (!WORKSPACE_ID) {
+    return (
+      <AdminLayout>
+        <Box sx={{ p: 3 }}>
+          <Alert severity="error">
+            Workspace ID not found. Please log in again.
+          </Alert>
+        </Box>
+      </AdminLayout>
+    );
+  }
 
   // Drawer state
   const [drawerOpen, setDrawerOpen] = useState(false);

@@ -125,14 +125,16 @@ class Token(BaseModel):
     refresh_token: str
     token_type: str = "bearer"
     expires_in: int  # seconds
-    
+    workspace_id: Optional[Union[UUID, str]] = None  # Default workspace for the user
+
     class Config:
         schema_extra = {
             "example": {
                 "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
                 "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
                 "token_type": "bearer",
-                "expires_in": 1800
+                "expires_in": 1800,
+                "workspace_id": "987e6543-e21b-32d1-a654-426614174000"
             }
         }
 

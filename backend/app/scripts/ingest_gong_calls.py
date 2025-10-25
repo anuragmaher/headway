@@ -30,12 +30,14 @@ from app.core.database import get_db
 from app.models.integration import Integration
 from app.models.message import Message
 from app.models.workspace import Workspace
+from app.models.workspace_connector import WorkspaceConnector
 from app.models.customer import Customer
 from app.models.theme import Theme
 from app.models.feature import Feature
 from app.services.ai_extraction_service import get_ai_extraction_service
 from app.services.ai_feature_matching_service import get_ai_feature_matching_service
 from app.services.transcript_ingestion_service import get_transcript_ingestion_service
+from app.services.workspace_service import WorkspaceService
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -403,19 +405,6 @@ async def ingest_gong_calls(
         Number of calls ingested
     """
     try:
-        # Get Gong credentials from environment
-        access_key = os.getenv('GONG_ACCESS_KEY')
-        secret_key = os.getenv('GONG_SECRET_KEY')
-        base_url = os.getenv('GONG_API_BASE_URL', 'https://api.gong.io')
-
-        if not access_key or not secret_key:
-            logger.error("Gong credentials not found in environment variables")
-            logger.error("Please set GONG_ACCESS_KEY and GONG_SECRET_KEY in .env file")
-            return 0
-
-        # Initialize Gong service
-        gong_service = GongIngestionService(access_key, secret_key, base_url)
-
         # Get database session
         db: Session = next(get_db())
 
@@ -425,6 +414,28 @@ async def ingest_gong_calls(
             if not workspace:
                 logger.error(f"Workspace {workspace_id} not found")
                 return 0
+
+            # Get Gong credentials from workspace connector
+            workspace_service = WorkspaceService(db)
+            gong_connector = workspace_service.get_connector_by_type(workspace_id, "gong")
+
+            if not gong_connector:
+                logger.error(f"Gong connector not configured for workspace {workspace_id}")
+                logger.error("Please configure Gong credentials in workspace settings")
+                return 0
+
+            access_key = gong_connector.gong_access_key
+            secret_key = gong_connector.gong_secret_key
+
+            if not access_key or not secret_key:
+                logger.error(f"Gong credentials incomplete for workspace {workspace_id}")
+                return 0
+
+            base_url = os.getenv('GONG_API_BASE_URL', 'https://api.gong.io')
+
+            # Initialize Gong service
+            gong_service = GongIngestionService(access_key, secret_key, base_url)
+            logger.info(f"Using Gong credentials from workspace connector")
 
             logger.info(f"Starting Gong call ingestion for workspace: {workspace.name}")
 

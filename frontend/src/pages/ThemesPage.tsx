@@ -195,7 +195,20 @@ export function ThemesPage(): JSX.Element {
   const [isResizingMentions, setIsResizingMentions] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const WORKSPACE_ID = '647ab033-6d10-4a35-9ace-0399052ec874';
+  // Use workspace_id from tokens (from Google OAuth/login)
+  const WORKSPACE_ID = tokens?.workspace_id;
+
+  if (!WORKSPACE_ID) {
+    return (
+      <AdminLayout>
+        <Box sx={{ p: 3 }}>
+          <Alert severity="error">
+            Workspace ID not found. Please log in again.
+          </Alert>
+        </Box>
+      </AdminLayout>
+    );
+  }
 
   // Helper function to organize themes hierarchically
   const buildThemeHierarchy = (themes: Theme[]): Theme[] => {
