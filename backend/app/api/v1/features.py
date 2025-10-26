@@ -31,6 +31,12 @@ class ThemeUpdateRequest(BaseModel):
     parent_theme_id: Optional[str] = None
 
 
+class FeatureCreateRequest(BaseModel):
+    name: str
+    description: Optional[str] = None
+    theme_id: Optional[str] = None
+
+
 class FeatureUpdateRequest(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
@@ -64,6 +70,7 @@ class ThemeResponse(BaseModel):
     name: str
     description: Optional[str]
     feature_count: int
+    mention_count: int = 0
     parent_theme_id: Optional[str]
     sub_theme_count: int = 0
     level: int = 0  # 0 for root themes, 1 for sub-themes, etc.
@@ -164,6 +171,16 @@ async def get_themes(
 
         feature_counts = {str(theme_id): count for theme_id, count in feature_counts_query}
 
+        # Batch query for mention counts - ONE query instead of N
+        mention_counts_query = db.query(
+            Feature.theme_id,
+            func.sum(Feature.mention_count).label('total_mentions')
+        ).filter(
+            Feature.theme_id.in_([t.id for t in themes])
+        ).group_by(Feature.theme_id).all()
+
+        mention_counts = {str(theme_id): (total_mentions or 0) for theme_id, total_mentions in mention_counts_query}
+
         # Batch query for sub-theme counts - ONE query instead of N
         sub_theme_counts_query = db.query(
             Theme.parent_theme_id,
@@ -196,6 +213,7 @@ async def get_themes(
         for theme in themes:
             theme_id_str = str(theme.id)
             feature_count = feature_counts.get(theme_id_str, 0)
+            mention_count = mention_counts.get(theme_id_str, 0)
             sub_theme_count = sub_theme_counts.get(theme_id_str, 0)
             level = calculate_level(theme, themes)
 
@@ -204,6 +222,7 @@ async def get_themes(
                 name=theme.name,
                 description=theme.description,
                 feature_count=feature_count,
+                mention_count=mention_count,
                 parent_theme_id=str(theme.parent_theme_id) if theme.parent_theme_id else None,
                 sub_theme_count=sub_theme_count,
                 level=level
@@ -555,6 +574,63 @@ async def get_features(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get features: {str(e)}"
+        )
+
+
+@router.post("/features", response_model=FeatureResponse)
+async def create_feature(
+    workspace_id: str,
+    feature_data: FeatureCreateRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Create a new feature for a workspace
+    """
+    try:
+        import uuid
+        from datetime import datetime
+
+        # Create new feature
+        new_feature = Feature(
+            id=str(uuid.uuid4()),
+            workspace_id=workspace_id,
+            name=feature_data.name,
+            description=feature_data.description or "",
+            theme_id=feature_data.theme_id,
+            status="open",
+            urgency="medium",
+            mention_count=0,
+            first_mentioned=datetime.utcnow(),
+            last_mentioned=datetime.utcnow(),
+            created_at=datetime.utcnow()
+        )
+
+        db.add(new_feature)
+        db.commit()
+        db.refresh(new_feature)
+
+        # Return the created feature
+        return FeatureResponse(
+            id=str(new_feature.id),
+            name=new_feature.name,
+            description=new_feature.description,
+            urgency=new_feature.urgency,
+            status=new_feature.status,
+            mention_count=new_feature.mention_count,
+            theme_id=str(new_feature.theme_id) if new_feature.theme_id else None,
+            first_mentioned=new_feature.first_mentioned.isoformat() if new_feature.first_mentioned else "",
+            last_mentioned=new_feature.last_mentioned.isoformat() if new_feature.last_mentioned else "",
+            created_at=new_feature.created_at.isoformat() if new_feature.created_at else "",
+            updated_at=new_feature.updated_at.isoformat() if new_feature.updated_at else None
+        )
+
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error creating feature: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to create feature: {str(e)}"
         )
 
 

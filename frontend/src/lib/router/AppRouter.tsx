@@ -13,7 +13,6 @@ import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
 import { ThemesPage } from '@/pages/ThemesPage';
 import { WorkspaceSettingsPage } from '@/pages/WorkspaceSettingsPage';
-import { OnboardingPage } from '@/pages/OnboardingPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { ExecutiveInsightsPage } from '@/pages/ExecutiveInsightsPage';
 
@@ -50,15 +49,6 @@ export function AppRouter(): JSX.Element {
         />
 
         {/* Protected routes */}
-        <Route 
-          path={ROUTES.ONBOARDING} 
-          element={
-            <ProtectedRoute>
-              <OnboardingPage />
-            </ProtectedRoute>
-          } 
-        />
-        
         <Route
           path={ROUTES.DASHBOARD}
           element={

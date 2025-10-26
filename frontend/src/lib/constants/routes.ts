@@ -12,7 +12,6 @@ export const ROUTES = {
 
   // Protected routes
   DASHBOARD: '/dashboard',
-  ONBOARDING: '/onboarding',
 
   // Settings routes
   SETTINGS: '/app/settings',
@@ -47,7 +46,6 @@ export const PUBLIC_ROUTES = [
 
 export const PROTECTED_ROUTES = [
   ROUTES.DASHBOARD,
-  ROUTES.ONBOARDING,
   ROUTES.SETTINGS,
   ROUTES.SETTINGS_PROFILE,
   ROUTES.SETTINGS_WORKSPACE,

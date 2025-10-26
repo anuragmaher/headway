@@ -21,13 +21,8 @@ export function PublicRoute({
 
   // If authenticated, redirect to appropriate page
   if (isAuthenticated && user) {
-    // If onboarding not completed, go to onboarding
-    if (!user.onboarding_completed) {
-      return <Navigate to={ROUTES.ONBOARDING} replace />;
-    }
-
-    // Otherwise go to specified redirect or themes page
-    const destination = redirectTo || ROUTES.THEMES;
+    // Go to specified redirect or dashboard page
+    const destination = redirectTo || ROUTES.DASHBOARD;
     return <Navigate to={destination} replace />;
   }
 

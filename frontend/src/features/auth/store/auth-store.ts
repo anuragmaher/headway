@@ -230,7 +230,6 @@ export const useAuthStore = create<AuthStore>()(
             is_active: true,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
-            onboarding_completed: true,
           };
 
           const demoTokens: AuthTokens = {

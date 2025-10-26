@@ -11,7 +11,6 @@ export interface User {
   company_name: string;
   job_title?: string;
   is_active: boolean;
-  onboarding_completed: boolean;
   created_at: string;
   updated_at?: string;
   last_login_at?: string;

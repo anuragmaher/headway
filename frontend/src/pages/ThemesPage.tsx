@@ -206,6 +206,12 @@ export function ThemesPage(): JSX.Element {
   const [savingEdit, setSavingEdit] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
 
+  // Feature add modal state
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [addFormData, setAddFormData] = useState({ name: '', description: '' });
+  const [savingAdd, setSavingAdd] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
+
   // Feature delete state
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [featureToDelete, setFeatureToDelete] = useState<Feature | null>(null);
@@ -921,6 +927,63 @@ export function ThemesPage(): JSX.Element {
     }
   };
 
+  const handleOpenAddModal = () => {
+    setAddFormData({ name: '', description: '' });
+    setAddError(null);
+    setAddModalOpen(true);
+  };
+
+  const handleCloseAddModal = () => {
+    setAddModalOpen(false);
+    setAddFormData({ name: '', description: '' });
+    setAddError(null);
+  };
+
+  const handleSaveAdd = async () => {
+    if (!addFormData.name.trim()) {
+      setAddError('Feature name cannot be empty');
+      return;
+    }
+
+    try {
+      setSavingAdd(true);
+      setAddError(null);
+      const token = getAuthToken();
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/features/features?workspace_id=${WORKSPACE_ID}`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: addFormData.name,
+            description: addFormData.description,
+            theme_id: selectedThemeForDrawer?.id || null
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to create feature: ${response.status}`);
+      }
+
+      const newFeature = await response.json();
+      setThemeFeatures([...themeFeatures, newFeature]);
+      handleCloseAddModal();
+
+      // Refresh themes to update counts if needed
+      fetchThemes();
+    } catch (error) {
+      console.error('Error creating feature:', error);
+      setAddError(error instanceof Error ? error.message : 'Failed to create feature');
+    } finally {
+      setSavingAdd(false);
+    }
+  };
+
   const handleOpenDeleteConfirm = (feature: Feature) => {
     setFeatureToDelete(feature);
     setDeleteConfirmOpen(true);
@@ -1146,13 +1209,48 @@ export function ThemesPage(): JSX.Element {
           )}
 
           {/* Theme name and info */}
-          <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
             <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
               <Typography variant="subtitle2" sx={{ fontWeight: 600, fontSize: '0.9rem' }}>
                 {themeItem.name}
               </Typography>
             </Box>
 
+            {/* Feature & Mention Count Badges */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {themeItem.feature_count > 0 && (
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.3,
+                  px: 0.75,
+                  py: 0.2,
+                  borderRadius: 0.75,
+                  bgcolor: alpha(theme.palette.text.primary, 0.03),
+                }}>
+                  <FeatureIcon sx={{ fontSize: 12, color: alpha(theme.palette.text.secondary, 0.5) }} />
+                  <Typography variant="caption" sx={{ fontWeight: 500, color: alpha(theme.palette.text.secondary, 0.6), fontSize: '0.7rem' }}>
+                    {themeItem.feature_count}
+                  </Typography>
+                </Box>
+              )}
+              {themeItem.mention_count !== undefined && themeItem.mention_count > 0 && (
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.3,
+                  px: 0.75,
+                  py: 0.2,
+                  borderRadius: 0.75,
+                  bgcolor: alpha(theme.palette.text.primary, 0.03),
+                }}>
+                  <MessageIcon sx={{ fontSize: 12, color: alpha(theme.palette.text.secondary, 0.5) }} />
+                  <Typography variant="caption" sx={{ fontWeight: 500, color: alpha(theme.palette.text.secondary, 0.6), fontSize: '0.7rem' }}>
+                    {themeItem.mention_count}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
           </Box>
 
           {/* Actions - Dropdown Menu - Hidden on non-hover */}
@@ -1308,9 +1406,9 @@ export function ThemesPage(): JSX.Element {
           {!isMobile && !showMessagesFullPage && (
             <ResizablePanel
               storageKey="themes-page-left-panel-width"
-              minWidth={250}
-              maxWidth={600}
-              defaultWidth={300}
+              minWidth={280}
+              maxWidth={700}
+              defaultWidth={380}
             >
               <Card sx={{
                 borderRadius: 1,
@@ -1475,22 +1573,23 @@ export function ThemesPage(): JSX.Element {
                 {selectedThemeForDrawer || showingAllFeatures || showingAllFeaturesList ? (
                   <>
                     {/* Selected Theme Header */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
-                      <Box sx={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 2,
-                        background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
-                        <FeatureIcon sx={{ color: 'white', fontSize: 20 }} />
-                      </Box>
-                      <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                          {showingAllFeatures ? 'Theme Dashboard' : showingAllFeaturesList ? 'All Features' : selectedThemeForDrawer ? selectedThemeForDrawer.name : 'All Features'}
-                        </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3, justifyContent: 'space-between' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flex: 1 }}>
+                        <Box sx={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 2,
+                          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                          <FeatureIcon sx={{ color: 'white', fontSize: 20 }} />
+                        </Box>
+                        <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                            {showingAllFeatures ? 'Theme Dashboard' : showingAllFeaturesList ? 'All Features' : selectedThemeForDrawer ? selectedThemeForDrawer.name : 'All Features'}
+                          </Typography>
                         {!showingAllFeatures && !showingSubThemes && selectedThemeForDrawer?.description && (
                           <Tooltip title={selectedThemeForDrawer.description} arrow placement="top">
                             <Box sx={{
@@ -1522,6 +1621,24 @@ export function ThemesPage(): JSX.Element {
                           }
                         </Typography>
                       </Box>
+                      </Box>
+                      {/* Add Feature Button */}
+                      {!showingAllFeatures && (
+                        <Button
+                          onClick={handleOpenAddModal}
+                          variant="contained"
+                          startIcon={<AddIcon />}
+                          size="small"
+                          sx={{
+                            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                            textTransform: 'none',
+                            fontWeight: 600,
+                            fontSize: '0.875rem',
+                          }}
+                        >
+                          + Add
+                        </Button>
+                      )}
                     </Box>
 
                     {/* Dashboard or Features List */}
@@ -1928,24 +2045,26 @@ export function ThemesPage(): JSX.Element {
                                       variant="outlined"
                                       sx={{ minWidth: 'auto', height: 22, fontSize: '0.7rem' }}
                                     />
-                                    <Chip
-                                      label={`${feature.mention_count} mentions`}
-                                      size="small"
-                                      variant="outlined"
-                                      sx={{
-                                        minWidth: 'auto',
-                                        height: 22,
-                                        fontSize: '0.7rem',
-                                        cursor: 'pointer',
-                                        '&:hover': {
-                                          backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                                          borderColor: theme.palette.primary.main
-                                        }
-                                      }}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                      }}
-                                    />
+                                    {feature.mention_count > 0 && (
+                                      <Chip
+                                        label={`${feature.mention_count} mention${feature.mention_count !== 1 ? 's' : ''}`}
+                                        size="small"
+                                        variant="outlined"
+                                        sx={{
+                                          minWidth: 'auto',
+                                          height: 22,
+                                          fontSize: '0.7rem',
+                                          cursor: 'pointer',
+                                          '&:hover': {
+                                            backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                                            borderColor: theme.palette.primary.main
+                                          }
+                                        }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                        }}
+                                      />
+                                    )}
 
                                     {/* Confidence Chip */}
                                     {getThemeValidationConfidence(feature) !== null && (
@@ -3152,6 +3271,80 @@ export function ThemesPage(): JSX.Element {
               disabled={savingEdit || !editFormData.name.trim()}
             >
               {savingEdit ? 'Saving...' : 'Save Changes'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Add Feature Dialog */}
+        <Dialog
+          open={addModalOpen}
+          onClose={handleCloseAddModal}
+          maxWidth="sm"
+          fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: 2,
+            }
+          }}
+        >
+          <DialogTitle sx={{ fontWeight: 600, fontSize: '1.1rem' }}>
+            Add New Feature
+          </DialogTitle>
+          <DialogContent sx={{ pt: 2 }}>
+            {addError && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {addError}
+              </Alert>
+            )}
+            {savingAdd && (
+              <LinearProgress sx={{ mb: 2 }} />
+            )}
+            <TextField
+              autoFocus
+              label="Feature Title"
+              fullWidth
+              value={addFormData.name}
+              onChange={(e) => setAddFormData({ ...addFormData, name: e.target.value })}
+              disabled={savingAdd}
+              margin="normal"
+              variant="outlined"
+              required
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 1.5,
+                }
+              }}
+            />
+            <TextField
+              label="Description"
+              fullWidth
+              multiline
+              rows={4}
+              value={addFormData.description}
+              onChange={(e) => setAddFormData({ ...addFormData, description: e.target.value })}
+              disabled={savingAdd}
+              margin="normal"
+              variant="outlined"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 1.5,
+                }
+              }}
+            />
+          </DialogContent>
+          <DialogActions sx={{ p: 2 }}>
+            <Button
+              onClick={handleCloseAddModal}
+              disabled={savingAdd}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSaveAdd}
+              variant="contained"
+              disabled={savingAdd || !addFormData.name.trim()}
+            >
+              {savingAdd ? 'Creating...' : 'Create Feature'}
             </Button>
           </DialogActions>
         </Dialog>
