@@ -305,8 +305,8 @@ class AuthService:
                     ).first()
 
                     if not existing_workspace:
-                        # Generate slug from company name (domain)
-                        workspace_slug = company_name.replace(".", "-")
+                        # Generate slug from company name (using company.name instead of company_name)
+                        workspace_slug = company.name.replace(".", "-")
 
                         # If user is owner, use them as workspace owner; otherwise find existing owner
                         workspace_owner_id = user.id if user_role == "owner" else None
@@ -320,7 +320,7 @@ class AuthService:
                             workspace_owner_id = owner_user.id if owner_user else user.id
 
                         workspace = Workspace(
-                            name=company_name,
+                            name=company.name,
                             slug=workspace_slug,
                             company_id=company.id,
                             owner_id=workspace_owner_id,
@@ -328,7 +328,7 @@ class AuthService:
                         )
                         self.db.add(workspace)
                         self.db.commit()
-                        logger.info(f"Workspace '{company_name}' created for company {company.id}")
+                        logger.info(f"Workspace '{company.name}' created for company {company.id}")
                     else:
                         logger.info(f"Workspace already exists for company {company.id}, reusing it for user {email}")
                 except IntegrityError as workspace_error:
