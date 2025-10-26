@@ -1464,6 +1464,7 @@ export function ThemesPage(): JSX.Element {
             {/* Features List Panel - Dynamic width when showing mentions */}
             <Box sx={{ flex: showMessagesFullPage ? `0 0 ${featuresWidth}%` : 1, display: 'flex', minWidth: 0 }}>
             <Card sx={{
+              flex: 1,
               borderRadius: 1,
               background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
               backdropFilter: 'blur(10px)',
