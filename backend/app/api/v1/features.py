@@ -307,6 +307,7 @@ async def create_theme(
             name=new_theme.name,
             description=new_theme.description,
             feature_count=feature_count,
+            mention_count=0,
             parent_theme_id=str(new_theme.parent_theme_id) if new_theme.parent_theme_id else None,
             sub_theme_count=sub_theme_count,
             level=level
@@ -399,6 +400,12 @@ async def update_theme(
             Feature.theme_id == theme.id
         ).count()
 
+        # Calculate mention count
+        mention_count_result = db.query(func.sum(Feature.mention_count)).filter(
+            Feature.theme_id == theme.id
+        ).scalar()
+        mention_count = mention_count_result or 0
+
         # Calculate sub-theme count
         sub_theme_count = db.query(Theme).filter(
             Theme.parent_theme_id == theme.id
@@ -415,6 +422,7 @@ async def update_theme(
             name=theme.name,
             description=theme.description,
             feature_count=feature_count,
+            mention_count=mention_count,
             parent_theme_id=str(theme.parent_theme_id) if theme.parent_theme_id else None,
             sub_theme_count=sub_theme_count,
             level=level
