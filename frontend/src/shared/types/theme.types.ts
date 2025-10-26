@@ -50,6 +50,7 @@ export interface ThemeData {
   name: string;
   description: string;
   feature_count: number;
+  mention_count: number;
   workspace_id: string;
   created_at: string;
   updated_at: string;

@@ -296,26 +296,48 @@ class AuthService:
 
                 logger.info(f"New user created via Google OAuth: {email}")
 
-                # Create workspace for new company (only if user is owner)
-                if user_role == "owner":
-                    try:
+                # Ensure workspace exists for the company
+                # If user is the owner, they become the workspace owner; otherwise, find existing workspace owner
+                try:
+                    # Check if workspace already exists for this company
+                    existing_workspace = self.db.query(Workspace).filter(
+                        Workspace.company_id == company.id
+                    ).first()
+
+                    if not existing_workspace:
                         # Generate slug from company name (domain)
                         workspace_slug = company_name.replace(".", "-")
+
+                        # If user is owner, use them as workspace owner; otherwise find existing owner
+                        workspace_owner_id = user.id if user_role == "owner" else None
+
+                        # If user is not owner, find another owner in the company
+                        if user_role == "member":
+                            owner_user = self.db.query(User).filter(
+                                User.company_id == company.id,
+                                User.role == "owner"
+                            ).first()
+                            workspace_owner_id = owner_user.id if owner_user else user.id
 
                         workspace = Workspace(
                             name=company_name,
                             slug=workspace_slug,
                             company_id=company.id,
-                            owner_id=user.id,
+                            owner_id=workspace_owner_id,
                             is_active=True
                         )
                         self.db.add(workspace)
                         self.db.commit()
-                        logger.info(f"Workspace '{company_name}' created for user {email}")
-                    except IntegrityError as workspace_error:
-                        self.db.rollback()
-                        logger.warning(f"Failed to create workspace: {str(workspace_error)}")
-                        # Don't fail the login if workspace creation fails, just log it
+                        logger.info(f"Workspace '{company_name}' created for company {company.id}")
+                    else:
+                        logger.info(f"Workspace already exists for company {company.id}, reusing it for user {email}")
+                except IntegrityError as workspace_error:
+                    self.db.rollback()
+                    logger.warning(f"Failed to create workspace: {str(workspace_error)}")
+                    # Don't fail the login if workspace creation fails, just log it
+                except Exception as workspace_error:
+                    logger.warning(f"Error ensuring workspace exists: {str(workspace_error)}")
+                    # Don't fail the login if workspace creation fails, just log it
 
                 return user
 
