@@ -1209,27 +1209,29 @@ export function ThemesPage(): JSX.Element {
           )}
 
           {/* Theme name and info */}
-          <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
-            <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', minWidth: 0 }}>
               <Typography variant="subtitle2" sx={{ fontWeight: 600, fontSize: '0.9rem' }}>
                 {themeItem.name}
               </Typography>
             </Box>
 
             {/* Feature & Mention Count Badges */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flexShrink: 0, ml: 'auto', width: 'auto' }}>
               {themeItem.feature_count > 0 && (
                 <Box sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 0.3,
-                  px: 0.75,
-                  py: 0.2,
+                  gap: 0.25,
+                  px: 0.6,
+                  py: 0.15,
                   borderRadius: 0.75,
                   bgcolor: alpha(theme.palette.text.primary, 0.03),
+                  height: 20,
+                  whiteSpace: 'nowrap',
                 }}>
-                  <FeatureIcon sx={{ fontSize: 12, color: alpha(theme.palette.text.secondary, 0.5) }} />
-                  <Typography variant="caption" sx={{ fontWeight: 500, color: alpha(theme.palette.text.secondary, 0.6), fontSize: '0.7rem' }}>
+                  <FeatureIcon sx={{ fontSize: 11, color: alpha(theme.palette.text.secondary, 0.5), flexShrink: 0 }} />
+                  <Typography variant="caption" sx={{ fontWeight: 500, color: alpha(theme.palette.text.secondary, 0.6), fontSize: '0.65rem', lineHeight: 1 }}>
                     {themeItem.feature_count}
                   </Typography>
                 </Box>
@@ -1238,14 +1240,16 @@ export function ThemesPage(): JSX.Element {
                 <Box sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 0.3,
-                  px: 0.75,
-                  py: 0.2,
+                  gap: 0.25,
+                  px: 0.6,
+                  py: 0.15,
                   borderRadius: 0.75,
                   bgcolor: alpha(theme.palette.text.primary, 0.03),
+                  height: 20,
+                  whiteSpace: 'nowrap',
                 }}>
-                  <MessageIcon sx={{ fontSize: 12, color: alpha(theme.palette.text.secondary, 0.5) }} />
-                  <Typography variant="caption" sx={{ fontWeight: 500, color: alpha(theme.palette.text.secondary, 0.6), fontSize: '0.7rem' }}>
+                  <MessageIcon sx={{ fontSize: 11, color: alpha(theme.palette.text.secondary, 0.5), flexShrink: 0 }} />
+                  <Typography variant="caption" sx={{ fontWeight: 500, color: alpha(theme.palette.text.secondary, 0.6), fontSize: '0.65rem', lineHeight: 1 }}>
                     {themeItem.mention_count}
                   </Typography>
                 </Box>
@@ -1477,25 +1481,42 @@ export function ThemesPage(): JSX.Element {
                         </Typography>
                       </Box>
 
-                      {/* Total Features Count */}
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 1 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                          <FeatureIcon sx={{ fontSize: 16, color: theme.palette.primary.main }} />
+                      {/* Feature & Mention Count Badges */}
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flexShrink: 0, ml: 'auto' }}>
+                        <Box sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 0.25,
+                          px: 0.6,
+                          py: 0.15,
+                          borderRadius: 0.75,
+                          bgcolor: alpha(theme.palette.text.primary, 0.03),
+                          height: 20,
+                          whiteSpace: 'nowrap',
+                        }}>
+                          <FeatureIcon sx={{ fontSize: 11, color: alpha(theme.palette.text.secondary, 0.5), flexShrink: 0 }} />
+                          <Typography variant="caption" sx={{ fontWeight: 500, color: alpha(theme.palette.text.secondary, 0.6), fontSize: '0.65rem', lineHeight: 1 }}>
+                            {themes.reduce((acc, t) => acc + t.feature_count, 0)}
+                          </Typography>
+                        </Box>
+                        {themes.reduce((acc, t) => acc + (t.mention_count || 0), 0) > 0 && (
                           <Box sx={{
-                            width: 22,
-                            height: 22,
-                            borderRadius: '50%',
-                            bgcolor: theme.palette.primary.main,
-                            color: 'white',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '0.75rem',
-                            fontWeight: 600
+                            gap: 0.25,
+                            px: 0.6,
+                            py: 0.15,
+                            borderRadius: 0.75,
+                            bgcolor: alpha(theme.palette.text.primary, 0.03),
+                            height: 20,
+                            whiteSpace: 'nowrap',
                           }}>
-                            {themes.reduce((acc, t) => acc + t.feature_count, 0)}
+                            <MessageIcon sx={{ fontSize: 11, color: alpha(theme.palette.text.secondary, 0.5), flexShrink: 0 }} />
+                            <Typography variant="caption" sx={{ fontWeight: 500, color: alpha(theme.palette.text.secondary, 0.6), fontSize: '0.65rem', lineHeight: 1 }}>
+                              {themes.reduce((acc, t) => acc + (t.mention_count || 0), 0)}
+                            </Typography>
                           </Box>
-                        </Box>
+                        )}
                       </Box>
                     </Box>
 
@@ -1527,25 +1548,42 @@ export function ThemesPage(): JSX.Element {
                         </Typography>
                       </Box>
 
-                      {/* Total Features Count */}
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 1 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                          <FeatureIcon sx={{ fontSize: 16, color: theme.palette.secondary.main }} />
+                      {/* Feature & Mention Count Badges */}
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, flexShrink: 0, ml: 'auto' }}>
+                        <Box sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 0.25,
+                          px: 0.6,
+                          py: 0.15,
+                          borderRadius: 0.75,
+                          bgcolor: alpha(theme.palette.text.primary, 0.03),
+                          height: 20,
+                          whiteSpace: 'nowrap',
+                        }}>
+                          <FeatureIcon sx={{ fontSize: 11, color: alpha(theme.palette.text.secondary, 0.5), flexShrink: 0 }} />
+                          <Typography variant="caption" sx={{ fontWeight: 500, color: alpha(theme.palette.text.secondary, 0.6), fontSize: '0.65rem', lineHeight: 1 }}>
+                            {themes.reduce((acc, t) => acc + t.feature_count, 0)}
+                          </Typography>
+                        </Box>
+                        {themes.reduce((acc, t) => acc + (t.mention_count || 0), 0) > 0 && (
                           <Box sx={{
-                            width: 22,
-                            height: 22,
-                            borderRadius: '50%',
-                            bgcolor: theme.palette.secondary.main,
-                            color: 'white',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '0.75rem',
-                            fontWeight: 600
+                            gap: 0.25,
+                            px: 0.6,
+                            py: 0.15,
+                            borderRadius: 0.75,
+                            bgcolor: alpha(theme.palette.text.primary, 0.03),
+                            height: 20,
+                            whiteSpace: 'nowrap',
                           }}>
-                            {themes.reduce((acc, t) => acc + t.feature_count, 0)}
+                            <MessageIcon sx={{ fontSize: 11, color: alpha(theme.palette.text.secondary, 0.5), flexShrink: 0 }} />
+                            <Typography variant="caption" sx={{ fontWeight: 500, color: alpha(theme.palette.text.secondary, 0.6), fontSize: '0.65rem', lineHeight: 1 }}>
+                              {themes.reduce((acc, t) => acc + (t.mention_count || 0), 0)}
+                            </Typography>
                           </Box>
-                        </Box>
+                        )}
                       </Box>
                     </Box>
 
