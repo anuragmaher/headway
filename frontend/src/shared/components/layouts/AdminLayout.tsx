@@ -10,7 +10,6 @@ import {
   Toolbar,
   List,
   Typography,
-  Divider,
   IconButton,
   ListItem,
   ListItemButton,
@@ -19,6 +18,7 @@ import {
   Avatar,
   Menu,
   MenuItem,
+  Divider,
   Chip,
   alpha,
   useTheme,
@@ -67,6 +67,7 @@ const navigationItems = [
 export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(true); // Start collapsed by default
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -82,9 +83,18 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
     setCollapsed(!collapsed);
   };
 
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   const handleLogout = () => {
     logout();
     navigate(ROUTES.HOME);
+    handleProfileMenuClose();
   };
 
   const drawer = (
@@ -315,6 +325,60 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <ThemeToggle />
+
+            <IconButton
+              onClick={handleProfileMenuOpen}
+              aria-label="account menu"
+              sx={{
+                p: 0.5,
+                borderRadius: 1,
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                },
+              }}
+            >
+              <Avatar sx={{
+                width: 36,
+                height: 36,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
+                fontSize: '0.9rem',
+                fontWeight: 600,
+              }}>
+                {user?.first_name?.[0] || user?.email[0].toUpperCase()}
+              </Avatar>
+            </IconButton>
+
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleProfileMenuClose}
+              onClick={handleProfileMenuClose}
+              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            >
+              <MenuItem onClick={() => navigate(ROUTES.SETTINGS_PROFILE)}>
+                <ListItemIcon>
+                  <PersonIcon fontSize="small" />
+                </ListItemIcon>
+                Profile
+              </MenuItem>
+              <MenuItem onClick={() => navigate(ROUTES.SETTINGS_WORKSPACE)}>
+                <ListItemIcon>
+                  <SettingsIcon fontSize="small" />
+                </ListItemIcon>
+                Workspace Settings
+              </MenuItem>
+              <Divider />
+              <MenuItem onClick={handleLogout}>
+                <ListItemIcon>
+                  <LogoutIcon fontSize="small" />
+                </ListItemIcon>
+                Logout
+              </MenuItem>
+            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
