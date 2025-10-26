@@ -30,11 +30,8 @@ import {
   Settings as SettingsIcon,
   Logout as LogoutIcon,
   Person as PersonIcon,
-  BusinessCenter as FeaturesIcon,
-  Psychology as PsychologyIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
-  AutoAwesome as WayIcon,
 } from '@mui/icons-material';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
@@ -56,24 +53,9 @@ const navigationItems = [
     path: ROUTES.DASHBOARD,
   },
   {
-    text: 'Way',
-    icon: <WayIcon />,
-    path: ROUTES.WAY,
-  },
-  {
-    text: 'Features',
-    icon: <FeaturesIcon />,
-    path: ROUTES.FEATURES,
-  },
-  {
     text: 'Themes',
     icon: <CategoryIcon />,
     path: ROUTES.THEMES,
-  },
-  {
-    text: 'AI Intelligence',
-    icon: <PsychologyIcon />,
-    path: ROUTES.CLUSTERING,
   },
   {
     text: 'Workspace Settings',
@@ -85,7 +67,6 @@ const navigationItems = [
 export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(true); // Start collapsed by default
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -101,18 +82,9 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
     setCollapsed(!collapsed);
   };
 
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleProfileMenuClose = () => {
-    setAnchorEl(null);
-  };
-
   const handleLogout = () => {
     logout();
     navigate(ROUTES.HOME);
-    handleProfileMenuClose();
   };
 
   const drawer = (
@@ -299,61 +271,6 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
           );
         })}
       </List>
-
-      {/* User info */}
-      {user && (
-        <Box sx={{ 
-          p: collapsed ? 1 : 2, 
-          mt: 'auto',
-          borderTop: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
-          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.03)} 0%, ${alpha(theme.palette.primary.main, 0.01)} 100%)`,
-        }}>
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: collapsed ? 0 : 1.5,
-            p: collapsed ? 1 : 1.5,
-            borderRadius: 1,
-            background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
-            backdropFilter: 'blur(10px)',
-            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-            justifyContent: collapsed ? 'center' : 'flex-start',
-          }}>
-            <Avatar sx={{ 
-              width: collapsed ? 36 : 40, 
-              height: collapsed ? 36 : 40, 
-              fontSize: '0.9rem',
-              background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-              boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
-            }}>
-              {user.first_name?.[0] || user.email[0].toUpperCase()}
-            </Avatar>
-            {!collapsed && (
-              <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-                <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.85rem' }} noWrap>
-                  {`${user.first_name} ${user.last_name}` || user.email}
-                </Typography>
-                <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }} noWrap>
-                  {user.email}
-                </Typography>
-                <Box sx={{ mt: 0.5 }}>
-                  <Chip 
-                    label={user.company_name || 'Workspace'}
-                    size="small"
-                    sx={{ 
-                      height: 20,
-                      fontSize: '0.7rem',
-                      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
-                      color: theme.palette.primary.main,
-                      border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                    }}
-                  />
-                </Box>
-              </Box>
-            )}
-          </Box>
-        </Box>
-      )}
     </Box>
   );
 
@@ -398,60 +315,6 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <ThemeToggle />
-            
-            <IconButton
-              onClick={handleProfileMenuOpen}
-              aria-label="account menu"
-              sx={{
-                p: 0.5,
-                borderRadius: 1,
-                transition: 'all 0.2s ease-in-out',
-                '&:hover': {
-                  transform: 'scale(1.05)',
-                  bgcolor: alpha(theme.palette.primary.main, 0.1),
-                },
-              }}
-            >
-              <Avatar sx={{ 
-                width: 36, 
-                height: 36,
-                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-                boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
-                fontSize: '0.9rem',
-                fontWeight: 600,
-              }}>
-                {user?.first_name?.[0] || user?.email[0].toUpperCase()}
-              </Avatar>
-            </IconButton>
-
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleProfileMenuClose}
-              onClick={handleProfileMenuClose}
-              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-            >
-              <MenuItem onClick={() => navigate(ROUTES.SETTINGS_PROFILE)}>
-                <ListItemIcon>
-                  <PersonIcon fontSize="small" />
-                </ListItemIcon>
-                Profile
-              </MenuItem>
-              <MenuItem onClick={() => navigate(ROUTES.SETTINGS_WORKSPACE)}>
-                <ListItemIcon>
-                  <SettingsIcon fontSize="small" />
-                </ListItemIcon>
-                Workspace Settings
-              </MenuItem>
-              <Divider />
-              <MenuItem onClick={handleLogout}>
-                <ListItemIcon>
-                  <LogoutIcon fontSize="small" />
-                </ListItemIcon>
-                Logout
-              </MenuItem>
-            </Menu>
           </Box>
         </Toolbar>
       </AppBar>

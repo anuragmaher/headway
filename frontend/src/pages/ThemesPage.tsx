@@ -3027,21 +3027,6 @@ export function ThemesPage(): JSX.Element {
             {/* Drawer Footer */}
             {themeFeatures.length > 0 && (
               <Box sx={{ mt: 3, pt: 2, borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  startIcon={<FeatureIcon />}
-                  onClick={() => {
-                    handleCloseDrawer();
-                    window.location.href = `/app/features?theme=${selectedThemeForDrawer?.id}`;
-                  }}
-                  sx={{
-                    borderRadius: 2,
-                    background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100())`,
-                  }}
-                >
-                  View All Features in Feature Dashboard
-                </Button>
               </Box>
             )}
           </Box>

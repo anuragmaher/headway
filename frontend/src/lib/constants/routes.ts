@@ -13,7 +13,6 @@ export const ROUTES = {
   // Protected routes
   DASHBOARD: '/dashboard',
   ONBOARDING: '/onboarding',
-  WAY: '/app/way',
 
   // Settings routes
   SETTINGS: '/app/settings',
@@ -22,16 +21,9 @@ export const ROUTES = {
   SETTINGS_INTEGRATIONS: '/app/settings/integrations',
   SETTINGS_TEAM: '/app/settings/team',
 
-  // Feature routes
-  FEATURES: '/app/features',
-  FEATURE_DETAIL: '/app/features/:id',
-
   // Theme routes
   THEMES: '/app/themes',
   THEME_DETAIL: '/app/themes/:id',
-
-  // Clustering routes
-  CLUSTERING: '/app/clustering',
 
   // Slack integration routes
   SLACK_CALLBACK: '/app/slack/callback',
@@ -41,9 +33,6 @@ export const ROUTES = {
 } as const;
 
 // Helper functions for dynamic routes
-export const getFeatureDetailRoute = (id: string): string => 
-  ROUTES.FEATURE_DETAIL.replace(':id', id);
-
 export const getThemeDetailRoute = (id: string): string => 
   ROUTES.THEME_DETAIL.replace(':id', id);
 
@@ -64,11 +53,8 @@ export const PROTECTED_ROUTES = [
   ROUTES.SETTINGS_WORKSPACE,
   ROUTES.SETTINGS_INTEGRATIONS,
   ROUTES.SETTINGS_TEAM,
-  ROUTES.FEATURES,
-  ROUTES.FEATURE_DETAIL,
   ROUTES.THEMES,
   ROUTES.THEME_DETAIL,
-  ROUTES.CLUSTERING,
   ROUTES.SLACK_CALLBACK,
 ] as const;
 
@@ -85,23 +71,11 @@ export const ROUTE_METADATA = {
     showInNav: true,
     icon: 'DashboardIcon',
   },
-  [ROUTES.FEATURES]: {
-    title: 'Features',
-    description: 'Manage feature requests',
-    showInNav: true,
-    icon: 'FeaturesIcon',
-  },
   [ROUTES.THEMES]: {
     title: 'Themes',
     description: 'Organize features by theme',
     showInNav: true,
     icon: 'CategoryIcon',
-  },
-  [ROUTES.CLUSTERING]: {
-    title: 'AI Intelligence',
-    description: 'AI-powered feature clustering and classification',
-    showInNav: true,
-    icon: 'PsychologyIcon',
   },
   [ROUTES.SETTINGS]: {
     title: 'Settings',

@@ -11,13 +11,10 @@ import { ROUTES } from '@/lib/constants/routes';
 import { LandingPage } from '@/pages/LandingPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
-import FeaturesPage from '@/pages/FeaturesPage';
 import { ThemesPage } from '@/pages/ThemesPage';
 import { WorkspaceSettingsPage } from '@/pages/WorkspaceSettingsPage';
 import { OnboardingPage } from '@/pages/OnboardingPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
-import { ClusteringPage } from '@/pages/ClusteringPage';
-import { WayPage } from '@/pages/WayPage';
 import { ExecutiveInsightsPage } from '@/pages/ExecutiveInsightsPage';
 
 export function AppRouter(): JSX.Element {
@@ -71,15 +68,6 @@ export function AppRouter(): JSX.Element {
           }
         />
 
-        <Route
-          path={ROUTES.WAY}
-          element={
-            <ProtectedRoute>
-              <WayPage />
-            </ProtectedRoute>
-          }
-        />
-
         {/* Settings routes - will be implemented later */}
         <Route
           path={ROUTES.SETTINGS}
@@ -119,24 +107,10 @@ export function AppRouter(): JSX.Element {
         />
 
         <Route
-          path={ROUTES.FEATURES}
-          element={<FeaturesPage />}
-        />
-
-        <Route
           path={ROUTES.THEMES}
           element={
             <ProtectedRoute>
               <ThemesPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path={ROUTES.CLUSTERING}
-          element={
-            <ProtectedRoute>
-              <ClusteringPage />
             </ProtectedRoute>
           }
         />
