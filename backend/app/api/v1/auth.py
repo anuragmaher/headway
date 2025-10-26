@@ -138,6 +138,16 @@ async def login_json(
         )
 
     tokens = auth_service.create_tokens(user)
+
+    # Get user's workspace by company (not by owner)
+    from app.models.workspace import Workspace
+    workspace = db.query(Workspace).filter(
+        Workspace.company_id == user.company_id
+    ).first()
+
+    if workspace:
+        tokens['workspace_id'] = workspace.id
+
     return Token(**tokens)
 
 
@@ -179,10 +189,10 @@ async def login_google(
 
         tokens = auth_service.create_tokens(user)
 
-        # Get user's workspace (owner's workspace)
+        # Get user's workspace by company (all users in same company share workspace)
         from app.models.workspace import Workspace
         workspace = db.query(Workspace).filter(
-            Workspace.owner_id == user.id
+            Workspace.company_id == user.company_id
         ).first()
 
         if workspace:

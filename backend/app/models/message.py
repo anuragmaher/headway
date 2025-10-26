@@ -32,7 +32,10 @@ class Message(Base):
     author_name = Column(String, nullable=True)
     author_id = Column(String, nullable=True)
     author_email = Column(String, nullable=True)
-    
+
+    # Message title (extracted from source: call title, email subject, thread subject, etc.)
+    title = Column(String, nullable=True, index=True)
+
     # Message metadata
     message_metadata = Column(JSONB, nullable=True)  # Reactions, thread info, attachments, etc.
     ai_insights = Column(JSONB, nullable=True)  # AI-extracted features, bugs, sentiment, etc.

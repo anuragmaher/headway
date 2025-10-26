@@ -192,6 +192,9 @@ class TranscriptIngestionService:
                 logger.info(f"Skipped {source} {external_id} - not relevant to workspace themes")
                 return None
 
+            # Extract title from metadata
+            title = self._extract_title_from_metadata(source, metadata)
+
             # Create message object
             message = Message(
                 external_id=external_id,
@@ -203,6 +206,7 @@ class TranscriptIngestionService:
                 author_id=author_id,
                 author_email=author_email,
                 customer_id=customer_id,
+                title=title,
                 message_metadata=metadata,
                 ai_insights=ai_insights,
                 workspace_id=workspace_id,
@@ -239,6 +243,61 @@ class TranscriptIngestionService:
         except Exception as e:
             logger.error(f"Error ingesting {source} transcript {external_id}: {e}")
             self.db.rollback()
+            return None
+
+    def _extract_title_from_metadata(self, source: str, metadata: Dict[str, Any]) -> Optional[str]:
+        """
+        Extract a title from message metadata based on source type.
+
+        Strategy:
+        - Gong: Extract call_title
+        - Fathom: Extract meeting_title
+        - Email: Extract subject
+        - Generic: Look for 'title' field
+
+        Args:
+            source: Source type ('gong', 'fathom', 'email', etc)
+            metadata: Source-specific metadata dict
+
+        Returns:
+            Title string (max 255 chars) or None
+        """
+        try:
+            source_lower = source.lower() if source else ""
+
+            # Gong: extract call title
+            if source_lower == "gong":
+                title = metadata.get("call_title") or metadata.get("title")
+                if title:
+                    return str(title)[:255]
+
+            # Fathom: extract meeting title
+            elif source_lower == "fathom":
+                title = metadata.get("meeting_title") or metadata.get("title")
+                if title:
+                    return str(title)[:255]
+
+            # Email: extract subject
+            elif source_lower == "email":
+                title = metadata.get("subject") or metadata.get("title")
+                if title:
+                    return str(title)[:255]
+
+            # Generic fallback: try common title fields
+            title = (
+                metadata.get("title") or
+                metadata.get("call_title") or
+                metadata.get("meeting_title") or
+                metadata.get("subject") or
+                metadata.get("name")
+            )
+            if title:
+                return str(title)[:255]
+
+            return None
+
+        except Exception as e:
+            logger.warning(f"Error extracting title from {source} metadata: {e}")
             return None
 
     def _create_features_from_insights(

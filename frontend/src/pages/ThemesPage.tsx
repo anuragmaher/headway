@@ -37,6 +37,8 @@ import {
   Fab,
   Tooltip,
   LinearProgress,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
@@ -56,6 +58,10 @@ import {
   Search as SearchIcon,
   Info as InfoIcon,
   OpenInNew as OpenInNewIcon,
+  Lightbulb as LightbulbIcon,
+  BugReport as BugReportIcon,
+  SentimentDissatisfied as SadIcon,
+  Summarize as SummarizeIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
 import { ResizablePanel } from '@/shared/components/ResizablePanel';
@@ -138,6 +144,7 @@ interface AIInsights {
 
 interface Message {
   id: string;
+  title?: string; // Extracted title: call title, email subject, thread subject, etc.
   content: string;
   sent_at: string;
   sender_name: string;
@@ -198,6 +205,9 @@ export function ThemesPage(): JSX.Element {
   const [filterMrrMax, setFilterMrrMax] = useState<string>('');
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  // Message details tab state
+  const [mentionDetailsTab, setMentionDetailsTab] = useState<'summary' | 'features' | 'bugs' | 'pain-points' | 'highlights'>('summary');
 
   // Feature edit modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -2524,6 +2534,55 @@ export function ThemesPage(): JSX.Element {
                   display: 'flex',
                   flexDirection: 'column',
                 }}>
+                  {/* Message Title */}
+                  {(() => {
+                    const selectedMessage = featureMessages.find(m => m.id === selectedMessageId);
+                    return selectedMessage?.title ? (
+                      <Box sx={{
+                        px: 2,
+                        pt: 2,
+                        pb: 1.5,
+                        borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`
+                      }}>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: 600,
+                            fontSize: '0.95rem',
+                            color: theme.palette.text.primary,
+                            wordBreak: 'break-word'
+                          }}
+                        >
+                          {selectedMessage.title}
+                        </Typography>
+                      </Box>
+                    ) : null;
+                  })()}
+
+                  {/* Tabs Header */}
+                  <Box sx={{ borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
+                    <Tabs
+                      value={mentionDetailsTab}
+                      onChange={(e, newValue) => setMentionDetailsTab(newValue)}
+                      variant="scrollable"
+                      scrollButtonsDisplay="auto"
+                      sx={{
+                        '& .MuiTab-root': {
+                          textTransform: 'none',
+                          fontWeight: 500,
+                          fontSize: '0.85rem',
+                          minHeight: 40,
+                        }
+                      }}
+                    >
+                      <Tab icon={<SummarizeIcon sx={{ fontSize: 16, mr: 0.5 }} />} iconPosition="start" label="Summary" value="summary" />
+                      <Tab icon={<LightbulbIcon sx={{ fontSize: 16, mr: 0.5 }} />} iconPosition="start" label="Features" value="features" />
+                      <Tab icon={<BugReportIcon sx={{ fontSize: 16, mr: 0.5 }} />} iconPosition="start" label="Bugs" value="bugs" />
+                      <Tab icon={<SadIcon sx={{ fontSize: 16, mr: 0.5 }} />} iconPosition="start" label="Pain Points" value="pain-points" />
+                      <Tab icon={<MessageIcon sx={{ fontSize: 16, mr: 0.5 }} />} iconPosition="start" label="Highlights" value="highlights" />
+                    </Tabs>
+                  </Box>
+
                   <CardContent sx={{ flex: 1, overflow: 'auto', p: 2 }}>
                     {(() => {
                       const selectedMessage = featureMessages.find(m => m.id === selectedMessageId);
@@ -2580,24 +2639,68 @@ export function ThemesPage(): JSX.Element {
 
                           {selectedMessage.ai_insights ? (
                             <Box sx={{ width: '100%' }}>
-                              {/* Feature Requests */}
-                              {selectedMessage.ai_insights.feature_requests && selectedMessage.ai_insights.feature_requests.length > 0 && (
-                                <Box mb={2}>
-                                  <Typography variant="body2" fontWeight="bold" gutterBottom>
-                                    Features:
-                                  </Typography>
-                                  {selectedMessage.ai_insights.feature_requests.map((feature, idx) => (
-                                    <Box key={idx} mb={1.5} pl={1}>
-                                      <Typography variant="body2" fontWeight="600" sx={{ fontSize: '0.9rem' }}>
-                                        {feature.title}
+                              {/* Summary Tab */}
+                              {mentionDetailsTab === 'summary' && (
+                                <Box>
+                                  {selectedMessage.ai_insights.summary && (
+                                    <Box mb={2}>
+                                      <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.9rem', lineHeight: 1.6 }}>
+                                        {selectedMessage.ai_insights.summary}
                                       </Typography>
-                                      <Typography variant="body2" color="text.secondary" paragraph sx={{ fontSize: '0.85rem' }}>
-                                        {feature.description}
+                                    </Box>
+                                  )}
+
+                                  {/* Sentiment in Summary */}
+                                  {selectedMessage.ai_insights.sentiment && (
+                                    <Box mb={2}>
+                                      <Typography variant="body2" fontWeight="bold" gutterBottom sx={{ fontSize: '0.85rem' }}>
+                                        Sentiment
                                       </Typography>
-                                      <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', fontSize: '0.8rem' }}>
-                                        "{feature.quote}"
+                                      <Box pl={1}>
+                                        <Chip
+                                          label={`${selectedMessage.ai_insights.sentiment.overall} (${selectedMessage.ai_insights.sentiment.score})`}
+                                          size="small"
+                                          color={selectedMessage.ai_insights.sentiment.overall === 'positive' ? 'success' : selectedMessage.ai_insights.sentiment.overall === 'negative' ? 'error' : 'default'}
+                                          sx={{ fontSize: '0.7rem' }}
+                                        />
+                                        <Typography variant="caption" color="text.secondary" display="block" mt={0.5} sx={{ fontSize: '0.75rem' }}>
+                                          {selectedMessage.ai_insights.sentiment.reasoning}
+                                        </Typography>
+                                      </Box>
+                                    </Box>
+                                  )}
+
+                                  {/* Key Topics in Summary */}
+                                  {selectedMessage.ai_insights.key_topics && selectedMessage.ai_insights.key_topics.length > 0 && (
+                                    <Box>
+                                      <Typography variant="body2" fontWeight="bold" gutterBottom sx={{ fontSize: '0.85rem' }}>
+                                        Key Topics
                                       </Typography>
-                                      <Box mt={0.5}>
+                                      <Box pl={1} display="flex" gap={0.5} flexWrap="wrap">
+                                        {selectedMessage.ai_insights.key_topics.map((topic, idx) => (
+                                          <Chip key={idx} label={topic} size="small" variant="outlined" sx={{ fontSize: '0.7rem' }} />
+                                        ))}
+                                      </Box>
+                                    </Box>
+                                  )}
+                                </Box>
+                              )}
+
+                              {/* Features Tab */}
+                              {mentionDetailsTab === 'features' && (
+                                <Box>
+                                  {selectedMessage.ai_insights.feature_requests && selectedMessage.ai_insights.feature_requests.length > 0 ? (
+                                    selectedMessage.ai_insights.feature_requests.map((feature, idx) => (
+                                      <Box key={idx} mb={2} pb={2} sx={{ borderBottom: idx < selectedMessage.ai_insights.feature_requests.length - 1 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none' }}>
+                                        <Typography variant="body2" fontWeight="600" sx={{ fontSize: '0.9rem', mb: 0.5 }}>
+                                          {feature.title}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary" paragraph sx={{ fontSize: '0.85rem' }}>
+                                          {feature.description}
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', fontSize: '0.8rem', display: 'block', mb: 0.5 }}>
+                                          "{feature.quote}"
+                                        </Typography>
                                         <Chip
                                           label={feature.urgency}
                                           size="small"
@@ -2605,29 +2708,30 @@ export function ThemesPage(): JSX.Element {
                                           sx={{ fontSize: '0.7rem' }}
                                         />
                                       </Box>
-                                    </Box>
-                                  ))}
+                                    ))
+                                  ) : (
+                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
+                                      No features found in this mention
+                                    </Typography>
+                                  )}
                                 </Box>
                               )}
 
-                              {/* Bug Reports */}
-                              {selectedMessage.ai_insights.bug_reports && selectedMessage.ai_insights.bug_reports.length > 0 && (
-                                <Box mb={2}>
-                                  <Typography variant="body2" fontWeight="bold" gutterBottom>
-                                    Bugs:
-                                  </Typography>
-                                  {selectedMessage.ai_insights.bug_reports.map((bug, idx) => (
-                                    <Box key={idx} mb={1.5} pl={1}>
-                                      <Typography variant="body2" fontWeight="600" sx={{ fontSize: '0.9rem' }}>
-                                        {bug.title}
-                                      </Typography>
-                                      <Typography variant="body2" color="text.secondary" paragraph sx={{ fontSize: '0.85rem' }}>
-                                        {bug.description}
-                                      </Typography>
-                                      <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', fontSize: '0.8rem' }}>
-                                        "{bug.quote}"
-                                      </Typography>
-                                      <Box mt={0.5}>
+                              {/* Bugs Tab */}
+                              {mentionDetailsTab === 'bugs' && (
+                                <Box>
+                                  {selectedMessage.ai_insights.bug_reports && selectedMessage.ai_insights.bug_reports.length > 0 ? (
+                                    selectedMessage.ai_insights.bug_reports.map((bug, idx) => (
+                                      <Box key={idx} mb={2} pb={2} sx={{ borderBottom: idx < selectedMessage.ai_insights.bug_reports.length - 1 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none' }}>
+                                        <Typography variant="body2" fontWeight="600" sx={{ fontSize: '0.9rem', mb: 0.5 }}>
+                                          {bug.title}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary" paragraph sx={{ fontSize: '0.85rem' }}>
+                                          {bug.description}
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', fontSize: '0.8rem', display: 'block', mb: 0.5 }}>
+                                          "{bug.quote}"
+                                        </Typography>
                                         <Chip
                                           label={bug.severity}
                                           size="small"
@@ -2635,78 +2739,118 @@ export function ThemesPage(): JSX.Element {
                                           sx={{ fontSize: '0.7rem' }}
                                         />
                                       </Box>
-                                    </Box>
-                                  ))}
-                                </Box>
-                              )}
-
-                              {/* Pain Points */}
-                              {selectedMessage.ai_insights.pain_points && selectedMessage.ai_insights.pain_points.length > 0 && (
-                                <Box mb={2}>
-                                  <Typography variant="body2" fontWeight="bold" gutterBottom>
-                                    Pain Points:
-                                  </Typography>
-                                  {selectedMessage.ai_insights.pain_points.map((pain, idx) => (
-                                    <Box key={idx} mb={1.5} pl={1}>
-                                      <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
-                                        {pain.description}
-                                      </Typography>
-                                      <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
-                                        Impact: {pain.impact}
-                                      </Typography>
-                                      {pain.quote && (
-                                        <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', display: 'block', mt: 0.5, fontSize: '0.75rem' }}>
-                                          "{pain.quote}"
-                                        </Typography>
-                                      )}
-                                    </Box>
-                                  ))}
-                                </Box>
-                              )}
-
-                              {/* Summary */}
-                              {selectedMessage.ai_insights.summary && (
-                                <Box mb={2}>
-                                  <Typography variant="body2" fontWeight="bold" gutterBottom>
-                                    Summary:
-                                  </Typography>
-                                  <Typography variant="body2" color="text.secondary" pl={1} sx={{ fontSize: '0.85rem', lineHeight: 1.5 }}>
-                                    {selectedMessage.ai_insights.summary}
-                                  </Typography>
-                                </Box>
-                              )}
-
-                              {/* Sentiment */}
-                              {selectedMessage.ai_insights.sentiment && (
-                                <Box mb={2}>
-                                  <Typography variant="body2" fontWeight="bold" gutterBottom>
-                                    Sentiment:
-                                  </Typography>
-                                  <Box pl={1}>
-                                    <Chip
-                                      label={`${selectedMessage.ai_insights.sentiment.overall} (${selectedMessage.ai_insights.sentiment.score})`}
-                                      size="small"
-                                      color={selectedMessage.ai_insights.sentiment.overall === 'positive' ? 'success' : selectedMessage.ai_insights.sentiment.overall === 'negative' ? 'error' : 'default'}
-                                      sx={{ fontSize: '0.7rem' }}
-                                    />
-                                    <Typography variant="caption" color="text.secondary" display="block" mt={0.5} sx={{ fontSize: '0.75rem' }}>
-                                      {selectedMessage.ai_insights.sentiment.reasoning}
+                                    ))
+                                  ) : (
+                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
+                                      No bugs found in this mention
                                     </Typography>
-                                  </Box>
+                                  )}
                                 </Box>
                               )}
 
-                              {/* Key Topics */}
-                              {selectedMessage.ai_insights.key_topics && selectedMessage.ai_insights.key_topics.length > 0 && (
-                                <Box mb={2}>
-                                  <Typography variant="body2" fontWeight="bold" gutterBottom>
-                                    Key Topics:
+                              {/* Pain Points Tab */}
+                              {mentionDetailsTab === 'pain-points' && (
+                                <Box>
+                                  {selectedMessage.ai_insights.pain_points && selectedMessage.ai_insights.pain_points.length > 0 ? (
+                                    selectedMessage.ai_insights.pain_points.map((pain, idx) => (
+                                      <Box key={idx} mb={2} pb={2} sx={{ borderBottom: idx < selectedMessage.ai_insights.pain_points.length - 1 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none' }}>
+                                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mb: 0.5 }}>
+                                          {pain.description}
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                                          Impact: <strong>{pain.impact}</strong>
+                                        </Typography>
+                                        {pain.quote && (
+                                          <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', display: 'block', mt: 0.5, fontSize: '0.75rem' }}>
+                                            "{pain.quote}"
+                                          </Typography>
+                                        )}
+                                      </Box>
+                                    ))
+                                  ) : (
+                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
+                                      No pain points found in this mention
+                                    </Typography>
+                                  )}
+                                </Box>
+                              )}
+
+                              {/* Highlights Tab */}
+                              {mentionDetailsTab === 'highlights' && (
+                                <Box>
+                                  <Typography variant="body2" fontWeight="bold" gutterBottom sx={{ fontSize: '0.85rem', mb: 1 }}>
+                                    Key Insights
                                   </Typography>
-                                  <Box pl={1} display="flex" gap={0.5} flexWrap="wrap">
-                                    {selectedMessage.ai_insights.key_topics.map((topic, idx) => (
-                                      <Chip key={idx} label={topic} size="small" variant="outlined" sx={{ fontSize: '0.7rem' }} />
-                                    ))}
-                                  </Box>
+                                  {selectedMessage.ai_insights.summary && (
+                                    <Box mb={2}>
+                                      <Typography variant="caption" fontWeight="600" sx={{ fontSize: '0.75rem', color: theme.palette.primary.main }}>
+                                        Overview
+                                      </Typography>
+                                      <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mt: 0.5 }}>
+                                        {selectedMessage.ai_insights.summary}
+                                      </Typography>
+                                    </Box>
+                                  )}
+
+                                  {selectedMessage.ai_insights.feature_requests && selectedMessage.ai_insights.feature_requests.length > 0 && (
+                                    <Box mb={2}>
+                                      <Typography variant="caption" fontWeight="600" sx={{ fontSize: '0.75rem', color: theme.palette.success.main }}>
+                                        {selectedMessage.ai_insights.feature_requests.length} Feature Request{selectedMessage.ai_insights.feature_requests.length !== 1 ? 's' : ''}
+                                      </Typography>
+                                      <Box mt={0.5}>
+                                        {selectedMessage.ai_insights.feature_requests.slice(0, 3).map((feature, idx) => (
+                                          <Typography key={idx} variant="caption" sx={{ fontSize: '0.75rem', display: 'block', color: theme.palette.text.secondary }}>
+                                            • {feature.title}
+                                          </Typography>
+                                        ))}
+                                        {selectedMessage.ai_insights.feature_requests.length > 3 && (
+                                          <Typography variant="caption" sx={{ fontSize: '0.75rem', color: theme.palette.primary.main }}>
+                                            +{selectedMessage.ai_insights.feature_requests.length - 3} more
+                                          </Typography>
+                                        )}
+                                      </Box>
+                                    </Box>
+                                  )}
+
+                                  {selectedMessage.ai_insights.bug_reports && selectedMessage.ai_insights.bug_reports.length > 0 && (
+                                    <Box mb={2}>
+                                      <Typography variant="caption" fontWeight="600" sx={{ fontSize: '0.75rem', color: theme.palette.error.main }}>
+                                        {selectedMessage.ai_insights.bug_reports.length} Bug Report{selectedMessage.ai_insights.bug_reports.length !== 1 ? 's' : ''}
+                                      </Typography>
+                                      <Box mt={0.5}>
+                                        {selectedMessage.ai_insights.bug_reports.slice(0, 3).map((bug, idx) => (
+                                          <Typography key={idx} variant="caption" sx={{ fontSize: '0.75rem', display: 'block', color: theme.palette.text.secondary }}>
+                                            • {bug.title}
+                                          </Typography>
+                                        ))}
+                                        {selectedMessage.ai_insights.bug_reports.length > 3 && (
+                                          <Typography variant="caption" sx={{ fontSize: '0.75rem', color: theme.palette.primary.main }}>
+                                            +{selectedMessage.ai_insights.bug_reports.length - 3} more
+                                          </Typography>
+                                        )}
+                                      </Box>
+                                    </Box>
+                                  )}
+
+                                  {selectedMessage.ai_insights.pain_points && selectedMessage.ai_insights.pain_points.length > 0 && (
+                                    <Box>
+                                      <Typography variant="caption" fontWeight="600" sx={{ fontSize: '0.75rem', color: theme.palette.warning.main }}>
+                                        {selectedMessage.ai_insights.pain_points.length} Pain Point{selectedMessage.ai_insights.pain_points.length !== 1 ? 's' : ''}
+                                      </Typography>
+                                      <Box mt={0.5}>
+                                        {selectedMessage.ai_insights.pain_points.slice(0, 3).map((pain, idx) => (
+                                          <Typography key={idx} variant="caption" sx={{ fontSize: '0.75rem', display: 'block', color: theme.palette.text.secondary }}>
+                                            • {pain.description.substring(0, 50)}...
+                                          </Typography>
+                                        ))}
+                                        {selectedMessage.ai_insights.pain_points.length > 3 && (
+                                          <Typography variant="caption" sx={{ fontSize: '0.75rem', color: theme.palette.primary.main }}>
+                                            +{selectedMessage.ai_insights.pain_points.length - 3} more
+                                          </Typography>
+                                        )}
+                                      </Box>
+                                    </Box>
+                                  )}
                                 </Box>
                               )}
 

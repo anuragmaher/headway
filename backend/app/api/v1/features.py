@@ -81,6 +81,7 @@ class ThemeResponse(BaseModel):
 
 class MessageResponse(BaseModel):
     id: str
+    title: Optional[str] = None  # Extracted title: call title, email subject, thread subject, etc.
     content: str
     sent_at: str
     sender_name: Optional[str]
@@ -858,6 +859,7 @@ async def get_feature_messages(
             customer_name = message.customer.name if message.customer else None
             message_responses.append(MessageResponse(
                 id=str(message.id),
+                title=message.title,
                 content=message.content,
                 sent_at=message.sent_at.isoformat() if message.sent_at else "",
                 sender_name=message.author_name,

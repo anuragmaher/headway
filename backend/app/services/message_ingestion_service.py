@@ -162,6 +162,12 @@ class MessageIngestionService:
                     token=integration.access_token
                 )
                 
+                # Extract title from Slack message
+                title = self._extract_slack_title(
+                    message_data=message_data,
+                    channel_name=channel_name
+                )
+
                 # Create message object
                 message = Message(
                     external_id=external_id,
@@ -172,6 +178,7 @@ class MessageIngestionService:
                     author_name=author_info.get("name"),
                     author_id=message_data.get("user"),
                     author_email=author_info.get("email"),
+                    title=title,
                     message_metadata={
                         "reactions": message_data.get("reactions", []),
                         "thread_ts": message_data.get("thread_ts"),
@@ -258,6 +265,47 @@ class MessageIngestionService:
         
         return "unknown reason"
     
+    def _extract_slack_title(self, message_data: Dict[str, Any], channel_name: str) -> Optional[str]:
+        """
+        Extract a title from a Slack message.
+
+        Strategy:
+        1. Check for explicit thread subject in message metadata
+        2. Use first 80 characters of message text
+        3. Fallback to channel name with thread indicator
+
+        Args:
+            message_data: Slack message object
+            channel_name: Slack channel name
+
+        Returns:
+            Title string or None
+        """
+        try:
+            # Check for explicit subject/topic
+            subject = message_data.get("subject")
+            if subject and subject.strip():
+                return subject[:255]
+
+            # Get message text as title
+            text = message_data.get("text", "").strip()
+            if text:
+                # Take first 80 chars, clean up
+                title = text[:80]
+                # Remove markdown/formatting for cleaner title
+                title = title.replace("*", "").replace("_", "").replace("`", "")
+                return title
+
+            # Fallback to channel name
+            if message_data.get("thread_ts") and message_data.get("thread_ts") != message_data.get("ts"):
+                return f"#{channel_name} (thread)"
+            else:
+                return f"#{channel_name}"
+
+        except Exception as e:
+            logger.warning(f"Error extracting Slack message title: {e}")
+            return None
+
     async def _get_author_info(self, user_id: Optional[str], token: str) -> Dict[str, Any]:
         """
         Get author information from Slack API with caching
