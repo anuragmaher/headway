@@ -11,12 +11,16 @@ from typing import List, Optional, Union
 
 from app.models.workspace_connector import WorkspaceConnector, ConnectorType
 from app.models.workspace import Workspace
+from app.models.company import Company
 from app.schemas.workspace_connector import (
     WorkspaceConnectorResponse,
     GongConnectorCreate,
     FathomConnectorCreate,
     WorkspaceConnectorUpdate
 )
+from app.schemas.company import CompanyUpdate
+import requests
+import openai
 
 logger = logging.getLogger(__name__)
 
@@ -284,4 +288,312 @@ class WorkspaceService:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to delete connector"
+            )
+
+    def update_company_details(
+        self,
+        workspace_id: UUID,
+        company_data: CompanyUpdate
+    ) -> dict:
+        """
+        Update company details for a workspace.
+
+        Args:
+            workspace_id: UUID of the workspace
+            company_data: Company update data
+
+        Returns:
+            Updated company data
+
+        Raises:
+            HTTPException: If workspace or company not found
+        """
+        # Get workspace and its associated company
+        workspace = self.db.query(Workspace).filter(
+            Workspace.id == workspace_id
+        ).first()
+
+        if not workspace:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Workspace not found"
+            )
+
+        company = self.db.query(Company).filter(
+            Company.id == workspace.company_id
+        ).first()
+
+        if not company:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Company not found"
+            )
+
+        try:
+            # Update company fields
+            if company_data.name is not None:
+                company.name = company_data.name
+            if company_data.website is not None:
+                company.website = company_data.website
+            if company_data.size is not None:
+                company.size = company_data.size
+            if company_data.description is not None:
+                company.description = company_data.description
+            if company_data.industry is not None:
+                company.industry = company_data.industry
+
+            self.db.commit()
+            self.db.refresh(company)
+
+            return {
+                "id": str(company.id),
+                "name": company.name,
+                "website": company.website,
+                "size": company.size,
+                "description": company.description,
+                "industry": company.industry
+            }
+
+        except IntegrityError as e:
+            self.db.rollback()
+            logger.error(f"Database error updating company: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Failed to update company details"
+            )
+        except Exception as e:
+            self.db.rollback()
+            logger.error(f"Error updating company details: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to update company details"
+            )
+
+    def generate_description_from_website(
+        self,
+        workspace_id: UUID,
+        website_url: str
+    ) -> dict:
+        """
+        Fetch website content using Firecrawl and generate description using OpenAI.
+
+        Args:
+            workspace_id: UUID of the workspace
+            website_url: URL of the company website
+
+        Returns:
+            Dictionary with generated description
+
+        Raises:
+            HTTPException: If website fetch fails or OpenAI call fails
+        """
+        try:
+            logger.info(f"Fetching website content from {website_url} using Firecrawl")
+
+            # Validate workspace exists
+            workspace = self.db.query(Workspace).filter(
+                Workspace.id == workspace_id
+            ).first()
+
+            if not workspace:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Workspace not found"
+                )
+
+            # Fetch website content using Firecrawl
+            from app.core.config import settings
+            from firecrawl import FirecrawlApp
+
+            if not settings.FIRECRAWL_API_KEY:
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="Firecrawl API key not configured"
+                )
+
+            app = FirecrawlApp(api_key=settings.FIRECRAWL_API_KEY)
+            # Use simple scraping with minimal params
+            scrape_result = app.scrape_url(website_url)
+
+            # Handle ScrapeResponse object
+            if not scrape_result:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Failed to fetch website content"
+                )
+
+            # Access the markdown content from the response object
+            website_text = getattr(scrape_result, 'markdown', '') or getattr(scrape_result, 'content', '')
+
+            if not website_text:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Could not extract content from website"
+                )
+
+            # Limit text to 3000 chars for API efficiency
+            website_text = website_text[:3000]
+
+            logger.info(f"Extracted website text: {len(website_text)} characters")
+
+            # Generate description using OpenAI
+            client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are a helpful assistant that creates concise company descriptions. Generate a 2-3 sentence description of what the company does based on the provided website content."
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Based on this website content, provide a concise company description:\n\n{website_text}"
+                    }
+                ],
+                max_tokens=150,
+                temperature=0.7
+            )
+
+            description = response.choices[0].message.content.strip()
+
+            logger.info(f"Generated description: {description}")
+
+            return {
+                "description": description,
+                "status": "success"
+            }
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Error generating description: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to generate description: {str(e)}"
+            )
+
+    def generate_theme_suggestions(
+        self,
+        workspace_id: UUID
+    ) -> dict:
+        """
+        Generate AI-powered theme suggestions based on company details.
+
+        Args:
+            workspace_id: UUID of the workspace
+
+        Returns:
+            Dictionary with list of theme suggestions containing name and description
+
+        Raises:
+            HTTPException: If company details not found or generation fails
+        """
+        try:
+            logger.info(f"Generating theme suggestions for workspace {workspace_id}")
+
+            # Get workspace and its company details
+            workspace = self.db.query(Workspace).filter(
+                Workspace.id == workspace_id
+            ).first()
+
+            if not workspace:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Workspace not found"
+                )
+
+            company = self.db.query(Company).filter(
+                Company.id == workspace.company_id
+            ).first()
+
+            if not company or not company.name:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Company details not found. Please set up company details first."
+                )
+
+            # Build company context for AI
+            company_context = f"""
+Company Name: {company.name}
+Industry: {company.industry or 'Not specified'}
+Size: {company.size or 'Not specified'}
+Website: {company.website or 'Not specified'}
+Description: {company.description or 'Not specified'}
+"""
+
+            logger.info(f"Using company context: {company_context}")
+
+            # Generate suggestions using OpenAI
+            from app.core.config import settings
+            client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an expert at categorizing customer feedback for SaaS products. Your task is to create theme categories that are highly specific to the company's business, products, and customer base. Themes should represent different aspects of customer feedback relevant to what the company does."
+                    },
+                    {
+                        "role": "user",
+                        "content": f"""Analyze this company and generate 5-6 theme suggestions for organizing their customer feedback:
+
+{company_context}
+
+Based on what this company does (from their description above), think about:
+1. What are the main product areas or features customers would give feedback on?
+2. What operational or business aspects would customers care about?
+3. What customer pain points or experience categories are relevant?
+4. What are common feedback categories for similar companies?
+
+Generate themes that are SPECIFIC to this company's business and products, not generic.
+
+Return ONLY valid JSON array in this format, no markdown or extra text:
+[
+  {{"name": "Theme Name", "description": "What this theme captures for this specific company"}},
+  ...
+]"""
+                    }
+                ],
+                max_tokens=600,
+                temperature=0.7
+            )
+
+            suggestions_text = response.choices[0].message.content.strip()
+            logger.info(f"Raw suggestions response: {suggestions_text}")
+
+            # Parse JSON response
+            import json
+            # Remove markdown code blocks if present
+            if suggestions_text.startswith("```"):
+                suggestions_text = suggestions_text.split("```")[1]
+                if suggestions_text.startswith("json"):
+                    suggestions_text = suggestions_text[4:]
+                suggestions_text = suggestions_text.strip()
+
+            suggestions = json.loads(suggestions_text)
+
+            # Validate and clean suggestions
+            cleaned_suggestions = []
+            for suggestion in suggestions:
+                if isinstance(suggestion, dict) and 'name' in suggestion and 'description' in suggestion:
+                    cleaned_suggestions.append({
+                        'name': suggestion['name'],
+                        'description': suggestion['description']
+                    })
+
+            logger.info(f"Generated {len(cleaned_suggestions)} theme suggestions")
+
+            return {
+                "suggestions": cleaned_suggestions,
+                "status": "success"
+            }
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Error generating theme suggestions: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to generate theme suggestions: {str(e)}"
             )

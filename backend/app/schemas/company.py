@@ -10,10 +10,10 @@ from datetime import datetime
 class CompanyBase(BaseModel):
     """Base company schema with common fields"""
     name: str = Field(..., min_length=2, max_length=100)
-    size: str = Field(..., pattern="^(1-10|11-50|51-200|201-1000|1000\+)$")
+    size: Optional[str] = Field(None, pattern="^(Startup|Small|Medium|Enterprise)$")
     domain: Optional[str] = Field(None, max_length=100)
     industry: Optional[str] = Field(None, max_length=100)
-    description: Optional[str] = Field(None, max_length=500)
+    description: Optional[str] = Field(None, max_length=1000)
     website: Optional[str] = Field(None, max_length=200)
 
 
@@ -25,10 +25,10 @@ class CompanyCreate(CompanyBase):
 class CompanyUpdate(BaseModel):
     """Schema for company updates"""
     name: Optional[str] = Field(None, min_length=2, max_length=100)
-    size: Optional[str] = Field(None, pattern="^(1-10|11-50|51-200|201-1000|1000\+)$")
+    size: Optional[str] = Field(None, pattern="^(Startup|Small|Medium|Enterprise)$")
     domain: Optional[str] = Field(None, max_length=100)
     industry: Optional[str] = Field(None, max_length=100)
-    description: Optional[str] = Field(None, max_length=500)
+    description: Optional[str] = Field(None, max_length=1000)
     website: Optional[str] = Field(None, max_length=200)
 
 
@@ -46,7 +46,7 @@ class Company(CompanyBase):
             "example": {
                 "id": "123e4567-e89b-12d3-a456-426614174000",
                 "name": "Acme Corporation",
-                "size": "51-200",
+                "size": "Medium",
                 "domain": "acmecorp.com",
                 "industry": "Technology",
                 "description": "Leading provider of innovative solutions",

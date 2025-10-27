@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     # AI Integration
     ANTHROPIC_API_KEY: Optional[str] = None
     OPENAI_API_KEY: Optional[str] = None
+
+    # Web Scraping
+    FIRECRAWL_API_KEY: Optional[str] = None
     
     # Slack Integration
     SLACK_CLIENT_ID: Optional[str] = None

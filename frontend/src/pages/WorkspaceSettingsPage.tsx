@@ -55,6 +55,8 @@ import { AdminLayout } from '@/shared/components/layouts';
 import { useUser, useAuthStore } from '@/features/auth/store/auth-store';
 import { slackService, type SlackChannel, type SlackIntegration } from '@/services/slack';
 import { connectorService, type ConnectorResponse } from '@/services/connectors';
+import { CompanyDetailsForm } from '@/shared/components/CompanyDetailsForm';
+import { companyService, type CompanyDetails } from '@/services/company';
 
 interface DataSource {
   id: string;
@@ -108,11 +110,33 @@ export function WorkspaceSettingsPage(): JSX.Element {
   const [connectors, setConnectors] = useState<ConnectorResponse[]>([]);
   const [isLoadingConnectors, setIsLoadingConnectors] = useState(true);
 
+  // Company details state
+  const [companyData, setCompanyData] = useState<CompanyDetails>({
+    name: '',
+    website: '',
+    size: '',
+    description: '',
+  });
+  const [isLoadingCompany, setIsLoadingCompany] = useState(false);
+
   // Load integrations and connectors on component mount
   useEffect(() => {
     loadSlackIntegrations();
     loadConnectors();
+    loadCompanyDetails();
   }, []);
+
+  const loadCompanyDetails = async () => {
+    try {
+      const workspaceId = auth.tokens?.workspace_id;
+      if (!workspaceId) return;
+
+      const details = await companyService.getCompanyDetails(workspaceId);
+      setCompanyData(details);
+    } catch (error: any) {
+      console.error('Failed to load company details:', error);
+    }
+  };
 
   const loadSlackIntegrations = async () => {
     try {
@@ -200,7 +224,40 @@ export function WorkspaceSettingsPage(): JSX.Element {
       [section]: isExpanded,
     }));
   };
-  
+
+  const handleSaveCompanyDetails = async (data: CompanyDetails) => {
+    setIsLoadingCompany(true);
+    try {
+      const workspaceId = auth.tokens?.workspace_id;
+      if (!workspaceId) {
+        throw new Error('No workspace selected');
+      }
+
+      await companyService.updateCompanyDetails(workspaceId, data);
+      // Reload the company details from the database to ensure we have the latest data
+      await loadCompanyDetails();
+    } catch (error: any) {
+      console.error('Failed to save company details:', error);
+      throw error;
+    } finally {
+      setIsLoadingCompany(false);
+    }
+  };
+
+  const handleGenerateDescription = async (websiteUrl: string): Promise<string> => {
+    try {
+      const workspaceId = auth.tokens?.workspace_id;
+      if (!workspaceId) {
+        throw new Error('No workspace selected');
+      }
+
+      return await companyService.generateDescription(workspaceId, websiteUrl);
+    } catch (error: any) {
+      console.error('Failed to generate description:', error);
+      throw error;
+    }
+  };
+
   // Convert SlackIntegrations and Connectors to DataSource format for UI
   const dataSources: DataSource[] = [
     // Slack integrations
@@ -464,6 +521,16 @@ export function WorkspaceSettingsPage(): JSX.Element {
               </Box>
             </Box>
           </Box>
+        </Box>
+
+        {/* Company Details Section */}
+        <Box sx={{ mb: 3 }}>
+          <CompanyDetailsForm
+            companyData={companyData}
+            onSave={handleSaveCompanyDetails}
+            onGenerateDescription={handleGenerateDescription}
+            isLoading={isLoadingCompany}
+          />
         </Box>
 
         <Grid container spacing={2}>

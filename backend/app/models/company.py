@@ -9,12 +9,12 @@ from app.core.database import Base
 
 class Company(Base):
     """Company model for organization management"""
-    
+
     __tablename__ = "companies"
-    
+
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     name = Column(String, unique=True, nullable=False, index=True)
-    size = Column(String, nullable=False)  # "1-10", "11-50", "51-200", "201-1000", "1000+"
+    size = Column(String, nullable=True)  # "Startup", "Small", "Medium", "Enterprise"
     domain = Column(String, nullable=True, index=True)  # company.com - extracted from email
     industry = Column(String, nullable=True)
     description = Column(Text, nullable=True)

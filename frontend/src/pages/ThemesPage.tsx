@@ -65,9 +65,11 @@ import {
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
 import { ResizablePanel } from '@/shared/components/ResizablePanel';
+import { OnboardingBlocker } from '@/shared/components/OnboardingBlocker';
 import { useAuthStore } from '@/features/auth/store/auth-store';
 import { ThemeData, ThemeFormData } from '@/shared/types/theme.types';
 import { API_BASE_URL } from '@/config/api.config';
+import { themeService, ThemeSuggestion } from '@/services/theme';
 
 type Theme = ThemeData;
 
@@ -180,6 +182,8 @@ export function ThemesPage(): JSX.Element {
     description: '',
     parent_theme_id: null,
   });
+  const [suggestions, setSuggestions] = useState<ThemeSuggestion[]>([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedThemeForDrawer, setSelectedThemeForDrawer] = useState<Theme | null>(null);
   const [showingAllFeatures, setShowingAllFeatures] = useState(false);
@@ -237,6 +241,10 @@ export function ThemesPage(): JSX.Element {
   const [mentionsListWidth, setMentionsListWidth] = useState(18); // 18%
   const [isResizingMentions, setIsResizingMentions] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Onboarding blocker state
+  const [showOnboardingBlocker, setShowOnboardingBlocker] = useState(false);
+  const [companyDetailsFilledIn, setCompanyDetailsFilledIn] = useState(true); // Assume true by default
 
   // Use workspace_id from tokens (from Google OAuth/login)
   const WORKSPACE_ID = tokens?.workspace_id;
@@ -626,7 +634,18 @@ export function ThemesPage(): JSX.Element {
     fetchThemes();
     // Load all features by default
     handleAllThemesClick();
+
+    // Check if we should show the onboarding blocker
+    // This will be triggered if no themes exist and company details are missing
+    // The blocker will check: if themes.length === 0 && no company details
+    // For now, we show it if themes are empty (company details check would come from workspace context)
+    setShowOnboardingBlocker(themes.length === 0);
   }, []);
+
+  // Update blocker status when themes change
+  React.useEffect(() => {
+    setShowOnboardingBlocker(themes.length === 0);
+  }, [themes]);
 
   // Auto-select first message when messages are loaded
   useEffect(() => {
@@ -643,6 +662,7 @@ export function ThemesPage(): JSX.Element {
         description: themeToEdit.description,
         parent_theme_id: themeToEdit.parent_theme_id || null,
       });
+      setSuggestions([]);
     } else {
       setEditingTheme(null);
       setFormData({
@@ -650,6 +670,23 @@ export function ThemesPage(): JSX.Element {
         description: '',
         parent_theme_id: parentThemeId || null,
       });
+      setSuggestions([]);
+
+      // Load suggestions asynchronously (non-blocking)
+      if (WORKSPACE_ID) {
+        setLoadingSuggestions(true);
+        themeService.generateThemeSuggestions(WORKSPACE_ID)
+          .then((themeSuggestions) => {
+            setSuggestions(themeSuggestions);
+          })
+          .catch((err) => {
+            console.error('Failed to load theme suggestions:', err);
+            setSuggestions([]);
+          })
+          .finally(() => {
+            setLoadingSuggestions(false);
+          });
+      }
     }
     setDialogOpen(true);
   };
@@ -1404,6 +1441,16 @@ export function ThemesPage(): JSX.Element {
 
   return (
     <AdminLayout>
+      {/* Onboarding Blocker - shown if no themes exist and company details are missing */}
+      <OnboardingBlocker
+        isBlocked={showOnboardingBlocker}
+        missingItems={{
+          companyDetails: !companyDetailsFilledIn,
+          themes: themes.length === 0,
+        }}
+        onDismiss={() => setShowOnboardingBlocker(false)}
+      />
+
       <Box>
         {/* Header */}
 
@@ -3104,7 +3151,7 @@ export function ThemesPage(): JSX.Element {
         <Dialog
           open={dialogOpen}
           onClose={handleCloseDialog}
-          maxWidth="sm"
+          maxWidth="md"
           fullWidth
         >
           <DialogTitle sx={{
@@ -3121,43 +3168,102 @@ export function ThemesPage(): JSX.Element {
             </IconButton>
           </DialogTitle>
 
-          <DialogContent sx={{ pt: 2 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <TextField
-                label="Theme Name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                fullWidth
-                required
-              />
+          <DialogContent sx={{ pt: 2, p: 0 }}>
+            <Box sx={{ display: 'flex', height: '100%', minHeight: editingTheme ? 'auto' : '400px' }}>
+              {/* Left Column - Form */}
+              <Box sx={{ flex: 1, p: 3, pr: 2, borderRight: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <TextField
+                    label="Theme Name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    fullWidth
+                    required
+                    placeholder="e.g., User Interface"
+                  />
 
-              <TextField
-                label="Description"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                fullWidth
-                multiline
-                rows={3}
-                required
-              />
+                  <TextField
+                    label="Description"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    fullWidth
+                    multiline
+                    rows={3}
+                    required
+                    placeholder="Describe what this theme is about..."
+                  />
 
-              <TextField
-                select
-                label="Parent Theme (Optional)"
-                value={formData.parent_theme_id || ''}
-                onChange={(e) => setFormData({ ...formData, parent_theme_id: e.target.value || null })}
-                fullWidth
-                helperText="Select a parent theme to create a sub-theme"
-              >
-                <MenuItem value="">None (Root Theme)</MenuItem>
-                {themes
-                  .filter(t => !t.parent_theme_id && t.id !== editingTheme?.id) // Only show root themes and exclude current theme if editing
-                  .map((parentTheme) => (
-                    <MenuItem key={parentTheme.id} value={parentTheme.id}>
-                      {parentTheme.name}
-                    </MenuItem>
-                  ))}
-              </TextField>
+                  <TextField
+                    select
+                    label="Parent Theme (Optional)"
+                    value={formData.parent_theme_id || ''}
+                    onChange={(e) => setFormData({ ...formData, parent_theme_id: e.target.value || null })}
+                    fullWidth
+                    helperText="Select a parent theme to create a sub-theme"
+                  >
+                    <MenuItem value="">None (Root Theme)</MenuItem>
+                    {themes
+                      .filter(t => !t.parent_theme_id && t.id !== editingTheme?.id) // Only show root themes and exclude current theme if editing
+                      .map((parentTheme) => (
+                        <MenuItem key={parentTheme.id} value={parentTheme.id}>
+                          {parentTheme.name}
+                        </MenuItem>
+                      ))}
+                  </TextField>
+                </Box>
+              </Box>
+
+              {/* Right Column - Suggestions */}
+              {!editingTheme && (
+                <Box sx={{ flex: 0.9, p: 3, pl: 2, bgcolor: alpha(theme.palette.primary.main, 0.03), overflow: 'auto', maxHeight: '400px' }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2, color: 'text.secondary' }}>
+                    AI Suggestions
+                  </Typography>
+
+                  {loadingSuggestions ? (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+                      <CircularProgress size={32} />
+                    </Box>
+                  ) : suggestions.length > 0 ? (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                      {suggestions.map((suggestion, index) => (
+                        <Card
+                          key={index}
+                          sx={{
+                            p: 1.5,
+                            cursor: 'pointer',
+                            border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                            transition: 'all 0.2s ease',
+                            '&:hover': {
+                              bgcolor: alpha(theme.palette.primary.main, 0.1),
+                              borderColor: theme.palette.primary.main,
+                              transform: 'translateX(4px)',
+                            }
+                          }}
+                          onClick={() => {
+                            setFormData({
+                              ...formData,
+                              name: suggestion.name,
+                              description: suggestion.description
+                            });
+                          }}
+                        >
+                          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                            {suggestion.name}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', lineHeight: 1.4 }}>
+                            {suggestion.description}
+                          </Typography>
+                        </Card>
+                      ))}
+                    </Box>
+                  ) : (
+                    <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 3 }}>
+                      No suggestions available. Please set up company details first.
+                    </Typography>
+                  )}
+                </Box>
+              )}
             </Box>
           </DialogContent>
 
