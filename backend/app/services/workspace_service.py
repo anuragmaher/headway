@@ -613,3 +613,147 @@ Return ONLY valid JSON array in this format, no markdown or extra text:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Failed to generate theme suggestions: {str(e)}"
             )
+
+    def generate_feature_suggestions(
+        self,
+        workspace_id: UUID,
+        theme_name: str,
+        already_suggested: list = None
+    ) -> dict:
+        """
+        Generate AI-powered feature suggestions based on company details and selected theme.
+
+        Args:
+            workspace_id: UUID of the workspace
+            theme_name: Name of the selected theme
+            already_suggested: List of already-suggested features to avoid in format [{"name": "...", "description": "..."}, ...]
+
+        Returns:
+            Dictionary with list of feature suggestions containing name and description
+
+        Raises:
+            HTTPException: If company details not found or generation fails
+        """
+        try:
+            if already_suggested is None:
+                already_suggested = []
+
+            logger.info(f"Generating feature suggestions for workspace {workspace_id}, theme: {theme_name}. Already suggested: {len(already_suggested)}")
+
+            # Get workspace and its company details
+            workspace = self.db.query(Workspace).filter(
+                Workspace.id == workspace_id
+            ).first()
+
+            if not workspace:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Workspace not found"
+                )
+
+            company = self.db.query(Company).filter(
+                Company.id == workspace.company_id
+            ).first()
+
+            if not company or not company.name:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Company details not found. Please set up company details first."
+                )
+
+            # Build company context for AI
+            company_context = f"""
+Company Name: {company.name}
+Industry: {company.industry or 'Not specified'}
+Size: {company.size or 'Not specified'}
+Website: {company.website or 'Not specified'}
+Description: {company.description or 'Not specified'}
+"""
+
+            logger.info(f"Using company context and theme: {theme_name}")
+
+            # Build list of already suggested features for the prompt
+            already_suggested_text = ""
+            if already_suggested:
+                feature_names = ", ".join([f.get("name", "") for f in already_suggested if f.get("name")])
+                already_suggested_text = f"""
+
+IMPORTANT: Do NOT suggest these features again - user has already seen them:
+- {feature_names}
+
+Generate completely different features that complement or expand on the existing ones."""
+
+            # Generate suggestions using OpenAI
+            from app.core.config import settings
+            client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an expert at identifying valuable feature requests for SaaS products. Your task is to generate realistic, specific feature ideas that customers would request based on the company's business, products, and customer needs. Features should be concrete and actionable."
+                    },
+                    {
+                        "role": "user",
+                        "content": f"""Generate 5-6 specific feature suggestions for the "{theme_name}" category based on this company:
+
+{company_context}
+
+For the "{theme_name}" theme, think about:
+1. What specific features or improvements would customers request in this category?
+2. What pain points or workflows exist in this area?
+3. What competitive features do similar companies have?
+4. What would make the product more valuable to customers?
+
+Generate concrete, specific feature requests (not generic ones) that customers might actually submit.{already_suggested_text}
+
+Return ONLY valid JSON array in this format, no markdown or extra text:
+[
+  {{"name": "Feature Name", "description": "What this feature does and why it matters"}},
+  ...
+]"""
+                    }
+                ],
+                max_tokens=700,
+                temperature=0.7
+            )
+
+            suggestions_text = response.choices[0].message.content.strip()
+            logger.info(f"Raw feature suggestions response: {suggestions_text}")
+
+            # Parse JSON response
+            import json
+            # Remove markdown code blocks if present
+            if suggestions_text.startswith("```"):
+                suggestions_text = suggestions_text.split("```")[1]
+                if suggestions_text.startswith("json"):
+                    suggestions_text = suggestions_text[4:]
+                suggestions_text = suggestions_text.strip()
+
+            suggestions = json.loads(suggestions_text)
+
+            # Validate and clean suggestions
+            cleaned_suggestions = []
+            for suggestion in suggestions:
+                if isinstance(suggestion, dict) and 'name' in suggestion and 'description' in suggestion:
+                    cleaned_suggestions.append({
+                        'name': suggestion['name'],
+                        'description': suggestion['description']
+                    })
+
+            logger.info(f"Generated {len(cleaned_suggestions)} feature suggestions")
+
+            return {
+                "suggestions": cleaned_suggestions,
+                "status": "success"
+            }
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Error generating feature suggestions: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to generate feature suggestions: {str(e)}"
+            )

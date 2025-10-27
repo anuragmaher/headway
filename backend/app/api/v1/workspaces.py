@@ -355,6 +355,12 @@ class GenerateThemeSuggestionsRequest(BaseModel):
     already_suggested: list[dict] = None  # List of already suggested themes: [{"name": "...", "description": "..."}, ...]
 
 
+class GenerateFeatureSuggestionsRequest(BaseModel):
+    """Request model for feature suggestions generation"""
+    theme_name: str  # Name of the selected theme
+    already_suggested: list[dict] = None  # List of already suggested features: [{"name": "...", "description": "..."}, ...]
+
+
 @router.post(
     "/{workspace_id}/generate-description",
     response_model=dict,
@@ -455,4 +461,53 @@ async def generate_theme_suggestions(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to generate theme suggestions"
+        )
+
+
+@router.post(
+    "/{workspace_id}/generate-feature-suggestions",
+    response_model=dict,
+    status_code=status.HTTP_200_OK
+)
+async def generate_feature_suggestions(
+    workspace_id: UUID,
+    request: GenerateFeatureSuggestionsRequest,
+    current_user: User = Depends(get_current_user),
+    db = Depends(get_db)
+) -> dict:
+    """
+    Generate AI-powered feature suggestions based on company details and selected theme.
+
+    Args:
+        workspace_id: UUID of the workspace
+        request: Request containing theme_name and already_suggested features
+        current_user: Current authenticated user
+        db: Database session
+
+    Returns:
+        Dictionary with list of feature suggestions
+
+    Raises:
+        HTTPException: If company details not found or generation fails
+    """
+    try:
+        user_email = current_user.email if isinstance(current_user, User) else current_user.get('email', 'unknown')
+        logger.info(
+            f"User {user_email} requesting feature suggestions for theme '{request.theme_name}' in workspace {workspace_id}"
+        )
+
+        service = WorkspaceService(db)
+        already_suggested = request.already_suggested or []
+        suggestions = service.generate_feature_suggestions(workspace_id, request.theme_name, already_suggested)
+
+        logger.info(f"Feature suggestions generated successfully for workspace {workspace_id}")
+        return suggestions
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating feature suggestions: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to generate feature suggestions"
         )
