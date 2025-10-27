@@ -1001,8 +1001,13 @@ export function ThemesPage(): JSX.Element {
     // Load suggestions asynchronously
     if (WORKSPACE_ID && selectedThemeForDrawer) {
       setLoadingFeatureSuggestions(true);
+      // Convert existing features to the format expected by the service
+      const existingFeaturesForAI = themeFeatures.map(f => ({
+        name: f.name,
+        description: f.description
+      }));
       themeService
-        .generateFeatureSuggestions(WORKSPACE_ID, selectedThemeForDrawer.name)
+        .generateFeatureSuggestions(WORKSPACE_ID, selectedThemeForDrawer.name, existingFeaturesForAI)
         .then((suggestions) => {
           setFeatureSuggestions(suggestions);
         })
@@ -1020,8 +1025,18 @@ export function ThemesPage(): JSX.Element {
     if (!WORKSPACE_ID || !selectedThemeForDrawer || loadingMoreFeatureSuggestions) return;
 
     setLoadingMoreFeatureSuggestions(true);
+    // Convert existing features to the format expected by the service
+    const existingFeaturesForAI = themeFeatures.map(f => ({
+      name: f.name,
+      description: f.description
+    }));
     themeService
-      .generateFeatureSuggestions(WORKSPACE_ID, selectedThemeForDrawer.name, featureSuggestions)
+      .generateFeatureSuggestions(
+        WORKSPACE_ID,
+        selectedThemeForDrawer.name,
+        existingFeaturesForAI,
+        featureSuggestions // Pass already-suggested as the fourth parameter
+      )
       .then((moreSuggestions) => {
         setFeatureSuggestions([...featureSuggestions, ...moreSuggestions]);
       })

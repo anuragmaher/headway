@@ -42,12 +42,14 @@ export const themeService = {
   generateFeatureSuggestions: async (
     workspaceId: string,
     themeName: string,
+    existingFeatures: FeatureSuggestion[] = [],
     alreadySuggested: FeatureSuggestion[] = []
   ): Promise<FeatureSuggestion[]> => {
     const response = await api.post(
       `/api/v1/workspaces/${workspaceId}/generate-feature-suggestions`,
       {
         theme_name: themeName,
+        existing_features: existingFeatures,
         already_suggested: alreadySuggested,
       }
     );

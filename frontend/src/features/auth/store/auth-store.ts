@@ -9,7 +9,11 @@ import { API_BASE_URL } from '../../../config/api.config';
 
 const AUTH_STORAGE_KEY = 'headway-auth';
 
-interface AuthStore extends AuthState, AuthActions {}
+interface AuthStore extends AuthState, AuthActions {
+  refreshTimerId?: NodeJS.Timeout;
+}
+
+let refreshTimerId: NodeJS.Timeout | undefined = undefined;
 
 export const useAuthStore = create<AuthStore>()(
   persist(
@@ -297,32 +301,31 @@ export const useAuthStore = create<AuthStore>()(
 
       startTokenRefreshTimer: () => {
         // Clear existing timer if any
-        const state = get();
-        if ((state as any).refreshTimerId) {
-          clearInterval((state as any).refreshTimerId);
+        if (refreshTimerId) {
+          clearInterval(refreshTimerId);
         }
 
-        // Set up automatic token refresh every 15 minutes
-        const timerId = setInterval(async () => {
+        // Set up automatic token refresh every 10 minutes (shorter interval for safety)
+        refreshTimerId = setInterval(async () => {
           const currentState = get();
           if (currentState.isAuthenticated && currentState.tokens?.refresh_token) {
             try {
+              console.log('Proactive token refresh triggered');
               await currentState.refreshToken();
             } catch (error) {
               console.error('Automatic token refresh failed:', error);
             }
           }
-        }, 15 * 60 * 1000); // 15 minutes
+        }, 10 * 60 * 1000); // 10 minutes
 
-        // Store timer ID in state for cleanup
-        (get() as any).refreshTimerId = timerId;
+        console.log('Token refresh timer started (10 min interval)');
       },
 
       stopTokenRefreshTimer: () => {
-        const state = get();
-        if ((state as any).refreshTimerId) {
-          clearInterval((state as any).refreshTimerId);
-          delete (state as any).refreshTimerId;
+        if (refreshTimerId) {
+          clearInterval(refreshTimerId);
+          refreshTimerId = undefined;
+          console.log('Token refresh timer stopped');
         }
       },
     })),
@@ -355,8 +358,33 @@ export const useAuthActions = () => useAuthStore((state) => ({
   stopTokenRefreshTimer: state.stopTokenRefreshTimer,
 }));
 
-// Start token refresh timer on app load if user is authenticated
-const state = useAuthStore.getState();
-if (state.isAuthenticated && state.tokens?.refresh_token) {
-  state.startTokenRefreshTimer();
+// Handle token refresh timer on app load and store rehydration
+const handleAuthStateChange = (state: AuthStore) => {
+  if (state.isAuthenticated && state.tokens?.refresh_token) {
+    // Only start if not already started
+    if (!refreshTimerId) {
+      state.startTokenRefreshTimer();
+    }
+  } else {
+    // Stop timer if user logged out
+    state.stopTokenRefreshTimer();
+  }
+};
+
+// Start on initial load
+const initialState = useAuthStore.getState();
+if (initialState.isAuthenticated && initialState.tokens?.refresh_token) {
+  initialState.startTokenRefreshTimer();
 }
+
+// Listen for authentication changes (including store hydration from localStorage)
+useAuthStore.subscribe(
+  (state) => ({ isAuthenticated: state.isAuthenticated, tokens: state.tokens }),
+  (current, previous) => {
+    const state = useAuthStore.getState();
+    if (current.isAuthenticated !== previous?.isAuthenticated ||
+        current.tokens?.access_token !== previous?.tokens?.access_token) {
+      handleAuthStateChange(state);
+    }
+  }
+);

@@ -358,6 +358,7 @@ class GenerateThemeSuggestionsRequest(BaseModel):
 class GenerateFeatureSuggestionsRequest(BaseModel):
     """Request model for feature suggestions generation"""
     theme_name: str  # Name of the selected theme
+    existing_features: list[dict] = None  # List of existing features in DB: [{"name": "...", "description": "..."}, ...]
     already_suggested: list[dict] = None  # List of already suggested features: [{"name": "...", "description": "..."}, ...]
 
 
@@ -497,8 +498,9 @@ async def generate_feature_suggestions(
         )
 
         service = WorkspaceService(db)
+        existing_features = request.existing_features or []
         already_suggested = request.already_suggested or []
-        suggestions = service.generate_feature_suggestions(workspace_id, request.theme_name, already_suggested)
+        suggestions = service.generate_feature_suggestions(workspace_id, request.theme_name, existing_features, already_suggested)
 
         logger.info(f"Feature suggestions generated successfully for workspace {workspace_id}")
         return suggestions

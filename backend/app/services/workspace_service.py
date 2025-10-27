@@ -618,6 +618,7 @@ Return ONLY valid JSON array in this format, no markdown or extra text:
         self,
         workspace_id: UUID,
         theme_name: str,
+        existing_features: list = None,
         already_suggested: list = None
     ) -> dict:
         """
@@ -626,6 +627,7 @@ Return ONLY valid JSON array in this format, no markdown or extra text:
         Args:
             workspace_id: UUID of the workspace
             theme_name: Name of the selected theme
+            existing_features: List of existing features in DB to avoid in format [{"name": "...", "description": "..."}, ...]
             already_suggested: List of already-suggested features to avoid in format [{"name": "...", "description": "..."}, ...]
 
         Returns:
@@ -635,10 +637,12 @@ Return ONLY valid JSON array in this format, no markdown or extra text:
             HTTPException: If company details not found or generation fails
         """
         try:
+            if existing_features is None:
+                existing_features = []
             if already_suggested is None:
                 already_suggested = []
 
-            logger.info(f"Generating feature suggestions for workspace {workspace_id}, theme: {theme_name}. Already suggested: {len(already_suggested)}")
+            logger.info(f"Generating feature suggestions for workspace {workspace_id}, theme: {theme_name}. Existing: {len(existing_features)}, Already suggested: {len(already_suggested)}")
 
             # Get workspace and its company details
             workspace = self.db.query(Workspace).filter(
@@ -672,13 +676,23 @@ Description: {company.description or 'Not specified'}
 
             logger.info(f"Using company context and theme: {theme_name}")
 
+            # Build list of existing features in DB for the prompt
+            existing_features_text = ""
+            if existing_features:
+                feature_names = ", ".join([f.get("name", "") for f in existing_features if f.get("name")])
+                existing_features_text = f"""
+
+IMPORTANT: These features ALREADY EXIST in the system - do NOT suggest them:
+- {feature_names}
+"""
+
             # Build list of already suggested features for the prompt
             already_suggested_text = ""
             if already_suggested:
                 feature_names = ", ".join([f.get("name", "") for f in already_suggested if f.get("name")])
                 already_suggested_text = f"""
 
-IMPORTANT: Do NOT suggest these features again - user has already seen them:
+IMPORTANT: Do NOT suggest these features again - user has already seen them in suggestions:
 - {feature_names}
 
 Generate completely different features that complement or expand on the existing ones."""
@@ -706,7 +720,7 @@ For the "{theme_name}" theme, think about:
 3. What competitive features do similar companies have?
 4. What would make the product more valuable to customers?
 
-Generate concrete, specific feature requests (not generic ones) that customers might actually submit.{already_suggested_text}
+Generate concrete, specific feature requests (not generic ones) that customers might actually submit.{existing_features_text}{already_suggested_text}
 
 Return ONLY valid JSON array in this format, no markdown or extra text:
 [
