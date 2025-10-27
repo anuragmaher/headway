@@ -474,13 +474,15 @@ class WorkspaceService:
 
     def generate_theme_suggestions(
         self,
-        workspace_id: UUID
+        workspace_id: UUID,
+        already_suggested: list = None
     ) -> dict:
         """
         Generate AI-powered theme suggestions based on company details.
 
         Args:
             workspace_id: UUID of the workspace
+            already_suggested: List of already-suggested themes to avoid in format [{"name": "...", "description": "..."}, ...]
 
         Returns:
             Dictionary with list of theme suggestions containing name and description
@@ -489,7 +491,10 @@ class WorkspaceService:
             HTTPException: If company details not found or generation fails
         """
         try:
-            logger.info(f"Generating theme suggestions for workspace {workspace_id}")
+            if already_suggested is None:
+                already_suggested = []
+
+            logger.info(f"Generating theme suggestions for workspace {workspace_id}. Already suggested: {len(already_suggested)}")
 
             # Get workspace and its company details
             workspace = self.db.query(Workspace).filter(
@@ -523,6 +528,17 @@ Description: {company.description or 'Not specified'}
 
             logger.info(f"Using company context: {company_context}")
 
+            # Build list of already suggested themes for the prompt
+            already_suggested_text = ""
+            if already_suggested:
+                theme_names = ", ".join([t.get("name", "") for t in already_suggested if t.get("name")])
+                already_suggested_text = f"""
+
+IMPORTANT: Do NOT suggest these themes again - user has already seen them:
+- {theme_names}
+
+Generate completely different themes that complement or expand on the existing ones."""
+
             # Generate suggestions using OpenAI
             from app.core.config import settings
             client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
@@ -546,7 +562,7 @@ Based on what this company does (from their description above), think about:
 3. What customer pain points or experience categories are relevant?
 4. What are common feedback categories for similar companies?
 
-Generate themes that are SPECIFIC to this company's business and products, not generic.
+Generate themes that are SPECIFIC to this company's business and products, not generic.{already_suggested_text}
 
 Return ONLY valid JSON array in this format, no markdown or extra text:
 [

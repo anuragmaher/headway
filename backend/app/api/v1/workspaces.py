@@ -350,6 +350,11 @@ class GenerateDescriptionRequest(BaseModel):
     website_url: str = None
 
 
+class GenerateThemeSuggestionsRequest(BaseModel):
+    """Request model for theme suggestions generation"""
+    already_suggested: list[dict] = None  # List of already suggested themes: [{"name": "...", "description": "..."}, ...]
+
+
 @router.post(
     "/{workspace_id}/generate-description",
     response_model=dict,
@@ -411,6 +416,7 @@ async def generate_description(
 )
 async def generate_theme_suggestions(
     workspace_id: UUID,
+    request: GenerateThemeSuggestionsRequest,
     current_user: User = Depends(get_current_user),
     db = Depends(get_db)
 ) -> dict:
@@ -419,6 +425,7 @@ async def generate_theme_suggestions(
 
     Args:
         workspace_id: UUID of the workspace
+        request: Request containing already_suggested themes to avoid
         current_user: Current authenticated user
         db: Database session
 
@@ -435,7 +442,8 @@ async def generate_theme_suggestions(
         )
 
         service = WorkspaceService(db)
-        suggestions = service.generate_theme_suggestions(workspace_id)
+        already_suggested = request.already_suggested or []
+        suggestions = service.generate_theme_suggestions(workspace_id, already_suggested)
 
         logger.info(f"Theme suggestions generated successfully for workspace {workspace_id}")
         return suggestions

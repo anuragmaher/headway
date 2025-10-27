@@ -13,8 +13,16 @@ export const themeService = {
   /**
    * Generate AI-powered theme suggestions based on company details
    */
-  generateThemeSuggestions: async (workspaceId: string): Promise<ThemeSuggestion[]> => {
-    const response = await api.post(`/api/v1/workspaces/${workspaceId}/generate-theme-suggestions`, {});
+  generateThemeSuggestions: async (
+    workspaceId: string,
+    alreadySuggested: ThemeSuggestion[] = []
+  ): Promise<ThemeSuggestion[]> => {
+    const response = await api.post(
+      `/api/v1/workspaces/${workspaceId}/generate-theme-suggestions`,
+      {
+        already_suggested: alreadySuggested,
+      }
+    );
 
     if (response.data.suggestions && Array.isArray(response.data.suggestions)) {
       return response.data.suggestions;
