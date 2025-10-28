@@ -66,7 +66,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle auth errors with automatic token refresh
+// Handle auth errors with automatic token refresh and graceful degradation
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -96,10 +96,26 @@ api.interceptors.response.use(
           throw new Error('No refresh token found');
         }
 
-        // Attempt to refresh token
-        const refreshResponse = await axios.post(`${API_BASE_URL}/api/v1/auth/refresh`, {
-          refresh_token: refreshToken
-        });
+        // Attempt to refresh token with retry logic
+        let refreshResponse;
+        let retryCount = 0;
+        const maxRetries = 3;
+
+        while (retryCount < maxRetries) {
+          try {
+            refreshResponse = await axios.post(`${API_BASE_URL}/api/v1/auth/refresh`, {
+              refresh_token: refreshToken
+            });
+            break; // Success, exit retry loop
+          } catch (retryError) {
+            retryCount++;
+            if (retryCount >= maxRetries) {
+              throw retryError; // Re-throw after max retries
+            }
+            console.log(`Token refresh retry ${retryCount}/${maxRetries}`);
+            await new Promise(resolve => setTimeout(resolve, 2000 * retryCount)); // Exponential backoff
+          }
+        }
 
         const newTokens = refreshResponse.data;
 
@@ -121,9 +137,28 @@ api.interceptors.response.use(
         processQueue(refreshError);
         isRefreshing = false;
 
-        // If refresh fails, logout user
-        useAuthStore.getState().logout();
-        window.location.href = '/auth/login';
+        // Only logout on authentication errors, not network errors
+        if (refreshError instanceof Error && 
+            (refreshError.message.includes('invalid refresh token') || 
+             refreshError.message.includes('401') || 
+             refreshError.message.includes('403'))) {
+          console.log('Authentication failed, redirecting to login');
+          useAuthStore.getState().logout();
+          window.location.href = '/auth/login';
+        } else {
+          // For network errors, return a graceful error response instead of crashing
+          console.log('Network error during token refresh, returning graceful error');
+          return Promise.reject({
+            ...error,
+            response: {
+              ...error.response,
+              data: {
+                message: 'Service temporarily unavailable. Please try again later.',
+                status_code: 503
+              }
+            }
+          });
+        }
 
         return Promise.reject(refreshError);
       }

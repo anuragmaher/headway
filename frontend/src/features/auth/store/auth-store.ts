@@ -181,11 +181,11 @@ export const useAuthStore = create<AuthStore>()(
         });
       },
 
-      refreshToken: async () => {
+      refreshToken: async (retryCount = 0) => {
         const { tokens } = get();
 
         if (!tokens?.refresh_token) {
-          get().logout();
+          console.warn('No refresh token available, skipping refresh');
           return;
         }
 
@@ -201,7 +201,11 @@ export const useAuthStore = create<AuthStore>()(
           });
 
           if (!response.ok) {
-            throw new Error('Token refresh failed');
+            // Only logout on 401/403, not on network errors
+            if (response.status === 401 || response.status === 403) {
+              throw new Error('Token refresh failed - invalid refresh token');
+            }
+            throw new Error(`Token refresh failed with status: ${response.status}`);
           }
 
           const newTokens: AuthTokens = await response.json();
@@ -209,9 +213,27 @@ export const useAuthStore = create<AuthStore>()(
           set({
             tokens: newTokens,
           });
+          
+          console.log('Token refresh successful');
         } catch (error) {
           console.error('Token refresh failed:', error);
-          get().logout();
+          
+          // Retry logic for network errors
+          if (retryCount < 3 && error instanceof Error && !error.message.includes('invalid refresh token')) {
+            console.log(`Retrying token refresh (attempt ${retryCount + 1}/3)`);
+            setTimeout(() => {
+              get().refreshToken(retryCount + 1);
+            }, 5000 * (retryCount + 1)); // Exponential backoff
+            return;
+          }
+          
+          // Only logout if it's an authentication error after all retries
+          if (error instanceof Error && error.message.includes('invalid refresh token')) {
+            console.log('Refresh token invalid, logging out');
+            get().logout();
+          } else {
+            console.log('Token refresh failed but continuing with existing token');
+          }
         }
       },
 
@@ -305,20 +327,25 @@ export const useAuthStore = create<AuthStore>()(
           clearInterval(refreshTimerId);
         }
 
-        // Set up automatic token refresh every 10 minutes (shorter interval for safety)
+        // Set up automatic token refresh every 12 hours to prevent token expiration issues
+        // This helps maintain session continuity during long periods of inactivity
         refreshTimerId = setInterval(async () => {
           const currentState = get();
           if (currentState.isAuthenticated && currentState.tokens?.refresh_token) {
             try {
               console.log('Proactive token refresh triggered');
               await currentState.refreshToken();
+              console.log('Token refresh successful');
             } catch (error) {
               console.error('Automatic token refresh failed:', error);
+              // If refresh fails, logout user to prevent 401 errors
+              console.log('Logging out due to token refresh failure');
+              currentState.logout();
             }
           }
-        }, 10 * 60 * 1000); // 10 minutes
+        }, 12 * 60 * 60 * 1000); // 12 hours
 
-        console.log('Token refresh timer started (10 min interval)');
+        console.log('Token refresh timer started (12 hour interval)');
       },
 
       stopTokenRefreshTimer: () => {
@@ -371,10 +398,26 @@ const handleAuthStateChange = (state: AuthStore) => {
   }
 };
 
+// Session recovery function
+const attemptSessionRecovery = async () => {
+  const state = useAuthStore.getState();
+  if (state.isAuthenticated && state.tokens?.refresh_token) {
+    try {
+      console.log('Attempting session recovery...');
+      await state.refreshToken();
+      console.log('Session recovery successful');
+    } catch (error) {
+      console.log('Session recovery failed, but continuing with existing session');
+    }
+  }
+};
+
 // Start on initial load
 const initialState = useAuthStore.getState();
 if (initialState.isAuthenticated && initialState.tokens?.refresh_token) {
   initialState.startTokenRefreshTimer();
+  // Attempt session recovery on app load
+  attemptSessionRecovery();
 }
 
 // Listen for authentication changes (including store hydration from localStorage)

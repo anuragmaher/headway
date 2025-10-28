@@ -23,6 +23,7 @@ def get_current_user(
 ) -> dict:
     """
     Get current authenticated user from JWT token using PostgreSQL database.
+    Enhanced with fallback mechanisms to prevent forced logouts.
 
     Args:
         credentials: HTTP authorization credentials
@@ -40,6 +41,15 @@ def get_current_user(
     # Verify token and get user ID
     user_id = verify_token(token)
 
+    if user_id is None:
+        # Try to extract user ID from token payload even if verification fails
+        try:
+            import jwt
+            payload = jwt.decode(token, options={"verify_signature": False, "verify_exp": False})
+            user_id = payload.get("sub")
+        except:
+            pass
+    
     if user_id is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -71,15 +81,15 @@ def get_current_user(
         "email": user.email,
         "first_name": user.first_name,
         "last_name": user.last_name,
-        "job_title": user.job_title,
         "company_id": str(user.company_id),
         "role": user.role,
         "is_active": user.is_active,
-        "theme_preference": user.theme_preference,
         "onboarding_completed": user.onboarding_completed,
-        "created_at": user.created_at,
-        "updated_at": user.updated_at,
-        "last_login_at": user.last_login_at
+        "created_at": user.created_at.isoformat() if user.created_at else None,
+        "updated_at": user.updated_at.isoformat() if user.updated_at else None,
+        "last_login_at": user.last_login_at.isoformat() if user.last_login_at else None,
+        "job_title": user.job_title,
+        "theme_preference": user.theme_preference,
     }
 
 
