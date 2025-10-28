@@ -2287,19 +2287,7 @@ export function ThemesPage(): JSX.Element {
                                         label={`${feature.mention_count} mention${feature.mention_count !== 1 ? 's' : ''}`}
                                         size="small"
                                         variant="outlined"
-                                        sx={{
-                                          minWidth: 'auto',
-                                          height: 22,
-                                          fontSize: '0.7rem',
-                                          cursor: 'pointer',
-                                          '&:hover': {
-                                            backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                                            borderColor: theme.palette.primary.main
-                                          }
-                                        }}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                        }}
+                                        sx={{ minWidth: 'auto', height: 22, fontSize: '0.7rem' }}
                                       />
                                     )}
 
