@@ -20,12 +20,13 @@ export const themeService = {
    */
   generateThemeSuggestions: async (
     workspaceId: string,
+    existingThemes: ThemeSuggestion[] = [],
     alreadySuggested: ThemeSuggestion[] = []
   ): Promise<ThemeSuggestion[]> => {
     const response = await api.post(
       `/api/v1/workspaces/${workspaceId}/generate-theme-suggestions`,
       {
-        already_suggested: alreadySuggested,
+        already_suggested: [...existingThemes, ...alreadySuggested],
       }
     );
 

@@ -192,7 +192,12 @@ class SlackNotificationService:
         existing_mention_count: int,
         confidence: float,
         source: str,
-        source_id: str
+        source_id: str,
+        sentiment: Optional[dict] = None,
+        key_topics: Optional[list] = None,
+        quote: Optional[str] = None,
+        customer_name: Optional[str] = None,
+        urgency: Optional[str] = None
     ) -> bool:
         """
         Send Slack notification when a new feature is matched to an existing one
@@ -204,6 +209,11 @@ class SlackNotificationService:
             confidence: Matching confidence score
             source: Source system (e.g., 'gong', 'fathom')
             source_id: ID of the source transcript/call
+            sentiment: Optional sentiment dict with 'overall', 'score', 'reasoning'
+            key_topics: Optional list of key topics mentioned
+            quote: Optional direct quote from the transcript
+            customer_name: Optional customer name
+            urgency: Optional urgency level of the feature
 
         Returns:
             True if notification was sent successfully, False otherwise
@@ -214,47 +224,96 @@ class SlackNotificationService:
 
         try:
             confidence_emoji = SlackNotificationService._get_confidence_emoji(confidence)
+            sentiment_emoji = SlackNotificationService._get_sentiment_emoji(sentiment) if sentiment else ""
+            urgency_emoji = SlackNotificationService._get_urgency_emoji(urgency) if urgency else ""
 
-            payload = {
-                "blocks": [
-                    {
-                        "type": "header",
-                        "text": {
-                            "type": "plain_text",
-                            "text": "🔗 Feature Mention Added",
-                            "emoji": True
-                        }
-                    },
-                    {
-                        "type": "section",
-                        "fields": [
-                            {
-                                "type": "mrkdwn",
-                                "text": f"*Matched Feature*\n{new_feature_title}"
-                            },
-                            {
-                                "type": "mrkdwn",
-                                "text": f"*Linked To*\n{existing_feature_name}"
-                            },
-                            {
-                                "type": "mrkdwn",
-                                "text": f"*Total Mentions*\n{existing_mention_count}"
-                            },
-                            {
-                                "type": "mrkdwn",
-                                "text": f"*Match Confidence*\n{confidence_emoji} {confidence:.0%}"
-                            },
-                            {
-                                "type": "mrkdwn",
-                                "text": f"*Source*\n{source.upper()} ({source_id[-12:]})"
-                            }
-                        ]
-                    },
-                    {
-                        "type": "divider"
+            blocks = [
+                {
+                    "type": "header",
+                    "text": {
+                        "type": "plain_text",
+                        "text": "🔗 Feature Mention Added",
+                        "emoji": True
                     }
-                ]
-            }
+                },
+                {
+                    "type": "section",
+                    "fields": [
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*Matched Feature*\n{new_feature_title}"
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*Linked To*\n{existing_feature_name}"
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*Total Mentions*\n{existing_mention_count}"
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*Match Confidence*\n{confidence_emoji} {confidence:.0%}"
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*Source*\n{source.upper()} ({source_id[-12:]})"
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*Sentiment*\n{sentiment_emoji} {sentiment.get('overall', 'unknown').title() if sentiment else 'N/A'}"
+                        }
+                    ]
+                }
+            ]
+
+            # Add urgency if available
+            if urgency:
+                blocks[1]["fields"].append({
+                    "type": "mrkdwn",
+                    "text": f"*Urgency*\n{urgency_emoji} {urgency.upper()}"
+                })
+
+            # Add customer context if available
+            if customer_name:
+                blocks.append({
+                    "type": "context",
+                    "elements": [
+                        {
+                            "type": "mrkdwn",
+                            "text": f"👤 From: {customer_name}"
+                        }
+                    ]
+                })
+
+            # Add quote if available
+            if quote:
+                blocks.append({
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"_\"{quote}\"_"
+                    }
+                })
+
+            # Add key topics if available
+            if key_topics and len(key_topics) > 0:
+                topics_text = ", ".join([f"`{topic}`" for topic in key_topics[:5]])  # Limit to 5
+                blocks.append({
+                    "type": "context",
+                    "elements": [
+                        {
+                            "type": "mrkdwn",
+                            "text": f"🏷️ Topics: {topics_text}"
+                        }
+                    ]
+                })
+
+            blocks.append({
+                "type": "divider"
+            })
+
+            payload = {"blocks": blocks}
 
             response = requests.post(
                 settings.SLACK_WEBHOOK_URL,

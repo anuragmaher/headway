@@ -445,15 +445,26 @@ class TranscriptIngestionService:
                             f"(confidence: {match_result['confidence']:.2f}) - {match_result['reasoning']}"
                         )
 
+                        # Extract additional AI insights for Slack notification
+                        sentiment = ai_insights.get('sentiment')
+                        key_topics = ai_insights.get('key_topics', [])
+                        quote = feature_data.get('quote', '')
+                        customer_name = message.message_metadata.get('customer_name') if message.message_metadata else None
+
                         # Send Slack notification
-                        # self.slack_notification_service.send_feature_matched_notification(
-                        #     new_feature_title=feature_title,
-                        #     existing_feature_name=existing_feature.name,
-                        #     existing_mention_count=existing_feature.mention_count,
-                        #     confidence=match_result["confidence"],
-                        #     source=source,
-                        #     source_id=external_id
-                        # )
+                        self.slack_notification_service.send_feature_matched_notification(
+                            new_feature_title=feature_title,
+                            existing_feature_name=existing_feature.name,
+                            existing_mention_count=existing_feature.mention_count,
+                            confidence=match_result["confidence"],
+                            source=source,
+                            source_id=external_id,
+                            sentiment=sentiment,
+                            key_topics=key_topics,
+                            quote=quote,
+                            customer_name=customer_name,
+                            urgency=feature_urgency
+                        )
                     else:
                         logger.warning(
                             f"Matching feature {match_result['matching_feature_id']} not found, creating new"
@@ -538,20 +549,20 @@ class TranscriptIngestionService:
                         ]
 
                     # Send Slack notification
-                    # self.slack_notification_service.send_feature_created_notification(
-                    #     feature_name=feature_title,
-                    #     feature_description=feature_description,
-                    #     theme_name=assigned_theme.name if assigned_theme else "Uncategorized",
-                    #     confidence=theme_validation.get("confidence", 0) if theme_validation else 0,
-                    #     urgency=feature_urgency,
-                    #     source=source,
-                    #     source_id=external_id,
-                    #     sentiment=sentiment,
-                    #     key_topics=key_topics,
-                    #     quote=quote,
-                    #     customer_name=customer_name,
-                    #     pain_points=pain_points_list
-                    # )
+                    self.slack_notification_service.send_feature_created_notification(
+                        feature_name=feature_title,
+                        feature_description=feature_description,
+                        theme_name=assigned_theme.name if assigned_theme else "Uncategorized",
+                        confidence=theme_validation.get("confidence", 0) if theme_validation else 0,
+                        urgency=feature_urgency,
+                        source=source,
+                        source_id=external_id,
+                        sentiment=sentiment,
+                        key_topics=key_topics,
+                        quote=quote,
+                        customer_name=customer_name,
+                        pain_points=pain_points_list
+                    )
 
             # Commit all feature changes
             if features_created_count > 0 or features_matched_count > 0:

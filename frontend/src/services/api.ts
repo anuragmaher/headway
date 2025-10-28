@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuthStore } from '../features/auth/store/auth-store';
 
 // Get API base URL from environment, removing trailing slash
 const envApiUrl = import.meta.env.VITE_API_URL;
@@ -37,7 +38,19 @@ const processQueue = (error: any = null) => {
 
 // Add auth token to requests
 api.interceptors.request.use((config) => {
-  // Get token from Zustand auth store persistence
+  // Get token from Zustand store first, fallback to localStorage for hydration
+  try {
+    const authStore = useAuthStore.getState();
+    const token = authStore.tokens?.access_token;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+      return config;
+    }
+  } catch (error) {
+    console.debug('Zustand store not ready, falling back to localStorage');
+  }
+
+  // Fallback: Get from localStorage if store is not ready
   const authData = localStorage.getItem('headway-auth');
   if (authData) {
     try {
@@ -75,14 +88,9 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Get auth data from localStorage
-        const authData = localStorage.getItem('headway-auth');
-        if (!authData) {
-          throw new Error('No auth data found');
-        }
-
-        const parsedAuth = JSON.parse(authData);
-        const refreshToken = parsedAuth.state?.tokens?.refresh_token;
+        // Get refresh token from Zustand store
+        const authStore = useAuthStore.getState();
+        const refreshToken = authStore.tokens?.refresh_token;
 
         if (!refreshToken) {
           throw new Error('No refresh token found');
@@ -95,15 +103,10 @@ api.interceptors.response.use(
 
         const newTokens = refreshResponse.data;
 
-        // Update tokens in localStorage
-        const updatedAuth = {
-          ...parsedAuth,
-          state: {
-            ...parsedAuth.state,
-            tokens: newTokens
-          }
-        };
-        localStorage.setItem('headway-auth', JSON.stringify(updatedAuth));
+        // Update tokens in Zustand store (which persists to localStorage automatically)
+        useAuthStore.setState({
+          tokens: newTokens
+        });
 
         // Update the original request with new token
         originalRequest.headers.Authorization = `Bearer ${newTokens.access_token}`;
@@ -119,7 +122,7 @@ api.interceptors.response.use(
         isRefreshing = false;
 
         // If refresh fails, logout user
-        localStorage.removeItem('headway-auth');
+        useAuthStore.getState().logout();
         window.location.href = '/auth/login';
 
         return Promise.reject(refreshError);

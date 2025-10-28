@@ -679,7 +679,12 @@ export function ThemesPage(): JSX.Element {
       // Load suggestions asynchronously (non-blocking)
       if (WORKSPACE_ID) {
         setLoadingSuggestions(true);
-        themeService.generateThemeSuggestions(WORKSPACE_ID)
+        // Convert existing themes to format for API (name + description)
+        const existingThemes = themes.map(theme => ({
+          name: theme.name,
+          description: theme.description
+        }));
+        themeService.generateThemeSuggestions(WORKSPACE_ID, existingThemes)
           .then((themeSuggestions) => {
             setSuggestions(themeSuggestions);
           })
@@ -700,7 +705,13 @@ export function ThemesPage(): JSX.Element {
 
     setLoadingMoreSuggestions(true);
     try {
-      const moreSuggestions = await themeService.generateThemeSuggestions(WORKSPACE_ID, suggestions);
+      // Convert existing themes to format for API
+      const existingThemes = themes.map(theme => ({
+        name: theme.name,
+        description: theme.description
+      }));
+      // Pass both existing themes and already suggested themes in this session
+      const moreSuggestions = await themeService.generateThemeSuggestions(WORKSPACE_ID, existingThemes, suggestions);
       setSuggestions([...suggestions, ...moreSuggestions]);
     } catch (err) {
       console.error('Failed to load more suggestions:', err);
@@ -3223,11 +3234,13 @@ export function ThemesPage(): JSX.Element {
           maxWidth="md"
           fullWidth
         >
-          <DialogTitle sx={{
+          <Box sx={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            pb: 1
+            pb: 1,
+            px: 3,
+            pt: 2
           }}>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               {editingTheme ? 'Edit Theme' : 'Create New Theme'}
@@ -3235,7 +3248,7 @@ export function ThemesPage(): JSX.Element {
             <IconButton onClick={handleCloseDialog} size="small">
               <CloseIcon />
             </IconButton>
-          </DialogTitle>
+          </Box>
 
           <DialogContent sx={{ pt: 2, p: 0 }}>
             <Box sx={{ display: 'flex', height: '100%', minHeight: editingTheme ? 'auto' : '400px' }}>

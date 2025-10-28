@@ -102,64 +102,99 @@ interface DashboardMetrics {
 
 export function ExecutiveInsightsPage(): JSX.Element {
   const theme = useTheme();
-  const { tokens } = useAuthStore();
+  const { tokens, isAuthenticated } = useAuthStore();
   const WORKSPACE_ID = tokens?.workspace_id;
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [topFeatures, setTopFeatures] = useState<Feature[]>([]);
-
-  if (!WORKSPACE_ID) {
-    return (
-      <AdminLayout>
-        <Box sx={{ p: 3 }}>
-          <Alert severity="error">
-            Workspace ID not found. Please log in again.
-          </Alert>
-        </Box>
-      </AdminLayout>
-    );
-  }
+  const [hydrated, setHydrated] = useState(false);
+  const [fetchingWorkspaceId, setFetchingWorkspaceId] = useState(false);
+  const [attemptedFetch, setAttemptedFetch] = useState(false);
 
   const getAuthToken = () => {
     return tokens?.access_token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTk3NDIzODgsInN1YiI6ImI0NzE0NGU3LTAyYTAtNGEyMi04MDBlLTNmNzE3YmZiNGZhYSIsInR5cGUiOiJhY2Nlc3MifQ.L2dOy92Nim5egY3nzRXQts3ywgxV_JvO_8EEiePpDNY';
   };
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const token = getAuthToken();
-      const headers = {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      };
-
-      // Fetch all executive insights data from optimized endpoint
-      const response = await fetch(
-        `${API_BASE_URL}/api/v1/features/executive-insights?workspace_id=${WORKSPACE_ID}`,
-        { headers }
-      );
-      if (!response.ok) throw new Error('Failed to fetch executive insights');
-      const data = await response.json();
-
-      // Set metrics and top features directly from API response
-      setMetrics(data.metrics);
-      setTopFeatures(data.top_features);
-
-    } catch (err) {
-      console.error('Error fetching data:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Hydration: Check if store is ready
   useEffect(() => {
-    fetchData();
+    setHydrated(true);
   }, []);
+
+  // Recovery: If authenticated but workspace_id is missing, fetch it once
+  useEffect(() => {
+    if (!hydrated || !isAuthenticated || WORKSPACE_ID || fetchingWorkspaceId || attemptedFetch) {
+      return;
+    }
+
+    setAttemptedFetch(true);
+    setFetchingWorkspaceId(true);
+
+    fetch(`${API_BASE_URL}/api/v1/workspaces/my-workspace`, {
+      headers: {
+        'Authorization': `Bearer ${tokens?.access_token}`,
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.workspace_id) {
+          useAuthStore.setState({
+            tokens: {
+              ...tokens,
+              workspace_id: data.workspace_id
+            }
+          });
+        }
+      })
+      .catch(err => {
+        console.error('Failed to fetch workspace_id:', err);
+      })
+      .finally(() => {
+        setFetchingWorkspaceId(false);
+      });
+  }, [hydrated, isAuthenticated, WORKSPACE_ID, fetchingWorkspaceId, attemptedFetch, tokens]);
+
+  // Fetch dashboard data when workspace is available
+  useEffect(() => {
+    if (!WORKSPACE_ID) {
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const token = getAuthToken();
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        };
+
+        // Fetch all executive insights data from optimized endpoint
+        const response = await fetch(
+          `${API_BASE_URL}/api/v1/features/executive-insights?workspace_id=${WORKSPACE_ID}`,
+          { headers }
+        );
+        if (!response.ok) throw new Error('Failed to fetch executive insights');
+        const data = await response.json();
+
+        // Set metrics and top features directly from API response
+        setMetrics(data.metrics);
+        setTopFeatures(data.top_features);
+
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [WORKSPACE_ID]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -199,6 +234,31 @@ export function ExecutiveInsightsPage(): JSX.Element {
     return Math.round(change);
   };
 
+  // Show loading state while hydrating or recovering workspace_id
+  if (!hydrated || fetchingWorkspaceId) {
+    return (
+      <AdminLayout>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
+          <CircularProgress />
+        </Box>
+      </AdminLayout>
+    );
+  }
+
+  // Show error if workspace_id is missing
+  if (!WORKSPACE_ID) {
+    return (
+      <AdminLayout>
+        <Box sx={{ p: 3 }}>
+          <Alert severity="error">
+            Workspace ID not found. Please log in again.
+          </Alert>
+        </Box>
+      </AdminLayout>
+    );
+  }
+
+  // Show loading state while fetching data
   if (loading) {
     return (
       <AdminLayout>

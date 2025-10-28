@@ -24,6 +24,56 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
+@router.get(
+    "/my-workspace",
+    response_model=dict,
+    status_code=status.HTTP_200_OK
+)
+async def get_my_workspace(
+    current_user: dict = Depends(get_current_user),
+    db = Depends(get_db)
+) -> dict:
+    """
+    Get the workspace ID for the current user.
+
+    Args:
+        current_user: Current authenticated user (as dict)
+        db: Database session
+
+    Returns:
+        Dictionary with workspace_id
+
+    Raises:
+        HTTPException: If workspace not found
+    """
+    try:
+        from app.models.workspace import Workspace
+
+        # Handle both dict and User object
+        user_company_id = current_user.get('company_id') if isinstance(current_user, dict) else current_user.company_id
+
+        workspace = db.query(Workspace).filter(
+            Workspace.company_id == user_company_id
+        ).first()
+
+        if not workspace:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Workspace not found for user's company"
+            )
+
+        return {"workspace_id": str(workspace.id)}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching user workspace: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch workspace"
+        )
+
+
 @router.post(
     "/{workspace_id}/connectors",
     response_model=WorkspaceConnectorResponse,
