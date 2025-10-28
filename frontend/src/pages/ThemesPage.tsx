@@ -219,7 +219,7 @@ export function ThemesPage(): JSX.Element {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Message details tab state
-  const [mentionDetailsTab, setMentionDetailsTab] = useState<'summary' | 'features' | 'bugs' | 'pain-points' | 'highlights'>('summary');
+  const [mentionDetailsTab, setMentionDetailsTab] = useState<'summary' | 'features' | 'bugs' | 'pain-points' | 'highlights'>('highlights');
 
   // Feature edit modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -1622,9 +1622,9 @@ export function ThemesPage(): JSX.Element {
           {!isMobile && !showMessagesFullPage && (
             <ResizablePanel
               storageKey="themes-page-left-panel-width"
-              minWidth={280}
-              maxWidth={700}
-              defaultWidth={380}
+              minWidth={240}
+              maxWidth={500}
+              defaultWidth={300}
             >
               <Card sx={{
                 borderRadius: 1,
@@ -2541,7 +2541,7 @@ export function ThemesPage(): JSX.Element {
               }}
               PaperProps={{
                 sx: {
-                  width: { xs: '100%', sm: '63%', md: '40.5%' },
+                  width: { xs: '100%', sm: '70%', md: '50%' },
                   backgroundColor: theme.palette.background.paper,
                   boxShadow: `-2px 0 6px ${alpha(theme.palette.common.black, 0.06)}`,
                   zIndex: 1200,
