@@ -696,12 +696,6 @@ export function ThemesPage(): JSX.Element {
     setShowOnboardingBlocker(themes.length === 0);
   }, [themes]);
 
-  // Auto-select first message when messages are loaded
-  useEffect(() => {
-    if (featureMessages.length > 0 && !selectedMessageId) {
-      setSelectedMessageId(featureMessages[0].id);
-    }
-  }, [featureMessages, selectedMessageId]);
 
   const handleOpenDialog = (themeToEdit?: Theme, parentThemeId?: string) => {
     if (themeToEdit) {
@@ -2535,20 +2529,24 @@ export function ThemesPage(): JSX.Element {
               anchor="right"
               open={mentionsDrawerOpen && selectedFeatureForMessages}
               onClose={handleBackFromMessages}
-              elevation={16}
+              elevation={0}
+              hideBackdrop
               SlotProps={{
                 backdrop: {
                   sx: {
-                    backgroundColor: 'transparent'
+                    backgroundColor: 'transparent !important',
+                    display: 'none !important'
                   }
                 }
               }}
               PaperProps={{
                 sx: {
-                  width: { xs: '100%', sm: 500, md: 600 },
-                  backgroundColor: theme.palette.grey[50],
-                  boxShadow: theme.shadows[8],
+                  width: { xs: '100%', sm: '63%', md: '40.5%' },
+                  backgroundColor: theme.palette.background.paper,
+                  boxShadow: `-2px 0 6px ${alpha(theme.palette.common.black, 0.06)}`,
                   zIndex: 1200,
+                  mt: { xs: 7, sm: 8, md: 8 },
+                  height: { xs: 'calc(100vh - 56px)', sm: 'calc(100vh - 64px)', md: 'calc(100vh - 64px)' },
                 }
               }}
             >
@@ -2630,45 +2628,102 @@ export function ThemesPage(): JSX.Element {
                               key={message.id}
                               onClick={() => handleViewMentionDetails(message)}
                               sx={{
-                                p: 1,
-                                borderRadius: 1,
+                                p: 1.5,
+                                borderRadius: 1.25,
                                 cursor: 'pointer',
                                 background: isSelected
-                                  ? alpha(theme.palette.primary.main, 0.1)
-                                  : 'transparent',
-                                border: isSelected
-                                  ? `1px solid ${theme.palette.primary.main}`
-                                  : `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-                                transition: 'all 0.2s ease-in-out',
+                                  ? alpha(theme.palette.primary.main, 0.12)
+                                  : alpha(theme.palette.background.default, 0.4),
+                                border: `1px solid ${isSelected
+                                  ? theme.palette.primary.main
+                                  : alpha(theme.palette.divider, 0.12)}`,
+                                boxShadow: isSelected
+                                  ? `0 2px 8px ${alpha(theme.palette.primary.main, 0.15)}`
+                                  : `0 1px 3px ${alpha(theme.palette.common.black, 0.06)}`,
+                                transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                                 position: 'relative',
                                 '&:hover': {
-                                  background: alpha(theme.palette.primary.main, 0.06),
-                                  border: `1px solid ${alpha(theme.palette.primary.main, 0.5)}`,
+                                  background: isSelected
+                                    ? alpha(theme.palette.primary.main, 0.12)
+                                    : alpha(theme.palette.background.default, 0.6),
+                                  border: `1px solid ${alpha(theme.palette.primary.main, 0.4)}`,
+                                  boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.12)}`,
                                   '& .delete-button': {
                                     opacity: 1,
                                   },
                                 },
                               }}
                             >
-                              <Typography variant="caption" fontWeight="bold" color="primary" noWrap display="block">
+                              <Typography variant="caption" fontWeight="700" sx={{ fontSize: '0.95rem', color: theme.palette.text.primary }} noWrap display="block">
                                 {message.customer_name || message.sender_name || 'Unknown'}
                               </Typography>
-                              <Typography variant="caption" color="text.secondary" noWrap display="block" sx={{ mt: 0.25 }}>
+                              <Typography variant="caption" sx={{ fontSize: '0.8rem', color: theme.palette.text.secondary, mt: 0.5 }} noWrap display="block">
                                 {message.customer_email || message.sender_name}
                               </Typography>
-                              <Typography variant="caption" color="text.secondary" noWrap display="block" sx={{ mt: 0.25, fontSize: '0.7rem' }}>
+                              <Typography variant="caption" sx={{ fontSize: '0.75rem', color: theme.palette.text.secondary, mt: 0.5, opacity: 0.7 }} noWrap display="block">
                                 {formatDate(message.sent_at)}
                               </Typography>
                               {totalInsights > 0 && (
-                                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mt: 0.5 }}>
+                                <Box sx={{ display: 'flex', gap: 0.75, flexWrap: 'wrap', mt: 1 }}>
                                   {insightCounts.features > 0 && (
-                                    <Chip label={`${insightCounts.features} features`} size="small" color="info" variant="filled" sx={{ height: 20, fontSize: '0.7rem' }} />
+                                    <Chip
+                                      label={`${insightCounts.features} features`}
+                                      size="small"
+                                      color="info"
+                                      variant="outlined"
+                                      sx={{
+                                        height: 22,
+                                        fontSize: '0.7rem',
+                                        fontWeight: '600',
+                                        borderColor: alpha(theme.palette.info.main, 0.4),
+                                        backgroundColor: alpha(theme.palette.info.main, 0.08),
+                                        color: theme.palette.info.dark,
+                                        '&:hover': {
+                                          backgroundColor: alpha(theme.palette.info.main, 0.12),
+                                          borderColor: alpha(theme.palette.info.main, 0.6),
+                                        }
+                                      }}
+                                    />
                                   )}
                                   {insightCounts.bugs > 0 && (
-                                    <Chip label={`${insightCounts.bugs} bugs`} size="small" color="error" variant="filled" sx={{ height: 20, fontSize: '0.7rem' }} />
+                                    <Chip
+                                      label={`${insightCounts.bugs} bugs`}
+                                      size="small"
+                                      color="error"
+                                      variant="outlined"
+                                      sx={{
+                                        height: 22,
+                                        fontSize: '0.7rem',
+                                        fontWeight: '600',
+                                        borderColor: alpha(theme.palette.error.main, 0.4),
+                                        backgroundColor: alpha(theme.palette.error.main, 0.08),
+                                        color: theme.palette.error.dark,
+                                        '&:hover': {
+                                          backgroundColor: alpha(theme.palette.error.main, 0.12),
+                                          borderColor: alpha(theme.palette.error.main, 0.6),
+                                        }
+                                      }}
+                                    />
                                   )}
                                   {insightCounts.painPoints > 0 && (
-                                    <Chip label={`${insightCounts.painPoints} pain points`} size="small" color="warning" variant="filled" sx={{ height: 20, fontSize: '0.7rem' }} />
+                                    <Chip
+                                      label={`${insightCounts.painPoints} pain points`}
+                                      size="small"
+                                      color="warning"
+                                      variant="outlined"
+                                      sx={{
+                                        height: 22,
+                                        fontSize: '0.7rem',
+                                        fontWeight: '600',
+                                        borderColor: alpha(theme.palette.warning.main, 0.4),
+                                        backgroundColor: alpha(theme.palette.warning.main, 0.08),
+                                        color: theme.palette.warning.dark,
+                                        '&:hover': {
+                                          backgroundColor: alpha(theme.palette.warning.main, 0.12),
+                                          borderColor: alpha(theme.palette.warning.main, 0.6),
+                                        }
+                                      }}
+                                    />
                                   )}
                                 </Box>
                               )}
@@ -2681,13 +2736,14 @@ export function ThemesPage(): JSX.Element {
                                 }}
                                 sx={{
                                   position: 'absolute',
-                                  top: 4,
-                                  right: 4,
+                                  top: 8,
+                                  right: 8,
                                   opacity: 0,
                                   transition: 'opacity 0.2s ease-in-out',
                                   color: theme.palette.error.main,
+                                  bgcolor: alpha(theme.palette.error.main, 0.08),
                                   '&:hover': {
-                                    bgcolor: alpha(theme.palette.error.main, 0.1),
+                                    bgcolor: alpha(theme.palette.error.main, 0.15),
                                   },
                                 }}
                               >
@@ -2709,25 +2765,28 @@ export function ThemesPage(): JSX.Element {
                   <Box sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 1,
+                    gap: 1.5,
                     p: 2,
-                    borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`
+                    borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                    bgcolor: alpha(theme.palette.primary.main, 0.02)
                   }}>
                     <IconButton
                       onClick={handleBackFromMentionDetails}
-                      size="small"
+                      size="medium"
                       sx={{
-                        color: theme.palette.text.secondary,
+                        color: theme.palette.primary.main,
+                        bgcolor: alpha(theme.palette.primary.main, 0.1),
                         '&:hover': {
-                          bgcolor: alpha(theme.palette.primary.main, 0.1),
+                          bgcolor: alpha(theme.palette.primary.main, 0.2),
                           color: theme.palette.primary.main
-                        }
+                        },
+                        transition: 'all 0.2s ease'
                       }}
                     >
-                      <ArrowBackIcon sx={{ fontSize: 20 }} />
+                      <ArrowBackIcon sx={{ fontSize: 22 }} />
                     </IconButton>
-                    <Typography variant="h6" sx={{ fontWeight: 600, flex: 1 }}>
-                      Message Details
+                    <Typography variant="h6" sx={{ fontWeight: 700, flex: 1, fontSize: '1rem' }}>
+                      Details
                     </Typography>
                     <IconButton
                       onClick={handleBackFromMessages}
@@ -2735,8 +2794,8 @@ export function ThemesPage(): JSX.Element {
                       sx={{
                         color: theme.palette.text.secondary,
                         '&:hover': {
-                          bgcolor: alpha(theme.palette.primary.main, 0.1),
-                          color: theme.palette.primary.main
+                          bgcolor: alpha(theme.palette.action.hover, 0.5),
+                          color: theme.palette.text.primary
                         }
                       }}
                     >
@@ -2771,21 +2830,21 @@ export function ThemesPage(): JSX.Element {
                   })()}
 
                   {/* Accordion Sections */}
-                  <Box sx={{ flex: 1, overflow: 'auto' }}>
+                  <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
                     {(() => {
                       const selectedMessage = featureMessages.find(m => m.id === selectedMessageId);
                       if (!selectedMessage) return null;
 
                       return (
                         <Box sx={{ width: '100%' }}>
-                          {/* Header */}
+                          {/* Header Section */}
                           <Box sx={{ mb: 2, pb: 2, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                               <Box sx={{ flex: 1 }}>
-                                <Typography variant="body2" fontWeight="bold" color="primary" sx={{ mb: 0.5 }}>
+                                <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5, mb: 0.75, display: 'block' }}>
                                   {selectedMessage.customer_name || selectedMessage.sender_name || 'Unknown'}
                                 </Typography>
-                                <Typography variant="caption" color="text.secondary" display="block">
+                                <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: '0.8rem' }}>
                                   {selectedMessage.customer_email || selectedMessage.sender_name}
                                 </Typography>
                               </Box>
@@ -2805,15 +2864,17 @@ export function ThemesPage(): JSX.Element {
                                 if (callUrl) {
                                   return (
                                     <Button
-                                      variant="outlined"
+                                      variant="contained"
                                       size="small"
                                       endIcon={<OpenInNewIcon />}
                                       onClick={() => window.open(callUrl, '_blank')}
                                       sx={{
                                         textTransform: 'none',
-                                        fontSize: '0.75rem',
-                                        py: 0.5,
-                                        px: 1,
+                                        fontSize: '0.8rem',
+                                        py: 0.75,
+                                        px: 1.5,
+                                        fontWeight: 600,
+                                        whiteSpace: 'nowrap',
                                       }}
                                     >
                                       {buttonText}
@@ -2827,165 +2888,22 @@ export function ThemesPage(): JSX.Element {
 
                           {selectedMessage.ai_insights ? (
                             <Box sx={{ width: '100%' }}>
-                              {/* Summary Accordion */}
-                              <Accordion expanded={mentionDetailsTab === 'summary'} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'summary' : '')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                  <SummarizeIcon sx={{ fontSize: 18, mr: 1, color: 'primary.main' }} />
-                                  <Typography variant="body2" fontWeight="600">Summary</Typography>
+                              {/* Highlights Accordion - First and Open by Default */}
+                              <Accordion defaultExpanded expanded={mentionDetailsTab === 'highlights' || mentionDetailsTab === ''} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'highlights' : '')} sx={{
+                                '&.MuiAccordion-root': {
+                                  boxShadow: 'none',
+                                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                                  borderRadius: 1,
+                                  '&:before': { display: 'none' },
+                                  backgroundColor: alpha(theme.palette.info.main, 0.02)
+                                },
+                                mb: 1.5
+                              }}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ py: 1, px: 1.5, '&:hover': { bgcolor: alpha(theme.palette.info.main, 0.05) }, transition: 'all 0.2s ease' }}>
+                                  <LightbulbIcon sx={{ fontSize: 20, mr: 1.5, color: 'info.main' }} />
+                                  <Typography variant="body2" fontWeight="700" sx={{ fontSize: '0.95rem' }}>Highlights</Typography>
                                 </AccordionSummary>
-                                <AccordionDetails sx={{ pt: 2 }}>
-                                  {selectedMessage.ai_insights.summary && (
-                                    <Box mb={2}>
-                                      <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.9rem', lineHeight: 1.6 }}>
-                                        {selectedMessage.ai_insights.summary}
-                                      </Typography>
-                                    </Box>
-                                  )}
-
-                                  {/* Sentiment in Summary */}
-                                  {selectedMessage.ai_insights.sentiment && (
-                                    <Box mb={2}>
-                                      <Typography variant="body2" fontWeight="bold" gutterBottom sx={{ fontSize: '0.85rem' }}>
-                                        Sentiment
-                                      </Typography>
-                                      <Box pl={1}>
-                                        <Chip
-                                          label={`${selectedMessage.ai_insights.sentiment.overall} (${selectedMessage.ai_insights.sentiment.score})`}
-                                          size="small"
-                                          color={selectedMessage.ai_insights.sentiment.overall === 'positive' ? 'success' : selectedMessage.ai_insights.sentiment.overall === 'negative' ? 'error' : 'default'}
-                                          sx={{ fontSize: '0.7rem' }}
-                                        />
-                                        <Typography variant="caption" color="text.secondary" display="block" mt={0.5} sx={{ fontSize: '0.75rem' }}>
-                                          {selectedMessage.ai_insights.sentiment.reasoning}
-                                        </Typography>
-                                      </Box>
-                                    </Box>
-                                  )}
-
-                                  {/* Key Topics in Summary */}
-                                  {selectedMessage.ai_insights.key_topics && selectedMessage.ai_insights.key_topics.length > 0 && (
-                                    <Box>
-                                      <Typography variant="body2" fontWeight="bold" gutterBottom sx={{ fontSize: '0.85rem' }}>
-                                        Key Topics
-                                      </Typography>
-                                      <Box pl={1} display="flex" gap={0.5} flexWrap="wrap">
-                                        {selectedMessage.ai_insights.key_topics.map((topic, idx) => (
-                                          <Chip key={idx} label={topic} size="small" variant="outlined" sx={{ fontSize: '0.7rem' }} />
-                                        ))}
-                                      </Box>
-                                    </Box>
-                                  )}
-                                </AccordionDetails>
-                              </Accordion>
-
-                              {/* Features Accordion */}
-                              <Accordion expanded={mentionDetailsTab === 'features'} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'features' : '')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                  <FeatureIcon sx={{ fontSize: 18, mr: 1, color: 'success.main' }} />
-                                  <Typography variant="body2" fontWeight="600">Features</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails sx={{ pt: 2 }}>
-                                  {selectedMessage.ai_insights.feature_requests && selectedMessage.ai_insights.feature_requests.length > 0 ? (
-                                    selectedMessage.ai_insights.feature_requests.map((feature, idx) => (
-                                      <Box key={idx} mb={2} pb={2} sx={{ borderBottom: idx < selectedMessage.ai_insights.feature_requests.length - 1 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none' }}>
-                                        <Typography variant="body2" fontWeight="600" sx={{ fontSize: '0.9rem', mb: 0.5 }}>
-                                          {feature.title}
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary" paragraph sx={{ fontSize: '0.85rem' }}>
-                                          {feature.description}
-                                        </Typography>
-                                        <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', fontSize: '0.8rem', display: 'block', mb: 0.5 }}>
-                                          "{feature.quote}"
-                                        </Typography>
-                                        <Chip
-                                          label={feature.urgency}
-                                          size="small"
-                                          color={feature.urgency === 'high' || feature.urgency === 'critical' ? 'error' : feature.urgency === 'medium' ? 'warning' : 'default'}
-                                          sx={{ fontSize: '0.7rem' }}
-                                        />
-                                      </Box>
-                                    ))
-                                  ) : (
-                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
-                                      No features found in this mention
-                                    </Typography>
-                                  )}
-                                </AccordionDetails>
-                              </Accordion>
-
-                              {/* Bugs Accordion */}
-                              <Accordion expanded={mentionDetailsTab === 'bugs'} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'bugs' : '')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                  <BugReportIcon sx={{ fontSize: 18, mr: 1, color: 'error.main' }} />
-                                  <Typography variant="body2" fontWeight="600">Bugs</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails sx={{ pt: 2 }}>
-                                  {selectedMessage.ai_insights.bug_reports && selectedMessage.ai_insights.bug_reports.length > 0 ? (
-                                    selectedMessage.ai_insights.bug_reports.map((bug, idx) => (
-                                      <Box key={idx} mb={2} pb={2} sx={{ borderBottom: idx < selectedMessage.ai_insights.bug_reports.length - 1 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none' }}>
-                                        <Typography variant="body2" fontWeight="600" sx={{ fontSize: '0.9rem', mb: 0.5 }}>
-                                          {bug.title}
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary" paragraph sx={{ fontSize: '0.85rem' }}>
-                                          {bug.description}
-                                        </Typography>
-                                        <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', fontSize: '0.8rem', display: 'block', mb: 0.5 }}>
-                                          "{bug.quote}"
-                                        </Typography>
-                                        <Chip
-                                          label={bug.severity}
-                                          size="small"
-                                          color={bug.severity === 'high' || bug.severity === 'critical' ? 'error' : bug.severity === 'medium' ? 'warning' : 'default'}
-                                          sx={{ fontSize: '0.7rem' }}
-                                        />
-                                      </Box>
-                                    ))
-                                  ) : (
-                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
-                                      No bugs found in this mention
-                                    </Typography>
-                                  )}
-                                </AccordionDetails>
-                              </Accordion>
-
-                              {/* Pain Points Accordion */}
-                              <Accordion expanded={mentionDetailsTab === 'pain-points'} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'pain-points' : '')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                  <SadIcon sx={{ fontSize: 18, mr: 1, color: 'warning.main' }} />
-                                  <Typography variant="body2" fontWeight="600">Pain Points</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails sx={{ pt: 2 }}>
-                                  {selectedMessage.ai_insights.pain_points && selectedMessage.ai_insights.pain_points.length > 0 ? (
-                                    selectedMessage.ai_insights.pain_points.map((pain, idx) => (
-                                      <Box key={idx} mb={2} pb={2} sx={{ borderBottom: idx < selectedMessage.ai_insights.pain_points.length - 1 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none' }}>
-                                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mb: 0.5 }}>
-                                          {pain.description}
-                                        </Typography>
-                                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
-                                          Impact: <strong>{pain.impact}</strong>
-                                        </Typography>
-                                        {pain.quote && (
-                                          <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', display: 'block', mt: 0.5, fontSize: '0.75rem' }}>
-                                            "{pain.quote}"
-                                          </Typography>
-                                        )}
-                                      </Box>
-                                    ))
-                                  ) : (
-                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
-                                      No pain points found in this mention
-                                    </Typography>
-                                  )}
-                                </AccordionDetails>
-                              </Accordion>
-
-                              {/* Highlights Accordion */}
-                              <Accordion expanded={mentionDetailsTab === 'highlights'} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'highlights' : '')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                  <LightbulbIcon sx={{ fontSize: 18, mr: 1, color: 'info.main' }} />
-                                  <Typography variant="body2" fontWeight="600">Highlights</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails sx={{ pt: 2 }}>
+                                <AccordionDetails sx={{ pt: 1.5, px: 1.5, pb: 1.5 }}>
                                   {selectedMessage.ai_insights.summary && (
                                     <Box mb={2}>
                                       <Typography variant="caption" fontWeight="600" sx={{ fontSize: '0.75rem', color: theme.palette.primary.main }}>
@@ -3059,19 +2977,216 @@ export function ThemesPage(): JSX.Element {
                                 </AccordionDetails>
                               </Accordion>
 
+                              {/* Features Accordion */}
+                              <Accordion expanded={mentionDetailsTab === 'features'} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'features' : '')} sx={{
+                                '&.MuiAccordion-root': {
+                                  boxShadow: 'none',
+                                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                                  borderRadius: 1,
+                                  '&:before': { display: 'none' },
+                                  backgroundColor: alpha(theme.palette.success.main, 0.02)
+                                },
+                                mb: 1.5
+                              }}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ py: 1, px: 1.5, '&:hover': { bgcolor: alpha(theme.palette.success.main, 0.05) }, transition: 'all 0.2s ease' }}>
+                                  <FeatureIcon sx={{ fontSize: 20, mr: 1.5, color: 'success.main' }} />
+                                  <Typography variant="body2" fontWeight="700" sx={{ fontSize: '0.95rem' }}>Features</Typography>
+                                  <Typography variant="caption" sx={{ fontSize: '0.8rem', color: theme.palette.text.secondary, ml: 'auto' }}>
+                                    {selectedMessage.ai_insights.feature_requests?.length || 0}
+                                  </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails sx={{ pt: 1.5, px: 1.5, pb: 1.5 }}>
+                                  {selectedMessage.ai_insights.feature_requests && selectedMessage.ai_insights.feature_requests.length > 0 ? (
+                                    selectedMessage.ai_insights.feature_requests.map((feature, idx) => (
+                                      <Box key={idx} mb={2} pb={2} sx={{ borderBottom: idx < selectedMessage.ai_insights.feature_requests.length - 1 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none' }}>
+                                        <Typography variant="body2" fontWeight="600" sx={{ fontSize: '0.9rem', mb: 0.5 }}>
+                                          {feature.title}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary" paragraph sx={{ fontSize: '0.85rem' }}>
+                                          {feature.description}
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', fontSize: '0.8rem', display: 'block', mb: 0.5 }}>
+                                          "{feature.quote}"
+                                        </Typography>
+                                        <Chip
+                                          label={feature.urgency}
+                                          size="small"
+                                          color={feature.urgency === 'high' || feature.urgency === 'critical' ? 'error' : feature.urgency === 'medium' ? 'warning' : 'default'}
+                                          sx={{ fontSize: '0.7rem' }}
+                                        />
+                                      </Box>
+                                    ))
+                                  ) : (
+                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
+                                      No features found in this mention
+                                    </Typography>
+                                  )}
+                                </AccordionDetails>
+                              </Accordion>
+
+                              {/* Bugs Accordion */}
+                              <Accordion expanded={mentionDetailsTab === 'bugs'} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'bugs' : '')} sx={{
+                                '&.MuiAccordion-root': {
+                                  boxShadow: 'none',
+                                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                                  borderRadius: 1,
+                                  '&:before': { display: 'none' },
+                                  backgroundColor: alpha(theme.palette.error.main, 0.02)
+                                },
+                                mb: 1.5
+                              }}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ py: 1, px: 1.5, '&:hover': { bgcolor: alpha(theme.palette.error.main, 0.05) }, transition: 'all 0.2s ease' }}>
+                                  <BugReportIcon sx={{ fontSize: 20, mr: 1.5, color: 'error.main' }} />
+                                  <Typography variant="body2" fontWeight="700" sx={{ fontSize: '0.95rem' }}>Bugs</Typography>
+                                  <Typography variant="caption" sx={{ fontSize: '0.8rem', color: theme.palette.text.secondary, ml: 'auto' }}>
+                                    {selectedMessage.ai_insights.bug_reports?.length || 0}
+                                  </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails sx={{ pt: 1.5, px: 1.5, pb: 1.5 }}>
+                                  {selectedMessage.ai_insights.bug_reports && selectedMessage.ai_insights.bug_reports.length > 0 ? (
+                                    selectedMessage.ai_insights.bug_reports.map((bug, idx) => (
+                                      <Box key={idx} mb={2} pb={2} sx={{ borderBottom: idx < selectedMessage.ai_insights.bug_reports.length - 1 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none' }}>
+                                        <Typography variant="body2" fontWeight="600" sx={{ fontSize: '0.9rem', mb: 0.5 }}>
+                                          {bug.title}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary" paragraph sx={{ fontSize: '0.85rem' }}>
+                                          {bug.description}
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', fontSize: '0.8rem', display: 'block', mb: 0.5 }}>
+                                          "{bug.quote}"
+                                        </Typography>
+                                        <Chip
+                                          label={bug.severity}
+                                          size="small"
+                                          color={bug.severity === 'high' || bug.severity === 'critical' ? 'error' : bug.severity === 'medium' ? 'warning' : 'default'}
+                                          sx={{ fontSize: '0.7rem' }}
+                                        />
+                                      </Box>
+                                    ))
+                                  ) : (
+                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
+                                      No bugs found in this mention
+                                    </Typography>
+                                  )}
+                                </AccordionDetails>
+                              </Accordion>
+
+                              {/* Pain Points Accordion */}
+                              <Accordion expanded={mentionDetailsTab === 'pain-points'} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'pain-points' : '')} sx={{
+                                '&.MuiAccordion-root': {
+                                  boxShadow: 'none',
+                                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                                  borderRadius: 1,
+                                  '&:before': { display: 'none' },
+                                  backgroundColor: alpha(theme.palette.warning.main, 0.02)
+                                },
+                                mb: 1.5
+                              }}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ py: 1, px: 1.5, '&:hover': { bgcolor: alpha(theme.palette.warning.main, 0.05) }, transition: 'all 0.2s ease' }}>
+                                  <SadIcon sx={{ fontSize: 20, mr: 1.5, color: 'warning.main' }} />
+                                  <Typography variant="body2" fontWeight="700" sx={{ fontSize: '0.95rem' }}>Pain Points</Typography>
+                                  <Typography variant="caption" sx={{ fontSize: '0.8rem', color: theme.palette.text.secondary, ml: 'auto' }}>
+                                    {selectedMessage.ai_insights.pain_points?.length || 0}
+                                  </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails sx={{ pt: 1.5, px: 1.5, pb: 1.5 }}>
+                                  {selectedMessage.ai_insights.pain_points && selectedMessage.ai_insights.pain_points.length > 0 ? (
+                                    selectedMessage.ai_insights.pain_points.map((pain, idx) => (
+                                      <Box key={idx} mb={2} pb={2} sx={{ borderBottom: idx < selectedMessage.ai_insights.pain_points.length - 1 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none' }}>
+                                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mb: 0.5 }}>
+                                          {pain.description}
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                                          Impact: <strong>{pain.impact}</strong>
+                                        </Typography>
+                                        {pain.quote && (
+                                          <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', display: 'block', mt: 0.5, fontSize: '0.75rem' }}>
+                                            "{pain.quote}"
+                                          </Typography>
+                                        )}
+                                      </Box>
+                                    ))
+                                  ) : (
+                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
+                                      No pain points found in this mention
+                                    </Typography>
+                                  )}
+                                </AccordionDetails>
+                              </Accordion>
+
+                              {/* Summary Accordion */}
+                              <Accordion expanded={mentionDetailsTab === 'summary'} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'summary' : '')} sx={{
+                                '&.MuiAccordion-root': {
+                                  boxShadow: 'none',
+                                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                                  borderRadius: 1,
+                                  '&:before': { display: 'none' },
+                                  backgroundColor: alpha(theme.palette.primary.main, 0.02)
+                                },
+                                mb: 1.5
+                              }}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ py: 1, px: 1.5, '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.05) }, transition: 'all 0.2s ease' }}>
+                                  <SummarizeIcon sx={{ fontSize: 20, mr: 1.5, color: 'primary.main' }} />
+                                  <Typography variant="body2" fontWeight="700" sx={{ fontSize: '0.95rem' }}>Summary</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails sx={{ pt: 1.5, px: 1.5, pb: 1.5 }}>
+                                  {selectedMessage.ai_insights.summary && (
+                                    <Box mb={2}>
+                                      <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.9rem', lineHeight: 1.6 }}>
+                                        {selectedMessage.ai_insights.summary}
+                                      </Typography>
+                                    </Box>
+                                  )}
+
+                                  {/* Sentiment in Summary */}
+                                  {selectedMessage.ai_insights.sentiment && (
+                                    <Box mb={2}>
+                                      <Typography variant="body2" fontWeight="bold" gutterBottom sx={{ fontSize: '0.85rem' }}>
+                                        Sentiment
+                                      </Typography>
+                                      <Box pl={1}>
+                                        <Chip
+                                          label={`${selectedMessage.ai_insights.sentiment.overall} (${selectedMessage.ai_insights.sentiment.score})`}
+                                          size="small"
+                                          color={selectedMessage.ai_insights.sentiment.overall === 'positive' ? 'success' : selectedMessage.ai_insights.sentiment.overall === 'negative' ? 'error' : 'default'}
+                                          sx={{ fontSize: '0.7rem' }}
+                                        />
+                                        <Typography variant="caption" color="text.secondary" display="block" mt={0.5} sx={{ fontSize: '0.75rem' }}>
+                                          {selectedMessage.ai_insights.sentiment.reasoning}
+                                        </Typography>
+                                      </Box>
+                                    </Box>
+                                  )}
+
+                                  {/* Key Topics in Summary */}
+                                  {selectedMessage.ai_insights.key_topics && selectedMessage.ai_insights.key_topics.length > 0 && (
+                                    <Box>
+                                      <Typography variant="body2" fontWeight="bold" gutterBottom sx={{ fontSize: '0.85rem' }}>
+                                        Key Topics
+                                      </Typography>
+                                      <Box pl={1} display="flex" gap={0.5} flexWrap="wrap">
+                                        {selectedMessage.ai_insights.key_topics.map((topic, idx) => (
+                                          <Chip key={idx} label={topic} size="small" variant="outlined" sx={{ fontSize: '0.7rem' }} />
+                                        ))}
+                                      </Box>
+                                    </Box>
+                                  )}
+                                </AccordionDetails>
+                              </Accordion>
+
                               {/* Message Metadata */}
                               <Box sx={{
                                 display: 'flex',
                                 flexDirection: 'column',
                                 width: '100%',
-                                mt: 2,
+                                mt: 3,
                                 pt: 2,
                                 borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`
                               }}>
-                                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, fontSize: '0.75rem' }}>
+                                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: 0.5 }}>
                                   {selectedMessage.sender_name}
                                 </Typography>
-                                <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                                <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem', mt: 0.5 }}>
                                   in #{selectedMessage.channel_name}
                                 </Typography>
                               </Box>
