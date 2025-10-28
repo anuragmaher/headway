@@ -39,6 +39,9 @@ import {
   LinearProgress,
   Tabs,
   Tab,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
@@ -2532,11 +2535,20 @@ export function ThemesPage(): JSX.Element {
               anchor="right"
               open={mentionsDrawerOpen && selectedFeatureForMessages}
               onClose={handleBackFromMessages}
+              elevation={16}
+              SlotProps={{
+                backdrop: {
+                  sx: {
+                    backgroundColor: 'transparent'
+                  }
+                }
+              }}
               PaperProps={{
                 sx: {
                   width: { xs: '100%', sm: 500, md: 600 },
-                  backgroundColor: theme.palette.background.paper,
+                  backgroundColor: theme.palette.grey[50],
                   boxShadow: theme.shadows[8],
+                  zIndex: 1200,
                 }
               }}
             >
@@ -2758,31 +2770,8 @@ export function ThemesPage(): JSX.Element {
                     ) : null;
                   })()}
 
-                  {/* Tabs Header */}
-                  <Box sx={{ borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`, overflowX: 'auto' }}>
-                    <Tabs
-                      value={mentionDetailsTab}
-                      onChange={(e, newValue) => setMentionDetailsTab(newValue)}
-                      variant="scrollable"
-                      scrollButtons="auto"
-                      sx={{
-                        '& .MuiTab-root': {
-                          textTransform: 'none',
-                          fontWeight: 500,
-                          fontSize: '0.85rem',
-                          minHeight: 40,
-                        }
-                      }}
-                    >
-                      <Tab icon={<SummarizeIcon sx={{ fontSize: 16, mr: 0.5 }} />} iconPosition="start" label="Summary" value="summary" />
-                      <Tab icon={<LightbulbIcon sx={{ fontSize: 16, mr: 0.5 }} />} iconPosition="start" label="Features" value="features" />
-                      <Tab icon={<BugReportIcon sx={{ fontSize: 16, mr: 0.5 }} />} iconPosition="start" label="Bugs" value="bugs" />
-                      <Tab icon={<SadIcon sx={{ fontSize: 16, mr: 0.5 }} />} iconPosition="start" label="Pain Points" value="pain-points" />
-                      <Tab icon={<MessageIcon sx={{ fontSize: 16, mr: 0.5 }} />} iconPosition="start" label="Highlights" value="highlights" />
-                    </Tabs>
-                  </Box>
-
-                  <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
+                  {/* Accordion Sections */}
+                  <Box sx={{ flex: 1, overflow: 'auto' }}>
                     {(() => {
                       const selectedMessage = featureMessages.find(m => m.id === selectedMessageId);
                       if (!selectedMessage) return null;
@@ -2838,9 +2827,13 @@ export function ThemesPage(): JSX.Element {
 
                           {selectedMessage.ai_insights ? (
                             <Box sx={{ width: '100%' }}>
-                              {/* Summary Tab */}
-                              {mentionDetailsTab === 'summary' && (
-                                <Box>
+                              {/* Summary Accordion */}
+                              <Accordion expanded={mentionDetailsTab === 'summary'} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'summary' : '')}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                  <SummarizeIcon sx={{ fontSize: 18, mr: 1, color: 'primary.main' }} />
+                                  <Typography variant="body2" fontWeight="600">Summary</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails sx={{ pt: 2 }}>
                                   {selectedMessage.ai_insights.summary && (
                                     <Box mb={2}>
                                       <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.9rem', lineHeight: 1.6 }}>
@@ -2882,12 +2875,16 @@ export function ThemesPage(): JSX.Element {
                                       </Box>
                                     </Box>
                                   )}
-                                </Box>
-                              )}
+                                </AccordionDetails>
+                              </Accordion>
 
-                              {/* Features Tab */}
-                              {mentionDetailsTab === 'features' && (
-                                <Box>
+                              {/* Features Accordion */}
+                              <Accordion expanded={mentionDetailsTab === 'features'} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'features' : '')}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                  <FeatureIcon sx={{ fontSize: 18, mr: 1, color: 'success.main' }} />
+                                  <Typography variant="body2" fontWeight="600">Features</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails sx={{ pt: 2 }}>
                                   {selectedMessage.ai_insights.feature_requests && selectedMessage.ai_insights.feature_requests.length > 0 ? (
                                     selectedMessage.ai_insights.feature_requests.map((feature, idx) => (
                                       <Box key={idx} mb={2} pb={2} sx={{ borderBottom: idx < selectedMessage.ai_insights.feature_requests.length - 1 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none' }}>
@@ -2913,12 +2910,16 @@ export function ThemesPage(): JSX.Element {
                                       No features found in this mention
                                     </Typography>
                                   )}
-                                </Box>
-                              )}
+                                </AccordionDetails>
+                              </Accordion>
 
-                              {/* Bugs Tab */}
-                              {mentionDetailsTab === 'bugs' && (
-                                <Box>
+                              {/* Bugs Accordion */}
+                              <Accordion expanded={mentionDetailsTab === 'bugs'} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'bugs' : '')}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                  <BugReportIcon sx={{ fontSize: 18, mr: 1, color: 'error.main' }} />
+                                  <Typography variant="body2" fontWeight="600">Bugs</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails sx={{ pt: 2 }}>
                                   {selectedMessage.ai_insights.bug_reports && selectedMessage.ai_insights.bug_reports.length > 0 ? (
                                     selectedMessage.ai_insights.bug_reports.map((bug, idx) => (
                                       <Box key={idx} mb={2} pb={2} sx={{ borderBottom: idx < selectedMessage.ai_insights.bug_reports.length - 1 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none' }}>
@@ -2944,12 +2945,16 @@ export function ThemesPage(): JSX.Element {
                                       No bugs found in this mention
                                     </Typography>
                                   )}
-                                </Box>
-                              )}
+                                </AccordionDetails>
+                              </Accordion>
 
-                              {/* Pain Points Tab */}
-                              {mentionDetailsTab === 'pain-points' && (
-                                <Box>
+                              {/* Pain Points Accordion */}
+                              <Accordion expanded={mentionDetailsTab === 'pain-points'} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'pain-points' : '')}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                  <SadIcon sx={{ fontSize: 18, mr: 1, color: 'warning.main' }} />
+                                  <Typography variant="body2" fontWeight="600">Pain Points</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails sx={{ pt: 2 }}>
                                   {selectedMessage.ai_insights.pain_points && selectedMessage.ai_insights.pain_points.length > 0 ? (
                                     selectedMessage.ai_insights.pain_points.map((pain, idx) => (
                                       <Box key={idx} mb={2} pb={2} sx={{ borderBottom: idx < selectedMessage.ai_insights.pain_points.length - 1 ? `1px solid ${alpha(theme.palette.divider, 0.1)}` : 'none' }}>
@@ -2971,15 +2976,16 @@ export function ThemesPage(): JSX.Element {
                                       No pain points found in this mention
                                     </Typography>
                                   )}
-                                </Box>
-                              )}
+                                </AccordionDetails>
+                              </Accordion>
 
-                              {/* Highlights Tab */}
-                              {mentionDetailsTab === 'highlights' && (
-                                <Box>
-                                  <Typography variant="body2" fontWeight="bold" gutterBottom sx={{ fontSize: '0.85rem', mb: 1 }}>
-                                    Key Insights
-                                  </Typography>
+                              {/* Highlights Accordion */}
+                              <Accordion expanded={mentionDetailsTab === 'highlights'} onChange={(e, isExpanded) => setMentionDetailsTab(isExpanded ? 'highlights' : '')}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                  <LightbulbIcon sx={{ fontSize: 18, mr: 1, color: 'info.main' }} />
+                                  <Typography variant="body2" fontWeight="600">Highlights</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails sx={{ pt: 2 }}>
                                   {selectedMessage.ai_insights.summary && (
                                     <Box mb={2}>
                                       <Typography variant="caption" fontWeight="600" sx={{ fontSize: '0.75rem', color: theme.palette.primary.main }}>
@@ -3050,8 +3056,8 @@ export function ThemesPage(): JSX.Element {
                                       </Box>
                                     </Box>
                                   )}
-                                </Box>
-                              )}
+                                </AccordionDetails>
+                              </Accordion>
 
                               {/* Message Metadata */}
                               <Box sx={{
