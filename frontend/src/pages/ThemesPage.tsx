@@ -169,7 +169,11 @@ interface Message {
 export function ThemesPage(): JSX.Element {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { tokens } = useAuthStore();
+  const { tokens, isAuthenticated } = useAuthStore();
+  
+  // Use workspace_id from tokens (from Google OAuth/login)
+  const WORKSPACE_ID = tokens?.workspace_id;
+
   const [themes, setThemes] = useState<Theme[]>([]);
   const [mobileThemesDrawerOpen, setMobileThemesDrawerOpen] = useState(false);
   const [selectedThemeId, setSelectedThemeId] = useState<string>('');
@@ -250,20 +254,10 @@ export function ThemesPage(): JSX.Element {
   const [showOnboardingBlocker, setShowOnboardingBlocker] = useState(false);
   const [companyDetailsFilledIn, setCompanyDetailsFilledIn] = useState(true); // Assume true by default
 
-  // Use workspace_id from tokens (from Google OAuth/login)
-  const WORKSPACE_ID = tokens?.workspace_id;
-
-  if (!WORKSPACE_ID) {
-    return (
-      <AdminLayout>
-        <Box sx={{ p: 3 }}>
-          <Alert severity="error">
-            Workspace ID not found. Please log in again.
-          </Alert>
-        </Box>
-      </AdminLayout>
-    );
-  }
+  // Workspace ID recovery state
+  const [hydrated, setHydrated] = useState(false);
+  const [fetchingWorkspaceId, setFetchingWorkspaceId] = useState(false);
+  const [attemptedFetch, setAttemptedFetch] = useState(false);
 
   // Helper function to organize themes hierarchically
   const buildThemeHierarchy = (themes: Theme[]): Theme[] => {
@@ -315,6 +309,45 @@ export function ThemesPage(): JSX.Element {
   React.useEffect(() => {
     setExpandedThemes(new Set()); // Empty set = all collapsed
   }, [themes]);
+
+  // Hydration: Check if store is ready
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  // Recovery: If authenticated but workspace_id is missing, fetch it once
+  useEffect(() => {
+    if (!hydrated || !isAuthenticated || WORKSPACE_ID || fetchingWorkspaceId || attemptedFetch) {
+      return;
+    }
+
+    setAttemptedFetch(true);
+    setFetchingWorkspaceId(true);
+
+    fetch(`${API_BASE_URL}/api/v1/workspaces/my-workspace`, {
+      headers: {
+        'Authorization': `Bearer ${tokens?.access_token}`,
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.workspace_id && tokens) {
+          useAuthStore.setState({
+            tokens: {
+              ...tokens,
+              workspace_id: data.workspace_id
+            }
+          });
+        }
+      })
+      .catch(err => {
+        console.error('Failed to fetch workspace_id:', err);
+      })
+      .finally(() => {
+        setFetchingWorkspaceId(false);
+      });
+  }, [hydrated, isAuthenticated, WORKSPACE_ID, fetchingWorkspaceId, attemptedFetch, tokens]);
 
   // Handle resizing of mentions layout panels
   React.useEffect(() => {
@@ -634,7 +667,12 @@ export function ThemesPage(): JSX.Element {
     }
   };
 
+  // Fetch themes when workspace is available
   useEffect(() => {
+    if (!WORKSPACE_ID) {
+      return;
+    }
+
     fetchThemes();
     // Load all features by default
     handleAllThemesClick();
@@ -644,7 +682,7 @@ export function ThemesPage(): JSX.Element {
     // The blocker will check: if themes.length === 0 && no company details
     // For now, we show it if themes are empty (company details check would come from workspace context)
     setShowOnboardingBlocker(themes.length === 0);
-  }, []);
+  }, [WORKSPACE_ID]);
 
   // Update blocker status when themes change
   React.useEffect(() => {
@@ -1234,6 +1272,30 @@ export function ThemesPage(): JSX.Element {
     if (confidence >= 0.5) return 'Medium';
     return 'Low';
   };
+
+  // Show loading state while fetching workspace ID
+  if (isAuthenticated && !WORKSPACE_ID && (fetchingWorkspaceId || !attemptedFetch)) {
+    return (
+      <AdminLayout>
+        <Box sx={{ p: 3, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+          <CircularProgress />
+        </Box>
+      </AdminLayout>
+    );
+  }
+
+  // Show error if we can't get workspace ID after attempting to fetch it
+  if (isAuthenticated && !WORKSPACE_ID && attemptedFetch && !fetchingWorkspaceId) {
+    return (
+      <AdminLayout>
+        <Box sx={{ p: 3 }}>
+          <Alert severity="error">
+            Workspace ID not found. Please log in again.
+          </Alert>
+        </Box>
+      </AdminLayout>
+    );
+  }
 
   const getThemeValidationConfidence = (feature: Feature) => {
     return feature.ai_metadata?.theme_validation?.confidence ?? null;
