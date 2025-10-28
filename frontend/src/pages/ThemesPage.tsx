@@ -250,6 +250,10 @@ export function ThemesPage(): JSX.Element {
   const [isResizingMentions, setIsResizingMentions] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Drawer navigation state for mentions/details
+  const [mentionsDrawerOpen, setMentionsDrawerOpen] = useState(false);
+  const [drawerLevel, setDrawerLevel] = useState<'mentions' | 'details'>('mentions');
+
   // Onboarding blocker state
   const [showOnboardingBlocker, setShowOnboardingBlocker] = useState(false);
   const [companyDetailsFilledIn, setCompanyDetailsFilledIn] = useState(true); // Assume true by default
@@ -1331,15 +1335,27 @@ export function ThemesPage(): JSX.Element {
 
   const handleShowMessages = (feature: Feature) => {
     setSelectedFeatureForMessages(feature);
-    setShowMessagesFullPage(true);
+    setMentionsDrawerOpen(true);
+    setDrawerLevel('mentions');
     setSelectedMessageId(null);
     fetchFeatureMessages(feature.id);
   };
 
   const handleBackFromMessages = () => {
-    setShowMessagesFullPage(false);
+    setMentionsDrawerOpen(false);
     setSelectedFeatureForMessages(null);
     setFeatureMessages([]);
+    setDrawerLevel('mentions');
+  };
+
+  const handleViewMentionDetails = (message: Message) => {
+    setSelectedMessageId(message.id);
+    setDrawerLevel('details');
+  };
+
+  const handleBackFromMentionDetails = () => {
+    setDrawerLevel('mentions');
+    setSelectedMessageId(null);
   };
 
   const formatDate = (dateString: string) => {
@@ -2511,206 +2527,212 @@ export function ThemesPage(): JSX.Element {
             </Card>
             </Box>
 
-            {/* Draggable Divider - Between Features and Mentions */}
-            {showMessagesFullPage && selectedFeatureForMessages && (
-              <Box
-                onMouseDown={() => setIsResizingMentions(true)}
-                sx={{
-                  width: 4,
-                  cursor: 'col-resize',
-                  backgroundColor: alpha(theme.palette.divider, 0.5),
-                  transition: isResizingMentions ? 'none' : 'background-color 0.2s ease-in-out',
-                  '&:hover': {
-                    backgroundColor: theme.palette.primary.main,
-                  },
-                  userSelect: 'none',
-                  flex: 'none',
-                }}
-              />
-            )}
+            {/* Mentions and Details Drawer */}
+            <Drawer
+              anchor="right"
+              open={mentionsDrawerOpen && selectedFeatureForMessages}
+              onClose={handleBackFromMessages}
+              PaperProps={{
+                sx: {
+                  width: { xs: '100%', sm: 500, md: 600 },
+                  backgroundColor: theme.palette.background.paper,
+                  boxShadow: theme.shadows[8],
+                }
+              }}
+            >
+              {drawerLevel === 'mentions' && selectedFeatureForMessages && (
+                <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                  {/* Mentions List Header */}
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 1,
+                    p: 2,
+                    borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`
+                  }}>
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
+                        {selectedFeatureForMessages.name}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {searchQuery.trim()
+                          ? featureMessages.filter((m) => {
+                              const query = searchQuery.toLowerCase();
+                              const customerName = (m.customer_name || m.sender_name || '').toLowerCase();
+                              const customerEmail = (m.customer_email || '').toLowerCase();
+                              return customerName.includes(query) || customerEmail.includes(query);
+                            }).length
+                          : featureMessages.length} mentions
+                      </Typography>
+                    </Box>
+                    <IconButton
+                      onClick={handleBackFromMessages}
+                      size="small"
+                      sx={{
+                        color: theme.palette.text.secondary,
+                        '&:hover': {
+                          bgcolor: alpha(theme.palette.primary.main, 0.1),
+                          color: theme.palette.primary.main
+                        }
+                      }}
+                    >
+                      <CloseIcon sx={{ fontSize: 20 }} />
+                    </IconButton>
+                  </Box>
 
-            {/* Mentions List Panel - Dynamic width when showing mentions */}
-            {showMessagesFullPage && selectedFeatureForMessages && (
-              <Box sx={{ flex: `0 0 ${mentionsListWidth}%`, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                <Card sx={{
-                  borderRadius: 1,
-                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
-                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                  height: { xs: 'auto', md: 'calc(100vh - 120px)' },
-                }}>
-                  <CardContent sx={{ p: 1.5, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                    {/* Header */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1, mb: 1.5, pb: 1.5, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="caption" fontWeight="bold" color="primary" sx={{ fontSize: '0.75rem' }}>
-                          Mentions
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.65rem' }}>
-                          {searchQuery.trim()
-                            ? featureMessages.filter((m) => {
-                                const query = searchQuery.toLowerCase();
-                                const customerName = (m.customer_name || m.sender_name || '').toLowerCase();
-                                const customerEmail = (m.customer_email || '').toLowerCase();
-                                return customerName.includes(query) || customerEmail.includes(query);
-                              }).length
-                            : featureMessages.length}
-                        </Typography>
+                  {/* Mentions List Content */}
+                  <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
+                    {loadingMessages ? (
+                      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
+                        <CircularProgress size={24} />
                       </Box>
-                      <IconButton
-                        onClick={handleBackFromMessages}
-                        size="small"
-                        sx={{
-                          color: theme.palette.text.secondary,
-                          '&:hover': {
-                            bgcolor: alpha(theme.palette.primary.main, 0.1),
-                            color: theme.palette.primary.main
-                          }
-                        }}
-                      >
-                        <CloseIcon sx={{ fontSize: 14 }} />
-                      </IconButton>
-                    </Box>
+                    ) : featureMessages.length === 0 ? (
+                      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
+                        <Typography variant="body2" color="text.secondary">No messages</Typography>
+                      </Box>
+                    ) : (
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        {featureMessages
+                          .filter((message) => {
+                            // Filter mentions by search query
+                            if (!searchQuery.trim()) return true;
 
-                    {/* Messages List */}
-                    <Box sx={{ flex: 1, overflow: 'auto' }}>
-                        {loadingMessages ? (
-                          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
-                            <CircularProgress size={24} />
-                          </Box>
-                        ) : featureMessages.length === 0 ? (
-                          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
-                            <Typography variant="body2" color="text.secondary">No messages</Typography>
-                          </Box>
-                        ) : (
-                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
-                            {featureMessages
-                              .filter((message) => {
-                                // Filter mentions by search query
-                                if (!searchQuery.trim()) return true;
+                            const query = searchQuery.toLowerCase();
+                            const customerName = (message.customer_name || message.sender_name || '').toLowerCase();
+                            const customerEmail = (message.customer_email || '').toLowerCase();
 
-                                const query = searchQuery.toLowerCase();
-                                const customerName = (message.customer_name || message.sender_name || '').toLowerCase();
-                                const customerEmail = (message.customer_email || '').toLowerCase();
+                            return customerName.includes(query) || customerEmail.includes(query);
+                          })
+                          .map((message) => {
+                          const insightCounts = {
+                            features: message.ai_insights?.feature_requests?.length || 0,
+                            bugs: message.ai_insights?.bug_reports?.length || 0,
+                            painPoints: message.ai_insights?.pain_points?.length || 0,
+                          };
+                          const totalInsights = insightCounts.features + insightCounts.bugs + insightCounts.painPoints;
+                          const isSelected = selectedMessageId === message.id;
 
-                                return customerName.includes(query) || customerEmail.includes(query);
-                              })
-                              .map((message) => {
-                              const insightCounts = {
-                                features: message.ai_insights?.feature_requests?.length || 0,
-                                bugs: message.ai_insights?.bug_reports?.length || 0,
-                                painPoints: message.ai_insights?.pain_points?.length || 0,
-                              };
-                              const totalInsights = insightCounts.features + insightCounts.bugs + insightCounts.painPoints;
-                              const isSelected = selectedMessageId === message.id;
-
-                              return (
-                                <Box
-                                  key={message.id}
-                                  onClick={() => setSelectedMessageId(message.id)}
-                                  sx={{
-                                    p: 0.75,
-                                    borderRadius: 0.75,
-                                    cursor: 'pointer',
-                                    background: isSelected
-                                      ? alpha(theme.palette.primary.main, 0.1)
-                                      : 'transparent',
-                                    border: isSelected
-                                      ? `1px solid ${theme.palette.primary.main}`
-                                      : `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-                                    transition: 'all 0.2s ease-in-out',
-                                    position: 'relative',
-                                    '&:hover': {
-                                      background: alpha(theme.palette.primary.main, 0.06),
-                                      border: `1px solid ${alpha(theme.palette.primary.main, 0.5)}`,
-                                      '& .delete-button': {
-                                        opacity: 1,
-                                      },
-                                    },
-                                  }}
-                                >
-                                  <Typography variant="caption" fontWeight="bold" color="primary" noWrap display="block">
-                                    {message.customer_name || message.sender_name || 'Unknown'}
-                                  </Typography>
-                                  <Typography variant="caption" color="text.secondary" noWrap display="block">
-                                    {message.customer_email || message.sender_name}
-                                  </Typography>
-                                  <Typography variant="caption" color="text.secondary" noWrap display="block" sx={{ mt: 0.25 }}>
-                                    {formatDate(message.sent_at)}
-                                  </Typography>
-                                  {totalInsights > 0 && (
-                                    <Box sx={{ display: 'flex', gap: 0.25, flexWrap: 'wrap', mt: 0.4 }}>
-                                      {insightCounts.features > 0 && (
-                                        <Chip label={insightCounts.features} size="small" color="info" variant="filled" sx={{ height: 16 }} />
-                                      )}
-                                      {insightCounts.bugs > 0 && (
-                                        <Chip label={insightCounts.bugs} size="small" color="error" variant="filled" sx={{ height: 16 }} />
-                                      )}
-                                      {insightCounts.painPoints > 0 && (
-                                        <Chip label={insightCounts.painPoints} size="small" color="warning" variant="filled" sx={{ height: 16 }} />
-                                      )}
-                                    </Box>
+                          return (
+                            <Box
+                              key={message.id}
+                              onClick={() => handleViewMentionDetails(message)}
+                              sx={{
+                                p: 1,
+                                borderRadius: 1,
+                                cursor: 'pointer',
+                                background: isSelected
+                                  ? alpha(theme.palette.primary.main, 0.1)
+                                  : 'transparent',
+                                border: isSelected
+                                  ? `1px solid ${theme.palette.primary.main}`
+                                  : `1px solid ${alpha(theme.palette.divider, 0.2)}`,
+                                transition: 'all 0.2s ease-in-out',
+                                position: 'relative',
+                                '&:hover': {
+                                  background: alpha(theme.palette.primary.main, 0.06),
+                                  border: `1px solid ${alpha(theme.palette.primary.main, 0.5)}`,
+                                  '& .delete-button': {
+                                    opacity: 1,
+                                  },
+                                },
+                              }}
+                            >
+                              <Typography variant="caption" fontWeight="bold" color="primary" noWrap display="block">
+                                {message.customer_name || message.sender_name || 'Unknown'}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary" noWrap display="block" sx={{ mt: 0.25 }}>
+                                {message.customer_email || message.sender_name}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary" noWrap display="block" sx={{ mt: 0.25, fontSize: '0.7rem' }}>
+                                {formatDate(message.sent_at)}
+                              </Typography>
+                              {totalInsights > 0 && (
+                                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mt: 0.5 }}>
+                                  {insightCounts.features > 0 && (
+                                    <Chip label={`${insightCounts.features} features`} size="small" color="info" variant="filled" sx={{ height: 20, fontSize: '0.7rem' }} />
                                   )}
-                                  <IconButton
-                                    className="delete-button"
-                                    size="small"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleOpenDeleteMentionConfirm(message);
-                                    }}
-                                    sx={{
-                                      position: 'absolute',
-                                      top: 4,
-                                      right: 4,
-                                      opacity: 0,
-                                      transition: 'opacity 0.2s ease-in-out',
-                                      color: theme.palette.error.main,
-                                      '&:hover': {
-                                        bgcolor: alpha(theme.palette.error.main, 0.1),
-                                      },
-                                    }}
-                                  >
-                                    <DeleteIcon sx={{ fontSize: 16 }} />
-                                  </IconButton>
+                                  {insightCounts.bugs > 0 && (
+                                    <Chip label={`${insightCounts.bugs} bugs`} size="small" color="error" variant="filled" sx={{ height: 20, fontSize: '0.7rem' }} />
+                                  )}
+                                  {insightCounts.painPoints > 0 && (
+                                    <Chip label={`${insightCounts.painPoints} pain points`} size="small" color="warning" variant="filled" sx={{ height: 20, fontSize: '0.7rem' }} />
+                                  )}
                                 </Box>
-                              );
-                            })}
-                          </Box>
-                        )}
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Box>
-            )}
+                              )}
+                              <IconButton
+                                className="delete-button"
+                                size="small"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleOpenDeleteMentionConfirm(message);
+                                }}
+                                sx={{
+                                  position: 'absolute',
+                                  top: 4,
+                                  right: 4,
+                                  opacity: 0,
+                                  transition: 'opacity 0.2s ease-in-out',
+                                  color: theme.palette.error.main,
+                                  '&:hover': {
+                                    bgcolor: alpha(theme.palette.error.main, 0.1),
+                                  },
+                                }}
+                              >
+                                <DeleteIcon sx={{ fontSize: 16 }} />
+                              </IconButton>
+                            </Box>
+                          );
+                        })}
+                      </Box>
+                    )}
+                  </Box>
+                </Box>
+              )}
 
-            {/* Draggable Divider - Between Mentions and Details */}
-            {showMessagesFullPage && selectedFeatureForMessages && (
-              <Box
-                onMouseDown={() => setIsResizingMentions(true)}
-                sx={{
-                  width: 4,
-                  cursor: 'col-resize',
-                  backgroundColor: alpha(theme.palette.divider, 0.5),
-                  transition: isResizingMentions ? 'none' : 'background-color 0.2s ease-in-out',
-                  '&:hover': {
-                    backgroundColor: theme.palette.primary.main,
-                  },
-                  userSelect: 'none',
-                  flex: 'none',
-                }}
-              />
-            )}
+              {/* Message Details View */}
+              {drawerLevel === 'details' && selectedFeatureForMessages && selectedMessageId && (
+                <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                  {/* Details Header */}
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    p: 2,
+                    borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`
+                  }}>
+                    <IconButton
+                      onClick={handleBackFromMentionDetails}
+                      size="small"
+                      sx={{
+                        color: theme.palette.text.secondary,
+                        '&:hover': {
+                          bgcolor: alpha(theme.palette.primary.main, 0.1),
+                          color: theme.palette.primary.main
+                        }
+                      }}
+                    >
+                      <ArrowBackIcon sx={{ fontSize: 20 }} />
+                    </IconButton>
+                    <Typography variant="h6" sx={{ fontWeight: 600, flex: 1 }}>
+                      Message Details
+                    </Typography>
+                    <IconButton
+                      onClick={handleBackFromMessages}
+                      size="small"
+                      sx={{
+                        color: theme.palette.text.secondary,
+                        '&:hover': {
+                          bgcolor: alpha(theme.palette.primary.main, 0.1),
+                          color: theme.palette.primary.main
+                        }
+                      }}
+                    >
+                      <CloseIcon sx={{ fontSize: 20 }} />
+                    </IconButton>
+                  </Box>
 
-            {/* Message Details Panel - Remaining width when viewing mentions */}
-            {showMessagesFullPage && selectedFeatureForMessages && selectedMessageId && (
-              <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
-                <Card sx={{
-                  borderRadius: 1,
-                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
-                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                  height: { xs: 'auto', md: 'calc(100vh - 120px)' },
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}>
+                  {/* Details Content */}
                   {/* Message Title */}
                   {(() => {
                     const selectedMessage = featureMessages.find(m => m.id === selectedMessageId);
@@ -2737,12 +2759,12 @@ export function ThemesPage(): JSX.Element {
                   })()}
 
                   {/* Tabs Header */}
-                  <Box sx={{ borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
+                  <Box sx={{ borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`, overflowX: 'auto' }}>
                     <Tabs
                       value={mentionDetailsTab}
                       onChange={(e, newValue) => setMentionDetailsTab(newValue)}
                       variant="scrollable"
-                      scrollButtonsDisplay="auto"
+                      scrollButtons="auto"
                       sx={{
                         '& .MuiTab-root': {
                           textTransform: 'none',
@@ -2760,7 +2782,7 @@ export function ThemesPage(): JSX.Element {
                     </Tabs>
                   </Box>
 
-                  <CardContent sx={{ flex: 1, overflow: 'auto', p: 2 }}>
+                  <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
                     {(() => {
                       const selectedMessage = featureMessages.find(m => m.id === selectedMessageId);
                       if (!selectedMessage) return null;
@@ -3065,30 +3087,10 @@ export function ThemesPage(): JSX.Element {
                         </Box>
                       );
                     })()}
-                  </CardContent>
-                </Card>
-              </Box>
-            )}
-
-            {/* Close Button for Mentions View - Only shown when viewing mentions but no message selected */}
-            {showMessagesFullPage && selectedFeatureForMessages && !selectedMessageId && (
-              <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 0 }}>
-                <Card sx={{
-                  borderRadius: 1,
-                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
-                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-                  width: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Select a mention to view details
-                  </Typography>
-                </Card>
-              </Box>
-            )}
+                  </Box>
+                </Box>
+              )}
+            </Drawer>
           </Box>
         </Box>
 
