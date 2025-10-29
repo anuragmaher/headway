@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from typing import List, Optional
 from pydantic import BaseModel
 import logging
@@ -827,13 +827,24 @@ async def delete_feature(
 async def get_feature_messages(
     feature_id: str,
     workspace_id: str,
+    skip: int = 0,
+    limit: int = 100,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
-    Get all messages associated with a specific feature
+    Get messages associated with a specific feature
+
+    Query parameters:
+    - skip: Number of messages to skip (default: 0)
+    - limit: Maximum number of messages to return (default: 100, max: 500)
     """
     try:
+        # Validate pagination parameters
+        limit = min(limit, 500)  # Cap at 500 messages per request
+        if skip < 0:
+            skip = 0
+
         # First verify the feature exists and belongs to the workspace
         feature = db.query(Feature).filter(
             Feature.id == feature_id,
@@ -846,12 +857,18 @@ async def get_feature_messages(
                 detail="Feature not found"
             )
 
-        # Get messages through the many-to-many relationship
-        messages = db.query(Message).join(
+        # Get messages with eager loading of customer relationship
+        # This prevents N+1 queries when accessing message.customer
+        messages = db.query(Message).options(
+            selectinload(Message.customer)
+        ).join(
             Message.features
         ).filter(
-            Feature.id == feature_id
-        ).order_by(Message.sent_at.desc()).all()
+            Feature.id == feature_id,
+            Message.workspace_id == workspace_id  # Add workspace filter for security
+        ).order_by(
+            Message.sent_at.desc()
+        ).offset(skip).limit(limit).all()
 
         # Convert to response format
         message_responses = []
