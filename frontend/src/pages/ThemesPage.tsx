@@ -2015,7 +2015,97 @@ export function ThemesPage(): JSX.Element {
                         <>
                           {/* Filter and Sort Bar */}
                           <Box sx={{ mb: 2 }}>
-                            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 1 }}>
+                            {/* Mobile Layout */}
+                            <Box sx={{ 
+                              display: { xs: 'block', md: 'none' },
+                              mb: 1
+                            }}>
+                              {/* Search Input - Full width on mobile */}
+                              <TextField
+                                size="small"
+                                placeholder="Search features..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                InputProps={{
+                                  startAdornment: <SearchIcon sx={{ fontSize: 20, mr: 1, color: 'text.secondary' }} />
+                                }}
+                                fullWidth
+                                sx={{ mb: 2 }}
+                              />
+
+                              {/* Controls Row - Stacked on mobile */}
+                              <Box sx={{ 
+                                display: 'flex', 
+                                flexDirection: 'column',
+                                gap: 1,
+                                mb: 1
+                              }}>
+                                {/* First Row: Filters and Sort */}
+                                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                                  <Button
+                                    size="small"
+                                    startIcon={<FilterListIcon />}
+                                    onClick={() => setShowFilters(!showFilters)}
+                                    variant="outlined"
+                                    sx={{ flex: 1 }}
+                                  >
+                                    Filters
+                                  </Button>
+
+                                  <FormControl size="small" sx={{ flex: 2, minWidth: 120 }}>
+                                    <InputLabel>Sort By</InputLabel>
+                                    <Select
+                                      value={sortBy}
+                                      label="Sort By"
+                                      onChange={(e) => setSortBy(e.target.value)}
+                                    >
+                                      <MenuItem value="last_mentioned">Last Mentioned</MenuItem>
+                                      <MenuItem value="mention_count">Mentions</MenuItem>
+                                      <MenuItem value="name">Name</MenuItem>
+                                      <MenuItem value="status">Status</MenuItem>
+                                      <MenuItem value="urgency">Urgency</MenuItem>
+                                      <MenuItem value="mrr">MRR</MenuItem>
+                                      <MenuItem value="company_name">Company Name</MenuItem>
+                                    </Select>
+                                  </FormControl>
+
+                                  <Button
+                                    size="small"
+                                    variant="outlined"
+                                    onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                                    sx={{ minWidth: 60 }}
+                                  >
+                                    {sortOrder === 'asc' ? '↑' : '↓'}
+                                  </Button>
+                                </Box>
+
+                                {/* Second Row: Clear and Count */}
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                  {(filterStatus !== 'all' || filterUrgency !== 'all' || filterMrrMin || filterMrrMax || searchQuery) ? (
+                                    <Button
+                                      size="small"
+                                      startIcon={<ClearIcon />}
+                                      onClick={clearFilters}
+                                      color="secondary"
+                                    >
+                                      Clear Filters
+                                    </Button>
+                                  ) : <Box />}
+                                  
+                                  <Typography variant="caption" color="text.secondary">
+                                    {filteredAndSortedFeatures.length} of {themeFeatures.length}
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </Box>
+
+                            {/* Desktop Layout */}
+                            <Box sx={{ 
+                              display: { xs: 'none', md: 'flex' }, 
+                              gap: 2, 
+                              alignItems: 'center', 
+                              mb: 1 
+                            }}>
                               {/* Search Input */}
                               <TextField
                                 size="small"
@@ -2181,9 +2271,29 @@ export function ThemesPage(): JSX.Element {
                               >
                                 <Box sx={{ width: '100%' }}>
                                   {/* Top Row - Feature Name + Confidence + Urgency */}
-                                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1 }}>
-                                      <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: '0.95rem' }}>
+                                  <Box sx={{ 
+                                    display: 'flex', 
+                                    alignItems: { xs: 'flex-start', md: 'center' }, 
+                                    justifyContent: 'space-between', 
+                                    mb: 1,
+                                    flexDirection: { xs: 'column', sm: 'row' },
+                                    gap: { xs: 1, sm: 0 }
+                                  }}>
+                                    <Box sx={{ 
+                                      display: 'flex', 
+                                      alignItems: 'center', 
+                                      gap: 1, 
+                                      flex: 1,
+                                      flexWrap: 'wrap'
+                                    }}>
+                                      <Typography 
+                                        variant="subtitle1" 
+                                        sx={{ 
+                                          fontWeight: 600, 
+                                          fontSize: '0.95rem',
+                                          wordBreak: 'break-word'
+                                        }}
+                                      >
                                         {feature.name}
                                       </Typography>
                                       {feature.match_confidence !== null && feature.match_confidence !== undefined && (
@@ -2215,62 +2325,71 @@ export function ThemesPage(): JSX.Element {
                                         </Tooltip>
                                       )}
                                     </Box>
-                                    <Chip
-                                      label={feature.urgency}
-                                      size="small"
-                                      color={getUrgencyColor(feature.urgency) as any}
-                                      sx={{
-                                        minWidth: 'auto',
-                                        height: 22,
-                                        fontSize: '0.7rem',
-                                        fontWeight: 600,
-                                        ml: 2
-                                      }}
-                                    />
-                                    <Box
-                                      sx={{
-                                        ml: 'auto',
-                                        display: 'flex',
-                                        gap: 0.5,
-                                        opacity: 0,
-                                        transition: 'opacity 0.2s ease-in-out',
-                                        '_groupHover &': { opacity: 1 }
-                                      }}
-                                    >
-                                      <Tooltip title="Edit feature">
-                                        <IconButton
-                                          size="small"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleOpenEditModal(feature);
-                                          }}
-                                          sx={{
-                                            color: theme.palette.primary.main,
-                                            '&:hover': {
-                                              backgroundColor: alpha(theme.palette.primary.main, 0.1)
-                                            }
-                                          }}
-                                        >
-                                          <EditIcon sx={{ fontSize: '1.1rem' }} />
-                                        </IconButton>
-                                      </Tooltip>
-                                      <Tooltip title="Delete feature">
-                                        <IconButton
-                                          size="small"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleOpenDeleteConfirm(feature);
-                                          }}
-                                          sx={{
-                                            color: theme.palette.error.main,
-                                            '&:hover': {
-                                              backgroundColor: alpha(theme.palette.error.main, 0.1)
-                                            }
-                                          }}
-                                        >
-                                          <DeleteIcon sx={{ fontSize: '1.1rem' }} />
-                                        </IconButton>
-                                      </Tooltip>
+                                    
+                                    {/* Mobile: Stack urgency and action buttons */}
+                                    <Box sx={{ 
+                                      display: 'flex', 
+                                      alignItems: 'center', 
+                                      gap: 1,
+                                      justifyContent: { xs: 'space-between', sm: 'flex-end' },
+                                      width: { xs: '100%', sm: 'auto' }
+                                    }}>
+                                      <Chip
+                                        label={feature.urgency}
+                                        size="small"
+                                        color={getUrgencyColor(feature.urgency) as any}
+                                        sx={{
+                                          minWidth: 'auto',
+                                          height: 22,
+                                          fontSize: '0.7rem',
+                                          fontWeight: 600
+                                        }}
+                                      />
+                                      
+                                      <Box
+                                        sx={{
+                                          display: { xs: 'flex', md: 'flex' },
+                                          gap: 0.5,
+                                          opacity: { xs: 1, md: 0 },
+                                          transition: 'opacity 0.2s ease-in-out',
+                                          '_groupHover &': { opacity: 1 }
+                                        }}
+                                      >
+                                        <Tooltip title="Edit feature">
+                                          <IconButton
+                                            size="small"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleOpenEditModal(feature);
+                                            }}
+                                            sx={{
+                                              color: theme.palette.primary.main,
+                                              '&:hover': {
+                                                backgroundColor: alpha(theme.palette.primary.main, 0.1)
+                                              }
+                                            }}
+                                          >
+                                            <EditIcon sx={{ fontSize: '1.1rem' }} />
+                                          </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title="Delete feature">
+                                          <IconButton
+                                            size="small"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleOpenDeleteConfirm(feature);
+                                            }}
+                                            sx={{
+                                              color: theme.palette.error.main,
+                                              '&:hover': {
+                                                backgroundColor: alpha(theme.palette.error.main, 0.1)
+                                              }
+                                            }}
+                                          >
+                                            <DeleteIcon sx={{ fontSize: '1.1rem' }} />
+                                          </IconButton>
+                                        </Tooltip>
+                                      </Box>
                                     </Box>
                                   </Box>
 
@@ -2287,20 +2406,34 @@ export function ThemesPage(): JSX.Element {
                                   </Typography>
 
                                   {/* Status Row - Status, Mentions, Theme */}
-                                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center', mb: 1.5 }}>
+                                  <Box sx={{ 
+                                    display: 'flex', 
+                                    gap: { xs: 0.5, sm: 1 }, 
+                                    flexWrap: 'wrap', 
+                                    alignItems: 'center', 
+                                    mb: 1.5 
+                                  }}>
                                     <Chip
                                       label={feature.status}
                                       size="small"
                                       color={getStatusColor(feature.status) as any}
                                       variant="outlined"
-                                      sx={{ minWidth: 'auto', height: 22, fontSize: '0.7rem' }}
+                                      sx={{ 
+                                        minWidth: 'auto', 
+                                        height: 22, 
+                                        fontSize: { xs: '0.65rem', sm: '0.7rem' }
+                                      }}
                                     />
                                     {feature.mention_count > 0 && (
                                       <Chip
                                         label={`${feature.mention_count} mention${feature.mention_count !== 1 ? 's' : ''}`}
                                         size="small"
                                         variant="outlined"
-                                        sx={{ minWidth: 'auto', height: 22, fontSize: '0.7rem' }}
+                                        sx={{ 
+                                          minWidth: 'auto', 
+                                          height: 22, 
+                                          fontSize: { xs: '0.65rem', sm: '0.7rem' }
+                                        }}
                                       />
                                     )}
 
@@ -2313,15 +2446,23 @@ export function ThemesPage(): JSX.Element {
                                         sx={{
                                           minWidth: 'auto',
                                           height: 22,
-                                          fontSize: '0.7rem',
+                                          fontSize: { xs: '0.65rem', sm: '0.7rem' },
                                           backgroundColor: getConfidenceColor(getThemeValidationConfidence(feature)!),
                                           color: 'white'
                                         }}
                                       />
                                     )}
 
-                                    {/* Theme Selector - Compact */}
-                                    <FormControl size="small" sx={{ minWidth: 180, ml: 'auto' }}>
+                                    {/* Theme Selector - Responsive */}
+                                    <FormControl 
+                                      size="small" 
+                                      sx={{ 
+                                        minWidth: { xs: 120, sm: 180 }, 
+                                        ml: { xs: 0, sm: 'auto' },
+                                        width: { xs: '100%', sm: 'auto' },
+                                        mt: { xs: 1, sm: 0 }
+                                      }}
+                                    >
                                       <Select
                                         value={feature.theme_id || ''}
                                         onChange={(e) => handleFeatureThemeChange(feature.id, e.target.value || null)}
@@ -2358,6 +2499,7 @@ export function ThemesPage(): JSX.Element {
                                           },
                                           '& .MuiSelect-select': {
                                             py: 0.5,
+                                            fontSize: { xs: '0.7rem', sm: '0.75rem' }
                                           }
                                         }}
                                       >
