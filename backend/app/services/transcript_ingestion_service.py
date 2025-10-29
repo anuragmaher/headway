@@ -410,9 +410,26 @@ class TranscriptIngestionService:
 
                 if match_result["is_duplicate"]:
                     # Link message to existing feature
-                    existing_feature = self.db.query(Feature).filter(
-                        Feature.id == match_result["matching_feature_id"]
-                    ).first()
+                    # The matching_feature_id from LLM is the feature name/id, not UUID
+                    # We need to find by name in the existing features
+                    matching_feature_id = match_result.get("matching_feature_id")
+
+                    existing_feature = None
+                    if matching_feature_id:
+                        # Try to find by ID first (if it's a UUID)
+                        try:
+                            existing_feature = self.db.query(Feature).filter(
+                                Feature.id == matching_feature_id
+                            ).first()
+                        except:
+                            pass
+
+                        # If not found, search by name in the existing features list
+                        if not existing_feature:
+                            for feat in existing_features_in_theme:
+                                if str(feat.id) == str(matching_feature_id) or feat.name == str(matching_feature_id):
+                                    existing_feature = feat
+                                    break
 
                     if existing_feature:
                         # Add message to feature's messages (many-to-many)

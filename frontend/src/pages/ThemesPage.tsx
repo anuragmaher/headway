@@ -2849,9 +2849,9 @@ export function ThemesPage(): JSX.Element {
                                 background: isSelected
                                   ? alpha(theme.palette.primary.main, 0.12)
                                   : alpha(theme.palette.background.default, 0.4),
-                                border: `1px solid ${isSelected
+                                border: `2px solid ${isSelected
                                   ? theme.palette.primary.main
-                                  : alpha(theme.palette.divider, 0.12)}`,
+                                  : alpha(theme.palette.divider, 0.25)}`,
                                 boxShadow: isSelected
                                   ? `0 2px 8px ${alpha(theme.palette.primary.main, 0.15)}`
                                   : `0 1px 3px ${alpha(theme.palette.common.black, 0.06)}`,
@@ -2861,7 +2861,7 @@ export function ThemesPage(): JSX.Element {
                                   background: isSelected
                                     ? alpha(theme.palette.primary.main, 0.12)
                                     : alpha(theme.palette.background.default, 0.6),
-                                  border: `1px solid ${alpha(theme.palette.primary.main, 0.4)}`,
+                                  border: `2px solid ${alpha(theme.palette.primary.main, 0.5)}`,
                                   boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.12)}`,
                                   '& .delete-button': {
                                     opacity: 1,
@@ -2869,6 +2869,11 @@ export function ThemesPage(): JSX.Element {
                                 },
                               }}
                             >
+                              {message.title && (
+                                <Typography variant="caption" sx={{ fontSize: '0.85rem', fontWeight: '600', color: theme.palette.primary.main, display: 'block', mb: 0.75, lineHeight: 1.3 }}>
+                                  {message.title}
+                                </Typography>
+                              )}
                               <Typography variant="caption" fontWeight="700" sx={{ fontSize: '0.95rem', color: theme.palette.text.primary }} noWrap display="block">
                                 {message.customer_name || message.sender_name || 'Unknown'}
                               </Typography>

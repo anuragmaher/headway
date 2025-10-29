@@ -65,7 +65,7 @@ class AIFeatureMatchingService:
             # Build the existing features context
             existing_features_text = ""
             for idx, feature in enumerate(existing_features, 1):
-                existing_features_text += f"{idx}. [{feature['id']}] {feature['name']}\n"
+                existing_features_text += f"{idx}. ID: {feature['id']}, Name: {feature['name']}\n"
                 if feature.get('description'):
                     existing_features_text += f"   Description: {feature['description']}\n"
 
@@ -89,7 +89,7 @@ Return confidence levels:
 Return ONLY a valid JSON object with this exact structure:
 {
   "is_duplicate": true/false,
-  "matching_feature_id": "uuid of matching feature or null",
+  "matching_feature_id": "the UUID of the matching feature (not the index number), or null if no match",
   "confidence": 0.0-1.0,
   "reasoning": "Brief explanation of why you think it matches or doesn't match"
 }
@@ -98,18 +98,19 @@ IMPORTANT:
 - If confidence >= threshold, set is_duplicate=true
 - Only return ONE matching feature (the most similar one)
 - Be conservative: when in doubt, treat as different features
-- Focus on FUNCTIONALITY, not just keywords"""
+- Focus on FUNCTIONALITY, not just keywords
+- **CRITICAL**: Return the UUID in matching_feature_id, NOT the index number"""
 
             user_prompt = f"""NEW FEATURE REQUEST:
 Title: {new_feature.get('title', 'No title')}
 Description: {new_feature.get('description', 'No description')}
 
-EXISTING FEATURES:
+EXISTING FEATURES (use UUID in response, not the index number):
 {existing_features_text}
 
 Confidence Threshold: {confidence_threshold}
 
-Determine if the NEW feature is a duplicate of any EXISTING feature."""
+Determine if the NEW feature is a duplicate of any EXISTING feature. If it is a duplicate, return the UUID (not the index number) in matching_feature_id."""
 
             # Call OpenAI API
             response = self.client.chat.completions.create(
