@@ -2530,12 +2530,11 @@ export function ThemesPage(): JSX.Element {
               open={mentionsDrawerOpen && selectedFeatureForMessages}
               onClose={handleBackFromMessages}
               elevation={0}
-              hideBackdrop
-              SlotProps={{
+              slotProps={{
                 backdrop: {
                   sx: {
-                    backgroundColor: 'transparent !important',
-                    display: 'none !important'
+                    backgroundColor: 'transparent',
+                    backdropFilter: 'none'
                   }
                 }
               }}
@@ -2594,9 +2593,83 @@ export function ThemesPage(): JSX.Element {
                   {/* Mentions List Content */}
                   <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
                     {loadingMessages ? (
-                      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
-                        <CircularProgress size={24} />
-                      </Box>
+                      // Shimmer loading state for mentions
+                      Array.from({ length: 3 }).map((_, index) => (
+                        <Box key={`mention-shimmer-${index}`} sx={{
+                          p: 2,
+                          mb: 1,
+                          borderRadius: 1,
+                          background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                          border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                          animation: 'pulse 1.5s ease-in-out infinite',
+                          '@keyframes pulse': {
+                            '0%': { opacity: 1 },
+                            '50%': { opacity: 0.4 },
+                            '100%': { opacity: 1 },
+                          },
+                        }}>
+                          <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                            {/* Avatar shimmer */}
+                            <Box sx={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: '50%',
+                              background: alpha(theme.palette.grey[500], 0.2),
+                              flexShrink: 0,
+                            }} />
+                            
+                            <Box sx={{ flex: 1, minWidth: 0 }}>
+                              {/* Name and email shimmer */}
+                              <Box sx={{
+                                height: 16,
+                                width: '60%',
+                                borderRadius: 0.5,
+                                background: alpha(theme.palette.grey[500], 0.2),
+                                mb: 0.5,
+                              }} />
+                              <Box sx={{
+                                height: 14,
+                                width: '40%',
+                                borderRadius: 0.5,
+                                background: alpha(theme.palette.grey[500], 0.15),
+                                mb: 1,
+                              }} />
+                              
+                              {/* Message content shimmer */}
+                              <Box sx={{
+                                height: 14,
+                                width: '90%',
+                                borderRadius: 0.5,
+                                background: alpha(theme.palette.grey[500], 0.15),
+                                mb: 0.5,
+                              }} />
+                              <Box sx={{
+                                height: 14,
+                                width: '70%',
+                                borderRadius: 0.5,
+                                background: alpha(theme.palette.grey[500], 0.1),
+                                mb: 1,
+                              }} />
+                              
+                              {/* Tags shimmer */}
+                              <Box sx={{ display: 'flex', gap: 0.5 }}>
+                                <Box sx={{
+                                  height: 20,
+                                  width: 60,
+                                  borderRadius: 10,
+                                  background: alpha(theme.palette.grey[500], 0.15),
+                                }} />
+                                <Box sx={{
+                                  height: 20,
+                                  width: 40,
+                                  borderRadius: 10,
+                                  background: alpha(theme.palette.grey[500], 0.1),
+                                }} />
+                              </Box>
+                            </Box>
+                          </Box>
+                        </Box>
+                      ))
                     ) : featureMessages.length === 0 ? (
                       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
                         <Typography variant="body2" color="text.secondary">No messages</Typography>
@@ -2727,6 +2800,172 @@ export function ThemesPage(): JSX.Element {
                                   )}
                                 </Box>
                               )}
+                              
+                              {/* Detailed Highlights for this mention */}
+                              {message.ai_insights && (
+                                <Box sx={{ mt: 1.5, pt: 1.5, borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
+                                  {/* Feature Requests */}
+                                  {message.ai_insights.feature_requests && message.ai_insights.feature_requests.length > 0 && (
+                                    <Box sx={{ mb: 1.5 }}>
+                                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.75 }}>
+                                        <FeatureIcon sx={{ fontSize: 12, color: 'success.main' }} />
+                                        <Typography variant="caption" fontWeight="600" sx={{ fontSize: '0.7rem', color: theme.palette.success.main }}>
+                                          Feature Requests
+                                        </Typography>
+                                      </Box>
+                                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                        {message.ai_insights.feature_requests.slice(0, 2).map((feature, idx) => (
+                                          <Box key={idx} sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
+                                            <Typography variant="caption" sx={{ fontSize: '0.7rem', fontWeight: '600', color: theme.palette.text.primary }}>
+                                              • {feature.title}
+                                            </Typography>
+                                            {feature.description && (
+                                              <Typography variant="caption" sx={{ fontSize: '0.65rem', color: theme.palette.text.secondary, ml: 1, opacity: 0.8 }}>
+                                                {feature.description.length > 80 ? `${feature.description.substring(0, 80)}...` : feature.description}
+                                              </Typography>
+                                            )}
+                                            {feature.urgency && (
+                                              <Chip
+                                                label={feature.urgency}
+                                                size="small"
+                                                variant="outlined"
+                                                sx={{
+                                                  height: 16,
+                                                  fontSize: '0.6rem',
+                                                  fontWeight: '500',
+                                                  ml: 1,
+                                                  alignSelf: 'flex-start',
+                                                  borderColor: alpha(theme.palette.success.main, 0.3),
+                                                  backgroundColor: alpha(theme.palette.success.main, 0.05),
+                                                  color: theme.palette.success.dark,
+                                                  '& .MuiChip-label': { px: 0.5 }
+                                                }}
+                                              />
+                                            )}
+                                          </Box>
+                                        ))}
+                                        {message.ai_insights.feature_requests.length > 2 && (
+                                          <Typography variant="caption" sx={{ fontSize: '0.65rem', color: theme.palette.success.main, ml: 1 }}>
+                                            +{message.ai_insights.feature_requests.length - 2} more features
+                                          </Typography>
+                                        )}
+                                      </Box>
+                                    </Box>
+                                  )}
+
+                                  {/* Bug Reports */}
+                                  {message.ai_insights.bug_reports && message.ai_insights.bug_reports.length > 0 && (
+                                    <Box sx={{ mb: 1.5 }}>
+                                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.75 }}>
+                                        <BugReportIcon sx={{ fontSize: 12, color: 'error.main' }} />
+                                        <Typography variant="caption" fontWeight="600" sx={{ fontSize: '0.7rem', color: theme.palette.error.main }}>
+                                          Issues Reported
+                                        </Typography>
+                                      </Box>
+                                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                        {message.ai_insights.bug_reports.slice(0, 2).map((bug, idx) => (
+                                          <Box key={idx} sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
+                                            <Typography variant="caption" sx={{ fontSize: '0.7rem', fontWeight: '600', color: theme.palette.text.primary }}>
+                                              • {bug.title}
+                                            </Typography>
+                                            {bug.description && (
+                                              <Typography variant="caption" sx={{ fontSize: '0.65rem', color: theme.palette.text.secondary, ml: 1, opacity: 0.8 }}>
+                                                {bug.description.length > 80 ? `${bug.description.substring(0, 80)}...` : bug.description}
+                                              </Typography>
+                                            )}
+                                            {bug.severity && (
+                                              <Chip
+                                                label={bug.severity}
+                                                size="small"
+                                                variant="outlined"
+                                                sx={{
+                                                  height: 16,
+                                                  fontSize: '0.6rem',
+                                                  fontWeight: '500',
+                                                  ml: 1,
+                                                  alignSelf: 'flex-start',
+                                                  borderColor: alpha(theme.palette.error.main, 0.3),
+                                                  backgroundColor: alpha(theme.palette.error.main, 0.05),
+                                                  color: theme.palette.error.dark,
+                                                  '& .MuiChip-label': { px: 0.5 }
+                                                }}
+                                              />
+                                            )}
+                                          </Box>
+                                        ))}
+                                        {message.ai_insights.bug_reports.length > 2 && (
+                                          <Typography variant="caption" sx={{ fontSize: '0.65rem', color: theme.palette.error.main, ml: 1 }}>
+                                            +{message.ai_insights.bug_reports.length - 2} more issues
+                                          </Typography>
+                                        )}
+                                      </Box>
+                                    </Box>
+                                  )}
+
+                                  {/* Pain Points */}
+                                  {message.ai_insights.pain_points && message.ai_insights.pain_points.length > 0 && (
+                                    <Box sx={{ mb: 1 }}>
+                                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.75 }}>
+                                        <SadIcon sx={{ fontSize: 12, color: 'warning.main' }} />
+                                        <Typography variant="caption" fontWeight="600" sx={{ fontSize: '0.7rem', color: theme.palette.warning.main }}>
+                                          Pain Points
+                                        </Typography>
+                                      </Box>
+                                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                        {message.ai_insights.pain_points.slice(0, 2).map((pain, idx) => (
+                                          <Box key={idx} sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
+                                            <Typography variant="caption" sx={{ fontSize: '0.7rem', color: theme.palette.text.primary }}>
+                                              • {pain.description.length > 100 ? `${pain.description.substring(0, 100)}...` : pain.description}
+                                            </Typography>
+                                            {pain.impact && (
+                                              <Chip
+                                                label={`${pain.impact} impact`}
+                                                size="small"
+                                                variant="outlined"
+                                                sx={{
+                                                  height: 16,
+                                                  fontSize: '0.6rem',
+                                                  fontWeight: '500',
+                                                  ml: 1,
+                                                  alignSelf: 'flex-start',
+                                                  borderColor: alpha(theme.palette.warning.main, 0.3),
+                                                  backgroundColor: alpha(theme.palette.warning.main, 0.05),
+                                                  color: theme.palette.warning.dark,
+                                                  '& .MuiChip-label': { px: 0.5 }
+                                                }}
+                                              />
+                                            )}
+                                          </Box>
+                                        ))}
+                                        {message.ai_insights.pain_points.length > 2 && (
+                                          <Typography variant="caption" sx={{ fontSize: '0.65rem', color: theme.palette.warning.main, ml: 1 }}>
+                                            +{message.ai_insights.pain_points.length - 2} more pain points
+                                          </Typography>
+                                        )}
+                                      </Box>
+                                    </Box>
+                                  )}
+
+                                  {/* Summary */}
+                                  {message.ai_insights.summary && (
+                                    <Box sx={{ mt: 1 }}>
+                                      <Typography variant="caption" fontWeight="600" sx={{ fontSize: '0.7rem', color: theme.palette.primary.main, mb: 0.5, display: 'block' }}>
+                                        Summary
+                                      </Typography>
+                                      <Typography variant="caption" sx={{ 
+                                        fontSize: '0.65rem', 
+                                        color: theme.palette.text.secondary, 
+                                        fontStyle: 'italic',
+                                        display: 'block',
+                                        lineHeight: 1.3
+                                      }}>
+                                        {message.ai_insights.summary.length > 150 ? `${message.ai_insights.summary.substring(0, 150)}...` : message.ai_insights.summary}
+                                      </Typography>
+                                    </Box>
+                                  )}
+                                </Box>
+                              )}
+                              
                               <IconButton
                                 className="delete-button"
                                 size="small"
