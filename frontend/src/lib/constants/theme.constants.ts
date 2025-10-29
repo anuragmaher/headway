@@ -19,16 +19,16 @@ export const THEME_MODES: Record<string, ThemeMode> = {
 // Custom color palette
 export const COLORS = {
   primary: {
-    50: '#e3f2fd',
-    100: '#bbdefb',
-    200: '#90caf9',
-    300: '#64b5f6',
-    400: '#42a5f5',
-    500: '#2196f3',
-    600: '#1e88e5',
-    700: '#1976d2',
-    800: '#1565c0',
-    900: '#0d47a1',
+    50: '#f5f3ff',
+    100: '#ede9fe',
+    200: '#ddd6fe',
+    300: '#c4b5fd',
+    400: '#a78bfa',
+    500: '#8b5cf6',
+    600: '#7c3aed',
+    700: '#6d28d9',
+    800: '#5b21b6',
+    900: '#4c1d95',
   },
   secondary: {
     50: '#fce4ec',
@@ -70,9 +70,9 @@ export const COLORS = {
     dark: '#d32f2f',
   },
   info: {
-    main: '#2196f3',
-    light: '#64b5f6',
-    dark: '#1976d2',
+    main: '#6366f1',
+    light: '#818cf8',
+    dark: '#4f46e5',
   },
 } as const;
 
