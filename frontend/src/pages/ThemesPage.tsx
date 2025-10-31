@@ -42,6 +42,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Snackbar,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
@@ -246,6 +247,10 @@ export function ThemesPage(): JSX.Element {
   const [deleteMentionConfirmOpen, setDeleteMentionConfirmOpen] = useState(false);
   const [mentionToDelete, setMentionToDelete] = useState<Message | null>(null);
   const [deletingMention, setDeletingMention] = useState(false);
+  
+  // Snackbar state
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   // Resizable mentions layout state
   const [featuresWidth, setFeaturesWidth] = useState(35); // 35%
@@ -1215,7 +1220,7 @@ export function ThemesPage(): JSX.Element {
     setDeletingMention(true);
     try {
       const response = await fetch(
-        `${API_BASE_URL}/features/${selectedFeatureForMessages.id}/messages/${mentionToDelete.id}`,
+        `${API_BASE_URL}/api/v1/features/features/${selectedFeatureForMessages.id}/messages/${mentionToDelete.id}?workspace_id=${WORKSPACE_ID}`,
         {
           method: 'DELETE',
           headers: {
@@ -1236,6 +1241,10 @@ export function ThemesPage(): JSX.Element {
       if (selectedMessageId === mentionToDelete.id) {
         setSelectedMessageId(null);
       }
+
+      // Show success snackbar
+      setSnackbarMessage('Mention deleted successfully');
+      setSnackbarOpen(true);
     } catch (error) {
       console.error('Error deleting message:', error);
       alert(error instanceof Error ? error.message : 'Failed to delete message');
@@ -4456,6 +4465,22 @@ export function ThemesPage(): JSX.Element {
             </Button>
           </DialogActions>
         </Dialog>
+
+        {/* Success Snackbar */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+          <Alert 
+            onClose={() => setSnackbarOpen(false)} 
+            severity="success" 
+            sx={{ width: '100%' }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </Box>
     </AdminLayout>
   );

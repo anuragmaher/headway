@@ -402,6 +402,7 @@ async def update_theme(
         ).count()
 
         # Calculate mention count
+        from sqlalchemy import func
         mention_count_result = db.query(func.sum(Feature.mention_count)).filter(
             Feature.theme_id == theme.id
         ).scalar()
@@ -898,6 +899,114 @@ async def get_feature_messages(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get feature messages: {str(e)}"
+        )
+
+
+@router.delete("/features/{feature_id}/messages/{message_id}")
+async def delete_feature_message(
+    feature_id: str,
+    message_id: str,
+    workspace_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Remove a message from a feature (unlink the association)
+    This does not delete the message itself, just removes the association.
+    """
+    try:
+        from app.models.message import feature_messages
+        
+        # First verify the feature exists and belongs to the workspace
+        feature = db.query(Feature).filter(
+            Feature.id == feature_id,
+            Feature.workspace_id == workspace_id
+        ).first()
+
+        if not feature:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Feature not found"
+            )
+
+        # Verify the message exists and belongs to the workspace
+        message = db.query(Message).filter(
+            Message.id == message_id,
+            Message.workspace_id == workspace_id
+        ).first()
+
+        if not message:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Message not found"
+            )
+
+        # Check if the association exists
+        from sqlalchemy import delete, select
+        association_exists = db.execute(
+            select(1).where(
+                (feature_messages.c.feature_id == feature_id) &
+                (feature_messages.c.message_id == message_id)
+            )
+        ).first()
+
+        if not association_exists:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Message is not associated with this feature"
+            )
+
+        # Delete the association
+        db.execute(
+            delete(feature_messages).where(
+                (feature_messages.c.feature_id == feature_id) &
+                (feature_messages.c.message_id == message_id)
+            )
+        )
+
+        # Update feature mention_count
+        remaining_messages_count = db.query(Message).join(
+            Message.features
+        ).filter(
+            Feature.id == feature_id,
+            Message.workspace_id == workspace_id
+        ).count()
+
+        feature.mention_count = remaining_messages_count
+        feature.updated_at = datetime.utcnow()
+
+        # Update last_mentioned if needed
+        if remaining_messages_count > 0:
+            # Get the most recent message date
+            last_message = db.query(Message).join(
+                Message.features
+            ).filter(
+                Feature.id == feature_id,
+                Message.workspace_id == workspace_id
+            ).order_by(Message.sent_at.desc()).first()
+
+            if last_message:
+                feature.last_mentioned = last_message.sent_at
+        else:
+            # If no messages left, keep the existing last_mentioned (don't reset it)
+            pass
+
+        db.commit()
+
+        return {
+            "message": "Message removed from feature successfully",
+            "feature_id": feature_id,
+            "message_id": message_id
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error removing message {message_id} from feature {feature_id}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to remove message from feature: {str(e)}"
         )
 
 
