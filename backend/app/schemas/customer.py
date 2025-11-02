@@ -13,6 +13,7 @@ class CustomerBase(BaseModel):
     phone: Optional[str] = None
     contact_name: Optional[str] = None
     contact_email: Optional[str] = None
+    use_cases: Optional[str] = None
     mrr: Optional[float] = Field(None, ge=0)
     arr: Optional[float] = Field(None, ge=0)
     deal_stage: Optional[str] = None

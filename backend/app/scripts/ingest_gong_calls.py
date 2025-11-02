@@ -187,13 +187,107 @@ class GongIngestionService:
             return None
 
 
-def _get_or_create_customer(
+def _get_or_create_customer_from_parties(
+    db: Session,
+    workspace_id: str,
+    parties: List[Dict[str, Any]]
+) -> Optional[Customer]:
+    """
+    Get or create a customer from Gong call parties.
+    Uses external participants (affiliation='External') to identify customers.
+
+    Args:
+        db: Database session
+        workspace_id: Workspace UUID
+        parties: List of party dictionaries from Gong call
+
+    Returns:
+        Customer instance or None if no external participants found
+    """
+    if not parties:
+        return None
+
+    # Find first external party (customer)
+    external_parties = [
+        party for party in parties
+        if party.get('affiliation') == 'External'
+    ]
+
+    if not external_parties:
+        logger.debug("No external parties found - all participants are internal")
+        return None
+
+    # Use the first external party as the customer
+    party = external_parties[0]
+    email = party.get('emailAddress')
+    name = party.get('name', '')
+
+    if not email:
+        logger.warning("External party has no email address")
+        return None
+
+    # Extract domain from email
+    domain = email.split('@')[1] if '@' in email else None
+
+    if not domain:
+        logger.warning(f"Could not extract domain from email: {email}")
+        return None
+
+    # Get workspace and company to check if this is an internal customer
+    workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
+    if workspace and workspace.company and workspace.company.domain and domain:
+        workspace_domain = workspace.company.domain.lower()
+        if domain.lower() == workspace_domain:
+            logger.debug(f"Skipping customer creation for internal domain: {domain}")
+            return None
+
+    # Try to find existing customer by domain
+    customer = db.query(Customer).filter(
+        and_(
+            Customer.workspace_id == workspace_id,
+            Customer.domain == domain
+        )
+    ).first()
+
+    if customer:
+        # Update last activity timestamp
+        customer.last_activity_at = datetime.now(timezone.utc)
+
+        # Update contact info if not already set
+        if not customer.contact_name and name:
+            customer.contact_name = name
+        if not customer.contact_email and email:
+            customer.contact_email = email
+
+        logger.debug(f"Found existing customer: {customer.name} ({domain})")
+        return customer
+
+    # Create new customer from party data
+    company_name = domain.split('.')[0].capitalize()
+
+    customer = Customer(
+        workspace_id=workspace_id,
+        name=company_name,
+        domain=domain,
+        contact_name=name,  # Store contact person's name
+        contact_email=email,  # Store contact person's email
+        external_system='gong',
+        external_id=domain,
+        last_activity_at=datetime.now(timezone.utc)
+    )
+    db.add(customer)
+    logger.info(f"Created new customer from external party: {company_name} ({domain}) - Contact: {name} ({email})")
+
+    return customer
+
+
+def _get_or_create_customer_from_hubspot(
     db: Session,
     workspace_id: str,
     hubspot_data: Dict[str, Any]
 ) -> Optional[Customer]:
     """
-    Get or create a Customer record from HubSpot context data
+    Get or create a Customer record from HubSpot context data (legacy method)
 
     Args:
         db: Database session
@@ -217,7 +311,6 @@ def _get_or_create_customer(
     domain = account.get('domain')
 
     # Get workspace and company to check if this is an internal customer
-    from app.models.workspace import Workspace
     workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
     if workspace and workspace.company and workspace.company.domain and domain:
         workspace_domain = workspace.company.domain.lower()
@@ -599,11 +692,16 @@ async def ingest_gong_calls(
                     # Parse the call timestamp
                     call_time = datetime.fromisoformat(started.replace('Z', '+00:00')) if started else datetime.now(timezone.utc)
 
-                    # Extract HubSpot context data
+                    # Extract HubSpot context data (for metadata/enrichment)
                     hubspot_data = _extract_hubspot_context(call_data)
 
-                    # Get or create customer from HubSpot data
-                    customer = _get_or_create_customer(db, workspace_id, hubspot_data)
+                    # Get or create customer from Gong parties (primary method)
+                    customer = _get_or_create_customer_from_parties(db, workspace_id, parties)
+
+                    # Fallback to HubSpot data if no customer from parties
+                    if not customer and hubspot_data.get('accounts'):
+                        customer = _get_or_create_customer_from_hubspot(db, workspace_id, hubspot_data)
+
                     if customer:
                         # Flush to get customer ID
                         db.flush()

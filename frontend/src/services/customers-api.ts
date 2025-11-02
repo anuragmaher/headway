@@ -17,6 +17,7 @@ export interface Customer {
   phone?: string;
   contact_name?: string;
   contact_email?: string;
+  use_cases?: string;
   mrr?: number;
   arr?: number;
   deal_stage?: string;

@@ -20,6 +20,7 @@ from app.schemas.customer import (
 )
 from app.core.deps import get_current_user
 from app.models.feature import Feature
+from app.services.ai_extraction_service import get_ai_extraction_service
 
 router = APIRouter()
 
@@ -528,28 +529,65 @@ def get_customer_consolidated_view(
             sent_at=message.sent_at
         ))
 
-    # Extract pain points from messages (looking for negative sentiment indicators)
+    # Extract customer context using LLM (industry, use cases, pain points)
     pain_points = []
-    pain_keywords = ['problem', 'issue', 'bug', 'frustrat', 'difficult', 'pain', 'struggle', 'broken', 'not working']
+    pain_points_structured = []
 
-    for message in messages:
-        if not message.content:
-            continue
-        content_lower = message.content.lower()
-        for keyword in pain_keywords:
-            if keyword in content_lower:
-                # Extract sentence with pain point
-                sentences = message.content.split('.')
-                for sentence in sentences:
-                    if keyword in sentence.lower() and len(sentence.strip()) > 20:
-                        pain_point = sentence.strip()[:200]  # Truncate long sentences
-                        if pain_point and pain_point not in pain_points:
-                            pain_points.append(pain_point)
-                        break
-                if len(pain_points) >= 5:  # Limit to top 5 pain points
-                    break
-        if len(pain_points) >= 5:
-            break
+    if messages and len(messages) > 0:
+        try:
+            # Prepare messages for AI extraction
+            message_dicts = [
+                {
+                    'content': msg.content,
+                    'sent_at': msg.sent_at.isoformat() if msg.sent_at else None
+                }
+                for msg in messages
+                if msg.content
+            ]
+
+            # Call AI extraction service
+            ai_service = get_ai_extraction_service()
+            context_extraction = ai_service.extract_customer_context(
+                messages=message_dicts,
+                customer_name=customer.name,
+                existing_industry=customer.industry,
+                existing_use_cases=customer.use_cases
+            )
+
+            # Update customer record if we learned new information
+            should_update = False
+
+            # Update industry if we have high confidence and it's not already set
+            if (not customer.industry and
+                context_extraction.get('industry') and
+                context_extraction.get('industry_confidence', 0) > 0.7):
+                customer.industry = context_extraction['industry']
+                should_update = True
+
+            # Update use cases if extracted and not already set
+            if not customer.use_cases and context_extraction.get('use_cases'):
+                customer.use_cases = context_extraction['use_cases']
+                should_update = True
+
+            if should_update:
+                db.commit()
+                db.refresh(customer)
+
+            # Extract pain points from LLM response
+            pain_points_structured = context_extraction.get('pain_points', [])
+
+            # Convert to simple list of strings for backwards compatibility
+            pain_points = [
+                f"{pp.get('description', '')} - {pp.get('impact', '')}"
+                for pp in pain_points_structured
+                if pp.get('description')
+            ]
+
+        except Exception as e:
+            # Fall back to empty pain points if extraction fails
+            import logging
+            logging.error(f"Error extracting customer context: {e}")
+            pain_points = []
 
     # Generate highlights
     highlights = []

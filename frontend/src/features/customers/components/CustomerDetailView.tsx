@@ -155,6 +155,26 @@ export function CustomerDetailView({
             <Chip label={customer.deal_stage} color="primary" variant="outlined" />
           )}
         </Stack>
+
+        {/* Use Cases Section */}
+        {customer.use_cases && (
+          <Paper
+            elevation={0}
+            sx={{
+              p: 2,
+              mt: 2,
+              background: alpha(theme.palette.info.main, 0.05),
+              border: `1px solid ${alpha(theme.palette.info.main, 0.2)}`,
+            }}
+          >
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'info.main', mb: 1 }}>
+              How they use the product
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
+              {customer.use_cases}
+            </Typography>
+          </Paper>
+        )}
       </Box>
 
       {/* Highlights Section */}

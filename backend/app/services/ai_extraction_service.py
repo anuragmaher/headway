@@ -296,6 +296,143 @@ Respond in JSON format with the structure described above."""
                 'reasoning': f'Error checking relevance: {str(e)}'
             }
 
+    def extract_customer_context(
+        self,
+        messages: List[Dict[str, Any]],
+        customer_name: str,
+        existing_industry: Optional[str] = None,
+        existing_use_cases: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Extract customer context from all their messages
+
+        Analyzes conversation history to understand:
+        - Customer's industry (if not already known)
+        - How they use the product (use cases)
+        - Key pain points they're experiencing
+
+        Args:
+            messages: List of message dictionaries with 'content' and 'sent_at'
+            customer_name: Name of the customer
+            existing_industry: Current industry value (if any)
+            existing_use_cases: Current use cases value (if any)
+
+        Returns:
+            Dictionary with extracted context
+        """
+        try:
+            if not messages or len(messages) == 0:
+                return self._empty_customer_context()
+
+            # Combine all message content (limit to most recent for performance)
+            recent_messages = sorted(messages, key=lambda m: m.get('sent_at', ''), reverse=True)[:20]
+            combined_text = "\n\n---\n\n".join([
+                f"[{msg.get('sent_at', 'unknown')}]\n{msg.get('content', '')}"
+                for msg in recent_messages
+                if msg.get('content')
+            ])
+
+            if not combined_text.strip():
+                return self._empty_customer_context()
+
+            # Build system prompt
+            system_prompt = """You are an AI assistant that analyzes customer conversations to understand their business context and challenges.
+
+Analyze all the conversations from this customer and extract:
+
+1. **Industry**: What industry or business sector is this customer in?
+   - Be specific (e.g., "Healthcare", "E-commerce", "Financial Services", "SaaS")
+   - Look for context clues about their business domain
+   - Only extract if there's clear evidence
+
+2. **Use Cases**: How does this customer use the product?
+   - What are their main workflows?
+   - What problems are they trying to solve?
+   - What features do they use most?
+   - Be specific and concrete
+
+3. **Pain Points**: What challenges or frustrations are they experiencing?
+   - Current limitations they're hitting
+   - Workarounds they have to do
+   - Features they wish existed
+   - Problems with their workflows
+   - Extract 3-5 most significant pain points
+
+Return a JSON object with this structure:
+{
+  "industry": "Industry name or null if unclear",
+  "industry_confidence": 0.0-1.0,
+  "use_cases": "Detailed description of how they use the product",
+  "pain_points": [
+    {
+      "description": "Brief pain point description",
+      "impact": "How it affects their workflow",
+      "severity": "low|medium|high",
+      "quote": "Supporting quote from conversation"
+    }
+  ],
+  "key_insights": ["insight1", "insight2"],
+  "reasoning": "Brief explanation of how you determined these"
+}
+
+IMPORTANT:
+- Be specific and evidence-based
+- Only include what you can clearly infer from the conversations
+- If industry is unclear, set to null
+- Focus on actionable insights"""
+
+            # Build context
+            context = f"Customer: {customer_name}\n"
+            if existing_industry:
+                context += f"Current industry record: {existing_industry}\n"
+            if existing_use_cases:
+                context += f"Current use cases record: {existing_use_cases}\n"
+
+            user_prompt = f"""{context}
+
+Conversation History (most recent first):
+{combined_text[:6000]}
+
+Extract the customer context based on these conversations."""
+
+            # Call OpenAI API
+            response = self.client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.3,
+                response_format={"type": "json_object"}
+            )
+
+            # Parse the response
+            result = json.loads(response.choices[0].message.content)
+
+            logger.info(
+                f"Extracted customer context for {customer_name}: "
+                f"industry={result.get('industry')}, "
+                f"{len(result.get('pain_points', []))} pain points"
+            )
+
+            return result
+
+        except Exception as e:
+            logger.error(f"Error extracting customer context: {e}")
+            return self._empty_customer_context(f"Extraction error: {str(e)}")
+
+    def _empty_customer_context(self, error: str = None) -> Dict[str, Any]:
+        """Return empty customer context structure"""
+        return {
+            'industry': None,
+            'industry_confidence': 0.0,
+            'use_cases': None,
+            'pain_points': [],
+            'key_insights': [],
+            'reasoning': 'Could not analyze' if error else 'No data available',
+            'error': error
+        }
+
     def _empty_result(self, error: str = None) -> Dict[str, Any]:
         """Return empty result structure"""
         return {

@@ -30,6 +30,9 @@ class Customer(Base):
     contact_name = Column(String, nullable=True)  # Primary contact person name
     contact_email = Column(String, nullable=True, index=True)  # Primary contact email
 
+    # Additional customer context
+    use_cases = Column(Text, nullable=True)  # Customer use cases and how they use the product
+
     # CRM Integration
     external_system = Column(String, nullable=True)  # "hubspot", "salesforce", etc.
     external_id = Column(String, nullable=True, index=True)  # CRM object ID
