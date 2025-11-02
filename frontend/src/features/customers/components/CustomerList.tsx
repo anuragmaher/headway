@@ -17,10 +17,13 @@ import {
   Chip,
   alpha,
   useTheme,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import {
   Search as SearchIcon,
   Business as BusinessIcon,
+  Refresh as RefreshIcon,
 } from '@mui/icons-material';
 import { customersApi } from '@/services/customers-api';
 
@@ -52,6 +55,7 @@ export function CustomerList({
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     if (!workspaceId) return;
@@ -78,7 +82,11 @@ export function CustomerList({
     };
 
     fetchCustomers();
-  }, [workspaceId, searchTerm]);
+  }, [workspaceId, searchTerm, refreshKey]);
+
+  const handleRefresh = () => {
+    setRefreshKey((prev) => prev + 1);
+  };
 
   const formatCurrency = (value?: number) => {
     if (!value) return null;
@@ -94,9 +102,27 @@ export function CustomerList({
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* Header with Search */}
       <Box sx={{ p: 3, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
-        <Typography variant="h5" sx={{ mb: 2, fontWeight: 700 }}>
-          Customers
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Typography variant="h5" sx={{ fontWeight: 700 }}>
+            Customers
+          </Typography>
+          <Tooltip title="Refresh customer list">
+            <IconButton
+              onClick={handleRefresh}
+              disabled={loading}
+              size="small"
+              sx={{
+                color: 'text.secondary',
+                '&:hover': {
+                  color: 'primary.main',
+                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                },
+              }}
+            >
+              <RefreshIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
         <TextField
           fullWidth
           size="small"
