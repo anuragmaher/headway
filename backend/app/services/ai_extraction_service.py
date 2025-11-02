@@ -345,11 +345,20 @@ Analyze all the conversations from this customer and extract:
    - Look for context clues about their business domain
    - Only extract if there's clear evidence
 
-2. **Use Cases**: How does this customer use the product?
-   - What are their main workflows?
-   - What problems are they trying to solve?
-   - What features do they use most?
-   - Be specific and concrete
+2. **Use Cases**: Provide a comprehensive description of how this customer uses the product
+   FORMAT: Return as a bulleted list (3-5 bullet points), each bullet as a complete sentence
+   - What are their primary workflows and day-to-day activities?
+   - What specific problems or business challenges are they solving?
+   - What features or capabilities do they rely on most heavily?
+   - Who are the main users/teams using the product?
+   - What are their key goals and objectives with the product?
+   - Include specific examples and context from the conversations
+   - Be detailed and paint a complete picture of their usage patterns
+
+   Example format:
+   "• They use the product for X workflow to achieve Y goal.
+   • Their team relies heavily on Z feature for ABC purpose.
+   • The main business challenge they're solving is DEF."
 
 3. **Pain Points**: What challenges or frustrations are they experiencing?
    - Current limitations they're hitting

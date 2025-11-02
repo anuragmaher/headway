@@ -187,6 +187,55 @@ class GongIngestionService:
             return None
 
 
+def _format_use_cases(use_cases_data: Any) -> str:
+    """
+    Format use cases data into readable bullet points.
+
+    Handles both:
+    - Plain text (already formatted) - return as-is
+    - JSON array of strings - convert to bullet points
+
+    Args:
+        use_cases_data: Either a string (plain text or JSON array) or already parsed data
+
+    Returns:
+        Formatted string with bullet points
+    """
+    import json
+
+    try:
+        # If it's already a plain string with bullets or newlines, return as-is
+        if isinstance(use_cases_data, str):
+            # Check if it looks like JSON (starts with { or [)
+            stripped = use_cases_data.strip()
+            if not (stripped.startswith('[') or stripped.startswith('{')):
+                # Plain text, return as-is
+                return use_cases_data
+
+            # Try to parse as JSON
+            try:
+                parsed = json.loads(use_cases_data)
+            except json.JSONDecodeError:
+                # Not valid JSON, return as-is
+                return use_cases_data
+        else:
+            parsed = use_cases_data
+
+        # If parsed data is a list, convert to bullet points
+        if isinstance(parsed, list):
+            # Filter out empty strings and format as bullets
+            bullets = [item.strip() for item in parsed if item and str(item).strip()]
+            if bullets:
+                return '\n'.join([f'• {bullet}' for bullet in bullets])
+
+        # If it's a dict or other type, try to convert to string
+        return str(use_cases_data)
+
+    except Exception as e:
+        logger.warning(f"Error formatting use cases: {e}")
+        return str(use_cases_data) if use_cases_data else ""
+
+
 def _get_or_create_customer_from_parties(
     db: Session,
     workspace_id: str,
@@ -705,6 +754,35 @@ async def ingest_gong_calls(
                     if customer:
                         # Flush to get customer ID
                         db.flush()
+
+                        # Extract customer context (industry, use cases) from transcript
+                        if not customer.use_cases and transcript_text:
+                            try:
+                                logger.info(f"Extracting use cases for {customer.name} from Gong transcript...")
+                                from app.services.ai_extraction_service import get_ai_extraction_service
+                                ai_service = get_ai_extraction_service()
+
+                                context = ai_service.extract_customer_context(
+                                    messages=[{'content': transcript_text, 'sent_at': started}],
+                                    customer_name=customer.name,
+                                    existing_industry=customer.industry,
+                                    existing_use_cases=customer.use_cases
+                                )
+
+                                # Update customer with extracted context
+                                if context.get('industry') and not customer.industry and context.get('industry_confidence', 0) > 0.7:
+                                    customer.industry = context['industry']
+                                    logger.info(f"  ✓ Set industry: {customer.industry}")
+
+                                if context.get('use_cases'):
+                                    # Convert JSON array to bullet points if needed
+                                    use_cases_text = _format_use_cases(context['use_cases'])
+                                    customer.use_cases = use_cases_text
+                                    logger.info(f"  ✓ Set use cases ({len(customer.use_cases)} chars)")
+
+                                db.flush()
+                            except Exception as e:
+                                logger.warning(f"Failed to extract customer context: {e}")
 
                     # Prepare message metadata
                     message_metadata = {

@@ -170,7 +170,14 @@ export function CustomerDetailView({
             <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'info.main', mb: 1 }}>
               How they use the product
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'text.secondary',
+                lineHeight: 1.6,
+                whiteSpace: 'pre-line'
+              }}
+            >
               {customer.use_cases}
             </Typography>
           </Paper>
