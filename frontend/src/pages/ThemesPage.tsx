@@ -43,6 +43,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   Snackbar,
+  Checkbox,
 } from '@mui/material';
 import {
   Category as CategoryIcon,
@@ -237,6 +238,7 @@ export function ThemesPage(): JSX.Element {
   const [featureSuggestions, setFeatureSuggestions] = useState<FeatureSuggestion[]>([]);
   const [loadingFeatureSuggestions, setLoadingFeatureSuggestions] = useState(false);
   const [loadingMoreFeatureSuggestions, setLoadingMoreFeatureSuggestions] = useState(false);
+  const [selectedSuggestions, setSelectedSuggestions] = useState<Set<number>>(new Set());
 
   // Feature delete state
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -1051,6 +1053,7 @@ export function ThemesPage(): JSX.Element {
     setAddFormData({ name: '', description: '' });
     setAddError(null);
     setFeatureSuggestions([]);
+    setSelectedSuggestions(new Set());
     setAddModalOpen(true);
 
     // Load suggestions asynchronously
@@ -1108,10 +1111,14 @@ export function ThemesPage(): JSX.Element {
     setAddFormData({ name: '', description: '' });
     setAddError(null);
     setFeatureSuggestions([]);
+    setSelectedSuggestions(new Set());
   };
 
   const handleSaveAdd = async () => {
-    if (!addFormData.name.trim()) {
+    // Check if we're creating from selections or from manual form
+    const hasSelections = selectedSuggestions.size > 0;
+
+    if (!hasSelections && !addFormData.name.trim()) {
       setAddError('Feature name cannot be empty');
       return;
     }
@@ -1121,28 +1128,67 @@ export function ThemesPage(): JSX.Element {
       setAddError(null);
       const token = getAuthToken();
 
-      const response = await fetch(
-        `${API_BASE_URL}/api/v1/features/features?workspace_id=${WORKSPACE_ID}`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: addFormData.name,
-            description: addFormData.description,
-            theme_id: selectedThemeForDrawer?.id || null
-          })
-        }
-      );
+      if (hasSelections) {
+        // Create multiple features from selected suggestions
+        const selectedFeatures = Array.from(selectedSuggestions).map(index => featureSuggestions[index]);
+        const createdFeatures: any[] = [];
 
-      if (!response.ok) {
-        throw new Error(`Failed to create feature: ${response.status}`);
+        for (const suggestion of selectedFeatures) {
+          const response = await fetch(
+            `${API_BASE_URL}/api/v1/features/features?workspace_id=${WORKSPACE_ID}`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                name: suggestion.name,
+                description: suggestion.description,
+                theme_id: selectedThemeForDrawer?.id || null
+              })
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(`Failed to create feature "${suggestion.name}": ${response.status}`);
+          }
+
+          const newFeature = await response.json();
+          createdFeatures.push(newFeature);
+        }
+
+        setThemeFeatures([...themeFeatures, ...createdFeatures]);
+        setSnackbarMessage(`Successfully created ${createdFeatures.length} features`);
+        setSnackbarOpen(true);
+      } else {
+        // Create single feature from manual form
+        const response = await fetch(
+          `${API_BASE_URL}/api/v1/features/features?workspace_id=${WORKSPACE_ID}`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: addFormData.name,
+              description: addFormData.description,
+              theme_id: selectedThemeForDrawer?.id || null
+            })
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to create feature: ${response.status}`);
+        }
+
+        const newFeature = await response.json();
+        setThemeFeatures([...themeFeatures, newFeature]);
+        setSnackbarMessage('Feature created successfully');
+        setSnackbarOpen(true);
       }
 
-      const newFeature = await response.json();
-      setThemeFeatures([...themeFeatures, newFeature]);
       handleCloseAddModal();
 
       // Refresh themes to update counts if needed
@@ -1199,6 +1245,18 @@ export function ThemesPage(): JSX.Element {
     } finally {
       setDeletingFeature(false);
     }
+  };
+
+  const handleToggleSuggestionSelection = (index: number) => {
+    setSelectedSuggestions(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
   };
 
   // Delete mention handlers
@@ -4303,37 +4361,42 @@ export function ThemesPage(): JSX.Element {
                 ) : featureSuggestions.length > 0 ? (
                   <>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, flex: 1, overflow: 'auto', mb: 2 }}>
-                      {featureSuggestions.map((suggestion, index) => (
-                        <Card
-                          key={index}
-                          sx={{
-                            p: 1.5,
-                            cursor: 'pointer',
-                            border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                            transition: 'all 0.2s ease',
-                            flexShrink: 0,
-                            '&:hover': {
-                              bgcolor: alpha(theme.palette.primary.main, 0.1),
-                              borderColor: theme.palette.primary.main,
-                              transform: 'translateX(4px)',
-                            }
-                          }}
-                          onClick={() => {
-                            setAddFormData({
-                              ...addFormData,
-                              name: suggestion.name,
-                              description: suggestion.description
-                            });
-                          }}
-                        >
-                          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                            {suggestion.name}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', lineHeight: 1.4 }}>
-                            {suggestion.description}
-                          </Typography>
-                        </Card>
-                      ))}
+                      {featureSuggestions.map((suggestion, index) => {
+                        const isSelected = selectedSuggestions.has(index);
+                        return (
+                          <Card
+                            key={index}
+                            sx={{
+                              p: 1.5,
+                              cursor: 'pointer',
+                              border: `2px solid ${isSelected ? theme.palette.primary.main : alpha(theme.palette.primary.main, 0.2)}`,
+                              bgcolor: isSelected ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
+                              transition: 'all 0.2s ease',
+                              flexShrink: 0,
+                              '&:hover': {
+                                bgcolor: isSelected ? alpha(theme.palette.primary.main, 0.12) : alpha(theme.palette.primary.main, 0.05),
+                                borderColor: theme.palette.primary.main,
+                              }
+                            }}
+                            onClick={() => handleToggleSuggestionSelection(index)}
+                          >
+                            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                              <Checkbox
+                                checked={isSelected}
+                                sx={{ p: 0, mt: 0.25 }}
+                              />
+                              <Box sx={{ flex: 1 }}>
+                                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                                  {suggestion.name}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', lineHeight: 1.4 }}>
+                                  {suggestion.description}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </Card>
+                        );
+                      })}
                     </Box>
                     <Button
                       fullWidth
@@ -4365,9 +4428,14 @@ export function ThemesPage(): JSX.Element {
             <Button
               onClick={handleSaveAdd}
               variant="contained"
-              disabled={savingAdd || !addFormData.name.trim()}
+              disabled={savingAdd || (selectedSuggestions.size === 0 && !addFormData.name.trim())}
             >
-              {savingAdd ? 'Creating...' : 'Create Feature'}
+              {savingAdd
+                ? 'Creating...'
+                : selectedSuggestions.size > 0
+                  ? `Create ${selectedSuggestions.size} Feature${selectedSuggestions.size > 1 ? 's' : ''}`
+                  : 'Create Feature'
+              }
             </Button>
           </DialogActions>
         </Dialog>

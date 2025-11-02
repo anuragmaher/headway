@@ -489,21 +489,18 @@ def get_customer_consolidated_view(
     ).order_by(Message.sent_at.desc()).all()
 
     # Get features associated with this customer's messages
-    features = db.query(Feature).join(
+    # Use outerjoin to load themes in a single query (avoid N+1)
+    features_with_themes = db.query(Feature, Theme).outerjoin(
+        Theme, Feature.theme_id == Theme.id
+    ).join(
         Feature.messages
     ).filter(
         Message.customer_id == customer.id
     ).distinct().all()
 
-    # Build feature requests with theme names
+    # Build feature requests with theme names (already loaded, no extra queries)
     feature_requests = []
-    for feature in features:
-        theme_name = None
-        if feature.theme_id:
-            theme = db.query(Theme).filter(Theme.id == feature.theme_id).first()
-            if theme:
-                theme_name = theme.name
-
+    for feature, theme in features_with_themes:
         feature_requests.append(CustomerFeatureRequest(
             id=feature.id,
             name=feature.name,
@@ -513,7 +510,7 @@ def get_customer_consolidated_view(
             mention_count=feature.mention_count,
             first_mentioned=feature.first_mentioned,
             last_mentioned=feature.last_mentioned,
-            theme_name=theme_name
+            theme_name=theme.name if theme else None
         ))
 
     # Get recent messages (last 10)
@@ -529,65 +526,26 @@ def get_customer_consolidated_view(
             sent_at=message.sent_at
         ))
 
-    # Extract customer context using LLM (industry, use cases, pain points)
+    # Extract pain points from messages (keyword-based for now, fast)
+    # TODO: Move LLM-based extraction to background job during ingestion
     pain_points = []
-    pain_points_structured = []
 
-    if messages and len(messages) > 0:
-        try:
-            # Prepare messages for AI extraction
-            message_dicts = [
-                {
-                    'content': msg.content,
-                    'sent_at': msg.sent_at.isoformat() if msg.sent_at else None
-                }
-                for msg in messages
-                if msg.content
-            ]
+    # Simple keyword-based extraction for pain points (fast, non-blocking)
+    pain_keywords = ['problem', 'issue', 'difficult', 'struggling', 'frustrated', 'bug', 'broken', 'error', 'challenge']
 
-            # Call AI extraction service
-            ai_service = get_ai_extraction_service()
-            context_extraction = ai_service.extract_customer_context(
-                messages=message_dicts,
-                customer_name=customer.name,
-                existing_industry=customer.industry,
-                existing_use_cases=customer.use_cases
-            )
+    for message in messages[:20]:  # Only check recent messages
+        if message.content:
+            content_lower = message.content.lower()
+            if any(keyword in content_lower for keyword in pain_keywords):
+                # Extract sentence containing pain point
+                sentences = message.content.split('.')
+                for sentence in sentences:
+                    if any(keyword in sentence.lower() for keyword in pain_keywords):
+                        pain_points.append(sentence.strip())
+                        break
 
-            # Update customer record if we learned new information
-            should_update = False
-
-            # Update industry if we have high confidence and it's not already set
-            if (not customer.industry and
-                context_extraction.get('industry') and
-                context_extraction.get('industry_confidence', 0) > 0.7):
-                customer.industry = context_extraction['industry']
-                should_update = True
-
-            # Update use cases if extracted and not already set
-            if not customer.use_cases and context_extraction.get('use_cases'):
-                customer.use_cases = context_extraction['use_cases']
-                should_update = True
-
-            if should_update:
-                db.commit()
-                db.refresh(customer)
-
-            # Extract pain points from LLM response
-            pain_points_structured = context_extraction.get('pain_points', [])
-
-            # Convert to simple list of strings for backwards compatibility
-            pain_points = [
-                f"{pp.get('description', '')} - {pp.get('impact', '')}"
-                for pp in pain_points_structured
-                if pp.get('description')
-            ]
-
-        except Exception as e:
-            # Fall back to empty pain points if extraction fails
-            import logging
-            logging.error(f"Error extracting customer context: {e}")
-            pain_points = []
+    # Limit to top 5 pain points
+    pain_points = pain_points[:5]
 
     # Generate highlights
     highlights = []
@@ -595,9 +553,9 @@ def get_customer_consolidated_view(
     if total_messages > 0:
         highlights.append(f"{total_messages} messages/calls analyzed")
 
-    if features:
-        highlights.append(f"{len(features)} feature requests identified")
-        urgent_features = [f for f in features if f.urgency in ['high', 'critical']]
+    if feature_requests:
+        highlights.append(f"{len(feature_requests)} feature requests identified")
+        urgent_features = [f for f in feature_requests if f.urgency in ['high', 'critical']]
         if urgent_features:
             highlights.append(f"{len(urgent_features)} high-priority requests")
 
@@ -619,7 +577,7 @@ def get_customer_consolidated_view(
     # Generate a simple summary
     summary = None
     if total_messages > 0:
-        feature_count = len(features)
+        feature_count = len(feature_requests)
         summary = (
             f"{customer.name} has been very active with {total_messages} interactions. "
             f"{'They have requested ' + str(feature_count) + ' features' if feature_count > 0 else 'No specific feature requests yet'}."
