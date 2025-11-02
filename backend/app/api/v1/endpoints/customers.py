@@ -5,6 +5,9 @@ from typing import List, Optional
 from uuid import UUID
 import csv
 import io
+import logging
+
+logger = logging.getLogger(__name__)
 
 from app.core.database import get_db
 from app.models.customer import Customer
@@ -16,11 +19,14 @@ from app.schemas.customer import (
     CustomerResponse,
     CustomerListResponse,
     CustomerImportResult,
-    CustomerConsolidatedView
+    CustomerConsolidatedView,
+    CustomerChatRequest,
+    CustomerChatResponse
 )
 from app.core.deps import get_current_user
 from app.models.feature import Feature
 from app.services.ai_extraction_service import get_ai_extraction_service
+from app.services.customer_chat_service import get_customer_chat_service
 
 router = APIRouter()
 
@@ -62,16 +68,34 @@ def list_customers(
     # Get total count
     total = query.count()
 
-    # Get paginated results
-    customers = query.order_by(Customer.name).offset((page - 1) * page_size).limit(page_size).all()
+    # Get paginated results with message counts in a single query (avoid N+1)
+    from sqlalchemy.orm import aliased
+    from sqlalchemy import case
 
-    # Add message count to each customer
+    # Subquery to count messages per customer
+    message_count_subq = (
+        db.query(
+            Message.customer_id,
+            func.count(Message.id).label('message_count')
+        )
+        .group_by(Message.customer_id)
+        .subquery()
+    )
+
+    # Join customers with message counts
+    customers_with_counts = (
+        query
+        .outerjoin(message_count_subq, Customer.id == message_count_subq.c.customer_id)
+        .add_columns(func.coalesce(message_count_subq.c.message_count, 0).label('message_count'))
+        .order_by(Customer.name)
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+        .all()
+    )
+
+    # Build response objects
     customer_responses = []
-    for customer in customers:
-        message_count = db.query(func.count(Message.id)).filter(
-            Message.customer_id == customer.id
-        ).scalar()
-
+    for customer, message_count in customers_with_counts:
         customer_dict = {
             **customer.__dict__,
             'message_count': message_count
@@ -592,3 +616,58 @@ def get_customer_consolidated_view(
         summary=summary,
         highlights=highlights
     )
+
+
+@router.post("/{customer_id}/chat", response_model=CustomerChatResponse)
+def customer_chat(
+    customer_id: UUID,
+    workspace_id: UUID,
+    chat_request: CustomerChatRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Natural language chat interface for customer insights
+
+    Ask questions about a customer and get AI-powered responses using:
+    - Pre-built query templates for common questions (fast, reliable)
+    - Text-to-SQL generation for custom queries (flexible, slower)
+
+    Example queries:
+    - "What features do they want?"
+    - "Show me their urgent requests"
+    - "What's their ARR?"
+    - "Recent messages from last 30 days?"
+    - "What are their pain points?"
+    """
+    # Verify customer exists and belongs to workspace
+    customer = db.query(Customer).filter(
+        Customer.id == customer_id,
+        Customer.workspace_id == workspace_id
+    ).first()
+
+    if not customer:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Customer not found"
+        )
+
+    # Process chat query
+    chat_service = get_customer_chat_service()
+
+    try:
+        result = chat_service.chat(
+            db=db,
+            customer_id=str(customer_id),
+            workspace_id=str(workspace_id),
+            user_query=chat_request.query
+        )
+
+        return CustomerChatResponse(**result)
+
+    except Exception as e:
+        logger.error(f"Error in customer chat: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error processing chat query: {str(e)}"
+        )

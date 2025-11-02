@@ -17,8 +17,11 @@ from app.schemas.workspace_connector import (
     WorkspaceConnectorInput,
 )
 from app.schemas.company import CompanyUpdate
+from app.schemas.customer import CustomerChatRequest, CustomerChatResponse
 from app.models.user import User
 from pydantic import BaseModel
+from app.services.workspace_chat_service import get_workspace_chat_service
+from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -562,4 +565,56 @@ async def generate_feature_suggestions(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to generate feature suggestions"
+        )
+
+
+@router.post("/{workspace_id}/chat", response_model=CustomerChatResponse)
+def workspace_chat(
+    workspace_id: UUID,
+    chat_request: CustomerChatRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Natural language chat interface for workspace-level customer insights
+
+    Ask questions across ALL customers in the workspace using AI-powered responses.
+
+    Example queries:
+    - "Which customers have the most urgent feature requests?"
+    - "Show me customers in the Healthcare industry"
+    - "What are the top pain points across all customers?"
+    - "Which customers have ARR over $100k?"
+    - "Show me feature requests by customer"
+
+    Args:
+        workspace_id: UUID of the workspace
+        chat_request: Chat query request
+        db: Database session
+        current_user: Current authenticated user
+
+    Returns:
+        CustomerChatResponse with AI-generated answer
+
+    Raises:
+        HTTPException: If workspace not found or query fails
+    """
+    try:
+        # Get workspace chat service
+        chat_service = get_workspace_chat_service()
+
+        # Process chat query across all customers in workspace
+        result = chat_service.chat(
+            db=db,
+            workspace_id=str(workspace_id),
+            user_query=chat_request.query
+        )
+
+        return CustomerChatResponse(**result)
+
+    except Exception as e:
+        logger.error(f"Error in workspace chat: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error processing chat query: {str(e)}"
         )

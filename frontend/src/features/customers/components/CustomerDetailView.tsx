@@ -315,7 +315,7 @@ export function CustomerDetailView({
 
       {/* Pain Points Section */}
       {pain_points && pain_points.length > 0 && (
-        <Box>
+        <Box sx={{ mb: 4 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
             <ErrorOutlineIcon sx={{ mr: 1, color: 'warning.main' }} />
             <Typography variant="h6" sx={{ fontWeight: 600 }}>

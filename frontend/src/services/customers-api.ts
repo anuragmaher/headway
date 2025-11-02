@@ -81,6 +81,22 @@ export interface ListCustomersParams {
   search?: string;
 }
 
+export interface TemplateOption {
+  template_id: string;
+  name: string;
+  description: string;
+}
+
+export interface CustomerChatResponse {
+  success: boolean;
+  response: string;
+  method?: string; // template, sql, suggestion
+  template_id?: string;
+  confidence?: number;
+  suggested_templates?: TemplateOption[];
+  error?: string;
+}
+
 class CustomersAPI {
   /**
    * List customers for a workspace with optional filters
@@ -139,6 +155,35 @@ class CustomersAPI {
   }> {
     const response = await api.get(
       `/api/v1/customers/stats/summary?workspace_id=${workspaceId}`
+    );
+    return response.data;
+  }
+
+  /**
+   * Chat with customer insights - ask natural language questions
+   */
+  async chat(
+    workspaceId: string,
+    customerId: string,
+    query: string
+  ): Promise<CustomerChatResponse> {
+    const response = await api.post<CustomerChatResponse>(
+      `/api/v1/customers/${customerId}/chat?workspace_id=${workspaceId}`,
+      { query }
+    );
+    return response.data;
+  }
+
+  /**
+   * Workspace-level chat - ask questions across ALL customers
+   */
+  async workspaceChat(
+    workspaceId: string,
+    query: string
+  ): Promise<CustomerChatResponse> {
+    const response = await api.post<CustomerChatResponse>(
+      `/api/v1/workspaces/${workspaceId}/chat`,
+      { query }
     );
     return response.data;
   }

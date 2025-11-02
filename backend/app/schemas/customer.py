@@ -117,3 +117,26 @@ class CustomerConsolidatedView(BaseModel):
     pain_points: list[str] = []  # Extracted pain points
     summary: Optional[str] = None  # AI-generated summary
     highlights: list[str] = []  # Key highlights
+
+
+class CustomerChatRequest(BaseModel):
+    """Schema for customer chat query request"""
+    query: str = Field(..., min_length=1, max_length=1000)
+
+
+class TemplateOption(BaseModel):
+    """Schema for template suggestion"""
+    template_id: str
+    name: str
+    description: str
+
+
+class CustomerChatResponse(BaseModel):
+    """Schema for customer chat response"""
+    success: bool
+    response: str
+    method: Optional[str] = None  # template, sql, suggestion
+    template_id: Optional[str] = None
+    confidence: Optional[float] = None
+    suggested_templates: Optional[list[TemplateOption]] = None
+    error: Optional[str] = None

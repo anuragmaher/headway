@@ -33,6 +33,7 @@ import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   Business as BusinessIcon,
+  Chat as ChatIcon,
 } from '@mui/icons-material';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
@@ -62,6 +63,11 @@ const navigationItems = [
     text: 'Customers',
     icon: <BusinessIcon />,
     path: ROUTES.CUSTOMERS,
+  },
+  {
+    text: 'Customer Chat',
+    icon: <ChatIcon />,
+    path: ROUTES.CUSTOMERS_CHAT,
   },
   {
     text: 'Workspace Settings',
@@ -437,7 +443,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 2,
+          p: 0,
           width: { sm: `calc(100% - ${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px)` },
           transition: 'all 0.3s ease-in-out',
           minHeight: '100vh',
@@ -456,9 +462,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
         }}
       >
         <Toolbar /> {/* Spacer for AppBar */}
-        <Box sx={{ position: 'relative', zIndex: 1 }}>
-          {children}
-        </Box>
+        {children}
       </Box>
     </Box>
   );

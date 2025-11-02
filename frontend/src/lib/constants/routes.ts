@@ -26,6 +26,7 @@ export const ROUTES = {
 
   // Customer routes
   CUSTOMERS: '/app/customers',
+  CUSTOMERS_CHAT: '/app/customers/chat',
 
   // Slack integration routes
   SLACK_CALLBACK: '/app/slack/callback',

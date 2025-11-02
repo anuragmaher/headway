@@ -7,12 +7,13 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useIsAuthenticated } from '../store/auth-store';
 import { ROUTES } from '@/lib/constants/routes';
 import { Loading } from '@/shared/components';
+import { AdminLayout } from '@/shared/components/layouts/AdminLayout';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
-export function ProtectedRoute({ 
+export function ProtectedRoute({
   children
 }: ProtectedRouteProps): JSX.Element {
   const isAuthenticated = useIsAuthenticated();
@@ -26,13 +27,13 @@ export function ProtectedRoute({
   // Redirect to login if not authenticated
   if (!isAuthenticated) {
     return (
-      <Navigate 
-        to={ROUTES.LOGIN} 
-        state={{ from: location.pathname }} 
-        replace 
+      <Navigate
+        to={ROUTES.LOGIN}
+        state={{ from: location.pathname }}
+        replace
       />
     );
   }
 
-  return <>{children}</>;
+  return <AdminLayout>{children}</AdminLayout>;
 }
