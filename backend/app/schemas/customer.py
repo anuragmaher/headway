@@ -11,6 +11,8 @@ class CustomerBase(BaseModel):
     industry: Optional[str] = None
     website: Optional[str] = None
     phone: Optional[str] = None
+    contact_name: Optional[str] = None
+    contact_email: Optional[str] = None
     mrr: Optional[float] = Field(None, ge=0)
     arr: Optional[float] = Field(None, ge=0)
     deal_stage: Optional[str] = None
@@ -73,3 +75,44 @@ class CustomerImportResult(BaseModel):
     error_count: int
     errors: list[Dict[str, Any]] = []
     created_ids: list[UUID] = []
+
+
+class CustomerFeatureRequest(BaseModel):
+    """Schema for feature request linked to customer"""
+    id: UUID
+    name: str
+    description: Optional[str] = None
+    urgency: str
+    status: str
+    mention_count: int
+    first_mentioned: datetime
+    last_mentioned: datetime
+    theme_name: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+class CustomerMessage(BaseModel):
+    """Schema for message linked to customer"""
+    id: UUID
+    title: Optional[str] = None
+    content: str
+    source: str
+    channel_name: Optional[str] = None
+    author_name: Optional[str] = None
+    sent_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class CustomerConsolidatedView(BaseModel):
+    """Schema for consolidated customer view with all related data"""
+    customer: CustomerResponse
+    feature_requests: list[CustomerFeatureRequest] = []
+    recent_messages: list[CustomerMessage] = []
+    total_messages: int = 0
+    pain_points: list[str] = []  # Extracted pain points
+    summary: Optional[str] = None  # AI-generated summary
+    highlights: list[str] = []  # Key highlights

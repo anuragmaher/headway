@@ -47,32 +47,50 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def _get_or_create_customer_from_email(
+def _get_or_create_customer_from_invitees(
     db: Session,
     workspace_id: str,
-    email: str,
-    user_name: str
+    calendar_invitees: List[Dict[str, Any]]
 ) -> Optional[Customer]:
     """
-    Get or create a customer from email address by extracting domain.
+    Get or create a customer from Fathom calendar invitees.
 
-    This is adapted for Fathom which doesn't have CRM integration like Gong/HubSpot.
-    We use the email domain as the company identifier.
+    Uses the is_external flag to identify external participants (customers)
+    and creates customer records based on their email domain.
 
     Args:
         db: Database session
         workspace_id: Workspace UUID
-        email: Email address (e.g., user@acme.com)
-        user_name: User/contact name
+        calendar_invitees: List of calendar invitee objects from Fathom
 
     Returns:
-        Customer instance or None if email is invalid
+        Customer instance for the first external invitee, or None if no external invitees
     """
-    if not email or '@' not in email:
+    if not calendar_invitees:
         return None
 
-    # Extract domain from email
-    domain = email.split('@')[1].lower()
+    # Find first external invitee (customer)
+    external_invitees = [
+        invitee for invitee in calendar_invitees
+        if invitee.get('is_external', False)
+    ]
+
+    if not external_invitees:
+        logger.debug("No external invitees found - all participants are internal")
+        return None
+
+    # Use the first external invitee as the customer
+    invitee = external_invitees[0]
+
+    email = invitee.get('email')
+    name = invitee.get('name', '')
+    domain = invitee.get('email_domain')
+
+    if not email or not domain:
+        logger.warning(f"External invitee missing email or domain: {invitee}")
+        return None
+
+    domain = domain.lower()
 
     # Try to find existing customer by domain
     customer = db.query(Customer).filter(
@@ -85,9 +103,17 @@ def _get_or_create_customer_from_email(
     if customer:
         # Update last activity timestamp
         customer.last_activity_at = datetime.now(timezone.utc)
+
+        # Update contact info if not already set
+        if not customer.contact_name and name:
+            customer.contact_name = name
+        if not customer.contact_email and email:
+            customer.contact_email = email
+
+        logger.debug(f"Found existing customer: {customer.name} ({domain})")
         return customer
 
-    # Create new customer from email domain
+    # Create new customer from invitee data
     # Use domain as company name (e.g., "acme.com" -> "Acme")
     company_name = domain.split('.')[0].capitalize()
 
@@ -95,11 +121,14 @@ def _get_or_create_customer_from_email(
         workspace_id=workspace_id,
         name=company_name,
         domain=domain,
+        contact_name=name,  # Store contact person's name
+        contact_email=email,  # Store contact person's email
         external_system='fathom',
         external_id=domain,  # Use domain as unique ID for Fathom
         last_activity_at=datetime.now(timezone.utc)
     )
     db.add(customer)
+    logger.info(f"Created new customer from external invitee: {company_name} ({domain}) - Contact: {name} ({email})")
 
     return customer
 
@@ -236,22 +265,13 @@ async def ingest_fathom_sessions(
 
                     # Extract session information
                     title = session_data.get('title') or f"Session {session_id}"
-                    # Get user info from recorded_by or calendar invitees
+                    # Get user info from recorded_by
                     recorded_by = session_data.get('recorded_by', {})
                     user_email = recorded_by.get('email')
                     user_name = recorded_by.get('name') or user_email or 'Unknown'
 
-                    # Extract or create customer from email domain
-                    customer = None
-                    if user_email:
-                        customer = _get_or_create_customer_from_email(
-                            db, workspace_id, user_email, user_name
-                        )
-                        if customer:
-                            # Flush to get customer ID
-                            db.flush()
-                            if not customer.id:
-                                db.refresh(customer)
+                    # Store calendar invitees for later customer creation (only if message is ingested)
+                    calendar_invitees = session_data.get('calendar_invitees', [])
 
                     # Calculate duration from recording timestamps
                     recording_start = session_data.get('recording_start_time')
@@ -330,10 +350,12 @@ async def ingest_fathom_sessions(
                         "events_count": len(events),
                         "tags": session_data.get('tags', []),
                         "has_transcript": bool(transcript_text),
-                        "raw_session_data": session_data
+                        "raw_session_data": session_data,
+                        "calendar_invitees": calendar_invitees  # Pass for customer creation if message is ingested
                     }
 
                     # Use transcript ingestion service to handle processing
+                    # Customer will be created inside if message is actually ingested
                     message_id = transcript_service.ingest_transcript(
                         workspace_id=workspace_id,
                         external_id=session_id,
@@ -345,7 +367,7 @@ async def ingest_fathom_sessions(
                         author_name=user_name,
                         author_email=user_email,
                         author_id=None,
-                        customer_id=customer.id if customer else None,
+                        customer_id=None,  # Will be created inside if message is ingested
                         sent_at=session_time,
                         integration_id=integration.id,
                         extract_features=extract_features

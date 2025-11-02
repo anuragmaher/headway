@@ -192,6 +192,24 @@ class TranscriptIngestionService:
                 logger.info(f"Skipped {source} {external_id} - not relevant to workspace themes")
                 return None
 
+            # Create customer from calendar_invitees if available (Fathom integration)
+            # This happens AFTER theme relevance check, so customers are only created for relevant messages
+            if not customer_id and 'calendar_invitees' in metadata and source == 'fathom':
+                calendar_invitees = metadata.get('calendar_invitees', [])
+                if calendar_invitees:
+                    # Import the helper function
+                    from app.scripts.ingest_fathom_sessions import _get_or_create_customer_from_invitees
+
+                    customer = _get_or_create_customer_from_invitees(
+                        self.db, workspace_id, calendar_invitees
+                    )
+                    if customer:
+                        self.db.flush()  # Get customer ID
+                        if not customer.id:
+                            self.db.refresh(customer)
+                        customer_id = customer.id
+                        logger.info(f"Created/updated customer from Fathom invitees: {customer.name}")
+
             # Extract title from metadata
             title = self._extract_title_from_metadata(source, metadata)
 
@@ -469,19 +487,20 @@ class TranscriptIngestionService:
                         customer_name = message.message_metadata.get('customer_name') if message.message_metadata else None
 
                         # Send Slack notification
-                        self.slack_notification_service.send_feature_matched_notification(
-                            new_feature_title=feature_title,
-                            existing_feature_name=existing_feature.name,
-                            existing_mention_count=existing_feature.mention_count,
-                            confidence=match_result["confidence"],
-                            source=source,
-                            source_id=external_id,
-                            sentiment=sentiment,
-                            key_topics=key_topics,
-                            quote=quote,
-                            customer_name=customer_name,
-                            urgency=feature_urgency
-                        )
+                        # TODO: Re-enable later
+                        # self.slack_notification_service.send_feature_matched_notification(
+                        #     new_feature_title=feature_title,
+                        #     existing_feature_name=existing_feature.name,
+                        #     existing_mention_count=existing_feature.mention_count,
+                        #     confidence=match_result["confidence"],
+                        #     source=source,
+                        #     source_id=external_id,
+                        #     sentiment=sentiment,
+                        #     key_topics=key_topics,
+                        #     quote=quote,
+                        #     customer_name=customer_name,
+                        #     urgency=feature_urgency
+                        # )
                     else:
                         logger.warning(
                             f"Matching feature {match_result['matching_feature_id']} not found, creating new"
@@ -566,20 +585,21 @@ class TranscriptIngestionService:
                         ]
 
                     # Send Slack notification
-                    self.slack_notification_service.send_feature_created_notification(
-                        feature_name=feature_title,
-                        feature_description=feature_description,
-                        theme_name=assigned_theme.name if assigned_theme else "Uncategorized",
-                        confidence=theme_validation.get("confidence", 0) if theme_validation else 0,
-                        urgency=feature_urgency,
-                        source=source,
-                        source_id=external_id,
-                        sentiment=sentiment,
-                        key_topics=key_topics,
-                        quote=quote,
-                        customer_name=customer_name,
-                        pain_points=pain_points_list
-                    )
+                    # TODO: Re-enable later
+                    # self.slack_notification_service.send_feature_created_notification(
+                    #     feature_name=feature_title,
+                    #     feature_description=feature_description,
+                    #     theme_name=assigned_theme.name if assigned_theme else "Uncategorized",
+                    #     confidence=theme_validation.get("confidence", 0) if theme_validation else 0,
+                    #     urgency=feature_urgency,
+                    #     source=source,
+                    #     source_id=external_id,
+                    #     sentiment=sentiment,
+                    #     key_topics=key_topics,
+                    #     quote=quote,
+                    #     customer_name=customer_name,
+                    #     pain_points=pain_points_list
+                    # )
 
             # Commit all feature changes
             if features_created_count > 0 or features_matched_count > 0:

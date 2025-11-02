@@ -32,6 +32,7 @@ import {
   Person as PersonIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
+  Business as BusinessIcon,
 } from '@mui/icons-material';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
@@ -56,6 +57,11 @@ const navigationItems = [
     text: 'Themes',
     icon: <CategoryIcon />,
     path: ROUTES.THEMES,
+  },
+  {
+    text: 'Customers',
+    icon: <BusinessIcon />,
+    path: ROUTES.CUSTOMERS,
   },
   {
     text: 'Workspace Settings',

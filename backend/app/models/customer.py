@@ -27,6 +27,8 @@ class Customer(Base):
     # Contact Information
     website = Column(String, nullable=True)
     phone = Column(String, nullable=True)
+    contact_name = Column(String, nullable=True)  # Primary contact person name
+    contact_email = Column(String, nullable=True, index=True)  # Primary contact email
 
     # CRM Integration
     external_system = Column(String, nullable=True)  # "hubspot", "salesforce", etc.

@@ -13,6 +13,7 @@ import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
 import { ThemesPage } from '@/pages/ThemesPage';
 import { WorkspaceSettingsPage } from '@/pages/WorkspaceSettingsPage';
+import { CustomersPage } from '@/pages/CustomersPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { ExecutiveInsightsPage } from '@/pages/ExecutiveInsightsPage';
 
@@ -101,6 +102,15 @@ export function AppRouter(): JSX.Element {
           element={
             <ProtectedRoute>
               <ThemesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.CUSTOMERS}
+          element={
+            <ProtectedRoute>
+              <CustomersPage />
             </ProtectedRoute>
           }
         />

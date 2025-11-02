@@ -24,6 +24,9 @@ export const ROUTES = {
   THEMES: '/app/themes',
   THEME_DETAIL: '/app/themes/:id',
 
+  // Customer routes
+  CUSTOMERS: '/app/customers',
+
   // Slack integration routes
   SLACK_CALLBACK: '/app/slack/callback',
   
@@ -53,6 +56,7 @@ export const PROTECTED_ROUTES = [
   ROUTES.SETTINGS_TEAM,
   ROUTES.THEMES,
   ROUTES.THEME_DETAIL,
+  ROUTES.CUSTOMERS,
   ROUTES.SLACK_CALLBACK,
 ] as const;
 

@@ -15,9 +15,11 @@ from app.schemas.customer import (
     CustomerUpdate,
     CustomerResponse,
     CustomerListResponse,
-    CustomerImportResult
+    CustomerImportResult,
+    CustomerConsolidatedView
 )
 from app.core.deps import get_current_user
+from app.models.feature import Feature
 
 router = APIRouter()
 
@@ -444,3 +446,153 @@ def get_customer_stats(
             for industry, count in by_industry
         ]
     }
+
+
+@router.get("/{customer_id}/consolidated", response_model=CustomerConsolidatedView)
+def get_customer_consolidated_view(
+    customer_id: UUID,
+    workspace_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get consolidated view of a customer with all related data:
+    - Customer info
+    - Feature requests
+    - Recent messages
+    - Pain points and highlights extracted from messages
+    """
+    from app.models.theme import Theme
+    from app.schemas.customer import CustomerFeatureRequest, CustomerMessage
+
+    # Get customer
+    customer = db.query(Customer).filter(
+        Customer.id == customer_id,
+        Customer.workspace_id == workspace_id
+    ).first()
+
+    if not customer:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Customer not found"
+        )
+
+    # Get total message count
+    total_messages = db.query(func.count(Message.id)).filter(
+        Message.customer_id == customer.id
+    ).scalar()
+
+    # Get all messages for this customer
+    messages = db.query(Message).filter(
+        Message.customer_id == customer.id
+    ).order_by(Message.sent_at.desc()).all()
+
+    # Get features associated with this customer's messages
+    features = db.query(Feature).join(
+        Feature.messages
+    ).filter(
+        Message.customer_id == customer.id
+    ).distinct().all()
+
+    # Build feature requests with theme names
+    feature_requests = []
+    for feature in features:
+        theme_name = None
+        if feature.theme_id:
+            theme = db.query(Theme).filter(Theme.id == feature.theme_id).first()
+            if theme:
+                theme_name = theme.name
+
+        feature_requests.append(CustomerFeatureRequest(
+            id=feature.id,
+            name=feature.name,
+            description=feature.description,
+            urgency=feature.urgency,
+            status=feature.status,
+            mention_count=feature.mention_count,
+            first_mentioned=feature.first_mentioned,
+            last_mentioned=feature.last_mentioned,
+            theme_name=theme_name
+        ))
+
+    # Get recent messages (last 10)
+    recent_messages = []
+    for message in messages[:10]:
+        recent_messages.append(CustomerMessage(
+            id=message.id,
+            title=message.title,
+            content=message.content[:500] if message.content else "",  # Truncate for preview
+            source=message.source,
+            channel_name=message.channel_name,
+            author_name=message.author_name,
+            sent_at=message.sent_at
+        ))
+
+    # Extract pain points from messages (looking for negative sentiment indicators)
+    pain_points = []
+    pain_keywords = ['problem', 'issue', 'bug', 'frustrat', 'difficult', 'pain', 'struggle', 'broken', 'not working']
+
+    for message in messages:
+        if not message.content:
+            continue
+        content_lower = message.content.lower()
+        for keyword in pain_keywords:
+            if keyword in content_lower:
+                # Extract sentence with pain point
+                sentences = message.content.split('.')
+                for sentence in sentences:
+                    if keyword in sentence.lower() and len(sentence.strip()) > 20:
+                        pain_point = sentence.strip()[:200]  # Truncate long sentences
+                        if pain_point and pain_point not in pain_points:
+                            pain_points.append(pain_point)
+                        break
+                if len(pain_points) >= 5:  # Limit to top 5 pain points
+                    break
+        if len(pain_points) >= 5:
+            break
+
+    # Generate highlights
+    highlights = []
+
+    if total_messages > 0:
+        highlights.append(f"{total_messages} messages/calls analyzed")
+
+    if features:
+        highlights.append(f"{len(features)} feature requests identified")
+        urgent_features = [f for f in features if f.urgency in ['high', 'critical']]
+        if urgent_features:
+            highlights.append(f"{len(urgent_features)} high-priority requests")
+
+    if customer.arr:
+        highlights.append(f"${customer.arr:,.0f} ARR")
+    elif customer.mrr:
+        highlights.append(f"${customer.mrr:,.0f} MRR")
+
+    if customer.deal_stage:
+        highlights.append(f"Deal stage: {customer.deal_stage}")
+
+    # Build customer response
+    customer_dict = {
+        **customer.__dict__,
+        'message_count': total_messages
+    }
+    customer_response = CustomerResponse(**customer_dict)
+
+    # Generate a simple summary
+    summary = None
+    if total_messages > 0:
+        feature_count = len(features)
+        summary = (
+            f"{customer.name} has been very active with {total_messages} interactions. "
+            f"{'They have requested ' + str(feature_count) + ' features' if feature_count > 0 else 'No specific feature requests yet'}."
+        )
+
+    return CustomerConsolidatedView(
+        customer=customer_response,
+        feature_requests=feature_requests,
+        recent_messages=recent_messages,
+        total_messages=total_messages,
+        pain_points=pain_points,
+        summary=summary,
+        highlights=highlights
+    )

@@ -201,7 +201,7 @@ def _get_or_create_customer(
         hubspot_data: Extracted HubSpot context
 
     Returns:
-        Customer instance or None if no account data
+        Customer instance or None if no account data or if domain matches workspace domain
     """
     accounts = hubspot_data.get('accounts', [])
     deals = hubspot_data.get('deals', [])
@@ -215,6 +215,15 @@ def _get_or_create_customer(
     # Try to find existing customer by external_id or domain
     external_id = account.get('object_id')
     domain = account.get('domain')
+
+    # Get workspace and company to check if this is an internal customer
+    from app.models.workspace import Workspace
+    workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
+    if workspace and workspace.company and workspace.company.domain and domain:
+        workspace_domain = workspace.company.domain.lower()
+        if domain.lower() == workspace_domain:
+            logger.debug(f"Skipping customer creation for internal domain: {domain}")
+            return None
 
     customer = None
     if external_id:

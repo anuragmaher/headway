@@ -95,36 +95,65 @@ def cleanup_workspace_data(
                 return False
 
         try:
-            # Delete features first (will cascade delete feature_messages associations)
+            # Delete features in batches (will cascade delete feature_messages associations)
             # This works because feature_messages has foreign keys to features
-            features_to_delete = db.query(Feature).filter(Feature.workspace_id == workspace_id).all()
-
+            BATCH_SIZE = 5
             deleted_feature_count = 0
-            for feature in features_to_delete:
-                if verbose:
-                    logger.debug(f"Deleting feature: {feature.name} (ID: {feature.id})")
-                db.delete(feature)
-                deleted_feature_count += 1
 
-            logger.info(f"Deleted {deleted_feature_count} features")
+            while True:
+                # Get a batch of features
+                features_batch = (
+                    db.query(Feature)
+                    .filter(Feature.workspace_id == workspace_id)
+                    .limit(BATCH_SIZE)
+                    .all()
+                )
 
-            # Delete messages (the feature_messages associations were already removed)
-            messages_to_delete = db.query(Message).filter(Message.workspace_id == workspace_id).all()
+                if not features_batch:
+                    break
 
+                batch_count = len(features_batch)
+                for feature in features_batch:
+                    if verbose:
+                        logger.debug(f"Deleting feature: {feature.name} (ID: {feature.id})")
+                    db.delete(feature)
+
+                # Commit this batch
+                db.commit()
+                deleted_feature_count += batch_count
+                logger.info(f"Deleted batch of {batch_count} features (total: {deleted_feature_count}/{feature_count})")
+
+            logger.info(f"✓ Deleted all {deleted_feature_count} features")
+
+            # Delete messages in batches (the feature_messages associations were already removed)
             deleted_message_count = 0
-            for message in messages_to_delete:
-                if verbose:
-                    logger.debug(f"Deleting message: {message.external_id} from {message.source}")
-                db.delete(message)
-                deleted_message_count += 1
 
-            logger.info(f"Deleted {deleted_message_count} messages")
+            while True:
+                # Get a batch of messages
+                messages_batch = (
+                    db.query(Message)
+                    .filter(Message.workspace_id == workspace_id)
+                    .limit(BATCH_SIZE)
+                    .all()
+                )
 
-            # Commit all changes
-            db.commit()
+                if not messages_batch:
+                    break
+
+                batch_count = len(messages_batch)
+                for message in messages_batch:
+                    if verbose:
+                        logger.debug(f"Deleting message: {message.external_id} from {message.source}")
+                    db.delete(message)
+
+                # Commit this batch
+                db.commit()
+                deleted_message_count += batch_count
+                logger.info(f"Deleted batch of {batch_count} messages (total: {deleted_message_count}/{message_count})")
+
+            logger.info(f"✓ Deleted all {deleted_message_count} messages")
             logger.info("✓ Cleanup completed successfully")
-            logger.info(f"  - Deleted {deleted_feature_count} features")
-            logger.info(f"  - Deleted {deleted_message_count} messages")
+            logger.info(f"  - Total deleted: {deleted_feature_count} features, {deleted_message_count} messages")
 
             return True
 

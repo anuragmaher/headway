@@ -308,18 +308,18 @@ def classify_features(workspace_id: str):
                         message_date = msg.sent_at.strftime('%Y-%m-%d %H:%M') if msg.sent_at else None
 
                         # Send Slack notification for merged feature
-                        slack_notifier.send_feature_merge_notification(
-                            feature_name=existing_feature.name,
-                            feature_description=description,
-                            theme_name=theme_name,
-                            mention_count=existing_feature.mention_count,
-                            customer_name=customer_name,
-                            quote=quote,
-                            feature_id=str(existing_feature.id),
-                            gong_url=gong_url,
-                            call_title=call_title,
-                            message_date=message_date
-                        )
+                        # slack_notifier.send_feature_merge_notification(
+                        #     feature_name=existing_feature.name,
+                        #     feature_description=description,
+                        #     theme_name=theme_name,
+                        #     mention_count=existing_feature.mention_count,
+                        #     customer_name=customer_name,
+                        #     quote=quote,
+                        #     feature_id=str(existing_feature.id),
+                        #     gong_url=gong_url,
+                        #     call_title=call_title,
+                        #     message_date=message_date
+                        # )
 
                         continue
 
@@ -362,18 +362,18 @@ def classify_features(workspace_id: str):
                 message_date = msg.sent_at.strftime('%Y-%m-%d %H:%M') if msg.sent_at else None
 
                 # Send Slack notification for new feature
-                slack_notifier.send_new_feature_notification(
-                    feature_name=title,
-                    feature_description=description,
-                    theme_name=theme_name or 'Unknown',
-                    urgency=urgency,
-                    customer_name=customer_name,
-                    quote=quote,
-                    feature_id=str(new_feature.id),
-                    gong_url=gong_url,
-                    call_title=call_title,
-                    message_date=message_date
-                )
+                # slack_notifier.send_new_feature_notification(
+                #     feature_name=title,
+                #     feature_description=description,
+                #     theme_name=theme_name or 'Unknown',
+                #     urgency=urgency,
+                #     customer_name=customer_name,
+                #     quote=quote,
+                #     feature_id=str(new_feature.id),
+                #     gong_url=gong_url,
+                #     call_title=call_title,
+                #     message_date=message_date
+                # )
 
         db.commit()
 
