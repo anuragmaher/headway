@@ -11,6 +11,7 @@ import {
   Typography,
   alpha,
   useTheme,
+  useMediaQuery,
   CircularProgress,
   Alert,
   Chip,
@@ -102,6 +103,7 @@ interface DashboardMetrics {
 
 export function ExecutiveInsightsPage(): JSX.Element {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { tokens, isAuthenticated } = useAuthStore();
   const WORKSPACE_ID = tokens?.workspace_id;
 
@@ -271,13 +273,24 @@ export function ExecutiveInsightsPage(): JSX.Element {
 
   return (
     <AdminLayout>
-      <Box sx={{ pb: 4 }}>
+      <Box sx={{ pb: { xs: 2, sm: 3, md: 4 }, px: { xs: 2, sm: 3, md: 0 } }}>
         {/* Header */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+        <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 700,
+              mb: 1,
+              fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2.125rem' }
+            }}
+          >
             Executive Insights
           </Typography>
-          <Typography variant="body1" color="text.secondary">
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+          >
             High-level product intelligence analytics and trends
           </Typography>
         </Box>
@@ -291,7 +304,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
         {metrics && (
           <>
             {/* Top KPI Cards */}
-            <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Grid container spacing={{ xs: 2, sm: 2, md: 3 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
               {/* Total Features */}
               <Grid item xs={12} sm={6} md={3}>
                 <Card sx={{
@@ -299,17 +312,36 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
                   height: '100%',
                 }}>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: { xs: 1, sm: 1.5, md: 2 } }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: { xs: '0.75rem', sm: '0.813rem', md: '0.875rem' }
+                        }}
+                      >
                         Total Features
                       </Typography>
-                      <FeaturesIcon sx={{ color: theme.palette.primary.main, fontSize: 32 }} />
+                      <FeaturesIcon sx={{ color: theme.palette.primary.main, fontSize: { xs: 24, sm: 28, md: 32 } }} />
                     </Box>
-                    <Typography variant="h3" sx={{ fontWeight: 700, color: theme.palette.primary.main, mb: 1 }}>
+                    <Typography
+                      variant="h3"
+                      sx={{
+                        fontWeight: 700,
+                        color: theme.palette.primary.main,
+                        mb: 1,
+                        fontSize: { xs: '1.75rem', sm: '2rem', md: '3rem' }
+                      }}
+                    >
                       {metrics.total_features}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
+                    >
                       Across {metrics.total_themes} themes
                     </Typography>
                   </CardContent>
@@ -323,17 +355,36 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   border: `1px solid ${alpha(theme.palette.secondary.main, 0.2)}`,
                   height: '100%',
                 }}>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: { xs: 1, sm: 1.5, md: 2 } }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: { xs: '0.75rem', sm: '0.813rem', md: '0.875rem' }
+                        }}
+                      >
                         Customer Mentions
                       </Typography>
-                      <PeopleIcon sx={{ color: theme.palette.secondary.main, fontSize: 32 }} />
+                      <PeopleIcon sx={{ color: theme.palette.secondary.main, fontSize: { xs: 24, sm: 28, md: 32 } }} />
                     </Box>
-                    <Typography variant="h3" sx={{ fontWeight: 700, color: theme.palette.secondary.main, mb: 1 }}>
+                    <Typography
+                      variant="h3"
+                      sx={{
+                        fontWeight: 700,
+                        color: theme.palette.secondary.main,
+                        mb: 1,
+                        fontSize: { xs: '1.75rem', sm: '2rem', md: '3rem' }
+                      }}
+                    >
                       {metrics.total_mentions}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
+                    >
                       Total feature requests
                     </Typography>
                   </CardContent>
@@ -347,18 +398,39 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   border: `1px solid ${alpha(theme.palette.success.main, 0.2)}`,
                   height: '100%',
                 }}>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: { xs: 1, sm: 1.5, md: 2 } }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: { xs: '0.75rem', sm: '0.813rem', md: '0.875rem' }
+                        }}
+                      >
                         This Week
                       </Typography>
-                      {getTrendIcon()}
+                      <Box sx={{ '& svg': { fontSize: { xs: '30px !important', sm: '35px !important', md: '40px !important' } } }}>
+                        {getTrendIcon()}
+                      </Box>
                     </Box>
-                    <Typography variant="h3" sx={{ fontWeight: 700, color: theme.palette.success.main, mb: 1 }}>
+                    <Typography
+                      variant="h3"
+                      sx={{
+                        fontWeight: 700,
+                        color: theme.palette.success.main,
+                        mb: 1,
+                        fontSize: { xs: '1.75rem', sm: '2rem', md: '3rem' }
+                      }}
+                    >
                       {metrics.recent_activity.features_this_week}
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
+                      >
                         {getTrendPercentage() > 0 ? '+' : ''}{getTrendPercentage()}% vs last week
                       </Typography>
                     </Box>
@@ -373,17 +445,36 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   border: `1px solid ${alpha(theme.palette.info.main, 0.2)}`,
                   height: '100%',
                 }}>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: { xs: 1, sm: 1.5, md: 2 } }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: { xs: '0.75rem', sm: '0.813rem', md: '0.875rem' }
+                        }}
+                      >
                         Completed
                       </Typography>
-                      <CheckCircleIcon sx={{ color: theme.palette.info.main, fontSize: 32 }} />
+                      <CheckCircleIcon sx={{ color: theme.palette.info.main, fontSize: { xs: 24, sm: 28, md: 32 } }} />
                     </Box>
-                    <Typography variant="h3" sx={{ fontWeight: 700, color: theme.palette.info.main, mb: 1 }}>
+                    <Typography
+                      variant="h3"
+                      sx={{
+                        fontWeight: 700,
+                        color: theme.palette.info.main,
+                        mb: 1,
+                        fontSize: { xs: '1.75rem', sm: '2rem', md: '3rem' }
+                      }}
+                    >
                       {metrics.features_by_status.completed}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
+                    >
                       {Math.round((metrics.features_by_status.completed / metrics.total_features) * 100)}% of total
                     </Typography>
                   </CardContent>
@@ -392,7 +483,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
             </Grid>
 
             {/* Three Pie Charts in a Row */}
-            <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Grid container spacing={{ xs: 2, sm: 2, md: 3 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
               {/* Status Distribution */}
               <Grid item xs={12} md={4}>
                 <Card sx={{
@@ -401,11 +492,19 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                   height: '100%',
                 }}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, textAlign: 'center' }}>
+                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 600,
+                        mb: { xs: 1.5, sm: 2 },
+                        textAlign: 'center',
+                        fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }
+                      }}
+                    >
                       Features by Status
                     </Typography>
-                    <ResponsiveContainer width="100%" height={250}>
+                    <ResponsiveContainer width="100%" height={isMobile ? 220 : 250}>
                       <PieChart>
                         <Pie
                           data={Object.entries(metrics.features_by_status).map(([status, count]) => ({
@@ -441,11 +540,19 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                   height: '100%',
                 }}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, textAlign: 'center' }}>
+                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 600,
+                        mb: { xs: 1.5, sm: 2 },
+                        textAlign: 'center',
+                        fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }
+                      }}
+                    >
                       Features by Urgency
                     </Typography>
-                    <ResponsiveContainer width="100%" height={250}>
+                    <ResponsiveContainer width="100%" height={isMobile ? 220 : 250}>
                       <PieChart>
                         <Pie
                           data={Object.entries(metrics.features_by_urgency).map(([urgency, count]) => ({
@@ -481,14 +588,20 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                   height: '100%',
                 }}>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 2 }}>
-                      <CategoryIcon sx={{ color: theme.palette.primary.main }} />
-                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: { xs: 1.5, sm: 2 } }}>
+                      <CategoryIcon sx={{ color: theme.palette.primary.main, fontSize: { xs: 20, sm: 22, md: 24 } }} />
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }
+                        }}
+                      >
                         Top 5 Themes
                       </Typography>
                     </Box>
-                    <ResponsiveContainer width="100%" height={250}>
+                    <ResponsiveContainer width="100%" height={isMobile ? 220 : 250}>
                       <PieChart>
                         <Pie
                           data={metrics.top_themes.map(t => ({
@@ -527,27 +640,33 @@ export function ExecutiveInsightsPage(): JSX.Element {
             </Grid>
 
             {/* Top 10 Features by Mentions - Bar Chart */}
-            <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Grid container spacing={{ xs: 2, sm: 2, md: 3 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
               <Grid item xs={12}>
                 <Card sx={{
                   background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
                   backdropFilter: 'blur(10px)',
                   border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                 }}>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-                      <HotIcon sx={{ color: theme.palette.error.main }} />
-                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: { xs: 2, sm: 2.5, md: 3 } }}>
+                      <HotIcon sx={{ color: theme.palette.error.main, fontSize: { xs: 20, sm: 22, md: 24 } }} />
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }
+                        }}
+                      >
                         Top 10 Features by Customer Mentions
                       </Typography>
                     </Box>
-                    <ResponsiveContainer width="100%" height={400}>
+                    <ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
                       <BarChart
                         data={topFeatures.map(f => ({
-                          name: f.name.length > 30 ? f.name.substring(0, 30) + '...' : f.name,
+                          name: f.name.length > (isMobile ? 20 : 30) ? f.name.substring(0, (isMobile ? 20 : 30)) + '...' : f.name,
                           mentions: f.mention_count,
                         }))}
-                        margin={{ top: 5, right: 30, left: 20, bottom: 80 }}
+                        margin={isMobile ? { top: 5, right: 10, left: 10, bottom: 80 } : { top: 5, right: 30, left: 20, bottom: 80 }}
                       >
                         <CartesianGrid strokeDasharray="3 3" stroke={alpha(theme.palette.divider, 0.2)} />
                         <XAxis
@@ -557,7 +676,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                           textAnchor="end"
                           height={100}
                           interval={0}
-                          style={{ fontSize: '12px' }}
+                          style={{ fontSize: isMobile ? '10px' : '12px' }}
                         />
                         <YAxis
                           stroke={theme.palette.text.secondary}
@@ -579,46 +698,79 @@ export function ExecutiveInsightsPage(): JSX.Element {
             </Grid>
 
             {/* Top 10 Most Requested Features - Table */}
-            <Grid container spacing={3}>
+            <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
               <Grid item xs={12}>
                 <Card sx={{
                   background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
                   backdropFilter: 'blur(10px)',
                   border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                 }}>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-                      <HotIcon sx={{ color: theme.palette.error.main }} />
-                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: { xs: 2, sm: 2.5, md: 3 } }}>
+                      <HotIcon sx={{ color: theme.palette.error.main, fontSize: { xs: 20, sm: 22, md: 24 } }} />
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }
+                        }}
+                      >
                         Feature Details
                       </Typography>
                     </Box>
-                    <TableContainer component={Paper} elevation={0} sx={{ background: 'transparent' }}>
-                      <Table>
+                    <TableContainer
+                      component={Paper}
+                      elevation={0}
+                      sx={{
+                        background: 'transparent',
+                        overflowX: 'auto',
+                        '&::-webkit-scrollbar': {
+                          height: 8,
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                          backgroundColor: alpha(theme.palette.primary.main, 0.3),
+                          borderRadius: 4,
+                        },
+                      }}
+                    >
+                      <Table sx={{ minWidth: { xs: 600, md: 'auto' } }}>
                         <TableHead>
                           <TableRow>
-                            <TableCell sx={{ fontWeight: 600 }}>#</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }}>Feature</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }}>Theme</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }}>Mentions</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }}>Urgency</TableCell>
-                            <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
+                            <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.875rem' }, p: { xs: 1, sm: 2 } }}>#</TableCell>
+                            <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.875rem' }, p: { xs: 1, sm: 2 } }}>Feature</TableCell>
+                            <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.875rem' }, p: { xs: 1, sm: 2 } }}>Theme</TableCell>
+                            <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.875rem' }, p: { xs: 1, sm: 2 } }}>Mentions</TableCell>
+                            <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.875rem' }, p: { xs: 1, sm: 2 } }}>Urgency</TableCell>
+                            <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.875rem' }, p: { xs: 1, sm: 2 } }}>Status</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
                           {topFeatures.map((feature, idx) => (
                             <TableRow key={feature.id} hover>
-                              <TableCell>
-                                <Typography variant="body2" sx={{ fontWeight: 600, color: theme.palette.text.secondary }}>
+                              <TableCell sx={{ p: { xs: 1, sm: 2 } }}>
+                                <Typography
+                                  variant="body2"
+                                  sx={{
+                                    fontWeight: 600,
+                                    color: theme.palette.text.secondary,
+                                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                                  }}
+                                >
                                   {idx + 1}
                                 </Typography>
                               </TableCell>
-                              <TableCell>
-                                <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                              <TableCell sx={{ p: { xs: 1, sm: 2 } }}>
+                                <Typography
+                                  variant="body2"
+                                  sx={{
+                                    fontWeight: 500,
+                                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                                  }}
+                                >
                                   {feature.name}
                                 </Typography>
                               </TableCell>
-                              <TableCell>
+                              <TableCell sx={{ p: { xs: 1, sm: 2 } }}>
                                 {feature.theme ? (
                                   <Chip
                                     label={feature.theme.name}
@@ -628,6 +780,8 @@ export function ExecutiveInsightsPage(): JSX.Element {
                                       color: theme.palette.primary.main,
                                       border: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
                                       fontWeight: 500,
+                                      height: { xs: 20, sm: 24 },
+                                      fontSize: { xs: '0.7rem', sm: '0.75rem' },
                                     }}
                                   />
                                 ) : (
@@ -639,11 +793,13 @@ export function ExecutiveInsightsPage(): JSX.Element {
                                       color: theme.palette.text.secondary,
                                       border: `1px solid ${alpha(theme.palette.text.secondary, 0.3)}`,
                                       fontWeight: 500,
+                                      height: { xs: 20, sm: 24 },
+                                      fontSize: { xs: '0.7rem', sm: '0.75rem' },
                                     }}
                                   />
                                 )}
                               </TableCell>
-                              <TableCell>
+                              <TableCell sx={{ p: { xs: 1, sm: 2 } }}>
                                 <Chip
                                   label={feature.mention_count}
                                   size="small"
@@ -652,10 +808,12 @@ export function ExecutiveInsightsPage(): JSX.Element {
                                     color: theme.palette.secondary.main,
                                     border: `1px solid ${alpha(theme.palette.secondary.main, 0.3)}`,
                                     fontWeight: 600,
+                                    height: { xs: 20, sm: 24 },
+                                    fontSize: { xs: '0.7rem', sm: '0.75rem' },
                                   }}
                                 />
                               </TableCell>
-                              <TableCell>
+                              <TableCell sx={{ p: { xs: 1, sm: 2 } }}>
                                 <Chip
                                   label={feature.urgency}
                                   size="small"
@@ -665,10 +823,12 @@ export function ExecutiveInsightsPage(): JSX.Element {
                                     border: `1px solid ${alpha(getUrgencyColor(feature.urgency), 0.3)}`,
                                     textTransform: 'capitalize',
                                     fontWeight: 500,
+                                    height: { xs: 20, sm: 24 },
+                                    fontSize: { xs: '0.7rem', sm: '0.75rem' },
                                   }}
                                 />
                               </TableCell>
-                              <TableCell>
+                              <TableCell sx={{ p: { xs: 1, sm: 2 } }}>
                                 <Chip
                                   label={feature.status.replace('_', ' ')}
                                   size="small"
@@ -678,6 +838,8 @@ export function ExecutiveInsightsPage(): JSX.Element {
                                     border: `1px solid ${alpha(getStatusColor(feature.status), 0.3)}`,
                                     textTransform: 'capitalize',
                                     fontWeight: 500,
+                                    height: { xs: 20, sm: 24 },
+                                    fontSize: { xs: '0.7rem', sm: '0.75rem' },
                                   }}
                                 />
                               </TableCell>
