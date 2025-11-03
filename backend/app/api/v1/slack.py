@@ -391,9 +391,19 @@ def convert_markdown_to_slack_mrkdwn(text: str) -> str:
     """
     Convert standard markdown to Slack's mrkdwn format
     - **bold** becomes *bold*
+    - ### Headings become *bold text* with newlines
     - Remove extra formatting that doesn't render well
     """
     import re
+
+    # Convert ### headings to bold text with extra newlines for emphasis
+    text = re.sub(r'###\s+([^\n]+)', r'\n*\1*', text)
+
+    # Convert ## headings to bold text
+    text = re.sub(r'##\s+([^\n]+)', r'\n*\1*', text)
+
+    # Convert # headings to bold text
+    text = re.sub(r'#\s+([^\n]+)', r'\n*\1*', text)
 
     # Convert **bold** to *bold* (Slack uses single asterisks)
     text = re.sub(r'\*\*([^*]+)\*\*', r'*\1*', text)
