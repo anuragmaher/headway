@@ -17,6 +17,7 @@ import {
   Chip,
   alpha,
   useTheme,
+  useMediaQuery,
   IconButton,
   Tooltip,
 } from '@mui/material';
@@ -52,6 +53,7 @@ export function CustomerList({
   onCustomerSelect,
 }: CustomerListProps): JSX.Element {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -71,7 +73,8 @@ export function CustomerList({
         setCustomers(response.customers);
 
         // Auto-select first customer if none is selected and customers exist
-        if (!selectedCustomerId && response.customers.length > 0) {
+        // Only auto-select on desktop to avoid hiding the customer list on mobile
+        if (!selectedCustomerId && response.customers.length > 0 && !isMobile) {
           onCustomerSelect(response.customers[0].id);
         }
       } catch (error) {
@@ -82,7 +85,7 @@ export function CustomerList({
     };
 
     fetchCustomers();
-  }, [workspaceId, searchTerm, refreshKey]);
+  }, [workspaceId, searchTerm, refreshKey, isMobile]);
 
   const handleRefresh = () => {
     setRefreshKey((prev) => prev + 1);

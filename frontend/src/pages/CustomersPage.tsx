@@ -1,13 +1,14 @@
 /**
  * Customers Page
  *
- * Two-column layout:
- * - Left: Customer list with search
- * - Right: Consolidated customer view (features, pain points, summary, highlights)
+ * Responsive layout:
+ * - Desktop: Two-column layout (list + detail)
+ * - Mobile: Single view that toggles between list and detail
  */
 
 import React, { useState, useEffect } from 'react';
-import { Box, Container, Paper, useTheme, alpha } from '@mui/material';
+import { Box, Container, Paper, useTheme, alpha, IconButton, useMediaQuery } from '@mui/material';
+import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts/AdminLayout';
 import { CustomerList } from '@/features/customers/components/CustomerList';
 import { CustomerDetailView } from '@/features/customers/components/CustomerDetailView';
@@ -16,12 +17,22 @@ import { API_BASE_URL } from '@/config/api.config';
 
 export function CustomersPage(): JSX.Element {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { tokens, isAuthenticated } = useAuthStore();
   const workspaceId = tokens?.workspace_id;
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [fetchingWorkspaceId, setFetchingWorkspaceId] = useState(false);
   const [attemptedFetch, setAttemptedFetch] = useState(false);
+
+  // On mobile, determine which view to show
+  const showList = !isMobile || !selectedCustomerId;
+  const showDetail = !isMobile || selectedCustomerId;
+
+  // Handler for mobile back button
+  const handleBackToList = () => {
+    setSelectedCustomerId(null);
+  };
 
   // Hydration: Check if store is ready
   useEffect(() => {
@@ -89,67 +100,113 @@ export function CustomersPage(): JSX.Element {
 
   return (
     <AdminLayout>
-      <Container maxWidth={false} sx={{ py: 3, px: { xs: 2, sm: 3 } }}>
+      <Container
+        maxWidth={false}
+        sx={{
+          py: { xs: 1, sm: 2, md: 3 },
+          px: { xs: 1, sm: 2, md: 3 },
+          height: '100%',
+        }}
+      >
         <Box
           sx={{
             display: 'flex',
-            gap: 3,
-            height: 'calc(100vh - 120px)',
+            flexDirection: { xs: 'column', md: 'row' },
+            gap: { xs: 0, md: 3 },
+            height: { xs: 'calc(100vh - 80px)', md: 'calc(100vh - 120px)' },
             overflow: 'hidden',
           }}
         >
-          {/* Left Column - Customer List */}
-          <Paper
-            elevation={0}
-            sx={{
-              flex: '0 0 400px',
-              display: 'flex',
-              flexDirection: 'column',
-              borderRadius: 2,
-              overflow: 'hidden',
-              background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)} 0%, ${alpha(theme.palette.background.paper, 0.7)} 100%)`,
-              backdropFilter: 'blur(20px)',
-              border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-            }}
-          >
-            <CustomerList
-              workspaceId={workspaceId}
-              selectedCustomerId={selectedCustomerId}
-              onCustomerSelect={setSelectedCustomerId}
-            />
-          </Paper>
-
-          {/* Right Column - Customer Detail View */}
-          <Paper
-            elevation={0}
-            sx={{
-              flex: 1,
-              borderRadius: 2,
-              overflow: 'auto',
-              background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)} 0%, ${alpha(theme.palette.background.paper, 0.7)} 100%)`,
-              backdropFilter: 'blur(20px)',
-              border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-            }}
-          >
-            {selectedCustomerId ? (
-              <CustomerDetailView
-                customerId={selectedCustomerId}
+          {/* Left Column - Customer List (hidden on mobile when detail is showing) */}
+          {showList && (
+            <Paper
+              elevation={0}
+              sx={{
+                flex: { xs: '1 1 auto', md: '0 0 400px' },
+                display: showList ? 'flex' : 'none',
+                flexDirection: 'column',
+                borderRadius: { xs: 0, sm: 2 },
+                overflow: 'hidden',
+                background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)} 0%, ${alpha(theme.palette.background.paper, 0.7)} 100%)`,
+                backdropFilter: 'blur(20px)',
+                border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                height: '100%',
+              }}
+            >
+              <CustomerList
                 workspaceId={workspaceId}
+                selectedCustomerId={selectedCustomerId}
+                onCustomerSelect={setSelectedCustomerId}
               />
-            ) : (
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '100%',
-                  color: 'text.secondary',
-                }}
-              >
-                Select a customer to view details
+            </Paper>
+          )}
+
+          {/* Right Column - Customer Detail View (hidden on mobile when list is showing) */}
+          {showDetail && (
+            <Paper
+              elevation={0}
+              sx={{
+                flex: 1,
+                display: showDetail ? 'flex' : 'none',
+                flexDirection: 'column',
+                borderRadius: { xs: 0, sm: 2 },
+                overflow: 'hidden',
+                background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)} 0%, ${alpha(theme.palette.background.paper, 0.7)} 100%)`,
+                backdropFilter: 'blur(20px)',
+                border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                height: '100%',
+              }}
+            >
+              {/* Mobile Back Button */}
+              {isMobile && selectedCustomerId && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    p: 2,
+                    borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                    gap: 1,
+                  }}
+                >
+                  <IconButton
+                    onClick={handleBackToList}
+                    sx={{
+                      color: 'primary.main',
+                    }}
+                  >
+                    <ArrowBackIcon />
+                  </IconButton>
+                  <Box sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
+                    Back to customers
+                  </Box>
+                </Box>
+              )}
+
+              {/* Detail Content */}
+              <Box sx={{ flex: 1, overflow: 'auto' }}>
+                {selectedCustomerId ? (
+                  <CustomerDetailView
+                    customerId={selectedCustomerId}
+                    workspaceId={workspaceId}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '100%',
+                      color: 'text.secondary',
+                      px: 2,
+                      textAlign: 'center',
+                    }}
+                  >
+                    Select a customer to view details
+                  </Box>
+                )}
               </Box>
-            )}
-          </Paper>
+            </Paper>
+          )}
         </Box>
       </Container>
     </AdminLayout>

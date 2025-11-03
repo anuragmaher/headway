@@ -312,8 +312,23 @@ Guidelines:
 - If there are customer names, mention them
 - If there are metrics (message counts, feature requests, etc.), highlight them"""
 
-            # Limit data in prompt to first 20 rows
-            data_preview = data[:20]
+            # Truncate long text fields to avoid context length issues
+            def truncate_long_fields(row_dict: Dict[str, Any], max_length: int = 500) -> Dict[str, Any]:
+                """Truncate string fields that are too long"""
+                truncated = {}
+                for key, value in row_dict.items():
+                    if isinstance(value, str) and len(value) > max_length:
+                        truncated[key] = value[:max_length] + "... (truncated)"
+                    else:
+                        truncated[key] = value
+                return truncated
+
+            # Limit data and truncate long fields
+            # For queries with large content (like message_content), use fewer rows
+            has_large_content = any('content' in str(k).lower() for row in data[:1] for k in row.keys())
+            preview_count = 5 if has_large_content else 15
+
+            data_preview = [truncate_long_fields(row) for row in data[:preview_count]]
 
             user_prompt = f"""User question: "{user_query}"
 
@@ -337,8 +352,16 @@ Convert this into a natural, conversational response that directly answers the u
 
         except Exception as e:
             logger.error(f"Error formatting response: {e}")
-            # Fallback to raw data
-            return f"Found {len(data)} results:\n\n{json.dumps(data[:5], indent=2, default=str)}"
+            # Better fallback with truncated data
+            try:
+                # Try to provide a simple summary instead of raw JSON
+                summary = f"I found {len(data)} results"
+                if data and len(data) > 0:
+                    first_row_keys = list(data[0].keys())
+                    summary += f" with fields: {', '.join(first_row_keys[:5])}"
+                return summary + ". The data was too large to format properly. Please try a more specific query."
+            except:
+                return f"Found {len(data)} results, but encountered an error formatting the response. Please try a more specific query."
 
 
 # Singleton instance

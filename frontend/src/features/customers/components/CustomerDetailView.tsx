@@ -71,7 +71,13 @@ export function CustomerDetailView({
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', p: 4 }}>
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        p: { xs: 2, sm: 3, md: 4 }
+      }}>
         <CircularProgress />
       </Box>
     );
@@ -79,7 +85,7 @@ export function CustomerDetailView({
 
   if (error || !data) {
     return (
-      <Box sx={{ p: 4 }}>
+      <Box sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
         <Alert severity="error">{error || 'Failed to load customer data'}</Alert>
       </Box>
     );
@@ -111,10 +117,17 @@ export function CustomerDetailView({
   };
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
       {/* Header - Customer Info */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+      <Box sx={{ mb: { xs: 3, md: 4 } }}>
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 700,
+            mb: 1,
+            fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' }
+          }}
+        >
           {customer.name}
         </Typography>
         {customer.domain && (
@@ -133,12 +146,21 @@ export function CustomerDetailView({
         )}
 
         {/* Metrics Row */}
-        <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <Stack
+          direction="row"
+          spacing={{ xs: 1, sm: 2 }}
+          sx={{
+            mb: 2,
+            flexWrap: 'wrap',
+            gap: { xs: 1, sm: 2 },
+          }}
+        >
           {customer.arr && (
             <Chip
               label={`${formatCurrency(customer.arr)} ARR`}
               color="success"
               variant="outlined"
+              size="small"
             />
           )}
           {customer.mrr && !customer.arr && (
@@ -146,13 +168,14 @@ export function CustomerDetailView({
               label={`${formatCurrency(customer.mrr)} MRR`}
               color="success"
               variant="outlined"
+              size="small"
             />
           )}
           {customer.industry && (
-            <Chip label={customer.industry} variant="outlined" />
+            <Chip label={customer.industry} variant="outlined" size="small" />
           )}
           {customer.deal_stage && (
-            <Chip label={customer.deal_stage} color="primary" variant="outlined" />
+            <Chip label={customer.deal_stage} color="primary" variant="outlined" size="small" />
           )}
         </Stack>
 
@@ -161,13 +184,21 @@ export function CustomerDetailView({
           <Paper
             elevation={0}
             sx={{
-              p: 2,
+              p: { xs: 1.5, sm: 2 },
               mt: 2,
               background: alpha(theme.palette.info.main, 0.05),
               border: `1px solid ${alpha(theme.palette.info.main, 0.2)}`,
             }}
           >
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'info.main', mb: 1 }}>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                fontWeight: 600,
+                color: 'info.main',
+                mb: 1,
+                fontSize: { xs: '0.875rem', sm: '0.875rem' }
+              }}
+            >
               How they use the product
             </Typography>
             <Typography
@@ -175,7 +206,8 @@ export function CustomerDetailView({
               sx={{
                 color: 'text.secondary',
                 lineHeight: 1.6,
-                whiteSpace: 'pre-line'
+                whiteSpace: 'pre-line',
+                fontSize: { xs: '0.813rem', sm: '0.875rem' }
               }}
             >
               {customer.use_cases}
@@ -223,23 +255,36 @@ export function CustomerDetailView({
         <Paper
           elevation={0}
           sx={{
-            p: 3,
-            mb: 3,
+            p: { xs: 2, sm: 2.5, md: 3 },
+            mb: { xs: 2, md: 3 },
             background: alpha(theme.palette.background.default, 0.5),
             border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
           }}
         >
-          <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
+          <Typography
+            variant="body1"
+            sx={{
+              color: 'text.secondary',
+              lineHeight: 1.6,
+              fontSize: { xs: '0.875rem', sm: '1rem' }
+            }}
+          >
             {summary}
           </Typography>
         </Paper>
       )}
 
       {/* Feature Requests Section */}
-      <Box sx={{ mb: 4 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <CategoryIcon sx={{ mr: 1, color: 'text.primary' }} />
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+      <Box sx={{ mb: { xs: 3, md: 4 } }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 1.5, md: 2 } }}>
+          <CategoryIcon sx={{ mr: 1, color: 'text.primary', fontSize: { xs: '1.25rem', md: '1.5rem' } }} />
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 600,
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
+          >
             Feature Requests
           </Typography>
           <Chip
@@ -260,20 +305,33 @@ export function CustomerDetailView({
                 key={feature.id}
                 elevation={0}
                 sx={{
-                  p: 2,
-                  mb: 1.5,
+                  p: { xs: 1.5, sm: 2 },
+                  mb: { xs: 1, sm: 1.5 },
                   background: alpha(theme.palette.background.default, 0.3),
                   border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                   borderLeft: `4px solid ${getUrgencyColor(feature.urgency)}`,
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
                     bgcolor: alpha(theme.palette.primary.main, 0.02),
-                    transform: 'translateX(4px)',
+                    transform: { xs: 'none', md: 'translateX(4px)' },
                   },
                 }}
               >
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                <Box sx={{
+                  display: 'flex',
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  justifyContent: 'space-between',
+                  alignItems: { xs: 'flex-start', sm: 'flex-start' },
+                  mb: 1,
+                  gap: 1
+                }}>
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: { xs: '0.938rem', sm: '1rem' }
+                    }}
+                  >
                     {feature.name}
                   </Typography>
                   <Chip
@@ -287,11 +345,18 @@ export function CustomerDetailView({
                   />
                 </Box>
                 {feature.description && (
-                  <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: 'text.secondary',
+                      mb: 1,
+                      fontSize: { xs: '0.813rem', sm: '0.875rem' }
+                    }}
+                  >
                     {feature.description}
                   </Typography>
                 )}
-                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                <Box sx={{ display: 'flex', gap: { xs: 0.5, sm: 1 }, flexWrap: 'wrap' }}>
                   {feature.theme_name && (
                     <Chip label={feature.theme_name} size="small" variant="outlined" />
                   )}
@@ -315,10 +380,16 @@ export function CustomerDetailView({
 
       {/* Pain Points Section */}
       {pain_points && pain_points.length > 0 && (
-        <Box sx={{ mb: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <ErrorOutlineIcon sx={{ mr: 1, color: 'warning.main' }} />
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+        <Box sx={{ mb: { xs: 3, md: 4 } }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 1.5, md: 2 } }}>
+            <ErrorOutlineIcon sx={{ mr: 1, color: 'warning.main', fontSize: { xs: '1.25rem', md: '1.5rem' } }} />
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 600,
+                fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              }}
+            >
               Pain Points
             </Typography>
             <Chip
@@ -335,14 +406,20 @@ export function CustomerDetailView({
                 key={index}
                 elevation={0}
                 sx={{
-                  p: 2,
-                  mb: 1.5,
+                  p: { xs: 1.5, sm: 2 },
+                  mb: { xs: 1, sm: 1.5 },
                   background: alpha(theme.palette.warning.main, 0.05),
                   border: `1px solid ${alpha(theme.palette.warning.main, 0.2)}`,
                   borderLeft: `4px solid ${theme.palette.warning.main}`,
                 }}
               >
-                <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'text.primary',
+                    fontSize: { xs: '0.813rem', sm: '0.875rem' }
+                  }}
+                >
                   "{painPoint}"
                 </Typography>
               </Paper>
