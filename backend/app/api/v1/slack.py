@@ -331,10 +331,19 @@ async def send_slack_response(response_url: str, text: str):
         logger.error(f"Error sending delayed Slack response: {e}")
 
 
+# Dependency to cache request body before form parsing
+async def get_raw_body(request: Request) -> bytes:
+    """Cache the raw request body before FastAPI consumes it"""
+    if not hasattr(request.state, "body"):
+        request.state.body = await request.body()
+    return request.state.body
+
+
 @router.post("/command")
 async def handle_slash_command(
-    request: Request,
     background_tasks: BackgroundTasks,
+    request: Request,
+    raw_body: bytes = Depends(get_raw_body),
     team_id: str = Form(...),
     team_domain: str = Form(...),
     user_id: str = Form(...),
@@ -347,21 +356,24 @@ async def handle_slash_command(
 ):
     """
     Handle Slack slash command: /headway <query>
-    
+
     This endpoint processes natural language queries from Slack and returns
     customer insights using the workspace chat service.
-    
+
     Example: /headway Which customers are in Healthcare?
     """
     try:
-        # Step 1: Verify Slack signature
-        body = await request.body()
-        timestamp = request.headers.get("X-Slack-Request-Timestamp", "")
-        signature = request.headers.get("X-Slack-Signature", "")
-        
-        if not verify_slack_signature(body, timestamp, signature):
-            logger.warning(f"Invalid Slack signature from team {team_id}")
-            raise HTTPException(status_code=401, detail="Invalid request signature")
+        # Step 1: Verify Slack signature (if signing secret is configured)
+        slack_signing_secret = os.getenv("SLACK_SIGNING_SECRET", "")
+        if slack_signing_secret:
+            timestamp = request.headers.get("X-Slack-Request-Timestamp", "")
+            signature = request.headers.get("X-Slack-Signature", "")
+
+            if not verify_slack_signature(raw_body, timestamp, signature):
+                logger.warning(f"Invalid Slack signature from team {team_id}")
+                raise HTTPException(status_code=401, detail="Invalid request signature")
+        else:
+            logger.warning("SLACK_SIGNING_SECRET not configured - skipping signature verification")
         
         logger.info(f"Slash command received from {user_name} ({user_id}) in team {team_id}: {text}")
         
