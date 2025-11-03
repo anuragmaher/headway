@@ -346,16 +346,13 @@ async def send_slack_response(response_url: str, text: str = None, blocks: list 
 @router.post("/command")
 async def handle_slash_command(
     background_tasks: BackgroundTasks,
-    request: Request,
     team_id: str = Form(...),
     team_domain: str = Form(...),
     user_id: str = Form(...),
     user_name: str = Form(...),
     command: str = Form(...),
     text: str = Form(...),
-    response_url: str = Form(...),
-    trigger_id: str = Form(None),
-    db: Session = Depends(get_db)
+    response_url: str = Form(...)
 ):
     """
     Handle Slack slash command: /headway <query>
@@ -363,15 +360,16 @@ async def handle_slash_command(
     This endpoint processes natural language queries from Slack and returns
     customer insights using the workspace chat service.
 
+    CRITICAL: This endpoint MUST respond within 3 seconds to avoid Slack timeout.
+    All processing happens in background task after immediate acknowledgment.
+
     Example: /headway Which customers are in Healthcare?
     """
-    # IMPORTANT: Respond immediately to avoid Slack's 3-second timeout
-    # All validation and processing happens in background task
-
+    # Log the command (fast operation)
     logger.info(f"Slash command received from {user_name} ({user_id}) in team {team_id}: {text}")
 
-    # Schedule background task IMMEDIATELY - do all processing there
-    # Note: Don't pass db session, create fresh one in background task
+    # Schedule background task IMMEDIATELY
+    # Background task creates its own DB session
     background_tasks.add_task(
         process_and_respond,
         team_id=team_id,
