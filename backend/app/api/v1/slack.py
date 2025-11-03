@@ -365,60 +365,26 @@ async def handle_slash_command(
 
     Example: /headway Which customers are in Healthcare?
     """
-    try:
-        # Step 1: Log the command
-        logger.info(f"Slash command received from {user_name} ({user_id}) in team {team_id}: {text}")
-        
-        # Step 2: Look up workspace by slack_team_id
-        workspace = db.query(Workspace).filter(
-            Workspace.slack_team_id == team_id
-        ).first()
-        
-        if not workspace:
-            logger.warning(f"Workspace not found for Slack team {team_id}")
-            return {
-                "response_type": "ephemeral",
-                "text": f"⚠️ HeadwayHQ is not connected to this Slack workspace.\n\nPlease connect at: {os.getenv('FRONTEND_URL', 'https://app.headwayhq.com')}/settings"
-            }
-        
-        # Step 3: Validate query text
-        if not text or text.strip() == "":
-            return {
-                "response_type": "ephemeral",
-                "text": "ℹ️ *How to use /headway*\n\n"
-                        "Ask natural language questions about your customers:\n\n"
-                        "• `/headway Which customers are in Healthcare?`\n"
-                        "• `/headway Show me customers with most messages`\n"
-                        "• `/headway What are the top feature requests?`\n"
-                        "• `/headway List customers by industry`"
-            }
-        
-        # Step 4: Return immediate response (avoid 3-second timeout)
-        # Schedule background task to process query and send delayed response
-        background_tasks.add_task(
-            process_and_respond,
-            workspace_id=str(workspace.id),
-            user_query=text.strip(),
-            response_url=response_url,
-            user_name=user_name,
-            db=db
-        )
-        
-        return {
-            "response_type": "ephemeral",
-            "text": f"⏳ Processing your question: _{text.strip()}_\n\nThis may take a few seconds..."
-        }
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error handling Slack slash command: {e}")
-        import traceback
-        traceback.print_exc()
-        return {
-            "response_type": "ephemeral",
-            "text": f"❌ Sorry, something went wrong processing your request. Please try again."
-        }
+    # IMPORTANT: Respond immediately to avoid Slack's 3-second timeout
+    # All validation and processing happens in background task
+
+    logger.info(f"Slash command received from {user_name} ({user_id}) in team {team_id}: {text}")
+
+    # Schedule background task IMMEDIATELY - do all processing there
+    # Note: Don't pass db session, create fresh one in background task
+    background_tasks.add_task(
+        process_and_respond,
+        team_id=team_id,
+        user_query=text.strip() if text else "",
+        response_url=response_url,
+        user_name=user_name
+    )
+
+    # Return immediate acknowledgment (within milliseconds)
+    return {
+        "response_type": "ephemeral",
+        "text": "⏳ Processing your question..."
+    }
 
 
 def convert_markdown_to_slack_mrkdwn(text: str) -> str:
@@ -436,27 +402,67 @@ def convert_markdown_to_slack_mrkdwn(text: str) -> str:
 
 
 async def process_and_respond(
-    workspace_id: str,
+    team_id: str,
     user_query: str,
     response_url: str,
-    user_name: str,
-    db: Session
+    user_name: str
 ):
     """
     Background task to process query and send response to Slack
+    Handles all validation and processing after immediate acknowledgment
+    Creates its own database session to avoid lifecycle issues
     """
+    # Create a fresh database session for this background task
+    db = next(get_db())
+
     try:
-        # Get workspace chat service
+        # Step 1: Look up workspace by slack_team_id
+        workspace = db.query(Workspace).filter(
+            Workspace.slack_team_id == team_id
+        ).first()
+
+        if not workspace:
+            logger.warning(f"Workspace not found for Slack team {team_id}")
+            error_blocks = [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"⚠️ *HeadwayHQ is not connected to this Slack workspace*\n\nPlease connect at: {os.getenv('FRONTEND_URL', 'https://app.headwayhq.com')}/settings"
+                    }
+                }
+            ]
+            await send_slack_response(response_url, text="Not connected", blocks=error_blocks)
+            return
+
+        # Step 2: Validate query text
+        if not user_query or user_query.strip() == "":
+            help_blocks = [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "ℹ️ *How to use /headway*\n\nAsk natural language questions about your customers:\n\n"
+                                "• `/headway Which customers are in Healthcare?`\n"
+                                "• `/headway Show me customers with most messages`\n"
+                                "• `/headway What are the top feature requests?`\n"
+                                "• `/headway List customers by industry`"
+                    }
+                }
+            ]
+            await send_slack_response(response_url, text="Help", blocks=help_blocks)
+            return
+
+        # Step 3: Get workspace chat service and process query
         chat_service = get_workspace_chat_service()
 
-        # Process query
         result = chat_service.chat(
             db=db,
-            workspace_id=workspace_id,
+            workspace_id=str(workspace.id),
             user_query=user_query
         )
 
-        # Format response for Slack using Block Kit
+        # Step 4: Format response for Slack using Block Kit
         if result.get("success"):
             # Convert markdown to Slack's mrkdwn format
             slack_formatted_response = convert_markdown_to_slack_mrkdwn(result['response'])
@@ -500,6 +506,8 @@ async def process_and_respond(
                 text=f"Response to: {user_query}",  # Fallback text
                 blocks=blocks
             )
+
+            logger.info(f"Successfully processed Slack command for workspace {workspace.id}")
         else:
             # Error response with simple block
             error_blocks = [
@@ -516,8 +524,6 @@ async def process_and_respond(
                 text="Error processing your question",
                 blocks=error_blocks
             )
-
-        logger.info(f"Successfully processed Slack command for workspace {workspace_id}")
 
     except Exception as e:
         logger.error(f"Error processing Slack command in background: {e}")
@@ -539,3 +545,6 @@ async def process_and_respond(
             text="Error occurred",
             blocks=error_blocks
         )
+    finally:
+        # Always close the database session
+        db.close()
