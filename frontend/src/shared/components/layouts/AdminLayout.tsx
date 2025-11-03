@@ -448,6 +448,8 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
           minHeight: '100vh',
           background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.9)} 100%)`,
           position: 'relative',
+          maxWidth: '100%',
+          overflowX: 'hidden',
           '&::before': {
             content: '""',
             position: 'absolute',

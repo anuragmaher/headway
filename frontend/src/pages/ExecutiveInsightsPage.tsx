@@ -273,15 +273,20 @@ export function ExecutiveInsightsPage(): JSX.Element {
 
   return (
     <AdminLayout>
-      <Box sx={{ pb: { xs: 2, sm: 3, md: 4 }, px: { xs: 2, sm: 3, md: 0 } }}>
+      <Box sx={{
+        pb: { xs: 2, sm: 3, md: 4 },
+        px: { xs: 1.5, sm: 3, md: 0 },
+        maxWidth: '100%',
+        overflowX: 'hidden',
+      }}>
         {/* Header */}
-        <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+        <Box sx={{ mb: { xs: 1.5, sm: 3, md: 4 } }}>
           <Typography
             variant="h4"
             sx={{
               fontWeight: 700,
-              mb: 1,
-              fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2.125rem' }
+              mb: 0.5,
+              fontSize: { xs: '1.35rem', sm: '1.75rem', md: '2.125rem' }
             }}
           >
             Executive Insights
@@ -289,7 +294,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
           <Typography
             variant="body1"
             color="text.secondary"
-            sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+            sx={{ fontSize: { xs: '0.813rem', sm: '1rem' } }}
           >
             High-level product intelligence analytics and trends
           </Typography>
@@ -304,7 +309,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
         {metrics && (
           <>
             {/* Top KPI Cards */}
-            <Grid container spacing={{ xs: 2, sm: 2, md: 3 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+            <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }} sx={{ mb: { xs: 1.5, sm: 3, md: 4 } }}>
               {/* Total Features */}
               <Grid item xs={12} sm={6} md={3}>
                 <Card sx={{
@@ -312,27 +317,27 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
                   height: '100%',
                 }}>
-                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: { xs: 1, sm: 1.5, md: 2 } }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: { xs: 0.75, sm: 1.5, md: 2 } }}>
                       <Typography
                         variant="body2"
                         color="text.secondary"
                         sx={{
                           fontWeight: 600,
-                          fontSize: { xs: '0.75rem', sm: '0.813rem', md: '0.875rem' }
+                          fontSize: { xs: '0.7rem', sm: '0.813rem', md: '0.875rem' }
                         }}
                       >
                         Total Features
                       </Typography>
-                      <FeaturesIcon sx={{ color: theme.palette.primary.main, fontSize: { xs: 24, sm: 28, md: 32 } }} />
+                      <FeaturesIcon sx={{ color: theme.palette.primary.main, fontSize: { xs: 22, sm: 28, md: 32 } }} />
                     </Box>
                     <Typography
                       variant="h3"
                       sx={{
                         fontWeight: 700,
                         color: theme.palette.primary.main,
-                        mb: 1,
-                        fontSize: { xs: '1.75rem', sm: '2rem', md: '3rem' }
+                        mb: 0.5,
+                        fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' }
                       }}
                     >
                       {metrics.total_features}
@@ -340,7 +345,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                     <Typography
                       variant="caption"
                       color="text.secondary"
-                      sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
+                      sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
                     >
                       Across {metrics.total_themes} themes
                     </Typography>
@@ -355,27 +360,27 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   border: `1px solid ${alpha(theme.palette.secondary.main, 0.2)}`,
                   height: '100%',
                 }}>
-                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: { xs: 1, sm: 1.5, md: 2 } }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: { xs: 0.75, sm: 1.5, md: 2 } }}>
                       <Typography
                         variant="body2"
                         color="text.secondary"
                         sx={{
                           fontWeight: 600,
-                          fontSize: { xs: '0.75rem', sm: '0.813rem', md: '0.875rem' }
+                          fontSize: { xs: '0.7rem', sm: '0.813rem', md: '0.875rem' }
                         }}
                       >
                         Customer Mentions
                       </Typography>
-                      <PeopleIcon sx={{ color: theme.palette.secondary.main, fontSize: { xs: 24, sm: 28, md: 32 } }} />
+                      <PeopleIcon sx={{ color: theme.palette.secondary.main, fontSize: { xs: 22, sm: 28, md: 32 } }} />
                     </Box>
                     <Typography
                       variant="h3"
                       sx={{
                         fontWeight: 700,
                         color: theme.palette.secondary.main,
-                        mb: 1,
-                        fontSize: { xs: '1.75rem', sm: '2rem', md: '3rem' }
+                        mb: 0.5,
+                        fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' }
                       }}
                     >
                       {metrics.total_mentions}
@@ -383,7 +388,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                     <Typography
                       variant="caption"
                       color="text.secondary"
-                      sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
+                      sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
                     >
                       Total feature requests
                     </Typography>
@@ -398,19 +403,19 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   border: `1px solid ${alpha(theme.palette.success.main, 0.2)}`,
                   height: '100%',
                 }}>
-                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: { xs: 1, sm: 1.5, md: 2 } }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: { xs: 0.75, sm: 1.5, md: 2 } }}>
                       <Typography
                         variant="body2"
                         color="text.secondary"
                         sx={{
                           fontWeight: 600,
-                          fontSize: { xs: '0.75rem', sm: '0.813rem', md: '0.875rem' }
+                          fontSize: { xs: '0.7rem', sm: '0.813rem', md: '0.875rem' }
                         }}
                       >
                         This Week
                       </Typography>
-                      <Box sx={{ '& svg': { fontSize: { xs: '30px !important', sm: '35px !important', md: '40px !important' } } }}>
+                      <Box sx={{ '& svg': { fontSize: { xs: '26px !important', sm: '35px !important', md: '40px !important' } } }}>
                         {getTrendIcon()}
                       </Box>
                     </Box>
@@ -419,8 +424,8 @@ export function ExecutiveInsightsPage(): JSX.Element {
                       sx={{
                         fontWeight: 700,
                         color: theme.palette.success.main,
-                        mb: 1,
-                        fontSize: { xs: '1.75rem', sm: '2rem', md: '3rem' }
+                        mb: 0.5,
+                        fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' }
                       }}
                     >
                       {metrics.recent_activity.features_this_week}
@@ -429,7 +434,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                       <Typography
                         variant="caption"
                         color="text.secondary"
-                        sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
+                        sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
                       >
                         {getTrendPercentage() > 0 ? '+' : ''}{getTrendPercentage()}% vs last week
                       </Typography>
@@ -445,27 +450,27 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   border: `1px solid ${alpha(theme.palette.info.main, 0.2)}`,
                   height: '100%',
                 }}>
-                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: { xs: 1, sm: 1.5, md: 2 } }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: { xs: 0.75, sm: 1.5, md: 2 } }}>
                       <Typography
                         variant="body2"
                         color="text.secondary"
                         sx={{
                           fontWeight: 600,
-                          fontSize: { xs: '0.75rem', sm: '0.813rem', md: '0.875rem' }
+                          fontSize: { xs: '0.7rem', sm: '0.813rem', md: '0.875rem' }
                         }}
                       >
                         Completed
                       </Typography>
-                      <CheckCircleIcon sx={{ color: theme.palette.info.main, fontSize: { xs: 24, sm: 28, md: 32 } }} />
+                      <CheckCircleIcon sx={{ color: theme.palette.info.main, fontSize: { xs: 22, sm: 28, md: 32 } }} />
                     </Box>
                     <Typography
                       variant="h3"
                       sx={{
                         fontWeight: 700,
                         color: theme.palette.info.main,
-                        mb: 1,
-                        fontSize: { xs: '1.75rem', sm: '2rem', md: '3rem' }
+                        mb: 0.5,
+                        fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' }
                       }}
                     >
                       {metrics.features_by_status.completed}
@@ -473,7 +478,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                     <Typography
                       variant="caption"
                       color="text.secondary"
-                      sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
+                      sx={{ fontSize: { xs: '0.65rem', sm: '0.75rem' } }}
                     >
                       {Math.round((metrics.features_by_status.completed / metrics.total_features) * 100)}% of total
                     </Typography>
@@ -492,7 +497,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                   height: '100%',
                 }}>
-                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
                     <Typography
                       variant="h6"
                       sx={{
@@ -540,7 +545,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                   height: '100%',
                 }}>
-                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
                     <Typography
                       variant="h6"
                       sx={{
@@ -588,7 +593,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                   height: '100%',
                 }}>
-                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: { xs: 1.5, sm: 2 } }}>
                       <CategoryIcon sx={{ color: theme.palette.primary.main, fontSize: { xs: 20, sm: 22, md: 24 } }} />
                       <Typography
@@ -647,7 +652,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   backdropFilter: 'blur(10px)',
                   border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                 }}>
-                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: { xs: 2, sm: 2.5, md: 3 } }}>
                       <HotIcon sx={{ color: theme.palette.error.main, fontSize: { xs: 20, sm: 22, md: 24 } }} />
                       <Typography
@@ -705,7 +710,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                   backdropFilter: 'blur(10px)',
                   border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                 }}>
-                  <CardContent sx={{ p: { xs: 2, sm: 2, md: 3 } }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: { xs: 2, sm: 2.5, md: 3 } }}>
                       <HotIcon sx={{ color: theme.palette.error.main, fontSize: { xs: 20, sm: 22, md: 24 } }} />
                       <Typography
@@ -733,7 +738,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                         },
                       }}
                     >
-                      <Table sx={{ minWidth: { xs: 600, md: 'auto' } }}>
+                      <Table sx={{ width: '100%' }}>
                         <TableHead>
                           <TableRow>
                             <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.875rem' }, p: { xs: 1, sm: 2 } }}>#</TableCell>
