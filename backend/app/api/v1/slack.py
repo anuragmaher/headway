@@ -312,18 +312,30 @@ def verify_slack_signature(request_body: bytes, timestamp: str, signature: str) 
 
 
 # Background task to send delayed response
-async def send_slack_response(response_url: str, text: str):
+async def send_slack_response(response_url: str, text: str = None, blocks: list = None):
     """
     Send a delayed response to Slack using response_url
+    Supports both plain text and Block Kit format
     """
     try:
+        payload = {
+            "response_type": "ephemeral",  # Only visible to command user
+        }
+
+        if blocks:
+            payload["blocks"] = blocks
+            # Add fallback text for notifications
+            if text:
+                payload["text"] = text
+            else:
+                payload["text"] = "Response from HeadwayHQ"
+        else:
+            payload["text"] = text
+
         async with httpx.AsyncClient() as client:
             await client.post(
                 response_url,
-                json={
-                    "response_type": "ephemeral",  # Only visible to command user
-                    "text": text
-                },
+                json=payload,
                 timeout=30.0
             )
             logger.info(f"Sent delayed response to Slack")
@@ -422,34 +434,91 @@ async def process_and_respond(
     try:
         # Get workspace chat service
         chat_service = get_workspace_chat_service()
-        
+
         # Process query
         result = chat_service.chat(
             db=db,
             workspace_id=workspace_id,
             user_query=user_query
         )
-        
-        # Format response for Slack
+
+        # Format response for Slack using Block Kit
         if result.get("success"):
-            response_text = f"*Question:* {user_query}\n\n{result['response']}"
-            
+            blocks = [
+                {
+                    "type": "header",
+                    "text": {
+                        "type": "plain_text",
+                        "text": f"💬 {user_query}",
+                        "emoji": True
+                    }
+                },
+                {
+                    "type": "divider"
+                },
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": result['response']
+                    }
+                }
+            ]
+
             # Add SQL query info if available (for debugging)
             if result.get("sql_query"):
-                response_text += f"\n\n_Query method: SQL_"
+                blocks.append({
+                    "type": "context",
+                    "elements": [
+                        {
+                            "type": "mrkdwn",
+                            "text": "_Query method: SQL_"
+                        }
+                    ]
+                })
+
+            # Send formatted response with blocks
+            await send_slack_response(
+                response_url,
+                text=f"Response to: {user_query}",  # Fallback text
+                blocks=blocks
+            )
         else:
-            response_text = f"❌ {result.get('response', 'Unable to process your question. Please try rephrasing.')}"
-        
-        # Send delayed response
-        await send_slack_response(response_url, response_text)
-        
+            # Error response with simple block
+            error_blocks = [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"❌ {result.get('response', 'Unable to process your question. Please try rephrasing.')}"
+                    }
+                }
+            ]
+            await send_slack_response(
+                response_url,
+                text="Error processing your question",
+                blocks=error_blocks
+            )
+
         logger.info(f"Successfully processed Slack command for workspace {workspace_id}")
-        
+
     except Exception as e:
         logger.error(f"Error processing Slack command in background: {e}")
         import traceback
         traceback.print_exc()
-        
+
         # Send error response
-        error_text = f"❌ Sorry, I encountered an error: {str(e)}\n\nPlease try rephrasing your question or contact support."
-        await send_slack_response(response_url, error_text)
+        error_blocks = [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"❌ Sorry, I encountered an error: {str(e)}\n\nPlease try rephrasing your question or contact support."
+                }
+            }
+        ]
+        await send_slack_response(
+            response_url,
+            text="Error occurred",
+            blocks=error_blocks
+        )
