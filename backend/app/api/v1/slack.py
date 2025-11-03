@@ -347,10 +347,8 @@ async def send_slack_response(response_url: str, text: str = None, blocks: list 
 async def handle_slash_command(
     background_tasks: BackgroundTasks,
     team_id: str = Form(...),
-    team_domain: str = Form(...),
     user_id: str = Form(...),
     user_name: str = Form(...),
-    command: str = Form(...),
     text: str = Form(...),
     response_url: str = Form(...)
 ):
@@ -365,17 +363,15 @@ async def handle_slash_command(
 
     Example: /headway Which customers are in Healthcare?
     """
-    # Log the command (fast operation)
-    logger.info(f"Slash command received from {user_name} ({user_id}) in team {team_id}: {text}")
-
-    # Schedule background task IMMEDIATELY
+    # Schedule background task IMMEDIATELY (do logging there, not here)
     # Background task creates its own DB session
     background_tasks.add_task(
         process_and_respond,
         team_id=team_id,
         user_query=text.strip() if text else "",
         response_url=response_url,
-        user_name=user_name
+        user_name=user_name,
+        user_id=user_id
     )
 
     # Return immediate acknowledgment (within milliseconds)
@@ -413,13 +409,17 @@ async def process_and_respond(
     team_id: str,
     user_query: str,
     response_url: str,
-    user_name: str
+    user_name: str,
+    user_id: str
 ):
     """
     Background task to process query and send response to Slack
     Handles all validation and processing after immediate acknowledgment
     Creates its own database session to avoid lifecycle issues
     """
+    # Log the command here in background task (not in main endpoint for speed)
+    logger.info(f"Slash command received from {user_name} ({user_id}) in team {team_id}: {user_query}")
+
     # Create a fresh database session for this background task
     db = next(get_db())
 
