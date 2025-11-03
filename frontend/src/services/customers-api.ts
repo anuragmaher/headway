@@ -79,6 +79,8 @@ export interface ListCustomersParams {
   min_arr?: number;
   max_arr?: number;
   search?: string;
+  deal_stage?: string;
+  min_messages?: number;
 }
 
 export interface TemplateOption {
@@ -113,6 +115,8 @@ class CustomersAPI {
       ...(params?.min_arr && { min_arr: params.min_arr.toString() }),
       ...(params?.max_arr && { max_arr: params.max_arr.toString() }),
       ...(params?.search && { search: params.search }),
+      ...(params?.deal_stage && { deal_stage: params.deal_stage }),
+      ...(params?.min_messages && { min_messages: params.min_messages.toString() }),
     });
 
     const response = await api.get<CustomerListResponse>(

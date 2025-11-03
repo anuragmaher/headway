@@ -27,6 +27,7 @@ import {
   Refresh as RefreshIcon,
 } from '@mui/icons-material';
 import { customersApi } from '@/services/customers-api';
+import { CustomerFilterValues } from './CustomerFilters';
 
 interface Customer {
   id: string;
@@ -39,18 +40,25 @@ interface Customer {
   deal_stage?: string;
   contact_name?: string;
   contact_email?: string;
+  last_activity_at?: string;
 }
 
 interface CustomerListProps {
   workspaceId: string;
   selectedCustomerId: string | null;
   onCustomerSelect: (customerId: string) => void;
+  filters: CustomerFilterValues;
+  onFiltersChange: (filters: CustomerFilterValues) => void;
+  onIndustriesLoad?: (industries: string[]) => void;
 }
 
 export function CustomerList({
   workspaceId,
   selectedCustomerId,
   onCustomerSelect,
+  filters,
+  onFiltersChange,
+  onIndustriesLoad,
 }: CustomerListProps): JSX.Element {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -69,13 +77,52 @@ export function CustomerList({
           page: 1,
           page_size: 100,
           search: searchTerm || undefined,
+          industry: filters.industry,
+          deal_stage: filters.dealStage && filters.dealStage !== 'All Stages' ? filters.dealStage : undefined,
+          min_messages: filters.minMessages,
         });
-        setCustomers(response.customers);
+
+        // Apply client-side sorting based on sortBy filter
+        let sortedCustomers = [...response.customers];
+        if (filters.sortBy) {
+          switch (filters.sortBy) {
+            case 'name_asc':
+              sortedCustomers.sort((a, b) => a.name.localeCompare(b.name));
+              break;
+            case 'name_desc':
+              sortedCustomers.sort((a, b) => b.name.localeCompare(a.name));
+              break;
+            case 'messages_desc':
+              sortedCustomers.sort((a, b) => (b.message_count || 0) - (a.message_count || 0));
+              break;
+            case 'messages_asc':
+              sortedCustomers.sort((a, b) => (a.message_count || 0) - (b.message_count || 0));
+              break;
+            case 'recent':
+              // Sort by last_activity_at if available
+              sortedCustomers.sort((a, b) => {
+                const dateA = new Date(a.last_activity_at || 0).getTime();
+                const dateB = new Date(b.last_activity_at || 0).getTime();
+                return dateB - dateA;
+              });
+              break;
+          }
+        }
+
+        setCustomers(sortedCustomers);
+
+        // Extract unique industries for filter dropdown
+        const industries = Array.from(new Set(
+          response.customers
+            .map(c => c.industry)
+            .filter((i): i is string => !!i)
+        )).sort();
+        onIndustriesLoad?.(industries);
 
         // Auto-select first customer if none is selected and customers exist
         // Only auto-select on desktop to avoid hiding the customer list on mobile
-        if (!selectedCustomerId && response.customers.length > 0 && !isMobile) {
-          onCustomerSelect(response.customers[0].id);
+        if (!selectedCustomerId && sortedCustomers.length > 0 && !isMobile) {
+          onCustomerSelect(sortedCustomers[0].id);
         }
       } catch (error) {
         console.error('Error fetching customers:', error);
@@ -85,7 +132,7 @@ export function CustomerList({
     };
 
     fetchCustomers();
-  }, [workspaceId, searchTerm, refreshKey, isMobile]);
+  }, [workspaceId, searchTerm, refreshKey, isMobile, filters]);
 
   const handleRefresh = () => {
     setRefreshKey((prev) => prev + 1);
@@ -148,6 +195,7 @@ export function CustomerList({
           }}
         />
       </Box>
+
 
       {/* Customer List */}
       <Box sx={{ flex: 1, overflow: 'auto', px: 2, py: 1 }}>

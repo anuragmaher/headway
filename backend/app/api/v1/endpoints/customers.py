@@ -40,6 +40,8 @@ def list_customers(
     min_arr: Optional[float] = None,
     max_arr: Optional[float] = None,
     search: Optional[str] = None,
+    deal_stage: Optional[str] = None,
+    min_messages: Optional[int] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -57,6 +59,9 @@ def list_customers(
 
     if max_arr is not None:
         query = query.filter(Customer.arr <= max_arr)
+
+    if deal_stage:
+        query = query.filter(Customer.deal_stage == deal_stage)
 
     if search:
         search_term = f"%{search}%"
@@ -83,10 +88,18 @@ def list_customers(
     )
 
     # Join customers with message counts
-    customers_with_counts = (
+    customers_query = (
         query
         .outerjoin(message_count_subq, Customer.id == message_count_subq.c.customer_id)
         .add_columns(func.coalesce(message_count_subq.c.message_count, 0).label('message_count'))
+    )
+
+    # Apply min_messages filter if specified
+    if min_messages is not None and min_messages > 0:
+        customers_query = customers_query.having(func.coalesce(message_count_subq.c.message_count, 0) >= min_messages)
+
+    customers_with_counts = (
+        customers_query
         .order_by(Customer.name)
         .offset((page - 1) * page_size)
         .limit(page_size)

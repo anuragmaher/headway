@@ -12,6 +12,7 @@ import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts/AdminLayout';
 import { CustomerList } from '@/features/customers/components/CustomerList';
 import { CustomerDetailView } from '@/features/customers/components/CustomerDetailView';
+import { CustomerFilters, CustomerFilterValues } from '@/features/customers/components/CustomerFilters';
 import { useAuthStore } from '@/features/auth/store/auth-store';
 import { API_BASE_URL } from '@/config/api.config';
 
@@ -24,6 +25,8 @@ export function CustomersPage(): JSX.Element {
   const [hydrated, setHydrated] = useState(false);
   const [fetchingWorkspaceId, setFetchingWorkspaceId] = useState(false);
   const [attemptedFetch, setAttemptedFetch] = useState(false);
+  const [filters, setFilters] = useState<CustomerFilterValues>({});
+  const [availableIndustries, setAvailableIndustries] = useState<string[]>([]);
 
   // On mobile, determine which view to show
   const showList = !isMobile || !selectedCustomerId;
@@ -137,6 +140,9 @@ export function CustomersPage(): JSX.Element {
                 workspaceId={workspaceId}
                 selectedCustomerId={selectedCustomerId}
                 onCustomerSelect={setSelectedCustomerId}
+                filters={filters}
+                onFiltersChange={setFilters}
+                onIndustriesLoad={setAvailableIndustries}
               />
             </Paper>
           )}
@@ -179,6 +185,22 @@ export function CustomersPage(): JSX.Element {
                   <Box sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
                     Back to customers
                   </Box>
+                </Box>
+              )}
+
+              {/* Filters Section */}
+              {!isMobile && (
+                <Box
+                  sx={{
+                    p: 2,
+                    borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  }}
+                >
+                  <CustomerFilters
+                    filters={filters}
+                    onFiltersChange={setFilters}
+                    availableIndustries={availableIndustries}
+                  />
                 </Box>
               )}
 
