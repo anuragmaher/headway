@@ -39,11 +39,14 @@ import {
   Cell,
   BarChart,
   Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Legend,
 } from 'recharts';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useAuthStore } from '@/features/auth/store/auth-store';
@@ -99,6 +102,14 @@ interface DashboardMetrics {
     features_this_week: number;
     features_last_week: number;
   };
+  customers_by_industry: Array<{
+    industry: string;
+    count: number;
+  }>;
+  calls_per_day: Array<{
+    date: string;
+    count: number;
+  }>;
 }
 
 export function ExecutiveInsightsPage(): JSX.Element {
@@ -638,6 +649,129 @@ export function ExecutiveInsightsPage(): JSX.Element {
                         </Pie>
                         <Tooltip />
                       </PieChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+
+            {/* Customers by Industry & Calls per Day */}
+            <Grid container spacing={{ xs: 2, sm: 2, md: 3 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+              {/* Customers by Industry - Pie Chart */}
+              <Grid item xs={12} md={6}>
+                <Card sx={{
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                  backdropFilter: 'blur(10px)',
+                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  height: '100%',
+                }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 600,
+                        mb: { xs: 1.5, sm: 2 },
+                        textAlign: 'center',
+                        fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }
+                      }}
+                    >
+                      Top 10 Customers by Industry
+                    </Typography>
+                    <ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
+                      <PieChart>
+                        <Pie
+                          data={metrics.customers_by_industry.map(item => ({
+                            name: item.industry,
+                            value: item.count,
+                          }))}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={isMobile ? 50 : 60}
+                          outerRadius={isMobile ? 90 : 100}
+                          paddingAngle={2}
+                          dataKey="value"
+                          label={({ name, value, percent }: { name: string; value: number; percent: number }) =>
+                            `${name}: ${value} (${(percent * 100).toFixed(0)}%)`
+                          }
+                        >
+                          {metrics.customers_by_industry.map((_, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={[
+                                theme.palette.primary.main,
+                                theme.palette.secondary.main,
+                                theme.palette.success.main,
+                                theme.palette.warning.main,
+                                theme.palette.info.main,
+                                theme.palette.error.main,
+                                alpha(theme.palette.primary.main, 0.6),
+                                alpha(theme.palette.secondary.main, 0.6),
+                              ][index % 8]}
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              {/* Calls per Day - Line Chart */}
+              <Grid item xs={12} md={6}>
+                <Card sx={{
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                  backdropFilter: 'blur(10px)',
+                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  height: '100%',
+                }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 600,
+                        mb: { xs: 1.5, sm: 2 },
+                        textAlign: 'center',
+                        fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }
+                      }}
+                    >
+                      Calls/Messages per Day (Last 30 Days)
+                    </Typography>
+                    <ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
+                      <LineChart
+                        data={metrics.calls_per_day.map(item => ({
+                          date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                          count: item.count,
+                        }))}
+                        margin={isMobile ? { top: 5, right: 10, left: -10, bottom: 5 } : { top: 5, right: 30, left: 0, bottom: 5 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke={alpha(theme.palette.divider, 0.2)} />
+                        <XAxis
+                          dataKey="date"
+                          stroke={theme.palette.text.secondary}
+                          style={{ fontSize: isMobile ? '9px' : '11px' }}
+                          interval={isMobile ? 5 : 3}
+                        />
+                        <YAxis
+                          stroke={theme.palette.text.secondary}
+                          style={{ fontSize: isMobile ? '10px' : '12px' }}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: theme.palette.background.paper,
+                            border: `1px solid ${theme.palette.divider}`,
+                            borderRadius: '8px',
+                          }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="count"
+                          stroke={theme.palette.primary.main}
+                          strokeWidth={2}
+                          dot={{ fill: theme.palette.primary.main, r: 3 }}
+                          activeDot={{ r: 5 }}
+                        />
+                      </LineChart>
                     </ResponsiveContainer>
                   </CardContent>
                 </Card>

@@ -1785,6 +1785,52 @@ async def get_executive_insights(
             Feature.created_at < one_week_ago
         ).scalar() or 0
 
+        # 7. Customers by industry - aggregated in SQL (top 10)
+        from app.models.customer import Customer
+
+        customers_by_industry = db.query(
+            Customer.industry,
+            func.count(Customer.id).label('count')
+        ).filter(
+            Customer.workspace_id == workspace_id,
+            Customer.is_active == True
+        ).group_by(Customer.industry).order_by(
+            func.count(Customer.id).desc()
+        ).limit(10).all()
+
+        # Format industry data
+        industry_data = [
+            {
+                'industry': industry if industry else 'Unknown',
+                'count': count
+            }
+            for industry, count in customers_by_industry
+        ]
+
+        # 8. Calls/Messages per day for the last 30 days - aggregated in SQL
+        thirty_days_ago = now - timedelta(days=30)
+
+        calls_per_day = db.query(
+            func.date(Message.sent_at).label('date'),
+            func.count(Message.id).label('count')
+        ).filter(
+            Message.workspace_id == workspace_id,
+            Message.sent_at >= thirty_days_ago
+        ).group_by(
+            func.date(Message.sent_at)
+        ).order_by(
+            func.date(Message.sent_at)
+        ).all()
+
+        # Format calls per day data
+        calls_per_day_data = [
+            {
+                'date': date.isoformat() if date else None,
+                'count': count
+            }
+            for date, count in calls_per_day
+        ]
+
         # Format response
         return {
             'metrics': {
@@ -1800,7 +1846,9 @@ async def get_executive_insights(
                 'recent_activity': {
                     'features_this_week': features_this_week,
                     'features_last_week': features_last_week
-                }
+                },
+                'customers_by_industry': industry_data,
+                'calls_per_day': calls_per_day_data
             },
             'top_features': [
                 {
