@@ -284,11 +284,19 @@ def _get_or_create_customer_from_parties(
 
     # Get workspace and company to check if this is an internal customer
     workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
-    if workspace and workspace.company and workspace.company.domain and domain:
-        workspace_domain = workspace.company.domain.lower()
-        if domain.lower() == workspace_domain:
-            logger.debug(f"Skipping customer creation for internal domain: {domain}")
-            return None
+    if workspace:
+        # Check against company domain
+        if workspace.company and workspace.company.domain and domain:
+            workspace_domain = workspace.company.domain.lower()
+            if domain.lower() == workspace_domain:
+                logger.debug(f"Skipping customer creation for internal domain: {domain}")
+                return None
+
+        # Check against additional company domains
+        if workspace.company_domains and domain:
+            if domain.lower() in [d.lower() for d in workspace.company_domains]:
+                logger.debug(f"Skipping customer creation for company domain: {domain}")
+                return None
 
     # Try to find existing customer by domain
     customer = db.query(Customer).filter(
@@ -361,11 +369,19 @@ def _get_or_create_customer_from_hubspot(
 
     # Get workspace and company to check if this is an internal customer
     workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
-    if workspace and workspace.company and workspace.company.domain and domain:
-        workspace_domain = workspace.company.domain.lower()
-        if domain.lower() == workspace_domain:
-            logger.debug(f"Skipping customer creation for internal domain: {domain}")
-            return None
+    if workspace:
+        # Check against company domain
+        if workspace.company and workspace.company.domain and domain:
+            workspace_domain = workspace.company.domain.lower()
+            if domain.lower() == workspace_domain:
+                logger.debug(f"Skipping customer creation for internal domain: {domain}")
+                return None
+
+        # Check against additional company domains
+        if workspace.company_domains and domain:
+            if domain.lower() in [d.lower() for d in workspace.company_domains]:
+                logger.debug(f"Skipping customer creation for company domain: {domain}")
+                return None
 
     customer = None
     if external_id:

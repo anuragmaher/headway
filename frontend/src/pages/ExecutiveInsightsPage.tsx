@@ -110,6 +110,26 @@ interface DashboardMetrics {
     date: string;
     count: number;
   }>;
+  top_engaged_customers: Array<{
+    customer_id: string;
+    name: string;
+    industry: string;
+    message_count: number;
+  }>;
+  customer_health_summary: {
+    healthy: number;
+    at_risk: number;
+    dormant: number;
+  };
+}
+
+interface CustomerHealthDetail {
+  customer_id: string;
+  name: string;
+  industry: string;
+  last_activity: string | null;
+  message_count: number;
+  health_status: 'healthy' | 'at_risk' | 'dormant';
 }
 
 export function ExecutiveInsightsPage(): JSX.Element {
@@ -122,6 +142,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [topFeatures, setTopFeatures] = useState<Feature[]>([]);
+  const [customerHealthDetails, setCustomerHealthDetails] = useState<CustomerHealthDetail[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [fetchingWorkspaceId, setFetchingWorkspaceId] = useState(false);
   const [attemptedFetch, setAttemptedFetch] = useState(false);
@@ -194,9 +215,10 @@ export function ExecutiveInsightsPage(): JSX.Element {
         if (!response.ok) throw new Error('Failed to fetch executive insights');
         const data = await response.json();
 
-        // Set metrics and top features directly from API response
+        // Set metrics, top features, and customer health details from API response
         setMetrics(data.metrics);
         setTopFeatures(data.top_features);
+        setCustomerHealthDetails(data.customer_health_details || []);
 
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -245,6 +267,24 @@ export function ExecutiveInsightsPage(): JSX.Element {
     const change = ((metrics.recent_activity.features_this_week - metrics.recent_activity.features_last_week) /
                     metrics.recent_activity.features_last_week) * 100;
     return Math.round(change);
+  };
+
+  const getHealthStatusColor = (status: 'healthy' | 'at_risk' | 'dormant') => {
+    switch (status) {
+      case 'healthy': return theme.palette.success.main;
+      case 'at_risk': return theme.palette.warning.main;
+      case 'dormant': return theme.palette.error.main;
+      default: return theme.palette.grey[500];
+    }
+  };
+
+  const getHealthStatusLabel = (status: 'healthy' | 'at_risk' | 'dormant') => {
+    switch (status) {
+      case 'healthy': return 'Active';
+      case 'at_risk': return 'At Risk';
+      case 'dormant': return 'Dormant';
+      default: return 'Unknown';
+    }
   };
 
   // Show loading state while hydrating or recovering workspace_id
@@ -772,6 +812,121 @@ export function ExecutiveInsightsPage(): JSX.Element {
                           activeDot={{ r: 5 }}
                         />
                       </LineChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+
+            {/* Top 10 Most Engaged Customers & Customer Health Score */}
+            <Grid container spacing={{ xs: 2, sm: 2, md: 3 }} sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+              {/* Top 10 Most Engaged Customers - Bar Chart */}
+              <Grid item xs={12} md={6}>
+                <Card sx={{
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                  backdropFilter: 'blur(10px)',
+                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  height: '100%',
+                }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 600,
+                        mb: { xs: 1.5, sm: 2 },
+                        textAlign: 'center',
+                        fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }
+                      }}
+                    >
+                      Top 10 Most Engaged Customers
+                    </Typography>
+                    <ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
+                      <BarChart
+                        data={metrics.top_engaged_customers}
+                        layout="vertical"
+                        margin={isMobile ? { top: 5, right: 10, left: 10, bottom: 5 } : { top: 5, right: 30, left: 100, bottom: 5 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke={alpha(theme.palette.divider, 0.2)} />
+                        <XAxis
+                          type="number"
+                          stroke={theme.palette.text.secondary}
+                          style={{ fontSize: isMobile ? '10px' : '12px' }}
+                        />
+                        <YAxis
+                          type="category"
+                          dataKey="name"
+                          stroke={theme.palette.text.secondary}
+                          style={{ fontSize: isMobile ? '9px' : '11px' }}
+                          width={isMobile ? 80 : 100}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: theme.palette.background.paper,
+                            border: `1px solid ${theme.palette.divider}`,
+                            borderRadius: '8px',
+                          }}
+                          formatter={(value: number, name: string, props: any) => [
+                            `${value} messages`,
+                            props.payload.industry
+                          ]}
+                        />
+                        <Bar dataKey="message_count" fill={theme.palette.secondary.main} radius={[0, 8, 8, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              {/* Customer Health Score - Pie Chart */}
+              <Grid item xs={12} md={6}>
+                <Card sx={{
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+                  backdropFilter: 'blur(10px)',
+                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  height: '100%',
+                }}>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 600,
+                        mb: { xs: 1.5, sm: 2 },
+                        textAlign: 'center',
+                        fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }
+                      }}
+                    >
+                      Customer Health Score
+                    </Typography>
+                    <ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
+                      <PieChart>
+                        <Pie
+                          data={[
+                            { name: 'Active (< 7 days)', value: metrics.customer_health_summary.healthy, status: 'healthy' },
+                            { name: 'At Risk (7-30 days)', value: metrics.customer_health_summary.at_risk, status: 'at_risk' },
+                            { name: 'Dormant (> 30 days)', value: metrics.customer_health_summary.dormant, status: 'dormant' },
+                          ]}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={isMobile ? 50 : 60}
+                          outerRadius={isMobile ? 90 : 100}
+                          paddingAngle={2}
+                          dataKey="value"
+                          label={({ name, value, percent }: { name: string; value: number; percent: number }) =>
+                            `${value} (${(percent * 100).toFixed(0)}%)`
+                          }
+                        >
+                          <Cell fill={theme.palette.success.main} />
+                          <Cell fill={theme.palette.warning.main} />
+                          <Cell fill={theme.palette.error.main} />
+                        </Pie>
+                        <Tooltip />
+                        <Legend
+                          verticalAlign="bottom"
+                          height={36}
+                          iconType="circle"
+                          wrapperStyle={{ fontSize: isMobile ? '11px' : '12px' }}
+                        />
+                      </PieChart>
                     </ResponsiveContainer>
                   </CardContent>
                 </Card>

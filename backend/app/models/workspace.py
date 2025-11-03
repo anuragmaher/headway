@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, ARRAY
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -9,14 +9,15 @@ from app.core.database import Base
 
 class Workspace(Base):
     """Workspace model representing a team/organization"""
-    
+
     __tablename__ = "workspaces"
-    
+
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     name = Column(String, nullable=False)
     slug = Column(String, unique=True, index=True, nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)
     slack_team_id = Column(String, unique=True, index=True, nullable=True)  # Slack workspace ID for slash commands
+    company_domains = Column(ARRAY(String), nullable=True, default=list)  # Additional company domains to exclude from customers (e.g., ["hiverhq.com", "hiver.com"])
     
     # Company and owner relationships
     company_id = Column(UUID(as_uuid=True), ForeignKey("companies.id"), nullable=False)

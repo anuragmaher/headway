@@ -296,14 +296,14 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       {/* App Bar */}
       <AppBar
         position="fixed"
         elevation={0}
         sx={{
-          width: { sm: `calc(100% - ${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px)` },
-          ml: { sm: `${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px` },
+          width: { xs: '100%', sm: `calc(100% - ${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px)` },
+          ml: { xs: 0, sm: `${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px` },
           transition: 'all 0.3s ease-in-out',
           zIndex: theme.zIndex.drawer + 1,
           background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)} 0%, ${alpha(theme.palette.background.paper, 0.7)} 100%)`,
@@ -395,47 +395,38 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
       </AppBar>
 
       {/* Drawer */}
-      <Box
-        component="nav"
-        sx={{ 
-          width: { sm: collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH }, 
-          flexShrink: { sm: 0 },
-          transition: 'width 0.3s ease-in-out',
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile
+        }}
+        sx={{
+          display: { xs: 'block', sm: 'none' },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: DRAWER_WIDTH,
+          },
         }}
       >
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile
-          }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': {
-              boxSizing: 'border-box',
-              width: DRAWER_WIDTH,
-            },
-          }}
-        >
-          {drawer}
-        </Drawer>
-        
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': {
-              boxSizing: 'border-box',
-              width: collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH,
-              transition: 'width 0.3s ease-in-out',
-            },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
+        {drawer}
+      </Drawer>
+
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: 'none', sm: 'block' },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH,
+            transition: 'width 0.3s ease-in-out',
+          },
+        }}
+        open
+      >
+        {drawer}
+      </Drawer>
 
       {/* Main content */}
       <Box
@@ -443,7 +434,8 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
         sx={{
           flexGrow: 1,
           p: 0,
-          width: { sm: `calc(100% - ${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px)` },
+          ml: { xs: 0, sm: `${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px` },
+          width: '100%',
           transition: 'all 0.3s ease-in-out',
           minHeight: '100vh',
           background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.9)} 100%)`,

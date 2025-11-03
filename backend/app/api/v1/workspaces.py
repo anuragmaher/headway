@@ -16,6 +16,7 @@ from app.schemas.workspace_connector import (
     WorkspaceConnectorUpdate,
     WorkspaceConnectorInput,
 )
+from app.schemas.workspace import WorkspaceDomainsUpdate, WorkspaceResponse
 from app.schemas.company import CompanyUpdate
 from app.schemas.customer import CustomerChatRequest, CustomerChatResponse
 from app.models.user import User
@@ -617,4 +618,123 @@ def workspace_chat(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error processing chat query: {str(e)}"
+        )
+
+
+@router.get(
+    "/{workspace_id}/company-domains",
+    response_model=WorkspaceResponse,
+    status_code=status.HTTP_200_OK
+)
+async def get_company_domains(
+    workspace_id: UUID,
+    current_user: User = Depends(get_current_user),
+    db = Depends(get_db)
+) -> WorkspaceResponse:
+    """
+    Get workspace company domains to exclude from customer tracking.
+
+    Args:
+        workspace_id: UUID of the workspace
+        current_user: Current authenticated user
+        db: Database session
+
+    Returns:
+        Workspace with company_domains
+
+    Raises:
+        HTTPException: If workspace not found
+    """
+    try:
+        from app.models.workspace import Workspace
+
+        workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
+
+        if not workspace:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Workspace not found"
+            )
+
+        return WorkspaceResponse(
+            id=str(workspace.id),
+            name=workspace.name,
+            slug=workspace.slug,
+            company_domains=workspace.company_domains or []
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching company domains: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch company domains"
+        )
+
+
+@router.put(
+    "/{workspace_id}/company-domains",
+    response_model=WorkspaceResponse,
+    status_code=status.HTTP_200_OK
+)
+async def update_company_domains(
+    workspace_id: UUID,
+    domains_data: WorkspaceDomainsUpdate,
+    current_user: User = Depends(get_current_user),
+    db = Depends(get_db)
+) -> WorkspaceResponse:
+    """
+    Update workspace company domains to exclude from customer tracking.
+
+    Args:
+        workspace_id: UUID of the workspace
+        domains_data: List of company domains (e.g., ["hiverhq.com", "hiver.com"])
+        current_user: Current authenticated user
+        db: Database session
+
+    Returns:
+        Updated workspace with company_domains
+
+    Raises:
+        HTTPException: If workspace not found
+    """
+    try:
+        from app.models.workspace import Workspace
+
+        user_email = current_user.email if isinstance(current_user, User) else current_user.get('email', 'unknown')
+        logger.info(
+            f"User {user_email} updating company domains for workspace {workspace_id}"
+        )
+
+        workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
+
+        if not workspace:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Workspace not found"
+            )
+
+        # Update company domains
+        workspace.company_domains = domains_data.company_domains
+        db.commit()
+        db.refresh(workspace)
+
+        logger.info(f"Company domains updated successfully for workspace {workspace_id}")
+
+        return WorkspaceResponse(
+            id=str(workspace.id),
+            name=workspace.name,
+            slug=workspace.slug,
+            company_domains=workspace.company_domains or []
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating company domains: {e}")
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update company domains"
         )

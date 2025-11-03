@@ -1770,7 +1770,8 @@ async def get_executive_insights(
         ).limit(10).all()
 
         # 6. Recent activity - this week vs last week
-        now = datetime.utcnow()
+        from datetime import timezone as dt_timezone
+        now = datetime.now(dt_timezone.utc)
         one_week_ago = now - timedelta(days=7)
         two_weeks_ago = now - timedelta(days=14)
 
@@ -1831,6 +1832,97 @@ async def get_executive_insights(
             for date, count in calls_per_day
         ]
 
+        # 9. Top 10 Most Engaged Customers - by message count
+        top_engaged_customers = db.query(
+            Customer.id,
+            Customer.name,
+            Customer.industry,
+            func.count(Message.id).label('message_count')
+        ).join(
+            Message, Customer.id == Message.customer_id
+        ).filter(
+            Customer.workspace_id == workspace_id,
+            Customer.is_active == True
+        ).group_by(
+            Customer.id, Customer.name, Customer.industry
+        ).order_by(
+            func.count(Message.id).desc()
+        ).limit(10).all()
+
+        # Format top engaged customers
+        top_engaged_data = [
+            {
+                'customer_id': str(customer_id),
+                'name': name,
+                'industry': industry if industry else 'Unknown',
+                'message_count': message_count
+            }
+            for customer_id, name, industry, message_count in top_engaged_customers
+        ]
+
+        # 10. Customer Health Score - categorize by last activity
+        seven_days_ago = now - timedelta(days=7)
+        thirty_days_ago_health = now - timedelta(days=30)
+
+        # Get all customers with their last message date
+        customer_health = db.query(
+            Customer.id,
+            Customer.name,
+            Customer.industry,
+            func.max(Message.sent_at).label('last_activity'),
+            func.count(Message.id).label('message_count')
+        ).outerjoin(
+            Message, Customer.id == Message.customer_id
+        ).filter(
+            Customer.workspace_id == workspace_id,
+            Customer.is_active == True
+        ).group_by(
+            Customer.id, Customer.name, Customer.industry
+        ).all()
+
+        # Categorize customers by health
+        healthy_count = 0  # Active in last 7 days
+        at_risk_count = 0  # Active 7-30 days ago
+        dormant_count = 0  # No activity in 30+ days or never active
+
+        customer_health_details = []
+
+        for customer_id, name, industry, last_activity, message_count in customer_health:
+            if last_activity is None:
+                health_status = 'dormant'
+                dormant_count += 1
+            elif last_activity >= seven_days_ago:
+                health_status = 'healthy'
+                healthy_count += 1
+            elif last_activity >= thirty_days_ago_health:
+                health_status = 'at_risk'
+                at_risk_count += 1
+            else:
+                health_status = 'dormant'
+                dormant_count += 1
+
+            customer_health_details.append({
+                'customer_id': str(customer_id),
+                'name': name,
+                'industry': industry if industry else 'Unknown',
+                'last_activity': last_activity.isoformat() if last_activity else None,
+                'message_count': message_count,
+                'health_status': health_status
+            })
+
+        # Sort by health status priority (healthy first, then at_risk, then dormant)
+        # and within each category by message count descending
+        status_priority = {'healthy': 0, 'at_risk': 1, 'dormant': 2}
+        customer_health_details.sort(
+            key=lambda x: (status_priority[x['health_status']], -x['message_count'])
+        )
+
+        customer_health_summary = {
+            'healthy': healthy_count,
+            'at_risk': at_risk_count,
+            'dormant': dormant_count
+        }
+
         # Format response
         return {
             'metrics': {
@@ -1848,8 +1940,11 @@ async def get_executive_insights(
                     'features_last_week': features_last_week
                 },
                 'customers_by_industry': industry_data,
-                'calls_per_day': calls_per_day_data
+                'calls_per_day': calls_per_day_data,
+                'top_engaged_customers': top_engaged_data,
+                'customer_health_summary': customer_health_summary
             },
+            'customer_health_details': customer_health_details[:20],  # Top 20 for detailed view
             'top_features': [
                 {
                     'id': str(feature.id),

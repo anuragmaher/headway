@@ -57,6 +57,7 @@ import { slackService, type SlackChannel, type SlackIntegration } from '@/servic
 import { connectorService, type ConnectorResponse } from '@/services/connectors';
 import { CompanyDetailsForm } from '@/shared/components/CompanyDetailsForm';
 import { companyService, type CompanyDetails } from '@/services/company';
+import { API_BASE_URL } from '@/config/api.config';
 
 interface DataSource {
   id: string;
@@ -119,12 +120,27 @@ export function WorkspaceSettingsPage(): JSX.Element {
   });
   const [isLoadingCompany, setIsLoadingCompany] = useState(false);
 
+  // Company domains state
+  const [companyDomains, setCompanyDomains] = useState<string[]>([]);
+  const [newDomain, setNewDomain] = useState('');
+  const [isLoadingDomains, setIsLoadingDomains] = useState(false);
+  const [isSavingDomains, setIsSavingDomains] = useState(false);
+  const [domainsError, setDomainsError] = useState<string | null>(null);
+  const [domainsSuccess, setDomainsSuccess] = useState(false);
+
   // Load integrations and connectors on component mount
   useEffect(() => {
     loadSlackIntegrations();
     loadConnectors();
-    loadCompanyDetails();
   }, []);
+
+  // Load company details and domains when workspace_id is available
+  useEffect(() => {
+    if (auth.tokens?.workspace_id) {
+      loadCompanyDetails();
+      loadCompanyDomains();
+    }
+  }, [auth.tokens?.workspace_id]);
 
   const loadCompanyDetails = async () => {
     try {
@@ -135,6 +151,115 @@ export function WorkspaceSettingsPage(): JSX.Element {
       setCompanyData(details);
     } catch (error: any) {
       console.error('Failed to load company details:', error);
+    }
+  };
+
+  const loadCompanyDomains = async () => {
+    try {
+      setIsLoadingDomains(true);
+      const workspaceId = auth.tokens?.workspace_id;
+
+      console.log('[Company Domains] Loading for workspace:', workspaceId);
+
+      if (!workspaceId) {
+        console.warn('[Company Domains] No workspace ID found');
+        return;
+      }
+
+      const url = `${API_BASE_URL}/api/v1/workspaces/${workspaceId}/company-domains`;
+      console.log('[Company Domains] Fetching from:', url);
+
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${auth.tokens?.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('[Company Domains] Response status:', response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('[Company Domains] Error response:', errorText);
+        throw new Error(`Failed to load company domains: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('[Company Domains] Loaded domains:', data.company_domains);
+      setCompanyDomains(data.company_domains || []);
+    } catch (error: any) {
+      console.error('[Company Domains] Failed to load:', error);
+      setDomainsError('Failed to load company domains');
+    } finally {
+      setIsLoadingDomains(false);
+    }
+  };
+
+  const handleAddDomain = async () => {
+    if (!newDomain.trim()) return;
+
+    let domainToAdd = newDomain.trim().toLowerCase();
+
+    // Remove email prefix if present (e.g., "anurag@hiverhq.com" -> "hiverhq.com")
+    if (domainToAdd.includes('@')) {
+      domainToAdd = domainToAdd.split('@')[1];
+    }
+
+    // Remove protocol if present (e.g., "https://hiverhq.com" -> "hiverhq.com")
+    domainToAdd = domainToAdd.replace(/^https?:\/\//, '').replace(/^www\./, '');
+
+    // Remove trailing slash
+    domainToAdd = domainToAdd.replace(/\/$/, '');
+
+    // Basic domain validation
+    const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?\.([a-zA-Z]{2,}\.?)+$/;
+    if (!domainRegex.test(domainToAdd)) {
+      setDomainsError('Please enter a valid domain (e.g., hiverhq.com)');
+      return;
+    }
+
+    // Check for duplicates
+    if (companyDomains.includes(domainToAdd)) {
+      setDomainsError('This domain is already in the list');
+      return;
+    }
+
+    const updatedDomains = [...companyDomains, domainToAdd];
+    await saveCompanyDomains(updatedDomains);
+    setNewDomain('');
+  };
+
+  const handleRemoveDomain = async (domain: string) => {
+    const updatedDomains = companyDomains.filter(d => d !== domain);
+    await saveCompanyDomains(updatedDomains);
+  };
+
+  const saveCompanyDomains = async (domains: string[]) => {
+    try {
+      setIsSavingDomains(true);
+      setDomainsError(null);
+      const workspaceId = auth.tokens?.workspace_id;
+      if (!workspaceId) return;
+
+      const response = await fetch(`${API_BASE_URL}/api/v1/workspaces/${workspaceId}/company-domains`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${auth.tokens?.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ company_domains: domains }),
+      });
+
+      if (!response.ok) throw new Error('Failed to update company domains');
+      const data = await response.json();
+      setCompanyDomains(data.company_domains || []);
+      setDomainsSuccess(true);
+      setTimeout(() => setDomainsSuccess(false), 3000);
+    } catch (error: any) {
+      console.error('Failed to save company domains:', error);
+      setDomainsError('Failed to save company domains');
+    } finally {
+      setIsSavingDomains(false);
     }
   };
 
@@ -531,6 +656,106 @@ export function WorkspaceSettingsPage(): JSX.Element {
             onGenerateDescription={handleGenerateDescription}
             isLoading={isLoadingCompany}
           />
+        </Box>
+
+        {/* Company Domains Section */}
+        <Box sx={{ mb: 3 }}>
+          <Card sx={{
+            borderRadius: 1,
+            background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
+            backdropFilter: 'blur(10px)',
+            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                <Avatar sx={{
+                  background: `linear-gradient(135deg, ${theme.palette.warning.main} 0%, ${theme.palette.warning.dark} 100%)`,
+                  width: 48,
+                  height: 48,
+                }}>
+                  <SecurityIcon />
+                </Avatar>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                    Company Domains
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Exclude internal company domains from customer tracking
+                  </Typography>
+                </Box>
+              </Box>
+
+              {domainsError && (
+                <Alert severity="error" sx={{ mb: 2 }} onClose={() => setDomainsError(null)}>
+                  {domainsError}
+                </Alert>
+              )}
+
+              {domainsSuccess && (
+                <Alert severity="success" sx={{ mb: 2 }}>
+                  Company domains updated successfully!
+                </Alert>
+              )}
+
+              <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  placeholder="e.g., hiverhq.com or anurag@hiverhq.com"
+                  value={newDomain}
+                  onChange={(e) => setNewDomain(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleAddDomain();
+                    }
+                  }}
+                  disabled={isSavingDomains}
+                  helperText="Enter a domain name or email address"
+                />
+                <Button
+                  variant="contained"
+                  startIcon={isSavingDomains ? <CircularProgress size={16} sx={{ color: 'white' }} /> : <AddIcon />}
+                  onClick={handleAddDomain}
+                  disabled={!newDomain.trim() || isSavingDomains}
+                  sx={{ minWidth: '100px', alignSelf: 'flex-start' }}
+                >
+                  {isSavingDomains ? 'Saving...' : 'Add'}
+                </Button>
+              </Box>
+
+              {isLoadingDomains ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
+                  <CircularProgress size={24} />
+                </Box>
+              ) : companyDomains.length === 0 ? (
+                <Alert severity="info">
+                  No company domains configured. Add domains like "hiverhq.com" or "hiver.com" to exclude them from customer metrics.
+                </Alert>
+              ) : (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  {companyDomains.map((domain) => (
+                    <Chip
+                      key={domain}
+                      label={domain}
+                      onDelete={() => handleRemoveDomain(domain)}
+                      disabled={isSavingDomains}
+                      sx={{
+                        background: alpha(theme.palette.warning.main, 0.1),
+                        border: `1px solid ${alpha(theme.palette.warning.main, 0.3)}`,
+                        '& .MuiChip-deleteIcon': {
+                          color: theme.palette.warning.main,
+                          '&:hover': {
+                            color: theme.palette.warning.dark,
+                          },
+                        },
+                      }}
+                    />
+                  ))}
+                </Box>
+              )}
+            </CardContent>
+          </Card>
         </Box>
 
         <Grid container spacing={2}>
