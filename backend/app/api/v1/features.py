@@ -1808,15 +1808,15 @@ async def get_executive_insights(
             for industry, count in customers_by_industry
         ]
 
-        # 8. Calls/Messages per day for the last 30 days - aggregated in SQL
-        thirty_days_ago = now - timedelta(days=30)
+        # 8. Calls/Messages per day for the last 90 days - aggregated in SQL
+        ninety_days_ago = now - timedelta(days=90)
 
         calls_per_day = db.query(
             func.date(Message.sent_at).label('date'),
             func.count(Message.id).label('count')
         ).filter(
             Message.workspace_id == workspace_id,
-            Message.sent_at >= thirty_days_ago
+            Message.sent_at >= ninety_days_ago
         ).group_by(
             func.date(Message.sent_at)
         ).order_by(

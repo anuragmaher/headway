@@ -775,7 +775,7 @@ export function ExecutiveInsightsPage(): JSX.Element {
                         fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }
                       }}
                     >
-                      Calls/Messages per Day (Last 30 Days)
+                      Calls/Messages per Day (Last 90 Days)
                     </Typography>
                     <ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
                       <LineChart
