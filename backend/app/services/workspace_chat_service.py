@@ -50,7 +50,7 @@ class WorkspaceChatService:
         """
         try:
             # Step 1: Generate SQL query for the user's question
-            sql_query = self.generate_workspace_sql(user_query, workspace_id)
+            sql_query = self.generate_workspace_sql(user_query, workspace_id, db)
 
             # Step 2: Validate query
             if not self.validate_sql_query(sql_query):
@@ -95,17 +95,38 @@ class WorkspaceChatService:
                 "response": f"I encountered an error processing your question: {str(e)}. Please try rephrasing."
             }
 
-    def generate_workspace_sql(self, user_query: str, workspace_id: str) -> str:
+    def generate_workspace_sql(self, user_query: str, workspace_id: str, db: Session = None) -> str:
         """
         Generate SQL query from natural language for workspace-wide queries
 
         Args:
             user_query: User's natural language query
             workspace_id: Workspace ID to filter by
+            db: Database session to fetch context (optional)
 
         Returns:
             SQL query string
         """
+        # Fetch actual themes for this workspace to provide context
+        themes_context = ""
+        if db:
+            try:
+                themes_result = db.execute(
+                    text(f"SELECT id, name, description FROM themes WHERE workspace_id = '{workspace_id}'")
+                )
+                themes = themes_result.fetchall()
+                if themes:
+                    themes_list = [f"- {row.name} (id: {row.id})" + (f" - {row.description}" if row.description else "")
+                                   for row in themes]
+                    themes_context = f"""
+Available Themes in this workspace:
+{chr(10).join(themes_list)}
+
+When user asks about a specific theme name (e.g., "AI features", "Security", "Analytics"), JOIN with themes table and filter by theme name.
+"""
+            except Exception as e:
+                logger.warning(f"Could not fetch themes context: {e}")
+
         schema_context = f"""
 Database Schema (PostgreSQL):
 
@@ -164,6 +185,8 @@ ai_insights JSONB structure in messages table:
 }}
 
 Current workspace_id: {workspace_id}
+
+{themes_context}
 """
 
         system_prompt = f"""{schema_context}
