@@ -421,6 +421,20 @@ async def handle_slash_command(
         }
 
 
+def convert_markdown_to_slack_mrkdwn(text: str) -> str:
+    """
+    Convert standard markdown to Slack's mrkdwn format
+    - **bold** becomes *bold*
+    - Remove extra formatting that doesn't render well
+    """
+    import re
+
+    # Convert **bold** to *bold* (Slack uses single asterisks)
+    text = re.sub(r'\*\*([^*]+)\*\*', r'*\1*', text)
+
+    return text
+
+
 async def process_and_respond(
     workspace_id: str,
     user_query: str,
@@ -444,6 +458,9 @@ async def process_and_respond(
 
         # Format response for Slack using Block Kit
         if result.get("success"):
+            # Convert markdown to Slack's mrkdwn format
+            slack_formatted_response = convert_markdown_to_slack_mrkdwn(result['response'])
+
             blocks = [
                 {
                     "type": "header",
@@ -460,7 +477,7 @@ async def process_and_respond(
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": result['response']
+                        "text": slack_formatted_response
                     }
                 }
             ]
