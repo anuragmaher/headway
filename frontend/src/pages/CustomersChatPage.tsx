@@ -21,10 +21,9 @@ import {
   Button,
   Collapse,
   Container,
-  List,
-  ListItem,
-  ListItemText,
 } from '@mui/material';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import {
   Send as SendIcon,
   SmartToy as BotIcon,
@@ -120,179 +119,6 @@ const QUERY_THEMES: QueryTheme[] = [
     ],
   },
 ];
-
-// Markdown renderer component
-const MarkdownText: React.FC<{ content: string }> = ({ content }) => {
-  const theme = useTheme();
-
-  const renderContent = () => {
-    const lines = content.split('\n');
-    const elements: React.ReactNode[] = [];
-    let listItems: string[] = [];
-    let inCodeBlock = false;
-    let codeLines: string[] = [];
-
-    const flushList = () => {
-      if (listItems.length > 0) {
-        elements.push(
-          <List key={`list-${elements.length}`} dense sx={{ my: 1 }}>
-            {listItems.map((item, idx) => (
-              <ListItem key={idx} sx={{ py: 0.5 }}>
-                <ListItemText
-                  primary={item}
-                  primaryTypographyProps={{
-                    variant: 'body2',
-                    sx: { color: 'text.primary' }
-                  }}
-                />
-              </ListItem>
-            ))}
-          </List>
-        );
-        listItems = [];
-      }
-    };
-
-    const flushCodeBlock = () => {
-      if (codeLines.length > 0) {
-        elements.push(
-          <Box
-            key={`code-${elements.length}`}
-            sx={{
-              bgcolor: alpha(theme.palette.background.default, 0.5),
-              p: 2,
-              borderRadius: 1,
-              my: 1,
-              fontFamily: 'monospace',
-              fontSize: '0.875rem',
-              overflowX: 'auto',
-            }}
-          >
-            {codeLines.join('\n')}
-          </Box>
-        );
-        codeLines = [];
-      }
-    };
-
-    lines.forEach((line, idx) => {
-      // Handle code blocks
-      if (line.trim().startsWith('```')) {
-        if (inCodeBlock) {
-          flushCodeBlock();
-          inCodeBlock = false;
-        } else {
-          flushList();
-          inCodeBlock = true;
-        }
-        return;
-      }
-
-      if (inCodeBlock) {
-        codeLines.push(line);
-        return;
-      }
-
-      // Handle bullet points
-      if (line.trim().match(/^[-•*]\s/)) {
-        const text = line.trim().substring(2);
-        listItems.push(text);
-        return;
-      }
-
-      // Flush any pending list
-      flushList();
-
-      // Handle headers
-      if (line.startsWith('### ')) {
-        elements.push(
-          <Typography key={idx} variant="h6" sx={{ fontWeight: 600, mt: 2, mb: 1 }}>
-            {line.substring(4)}
-          </Typography>
-        );
-        return;
-      }
-
-      if (line.startsWith('## ')) {
-        elements.push(
-          <Typography key={idx} variant="h5" sx={{ fontWeight: 700, mt: 2, mb: 1 }}>
-            {line.substring(3)}
-          </Typography>
-        );
-        return;
-      }
-
-      if (line.startsWith('# ')) {
-        elements.push(
-          <Typography key={idx} variant="h4" sx={{ fontWeight: 700, mt: 2, mb: 1 }}>
-            {line.substring(2)}
-          </Typography>
-        );
-        return;
-      }
-
-      // Handle bold and italic text
-      const renderInlineFormatting = (text: string) => {
-        const parts: React.ReactNode[] = [];
-        let remaining = text;
-        let keyCounter = 0;
-
-        while (remaining.length > 0) {
-          // Bold (**text**)
-          const boldMatch = remaining.match(/\*\*(.+?)\*\*/);
-          if (boldMatch && boldMatch.index !== undefined) {
-            if (boldMatch.index > 0) {
-              parts.push(remaining.substring(0, boldMatch.index));
-            }
-            parts.push(
-              <strong key={`bold-${keyCounter++}`}>{boldMatch[1]}</strong>
-            );
-            remaining = remaining.substring(boldMatch.index + boldMatch[0].length);
-            continue;
-          }
-
-          // Italic (*text*)
-          const italicMatch = remaining.match(/\*(.+?)\*/);
-          if (italicMatch && italicMatch.index !== undefined) {
-            if (italicMatch.index > 0) {
-              parts.push(remaining.substring(0, italicMatch.index));
-            }
-            parts.push(
-              <em key={`italic-${keyCounter++}`}>{italicMatch[1]}</em>
-            );
-            remaining = remaining.substring(italicMatch.index + italicMatch[0].length);
-            continue;
-          }
-
-          parts.push(remaining);
-          break;
-        }
-
-        return parts;
-      };
-
-      // Regular paragraph
-      if (line.trim()) {
-        elements.push(
-          <Typography key={idx} variant="body1" sx={{ my: 0.5, lineHeight: 1.7 }}>
-            {renderInlineFormatting(line)}
-          </Typography>
-        );
-      } else if (elements.length > 0) {
-        // Empty line for spacing
-        elements.push(<Box key={`space-${idx}`} sx={{ height: 8 }} />);
-      }
-    });
-
-    // Flush any remaining list or code block
-    flushList();
-    flushCodeBlock();
-
-    return elements;
-  };
-
-  return <Box>{renderContent()}</Box>;
-};
 
 export default function CustomersChatPage(): JSX.Element {
   const theme = useTheme();
@@ -582,7 +408,9 @@ export default function CustomersChatPage(): JSX.Element {
                   }}
                 >
                   <Box sx={{ color: 'text.primary' }}>
-                    <MarkdownText content={message.content} />
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {message.content}
+                    </ReactMarkdown>
                   </Box>
                 </Paper>
 

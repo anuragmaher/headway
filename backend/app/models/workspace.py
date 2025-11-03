@@ -16,6 +16,7 @@ class Workspace(Base):
     name = Column(String, nullable=False)
     slug = Column(String, unique=True, index=True, nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)
+    slack_team_id = Column(String, unique=True, index=True, nullable=True)  # Slack workspace ID for slash commands
     
     # Company and owner relationships
     company_id = Column(UUID(as_uuid=True), ForeignKey("companies.id"), nullable=False)

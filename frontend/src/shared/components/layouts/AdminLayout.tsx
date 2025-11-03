@@ -218,9 +218,8 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
       {/* Navigation */}
       <List sx={{ px: collapsed ? 1 : 2, py: 3 }}>
         {navigationItems.map((item) => {
-          const isActive = location.pathname === item.path || 
-                          location.pathname.startsWith(item.path + '/');
-          
+          const isActive = location.pathname === item.path;
+
           return (
             <ListItem key={item.text} disablePadding sx={{ mb: 1 }}>
               <ListItemButton
@@ -330,8 +329,8 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
             fontSize: '1.1rem',
             color: theme.palette.text.primary,
           }}>
-            {navigationItems.find(item => 
-              location.pathname === item.path || location.pathname.startsWith(item.path + '/')
+            {navigationItems.find(item =>
+              location.pathname === item.path
             )?.text || 'HeadwayHQ'}
           </Typography>
 

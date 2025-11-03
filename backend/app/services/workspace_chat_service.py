@@ -181,9 +181,11 @@ CRITICAL RULES:
 6. For aggregations, use appropriate GROUP BY
 7. Use descriptive column aliases for clarity
 8. Ensure all columns referenced exist in the schema
+9. IMPORTANT: For "most urgent" or "urgent" queries, use ORDER BY with CASE to sort urgency properly (critical > high > medium > low). DO NOT filter by urgency='critical' alone.
 
 Common query patterns:
 - Customers with most messages: SELECT c.name, COUNT(m.id) as message_count FROM customers c LEFT JOIN messages m ON m.customer_id = c.id WHERE c.workspace_id = '{workspace_id}' GROUP BY c.id, c.name ORDER BY message_count DESC LIMIT 100
+- Most urgent feature requests by customer: SELECT c.name AS customer_name, f.name AS feature_name, f.urgency FROM customers c JOIN messages m ON m.customer_id = c.id JOIN feature_messages fm ON fm.message_id = m.id JOIN features f ON f.id = fm.feature_id WHERE c.workspace_id = '{workspace_id}' ORDER BY CASE f.urgency WHEN 'critical' THEN 1 WHEN 'high' THEN 2 WHEN 'medium' THEN 3 WHEN 'low' THEN 4 ELSE 5 END, c.name LIMIT 100
 - Feature requests by customer: SELECT c.name, f.name, f.urgency FROM customers c JOIN feature_messages fm ON fm.message_id IN (SELECT id FROM messages WHERE customer_id = c.id) JOIN features f ON f.id = fm.feature_id WHERE c.workspace_id = '{workspace_id}' LIMIT 100
 - Top pain points: SELECT content, ai_insights->'pain_points' as pain_points FROM messages WHERE workspace_id = '{workspace_id}' AND ai_insights->'pain_points' IS NOT NULL LIMIT 100
 - Industry breakdown: SELECT industry, COUNT(*) as count FROM customers WHERE workspace_id = '{workspace_id}' GROUP BY industry ORDER BY count DESC LIMIT 100

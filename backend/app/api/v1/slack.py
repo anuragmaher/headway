@@ -1,9 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request, Form, BackgroundTasks
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 import uuid
 import logging
 from datetime import datetime
+import hmac
+import hashlib
+import time
+import os
+import httpx
 
 from app.core.database import get_db
 from app.models.integration import Integration
@@ -16,6 +21,7 @@ from app.schemas.slack import (
     SlackChannel
 )
 from app.services.slack_service import slack_service
+from app.services.workspace_chat_service import get_workspace_chat_service
 from app.core.deps import get_current_user_with_workspace
 
 logger = logging.getLogger(__name__)
@@ -272,3 +278,186 @@ async def disconnect_slack_integration(
             status_code=500,
             detail="Failed to disconnect Slack integration"
         )
+
+# Helper function to verify Slack request signature
+def verify_slack_signature(request_body: bytes, timestamp: str, signature: str) -> bool:
+    """
+    Verify that the request came from Slack by validating the signature
+    """
+    slack_signing_secret = os.getenv("SLACK_SIGNING_SECRET", "")
+    if not slack_signing_secret:
+        logger.error("SLACK_SIGNING_SECRET not configured")
+        return False
+    
+    # Check timestamp to prevent replay attacks (within 5 minutes)
+    try:
+        request_timestamp = int(timestamp)
+        if abs(time.time() - request_timestamp) > 60 * 5:
+            logger.warning(f"Request timestamp too old: {timestamp}")
+            return False
+    except (ValueError, TypeError):
+        logger.warning(f"Invalid timestamp: {timestamp}")
+        return False
+    
+    # Compute expected signature
+    sig_basestring = f"v0:{timestamp}:{request_body.decode('utf-8')}"
+    expected_signature = 'v0=' + hmac.new(
+        slack_signing_secret.encode(),
+        sig_basestring.encode(),
+        hashlib.sha256
+    ).hexdigest()
+    
+    # Compare signatures
+    return hmac.compare_digest(expected_signature, signature)
+
+
+# Background task to send delayed response
+async def send_slack_response(response_url: str, text: str):
+    """
+    Send a delayed response to Slack using response_url
+    """
+    try:
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                response_url,
+                json={
+                    "response_type": "ephemeral",  # Only visible to command user
+                    "text": text
+                },
+                timeout=30.0
+            )
+            logger.info(f"Sent delayed response to Slack")
+    except Exception as e:
+        logger.error(f"Error sending delayed Slack response: {e}")
+
+
+@router.post("/command")
+async def handle_slash_command(
+    request: Request,
+    background_tasks: BackgroundTasks,
+    team_id: str = Form(...),
+    team_domain: str = Form(...),
+    user_id: str = Form(...),
+    user_name: str = Form(...),
+    command: str = Form(...),
+    text: str = Form(...),
+    response_url: str = Form(...),
+    trigger_id: str = Form(None),
+    db: Session = Depends(get_db)
+):
+    """
+    Handle Slack slash command: /headway <query>
+    
+    This endpoint processes natural language queries from Slack and returns
+    customer insights using the workspace chat service.
+    
+    Example: /headway Which customers are in Healthcare?
+    """
+    try:
+        # Step 1: Verify Slack signature
+        body = await request.body()
+        timestamp = request.headers.get("X-Slack-Request-Timestamp", "")
+        signature = request.headers.get("X-Slack-Signature", "")
+        
+        if not verify_slack_signature(body, timestamp, signature):
+            logger.warning(f"Invalid Slack signature from team {team_id}")
+            raise HTTPException(status_code=401, detail="Invalid request signature")
+        
+        logger.info(f"Slash command received from {user_name} ({user_id}) in team {team_id}: {text}")
+        
+        # Step 2: Look up workspace by slack_team_id
+        workspace = db.query(Workspace).filter(
+            Workspace.slack_team_id == team_id
+        ).first()
+        
+        if not workspace:
+            logger.warning(f"Workspace not found for Slack team {team_id}")
+            return {
+                "response_type": "ephemeral",
+                "text": f"⚠️ HeadwayHQ is not connected to this Slack workspace.\n\nPlease connect at: {os.getenv('FRONTEND_URL', 'https://app.headwayhq.com')}/settings"
+            }
+        
+        # Step 3: Validate query text
+        if not text or text.strip() == "":
+            return {
+                "response_type": "ephemeral",
+                "text": "ℹ️ *How to use /headway*\n\n"
+                        "Ask natural language questions about your customers:\n\n"
+                        "• `/headway Which customers are in Healthcare?`\n"
+                        "• `/headway Show me customers with most messages`\n"
+                        "• `/headway What are the top feature requests?`\n"
+                        "• `/headway List customers by industry`"
+            }
+        
+        # Step 4: Return immediate response (avoid 3-second timeout)
+        # Schedule background task to process query and send delayed response
+        background_tasks.add_task(
+            process_and_respond,
+            workspace_id=str(workspace.id),
+            user_query=text.strip(),
+            response_url=response_url,
+            user_name=user_name,
+            db=db
+        )
+        
+        return {
+            "response_type": "ephemeral",
+            "text": f"⏳ Processing your question: _{text.strip()}_\n\nThis may take a few seconds..."
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error handling Slack slash command: {e}")
+        import traceback
+        traceback.print_exc()
+        return {
+            "response_type": "ephemeral",
+            "text": f"❌ Sorry, something went wrong processing your request. Please try again."
+        }
+
+
+async def process_and_respond(
+    workspace_id: str,
+    user_query: str,
+    response_url: str,
+    user_name: str,
+    db: Session
+):
+    """
+    Background task to process query and send response to Slack
+    """
+    try:
+        # Get workspace chat service
+        chat_service = get_workspace_chat_service()
+        
+        # Process query
+        result = chat_service.chat(
+            db=db,
+            workspace_id=workspace_id,
+            user_query=user_query
+        )
+        
+        # Format response for Slack
+        if result.get("success"):
+            response_text = f"*Question:* {user_query}\n\n{result['response']}"
+            
+            # Add SQL query info if available (for debugging)
+            if result.get("sql_query"):
+                response_text += f"\n\n_Query method: SQL_"
+        else:
+            response_text = f"❌ {result.get('response', 'Unable to process your question. Please try rephrasing.')}"
+        
+        # Send delayed response
+        await send_slack_response(response_url, response_text)
+        
+        logger.info(f"Successfully processed Slack command for workspace {workspace_id}")
+        
+    except Exception as e:
+        logger.error(f"Error processing Slack command in background: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        # Send error response
+        error_text = f"❌ Sorry, I encountered an error: {str(e)}\n\nPlease try rephrasing your question or contact support."
+        await send_slack_response(response_url, error_text)
