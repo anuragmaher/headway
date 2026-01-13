@@ -17,6 +17,7 @@ from app.models.customer import Customer
 from app.models.clustering import ClusteringRun, DiscoveredCluster, ClassificationSignal
 from app.models.workspace_data_point import WorkspaceDataPoint
 from app.models.data_extraction_field import DataExtractionField
+from app.models.gmail import GmailAccounts, GmailLabels
 
 __all__ = [
     "User",
@@ -33,5 +34,7 @@ __all__ = [
     "DiscoveredCluster",
     "ClassificationSignal",
     "WorkspaceDataPoint",
-    "DataExtractionField"
+    "DataExtractionField",
+    "GmailAccounts",
+    "GmailLabels"
 ]

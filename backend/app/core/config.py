@@ -45,6 +45,11 @@ class Settings(BaseSettings):
     FATHOM_PROJECT_ID: Optional[str] = None
     FATHOM_API_BASE_URL: str = "https://api.fathom.com"
 
+    # Google OAuth Configuration
+    GOOGLE_CLIENT_ID: str
+    GOOGLE_CLIENT_SECRET: str
+    GMAIL_REDIRECT_URI: str
+
     # Environment
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     DEBUG: bool = os.getenv("DEBUG", "true").lower() in ("true", "1", "yes")
