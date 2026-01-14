@@ -30,6 +30,8 @@ export const getConnectorIcon = (name: string): React.ReactNode => {
       return "💭";
     case "zendesk":
       return "🎫";
+    case "hubspot":
+      return "🟠";
     case "api webhook":
       return "🔗";
     default:
