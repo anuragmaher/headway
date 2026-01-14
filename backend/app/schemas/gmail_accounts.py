@@ -17,8 +17,8 @@ class Gmail_account(BaseModel):
         orm_mode = True
 
 class Gmail_labels(BaseModel):
-    id = UUID(as_uuid=True)
-    gmail_accoubt_id = UUID(as_uuid=True)
+    id : UUID = Field(default_factory=UUID)
+    gmail_account_id : UUID
     label_id: str
     label_name: str
     watch_enabled: bool
@@ -28,5 +28,15 @@ class Gmail_labels(BaseModel):
         orm_mode = True
 
 
+class GmailLabelInput(BaseModel):
+    """Simple input schema for label selection from frontend"""
+    id: str  # Gmail label ID (e.g., "Label_123")
+    name: str
+    type: str
+
+
 class SelectLabelsRequest(BaseModel):
-    label_ids: List[str]
+    selected: List[GmailLabelInput]
+
+class GmailAuthURLResponse(BaseModel):
+    auth_url: str

@@ -11,7 +11,7 @@ def get_gmail_client(gmail_account: GmailAccounts, db: Session) -> Request:
     """
     try:
         creds = Credentials(
-            access_token=gmail_account.access_token,
+            token=gmail_account.access_token,
             refresh_token=gmail_account.refresh_token,
             token_uri="https://oauth2.googleapis.com/token",
             client_id=settings.GOOGLE_CLIENT_ID,

@@ -189,6 +189,56 @@ async def get_workspace_connectors(
         )
 
 
+@router.get(
+    "/{workspace_id}/connectors/{connector_id}",
+    response_model=WorkspaceConnectorResponse,
+    status_code=status.HTTP_200_OK
+)
+async def get_connector(
+    workspace_id: UUID,
+    connector_id: UUID,
+    current_user: User = Depends(get_current_user),
+    db = Depends(get_db)
+) -> WorkspaceConnectorResponse:
+    """
+    Get a specific connector for a workspace.
+
+    Args:
+        workspace_id: UUID of the workspace
+        connector_id: UUID of the connector
+        current_user: Current authenticated user
+        db: Database session
+
+    Returns:
+        WorkspaceConnectorResponse with masked credentials
+
+    Raises:
+        HTTPException: If connector not found
+    """
+    try:
+        logger.info(f"Fetching connector {connector_id} for workspace {workspace_id}")
+
+        service = WorkspaceService(db)
+        connector = service.get_connector(workspace_id, connector_id)
+
+        if not connector:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Connector not found"
+            )
+
+        return connector
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching connector: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch connector"
+        )
+
+
 @router.put(
     "/{workspace_id}/connectors/{connector_id}",
     response_model=WorkspaceConnectorResponse,

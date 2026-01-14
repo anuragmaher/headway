@@ -6,7 +6,7 @@ SCOPES = [
 ]
 
 def gmailOauth():
-    return Flow.from_client_config(
+    flow =  Flow.from_client_config(
         {
             "web": {
                 "client_id": os.getenv("GOOGLE_CLIENT_ID"),
@@ -18,3 +18,5 @@ def gmailOauth():
         },
         scopes=SCOPES
     )
+    flow.redirect_uri = os.getenv("GMAIL_REDIRECT_URI")
+    return flow

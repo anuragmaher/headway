@@ -19,9 +19,10 @@ import {
   Menu,
   MenuItem,
   Divider,
-  Chip,
+  Tooltip,
   alpha,
   useTheme,
+  GlobalStyles,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -30,8 +31,8 @@ import {
   Settings as SettingsIcon,
   Logout as LogoutIcon,
   Person as PersonIcon,
-  ChevronLeft as ChevronLeftIcon,
-  ChevronRight as ChevronRightIcon,
+  KeyboardDoubleArrowLeft as CollapseIcon,
+  KeyboardDoubleArrowRight as ExpandIcon,
   Business as BusinessIcon,
   Chat as ChatIcon,
 } from '@mui/icons-material';
@@ -39,9 +40,8 @@ import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { useAuthActions, useUser } from '@/features/auth/store/auth-store';
 import { ROUTES } from '@/lib/constants/routes';
-import { useResponsive } from '@/shared/utils/responsive';
 
-const DRAWER_WIDTH = 280;
+const DRAWER_WIDTH = 260;
 const DRAWER_WIDTH_COLLAPSED = 72;
 
 interface AdminLayoutProps {
@@ -78,12 +78,11 @@ const navigationItems = [
 
 export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(true); // Start collapsed by default
+  const [collapsed, setCollapsed] = useState(true);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const theme = useTheme();
-  const { } = useResponsive();
   const { logout } = useAuthActions();
   const user = useUser();
 
@@ -109,168 +108,120 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
     handleProfileMenuClose();
   };
 
+  const currentDrawerWidth = collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH;
+
   const drawer = (
     <Box sx={{ 
       height: '100%', 
-      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
-      backdropFilter: 'blur(10px)',
-      width: collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH,
-      transition: 'width 0.3s ease-in-out',
+      display: 'flex',
+      flexDirection: 'column',
+      background: theme.palette.mode === 'dark' 
+        ? `linear-gradient(180deg, ${alpha('#0f0f23', 0.98)} 0%, ${alpha('#1a1a2e', 0.95)} 100%)`
+        : `linear-gradient(180deg, ${alpha('#fafafa', 0.98)} 0%, ${alpha('#f5f5f5', 0.95)} 100%)`,
+      borderRight: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+      overflow: 'hidden',
     }}>
       {/* Logo and branding */}
       <Box sx={{ 
-        p: collapsed ? 1.5 : 3, 
-        borderBottom: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
-        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+        p: 2,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        transition: 'all 0.3s ease-in-out',
-        position: 'relative',
+        justifyContent: collapsed ? 'center' : 'flex-start',
+        gap: 1.5,
+        minHeight: 64,
+        borderBottom: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
       }}>
-        <Box sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: collapsed ? 0 : 1.5,
-          flex: 1,
-          justifyContent: collapsed ? 'center' : 'flex-start',
+        <Box sx={{
+          width: 40,
+          height: 40,
+          borderRadius: 2,
+          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: `0 4px 14px ${alpha(theme.palette.primary.main, 0.4)}`,
+          flexShrink: 0,
         }}>
-          <Box sx={{
-            width: 40,
-            height: 40,
-            borderRadius: 1,
-            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
-          }}>
-            <Typography variant="h6" sx={{ color: 'white', fontWeight: 800 }}>
-              H
+          <Typography variant="h6" sx={{ color: 'white', fontWeight: 800, fontSize: '1.2rem' }}>
+            H
+          </Typography>
+        </Box>
+        {!collapsed && (
+          <Box sx={{ overflow: 'hidden' }}>
+            <Typography variant="h6" sx={{ 
+              fontWeight: 700, 
+              color: 'text.primary', 
+              fontSize: '1rem',
+              lineHeight: 1.2,
+              whiteSpace: 'nowrap',
+            }}>
+              HeadwayHQ
+            </Typography>
+            <Typography variant="caption" sx={{ 
+              color: 'text.secondary', 
+              fontSize: '0.7rem',
+              whiteSpace: 'nowrap',
+            }}>
+              Product Intelligence
             </Typography>
           </Box>
-          {!collapsed && (
-            <Box>
-              <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary', fontSize: '1.1rem' }}>
-                HeadwayHQ
-              </Typography>
-              <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.75rem' }}>
-                Product Intelligence
-              </Typography>
-            </Box>
-          )}
-        </Box>
-        
-        {/* Collapse toggle button - only show on desktop */}
-        {!collapsed && (
-          <IconButton
-            onClick={handleDrawerCollapse}
-            sx={{
-              display: { xs: 'none', sm: 'flex' },
-              width: 32,
-              height: 32,
-              bgcolor: alpha(theme.palette.background.paper, 0.8),
-              backdropFilter: 'blur(10px)',
-              border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-              '&:hover': {
-                bgcolor: alpha(theme.palette.primary.main, 0.1),
-                transform: 'scale(1.1)',
-              },
-              transition: 'all 0.2s ease-in-out',
-            }}
-          >
-            <ChevronLeftIcon fontSize="small" />
-          </IconButton>
         )}
       </Box>
-      
-      {/* Expand button positioned within the drawer for collapsed state */}
-      {collapsed && (
-        <Box sx={{ 
-          position: 'absolute', 
-          top: 16, 
-          right: -12, 
-          zIndex: 1000 
-        }}>
-          <IconButton
-            onClick={handleDrawerCollapse}
-            sx={{
-              display: { xs: 'none', sm: 'flex' },
-              width: 24,
-              height: 24,
-              bgcolor: theme.palette.primary.main,
-              color: 'white',
-              border: `2px solid ${theme.palette.background.paper}`,
-              boxShadow: `0 2px 8px ${alpha(theme.palette.common.black, 0.3)}`,
-              '&:hover': {
-                bgcolor: theme.palette.primary.dark,
-                transform: 'scale(1.1)',
-                boxShadow: `0 4px 12px ${alpha(theme.palette.common.black, 0.4)}`,
-              },
-              transition: 'all 0.2s ease-in-out',
-            }}
-          >
-            <ChevronRightIcon sx={{ fontSize: 16 }} />
-          </IconButton>
-        </Box>
-      )}
 
       {/* Navigation */}
-      <List sx={{ px: collapsed ? 1 : 2, py: 3 }}>
-        {navigationItems.map((item) => {
-          const isActive = location.pathname === item.path;
+      <Box sx={{ flex: 1, py: 2, px: collapsed ? 1 : 1.5, overflow: 'auto' }}>
+        <List disablePadding>
+          {navigationItems.map((item) => {
+            const isActive = location.pathname === item.path;
 
-          return (
-            <ListItem key={item.text} disablePadding sx={{ mb: 1 }}>
+            const button = (
               <ListItemButton
                 component={RouterLink}
                 to={item.path}
                 selected={isActive}
                 sx={{
-                  borderRadius: 1,
-                  py: 1.2,
-                  px: collapsed ? 1.5 : 2,
-                  transition: 'all 0.2s ease-in-out',
-                  position: 'relative',
+                  borderRadius: 2,
+                  py: 1.25,
+                  px: collapsed ? 0 : 1.5,
+                  mb: 0.5,
                   justifyContent: collapsed ? 'center' : 'flex-start',
                   minHeight: 48,
+                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                  position: 'relative',
                   '&.Mui-selected': {
-                    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.15)} 0%, ${alpha(theme.palette.primary.main, 0.1)} 100%)`,
-                    color: theme.palette.primary.main,
-                    fontWeight: 600,
+                    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.15)} 0%, ${alpha(theme.palette.primary.main, 0.08)} 100%)`,
                     '&::before': {
                       content: '""',
                       position: 'absolute',
                       left: 0,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      width: 4,
-                      height: '60%',
+                      top: '20%',
+                      bottom: '20%',
+                      width: 3,
                       borderRadius: '0 4px 4px 0',
-                      background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-                      boxShadow: `2px 0 8px ${alpha(theme.palette.primary.main, 0.3)}`,
-                    },
-                    '&:hover': {
-                      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.2)} 0%, ${alpha(theme.palette.primary.main, 0.15)} 100%)`,
-                      transform: collapsed ? 'scale(1.05)' : 'translateX(2px)',
+                      background: theme.palette.primary.main,
+                      boxShadow: `0 0 8px ${alpha(theme.palette.primary.main, 0.5)}`,
                     },
                     '& .MuiListItemIcon-root': {
                       color: theme.palette.primary.main,
                     },
+                    '& .MuiListItemText-primary': {
+                      color: theme.palette.primary.main,
+                      fontWeight: 600,
+                    },
+                    '&:hover': {
+                      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.2)} 0%, ${alpha(theme.palette.primary.main, 0.12)} 100%)`,
+                    },
                   },
                   '&:hover': {
-                    bgcolor: alpha(theme.palette.primary.main, 0.05),
-                    transform: collapsed ? 'scale(1.05)' : 'translateX(2px)',
+                    background: alpha(theme.palette.action.hover, 0.08),
                   },
                 }}
-                title={collapsed ? item.text : undefined} // Show tooltip when collapsed
               >
                 <ListItemIcon
                   sx={{
-                    color: isActive ? 'inherit' : theme.palette.text.secondary,
-                    minWidth: collapsed ? 0 : 36,
-                    mr: collapsed ? 0 : 2,
-                    transition: 'all 0.2s ease-in-out',
+                    color: isActive ? theme.palette.primary.main : theme.palette.text.secondary,
+                    minWidth: collapsed ? 0 : 40,
+                    justifyContent: 'center',
                   }}
                 >
                   {item.icon}
@@ -280,35 +231,89 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
                     primary={item.text}
                     primaryTypographyProps={{
                       sx: {
-                        fontSize: '0.9rem',
+                        fontSize: '0.875rem',
                         fontWeight: isActive ? 600 : 500,
-                        letterSpacing: '0.01em',
+                        color: isActive ? theme.palette.primary.main : theme.palette.text.primary,
                       }
                     }}
                   />
                 )}
               </ListItemButton>
-            </ListItem>
-          );
-        })}
-      </List>
+            );
+
+            return (
+              <ListItem key={item.text} disablePadding>
+                {collapsed ? (
+                  <Tooltip title={item.text} placement="right" arrow>
+                    {button}
+                  </Tooltip>
+                ) : (
+                  button
+                )}
+              </ListItem>
+            );
+          })}
+        </List>
+      </Box>
+
+      {/* Collapse/Expand Toggle at bottom */}
+      <Box sx={{ 
+        p: 1.5,
+        borderTop: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
+        display: { xs: 'none', sm: 'flex' },
+        justifyContent: collapsed ? 'center' : 'flex-end',
+      }}>
+        <Tooltip title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} placement="right" arrow>
+          <IconButton
+            onClick={handleDrawerCollapse}
+            size="small"
+            sx={{
+              width: 36,
+              height: 36,
+              borderRadius: 2,
+              bgcolor: alpha(theme.palette.primary.main, 0.08),
+              color: theme.palette.primary.main,
+              '&:hover': {
+                bgcolor: alpha(theme.palette.primary.main, 0.15),
+                transform: 'scale(1.05)',
+              },
+              transition: 'all 0.2s ease',
+            }}
+          >
+            {collapsed ? <ExpandIcon fontSize="small" /> : <CollapseIcon fontSize="small" />}
+          </IconButton>
+        </Tooltip>
+      </Box>
     </Box>
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+    <>
+      <GlobalStyles
+        styles={{
+          'html, body': {
+            overflowX: 'hidden',
+          },
+        }}
+      />
+      <Box sx={{ 
+        display: 'flex', 
+        minHeight: '100vh', 
+        overflow: 'hidden',
+        width: '100vw',
+        maxWidth: '100%',
+      }}>
       {/* App Bar */}
       <AppBar
         position="fixed"
         elevation={0}
         sx={{
-          width: { xs: '100%', sm: `calc(100% - ${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px)` },
-          ml: { xs: 0, sm: `${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px` },
-          transition: 'all 0.3s ease-in-out',
-          zIndex: theme.zIndex.drawer + 1,
-          background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)} 0%, ${alpha(theme.palette.background.paper, 0.7)} 100%)`,
-          backdropFilter: 'blur(20px)',
-          borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          left: { xs: 0, sm: currentDrawerWidth },
+          width: { xs: '100%', sm: `calc(100% - ${currentDrawerWidth}px)` },
+          transition: 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          background: alpha(theme.palette.background.paper, 0.8),
+          backdropFilter: 'blur(12px)',
+          borderBottom: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
           color: theme.palette.text.primary,
         }}
       >
@@ -323,18 +328,19 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
             <MenuIcon />
           </IconButton>
 
-          <Typography variant="h6" noWrap component="div" sx={{ 
-            flexGrow: 1, 
-            fontWeight: 600, 
-            fontSize: '1.1rem',
-            color: theme.palette.text.primary,
-          }}>
-            {navigationItems.find(item =>
-              location.pathname === item.path
-            )?.text || 'HeadwayHQ'}
-          </Typography>
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="h6" noWrap component="div" sx={{ 
+              fontWeight: 600, 
+              fontSize: '1.1rem',
+              color: theme.palette.text.primary,
+            }}>
+              {navigationItems.find(item =>
+                location.pathname === item.path
+              )?.text || 'HeadwayHQ'}
+            </Typography>
+          </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
             <ThemeToggle />
 
             <IconButton
@@ -342,19 +348,17 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
               aria-label="account menu"
               sx={{
                 p: 0.5,
-                borderRadius: 1,
-                transition: 'all 0.2s ease-in-out',
+                borderRadius: 2,
+                transition: 'all 0.2s ease',
                 '&:hover': {
-                  transform: 'scale(1.05)',
-                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                  bgcolor: alpha(theme.palette.primary.main, 0.08),
                 },
               }}
             >
               <Avatar sx={{
-                width: 36,
-                height: 36,
+                width: 34,
+                height: 34,
                 background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-                boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
                 fontSize: '0.9rem',
                 fontWeight: 600,
               }}>
@@ -369,6 +373,14 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
               onClick={handleProfileMenuClose}
               transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+              PaperProps={{
+                sx: {
+                  mt: 1,
+                  borderRadius: 2,
+                  minWidth: 180,
+                  boxShadow: `0 4px 20px ${alpha(theme.palette.common.black, 0.15)}`,
+                }
+              }}
             >
               <MenuItem onClick={() => navigate(ROUTES.SETTINGS_PROFILE)}>
                 <ListItemIcon>
@@ -394,33 +406,38 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
         </Toolbar>
       </AppBar>
 
-      {/* Drawer */}
+      {/* Mobile Drawer */}
       <Drawer
         variant="temporary"
         open={mobileOpen}
         onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true, // Better open performance on mobile
-        }}
+        ModalProps={{ keepMounted: true }}
         sx={{
           display: { xs: 'block', sm: 'none' },
           '& .MuiDrawer-paper': {
             boxSizing: 'border-box',
             width: DRAWER_WIDTH,
+            border: 'none',
           },
         }}
       >
         {drawer}
       </Drawer>
 
+      {/* Desktop Drawer */}
       <Drawer
         variant="permanent"
         sx={{
           display: { xs: 'none', sm: 'block' },
+          width: currentDrawerWidth,
+          flexShrink: 0,
+          transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           '& .MuiDrawer-paper': {
             boxSizing: 'border-box',
-            width: collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH,
-            transition: 'width 0.3s ease-in-out',
+            width: currentDrawerWidth,
+            transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            border: 'none',
+            overflowX: 'hidden',
           },
         }}
         open
@@ -433,30 +450,17 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 0,
-          ml: { xs: 0, sm: `${collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH}px` },
-          width: '100%',
-          transition: 'all 0.3s ease-in-out',
+          minWidth: 0, // Important: allows flex item to shrink below content size
           minHeight: '100vh',
-          background: `linear-gradient(135deg, ${alpha(theme.palette.background.default, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.9)} 100%)`,
-          position: 'relative',
-          maxWidth: '100%',
+          background: theme.palette.background.default,
           overflowX: 'hidden',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: `radial-gradient(circle at 20% 20%, ${alpha(theme.palette.primary.main, 0.03)} 0%, transparent 50%), radial-gradient(circle at 80% 80%, ${alpha(theme.palette.secondary.main, 0.02)} 0%, transparent 50%)`,
-            pointerEvents: 'none',
-          },
+          overflowY: 'auto',
         }}
       >
-        <Toolbar /> {/* Spacer for AppBar */}
+        <Toolbar />
         {children}
       </Box>
     </Box>
+    </>
   );
 }

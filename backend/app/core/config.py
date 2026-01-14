@@ -53,7 +53,7 @@ class Settings(BaseSettings):
     # Environment
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     DEBUG: bool = os.getenv("DEBUG", "true").lower() in ("true", "1", "yes")
-
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:5173")
     # CORS
     CORS_ORIGINS: List[str] = [
         "http://localhost:5173",  # Vite dev server

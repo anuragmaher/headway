@@ -2,6 +2,7 @@
 Celery application configuration for background tasks and scheduled jobs
 """
 
+import sys
 from celery import Celery
 from celery.schedules import schedule
 from app.core.config import Settings
@@ -22,16 +23,23 @@ celery_app = Celery(
 )
 
 # Configure Celery
-celery_app.conf.update(
-    task_serializer="json",
-    accept_content=["json"],
-    result_serializer="json",
-    timezone="UTC",
-    enable_utc=True,
-    task_track_started=True,
-    task_time_limit=30 * 60,  # 30 minutes hard limit
-    task_soft_time_limit=25 * 60,  # 25 minutes soft limit
-)
+celery_config = {
+    "task_serializer": "json",
+    "accept_content": ["json"],
+    "result_serializer": "json",
+    "timezone": "UTC",
+    "enable_utc": True,
+    "task_track_started": True,
+    "task_time_limit": 30 * 60,  # 30 minutes hard limit
+    "task_soft_time_limit": 25 * 60,  # 25 minutes soft limit
+}
+
+# Use solo pool on Windows to avoid multiprocessing issues
+if sys.platform == "win32":
+    celery_config["worker_pool"] = "solo"
+    celery_config["worker_concurrency"] = 1
+
+celery_app.conf.update(**celery_config)
 
 # Configure periodic tasks (Celery Beat schedule)
 celery_app.conf.beat_schedule = {
@@ -53,9 +61,19 @@ celery_app.conf.beat_schedule = {
             "priority": 10
         }
     },
+    # Gmail ingestion every 15 minutes (staggered by 40 seconds after Fathom)
+    "ingest-gmail-threads": {
+        "task": "app.tasks.ingestion_tasks.ingest_gmail_periodic",
+        "schedule": schedule(run_every=940),  # 940 seconds = 15m 40s (staggered)
+        "options": {
+            "queue": "ingestion",
+            "priority": 10
+        }
+    },
 }
 
 logger.info(f"Celery app initialized with broker: {settings.REDIS_URL}")
 logger.info("Scheduled tasks configured:")
 logger.info("  - Gong ingestion: every 15 minutes")
 logger.info("  - Fathom ingestion: every 15 minutes (staggered by 20s)")
+logger.info("  - Gmail ingestion: every 15 minutes (staggered by 40s)")
