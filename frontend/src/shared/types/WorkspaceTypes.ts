@@ -28,12 +28,32 @@ export interface ConnectorInfo {
   available: boolean;
 }
 
-export const AVAILABLE_CONNECTORS: ConnectorInfo[] = [
+// All active connectors that can be connected
+export const ACTIVE_CONNECTORS: ConnectorInfo[] = [
   {
     name: "Slack",
     description: "Monitor channels for feature requests",
     available: true,
   },
+  {
+    name: "Gmail",
+    description: "Collect feedback from email conversations",
+    available: true,
+  },
+  {
+    name: "Gong",
+    description: "Analyze sales call recordings",
+    available: true,
+  },
+  {
+    name: "Fathom",
+    description: "Import meeting transcripts and notes",
+    available: true,
+  },
+];
+
+// Coming soon connectors
+export const COMING_SOON_CONNECTORS: ConnectorInfo[] = [
   {
     name: "Microsoft Teams",
     description: "Collect feedback from team conversations",
@@ -44,4 +64,25 @@ export const AVAILABLE_CONNECTORS: ConnectorInfo[] = [
     description: "Track community suggestions",
     available: false,
   },
+  {
+    name: "Hubspot",
+    description: "Sync customer feedback from CRM",
+    available: false,
+  },
+  {
+    name: "Zendesk",
+    description: "Import support tickets and feedback",
+    available: false,
+  },
+  {
+    name: "Intercom",
+    description: "Capture conversations and feedback",
+    available: false,
+  },
+];
+
+// Combined list for backwards compatibility
+export const AVAILABLE_CONNECTORS: ConnectorInfo[] = [
+  ...ACTIVE_CONNECTORS,
+  ...COMING_SOON_CONNECTORS,
 ];
