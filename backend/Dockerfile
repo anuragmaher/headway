@@ -1,23 +1,26 @@
 FROM python:3.12.3-slim-bookworm
 
-# Set Python to run in unbuffered mode (so print statements show up immediately)
+# Prevent Python from buffering stdout/stderr
 ENV PYTHONUNBUFFERED=1
 
+# Set default PORT (Railway overrides this automatically)
+ENV PORT=8000
+
 WORKDIR /app
+
+# Upgrade pip first (important for py3.12)
+RUN pip install --upgrade pip setuptools wheel
 
 # Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application
+# Copy application code
 COPY . .
 
 # Make start script executable
-COPY start.sh .
 RUN chmod +x start.sh
 
-# Railway sets PORT env var - default to 8000 for local
-EXPOSE $PORT
+EXPOSE 8000
 
-# Use bash script to handle PORT env var
 CMD ["./start.sh"]
