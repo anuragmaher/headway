@@ -85,7 +85,32 @@ class WorkspaceService:
                 self.db.commit()
                 self.db.refresh(existing_connector)
 
-                response = WorkspaceConnectorResponse.from_orm(existing_connector)
+                # Map credentials from JSONB to response fields
+                credentials = existing_connector.credentials or {}
+                if connector_data.connector_type == "gong":
+                    response = WorkspaceConnectorResponse(
+                        id=existing_connector.id,
+                        workspace_id=existing_connector.workspace_id,
+                        connector_type=existing_connector.connector_type,
+                        is_active=existing_connector.is_active,
+                        created_at=existing_connector.created_at,
+                        updated_at=existing_connector.updated_at,
+                        gong_access_key=credentials.get("access_key", ""),
+                        gong_secret_key=credentials.get("secret_key", ""),
+                        fathom_api_token=None
+                    )
+                else:  # fathom
+                    response = WorkspaceConnectorResponse(
+                        id=existing_connector.id,
+                        workspace_id=existing_connector.workspace_id,
+                        connector_type=existing_connector.connector_type,
+                        is_active=existing_connector.is_active,
+                        created_at=existing_connector.created_at,
+                        updated_at=existing_connector.updated_at,
+                        gong_access_key=None,
+                        gong_secret_key=None,
+                        fathom_api_token=credentials.get("api_token", "")
+                    )
             else:
                 # Create new connector
                 logger.info(f"Creating new {connector_data.connector_type} connector for workspace {workspace_id}")
@@ -113,7 +138,31 @@ class WorkspaceService:
                 self.db.commit()
                 self.db.refresh(new_connector)
 
-                response = WorkspaceConnectorResponse.from_orm(new_connector)
+                # Map credentials from JSONB to response fields
+                if connector_data.connector_type == "gong":
+                    response = WorkspaceConnectorResponse(
+                        id=new_connector.id,
+                        workspace_id=new_connector.workspace_id,
+                        connector_type=new_connector.connector_type,
+                        is_active=new_connector.is_active,
+                        created_at=new_connector.created_at,
+                        updated_at=new_connector.updated_at,
+                        gong_access_key=credentials.get("access_key", ""),
+                        gong_secret_key=credentials.get("secret_key", ""),
+                        fathom_api_token=None
+                    )
+                else:  # fathom
+                    response = WorkspaceConnectorResponse(
+                        id=new_connector.id,
+                        workspace_id=new_connector.workspace_id,
+                        connector_type=new_connector.connector_type,
+                        is_active=new_connector.is_active,
+                        created_at=new_connector.created_at,
+                        updated_at=new_connector.updated_at,
+                        gong_access_key=None,
+                        gong_secret_key=None,
+                        fathom_api_token=credentials.get("api_token", "")
+                    )
 
             # Mask credentials before returning
             return response.mask_credentials()
@@ -132,6 +181,74 @@ class WorkspaceService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Internal server error"
             )
+
+    def get_connector(
+        self, workspace_id: UUID, connector_id: UUID
+    ) -> Optional[WorkspaceConnectorResponse]:
+        """
+        Get a specific connector by ID.
+
+        Args:
+            workspace_id: UUID of the workspace
+            connector_id: UUID of the connector
+
+        Returns:
+            WorkspaceConnectorResponse with masked credentials, or None if not found
+        """
+        connector = self.db.query(WorkspaceConnector).filter(
+            WorkspaceConnector.id == connector_id,
+            WorkspaceConnector.workspace_id == workspace_id
+        ).first()
+
+        if not connector:
+            return None
+
+        # Extract credentials from JSONB column and map to response fields
+        credentials = connector.credentials or {}
+        
+        if connector.connector_type == "gong":
+            gong_access_key = credentials.get("access_key", "")
+            gong_secret_key = credentials.get("secret_key", "")
+            response = WorkspaceConnectorResponse(
+                id=connector.id,
+                workspace_id=connector.workspace_id,
+                connector_type=connector.connector_type,
+                is_active=connector.is_active,
+                created_at=connector.created_at,
+                updated_at=connector.updated_at,
+                gong_access_key=gong_access_key,
+                gong_secret_key=gong_secret_key,
+                fathom_api_token=None
+            )
+        elif connector.connector_type == "fathom":
+            fathom_api_token = credentials.get("api_token", "")
+            response = WorkspaceConnectorResponse(
+                id=connector.id,
+                workspace_id=connector.workspace_id,
+                connector_type=connector.connector_type,
+                is_active=connector.is_active,
+                created_at=connector.created_at,
+                updated_at=connector.updated_at,
+                gong_access_key=None,
+                gong_secret_key=None,
+                fathom_api_token=fathom_api_token
+            )
+        else:
+            response = WorkspaceConnectorResponse(
+                id=connector.id,
+                workspace_id=connector.workspace_id,
+                connector_type=connector.connector_type,
+                is_active=connector.is_active,
+                created_at=connector.created_at,
+                updated_at=connector.updated_at,
+                gong_access_key=None,
+                gong_secret_key=None,
+                fathom_api_token=None
+            )
+
+        # Don't mask credentials for details view - user needs to see what they entered
+        # return response.mask_credentials()
+        return response
 
     def get_connectors(self, workspace_id: UUID) -> List[WorkspaceConnectorResponse]:
         """
@@ -161,10 +278,50 @@ class WorkspaceService:
             WorkspaceConnector.workspace_id == workspace_id
         ).all()
 
-        return [
-            WorkspaceConnectorResponse.from_orm(c).mask_credentials()
-            for c in connectors
-        ]
+        result = []
+        for connector in connectors:
+            credentials = connector.credentials or {}
+            
+            if connector.connector_type == "gong":
+                response = WorkspaceConnectorResponse(
+                    id=connector.id,
+                    workspace_id=connector.workspace_id,
+                    connector_type=connector.connector_type,
+                    is_active=connector.is_active,
+                    created_at=connector.created_at,
+                    updated_at=connector.updated_at,
+                    gong_access_key=credentials.get("access_key", ""),
+                    gong_secret_key=credentials.get("secret_key", ""),
+                    fathom_api_token=None
+                )
+            elif connector.connector_type == "fathom":
+                response = WorkspaceConnectorResponse(
+                    id=connector.id,
+                    workspace_id=connector.workspace_id,
+                    connector_type=connector.connector_type,
+                    is_active=connector.is_active,
+                    created_at=connector.created_at,
+                    updated_at=connector.updated_at,
+                    gong_access_key=None,
+                    gong_secret_key=None,
+                    fathom_api_token=credentials.get("api_token", "")
+                )
+            else:
+                response = WorkspaceConnectorResponse(
+                    id=connector.id,
+                    workspace_id=connector.workspace_id,
+                    connector_type=connector.connector_type,
+                    is_active=connector.is_active,
+                    created_at=connector.created_at,
+                    updated_at=connector.updated_at,
+                    gong_access_key=None,
+                    gong_secret_key=None,
+                    fathom_api_token=None
+                )
+            
+            result.append(response.mask_credentials())
+        
+        return result
 
     def get_connector_by_type(
         self,

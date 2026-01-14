@@ -20,8 +20,8 @@ import {
   alpha,
   Button,
   Collapse,
-  Container,
 } from '@mui/material';
+import { AdminLayout } from '@/shared/components/layouts';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
@@ -241,14 +241,17 @@ export default function CustomersChatPage(): JSX.Element {
   // Show loading if workspace isn't loaded yet
   if (!workspaceId) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 100px)' }}>
-        <CircularProgress />
-      </Box>
+      <AdminLayout>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 100px)' }}>
+          <CircularProgress />
+        </Box>
+      </AdminLayout>
     );
   }
 
   return (
-    <Box sx={{
+    <AdminLayout>
+      <Box sx={{
       display: 'flex',
       flexDirection: { xs: 'column', md: 'row' },
       height: { xs: 'auto', md: 'calc(100vh - 100px)' },
@@ -606,5 +609,6 @@ export default function CustomersChatPage(): JSX.Element {
         </Box>
       </Paper>
     </Box>
+    </AdminLayout>
   );
 }

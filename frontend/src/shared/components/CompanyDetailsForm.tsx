@@ -153,10 +153,13 @@ export function CompanyDetailsForm({
         background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.8)} 0%, ${alpha(theme.palette.background.paper, 0.4)} 100%)`,
         backdropFilter: 'blur(10px)',
         border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-        mb: 2,
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
-      <CardContent>
+      <CardContent sx={{ p: 3, display: 'flex', flexDirection: 'column', flex: 1 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
           <Box
             sx={{
@@ -167,24 +170,49 @@ export function CompanyDetailsForm({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              flexShrink: 0,
             }}
           >
             <BusinessIcon sx={{ color: 'white', fontSize: 20 }} />
           </Box>
-          <Box>
-            <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                fontWeight: 600, 
+                mb: 0.25,
+                fontSize: '1.1rem',
+                letterSpacing: '-0.01em',
+                lineHeight: 1.3,
+              }}
+            >
               Company Details
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{
+                fontSize: '0.875rem',
+                lineHeight: 1.4,
+                fontWeight: 400,
+              }}
+            >
               Manage your company information
             </Typography>
           </Box>
-          <Box sx={{ ml: 'auto' }}>
+          <Box sx={{ ml: 'auto', flexShrink: 0 }}>
             <Button
               variant="outlined"
+              size="small"
               startIcon={<EditIcon />}
               onClick={handleOpenDialog}
               disabled={isLoading}
+              sx={{
+                borderRadius: 1.5,
+                textTransform: 'none',
+                fontWeight: 500,
+                px: 2,
+              }}
             >
               Edit
             </Button>
@@ -192,40 +220,94 @@ export function CompanyDetailsForm({
         </Box>
 
         {/* Company Info Display */}
-        <Grid container spacing={2}>
+        <Grid container spacing={2.5}>
           <Grid item xs={12} sm={6}>
             <Box>
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+              <Typography 
+                variant="caption" 
+                color="text.secondary" 
+                sx={{ 
+                  fontWeight: 500,
+                  fontSize: '0.75rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  display: 'block',
+                  mb: 0.75,
+                }}
+              >
                 Company Name
               </Typography>
-              <Typography variant="body2" sx={{ mt: 0.5, fontWeight: 500 }}>
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  fontWeight: 500,
+                  fontSize: '0.9375rem',
+                  lineHeight: 1.5,
+                  color: 'text.primary',
+                }}
+              >
                 {companyData.name || 'Not set'}
               </Typography>
             </Box>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Box>
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+              <Typography 
+                variant="caption" 
+                color="text.secondary" 
+                sx={{ 
+                  fontWeight: 500,
+                  fontSize: '0.75rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  display: 'block',
+                  mb: 0.75,
+                }}
+              >
                 Company Size
               </Typography>
-              <Typography variant="body2" sx={{ mt: 0.5, fontWeight: 500 }}>
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  fontWeight: 500,
+                  fontSize: '0.9375rem',
+                  lineHeight: 1.5,
+                  color: 'text.primary',
+                }}
+              >
                 {companyData.size || 'Not set'}
               </Typography>
             </Box>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Box>
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+              <Typography 
+                variant="caption" 
+                color="text.secondary" 
+                sx={{ 
+                  fontWeight: 500,
+                  fontSize: '0.75rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  display: 'block',
+                  mb: 0.75,
+                }}
+              >
                 Website
               </Typography>
               <Typography
-                variant="body2"
+                variant="body1"
                 sx={{
-                  mt: 0.5,
                   fontWeight: 500,
+                  fontSize: '0.9375rem',
+                  lineHeight: 1.5,
                   color: companyData.website ? theme.palette.info.main : 'text.secondary',
-                  textDecoration: companyData.website ? 'underline' : 'none',
+                  textDecoration: companyData.website ? 'none' : 'none',
                   cursor: companyData.website ? 'pointer' : 'default',
+                  '&:hover': companyData.website ? {
+                    textDecoration: 'underline',
+                  } : {},
+                  transition: 'all 0.2s ease-in-out',
                 }}
                 onClick={() => {
                   if (companyData.website) {
@@ -242,14 +324,27 @@ export function CompanyDetailsForm({
           </Grid>
           <Grid item xs={12} sm={6}>
             <Box>
-              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+              <Typography 
+                variant="caption" 
+                color="text.secondary" 
+                sx={{ 
+                  fontWeight: 500,
+                  fontSize: '0.75rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  display: 'block',
+                  mb: 0.75,
+                }}
+              >
                 Description
               </Typography>
               <Typography
-                variant="body2"
+                variant="body1"
                 sx={{
-                  mt: 0.5,
-                  fontWeight: 500,
+                  fontWeight: 400,
+                  fontSize: '0.9375rem',
+                  lineHeight: 1.5,
+                  color: 'text.primary',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   display: '-webkit-box',

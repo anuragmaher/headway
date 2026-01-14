@@ -117,7 +117,7 @@ api.interceptors.response.use(
           }
         }
 
-        const newTokens = refreshResponse.data;
+        const newTokens = refreshResponse?.data;
 
         // Update tokens in Zustand store (which persists to localStorage automatically)
         useAuthStore.setState({

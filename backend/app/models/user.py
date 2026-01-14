@@ -39,7 +39,7 @@ class User(Base):
     # Relationships
     company = relationship("Company", back_populates="users")
     workspaces = relationship("Workspace", back_populates="owner", cascade="all, delete-orphan")
-    
+    gmail_accounts = relationship("GmailAccounts", back_populates="user", cascade="all, delete-orphan")
     @property
     def full_name(self) -> str:
         """Computed property for backwards compatibility"""

@@ -38,6 +38,8 @@ class Workspace(Base):
     clustering_runs = relationship("ClusteringRun", back_populates="workspace", cascade="all, delete-orphan")
     classification_signals = relationship("ClassificationSignal", back_populates="workspace", cascade="all, delete-orphan")
     connectors = relationship("WorkspaceConnector", back_populates="workspace", cascade="all, delete-orphan")
+    gmail_accounts = relationship("GmailAccounts", back_populates="workspace", cascade="all, delete-orphan")
+    gmail_threads = relationship("GmailThread", back_populates="workspace", cascade="all, delete-orphan")
     
     def __repr__(self) -> str:
         return f"<Workspace(id={self.id}, name='{self.name}', slug='{self.slug}')>"
