@@ -12,6 +12,7 @@ from typing import List, Optional, Union
 from app.models.workspace_connector import WorkspaceConnector, ConnectorType
 from app.models.workspace import Workspace
 from app.models.company import Company
+from app.models.competitor import Competitor
 from app.schemas.workspace_connector import (
     WorkspaceConnectorResponse,
     GongConnectorCreate,
@@ -532,7 +533,7 @@ class WorkspaceService:
         website_url: str
     ) -> dict:
         """
-        Fetch website content using Firecrawl and generate description using OpenAI.
+        Fetch website content and generate description using OpenAI.
 
         Args:
             workspace_id: UUID of the workspace
@@ -544,8 +545,12 @@ class WorkspaceService:
         Raises:
             HTTPException: If website fetch fails or OpenAI call fails
         """
+        import requests
+        from bs4 import BeautifulSoup
+        from app.core.config import settings
+
         try:
-            logger.info(f"Fetching website content from {website_url} using Firecrawl")
+            logger.info(f"Fetching website content from {website_url}")
 
             # Validate workspace exists
             workspace = self.db.query(Workspace).filter(
@@ -558,40 +563,92 @@ class WorkspaceService:
                     detail="Workspace not found"
                 )
 
-            # Fetch website content using Firecrawl
-            from app.core.config import settings
-            from firecrawl import FirecrawlApp
+            # Ensure URL has protocol
+            if not website_url.startswith(('http://', 'https://')):
+                website_url = 'https://' + website_url
 
-            if not settings.FIRECRAWL_API_KEY:
-                raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail="Firecrawl API key not configured"
-                )
+            # Fetch website content using requests
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.5',
+            }
 
-            app = FirecrawlApp(api_key=settings.FIRECRAWL_API_KEY)
-            # Use simple scraping with minimal params
-            scrape_result = app.scrape_url(website_url)
-
-            # Handle ScrapeResponse object
-            if not scrape_result:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Failed to fetch website content"
-                )
-
-            # Access the markdown content from the response object
-            website_text = getattr(scrape_result, 'markdown', '') or getattr(scrape_result, 'content', '')
-
-            if not website_text:
+            try:
+                response = requests.get(website_url, headers=headers, timeout=15, allow_redirects=True)
+                response.raise_for_status()
+            except requests.RequestException as e:
+                logger.error(f"Failed to fetch website: {e}")
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Could not extract content from website"
+                    detail=f"Could not fetch website: {str(e)}"
                 )
+
+            # Parse HTML with BeautifulSoup
+            soup = BeautifulSoup(response.text, 'lxml')
+
+            # Remove script and style elements
+            for element in soup(['script', 'style', 'nav', 'footer', 'header', 'aside', 'noscript']):
+                element.decompose()
+
+            # Extract meaningful content
+            content_parts = []
+
+            # Get title
+            if soup.title and soup.title.string:
+                content_parts.append(f"Title: {soup.title.string.strip()}")
+
+            # Get meta description
+            meta_desc = soup.find('meta', attrs={'name': 'description'})
+            if meta_desc and meta_desc.get('content'):
+                content_parts.append(f"Description: {meta_desc['content'].strip()}")
+
+            # Get OG description
+            og_desc = soup.find('meta', attrs={'property': 'og:description'})
+            if og_desc and og_desc.get('content'):
+                content_parts.append(f"About: {og_desc['content'].strip()}")
+
+            # Get main headings
+            headings = []
+            for h in soup.find_all(['h1', 'h2'], limit=5):
+                text = h.get_text(strip=True)
+                if text and len(text) > 3:
+                    headings.append(text)
+            if headings:
+                content_parts.append(f"Headlines: {', '.join(headings)}")
+
+            # Get main content from common containers
+            main_content = soup.find('main') or soup.find('article') or soup.find('div', class_=['content', 'main', 'hero'])
+            if main_content:
+                paragraphs = main_content.find_all('p', limit=5)
+            else:
+                paragraphs = soup.find_all('p', limit=8)
+
+            para_texts = []
+            for p in paragraphs:
+                text = p.get_text(strip=True)
+                if text and len(text) > 50:  # Only meaningful paragraphs
+                    para_texts.append(text)
+
+            if para_texts:
+                content_parts.append(f"Content: {' '.join(para_texts[:3])}")
+
+            website_text = '\n'.join(content_parts)
+
+            if not website_text or len(website_text) < 50:
+                # Fallback: get all text
+                website_text = soup.get_text(separator=' ', strip=True)[:2000]
 
             # Limit text to 3000 chars for API efficiency
             website_text = website_text[:3000]
 
             logger.info(f"Extracted website text: {len(website_text)} characters")
+
+            if not settings.OPENAI_API_KEY:
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="OpenAI API key not configured"
+                )
 
             # Generate description using OpenAI
             client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
@@ -600,14 +657,14 @@ class WorkspaceService:
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are a helpful assistant that creates concise company descriptions. Generate a 2-3 sentence description of what the company does based on the provided website content."
+                        "content": "You are a helpful assistant that creates concise company descriptions. Based on the website content provided, generate a 2-3 sentence description explaining what the company does, who they serve, and their main value proposition. Be specific and informative."
                     },
                     {
                         "role": "user",
                         "content": f"Based on this website content, provide a concise company description:\n\n{website_text}"
                     }
                 ],
-                max_tokens=150,
+                max_tokens=200,
                 temperature=0.7
             )
 
@@ -623,7 +680,7 @@ class WorkspaceService:
         except HTTPException:
             raise
         except Exception as e:
-            logger.error(f"Error generating description: {e}")
+            logger.error(f"Error generating description: {e}", exc_info=True)
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Failed to generate description: {str(e)}"
@@ -769,6 +826,421 @@ Return ONLY valid JSON array in this format, no markdown or extra text:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Failed to generate theme suggestions: {str(e)}"
+            )
+
+    def generate_competitor_suggestions(
+        self,
+        workspace_id: UUID,
+        already_suggested: list = None
+    ) -> dict:
+        """
+        Generate AI-powered competitor suggestions based on company details.
+
+        Args:
+            workspace_id: UUID of the workspace
+            already_suggested: List of already-suggested competitor names to avoid
+
+        Returns:
+            Dictionary with list of competitor suggestions
+
+        Raises:
+            HTTPException: If company details not found or generation fails
+        """
+        try:
+            if already_suggested is None:
+                already_suggested = []
+
+            logger.info(f"Generating competitor suggestions for workspace {workspace_id}. Already suggested: {len(already_suggested)}")
+
+            # Get workspace and its company details
+            workspace = self.db.query(Workspace).filter(
+                Workspace.id == workspace_id
+            ).first()
+
+            if not workspace:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Workspace not found"
+                )
+
+            company = self.db.query(Company).filter(
+                Company.id == workspace.company_id
+            ).first()
+
+            if not company or not company.name:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Company details not found. Please set up company details first."
+                )
+
+            # Build company context for AI
+            company_context = f"""
+Company Name: {company.name}
+Industry: {company.industry or 'Not specified'}
+Website: {company.website or 'Not specified'}
+Description: {company.description or 'Not specified'}
+"""
+
+            logger.info(f"Using company context for competitor suggestions: {company_context}")
+
+            # Build list of already suggested competitors for the prompt
+            already_suggested_text = ""
+            if already_suggested:
+                already_suggested_text = f"""
+
+IMPORTANT: Do NOT suggest these competitors again - user has already seen them:
+- {', '.join(already_suggested)}
+
+Generate completely different competitor suggestions."""
+
+            # Generate suggestions using OpenAI
+            from app.core.config import settings
+            client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an expert market analyst who identifies direct and indirect competitors in the SaaS/technology industry. You provide accurate competitor names based on company profiles."
+                    },
+                    {
+                        "role": "user",
+                        "content": f"""Analyze this company and identify 4-5 likely competitors:
+
+{company_context}
+{already_suggested_text}
+
+Based on the company's industry, product description, and market positioning, identify their main competitors.
+Consider both direct competitors (offering similar solutions) and indirect competitors (solving the same problem differently).
+
+Return ONLY valid JSON array in this format, no markdown or extra text:
+[
+  {{"name": "Competitor Name", "website": "https://example.com", "description": "Brief description of what they do"}},
+  ...
+]"""
+                    }
+                ],
+                max_tokens=500,
+                temperature=0.7
+            )
+
+            suggestions_text = response.choices[0].message.content.strip()
+            logger.info(f"Raw competitor suggestions response: {suggestions_text}")
+
+            # Parse JSON response
+            import json
+            # Remove markdown code blocks if present
+            if suggestions_text.startswith("```"):
+                suggestions_text = suggestions_text.split("```")[1]
+                if suggestions_text.startswith("json"):
+                    suggestions_text = suggestions_text[4:]
+                suggestions_text = suggestions_text.strip()
+
+            suggestions = json.loads(suggestions_text)
+
+            # Validate and clean suggestions
+            cleaned_suggestions = []
+            for suggestion in suggestions:
+                if isinstance(suggestion, dict) and 'name' in suggestion:
+                    cleaned_suggestions.append({
+                        'name': suggestion['name'],
+                        'website': suggestion.get('website', ''),
+                        'description': suggestion.get('description', '')
+                    })
+
+            logger.info(f"Generated {len(cleaned_suggestions)} competitor suggestions")
+
+            return {
+                "suggestions": cleaned_suggestions,
+                "status": "success"
+            }
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Error generating competitor suggestions: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to generate competitor suggestions: {str(e)}"
+            )
+
+    def get_competitors(
+        self,
+        workspace_id: UUID
+    ) -> dict:
+        """
+        Get competitors for a workspace.
+
+        Args:
+            workspace_id: UUID of the workspace
+
+        Returns:
+            Dictionary with list of competitors
+
+        Raises:
+            HTTPException: If workspace not found or fetching fails
+        """
+        try:
+            logger.info(f"Fetching competitors for workspace {workspace_id}")
+
+            # Validate workspace exists
+            workspace = self.db.query(Workspace).filter(
+                Workspace.id == workspace_id
+            ).first()
+
+            if not workspace:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Workspace not found"
+                )
+
+            # Get all competitors for this workspace
+            competitors = self.db.query(Competitor).filter(
+                Competitor.workspace_id == workspace_id
+            ).order_by(Competitor.created_at.desc()).all()
+
+            competitors_list = [
+                {
+                    "id": str(c.id),
+                    "name": c.name,
+                    "website": c.website or "",
+                    "description": c.description or ""
+                }
+                for c in competitors
+            ]
+
+            logger.info(f"Found {len(competitors_list)} competitors for workspace {workspace_id}")
+
+            return {
+                "status": "success",
+                "competitors": competitors_list
+            }
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Error fetching competitors: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to fetch competitors: {str(e)}"
+            )
+
+    def save_competitors(
+        self,
+        workspace_id: UUID,
+        competitors: list
+    ) -> dict:
+        """
+        Save competitors for a workspace.
+
+        Args:
+            workspace_id: UUID of the workspace
+            competitors: List of competitors to save [{"name": "...", "website": "..."}, ...]
+
+        Returns:
+            Dictionary with success status and saved competitors
+
+        Raises:
+            HTTPException: If workspace not found or saving fails
+        """
+        try:
+            logger.info(f"Saving {len(competitors)} competitors for workspace {workspace_id}")
+
+            # Validate workspace exists
+            workspace = self.db.query(Workspace).filter(
+                Workspace.id == workspace_id
+            ).first()
+
+            if not workspace:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Workspace not found"
+                )
+
+            # Get existing competitor names to avoid duplicates
+            existing_competitors = self.db.query(Competitor).filter(
+                Competitor.workspace_id == workspace_id
+            ).all()
+            existing_names = {c.name.lower() for c in existing_competitors}
+
+            # Add new competitors (avoid duplicates)
+            saved_count = 0
+            for competitor_data in competitors:
+                name = competitor_data.get('name', '').strip()
+                if not name:
+                    continue
+                    
+                if name.lower() not in existing_names:
+                    new_competitor = Competitor(
+                        workspace_id=workspace_id,
+                        name=name,
+                        website=competitor_data.get('website', ''),
+                        description=competitor_data.get('description', '')
+                    )
+                    self.db.add(new_competitor)
+                    existing_names.add(name.lower())
+                    saved_count += 1
+
+            self.db.commit()
+            logger.info(f"Saved {saved_count} new competitors for workspace {workspace_id}")
+
+            return {
+                "status": "success",
+                "message": f"Saved {saved_count} competitors",
+                "saved_count": saved_count
+            }
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            self.db.rollback()
+            logger.error(f"Error saving competitors: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to save competitors: {str(e)}"
+            )
+
+    def update_competitor(
+        self,
+        workspace_id: UUID,
+        competitor_id: UUID,
+        competitor_data: dict
+    ) -> dict:
+        """
+        Update a competitor for a workspace.
+
+        Args:
+            workspace_id: UUID of the workspace
+            competitor_id: UUID of the competitor
+            competitor_data: Dictionary with updated competitor data (name, website, description)
+
+        Returns:
+            Dictionary with success status
+
+        Raises:
+            HTTPException: If workspace or competitor not found or update fails
+        """
+        try:
+            logger.info(f"Updating competitor {competitor_id} for workspace {workspace_id}")
+
+            # Validate workspace exists
+            workspace = self.db.query(Workspace).filter(
+                Workspace.id == workspace_id
+            ).first()
+
+            if not workspace:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Workspace not found"
+                )
+
+            # Get the competitor
+            competitor = self.db.query(Competitor).filter(
+                Competitor.id == competitor_id,
+                Competitor.workspace_id == workspace_id
+            ).first()
+
+            if not competitor:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Competitor not found"
+                )
+
+            # Update competitor fields
+            if 'name' in competitor_data:
+                competitor.name = competitor_data.get('name', '').strip()
+            if 'website' in competitor_data:
+                competitor.website = competitor_data.get('website', '') or None
+            if 'description' in competitor_data:
+                competitor.description = competitor_data.get('description', '') or None
+
+            self.db.commit()
+            logger.info(f"Competitor {competitor_id} updated successfully for workspace {workspace_id}")
+
+            return {
+                "status": "success",
+                "message": "Competitor updated successfully",
+                "competitor": {
+                    "id": str(competitor.id),
+                    "name": competitor.name,
+                    "website": competitor.website or "",
+                    "description": competitor.description or ""
+                }
+            }
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            self.db.rollback()
+            logger.error(f"Error updating competitor: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to update competitor: {str(e)}"
+            )
+
+    def delete_competitor(
+        self,
+        workspace_id: UUID,
+        competitor_id: UUID
+    ) -> dict:
+        """
+        Delete a competitor for a workspace.
+
+        Args:
+            workspace_id: UUID of the workspace
+            competitor_id: UUID of the competitor
+
+        Returns:
+            Dictionary with success status
+
+        Raises:
+            HTTPException: If workspace or competitor not found or deletion fails
+        """
+        try:
+            logger.info(f"Deleting competitor {competitor_id} for workspace {workspace_id}")
+
+            # Validate workspace exists
+            workspace = self.db.query(Workspace).filter(
+                Workspace.id == workspace_id
+            ).first()
+
+            if not workspace:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Workspace not found"
+                )
+
+            # Get the competitor
+            competitor = self.db.query(Competitor).filter(
+                Competitor.id == competitor_id,
+                Competitor.workspace_id == workspace_id
+            ).first()
+
+            if not competitor:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Competitor not found"
+                )
+
+            # Delete the competitor
+            self.db.delete(competitor)
+            self.db.commit()
+            logger.info(f"Competitor {competitor_id} deleted successfully for workspace {workspace_id}")
+
+            return {
+                "status": "success",
+                "message": "Competitor deleted successfully"
+            }
+
+        except HTTPException:
+            raise
+        except Exception as e:
+            self.db.rollback()
+            logger.error(f"Error deleting competitor: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to delete competitor: {str(e)}"
             )
 
     def generate_feature_suggestions(

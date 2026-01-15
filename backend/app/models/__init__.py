@@ -18,6 +18,7 @@ from app.models.clustering import ClusteringRun, DiscoveredCluster, Classificati
 from app.models.workspace_data_point import WorkspaceDataPoint
 from app.models.data_extraction_field import DataExtractionField
 from app.models.gmail import GmailAccounts, GmailLabels, GmailThread
+from app.models.competitor import Competitor
 
 __all__ = [
     "User",
@@ -37,5 +38,6 @@ __all__ = [
     "DataExtractionField",
     "GmailAccounts",
     "GmailLabels",
-    "GmailThread"
+    "GmailThread",
+    "Competitor"
 ]

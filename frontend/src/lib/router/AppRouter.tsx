@@ -17,6 +17,7 @@ import { CustomersPage } from '@/pages/CustomersPage';
 import CustomersChatPage from '@/pages/CustomersChatPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { ExecutiveInsightsPage } from '@/pages/ExecutiveInsightsPage';
+import { GmailCallbackPage } from '@/pages/GmailCallbackPage';
 
 export function AppRouter(): JSX.Element {
   return (
@@ -121,6 +122,16 @@ export function AppRouter(): JSX.Element {
           element={
             <ProtectedRoute>
               <CustomersChatPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Gmail OAuth Callback */}
+        <Route
+          path="/gmail/callback"
+          element={
+            <ProtectedRoute>
+              <GmailCallbackPage />
             </ProtectedRoute>
           }
         />

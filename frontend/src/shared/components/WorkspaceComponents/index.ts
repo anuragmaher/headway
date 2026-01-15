@@ -7,6 +7,7 @@ export { CompanyDomainsSection } from "./CompanyDomainsSection";
 export { ConnectedDataSources } from "./ConnectedDataSources";
 export { PreferencesSection } from "./PreferencesSection";
 export { WorkspaceInfoSection } from "./WorkspaceInfoSection";
+export { CompetitorsSection } from "./CompetitorsSection";
 export { ConnectorsConfigSection } from "./ConnectorsConfigSection";
 export { AvailableConnectors } from "./AvailableConnectors";
 export { SlackConnectionDialog } from "./SlackConnectionDialog";

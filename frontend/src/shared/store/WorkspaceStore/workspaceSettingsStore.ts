@@ -56,6 +56,11 @@ interface WorkspaceSettingsState {
   domainsError: string | null;
   domainsSuccess: boolean;
 
+  // Competitors State
+  competitors: Array<{ id: string; name: string; website?: string; description?: string }>;
+  isLoadingCompetitors: boolean;
+  competitorsDialogOpen: boolean;
+
   // Actions - UI
   setExpandedSection: (section: keyof ExpandedSections, expanded: boolean) => void;
   setAutoSync: (value: boolean) => void;
@@ -108,6 +113,11 @@ interface WorkspaceSettingsState {
   loadCompanyDomains: (workspaceId: string, accessToken: string) => Promise<void>;
   addDomain: (workspaceId: string, accessToken: string) => Promise<void>;
   removeDomain: (workspaceId: string, accessToken: string, domain: string) => Promise<void>;
+
+  // Actions - Competitors
+  loadCompetitors: (workspaceId: string, accessToken: string) => Promise<void>;
+  openCompetitorsDialog: () => void;
+  closeCompetitorsDialog: () => void;
 
   // Computed
   getDataSources: () => DataSource[];
@@ -172,6 +182,11 @@ export const useWorkspaceSettingsStore = create<WorkspaceSettingsState>((set, ge
   isSavingDomains: false,
   domainsError: null,
   domainsSuccess: false,
+
+  // Initial Competitors State
+  competitors: [],
+  isLoadingCompetitors: false,
+  competitorsDialogOpen: false,
 
   // UI Actions
   setExpandedSection: (section, expanded) =>
@@ -576,6 +591,44 @@ export const useWorkspaceSettingsStore = create<WorkspaceSettingsState>((set, ge
     const updatedDomains = companyDomains.filter((d) => d !== domain);
     await saveCompanyDomainsInternal(workspaceId, accessToken, updatedDomains, set);
   },
+
+  // Competitors Actions
+  loadCompetitors: async (workspaceId, accessToken) => {
+    if (!workspaceId || !accessToken) {
+      console.warn("[Competitors] No workspace ID or access token found");
+      return;
+    }
+
+    set({ isLoadingCompetitors: true });
+
+    try {
+      const url = `${API_BASE_URL}/api/v1/workspaces/${workspaceId}/competitors`;
+
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("[Competitors] Error response:", errorText);
+        throw new Error(`Failed to load competitors: ${response.status}`);
+      }
+
+      const data = await response.json();
+      set({ competitors: data.competitors || [] });
+    } catch (error: any) {
+      console.error("[Competitors] Failed to load:", error);
+      set({ competitors: [] });
+    } finally {
+      set({ isLoadingCompetitors: false });
+    }
+  },
+
+  openCompetitorsDialog: () => set({ competitorsDialogOpen: true }),
+  closeCompetitorsDialog: () => set({ competitorsDialogOpen: false }),
 
   // Computed getters
   getDataSources: () => {

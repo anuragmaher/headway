@@ -59,26 +59,26 @@ export const COMING_SOON_CONNECTORS: ConnectorInfo[] = [
     description: "Collect feedback from team conversations",
     available: false,
   },
-  {
-    name: "Discord",
-    description: "Track community suggestions",
-    available: false,
-  },
+  // {
+  //   name: "Discord",
+  //   description: "Track community suggestions",
+  //   available: false,
+  // },
   {
     name: "Hubspot",
     description: "Sync customer feedback from CRM",
     available: false,
   },
-  {
-    name: "Zendesk",
-    description: "Import support tickets and feedback",
-    available: false,
-  },
-  {
-    name: "Intercom",
-    description: "Capture conversations and feedback",
-    available: false,
-  },
+  // {
+  //   name: "Zendesk",
+  //   description: "Import support tickets and feedback",
+  //   available: false,
+  // },
+  // {
+  //   name: "Intercom",
+  //   description: "Capture conversations and feedback",
+  //   available: false,
+  // },
 ];
 
 // Combined list for backwards compatibility

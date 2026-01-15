@@ -86,9 +86,9 @@ async def gmail_callback(request: Request, db: Session = Depends(get_db)):
         ).first()
 
         if existing:
-            # Redirect to frontend with a flag indicating the Gmail account is already connected
+            # Redirect to frontend callback page
             already_connected_redirect = (
-                f"{settings.FRONTEND_URL}/app/settings/workspace?gmail=connected"
+                f"{settings.FRONTEND_URL}/gmail/callback?gmail=connected&existing=true"
             )
             return RedirectResponse(url=already_connected_redirect, status_code=302)
 
@@ -105,8 +105,9 @@ async def gmail_callback(request: Request, db: Session = Depends(get_db)):
         db.add(gmail_account)
         db.commit()
 
+        # Redirect to frontend callback page
         frontend_redirect = (
-            f"{settings.FRONTEND_URL}/app/settings/workspace?gmail=connected"
+            f"{settings.FRONTEND_URL}/gmail/callback?gmail=connected"
         )
         return RedirectResponse(url=frontend_redirect, status_code=302)
 
