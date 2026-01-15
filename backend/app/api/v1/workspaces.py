@@ -5,7 +5,7 @@ Workspace API endpoints for connector management
 from fastapi import APIRouter, Depends, HTTPException, status
 from uuid import UUID
 import logging
-from typing import Union, List
+from typing import List, Optional
 
 from app.core.deps import get_current_user, get_db
 from app.services.workspace_service import WorkspaceService
@@ -464,6 +464,264 @@ class GenerateFeatureSuggestionsRequest(BaseModel):
     theme_name: str  # Name of the selected theme
     existing_features: list[dict] = None  # List of existing features in DB: [{"name": "...", "description": "..."}, ...]
     already_suggested: list[dict] = None  # List of already suggested features: [{"name": "...", "description": "..."}, ...]
+
+
+class GenerateCompetitorSuggestionsRequest(BaseModel):
+    """Request model for competitor suggestions generation"""
+    already_suggested: list[str] = None  # List of already suggested competitor names
+
+
+class SaveCompetitorsRequest(BaseModel):
+    """Request model for saving competitors"""
+    competitors: list[dict]  # List of competitors: [{"name": "...", "website": "..."}, ...]
+
+
+class UpdateCompetitorRequest(BaseModel):
+    """Request model for updating a competitor"""
+    name: str
+    website: Optional[str] = None
+    description: Optional[str] = None
+
+
+@router.post(
+    "/{workspace_id}/generate-competitor-suggestions",
+    response_model=dict,
+    status_code=status.HTTP_200_OK
+)
+async def generate_competitor_suggestions(
+    workspace_id: UUID,
+    request: GenerateCompetitorSuggestionsRequest,
+    current_user: User = Depends(get_current_user),
+    db = Depends(get_db)
+) -> dict:
+    """
+    Generate AI-powered competitor suggestions based on company details.
+
+    Args:
+        workspace_id: UUID of the workspace
+        request: Request containing already_suggested competitors to avoid
+        current_user: Current authenticated user
+        db: Database session
+
+    Returns:
+        Dictionary with list of competitor suggestions
+
+    Raises:
+        HTTPException: If company details not found or generation fails
+    """
+    try:
+        user_email = current_user.email if isinstance(current_user, User) else current_user.get('email', 'unknown')
+        logger.info(
+            f"User {user_email} requesting competitor suggestions for workspace {workspace_id}"
+        )
+
+        service = WorkspaceService(db)
+        already_suggested = request.already_suggested or []
+        suggestions = service.generate_competitor_suggestions(workspace_id, already_suggested)
+
+        logger.info(f"Competitor suggestions generated successfully for workspace {workspace_id}")
+        return suggestions
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating competitor suggestions: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to generate competitor suggestions"
+        )
+
+
+@router.get(
+    "/{workspace_id}/competitors",
+    response_model=dict,
+    status_code=status.HTTP_200_OK
+)
+async def get_competitors(
+    workspace_id: UUID,
+    current_user: User = Depends(get_current_user),
+    db = Depends(get_db)
+) -> dict:
+    """
+    Get competitors for a workspace.
+
+    Args:
+        workspace_id: UUID of the workspace
+        current_user: Current authenticated user
+        db: Database session
+
+    Returns:
+        Dictionary with list of competitors
+
+    Raises:
+        HTTPException: If fetching fails
+    """
+    try:
+        user_email = current_user.email if isinstance(current_user, User) else current_user.get('email', 'unknown')
+        logger.info(
+            f"User {user_email} fetching competitors for workspace {workspace_id}"
+        )
+
+        service = WorkspaceService(db)
+        result = service.get_competitors(workspace_id)
+
+        logger.info(f"Competitors fetched successfully for workspace {workspace_id}")
+        return result
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching competitors: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch competitors"
+        )
+
+
+@router.post(
+    "/{workspace_id}/competitors",
+    response_model=dict,
+    status_code=status.HTTP_200_OK
+)
+async def save_competitors(
+    workspace_id: UUID,
+    request: SaveCompetitorsRequest,
+    current_user: User = Depends(get_current_user),
+    db = Depends(get_db)
+) -> dict:
+    """
+    Save competitors for a workspace.
+
+    Args:
+        workspace_id: UUID of the workspace
+        request: Request containing competitors list
+        current_user: Current authenticated user
+        db: Database session
+
+    Returns:
+        Dictionary with success status
+
+    Raises:
+        HTTPException: If saving fails
+    """
+    try:
+        user_email = current_user.email if isinstance(current_user, User) else current_user.get('email', 'unknown')
+        logger.info(
+            f"User {user_email} saving {len(request.competitors)} competitors for workspace {workspace_id}"
+        )
+
+        service = WorkspaceService(db)
+        result = service.save_competitors(workspace_id, request.competitors)
+
+        logger.info(f"Competitors saved successfully for workspace {workspace_id}")
+        return result
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error saving competitors: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to save competitors"
+        )
+
+
+@router.put(
+    "/{workspace_id}/competitors/{competitor_id}",
+    response_model=dict,
+    status_code=status.HTTP_200_OK
+)
+async def update_competitor(
+    workspace_id: UUID,
+    competitor_id: UUID,
+    request: UpdateCompetitorRequest,
+    current_user: User = Depends(get_current_user),
+    db = Depends(get_db)
+) -> dict:
+    """
+    Update a competitor for a workspace.
+
+    Args:
+        workspace_id: UUID of the workspace
+        competitor_id: UUID of the competitor
+        request: Request containing updated competitor data
+        current_user: Current authenticated user
+        db: Database session
+
+    Returns:
+        Dictionary with success status
+
+    Raises:
+        HTTPException: If update fails
+    """
+    try:
+        user_email = current_user.email if isinstance(current_user, User) else current_user.get('email', 'unknown')
+        logger.info(
+            f"User {user_email} updating competitor {competitor_id} for workspace {workspace_id}"
+        )
+
+        service = WorkspaceService(db)
+        result = service.update_competitor(workspace_id, competitor_id, request)
+
+        logger.info(f"Competitor updated successfully for workspace {workspace_id}")
+        return result
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating competitor: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update competitor"
+        )
+
+
+@router.delete(
+    "/{workspace_id}/competitors/{competitor_id}",
+    response_model=dict,
+    status_code=status.HTTP_200_OK
+)
+async def delete_competitor(
+    workspace_id: UUID,
+    competitor_id: UUID,
+    current_user: User = Depends(get_current_user),
+    db = Depends(get_db)
+) -> dict:
+    """
+    Delete a competitor for a workspace.
+
+    Args:
+        workspace_id: UUID of the workspace
+        competitor_id: UUID of the competitor
+        current_user: Current authenticated user
+        db: Database session
+
+    Returns:
+        Dictionary with success status
+
+    Raises:
+        HTTPException: If deletion fails
+    """
+    try:
+        user_email = current_user.email if isinstance(current_user, User) else current_user.get('email', 'unknown')
+        logger.info(
+            f"User {user_email} deleting competitor {competitor_id} for workspace {workspace_id}"
+        )
+
+        service = WorkspaceService(db)
+        result = service.delete_competitor(workspace_id, competitor_id)
+
+        logger.info(f"Competitor deleted successfully for workspace {workspace_id}")
+        return result
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting competitor: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete competitor"
+        )
 
 
 @router.post(

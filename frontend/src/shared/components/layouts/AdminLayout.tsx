@@ -2,7 +2,7 @@
  * Layout for authenticated app pages (dashboard, settings, etc.)
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Drawer,
@@ -38,7 +38,11 @@ import {
 } from '@mui/icons-material';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
-import { useAuthActions, useUser } from '@/features/auth/store/auth-store';
+import { OnboardingWizard } from '@/shared/components/OnboardingWizard/OnboardingWizard';
+import { GmailLabelSelectionScreen } from '@/shared/components/OnboardingWizard/GmailLabelSelectionScreen';
+import { useAuthActions, useUser, useAuthStore } from '@/features/auth/store/auth-store';
+import { useOnboardingStore } from '@/shared/store/onboardingStore';
+import { useLayoutStore } from '@/shared/store/layoutStore';
 import { ROUTES } from '@/lib/constants/routes';
 
 const DRAWER_WIDTH = 260;
@@ -85,6 +89,127 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   const theme = useTheme();
   const { logout } = useAuthActions();
   const user = useUser();
+  const tokens = useAuthStore((state) => state.tokens);
+
+  // Onboarding state
+  const {
+    checkOnboardingStatus,
+    showOnboardingDialog,
+    dismissOnboarding,
+    completeOnboarding,
+    hasChecked,
+    forceRecheck,
+  } = useOnboardingStore();
+
+  // Custom header content from pages
+  const headerContent = useLayoutStore((state) => state.headerContent);
+
+  // Track the workspace ID to detect changes (new login)
+  const [lastCheckedWorkspaceId, setLastCheckedWorkspaceId] = useState<string | null>(null);
+  
+  // Track if Gmail label selection screen should be shown
+  const [showGmailLabelScreen, setShowGmailLabelScreen] = useState(false);
+  // Track if wizard should be hidden (when label selection is active)
+  const [hideWizardForLabels, setHideWizardForLabels] = useState(false);
+
+  // Handle Gmail OAuth completion from new tab
+  useEffect(() => {
+    // Listen for OAuth completion event (triggered from DataSourcesStep)
+    const handleOAuthComplete = () => {
+      // Hide wizard and show label selection
+      setHideWizardForLabels(true);
+      setShowGmailLabelScreen(true);
+    };
+
+    // Also listen for storage events (cross-tab communication)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'gmail-oauth-complete' && e.newValue === 'true') {
+        const isFromOnboarding = localStorage.getItem('onboarding-gmail-connect') === 'true';
+        if (isFromOnboarding) {
+          setHideWizardForLabels(true);
+          setShowGmailLabelScreen(true);
+        }
+      }
+    };
+
+    window.addEventListener('gmail-oauth-complete', handleOAuthComplete);
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('gmail-oauth-complete', handleOAuthComplete);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
+  // Listen for when label selection completes
+  useEffect(() => {
+    const handleLabelSelectionComplete = () => {
+      // Clear the onboarding flag
+      localStorage.removeItem('onboarding-gmail-connect');
+      
+      // Since Gmail is now connected, data sources are complete
+      // Store that we should continue to Themes step (step 2)
+      // Do this BEFORE hiding the label screen and forceRecheck
+      localStorage.setItem('onboarding-continue-step', '2'); // Step 2 = Themes
+      
+      // Hide label screen
+      setShowGmailLabelScreen(false);
+      
+      // Small delay before showing wizard to ensure continue step is set
+      setTimeout(() => {
+        setHideWizardForLabels(false);
+        // Force recheck to update onboarding status (this will detect Gmail is connected)
+        forceRecheck();
+      }, 50);
+    };
+    
+    window.addEventListener('gmail-label-selection-complete', handleLabelSelectionComplete);
+    
+    return () => {
+      window.removeEventListener('gmail-label-selection-complete', handleLabelSelectionComplete);
+    };
+  }, [forceRecheck]);
+
+  // Check onboarding status when component mounts and workspace is available
+  useEffect(() => {
+    const workspaceId = tokens?.workspace_id;
+    const accessToken = tokens?.access_token;
+    
+    if (!workspaceId || !accessToken) {
+      console.log('[AdminLayout] No workspace or token, skipping onboarding check');
+      return;
+    }
+
+    // If workspace changed (user logged into different workspace), force recheck
+    if (lastCheckedWorkspaceId && lastCheckedWorkspaceId !== workspaceId) {
+      console.log('[AdminLayout] Workspace changed, forcing recheck');
+      forceRecheck();
+      setLastCheckedWorkspaceId(workspaceId);
+    }
+
+    // Only check if not already checked and onboarding is not complete/dismissed
+    // This prevents unnecessary API calls on every page navigation
+    if (!hasChecked) {
+      // Quick check: if onboarding is already complete or dismissed, skip API calls
+      const wasDismissed = localStorage.getItem('headway-onboarding-dismissed') === 'true';
+      const wasCompleted = localStorage.getItem('headway-onboarding-complete') === 'true';
+      
+      if (wasDismissed || wasCompleted) {
+        console.log('[AdminLayout] Onboarding already complete/dismissed, skipping check');
+        // Mark as checked without making API calls
+        useOnboardingStore.setState({ 
+          hasChecked: true,
+          isOnboardingComplete: wasCompleted,
+          showOnboardingDialog: false,
+        });
+        return;
+      }
+
+      console.log('[AdminLayout] Triggering onboarding check for workspace:', workspaceId);
+      setLastCheckedWorkspaceId(workspaceId);
+      checkOnboardingStatus(workspaceId, accessToken);
+    }
+  }, [tokens?.workspace_id, tokens?.access_token, hasChecked, checkOnboardingStatus, forceRecheck, lastCheckedWorkspaceId]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -102,7 +227,12 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
     setAnchorEl(null);
   };
 
+  // Get resetOnboarding from the store
+  const resetOnboarding = useOnboardingStore((state) => state.resetOnboarding);
+
   const handleLogout = () => {
+    // Reset onboarding state so it rechecks on next login
+    resetOnboarding();
     logout();
     navigate(ROUTES.HOME);
     handleProfileMenuClose();
@@ -329,15 +459,19 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
           </IconButton>
 
           <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="h6" noWrap component="div" sx={{ 
-              fontWeight: 600, 
-              fontSize: '1.1rem',
-              color: theme.palette.text.primary,
-            }}>
-              {navigationItems.find(item =>
-                location.pathname === item.path
-              )?.text || 'HeadwayHQ'}
-            </Typography>
+            {headerContent ? (
+              headerContent
+            ) : (
+              <Typography variant="h6" noWrap component="div" sx={{ 
+                fontWeight: 600, 
+                fontSize: '1.1rem',
+                color: theme.palette.text.primary,
+              }}>
+                {navigationItems.find(item =>
+                  location.pathname === item.path
+                )?.text || 'HeadwayHQ'}
+              </Typography>
+            )}
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -460,6 +594,24 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
         <Toolbar />
         {children}
       </Box>
+
+      {/* Gmail Label Selection Screen - shown when returning from Gmail OAuth during onboarding */}
+      {showGmailLabelScreen && <GmailLabelSelectionScreen />}
+
+                  {/* Onboarding Wizard - shown for new users who haven't completed setup */}
+                  {/* Hide wizard when Gmail label selection screen is active */}
+                  {!hideWizardForLabels && (
+                    <OnboardingWizard
+                      open={showOnboardingDialog}
+                      onComplete={() => {
+                        // Mark onboarding as complete and close the dialog
+                        completeOnboarding();
+                        // Dispatch event to refresh themes if user is on themes page
+                        window.dispatchEvent(new CustomEvent('onboarding-complete'));
+                      }}
+                      onDismiss={dismissOnboarding}
+                    />
+                  )}
     </Box>
     </>
   );

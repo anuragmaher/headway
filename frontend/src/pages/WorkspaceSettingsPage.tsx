@@ -15,6 +15,7 @@ import {
   ConnectedDataSources,
   PreferencesSection,
   WorkspaceInfoSection,
+  CompetitorsSection,
   AvailableConnectors,
   SlackConnectionDialog,
   GongConnectorDialog,
@@ -33,6 +34,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
     loadGmailAccounts,
     loadCompanyDetails,
     loadCompanyDomains,
+    loadCompetitors,
     saveCompanyDetails,
     generateDescription,
   } = useWorkspaceSettingsStore((state) => ({
@@ -43,6 +45,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
     loadGmailAccounts: state.loadGmailAccounts,
     loadCompanyDetails: state.loadCompanyDetails,
     loadCompanyDomains: state.loadCompanyDomains,
+    loadCompetitors: state.loadCompetitors,
     saveCompanyDetails: state.saveCompanyDetails,
     generateDescription: state.generateDescription,
   }));
@@ -75,6 +78,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
     if (workspaceId && accessToken) {
       loadCompanyDetails(workspaceId);
       loadCompanyDomains(workspaceId, accessToken);
+      loadCompetitors(workspaceId, accessToken);
     }
   }, [workspaceId, accessToken]);
 
@@ -110,23 +114,26 @@ export function WorkspaceSettingsPage(): JSX.Element {
           </Grid>
         </Grid>
 
-        {/* Preferences and Workspace Info - Side by Side */}
-        <Grid container spacing={3} sx={{ mb: 3, alignItems: "stretch" }}>
-          <Grid item xs={12} md={6} sx={{ display: "flex" }}>
-            <PreferencesSection />
-          </Grid>
-          <Grid item xs={12} md={6} sx={{ display: "flex" }}>
-            <WorkspaceInfoSection />
-          </Grid>
-        </Grid>
-
         {/* Connected Data Sources and Available Connectors - Side by Side */}
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{ mb: 3 }}>
           <Grid item xs={12} lg={6}>
             <ConnectedDataSources />
           </Grid>
           <Grid item xs={12} lg={6}>
             <AvailableConnectors />
+          </Grid>
+        </Grid>
+
+        {/* Preferences, Workspace Info, and Competitors - Three columns */}
+        <Grid container spacing={3} sx={{ mb: 3, alignItems: "stretch" }}>
+          <Grid item xs={12} md={4} sx={{ display: "flex" }}>
+            <PreferencesSection />
+          </Grid>
+          <Grid item xs={12} md={4} sx={{ display: "flex" }}>
+            <WorkspaceInfoSection />
+          </Grid>
+          <Grid item xs={12} md={4} sx={{ display: "flex" }}>
+            <CompetitorsSection />
           </Grid>
         </Grid>
 
