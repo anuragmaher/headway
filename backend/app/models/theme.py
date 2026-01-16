@@ -26,6 +26,11 @@ class Theme(Base):
     # Hierarchical relationship - self-referencing foreign key
     parent_theme_id = Column(UUID(as_uuid=True), ForeignKey("themes.id"), nullable=True)
 
+    # Slack integration for theme notifications
+    slack_integration_id = Column(UUID(as_uuid=True), ForeignKey("integrations.id"), nullable=True)
+    slack_channel_id = Column(String, nullable=True)  # Slack channel ID
+    slack_channel_name = Column(String, nullable=True)  # Slack channel name (for display)
+
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
@@ -33,6 +38,7 @@ class Theme(Base):
     # Relationships
     workspace = relationship("Workspace", back_populates="themes")
     features = relationship("Feature", back_populates="theme", cascade="all, delete-orphan")
+    slack_integration = relationship("Integration", foreign_keys=[slack_integration_id])
 
     # Hierarchical relationships
     parent_theme = relationship("Theme", remote_side=[id], back_populates="sub_themes")

@@ -63,6 +63,9 @@ interface ThemesPageState {
   editingTheme: Theme | null;
   formData: ThemeFormData;
   suggestions: ThemeSuggestion[];
+  selectedThemeSuggestions: Set<number>;
+  savingTheme: boolean;
+  themeError: string | null;
 
   // Feature dialog states
   editModalOpen: boolean;
@@ -91,6 +94,10 @@ interface ThemesPageState {
   menuAnchorEl: HTMLElement | null;
   selectedThemeForMenu: Theme | null;
 
+  // Slack connect dialog state
+  slackConnectDialogOpen: boolean;
+  selectedThemeForSlack: Theme | null;
+
   // Tab state
   mentionDetailsTab: MentionDetailsTab;
 
@@ -109,6 +116,7 @@ interface ThemesPageActions {
   setThemes: (themes: Theme[]) => void;
   fetchThemes: () => Promise<void>;
   createTheme: (formData: ThemeFormData) => Promise<void>;
+  createMultipleThemes: (themes: Array<{ name: string; description: string; parent_theme_id: string | null }>) => Promise<void>;
   updateTheme: (themeId: string, formData: ThemeFormData) => Promise<void>;
   deleteTheme: (themeId: string) => Promise<void>;
   setSelectedThemeForDrawer: (theme: Theme | null) => void;
@@ -152,6 +160,8 @@ interface ThemesPageActions {
   setFormData: (data: Partial<ThemeFormData>) => void;
   loadThemeSuggestions: () => Promise<void>;
   loadMoreThemeSuggestions: () => Promise<void>;
+  toggleThemeSuggestionSelection: (index: number) => void;
+  createMultipleThemes: (themes: Array<{ name: string; description: string; parent_theme_id: string | null }>) => Promise<void>;
 
   // Feature dialog actions
   openEditModal: (feature: Feature) => void;
@@ -179,7 +189,11 @@ interface ThemesPageActions {
   // Menu actions
   openMenu: (event: React.MouseEvent<HTMLElement>, theme: Theme) => void;
   closeMenu: () => void;
-  handleMenuAction: (action: 'edit' | 'delete' | 'add-sub') => void;
+  handleMenuAction: (action: 'edit' | 'delete' | 'add-sub' | 'slack') => void;
+
+  // Slack connect dialog actions
+  openSlackConnectDialog: (theme: Theme) => void;
+  closeSlackConnectDialog: () => void;
 
   // Tab actions
   setMentionDetailsTab: (tab: MentionDetailsTab) => void;
@@ -296,6 +310,9 @@ const initialState: ThemesPageState = {
   editingTheme: null,
   formData: { name: '', description: '', parent_theme_id: null },
   suggestions: [],
+  selectedThemeSuggestions: new Set(),
+  savingTheme: false,
+  themeError: null,
 
   editModalOpen: false,
   editingFeature: null,
@@ -320,6 +337,9 @@ const initialState: ThemesPageState = {
 
   menuAnchorEl: null,
   selectedThemeForMenu: null,
+
+  slackConnectDialogOpen: false,
+  selectedThemeForSlack: null,
 
   mentionDetailsTab: 'highlights',
 
@@ -394,6 +414,36 @@ export const useThemesPageStore = create<ThemesPageState & ThemesPageActions>()(
         }
 
         await get().fetchThemes();
+      },
+
+      createMultipleThemes: async (themes) => {
+        const workspaceId = getWorkspaceId();
+        const token = getAuthToken();
+        const createdThemes: Theme[] = [];
+
+        for (const themeData of themes) {
+          const response = await fetch(
+            `${API_BASE_URL}/api/v1/features/themes?workspace_id=${workspaceId}`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(themeData)
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(`Failed to create theme: ${response.status}`);
+          }
+
+          const createdTheme = await response.json();
+          createdThemes.push(createdTheme);
+        }
+
+        await get().fetchThemes();
+        return createdThemes;
       },
 
       updateTheme: async (themeId, formData) => {
@@ -801,6 +851,8 @@ export const useThemesPageStore = create<ThemesPageState & ThemesPageActions>()(
               parent_theme_id: parentThemeId || null,
             },
             suggestions: [],
+            selectedThemeSuggestions: new Set(),
+            themeError: null,
             dialogOpen: true,
           });
           get().loadThemeSuggestions();
@@ -813,6 +865,20 @@ export const useThemesPageStore = create<ThemesPageState & ThemesPageActions>()(
           editingTheme: null,
           formData: { name: '', description: '', parent_theme_id: null },
           suggestions: [],
+          selectedThemeSuggestions: new Set(),
+          themeError: null,
+        });
+      },
+
+      toggleThemeSuggestionSelection: (index) => {
+        set(state => {
+          const newSet = new Set(state.selectedThemeSuggestions);
+          if (newSet.has(index)) {
+            newSet.delete(index);
+          } else {
+            newSet.add(index);
+          }
+          return { selectedThemeSuggestions: newSet };
         });
       },
 
@@ -1098,8 +1164,20 @@ export const useThemesPageStore = create<ThemesPageState & ThemesPageActions>()(
           case 'add-sub':
             get().openThemeDialog(undefined, selectedThemeForMenu.id);
             break;
+          case 'slack':
+            get().openSlackConnectDialog(selectedThemeForMenu);
+            break;
         }
         get().closeMenu();
+      },
+
+      // Slack connect dialog actions
+      openSlackConnectDialog: (theme: Theme) => {
+        set({ slackConnectDialogOpen: true, selectedThemeForSlack: theme });
+      },
+
+      closeSlackConnectDialog: () => {
+        set({ slackConnectDialogOpen: false, selectedThemeForSlack: null });
       },
 
       // Tab actions

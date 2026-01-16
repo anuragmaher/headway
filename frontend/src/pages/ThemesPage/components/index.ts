@@ -10,3 +10,4 @@ export * from './FeatureDialogs';
 export * from './DeleteConfirmDialogs';
 export * from './ThemeActionsMenu';
 export * from './ThemeSelector';
+export * from './ThemeSlackConnectDialog';

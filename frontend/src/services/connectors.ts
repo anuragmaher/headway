@@ -88,10 +88,11 @@ class ConnectorService {
   async deleteConnector(
     workspaceId: string,
     connectorId: string
-  ): Promise<void> {
-    await api.delete(
+  ): Promise<{ message: string }> {
+    const response = await api.delete(
       `${this.baseUrl}/${workspaceId}/connectors/${connectorId}`
     );
+    return response.data;
   }
 }
 

@@ -13,6 +13,8 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Add as AddIcon,
+  Notifications as NotificationsIcon,
+  NotificationsOff as NotificationsOffIcon,
 } from '@mui/icons-material';
 import { useThemesPageStore } from '../store';
 
@@ -57,6 +59,22 @@ export const ThemeActionsMenu: React.FC = () => {
           Add Sub-theme
         </MenuItem>
       )}
+      <MenuItem
+        onClick={() => handleMenuAction('slack')}
+        sx={{ py: 1.5, px: 2 }}
+      >
+        {selectedThemeForMenu?.slack_channel_id ? (
+          <>
+            <NotificationsOffIcon sx={{ fontSize: 18, mr: 1.5, color: 'text.secondary' }} />
+            Manage Slack
+          </>
+        ) : (
+          <>
+            <NotificationsIcon sx={{ fontSize: 18, mr: 1.5, color: 'text.secondary' }} />
+            Connect to Slack
+          </>
+        )}
+      </MenuItem>
       <MenuItem
         onClick={() => handleMenuAction('delete')}
         sx={{

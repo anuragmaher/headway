@@ -57,6 +57,9 @@ export interface ThemeData {
   parent_theme_id?: string | null;
   sub_theme_count?: number;
   level?: number;
+  slack_integration_id?: string | null;
+  slack_channel_id?: string | null;
+  slack_channel_name?: string | null;
 }
 
 export interface ThemeFormData {

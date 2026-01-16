@@ -1,4 +1,5 @@
 import httpx
+import json
 from typing import List, Dict, Any, Tuple, Optional
 from fastapi import HTTPException
 import logging
@@ -173,7 +174,12 @@ class SlackService:
         if endpoint in ["auth.test", "conversations.list", "conversations.history", "users.info"]:
             response = await self.client.get(url, headers=headers, params=params or {})
         else:
-            response = await self.client.post(url, headers=headers, data=params or {})
+            # For POST endpoints, use JSON for chat.postMessage, form data for others
+            if endpoint == "chat.postMessage":
+                headers["Content-Type"] = "application/json"
+                response = await self.client.post(url, headers=headers, json=params or {})
+            else:
+                response = await self.client.post(url, headers=headers, data=params or {})
         
         response.raise_for_status()
         return response.json()
@@ -246,6 +252,59 @@ class SlackService:
         except Exception as e:
             logger.error(f"Error fetching user info for {user_id}: {e}")
             raise HTTPException(status_code=500, detail="Failed to fetch user info")
+
+    async def post_message(
+        self,
+        token: str,
+        channel_id: str,
+        text: Optional[str] = None,
+        blocks: Optional[List[Dict[str, Any]]] = None
+    ) -> Dict[str, Any]:
+        """
+        Post a message to a Slack channel using chat.postMessage API
+        
+        Args:
+            token: Slack OAuth token (bot token or user token)
+            channel_id: Slack channel ID to post to
+            text: Plain text message (fallback if blocks are provided)
+            blocks: Optional Block Kit blocks for rich formatting
+            
+        Returns:
+            Response from Slack API
+        """
+        try:
+            params = {
+                "channel": channel_id,
+            }
+            
+            if blocks:
+                # For chat.postMessage, blocks should be passed as JSON array, not stringified
+                params["blocks"] = blocks
+                # Text is required as fallback when using blocks
+                params["text"] = text or "Notification from HeadwayHQ"
+            elif text:
+                params["text"] = text
+            else:
+                raise ValueError("Either text or blocks must be provided")
+            
+            response = await self._call_slack_api("chat.postMessage", token, params=params)
+            
+            if not response.get("ok"):
+                error = response.get("error", "Unknown error")
+                logger.error(f"Failed to post message to Slack channel {channel_id}: {error}")
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Failed to post message to Slack: {error}"
+                )
+            
+            logger.info(f"Successfully posted message to Slack channel {channel_id}")
+            return response
+            
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Error posting message to Slack channel {channel_id}: {e}")
+            raise HTTPException(status_code=500, detail="Failed to post message to Slack")
 
     async def close(self):
         """Close the HTTP client"""

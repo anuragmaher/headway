@@ -559,21 +559,68 @@ class TranscriptIngestionService:
                         quote = feature_data.get('quote', '')
                         customer_name = message.message_metadata.get('customer_name') if message.message_metadata else None
 
-                        # Send Slack notification
-                        # TODO: Re-enable later
-                        self.slack_notification_service.send_feature_matched_notification(
-                            new_feature_title=feature_title,
-                            existing_feature_name=existing_feature.name,
-                            existing_mention_count=existing_feature.mention_count,
-                            confidence=match_result["confidence"],
-                            source=source,
-                            source_id=external_id,
-                            sentiment=sentiment,
-                            key_topics=key_topics,
-                            quote=quote,
-                            customer_name=customer_name,
-                            urgency=feature_urgency
-                        )
+                        # Send theme-specific Slack notification if theme has channel connected
+                        logger.info(f"Checking Slack notification for matched feature '{feature_title}': assigned_theme={assigned_theme.name if assigned_theme else None}, theme_id={assigned_theme.id if assigned_theme else None}")
+                        if assigned_theme and assigned_theme.id:
+                            from app.services.theme_slack_notification_service import theme_slack_notification_service
+                            from app.core.database import SessionLocal
+                            import asyncio
+                            import threading
+                            
+                            # Capture values before thread
+                            theme_id = assigned_theme.id
+                            feature_title_val = feature_title
+                            existing_feature_name_val = existing_feature.name
+                            existing_mention_count_val = existing_feature.mention_count
+                            confidence_val = match_result["confidence"]
+                            source_val = source
+                            source_id_val = external_id
+                            sentiment_val = sentiment
+                            key_topics_val = key_topics
+                            quote_val = quote
+                            customer_name_val = customer_name
+                            urgency_val = feature_urgency
+                            
+                            logger.info(f"🚀 Starting Slack notification thread for matched feature '{feature_title}' in theme {assigned_theme.name}")
+                            
+                            def send_notification():
+                                """Run async notification in a new event loop with a new DB session"""
+                                db = None
+                                try:
+                                    # Create a new database session for this thread
+                                    db = SessionLocal()
+                                    
+                                    loop = asyncio.new_event_loop()
+                                    asyncio.set_event_loop(loop)
+                                    loop.run_until_complete(
+                                        theme_slack_notification_service.send_feature_matched_notification(
+                                            db=db,
+                                            theme_id=theme_id,
+                                            new_feature_title=feature_title_val,
+                                            existing_feature_name=existing_feature_name_val,
+                                            existing_mention_count=existing_mention_count_val,
+                                            confidence=confidence_val,
+                                            source=source_val,
+                                            source_id=source_id_val,
+                                            sentiment=sentiment_val,
+                                            key_topics=key_topics_val,
+                                            quote=quote_val,
+                                            customer_name=customer_name_val,
+                                            urgency=urgency_val
+                                        )
+                                    )
+                                    loop.close()
+                                except Exception as e:
+                                    logger.error(f"Error sending theme Slack notification for matched feature: {e}", exc_info=True)
+                                finally:
+                                    if db:
+                                        db.close()
+                            
+                            # Run in background thread (fire and forget)
+                            thread = threading.Thread(target=send_notification, daemon=True)
+                            thread.start()
+                        else:
+                            logger.info(f"Skipping Slack notification: assigned_theme={assigned_theme}, theme_id={assigned_theme.id if assigned_theme else None}")
                     else:
                         logger.warning(
                             f"Matching feature {match_result['matching_feature_id']} not found, creating new"
@@ -657,22 +704,68 @@ class TranscriptIngestionService:
                             for pp in ai_insights.get('pain_points', [])[:3]  # Limit to 3
                         ]
 
-                    # Send Slack notification
-                    # TODO: Re-enable later
-                    self.slack_notification_service.send_feature_created_notification(
-                        feature_name=feature_title,
-                        feature_description=feature_description,
-                        theme_name=assigned_theme.name if assigned_theme else "Uncategorized",
-                        confidence=theme_validation.get("confidence", 0) if theme_validation else 0,
-                        urgency=feature_urgency,
-                        source=source,
-                        source_id=external_id,
-                        sentiment=sentiment,
-                        key_topics=key_topics,
-                        quote=quote,
-                        customer_name=customer_name,
-                        pain_points=pain_points_list
-                    )
+                    # Send theme-specific Slack notification if theme has channel connected
+                    logger.info(f"Checking Slack notification for feature '{feature_title}': assigned_theme={assigned_theme.name if assigned_theme else None}, theme_id={assigned_theme.id if assigned_theme else None}")
+                    if assigned_theme and assigned_theme.id:
+                        from app.services.theme_slack_notification_service import theme_slack_notification_service
+                        from app.core.database import SessionLocal
+                        import asyncio
+                        import threading
+                        
+                        # Capture values before thread
+                        theme_id = assigned_theme.id
+                        feature_name_val = feature_title
+                        feature_description_val = feature_description
+                        confidence_val = theme_validation.get("confidence", 0) if theme_validation else 0
+                        urgency_val = feature_urgency
+                        source_val = source
+                        source_id_val = external_id
+                        sentiment_val = sentiment
+                        key_topics_val = key_topics
+                        quote_val = quote
+                        customer_name_val = customer_name
+                        pain_points_val = pain_points_list
+                        
+                        logger.info(f"🚀 Starting Slack notification thread for created feature '{feature_title}' in theme {assigned_theme.name}")
+                        
+                        def send_notification():
+                            """Run async notification in a new event loop with a new DB session"""
+                            db = None
+                            try:
+                                # Create a new database session for this thread
+                                db = SessionLocal()
+                                
+                                loop = asyncio.new_event_loop()
+                                asyncio.set_event_loop(loop)
+                                loop.run_until_complete(
+                                    theme_slack_notification_service.send_feature_created_notification(
+                                        db=db,
+                                        theme_id=theme_id,
+                                        feature_name=feature_name_val,
+                                        feature_description=feature_description_val,
+                                        confidence=confidence_val,
+                                        urgency=urgency_val,
+                                        source=source_val,
+                                        source_id=source_id_val,
+                                        sentiment=sentiment_val,
+                                        key_topics=key_topics_val,
+                                        quote=quote_val,
+                                        customer_name=customer_name_val,
+                                        pain_points=pain_points_val
+                                    )
+                                )
+                                loop.close()
+                            except Exception as e:
+                                logger.error(f"Error sending theme Slack notification for created feature: {e}", exc_info=True)
+                            finally:
+                                if db:
+                                    db.close()
+                        
+                        # Run in background thread (fire and forget)
+                        thread = threading.Thread(target=send_notification, daemon=True)
+                        thread.start()
+                    else:
+                        logger.info(f"Skipping Slack notification: assigned_theme={assigned_theme}, theme_id={assigned_theme.id if assigned_theme else None}")
 
             # Commit all feature changes
             if features_created_count > 0 or features_matched_count > 0:

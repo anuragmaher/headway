@@ -26,6 +26,7 @@ import {
   MentionDeleteDialog,
   ThemeActionsMenu,
   ThemeSelector,
+  ThemeSlackConnectDialog,
 } from './components';
 
 export function ThemesPage(): JSX.Element {
@@ -39,8 +40,11 @@ export function ThemesPage(): JSX.Element {
     error,
     snackbarOpen,
     snackbarMessage,
+    slackConnectDialogOpen,
+    selectedThemeForSlack,
     setError,
     closeSnackbar,
+    closeSlackConnectDialog,
     fetchThemes,
     handleAllThemesClick,
   } = useThemesPageStore();
@@ -193,6 +197,11 @@ export function ThemesPage(): JSX.Element {
         <FeatureAddDialog />
         <FeatureDeleteDialog />
         <MentionDeleteDialog />
+        <ThemeSlackConnectDialog
+          open={slackConnectDialogOpen}
+          onClose={closeSlackConnectDialog}
+          theme={selectedThemeForSlack}
+        />
 
         {/* Theme Actions Menu */}
         <ThemeActionsMenu />
