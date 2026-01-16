@@ -51,6 +51,7 @@ export function ConnectedDataSources(): JSX.Element {
     loadSlackIntegrations,
     loadGmailAccounts,
     loadConnectors,
+    setConnectorError,
   } = useWorkspaceSettingsStore((state) => ({
     isLoadingIntegrations: state.isLoadingIntegrations,
     getDataSources: state.getDataSources,
@@ -60,6 +61,7 @@ export function ConnectedDataSources(): JSX.Element {
     loadSlackIntegrations: state.loadSlackIntegrations,
     loadGmailAccounts: state.loadGmailAccounts,
     loadConnectors: state.loadConnectors,
+    setConnectorError: state.setConnectorError,
   }));
 
   const dataSources = getDataSources();
@@ -100,13 +102,20 @@ export function ConnectedDataSources(): JSX.Element {
         await disconnectGmailAccount(selectedSource.id);
         await loadGmailAccounts();
       } else if (selectedSource.type === "gong" || selectedSource.type === "fathom") {
+        // Validate connector ID is a valid UUID format
+        if (!selectedSource.id || selectedSource.id === "gong" || selectedSource.id === "fathom") {
+          console.error("Invalid connector ID:", selectedSource.id);
+          setConnectorError("Unable to disconnect: Invalid connector ID. Please refresh the page and try again.");
+          return;
+        }
         await disconnectConnector(workspaceId, selectedSource.id);
         await loadConnectors(workspaceId);
       }
       setDisconnectDialogOpen(false);
       setSelectedSource(null);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to disconnect:", error);
+      // Error is already handled by the store and will be shown in snackbar
     }
   };
 

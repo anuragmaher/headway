@@ -14,6 +14,12 @@ export interface FeatureSuggestion {
   description: string;
 }
 
+export interface ThemeSlackConnectRequest {
+  integration_id: string;
+  channel_id: string;
+  channel_name: string;
+}
+
 export const themeService = {
   /**
    * Generate AI-powered theme suggestions based on company details
@@ -60,5 +66,37 @@ export const themeService = {
     }
 
     throw new Error('No suggestions generated');
+  },
+
+  /**
+   * Connect a theme to a Slack channel
+   */
+  connectThemeToSlack: async (
+    themeId: string,
+    workspaceId: string,
+    request: ThemeSlackConnectRequest
+  ): Promise<any> => {
+    const response = await api.post(
+      `/api/v1/features/themes/${themeId}/slack/connect?workspace_id=${workspaceId}`,
+      {
+        integration_id: request.integration_id,
+        channel_id: request.channel_id,
+        channel_name: request.channel_name,
+      }
+    );
+    return response.data;
+  },
+
+  /**
+   * Disconnect a theme from Slack
+   */
+  disconnectThemeFromSlack: async (
+    themeId: string,
+    workspaceId: string
+  ): Promise<any> => {
+    const response = await api.delete(
+      `/api/v1/features/themes/${themeId}/slack/disconnect?workspace_id=${workspaceId}`
+    );
+    return response.data;
   },
 };

@@ -8,13 +8,17 @@ import { useWorkspaceSettingsStore } from "../../store/WorkspaceStore/workspaceS
 export function NotificationSnackbars(): JSX.Element {
   const {
     error,
+    connectorError,
     connectorSuccess,
     setError,
+    setConnectorError,
     setConnectorSuccess,
   } = useWorkspaceSettingsStore((state) => ({
     error: state.error,
+    connectorError: state.connectorError,
     connectorSuccess: state.connectorSuccess,
     setError: state.setError,
+    setConnectorError: state.setConnectorError,
     setConnectorSuccess: state.setConnectorSuccess,
   }));
 
@@ -32,6 +36,18 @@ export function NotificationSnackbars(): JSX.Element {
         </Alert>
       </Snackbar>
 
+      {/* Connector Error Snackbar */}
+      <Snackbar
+        open={!!connectorError}
+        autoHideDuration={6000}
+        onClose={() => setConnectorError(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={() => setConnectorError(null)} severity="error" sx={{ borderRadius: 2 }}>
+          {connectorError}
+        </Alert>
+      </Snackbar>
+
       {/* Success Snackbar for Connectors */}
       <Snackbar
         open={connectorSuccess}
@@ -44,7 +60,7 @@ export function NotificationSnackbars(): JSX.Element {
           severity="success"
           sx={{ borderRadius: 2 }}
         >
-          Connectors saved successfully!
+          Operation completed successfully!
         </Alert>
       </Snackbar>
     </>

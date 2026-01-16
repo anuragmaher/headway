@@ -74,9 +74,18 @@ class ThemeResponse(BaseModel):
     parent_theme_id: Optional[str]
     sub_theme_count: int = 0
     level: int = 0  # 0 for root themes, 1 for sub-themes, etc.
+    slack_integration_id: Optional[str] = None
+    slack_channel_id: Optional[str] = None
+    slack_channel_name: Optional[str] = None
 
     class Config:
         from_attributes = True
+
+
+class ThemeSlackConnectRequest(BaseModel):
+    integration_id: str
+    channel_id: str
+    channel_name: str
 
 
 class MessageResponse(BaseModel):
@@ -218,6 +227,32 @@ async def get_themes(
             sub_theme_count = sub_theme_counts.get(theme_id_str, 0)
             level = calculate_level(theme, themes)
 
+            # Only include Slack fields if integration is active
+            slack_integration_id = None
+            slack_channel_id = None
+            slack_channel_name = None
+            
+            if theme.slack_integration_id:
+                # Verify the integration is still active
+                from app.models.integration import Integration
+                integration = db.query(Integration).filter(
+                    Integration.id == theme.slack_integration_id,
+                    Integration.is_active == True
+                ).first()
+                
+                if integration:
+                    slack_integration_id = str(theme.slack_integration_id)
+                    slack_channel_id = theme.slack_channel_id
+                    slack_channel_name = theme.slack_channel_name
+                else:
+                    # Integration is inactive, clear theme's Slack connection
+                    theme.slack_integration_id = None
+                    theme.slack_channel_id = None
+                    theme.slack_channel_name = None
+                    theme.updated_at = datetime.utcnow()
+                    logger.info(f"Cleared inactive Slack integration from theme {theme.name}")
+                    # Commit will happen after the loop
+            
             theme_responses.append(ThemeResponse(
                 id=theme_id_str,
                 name=theme.name,
@@ -226,8 +261,14 @@ async def get_themes(
                 mention_count=mention_count,
                 parent_theme_id=str(theme.parent_theme_id) if theme.parent_theme_id else None,
                 sub_theme_count=sub_theme_count,
-                level=level
+                level=level,
+                slack_integration_id=slack_integration_id,
+                slack_channel_id=slack_channel_id,
+                slack_channel_name=slack_channel_name
             ))
+        
+        # Commit any theme updates (clearing inactive integrations)
+        db.commit()
 
         return theme_responses
 
@@ -311,7 +352,10 @@ async def create_theme(
             mention_count=0,
             parent_theme_id=str(new_theme.parent_theme_id) if new_theme.parent_theme_id else None,
             sub_theme_count=sub_theme_count,
-            level=level
+            level=level,
+            slack_integration_id=str(new_theme.slack_integration_id) if new_theme.slack_integration_id else None,
+            slack_channel_id=new_theme.slack_channel_id,
+            slack_channel_name=new_theme.slack_channel_name
         )
 
     except HTTPException:
@@ -427,7 +471,10 @@ async def update_theme(
             mention_count=mention_count,
             parent_theme_id=str(theme.parent_theme_id) if theme.parent_theme_id else None,
             sub_theme_count=sub_theme_count,
-            level=level
+            level=level,
+            slack_integration_id=str(theme.slack_integration_id) if theme.slack_integration_id else None,
+            slack_channel_id=theme.slack_channel_id,
+            slack_channel_name=theme.slack_channel_name
         )
 
     except HTTPException:
@@ -487,6 +534,173 @@ async def delete_theme(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to delete theme: {str(e)}"
+        )
+
+
+@router.post("/themes/{theme_id}/slack/connect", response_model=ThemeResponse)
+async def connect_theme_to_slack(
+    theme_id: str,
+    request: ThemeSlackConnectRequest,
+    workspace_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Connect a theme to a Slack channel for notifications
+    
+    When features are created or updated in this theme, notifications
+    will be sent to the specified Slack channel.
+    """
+    try:
+        from app.models.integration import Integration
+        from uuid import UUID
+        
+        # Find the theme
+        theme = db.query(Theme).filter(
+            Theme.id == theme_id,
+            Theme.workspace_id == workspace_id
+        ).first()
+
+        if not theme:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Theme not found"
+            )
+
+        # Verify the integration exists and belongs to the workspace
+        integration = db.query(Integration).filter(
+            Integration.id == UUID(request.integration_id),
+            Integration.workspace_id == workspace_id,
+            Integration.provider == "slack",
+            Integration.is_active == True
+        ).first()
+
+        if not integration:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Slack integration not found or inactive"
+            )
+
+        # Update theme with Slack channel info
+        theme.slack_integration_id = UUID(request.integration_id)
+        theme.slack_channel_id = request.channel_id
+        theme.slack_channel_name = request.channel_name
+        theme.updated_at = datetime.utcnow()
+
+        db.commit()
+        db.refresh(theme)
+
+        # Calculate counts for response
+        from sqlalchemy import func
+        feature_count = db.query(Feature).filter(Feature.theme_id == theme.id).count()
+        mention_count_result = db.query(func.sum(Feature.mention_count)).filter(
+            Feature.theme_id == theme.id
+        ).scalar()
+        mention_count = mention_count_result or 0
+        sub_theme_count = db.query(Theme).filter(Theme.parent_theme_id == theme.id).count()
+        level = 0 if not theme.parent_theme_id else 1
+
+        logger.info(f"Connected theme {theme.name} to Slack channel {request.channel_name}")
+        
+        return ThemeResponse(
+            id=str(theme.id),
+            name=theme.name,
+            description=theme.description,
+            feature_count=feature_count,
+            mention_count=mention_count,
+            parent_theme_id=str(theme.parent_theme_id) if theme.parent_theme_id else None,
+            sub_theme_count=sub_theme_count,
+            level=level,
+            slack_integration_id=str(theme.slack_integration_id),
+            slack_channel_id=theme.slack_channel_id,
+            slack_channel_name=theme.slack_channel_name
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error connecting theme to Slack: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to connect theme to Slack: {str(e)}"
+        )
+
+
+@router.delete("/themes/{theme_id}/slack/disconnect", response_model=ThemeResponse)
+async def disconnect_theme_from_slack(
+    theme_id: str,
+    workspace_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Disconnect a theme from its Slack channel
+    
+    This will stop sending notifications to Slack for this theme.
+    """
+    try:
+        # Find the theme
+        theme = db.query(Theme).filter(
+            Theme.id == theme_id,
+            Theme.workspace_id == workspace_id
+        ).first()
+
+        if not theme:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Theme not found"
+            )
+
+        if not theme.slack_integration_id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Theme is not connected to Slack"
+            )
+
+        # Remove Slack connection
+        theme.slack_integration_id = None
+        theme.slack_channel_id = None
+        theme.slack_channel_name = None
+        theme.updated_at = datetime.utcnow()
+
+        db.commit()
+        db.refresh(theme)
+
+        # Calculate counts for response
+        from sqlalchemy import func
+        feature_count = db.query(Feature).filter(Feature.theme_id == theme.id).count()
+        mention_count_result = db.query(func.sum(Feature.mention_count)).filter(
+            Feature.theme_id == theme.id
+        ).scalar()
+        mention_count = mention_count_result or 0
+        sub_theme_count = db.query(Theme).filter(Theme.parent_theme_id == theme.id).count()
+        level = 0 if not theme.parent_theme_id else 1
+
+        logger.info(f"Disconnected theme {theme.name} from Slack")
+        
+        return ThemeResponse(
+            id=str(theme.id),
+            name=theme.name,
+            description=theme.description,
+            feature_count=feature_count,
+            mention_count=mention_count,
+            parent_theme_id=str(theme.parent_theme_id) if theme.parent_theme_id else None,
+            sub_theme_count=sub_theme_count,
+            level=level,
+            slack_integration_id=None,
+            slack_channel_id=None,
+            slack_channel_name=None
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error disconnecting theme from Slack: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to disconnect theme from Slack: {str(e)}"
         )
 
 
@@ -619,6 +833,64 @@ async def create_feature(
         db.add(new_feature)
         db.commit()
         db.refresh(new_feature)
+
+        # Send theme-specific Slack notification if theme has channel connected
+        logger.info(f"Feature created via API: name='{new_feature.name}', theme_id={new_feature.theme_id}")
+        if new_feature.theme_id:
+            from app.services.theme_slack_notification_service import theme_slack_notification_service
+            from app.core.database import SessionLocal
+            import asyncio
+            import threading
+            
+            # Capture values before thread
+            theme_id = new_feature.theme_id
+            feature_name_val = new_feature.name
+            feature_description_val = new_feature.description or ""
+            confidence_val = 1.0  # Manual creation has 100% confidence
+            urgency_val = new_feature.urgency
+            source_val = "manual"
+            source_id_val = str(new_feature.id)
+            
+            logger.info(f"🚀 Starting Slack notification thread for manually created feature '{feature_name_val}' in theme {theme_id}")
+            
+            def send_notification():
+                """Run async notification in a new event loop with a new DB session"""
+                db_session = None
+                try:
+                    # Create a new database session for this thread
+                    db_session = SessionLocal()
+                    
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                    loop.run_until_complete(
+                        theme_slack_notification_service.send_feature_created_notification(
+                            db=db_session,
+                            theme_id=theme_id,
+                            feature_name=feature_name_val,
+                            feature_description=feature_description_val,
+                            confidence=confidence_val,
+                            urgency=urgency_val,
+                            source=source_val,
+                            source_id=source_id_val,
+                            sentiment=None,
+                            key_topics=None,
+                            quote=None,
+                            customer_name=None,
+                            pain_points=None
+                        )
+                    )
+                    loop.close()
+                except Exception as e:
+                    logger.error(f"Error sending theme Slack notification for manually created feature: {e}", exc_info=True)
+                finally:
+                    if db_session:
+                        db_session.close()
+            
+            # Run in background thread (fire and forget)
+            thread = threading.Thread(target=send_notification, daemon=True)
+            thread.start()
+        else:
+            logger.info(f"Skipping Slack notification: feature has no theme_id")
 
         # Return the created feature
         return FeatureResponse(
@@ -1708,9 +1980,30 @@ async def get_executive_insights(
             'completed': 0,
             'on_hold': 0
         }
+        
+        # Normalize status values to match expected keys
+        status_mapping = {
+            'new': 'new',
+            'under-review': 'in_progress',
+            'in_progress': 'in_progress',
+            'in-progress': 'in_progress',
+            'planned': 'in_progress',
+            'completed': 'completed',
+            'shipped': 'completed',
+            'on_hold': 'on_hold',
+            'on-hold': 'on_hold',
+            'on hold': 'on_hold',
+        }
+        
         for status, count in features_by_status:
-            if status in status_counts:
-                status_counts[status] = count
+            if status:
+                # Normalize status (lowercase and handle variations)
+                normalized_status = status_mapping.get(status.lower(), 'new')
+                if normalized_status in status_counts:
+                    status_counts[normalized_status] += count
+                else:
+                    # If status doesn't match, default to 'new'
+                    status_counts['new'] += count
 
         # 3. Features by urgency - aggregated in SQL
         features_by_urgency = db.query(

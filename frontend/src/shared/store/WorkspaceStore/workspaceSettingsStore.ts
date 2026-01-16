@@ -475,14 +475,47 @@ export const useWorkspaceSettingsStore = create<WorkspaceSettingsState>((set, ge
   },
 
   disconnectConnector: async (workspaceId, connectorId) => {
+    if (!workspaceId) {
+      set({ connectorError: "Workspace ID not found. Please refresh the page." });
+      return;
+    }
+    
+    if (!connectorId) {
+      set({ connectorError: "Connector ID not found. Please refresh the page." });
+      return;
+    }
+
+    // Validate connector ID is a valid UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(connectorId)) {
+      console.error("Invalid connector ID format:", connectorId);
+      set({ connectorError: "Invalid connector ID format. Please refresh the page and try again." });
+      return;
+    }
+
+    set({ connectorError: null });
+
     try {
-      await connectorService.deleteConnector(workspaceId, connectorId);
+      console.log(`Attempting to delete connector ${connectorId} from workspace ${workspaceId}`);
+      const result = await connectorService.deleteConnector(workspaceId, connectorId);
+      console.log("Connector deleted successfully:", result);
       await get().loadConnectors(workspaceId);
+      set({ connectorSuccess: true });
+      setTimeout(() => set({ connectorSuccess: false }), 3000);
     } catch (error: any) {
       console.error("Failed to disconnect connector:", error);
-      set({
-        error: error.response?.data?.detail || "Failed to disconnect connector",
+      console.error("Error details:", {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message,
       });
+      const errorMessage = error.response?.data?.detail || error.response?.data?.message || error.message || "Failed to disconnect connector";
+      set({
+        connectorError: errorMessage,
+        error: errorMessage,
+      });
+      throw error; // Re-throw to allow UI to handle it
     }
   },
 
@@ -655,27 +688,23 @@ export const useWorkspaceSettingsStore = create<WorkspaceSettingsState>((set, ge
         status: "connected" as const,
       })),
       // Gong connector
-      ...(connectors.some((c) => c.connector_type === "gong" && c.is_active)
-        ? [
-            {
-              id: connectors.find((c) => c.connector_type === "gong")?.id || "gong",
-              name: "Gong",
-              type: "gong" as const,
-              status: "connected" as const,
-            },
-          ]
-        : []),
+      ...(connectors
+        .filter((c) => c.connector_type === "gong" && c.is_active && c.id)
+        .map((connector) => ({
+          id: connector.id,
+          name: "Gong",
+          type: "gong" as const,
+          status: "connected" as const,
+        }))),
       // Fathom connector
-      ...(connectors.some((c) => c.connector_type === "fathom" && c.is_active)
-        ? [
-            {
-              id: connectors.find((c) => c.connector_type === "fathom")?.id || "fathom",
-              name: "Fathom",
-              type: "fathom" as const,
-              status: "connected" as const,
-            },
-          ]
-        : []),
+      ...(connectors
+        .filter((c) => c.connector_type === "fathom" && c.is_active && c.id)
+        .map((connector) => ({
+          id: connector.id,
+          name: "Fathom",
+          type: "fathom" as const,
+          status: "connected" as const,
+        }))),
     ];
 
     return dataSources;

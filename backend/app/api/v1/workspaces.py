@@ -291,7 +291,7 @@ async def update_connector(
 
 @router.delete(
     "/{workspace_id}/connectors/{connector_id}",
-    status_code=status.HTTP_204_NO_CONTENT
+    status_code=status.HTTP_200_OK
 )
 async def delete_connector(
     workspace_id: UUID,
@@ -308,27 +308,32 @@ async def delete_connector(
         current_user: Current authenticated user
         db: Database session
 
+    Returns:
+        Success message
+
     Raises:
         HTTPException: If connector not found
     """
     try:
+        user_email = current_user.email if isinstance(current_user, User) else current_user.get('email', 'unknown')
         logger.info(
-            f"User {current_user.email} deleting connector {connector_id} "
+            f"User {user_email} deleting connector {connector_id} "
             f"from workspace {workspace_id}"
         )
 
         service = WorkspaceService(db)
-        service.delete_connector(workspace_id, connector_id)
+        result = service.delete_connector(workspace_id, connector_id)
 
         logger.info(f"Connector {connector_id} deleted successfully")
+        return result
 
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error deleting connector: {e}")
+        logger.error(f"Error deleting connector {connector_id}: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to delete connector"
+            detail=f"Failed to delete connector: {str(e)}"
         )
 
 

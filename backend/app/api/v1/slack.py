@@ -259,13 +259,26 @@ async def disconnect_slack_integration(
         if not integration:
             raise HTTPException(status_code=404, detail="Integration not found")
         
+        # Disconnect all themes that use this integration
+        from app.models.theme import Theme
+        themes_using_integration = db.query(Theme).filter(
+            Theme.slack_integration_id == integration.id
+        ).all()
+        
+        for theme in themes_using_integration:
+            theme.slack_integration_id = None
+            theme.slack_channel_id = None
+            theme.slack_channel_name = None
+            theme.updated_at = datetime.utcnow()
+            logger.info(f"Disconnected theme {theme.name} from Slack integration {integration_id}")
+        
         # Soft delete - mark as inactive
         integration.is_active = False
         integration.updated_at = datetime.utcnow()
         
         db.commit()
         
-        logger.info(f"Disconnected Slack integration {integration_id} for user {current_user['id']}")
+        logger.info(f"Disconnected Slack integration {integration_id} and {len(themes_using_integration)} associated themes for user {current_user['id']}")
         
         return {"message": "Slack integration disconnected successfully"}
         

@@ -18,9 +18,12 @@ celery_app = Celery(
     broker=settings.REDIS_URL,
     backend=settings.REDIS_URL,
     include=[
-        "app.tasks.ingestion_tasks"
+        "app.sync_engine.sync_tasks"  # Use sync_engine instead of old ingestion_tasks
     ]
 )
+
+# Auto-discover tasks from sync_engine
+celery_app.autodiscover_tasks(['app.sync_engine'], force=True)
 
 # Configure Celery
 celery_config = {
@@ -42,29 +45,39 @@ if sys.platform == "win32":
 celery_app.conf.update(**celery_config)
 
 # Configure periodic tasks (Celery Beat schedule)
+# All tasks check for active connections before syncing
 celery_app.conf.beat_schedule = {
-    # Gong ingestion every 15 minutes
-    "ingest-gong-calls": {
-        "task": "app.tasks.ingestion_tasks.ingest_gong_periodic",
+    # Slack sync every 15 minutes (starts at :00)
+    "sync-slack-messages": {
+        "task": "app.sync_engine.sync_tasks.sync_slack_periodic",
         "schedule": schedule(run_every=900),  # 900 seconds = 15 minutes
         "options": {
             "queue": "ingestion",
             "priority": 10
         }
     },
-    # Fathom ingestion every 15 minutes (staggered by 2 minutes to avoid conflicts)
-    "ingest-fathom-sessions": {
-        "task": "app.tasks.ingestion_tasks.ingest_fathom_periodic",
+    # Gong sync every 15 minutes (staggered by 20 seconds)
+    "sync-gong-calls": {
+        "task": "app.sync_engine.sync_tasks.sync_gong_periodic",
         "schedule": schedule(run_every=920),  # 920 seconds = 15m 20s (staggered)
         "options": {
             "queue": "ingestion",
             "priority": 10
         }
     },
-    # Gmail ingestion every 15 minutes (staggered by 40 seconds after Fathom)
-    "ingest-gmail-threads": {
-        "task": "app.tasks.ingestion_tasks.ingest_gmail_periodic",
+    # Fathom sync every 15 minutes (staggered by 40 seconds)
+    "sync-fathom-sessions": {
+        "task": "app.sync_engine.sync_tasks.sync_fathom_periodic",
         "schedule": schedule(run_every=940),  # 940 seconds = 15m 40s (staggered)
+        "options": {
+            "queue": "ingestion",
+            "priority": 10
+        }
+    },
+    # Gmail sync every 15 minutes (staggered by 60 seconds)
+    "sync-gmail-threads": {
+        "task": "app.sync_engine.sync_tasks.sync_gmail_periodic",
+        "schedule": schedule(run_every=960),  # 960 seconds = 16 minutes (staggered)
         "options": {
             "queue": "ingestion",
             "priority": 10
@@ -73,7 +86,8 @@ celery_app.conf.beat_schedule = {
 }
 
 logger.info(f"Celery app initialized with broker: {settings.REDIS_URL}")
-logger.info("Scheduled tasks configured:")
-logger.info("  - Gong ingestion: every 15 minutes")
-logger.info("  - Fathom ingestion: every 15 minutes (staggered by 20s)")
-logger.info("  - Gmail ingestion: every 15 minutes (staggered by 40s)")
+logger.info("Sync Engine - Scheduled tasks configured:")
+logger.info("  - Slack sync: every 15 minutes (only active integrations)")
+logger.info("  - Gong sync: every 15 minutes (only active connectors)")
+logger.info("  - Fathom sync: every 15 minutes (only active connectors)")
+logger.info("  - Gmail sync: every 15 minutes (only active accounts)")
