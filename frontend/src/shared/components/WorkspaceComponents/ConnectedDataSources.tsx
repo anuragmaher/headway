@@ -44,6 +44,7 @@ export function ConnectedDataSources(): JSX.Element {
 
   const {
     isLoadingIntegrations,
+    isDisconnectingSlack,
     getDataSources,
     disconnectSlackIntegration,
     disconnectGmailAccount,
@@ -54,6 +55,7 @@ export function ConnectedDataSources(): JSX.Element {
     setConnectorError,
   } = useWorkspaceSettingsStore((state) => ({
     isLoadingIntegrations: state.isLoadingIntegrations,
+    isDisconnectingSlack: state.isDisconnectingSlack,
     getDataSources: state.getDataSources,
     disconnectSlackIntegration: state.disconnectSlackIntegration,
     disconnectGmailAccount: state.disconnectGmailAccount,
@@ -92,13 +94,34 @@ export function ConnectedDataSources(): JSX.Element {
   };
 
   const handleDisconnectConfirm = async () => {
-    if (!selectedSource || !workspaceId) return;
+    console.log("handleDisconnectConfirm called", { selectedSource, workspaceId });
+    if (!selectedSource) {
+      console.error("Missing selectedSource", { selectedSource });
+      return;
+    }
+
+    // Only require workspaceId for connectors (Gong/Fathom)
+    if ((selectedSource.type === "gong" || selectedSource.type === "fathom") && !workspaceId) {
+      console.error("Missing workspaceId for connector disconnect", { selectedSource, workspaceId });
+      setConnectorError("Workspace ID is missing. Please refresh the page and try again.");
+      return;
+    }
 
     try {
+      console.log("Starting disconnect for:", selectedSource.type, selectedSource.id);
       if (selectedSource.type === "slack") {
-        await disconnectSlackIntegration(selectedSource.id);
+        console.log("Disconnecting Slack integration:", selectedSource.id, "Type:", typeof selectedSource.id);
+        // Ensure integration ID is a string
+        // Note: Slack disconnect doesn't need workspaceId - backend gets it from auth token
+        const integrationId = String(selectedSource.id);
+        console.log("Calling disconnectSlackIntegration with:", integrationId);
+        await disconnectSlackIntegration(integrationId);
+        console.log("Slack disconnect completed, reloading integrations");
+        // loadSlackIntegrations is already called in disconnectSlackIntegration, but we call it again to ensure UI updates
         await loadSlackIntegrations();
+        console.log("Integrations reloaded");
       } else if (selectedSource.type === "gmail") {
+        // Gmail disconnect also doesn't need workspaceId - backend gets it from auth token
         await disconnectGmailAccount(selectedSource.id);
         await loadGmailAccounts();
       } else if (selectedSource.type === "gong" || selectedSource.type === "fathom") {
@@ -108,14 +131,24 @@ export function ConnectedDataSources(): JSX.Element {
           setConnectorError("Unable to disconnect: Invalid connector ID. Please refresh the page and try again.");
           return;
         }
+        // Connectors require workspaceId
+        if (!workspaceId) {
+          console.error("Missing workspaceId for connector disconnect");
+          setConnectorError("Workspace ID is missing. Please refresh the page and try again.");
+          return;
+        }
         await disconnectConnector(workspaceId, selectedSource.id);
         await loadConnectors(workspaceId);
       }
+      // Only close dialog if disconnect was successful
+      console.log("Disconnect successful, closing dialog");
       setDisconnectDialogOpen(false);
       setSelectedSource(null);
     } catch (error: any) {
       console.error("Failed to disconnect:", error);
+      console.error("Error stack:", error.stack);
       // Error is already handled by the store and will be shown in snackbar
+      // Keep dialog open so user can try again or cancel
     }
   };
 
@@ -392,16 +425,23 @@ export function ConnectedDataSources(): JSX.Element {
             Cancel
           </Button>
           <Button
-            onClick={handleDisconnectConfirm}
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log("Disconnect button clicked");
+              handleDisconnectConfirm();
+            }}
             variant="contained"
             color="error"
+            disabled={isDisconnectingSlack && selectedSource?.type === "slack"}
             sx={{
               borderRadius: 2,
               textTransform: "none",
               fontWeight: 600,
             }}
           >
-            Disconnect
+            {isDisconnectingSlack && selectedSource?.type === "slack" ? "Disconnecting..." : "Disconnect"}
           </Button>
         </DialogActions>
       </Dialog>

@@ -40,9 +40,11 @@ import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { OnboardingWizard } from '@/shared/components/OnboardingWizard/OnboardingWizard';
 import { GmailLabelSelectionScreen } from '@/shared/components/OnboardingWizard/GmailLabelSelectionScreen';
+import { ConnectDataSourcesBanner } from '@/shared/components/ConnectDataSourcesBanner';
 import { useAuthActions, useUser, useAuthStore } from '@/features/auth/store/auth-store';
 import { useOnboardingStore } from '@/shared/store/onboardingStore';
 import { useLayoutStore } from '@/shared/store/layoutStore';
+import { useWorkspaceSettingsStore } from '@/shared/store/WorkspaceStore/workspaceSettingsStore';
 import { ROUTES } from '@/lib/constants/routes';
 
 const DRAWER_WIDTH = 260;
@@ -99,7 +101,27 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
     completeOnboarding,
     hasChecked,
     forceRecheck,
+    onboardingStatus,
+    isOnboardingComplete,
   } = useOnboardingStore();
+  
+  // Workspace settings store to check data sources
+  const { 
+    getDataSources, 
+    isLoadingIntegrations,
+    loadSlackIntegrations,
+    loadGmailAccounts,
+    loadConnectors,
+  } = useWorkspaceSettingsStore((state) => ({
+    getDataSources: state.getDataSources,
+    isLoadingIntegrations: state.isLoadingIntegrations,
+    loadSlackIntegrations: state.loadSlackIntegrations,
+    loadGmailAccounts: state.loadGmailAccounts,
+    loadConnectors: state.loadConnectors,
+  }));
+  
+  // State to control wizard opening from banner
+  const [wizardOpenFromBanner, setWizardOpenFromBanner] = useState(false);
 
   // Custom header content from pages
   const headerContent = useLayoutStore((state) => state.headerContent);
@@ -170,6 +192,16 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
     };
   }, [forceRecheck]);
 
+  // Load data sources when workspace is available (for banner visibility)
+  useEffect(() => {
+    const workspaceId = tokens?.workspace_id;
+    if (workspaceId) {
+      loadSlackIntegrations();
+      loadGmailAccounts();
+      loadConnectors(workspaceId);
+    }
+  }, [tokens?.workspace_id, loadSlackIntegrations, loadGmailAccounts, loadConnectors]);
+
   // Check onboarding status when component mounts and workspace is available
   useEffect(() => {
     const workspaceId = tokens?.workspace_id;
@@ -237,6 +269,40 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
     navigate(ROUTES.HOME);
     handleProfileMenuClose();
   };
+
+  // Handle banner button click - open wizard at data sources step
+  const handleBannerConnectClick = () => {
+    // Set the continue step to 1 (data sources step)
+    localStorage.setItem('onboarding-continue-step', '1');
+    // Open the wizard
+    setWizardOpenFromBanner(true);
+  };
+
+  // Clean up continue step when wizard closes
+  const handleWizardComplete = () => {
+    completeOnboarding();
+    setWizardOpenFromBanner(false);
+    localStorage.removeItem('onboarding-continue-step');
+    // Dispatch event to refresh themes if user is on themes page
+    window.dispatchEvent(new CustomEvent('onboarding-complete'));
+  };
+
+  const handleWizardDismiss = () => {
+    dismissOnboarding();
+    setWizardOpenFromBanner(false);
+    localStorage.removeItem('onboarding-continue-step');
+  };
+
+  // Determine if banner should be shown
+  // Show when: user has no data sources connected (regardless of onboarding status)
+  const dataSources = getDataSources();
+  const hasDataSources = !isLoadingIntegrations && dataSources.length > 0;
+  const shouldShowBanner = 
+    !isLoadingIntegrations &&
+    !hasDataSources &&
+    !showOnboardingDialog &&
+    !wizardOpenFromBanner &&
+    !hideWizardForLabels;
 
   const currentDrawerWidth = collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH;
 
@@ -593,6 +659,11 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
       >
         <Toolbar />
         {children}
+        
+        {/* Connect Data Sources Banner - Fixed position in right corner */}
+        {shouldShowBanner && (
+          <ConnectDataSourcesBanner onConnectClick={handleBannerConnectClick} />
+        )}
       </Box>
 
       {/* Gmail Label Selection Screen - shown when returning from Gmail OAuth during onboarding */}
@@ -602,14 +673,9 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
                   {/* Hide wizard when Gmail label selection screen is active */}
                   {!hideWizardForLabels && (
                     <OnboardingWizard
-                      open={showOnboardingDialog}
-                      onComplete={() => {
-                        // Mark onboarding as complete and close the dialog
-                        completeOnboarding();
-                        // Dispatch event to refresh themes if user is on themes page
-                        window.dispatchEvent(new CustomEvent('onboarding-complete'));
-                      }}
-                      onDismiss={dismissOnboarding}
+                      open={showOnboardingDialog || wizardOpenFromBanner}
+                      onComplete={handleWizardComplete}
+                      onDismiss={handleWizardDismiss}
                     />
                   )}
     </Box>
