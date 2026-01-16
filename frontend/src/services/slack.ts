@@ -76,8 +76,23 @@ class SlackService {
    * Disconnect a Slack integration
    */
   async disconnectIntegration(integrationId: string): Promise<{ message: string }> {
-    const response = await api.delete<{ message: string }>(`/api/v1/slack/integrations/${integrationId}`);
-    return response.data;
+    console.log("slackService.disconnectIntegration called with ID:", integrationId);
+    try {
+      const response = await api.delete<{ message: string }>(`/api/v1/slack/integrations/${integrationId}`);
+      console.log("Disconnect API response:", response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error("Disconnect API error:", error);
+      console.error("Error details:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        url: error.config?.url,
+        method: error.config?.method,
+      });
+      throw error;
+    }
   }
 }
 

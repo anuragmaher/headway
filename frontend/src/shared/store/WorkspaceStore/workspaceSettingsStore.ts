@@ -31,6 +31,7 @@ interface WorkspaceSettingsState {
   teamInfo: { team_id: string; team_name: string } | null;
   channelSearch: string;
   isLoadingIntegrations: boolean;
+  isDisconnectingSlack: boolean;
 
   // Connector State
   gongDialogOpen: boolean;
@@ -149,6 +150,7 @@ export const useWorkspaceSettingsStore = create<WorkspaceSettingsState>((set, ge
   teamInfo: null,
   channelSearch: "",
   isLoadingIntegrations: true,
+  isDisconnectingSlack: false,
 
   // Initial Gmail State
   gmailAccounts: [],
@@ -293,14 +295,32 @@ export const useWorkspaceSettingsStore = create<WorkspaceSettingsState>((set, ge
   },
 
   disconnectSlackIntegration: async (integrationId) => {
+    console.log("disconnectSlackIntegration called with ID:", integrationId);
+    set({ isDisconnectingSlack: true, error: null });
     try {
-      await slackService.disconnectIntegration(integrationId);
+      console.log("Calling slackService.disconnectIntegration...");
+      const result = await slackService.disconnectIntegration(integrationId);
+      console.log("Disconnect API call successful:", result);
+      // Reload integrations to reflect the change (backend filters out inactive ones)
+      console.log("Reloading Slack integrations...");
       await get().loadSlackIntegrations();
+      console.log("Slack integrations reloaded");
+      set({ isDisconnectingSlack: false });
     } catch (error: any) {
       console.error("Failed to disconnect Slack integration:", error);
-      set({
-        error: error.response?.data?.detail || "Failed to disconnect Slack integration",
+      console.error("Error details:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
       });
+      const errorMessage = error.response?.data?.detail || error.message || "Failed to disconnect Slack integration";
+      set({
+        error: errorMessage,
+        isDisconnectingSlack: false,
+      });
+      // Re-throw the error so the caller can handle it
+      throw error;
     }
   },
 
