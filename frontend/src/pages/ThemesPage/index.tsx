@@ -161,8 +161,8 @@ export function ThemesPage(): JSX.Element {
 
   return (
     <AdminLayout>
-      <Box sx={{ 
-        height: 'calc(100vh - 64px)', 
+      <Box sx={{
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',

@@ -64,7 +64,7 @@ export function TopFeaturesChart({ topFeatures }: TopFeaturesChartProps): JSX.El
 
   return (
     <Card
-      elevation={0}
+      
       sx={{
         borderRadius: 2,
         border: `1px solid ${theme.palette.divider}`,

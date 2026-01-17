@@ -242,7 +242,7 @@ export default function CustomersChatPage(): JSX.Element {
   if (!workspaceId) {
     return (
       <AdminLayout>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 100px)' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
           <CircularProgress />
         </Box>
       </AdminLayout>
@@ -252,13 +252,13 @@ export default function CustomersChatPage(): JSX.Element {
   return (
     <AdminLayout>
       <Box sx={{
-      display: 'flex',
-      flexDirection: { xs: 'column', md: 'row' },
-      height: { xs: 'auto', md: 'calc(100vh - 100px)' },
-      minHeight: { xs: 'calc(100vh - 100px)', md: 'auto' },
-      gap: 2,
-      p: { xs: 1, sm: 2, md: 3 }
-    }}>
+        display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' },
+        height: '100%',
+        gap: 2,
+        p: { xs: 1, sm: 2, md: 3 },
+        overflow: 'hidden',
+      }}>
       {/* Main Chat Area */}
       <Paper
         elevation={0}

@@ -1,0 +1,753 @@
+/**
+ * SourcesPage - Data Sync page for managing message syncing from connected sources
+ * Displays All Messages and Sync History tabs
+ */
+
+import { useState, useEffect, useCallback, useRef } from 'react';
+import {
+  Box,
+  Typography,
+  Button,
+  Tabs,
+  Tab,
+  Paper,
+  alpha,
+  useTheme,
+  Chip,
+  CircularProgress,
+  Alert,
+  Pagination,
+  Snackbar,
+} from '@mui/material';
+import {
+  Sync as SyncIcon,
+  AutoAwesome as ThemeSyncIcon,
+  ChatBubbleOutline as MessagesIcon,
+  History as HistoryIcon,
+} from '@mui/icons-material';
+import { AdminLayout } from '@/shared/components/layouts';
+import { useLayoutStore } from '@/shared/store/layoutStore';
+import { useAuthStore } from '@/features/auth/store/auth-store';
+import { MessageList, SyncHistoryTable, SourceFilters, TypeFilters, SyncDetailsDrawer } from './components';
+import { SourceType, SyncType, Message, SyncHistoryItem } from './types';
+import { useSyncHistoryPolling } from './hooks';
+import sourcesService, {
+  MessageListResponse,
+  SyncHistoryListResponse,
+} from '@/services/sources';
+
+export function SourcesPage(): JSX.Element {
+  const theme = useTheme();
+  const setHeaderContent = useLayoutStore((state) => state.setHeaderContent);
+  const { tokens } = useAuthStore();
+  const workspaceId = tokens?.workspace_id;
+
+  // Tab state
+  const [activeTab, setActiveTab] = useState(0);
+
+  // Filter states
+  const [selectedSource, setSelectedSource] = useState<SourceType>('all');
+  const [selectedType, setSelectedType] = useState<SyncType>('all');
+
+  // Pagination state
+  const [messagesPage, setMessagesPage] = useState(1);
+  const [syncHistoryPage, setSyncHistoryPage] = useState(1);
+  const messagesPageSize = 5;
+  const syncHistoryPageSize = 10;
+
+  // Data state
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [messagesTotal, setMessagesTotal] = useState(0);
+  const [messagesTotalPages, setMessagesTotalPages] = useState(1);
+  
+  const [syncHistory, setSyncHistory] = useState<SyncHistoryItem[]>([]);
+  const [syncHistoryTotal, setSyncHistoryTotal] = useState(0);
+  const [syncHistoryTotalPages, setSyncHistoryTotalPages] = useState(1);
+
+  // Loading states
+  const [loadingMessages, setLoadingMessages] = useState(false);
+  const [loadingSyncHistory, setLoadingSyncHistory] = useState(false);
+  const [syncingAll, setSyncingAll] = useState(false);
+  const [syncingThemes, setSyncingThemes] = useState(false);
+
+  // Error state
+  const [error, setError] = useState<string | null>(null);
+
+  // Snackbar state
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+
+  // Polling intervals - store refs to clean them up properly
+  const syncPollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const themePollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Drawer state
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedSyncId, setSelectedSyncId] = useState<string | null>(null);
+
+  // Cleanup function to clear polling intervals
+  const clearPollingIntervals = useCallback(() => {
+    if (syncPollingIntervalRef.current) {
+      clearInterval(syncPollingIntervalRef.current);
+      syncPollingIntervalRef.current = null;
+    }
+    if (themePollingIntervalRef.current) {
+      clearInterval(themePollingIntervalRef.current);
+      themePollingIntervalRef.current = null;
+    }
+  }, []);
+
+  // Set custom header content on mount
+  useEffect(() => {
+    setHeaderContent(
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '1rem' }} noWrap>
+          Sources
+        </Typography>
+      </Box>
+    );
+    return () => {
+      setHeaderContent(null);
+      clearPollingIntervals(); // Clean up intervals on unmount
+    };
+  }, [setHeaderContent, clearPollingIntervals]);
+
+  // Fetch messages
+  const fetchMessages = useCallback(async () => {
+    if (!workspaceId) return;
+    
+    setLoadingMessages(true);
+    setError(null);
+    
+    try {
+      const response: MessageListResponse = await sourcesService.getMessages(
+        workspaceId,
+        messagesPage,
+        messagesPageSize,
+        selectedSource !== 'all' ? selectedSource : undefined
+      );
+      
+      // Transform API response to frontend types
+      const transformedMessages: Message[] = response.messages.map((msg) => ({
+        id: msg.id,
+        title: msg.title || 'Untitled',
+        sender: msg.sender || msg.sender_email || 'Unknown',
+        sourceType: msg.source_type as Message['sourceType'],
+        preview: msg.preview || '',
+        timestamp: msg.timestamp,
+        source: msg.source as SourceType,
+      }));
+      
+      setMessages(transformedMessages);
+      setMessagesTotal(response.total);
+      setMessagesTotalPages(response.total_pages);
+    } catch (err) {
+      console.error('Error fetching messages:', err);
+      setError('Failed to load messages');
+      setMessages([]);
+    } finally {
+      setLoadingMessages(false);
+    }
+  }, [workspaceId, messagesPage, selectedSource]);
+
+  // Fetch sync history
+  const fetchSyncHistory = useCallback(async () => {
+    if (!workspaceId) return;
+    
+    setLoadingSyncHistory(true);
+    setError(null);
+    
+    try {
+      const response: SyncHistoryListResponse = await sourcesService.getSyncHistory(
+        workspaceId,
+        syncHistoryPage,
+        syncHistoryPageSize,
+        selectedSource !== 'all' ? selectedSource : undefined,
+        selectedType !== 'all' ? selectedType : undefined
+      );
+      
+      // Transform API response to frontend types
+      const transformedHistory: SyncHistoryItem[] = response.items.map((item) => ({
+        id: item.id,
+        type: item.sync_type as 'source' | 'theme',
+        name: item.sync_type === 'source' ? (item.source_name || item.source_type || 'Unknown') : (item.theme_name || 'Unknown'),
+        sourceType: item.source_type as SourceType | undefined,
+        sourceIcons: item.theme_sources as SourceType[] | undefined,
+        status: item.status as SyncHistoryItem['status'],
+        startedAt: item.started_at,
+        processed: item.items_processed,
+        newItems: item.items_new,
+        errorMessage: item.error_message,
+      }));
+      
+      setSyncHistory(transformedHistory);
+      setSyncHistoryTotal(response.total);
+      setSyncHistoryTotalPages(response.total_pages);
+    } catch (err) {
+      console.error('Error fetching sync history:', err);
+      setError('Failed to load sync history');
+      setSyncHistory([]);
+    } finally {
+      setLoadingSyncHistory(false);
+    }
+  }, [workspaceId, syncHistoryPage, selectedSource, selectedType]);
+
+  // Fetch data based on active tab
+  useEffect(() => {
+    if (activeTab === 0) {
+      fetchMessages();
+    } else {
+      fetchSyncHistory();
+    }
+  }, [activeTab, fetchMessages, fetchSyncHistory]);
+
+  // Reset page when source filter changes
+  useEffect(() => {
+    setMessagesPage(1);
+    setSyncHistoryPage(1);
+  }, [selectedSource, selectedType]);
+
+  // Auto-refresh sync history when Celery runs scheduled syncs (every 15 min)
+  // Only poll when on Sync History tab and not manually syncing
+  useSyncHistoryPolling({
+    workspaceId: workspaceId || '',
+    enabled: activeTab === 1 && !syncingAll && !syncingThemes,
+    onNewSync: fetchSyncHistory,
+    pollingInterval: 30000, // Check every 30 seconds
+  });
+
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
+    setActiveTab(newValue);
+  };
+
+  const handleSyncTheme = async () => {
+    if (!workspaceId) return;
+
+    // Clear any existing theme polling interval
+    if (themePollingIntervalRef.current) {
+      clearInterval(themePollingIntervalRef.current);
+      themePollingIntervalRef.current = null;
+    }
+
+    setSyncingThemes(true);
+    try {
+      const response = await sourcesService.syncThemes(workspaceId);
+      setSnackbarMessage(`${response.message} - Tasks queued for background processing`);
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+
+      // Switch to Sync History tab to show progress
+      setActiveTab(1);
+
+      // Track the sync ID for polling
+      const syncId = response.sync_id;
+
+      // Poll the specific sync operation status instead of reloading entire history
+      let pollCount = 0;
+      const maxPolls = 12; // 12 polls * 5 seconds = 60 seconds max
+
+      themePollingIntervalRef.current = setInterval(async () => {
+        pollCount++;
+
+        try {
+          const syncStatus = await sourcesService.getSyncStatus(workspaceId, syncId);
+
+          // Update the specific item in sync history without full reload
+          setSyncHistory(prevHistory => {
+            const updated = prevHistory.map(item => {
+              if (item.id === syncId) {
+                return {
+                  ...item,
+                  status: syncStatus.status as SyncHistoryItem['status'],
+                  processed: syncStatus.items_processed,
+                  newItems: syncStatus.items_new,
+                  errorMessage: syncStatus.error_message,
+                };
+              }
+              return item;
+            });
+
+            // If item doesn't exist, add it to the front
+            if (!updated.some(item => item.id === syncId)) {
+              updated.unshift({
+                id: syncId,
+                type: 'theme',
+                name: syncStatus.source_name || 'Theme Sync',
+                sourceType: undefined,
+                sourceIcons: undefined,
+                status: syncStatus.status as SyncHistoryItem['status'],
+                startedAt: syncStatus.started_at || new Date().toISOString(),
+                processed: syncStatus.items_processed,
+                newItems: syncStatus.items_new,
+                errorMessage: syncStatus.error_message,
+              });
+            }
+
+            return updated;
+          });
+
+          // Stop polling if completed or failed
+          if (syncStatus.status === 'success' || syncStatus.status === 'failed') {
+            if (themePollingIntervalRef.current) {
+              clearInterval(themePollingIntervalRef.current);
+              themePollingIntervalRef.current = null;
+            }
+            setSyncingThemes(false);
+
+            if (syncStatus.status === 'success') {
+              setSnackbarMessage('Theme sync completed successfully!');
+              setSnackbarSeverity('success');
+            } else {
+              setSnackbarMessage('Theme sync failed. Check sync history for details.');
+              setSnackbarSeverity('error');
+            }
+            setSnackbarOpen(true);
+          }
+        } catch (err) {
+          console.error('Error polling sync status:', err);
+        }
+
+        // Stop after max polls
+        if (pollCount >= maxPolls) {
+          if (themePollingIntervalRef.current) {
+            clearInterval(themePollingIntervalRef.current);
+            themePollingIntervalRef.current = null;
+          }
+          setSyncingThemes(false);
+        }
+      }, 5000);
+
+    } catch (err: unknown) {
+      console.error('Error syncing themes:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to start theme sync';
+      // Check if it's a Celery not running error
+      if (errorMessage.includes('503') || errorMessage.includes('service not available')) {
+        setSnackbarMessage('Background task service not running. Please ensure Celery worker is started.');
+      } else {
+        setSnackbarMessage('Failed to start theme sync');
+      }
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      setSyncingThemes(false);
+    }
+  };
+
+  const handleSyncAllSources = async () => {
+    if (!workspaceId) return;
+
+    // Clear any existing sync polling interval
+    if (syncPollingIntervalRef.current) {
+      clearInterval(syncPollingIntervalRef.current);
+      syncPollingIntervalRef.current = null;
+    }
+
+    setSyncingAll(true);
+    try {
+      const response = await sourcesService.syncAllSources(workspaceId);
+
+      if (response.total_sources === 0) {
+        setSnackbarMessage('No connected data sources found. Please connect a data source first.');
+        setSnackbarSeverity('error');
+        setSyncingAll(false);
+      } else {
+        setSnackbarMessage(`${response.message} - Tasks queued for background processing`);
+        setSnackbarSeverity('success');
+
+        // Switch to Sync History tab to show progress
+        setActiveTab(1);
+
+        // Track all sync IDs for polling
+        const syncIds = response.sync_operations.map(op => op.sync_id);
+
+        // Poll the specific sync operations status instead of reloading entire history
+        let pollCount = 0;
+        const maxPolls = 24; // 24 polls * 5 seconds = 120 seconds max
+
+        syncPollingIntervalRef.current = setInterval(async () => {
+          pollCount++;
+
+          try {
+            // Fetch status for all sync operations
+            const statusPromises = syncIds.map(syncId =>
+              sourcesService.getSyncStatus(workspaceId, syncId).catch(() => null)
+            );
+            const statuses = await Promise.all(statusPromises);
+
+            // Update sync history with new statuses
+            setSyncHistory(prevHistory => {
+              let updated = [...prevHistory];
+
+              statuses.forEach(syncStatus => {
+                if (!syncStatus) return;
+
+                const existingIndex = updated.findIndex(item => item.id === syncStatus.sync_id);
+
+                if (existingIndex >= 0) {
+                  // Update existing item
+                  updated[existingIndex] = {
+                    ...updated[existingIndex],
+                    status: syncStatus.status as SyncHistoryItem['status'],
+                    processed: syncStatus.items_processed,
+                    newItems: syncStatus.items_new,
+                    errorMessage: syncStatus.error_message,
+                  };
+                } else {
+                  // Add new item to the front
+                  updated.unshift({
+                    id: syncStatus.sync_id,
+                    type: 'source',
+                    name: syncStatus.source_name || syncStatus.source_type || 'Source Sync',
+                    sourceType: syncStatus.source_type as SourceType | undefined,
+                    sourceIcons: undefined,
+                    status: syncStatus.status as SyncHistoryItem['status'],
+                    startedAt: syncStatus.started_at || new Date().toISOString(),
+                    processed: syncStatus.items_processed,
+                    newItems: syncStatus.items_new,
+                    errorMessage: syncStatus.error_message,
+                  });
+                }
+              });
+
+              return updated;
+            });
+
+            // Check if all syncs are completed
+            const allCompleted = statuses.every(
+              s => s && (s.status === 'success' || s.status === 'failed')
+            );
+
+            if (allCompleted) {
+              if (syncPollingIntervalRef.current) {
+                clearInterval(syncPollingIntervalRef.current);
+                syncPollingIntervalRef.current = null;
+              }
+              setSyncingAll(false);
+
+              const successCount = statuses.filter(s => s?.status === 'success').length;
+              const failedCount = statuses.filter(s => s?.status === 'failed').length;
+
+              if (failedCount === 0) {
+                setSnackbarMessage(`All ${successCount} source syncs completed successfully!`);
+                setSnackbarSeverity('success');
+              } else if (successCount === 0) {
+                setSnackbarMessage(`All ${failedCount} source syncs failed. Check sync history for details.`);
+                setSnackbarSeverity('error');
+              } else {
+                setSnackbarMessage(`${successCount} succeeded, ${failedCount} failed. Check sync history for details.`);
+                setSnackbarSeverity('error');
+              }
+              setSnackbarOpen(true);
+            }
+          } catch (err) {
+            console.error('Error polling sync statuses:', err);
+          }
+
+          // Stop after max polls
+          if (pollCount >= maxPolls) {
+            if (syncPollingIntervalRef.current) {
+              clearInterval(syncPollingIntervalRef.current);
+              syncPollingIntervalRef.current = null;
+            }
+            setSyncingAll(false);
+          }
+        }, 5000);
+      }
+
+      setSnackbarOpen(true);
+
+    } catch (err: unknown) {
+      console.error('Error syncing sources:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to start source sync';
+      // Check if it's a Celery not running error
+      if (errorMessage.includes('503') || errorMessage.includes('service not available')) {
+        setSnackbarMessage('Background task service not running. Please ensure Celery worker is started.');
+      } else {
+        setSnackbarMessage('Failed to start source sync');
+      }
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      setSyncingAll(false);
+    }
+  };
+
+  const handleMessagesPageChange = (_: React.ChangeEvent<unknown>, page: number) => {
+    setMessagesPage(page);
+  };
+
+  const handleSyncHistoryPageChange = (_: React.ChangeEvent<unknown>, page: number) => {
+    setSyncHistoryPage(page);
+  };
+
+  const handleSyncRowClick = (item: SyncHistoryItem) => {
+    setSelectedSyncId(item.id);
+    setDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
+    setSelectedSyncId(null);
+  };
+
+  return (
+    <AdminLayout>
+      <Box
+        sx={{
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Header with Tabs and Actions */}
+        <Box
+          sx={{
+            px: 2.5,
+            pt: 1.5,
+            pb: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderBottom: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+          }}
+        >
+          {/* Tabs */}
+          <Tabs
+            value={activeTab}
+            onChange={handleTabChange}
+            sx={{
+              minHeight: 40,
+              '& .MuiTabs-indicator': {
+                height: 2,
+                borderRadius: '2px 2px 0 0',
+              },
+            }}
+          >
+            <Tab
+              icon={<MessagesIcon sx={{ fontSize: 16 }} />}
+              iconPosition="start"
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                  <span>All Messages</span>
+                  <Chip
+                    label={messagesTotal}
+                    size="small"
+                    sx={{
+                      height: 18,
+                      fontSize: '0.7rem',
+                      fontWeight: 600,
+                      bgcolor: alpha(theme.palette.primary.main, 0.1),
+                      color: theme.palette.primary.main,
+                      '& .MuiChip-label': { px: 0.75 },
+                    }}
+                  />
+                </Box>
+              }
+              sx={{
+                textTransform: 'none',
+                fontWeight: 500,
+                fontSize: '0.8rem',
+                minHeight: 40,
+                py: 1,
+                px: 1.5,
+                minWidth: 'auto',
+                gap: 0.5,
+              }}
+            />
+            <Tab
+              icon={<HistoryIcon sx={{ fontSize: 16 }} />}
+              iconPosition="start"
+              label="Sync History"
+              sx={{
+                textTransform: 'none',
+                fontWeight: 500,
+                fontSize: '0.8rem',
+                minHeight: 40,
+                py: 1,
+                px: 1.5,
+                minWidth: 'auto',
+                gap: 0.5,
+              }}
+            />
+          </Tabs>
+
+          {/* Action Buttons */}
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={syncingThemes ? <CircularProgress size={14} /> : <ThemeSyncIcon sx={{ fontSize: 16 }} />}
+              onClick={handleSyncTheme}
+              disabled={syncingThemes || !workspaceId}
+              sx={{
+                textTransform: 'none',
+                fontWeight: 500,
+                fontSize: '0.8rem',
+                borderRadius: 1.5,
+                px: 1.5,
+                py: 0.5,
+                borderColor: alpha(theme.palette.divider, 0.3),
+                color: theme.palette.text.primary,
+                '&:hover': {
+                  borderColor: theme.palette.primary.main,
+                  bgcolor: alpha(theme.palette.primary.main, 0.04),
+                },
+              }}
+            >
+              {syncingThemes ? 'Syncing...' : 'Sync Theme'}
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              startIcon={syncingAll ? <CircularProgress size={14} color="inherit" /> : <MessagesIcon sx={{ fontSize: 16 }} />}
+              onClick={handleSyncAllSources}
+              disabled={syncingAll || !workspaceId}
+              sx={{
+                textTransform: 'none',
+                fontWeight: 500,
+                fontSize: '0.8rem',
+                borderRadius: 1.5,
+                px: 1.5,
+                py: 0.5,
+                boxShadow: 'none',
+                '&:hover': {
+                  boxShadow: 'none',
+                },
+              }}
+            >
+              {syncingAll ? 'Syncing...' : 'Sync All Sources'}
+            </Button>
+          </Box>
+        </Box>
+
+        {/* Filters */}
+        <Box
+          sx={{
+            px: 2.5,
+            py: 1.25,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            bgcolor: alpha(theme.palette.background.default, 0.5),
+          }}
+        >
+          <SourceFilters
+            selectedSource={selectedSource}
+            onSourceChange={setSelectedSource}
+          />
+
+          {activeTab === 1 && (
+            <TypeFilters
+              selectedType={selectedType}
+              onTypeChange={setSelectedType}
+            />
+          )}
+        </Box>
+
+        {/* Error Alert */}
+        {error && (
+          <Alert severity="error" sx={{ mx: 2.5, mt: 1.5 }} onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
+
+        {/* Content Area */}
+        <Box
+          sx={{
+            flex: 1,
+            overflow: 'auto',
+            bgcolor: theme.palette.background.default,
+          }}
+        >
+          <Paper
+            elevation={0}
+            sx={{
+              mx: 2.5,
+              my: 1.5,
+              borderRadius: 2,
+              border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+              bgcolor: theme.palette.background.paper,
+              overflow: 'hidden',
+            }}
+          >
+            {activeTab === 0 ? (
+              loadingMessages ? (
+                <Box sx={{ py: 6, textAlign: 'center' }}>
+                  <CircularProgress size={24} />
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                    Loading messages...
+                  </Typography>
+                </Box>
+              ) : (
+                <MessageList messages={messages} />
+              )
+            ) : (
+              loadingSyncHistory ? (
+                <Box sx={{ py: 6, textAlign: 'center' }}>
+                  <CircularProgress size={24} />
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                    Loading sync history...
+                  </Typography>
+                </Box>
+              ) : (
+                <SyncHistoryTable items={syncHistory} onRowClick={handleSyncRowClick} />
+              )
+            )}
+          </Paper>
+
+          {/* Pagination */}
+          {activeTab === 0 && messagesTotalPages > 1 && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', pb: 2 }}>
+              <Pagination
+                count={messagesTotalPages}
+                page={messagesPage}
+                onChange={handleMessagesPageChange}
+                size="small"
+                color="primary"
+              />
+            </Box>
+          )}
+          {activeTab === 1 && syncHistoryTotalPages > 1 && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', pb: 2 }}>
+              <Pagination
+                count={syncHistoryTotalPages}
+                page={syncHistoryPage}
+                onChange={handleSyncHistoryPageChange}
+                size="small"
+                color="primary"
+              />
+            </Box>
+          )}
+        </Box>
+
+        {/* Snackbar for notifications */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={4000}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+          <Alert
+            onClose={() => setSnackbarOpen(false)}
+            severity={snackbarSeverity}
+            sx={{ width: '100%' }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </Box>
+
+      {/* Sync Details Drawer */}
+      {workspaceId && (
+        <SyncDetailsDrawer
+          open={drawerOpen}
+          onClose={handleDrawerClose}
+          syncId={selectedSyncId}
+          workspaceId={workspaceId}
+        />
+      )}
+    </AdminLayout>
+  );
+}
+
+export default SourcesPage;

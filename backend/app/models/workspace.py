@@ -41,6 +41,7 @@ class Workspace(Base):
     gmail_accounts = relationship("GmailAccounts", back_populates="workspace", cascade="all, delete-orphan")
     gmail_threads = relationship("GmailThread", back_populates="workspace", cascade="all, delete-orphan")
     competitors = relationship("Competitor", back_populates="workspace", cascade="all, delete-orphan")
+    sync_history = relationship("SyncHistory", back_populates="workspace", cascade="all, delete-orphan")
     
     def __repr__(self) -> str:
         return f"<Workspace(id={self.id}, name='{self.name}', slug='{self.slug}')>"

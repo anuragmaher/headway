@@ -1,11 +1,14 @@
 /**
  * Connect Data Sources Banner Component
  * Shows an eye-catching banner when user hasn't connected any data sources
+ * Banner persists until data sources are connected - dismiss only hides for current session
  */
 
 import { Box, Typography, Button, alpha, useTheme, IconButton } from '@mui/material';
 import { CloudSync as CloudSyncIcon, Close as CloseIcon } from '@mui/icons-material';
 import { useState } from 'react';
+
+const BANNER_DISMISSED_KEY = 'headway-datasource-banner-dismissed';
 
 interface ConnectDataSourcesBannerProps {
   onConnectClick: () => void;
@@ -15,7 +18,15 @@ export function ConnectDataSourcesBanner({
   onConnectClick,
 }: ConnectDataSourcesBannerProps): JSX.Element | null {
   const theme = useTheme();
-  const [isDismissed, setIsDismissed] = useState(false);
+  // Use sessionStorage so banner comes back after browser restart
+  const [isDismissed, setIsDismissed] = useState(() => {
+    return sessionStorage.getItem(BANNER_DISMISSED_KEY) === 'true';
+  });
+
+  const handleDismiss = () => {
+    sessionStorage.setItem(BANNER_DISMISSED_KEY, 'true');
+    setIsDismissed(true);
+  };
 
   if (isDismissed) return null;
 
@@ -99,7 +110,7 @@ export function ConnectDataSourcesBanner({
       >
         {/* Close Button */}
         <IconButton
-          onClick={() => setIsDismissed(true)}
+          onClick={handleDismiss}
           size="small"
           sx={{
             position: 'absolute',

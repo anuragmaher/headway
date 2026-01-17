@@ -560,7 +560,7 @@ async def ingest_gong_calls(
     extract_features: bool = True,
     access_key: Optional[str] = None,
     secret_key: Optional[str] = None
-) -> int:
+) -> Dict[str, int]:
     """
     Ingest calls from Gong for a specific workspace
 
@@ -574,7 +574,7 @@ async def ingest_gong_calls(
         secret_key: Gong API secret key (optional, uses connector if not provided)
 
     Returns:
-        Number of calls ingested
+        Dictionary with 'total_checked' and 'new_added' counts
     """
     try:
         # Get database session
@@ -585,7 +585,7 @@ async def ingest_gong_calls(
             workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
             if not workspace:
                 logger.error(f"Workspace {workspace_id} not found")
-                return 0
+                return {"total_checked": 0, "new_added": 0}
 
             # Use provided credentials or get from workspace connector
             if not access_key or not secret_key:
@@ -595,7 +595,7 @@ async def ingest_gong_calls(
                 if not gong_connector:
                     logger.error(f"Gong connector not configured for workspace {workspace_id}")
                     logger.error("Please configure Gong credentials in workspace settings")
-                    return 0
+                    return {"total_checked": 0, "new_added": 0}
 
                 # Extract credentials from JSONB
                 credentials = gong_connector.credentials or {}
@@ -604,7 +604,7 @@ async def ingest_gong_calls(
 
             if not access_key or not secret_key:
                 logger.error(f"Gong credentials incomplete for workspace {workspace_id}")
-                return 0
+                return {"total_checked": 0, "new_added": 0}
 
             base_url = os.getenv('GONG_API_BASE_URL', 'https://api.gong.io')
 
@@ -672,7 +672,7 @@ async def ingest_gong_calls(
 
             if not calls:
                 logger.warning("No calls found in the specified date range")
-                return 0
+                return {"total_checked": 0, "new_added": 0}
 
             # Initialize transcript ingestion service
             transcript_service = get_transcript_ingestion_service(db)
@@ -843,9 +843,11 @@ async def ingest_gong_calls(
                     db.rollback()  # Rollback on error to keep connection healthy
                     continue
 
+            # Calculate total calls checked
+            total_checked = len(calls)
+
             # Log final summary
-            if ingested_count > 0:
-                logger.info(f"Successfully ingested {ingested_count} calls to database")
+            logger.info(f"Checked {total_checked} calls, added {ingested_count} new to database")
 
             if skipped_count > 0:
                 logger.info(f"Skipped {skipped_count} calls that were already ingested")
@@ -856,7 +858,7 @@ async def ingest_gong_calls(
             integration.sync_error = None
             db.commit()
 
-            return ingested_count
+            return {"total_checked": total_checked, "new_added": ingested_count}
 
         finally:
             db.close()
@@ -865,7 +867,7 @@ async def ingest_gong_calls(
         logger.error(f"Error in ingest_gong_calls: {e}")
         import traceback
         traceback.print_exc()
-        return 0
+        return {"total_checked": 0, "new_added": 0}
 
 
 async def main():

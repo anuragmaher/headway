@@ -19,17 +19,17 @@ class MessageIngestionService:
     def __init__(self):
         self.user_cache: Dict[str, Dict[str, Any]] = {}  # Cache user info to avoid repeated API calls
     
-    async def ingest_slack_messages(self, integration_id: str, db: Session, hours_back: int = 24) -> int:
+    async def ingest_slack_messages(self, integration_id: str, db: Session, hours_back: int = 24) -> Dict[str, int]:
         """
         Ingest messages from a Slack integration
-        
+
         Args:
             integration_id: Integration ID to ingest messages for
             db: Database session
             hours_back: How many hours back to fetch messages (default: 24)
-            
+
         Returns:
-            Number of messages ingested
+            Dictionary with 'total_checked' and 'new_added' counts
         """
         try:
             # Get the integration
@@ -43,31 +43,32 @@ class MessageIngestionService:
             
             if not integration:
                 logger.error(f"Integration {integration_id} not found or not active")
-                return 0
-            
+                return {"total_checked": 0, "new_added": 0}
+
             if not integration.access_token:
                 logger.error(f"No access token for integration {integration_id}")
-                return 0
-            
+                return {"total_checked": 0, "new_added": 0}
+
             # Get selected channels from metadata
             selected_channels = integration.provider_metadata.get("selected_channels", [])
             if not selected_channels:
                 logger.warning(f"No channels selected for integration {integration_id}")
-                return 0
-            
+                return {"total_checked": 0, "new_added": 0}
+
             # Calculate oldest timestamp (24 hours ago by default)
             oldest_time = datetime.utcnow() - timedelta(hours=hours_back)
             oldest_timestamp = str(oldest_time.timestamp())
-            
-            total_ingested = 0
-            
+
+            total_checked = 0
+            total_new = 0
+
             # Process each selected channel
             for channel_info in selected_channels:
                 channel_id = channel_info["id"]
                 channel_name = channel_info["name"]
-                
+
                 logger.info(f"Ingesting messages from channel #{channel_name} ({channel_id})")
-                
+
                 try:
                     # Fetch messages from Slack (without timestamp filter for now)
                     messages = await slack_service.get_channel_messages(
@@ -76,32 +77,35 @@ class MessageIngestionService:
                         limit=100  # Start with recent 100 messages
                         # oldest=oldest_timestamp  # Commented out due to system clock issue
                     )
-                    
+
+                    # Track total messages checked
+                    total_checked += len(messages)
+
                     # Process and store messages
-                    channel_ingested = await self._process_slack_messages(
+                    channel_new = await self._process_slack_messages(
                         messages=messages,
                         integration=integration,
                         channel_id=channel_id,
                         channel_name=channel_name,
                         db=db
                     )
-                    
-                    total_ingested += channel_ingested
-                    logger.info(f"Ingested {channel_ingested} messages from #{channel_name}")
-                    
+
+                    total_new += channel_new
+                    logger.info(f"Checked {len(messages)} messages, added {channel_new} new from #{channel_name}")
+
                 except Exception as e:
                     logger.error(f"Error ingesting messages from channel #{channel_name}: {e}")
                     continue
-            
+
             # Update integration sync status
             integration.last_synced_at = datetime.utcnow()
             integration.sync_status = "success"
             integration.sync_error = None
             db.commit()
-            
-            logger.info(f"Total messages ingested for integration {integration_id}: {total_ingested}")
-            return total_ingested
-            
+
+            logger.info(f"Total for integration {integration_id}: checked {total_checked}, added {total_new}")
+            return {"total_checked": total_checked, "new_added": total_new}
+
         except Exception as e:
             logger.error(f"Error in ingest_slack_messages for integration {integration_id}: {e}")
             # Update integration with error status
@@ -109,7 +113,7 @@ class MessageIngestionService:
                 integration.sync_status = "error"
                 integration.sync_error = str(e)
                 db.commit()
-            return 0
+            return {"total_checked": 0, "new_added": 0}
     
     async def _process_slack_messages(
         self, 

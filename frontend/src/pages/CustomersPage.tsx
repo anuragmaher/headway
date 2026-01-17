@@ -116,7 +116,7 @@ export function CustomersPage(): JSX.Element {
             display: 'flex',
             flexDirection: { xs: 'column', md: 'row' },
             gap: { xs: 0, md: 3 },
-            height: { xs: 'calc(100vh - 80px)', md: 'calc(100vh - 120px)' },
+            height: '100%',
             overflow: 'hidden',
           }}
         >

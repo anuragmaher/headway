@@ -20,6 +20,9 @@ export const ROUTES = {
   SETTINGS_INTEGRATIONS: '/app/settings/integrations',
   SETTINGS_TEAM: '/app/settings/team',
 
+  // Sources routes
+  SOURCES: '/app/sources',
+
   // Theme routes
   THEMES: '/app/themes',
   THEME_DETAIL: '/app/themes/:id',
@@ -50,6 +53,7 @@ export const PUBLIC_ROUTES = [
 
 export const PROTECTED_ROUTES = [
   ROUTES.DASHBOARD,
+  ROUTES.SOURCES,
   ROUTES.SETTINGS,
   ROUTES.SETTINGS_PROFILE,
   ROUTES.SETTINGS_WORKSPACE,

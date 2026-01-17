@@ -17,6 +17,7 @@ import { CustomersPage } from '@/pages/CustomersPage';
 import CustomersChatPage from '@/pages/CustomersChatPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { ExecutiveInsightsPage } from '@/pages/ExecutiveInsightsPage';
+import { SourcesPage } from '@/pages/SourcesPage';
 import { GmailCallbackPage } from '@/pages/GmailCallbackPage';
 
 export function AppRouter(): JSX.Element {
@@ -57,6 +58,15 @@ export function AppRouter(): JSX.Element {
           element={
             <ProtectedRoute>
               <ExecutiveInsightsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.SOURCES}
+          element={
+            <ProtectedRoute>
+              <SourcesPage />
             </ProtectedRoute>
           }
         />

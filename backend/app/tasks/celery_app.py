@@ -18,12 +18,26 @@ celery_app = Celery(
     broker=settings.REDIS_URL,
     backend=settings.REDIS_URL,
     include=[
-        "app.sync_engine.sync_tasks"  # Use sync_engine instead of old ingestion_tasks
+        # Import all task modules for Celery to discover
+        "app.sync_engine.tasks.periodic.health",
+        "app.sync_engine.tasks.periodic.slack",
+        "app.sync_engine.tasks.periodic.gmail",
+        "app.sync_engine.tasks.periodic.gong",
+        "app.sync_engine.tasks.periodic.fathom",
+        "app.sync_engine.tasks.ondemand.gmail",
+        "app.sync_engine.tasks.ondemand.slack",
+        "app.sync_engine.tasks.ondemand.gong",
+        "app.sync_engine.tasks.ondemand.fathom",
+        "app.sync_engine.tasks.ondemand.themes",
     ]
 )
 
 # Auto-discover tasks from sync_engine
-celery_app.autodiscover_tasks(['app.sync_engine'], force=True)
+celery_app.autodiscover_tasks([
+    'app.sync_engine.tasks',
+    'app.sync_engine.tasks.periodic',
+    'app.sync_engine.tasks.ondemand',
+], force=True)
 
 # Configure Celery
 celery_config = {
@@ -46,48 +60,39 @@ celery_app.conf.update(**celery_config)
 
 # Configure periodic tasks (Celery Beat schedule)
 # All tasks check for active connections before syncing
+# Note: Using default queue for all tasks to avoid queue configuration issues
 celery_app.conf.beat_schedule = {
-    # Slack sync every 15 minutes (starts at :00)
+    # Health check every 5 minutes
+    "health-check": {
+        "task": "app.sync_engine.sync_tasks.health_check",
+        "schedule": schedule(run_every=300),  # 300 seconds = 5 minutes
+    },
+    # Slack sync every 1 minute for testing, then increase to 15 minutes
     "sync-slack-messages": {
         "task": "app.sync_engine.sync_tasks.sync_slack_periodic",
         "schedule": schedule(run_every=900),  # 900 seconds = 15 minutes
-        "options": {
-            "queue": "ingestion",
-            "priority": 10
-        }
     },
-    # Gong sync every 15 minutes (staggered by 20 seconds)
+    # Gong sync every 15 minutes (staggered by 5 minutes)
     "sync-gong-calls": {
         "task": "app.sync_engine.sync_tasks.sync_gong_periodic",
         "schedule": schedule(run_every=920),  # 920 seconds = 15m 20s (staggered)
-        "options": {
-            "queue": "ingestion",
-            "priority": 10
-        }
     },
-    # Fathom sync every 15 minutes (staggered by 40 seconds)
+    # Fathom sync every 15 minutes (staggered by 10 minutes)
     "sync-fathom-sessions": {
         "task": "app.sync_engine.sync_tasks.sync_fathom_periodic",
         "schedule": schedule(run_every=940),  # 940 seconds = 15m 40s (staggered)
-        "options": {
-            "queue": "ingestion",
-            "priority": 10
-        }
     },
-    # Gmail sync every 15 minutes (staggered by 60 seconds)
+    # Gmail sync every 15 minutes (staggered by 15 minutes)
     "sync-gmail-threads": {
         "task": "app.sync_engine.sync_tasks.sync_gmail_periodic",
         "schedule": schedule(run_every=960),  # 960 seconds = 16 minutes (staggered)
-        "options": {
-            "queue": "ingestion",
-            "priority": 10
-        }
     },
 }
 
 logger.info(f"Celery app initialized with broker: {settings.REDIS_URL}")
 logger.info("Sync Engine - Scheduled tasks configured:")
+logger.info("  - Health check: every 5 minutes")
 logger.info("  - Slack sync: every 15 minutes (only active integrations)")
 logger.info("  - Gong sync: every 15 minutes (only active connectors)")
 logger.info("  - Fathom sync: every 15 minutes (only active connectors)")
-logger.info("  - Gmail sync: every 15 minutes (only active accounts)")
+logger.info("  - Gmail sync: every 15 minutes (only active accounts, with AI extraction)")
