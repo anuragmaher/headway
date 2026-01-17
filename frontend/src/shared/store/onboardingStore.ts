@@ -22,6 +22,7 @@ interface OnboardingState {
   hasChecked: boolean;
   isOnboardingComplete: boolean;
   onboardingStatus: OnboardingStatus;
+  currentWorkspaceId: string | null; // Track current workspace for localStorage keys
   
   // Actions
   checkOnboardingStatus: (workspaceId: string, accessToken: string) => Promise<void>;
@@ -34,8 +35,12 @@ interface OnboardingState {
   showOnboardingDialog: boolean;
 }
 
-const ONBOARDING_DISMISSED_KEY = 'headway-onboarding-dismissed';
-const ONBOARDING_COMPLETE_KEY = 'headway-onboarding-complete';
+// Use workspace-specific keys to support multiple workspaces
+const getOnboardingDismissedKey = (workspaceId: string) => `headway-onboarding-dismissed-${workspaceId}`;
+const getOnboardingCompleteKey = (workspaceId: string) => `headway-onboarding-complete-${workspaceId}`;
+// Legacy keys (for backwards compat - we'll migrate away from these)
+const LEGACY_ONBOARDING_DISMISSED_KEY = 'headway-onboarding-dismissed';
+const LEGACY_ONBOARDING_COMPLETE_KEY = 'headway-onboarding-complete';
 
 export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   // Initial state
@@ -43,6 +48,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   hasChecked: false,
   isOnboardingComplete: false,
   showOnboardingDialog: false,
+  currentWorkspaceId: null,
   onboardingStatus: {
     companyDetails: false,
     dataSources: false,
@@ -58,19 +64,23 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       return;
     }
 
-    // Skip if already checked
+    // Skip if already checked for THIS workspace
     if (currentState.hasChecked) {
       console.log('[Onboarding] Already checked, skipping...');
       return;
     }
 
-    // Early exit: Check if onboarding was dismissed or completed (stored in localStorage)
+    // Clear legacy keys on first check (migration)
+    localStorage.removeItem(LEGACY_ONBOARDING_DISMISSED_KEY);
+    localStorage.removeItem(LEGACY_ONBOARDING_COMPLETE_KEY);
+
+    // Early exit: Check if onboarding was dismissed or completed for THIS workspace
     // This prevents unnecessary API calls when navigating between pages
-    const wasDismissed = localStorage.getItem(ONBOARDING_DISMISSED_KEY) === 'true';
-    const wasCompleted = localStorage.getItem(ONBOARDING_COMPLETE_KEY) === 'true';
+    const wasDismissed = localStorage.getItem(getOnboardingDismissedKey(workspaceId)) === 'true';
+    const wasCompleted = localStorage.getItem(getOnboardingCompleteKey(workspaceId)) === 'true';
     
     if (wasDismissed || wasCompleted) {
-      console.log('[Onboarding] Onboarding already dismissed or completed, skipping API calls');
+      console.log('[Onboarding] Onboarding already dismissed or completed for workspace:', workspaceId);
       set({
         hasChecked: true,
         isOnboardingComplete: wasCompleted,
@@ -87,7 +97,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
     console.log('[Onboarding] Starting onboarding status check...');
     console.log('[Onboarding] Workspace ID:', workspaceId);
     
-    set({ isChecking: true });
+    set({ isChecking: true, currentWorkspaceId: workspaceId });
 
     try {
       // Run all checks in parallel for better performance
@@ -111,14 +121,15 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
 
       const isComplete = companyDetailsResult && dataSourcesResult && themesResult;
       
-      // Check if user previously dismissed the onboarding dialog
-      const wasDismissed = localStorage.getItem(ONBOARDING_DISMISSED_KEY) === 'true';
+      // Check if user previously dismissed the onboarding dialog for THIS workspace
+      const dismissedKey = getOnboardingDismissedKey(workspaceId);
+      const wasDismissed = localStorage.getItem(dismissedKey) === 'true';
       console.log('[Onboarding] Was dismissed:', wasDismissed);
       console.log('[Onboarding] Is complete:', isComplete);
 
       // Store completion status in localStorage to avoid future API calls
       if (isComplete) {
-        localStorage.setItem(ONBOARDING_COMPLETE_KEY, 'true');
+        localStorage.setItem(getOnboardingCompleteKey(workspaceId), 'true');
       }
 
       // Determine if we should show the dialog
@@ -151,12 +162,19 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
 
   resetOnboarding: () => {
     console.log('[Onboarding] Resetting onboarding state');
-    localStorage.removeItem(ONBOARDING_DISMISSED_KEY);
-    localStorage.removeItem(ONBOARDING_COMPLETE_KEY);
+    const workspaceId = get().currentWorkspaceId;
+    if (workspaceId) {
+      localStorage.removeItem(getOnboardingDismissedKey(workspaceId));
+      localStorage.removeItem(getOnboardingCompleteKey(workspaceId));
+    }
+    // Also clear legacy keys
+    localStorage.removeItem(LEGACY_ONBOARDING_DISMISSED_KEY);
+    localStorage.removeItem(LEGACY_ONBOARDING_COMPLETE_KEY);
     set({
       hasChecked: false,
       isOnboardingComplete: false,
       showOnboardingDialog: false,
+      currentWorkspaceId: null,
       onboardingStatus: {
         companyDetails: false,
         dataSources: false,
@@ -174,15 +192,21 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   },
 
   dismissOnboarding: () => {
-    console.log('[Onboarding] Dismissing onboarding dialog');
-    localStorage.setItem(ONBOARDING_DISMISSED_KEY, 'true');
+    const workspaceId = get().currentWorkspaceId;
+    console.log('[Onboarding] Dismissing onboarding dialog for workspace:', workspaceId);
+    if (workspaceId) {
+      localStorage.setItem(getOnboardingDismissedKey(workspaceId), 'true');
+    }
     set({ showOnboardingDialog: false });
   },
 
   completeOnboarding: () => {
-    console.log('[Onboarding] Completing onboarding');
+    const workspaceId = get().currentWorkspaceId;
+    console.log('[Onboarding] Completing onboarding for workspace:', workspaceId);
     // Store completion in localStorage to prevent future API calls
-    localStorage.setItem(ONBOARDING_COMPLETE_KEY, 'true');
+    if (workspaceId) {
+      localStorage.setItem(getOnboardingCompleteKey(workspaceId), 'true');
+    }
     // Don't set dismissed flag - the user completed everything
     // Just close the dialog and mark as complete
     set({ 

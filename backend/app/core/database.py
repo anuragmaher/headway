@@ -4,19 +4,21 @@ from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
 
 # Create SQLAlchemy engine for native PostgreSQL connection
-# Optimized for Railway PostgreSQL with connection pooling
+# Optimized for Supabase PostgreSQL with connection pooling
 engine = create_engine(
     settings.DATABASE_URL,
-    pool_pre_ping=True,  # Test connections before using
-    pool_recycle=3600,  # Recycle connections every hour (Railway Postgres is stable)
-    pool_size=10,  # Increase pool size for better concurrency
-    max_overflow=20,  # Allow more overflow connections
+    pool_pre_ping=True,  # Test connections before using - helps detect stale connections
+    pool_recycle=1800,  # Recycle connections every 30 minutes (Supabase may close idle connections)
+    pool_size=5,  # Smaller pool size to avoid connection limits
+    max_overflow=10,  # Allow overflow connections
+    pool_timeout=30,  # Wait up to 30s for a connection from pool
     connect_args={
-        'connect_timeout': 10,  # Reduced timeout for faster failure detection
+        'connect_timeout': 30,  # Increased timeout for Supabase (can be slow to wake up)
         'keepalives': 1,  # Enable TCP keepalives
         'keepalives_idle': 30,  # Start keepalives after 30s of idle
         'keepalives_interval': 10,  # Send keepalive every 10s
         'keepalives_count': 5,  # Retry 5 times before giving up
+        'options': '-c statement_timeout=60000',  # 60s statement timeout
     },
     echo=False,  # Set to True for SQL debugging
 )

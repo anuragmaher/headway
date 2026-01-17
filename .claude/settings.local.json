@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python:*)",
+      "Bash(ls:*)",
+      "Bash(.venv/Scripts/python.exe:*)",
+      "Bash(d:/HeadwayHQ/headway/backend/.venv/Scripts/python.exe -c:*)",
+      "Bash(/d/HeadwayHQ/headway/backend/.venv/Scripts/python.exe -c:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)"
+    ]
+  }
+}

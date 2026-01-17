@@ -158,7 +158,7 @@ async def ingest_fathom_sessions(
     min_duration_seconds: int = 0,
     extract_features: bool = True,
     api_token: Optional[str] = None
-) -> int:
+) -> Dict[str, int]:
     """
     Ingest sessions from Fathom for a specific workspace
 
@@ -172,7 +172,7 @@ async def ingest_fathom_sessions(
         api_token: Fathom API token (optional, uses connector if not provided)
 
     Returns:
-        Number of sessions ingested
+        Dictionary with 'total_checked' and 'new_added' counts
     """
     try:
         # Get database session
@@ -182,7 +182,7 @@ async def ingest_fathom_sessions(
         workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
         if not workspace:
             logger.error(f"Workspace {workspace_id} not found")
-            return 0
+            return {"total_checked": 0, "new_added": 0}
 
         # Use provided credentials or get from workspace connector
         if not api_token:
@@ -192,7 +192,7 @@ async def ingest_fathom_sessions(
             if not fathom_connector:
                 logger.error(f"Fathom connector not configured for workspace {workspace_id}")
                 logger.error("Please configure Fathom credentials in workspace settings")
-                return 0
+                return {"total_checked": 0, "new_added": 0}
 
             # Extract credentials from JSONB
             credentials = fathom_connector.credentials or {}
@@ -202,14 +202,14 @@ async def ingest_fathom_sessions(
 
         if not api_token:
             logger.error(f"Fathom API token not configured for workspace {workspace_id}")
-            return 0
+            return {"total_checked": 0, "new_added": 0}
 
         if not fathom_project_id:
             # Try to get from settings as fallback
             fathom_project_id = settings.FATHOM_PROJECT_ID or os.getenv('FATHOM_PROJECT_ID')
             if not fathom_project_id:
                 logger.error("Fathom project ID not found. Please provide --project-id or set FATHOM_PROJECT_ID")
-                return 0
+                return {"total_checked": 0, "new_added": 0}
 
         logger.info(f"Using Fathom credentials from workspace connector")
 
@@ -262,7 +262,7 @@ async def ingest_fathom_sessions(
 
             if not sessions:
                 logger.warning("No sessions found in the specified date range")
-                return 0
+                return {"total_checked": 0, "new_added": 0}
 
             # Initialize transcript ingestion service
             transcript_service = get_transcript_ingestion_service(db)
@@ -401,9 +401,11 @@ async def ingest_fathom_sessions(
                     db.rollback()  # Rollback on error to keep connection healthy
                     continue
 
+            # Calculate total sessions checked
+            total_checked = len(sessions)
+
             # Log final summary
-            if ingested_count > 0:
-                logger.info(f"Successfully ingested {ingested_count} sessions to database")
+            logger.info(f"Checked {total_checked} sessions, added {ingested_count} new to database")
 
             if skipped_count > 0:
                 logger.info(f"Skipped {skipped_count} sessions that were already ingested")
@@ -414,7 +416,7 @@ async def ingest_fathom_sessions(
             integration.sync_error = None
             db.commit()
 
-            return ingested_count
+            return {"total_checked": total_checked, "new_added": ingested_count}
 
         finally:
             db.close()
@@ -423,7 +425,7 @@ async def ingest_fathom_sessions(
         logger.error(f"Error in ingest_fathom_sessions: {e}")
         import traceback
         traceback.print_exc()
-        return 0
+        return {"total_checked": 0, "new_added": 0}
 
 
 async def main():

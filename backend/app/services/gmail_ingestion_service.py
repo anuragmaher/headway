@@ -47,7 +47,7 @@ class GmailIngestionService:
             
             if not gmail_account:
                 logger.error(f"Gmail account {gmail_account_id} not found")
-                return {"status": "error", "error": "Gmail account not found", "count": 0}
+                return {"status": "error", "error": "Gmail account not found", "count": 0, "total_checked": 0, "new_added": 0}
             
             # Update sync status
             gmail_account.sync_status = "syncing"
@@ -64,47 +64,51 @@ class GmailIngestionService:
                 gmail_account.sync_status = "success"
                 gmail_account.last_synced_at = datetime.now(timezone.utc)
                 db.commit()
-                return {"status": "success", "count": 0, "message": "No labels selected"}
+                return {"status": "success", "count": 0, "total_checked": 0, "new_added": 0, "message": "No labels selected"}
             
             # Get Gmail client
             gmail_client = get_gmail_client(gmail_account, db)
-            
-            total_ingested = 0
+
+            total_checked = 0
+            total_new = 0
             errors = []
-            
+
             # Process each label
             for label in labels:
                 try:
                     logger.info(f"Fetching threads from label: {label.label_name} ({label.label_id})")
-                    
-                    ingested = self._fetch_threads_from_label(
+
+                    result = self._fetch_threads_from_label(
                         gmail_client=gmail_client,
                         gmail_account=gmail_account,
                         label=label,
                         db=db,
                         max_threads=max_threads
                     )
-                    
-                    total_ingested += ingested
-                    logger.info(f"Ingested {ingested} threads from label {label.label_name}")
-                    
+
+                    total_checked += result.get("total_checked", 0)
+                    total_new += result.get("new_added", 0)
+                    logger.info(f"Checked {result.get('total_checked', 0)} threads, added {result.get('new_added', 0)} new from label {label.label_name}")
+
                 except Exception as e:
                     error_msg = f"Error fetching threads from label {label.label_name}: {str(e)}"
                     logger.error(error_msg)
                     errors.append(error_msg)
                     continue
-            
+
             # Update sync status
             gmail_account.sync_status = "success" if not errors else "partial"
             gmail_account.sync_error = "; ".join(errors) if errors else None
             gmail_account.last_synced_at = datetime.now(timezone.utc)
             db.commit()
-            
-            logger.info(f"Gmail ingestion complete. Total threads ingested: {total_ingested}")
-            
+
+            logger.info(f"Gmail ingestion complete. Checked {total_checked}, added {total_new} new threads")
+
             return {
                 "status": "success" if not errors else "partial",
-                "count": total_ingested,
+                "total_checked": total_checked,
+                "new_added": total_new,
+                "count": total_new,  # Keep for backward compatibility
                 "errors": errors if errors else None
             }
             
@@ -117,7 +121,7 @@ class GmailIngestionService:
                 gmail_account.sync_error = str(e)
                 db.commit()
             
-            return {"status": "error", "error": str(e), "count": 0}
+            return {"status": "error", "error": str(e), "count": 0, "total_checked": 0, "new_added": 0}
     
     def _fetch_threads_from_label(
         self,
@@ -126,22 +130,23 @@ class GmailIngestionService:
         label: GmailLabels,
         db: Session,
         max_threads: int = 5
-    ) -> int:
+    ) -> Dict[str, int]:
         """
         Fetch threads from a specific label
-        
+
         Args:
             gmail_client: Gmail API client
             gmail_account: Gmail account model
             label: Gmail label model
             db: Database session
             max_threads: Maximum threads to fetch
-            
+
         Returns:
-            Number of threads ingested
+            Dictionary with 'total_checked' and 'new_added' counts
         """
-        ingested_count = 0
-        
+        total_checked = 0
+        new_added = 0
+
         try:
             # List threads with the specified label
             results = gmail_client.users().threads().list(
@@ -149,59 +154,61 @@ class GmailIngestionService:
                 labelIds=[label.label_id],
                 maxResults=max_threads
             ).execute()
-            
+
             threads = results.get("threads", [])
-            
+
             if not threads:
                 logger.info(f"No threads found in label {label.label_name}")
-                return 0
-            
+                return {"total_checked": 0, "new_added": 0}
+
+            total_checked = len(threads)
+
             # Process each thread
             for thread_info in threads:
                 try:
                     thread_id = thread_info["id"]
-                    
+
                     # Check if thread already exists
                     existing = db.query(GmailThread).filter(
                         GmailThread.gmail_account_id == gmail_account.id,
                         GmailThread.thread_id == thread_id
                     ).first()
-                    
+
                     if existing:
                         logger.debug(f"Thread {thread_id} already exists, skipping")
                         continue
-                    
+
                     # Get full thread details
                     thread_data = gmail_client.users().threads().get(
                         userId="me",
                         id=thread_id,
                         format="full"
                     ).execute()
-                    
+
                     # Parse thread and create record
                     thread_record = self._parse_thread(
                         thread_data=thread_data,
                         gmail_account=gmail_account,
                         label=label
                     )
-                    
+
                     if thread_record:
                         db.add(thread_record)
-                        ingested_count += 1
-                        
+                        new_added += 1
+
                 except Exception as e:
                     logger.error(f"Error processing thread {thread_info.get('id', 'unknown')}: {str(e)}")
                     continue
-            
+
             # Commit all threads for this label
             db.commit()
-            
+
         except Exception as e:
             logger.error(f"Error fetching threads from label {label.label_name}: {str(e)}")
             db.rollback()
             raise
-        
-        return ingested_count
+
+        return {"total_checked": total_checked, "new_added": new_added}
     
     def _parse_thread(
         self,

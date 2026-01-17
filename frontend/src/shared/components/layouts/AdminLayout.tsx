@@ -35,9 +35,11 @@ import {
   KeyboardDoubleArrowRight as ExpandIcon,
   Business as BusinessIcon,
   Chat as ChatIcon,
+  Sync as SyncIcon,
 } from '@mui/icons-material';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
+import { PageTransition } from '@/shared/components/PageTransition';
 import { OnboardingWizard } from '@/shared/components/OnboardingWizard/OnboardingWizard';
 import { GmailLabelSelectionScreen } from '@/shared/components/OnboardingWizard/GmailLabelSelectionScreen';
 import { ConnectDataSourcesBanner } from '@/shared/components/ConnectDataSourcesBanner';
@@ -59,6 +61,11 @@ const navigationItems = [
     text: 'Dashboard',
     icon: <DashboardIcon />,
     path: ROUTES.DASHBOARD,
+  },
+  {
+    text: 'Sources',
+    icon: <SyncIcon />,
+    path: ROUTES.SOURCES,
   },
   {
     text: 'Themes',
@@ -84,7 +91,6 @@ const navigationItems = [
 
 export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(true);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -92,6 +98,9 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   const { logout } = useAuthActions();
   const user = useUser();
   const tokens = useAuthStore((state) => state.tokens);
+
+  // Sidebar collapsed state from global store (persisted)
+  const { sidebarCollapsed: collapsed, toggleSidebar } = useLayoutStore();
 
   // Onboarding state
   const {
@@ -219,24 +228,9 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
       setLastCheckedWorkspaceId(workspaceId);
     }
 
-    // Only check if not already checked and onboarding is not complete/dismissed
-    // This prevents unnecessary API calls on every page navigation
+    // Only check if not already checked
+    // The onboarding store handles localStorage checks internally with workspace-specific keys
     if (!hasChecked) {
-      // Quick check: if onboarding is already complete or dismissed, skip API calls
-      const wasDismissed = localStorage.getItem('headway-onboarding-dismissed') === 'true';
-      const wasCompleted = localStorage.getItem('headway-onboarding-complete') === 'true';
-      
-      if (wasDismissed || wasCompleted) {
-        console.log('[AdminLayout] Onboarding already complete/dismissed, skipping check');
-        // Mark as checked without making API calls
-        useOnboardingStore.setState({ 
-          hasChecked: true,
-          isOnboardingComplete: wasCompleted,
-          showOnboardingDialog: false,
-        });
-        return;
-      }
-
       console.log('[AdminLayout] Triggering onboarding check for workspace:', workspaceId);
       setLastCheckedWorkspaceId(workspaceId);
       checkOnboardingStatus(workspaceId, accessToken);
@@ -248,7 +242,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   };
 
   const handleDrawerCollapse = () => {
-    setCollapsed(!collapsed);
+    toggleSidebar();
   };
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -297,6 +291,15 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   // Show when: user has no data sources connected (regardless of onboarding status)
   const dataSources = getDataSources();
   const hasDataSources = !isLoadingIntegrations && dataSources.length > 0;
+  
+  // Clear banner dismissed state when data sources are connected
+  // This ensures banner can show again if user later disconnects all sources
+  useEffect(() => {
+    if (hasDataSources) {
+      sessionStorage.removeItem('headway-datasource-banner-dismissed');
+    }
+  }, [hasDataSources]);
+  
   const shouldShowBanner = 
     !isLoadingIntegrations &&
     !hasDataSources &&
@@ -487,17 +490,19 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
     <>
       <GlobalStyles
         styles={{
-          'html, body': {
-            overflowX: 'hidden',
+          'html, body, #root': {
+            margin: 0,
+            padding: 0,
+            height: '100%',
+            overflow: 'hidden',
           },
         }}
       />
-      <Box sx={{ 
-        display: 'flex', 
-        minHeight: '100vh', 
-        overflow: 'hidden',
+      <Box sx={{
+        display: 'flex',
+        height: '100vh',
         width: '100vw',
-        maxWidth: '100%',
+        overflow: 'hidden',
       }}>
       {/* App Bar */}
       <AppBar
@@ -651,14 +656,25 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
         sx={{
           flexGrow: 1,
           minWidth: 0, // Important: allows flex item to shrink below content size
-          minHeight: '100vh',
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
           background: theme.palette.background.default,
-          overflowX: 'hidden',
-          overflowY: 'auto',
+          overflow: 'hidden',
         }}
       >
-        <Toolbar />
-        {children}
+        <Toolbar /> {/* Spacer for fixed AppBar */}
+        <Box
+          sx={{
+            flexGrow: 1,
+            overflowX: 'hidden',
+            overflowY: 'auto',
+          }}
+        >
+          <PageTransition>
+            {children}
+          </PageTransition>
+        </Box>
         
         {/* Connect Data Sources Banner - Fixed position in right corner */}
         {shouldShowBanner && (

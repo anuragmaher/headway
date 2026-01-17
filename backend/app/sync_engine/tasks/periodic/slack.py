@@ -1,0 +1,167 @@
+"""
+Periodic Slack sync task.
+
+Syncs Slack messages from all active integrations every 15 minutes.
+"""
+
+import logging
+
+from sqlalchemy import and_
+from sqlalchemy.orm import Session
+
+from app.tasks.celery_app import celery_app
+from app.models.workspace import Workspace
+from app.models.integration import Integration
+from app.services.message_ingestion_service import message_ingestion_service
+from app.sync_engine.tasks.base import (
+    engine,
+    run_async_task,
+    create_sync_record,
+    finalize_sync_record,
+    test_db_connection,
+    get_active_integrations,
+)
+
+logger = logging.getLogger(__name__)
+
+
+@celery_app.task(
+    name="app.sync_engine.sync_tasks.sync_slack_periodic",
+    bind=True,
+    retry_kwargs={"max_retries": 3},
+    default_retry_delay=300,
+)
+def sync_slack_periodic(self):
+    """
+    Periodic task to sync Slack messages every 15 minutes.
+
+    This task:
+    - Runs every 15 minutes
+    - Only syncs active Slack integrations
+    - Fetches messages from selected channels
+    - Creates SyncHistory records for tracking
+    - Updates the database
+    """
+    try:
+        logger.info("🚀 Starting periodic Slack sync task")
+        logger.info("📊 SyncHistory tracking enabled for periodic Slack sync")
+
+        with Session(engine) as db:
+            # Test database connection first
+            if not test_db_connection(db):
+                logger.error("❌ Database connection failed! Cannot proceed with sync.")
+                return {"status": "error", "reason": "database_connection_failed"}
+
+            logger.info("✅ Database connection verified")
+
+            # Use diagnostic function to log all integrations
+            get_active_integrations(db, "slack")
+
+            # Get all active Slack integrations
+            integrations = db.query(Integration).filter(
+                and_(
+                    Integration.provider == "slack",
+                    Integration.is_active == True
+                )
+            ).all()
+
+            logger.info(f"Found {len(integrations)} active Slack integrations to sync")
+
+            if not integrations:
+                logger.info("No active Slack integrations found. Skipping Slack sync.")
+                return {"status": "skipped", "reason": "no_active_integrations", "count": 0}
+
+            total_synced = 0
+            successful_workspaces = 0
+            failed_workspaces = 0
+
+            for integration in integrations:
+                sync_record = None
+                try:
+                    workspace = db.query(Workspace).filter(
+                        Workspace.id == integration.workspace_id
+                    ).first()
+
+                    if not workspace:
+                        logger.warning(f"Workspace not found for integration {integration.id}")
+                        continue
+
+                    logger.info(f"Syncing Slack for workspace: {workspace.name} (Integration: {integration.external_team_name})")
+
+                    # Sync messages from this integration
+                    result = run_async_task(
+                        message_ingestion_service.ingest_slack_messages(
+                            integration_id=str(integration.id),
+                            db=db,
+                            hours_back=24
+                        )
+                    )
+
+                    # Extract counts from result
+                    total_checked = result.get("total_checked", 0)
+                    new_added = result.get("new_added", 0)
+
+                    # Only create sync history record if new data was found
+                    if new_added > 0:
+                        sync_record = create_sync_record(
+                            db=db,
+                            workspace_id=str(workspace.id),
+                            source_type="slack",
+                            source_name=integration.external_team_name or "Slack",
+                            integration_id=str(integration.id),
+                        )
+                        finalize_sync_record(
+                            db=db,
+                            sync_record=sync_record,
+                            status="success",
+                            items_processed=total_checked,
+                            items_new=new_added,
+                        )
+                        logger.info(f"✅ Checked {total_checked} messages, added {new_added} new for {workspace.name}")
+                    else:
+                        logger.info(f"ℹ️ Checked {total_checked} messages, no new data for {workspace.name}")
+
+                    total_synced += new_added
+                    successful_workspaces += 1
+
+                except Exception as e:
+                    failed_workspaces += 1
+                    logger.error(f"❌ Error syncing Slack for integration {integration.id}: {e}")
+                    import traceback
+                    traceback.print_exc()
+                    # Create a failed sync record for errors
+                    try:
+                        error_record = create_sync_record(
+                            db=db,
+                            workspace_id=str(workspace.id),
+                            source_type="slack",
+                            source_name=integration.external_team_name or "Slack",
+                            integration_id=str(integration.id),
+                        )
+                        finalize_sync_record(
+                            db=db,
+                            sync_record=error_record,
+                            status="failed",
+                            error_message=str(e),
+                        )
+                    except Exception:
+                        pass  # Don't fail if we can't create error record
+                    continue
+
+            logger.info(
+                f"✅ Slack periodic sync complete. "
+                f"Total messages: {total_synced}, "
+                f"Workspaces: {successful_workspaces} successful, {failed_workspaces} failed"
+            )
+            return {
+                "status": "success",
+                "total_messages": total_synced,
+                "successful_workspaces": successful_workspaces,
+                "failed_workspaces": failed_workspaces
+            }
+
+    except Exception as e:
+        logger.error(f"❌ Fatal error in Slack periodic sync: {e}")
+        import traceback
+        traceback.print_exc()
+        raise self.retry(exc=e, countdown=600)
