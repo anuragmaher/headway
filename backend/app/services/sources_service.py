@@ -47,7 +47,7 @@ class SourcesService:
         sort_order: Optional[str] = "desc",
     ) -> MessageListResponse:
         """
-        Get paginated list of messages from all sources.
+        Get paginated list of messages from all sources with proper cross-table sorting.
 
         This includes:
         - Messages from the Message table (Slack, processed Gmail, Gong, Fathom)
@@ -64,108 +64,125 @@ class SourcesService:
         Returns:
             Paginated message list response
         """
-        message_responses = []
-
-        # If filtering for gmail only, get from GmailThread table
+        # If filtering for gmail only, use optimized gmail-only query
         if source_filter == 'gmail':
             return self._get_gmail_threads_paginated(workspace_id, page, page_size)
 
-        # If no filter or filter is not gmail, include regular messages
-        if source_filter != 'gmail':
-            # Build base query for Message table
-            query = self.db.query(Message).filter(Message.workspace_id == workspace_id)
+        # If filtering for a specific non-gmail source, use optimized single-table query
+        if source_filter and source_filter not in ('all', 'gmail'):
+            return self._get_messages_single_source_paginated(
+                workspace_id, source_filter, page, page_size, sort_by, sort_order
+            )
 
-            # Apply source filter if provided (exclude gmail from Message table as we fetch from GmailThread)
-            if source_filter and source_filter != 'all':
-                query = query.filter(Message.source == source_filter)
-            else:
-                # When showing all, exclude gmail from Message table to avoid duplicates
-                query = query.filter(Message.source != 'gmail')
+        # For 'all' or no filter: fetch from both tables and merge with proper sorting
+        # Get counts for pagination
+        message_count = self.db.query(func.count(Message.id)).filter(
+            Message.workspace_id == workspace_id,
+            Message.source != 'gmail'
+        ).scalar() or 0
 
-            # Get messages from Message table
-            messages = query.order_by(desc(Message.sent_at)).all()
+        gmail_count = self.db.query(func.count(GmailThread.id)).filter(
+            GmailThread.workspace_id == workspace_id
+        ).scalar() or 0
 
-            for msg in messages:
-                source_type = self._get_message_type(msg.source)
-                preview = self._get_preview(msg.content)
-                sender = msg.author_name or msg.author_email or "Unknown"
+        total = message_count + gmail_count
+        total_pages = (total + page_size - 1) // page_size if total > 0 else 1
 
-                message_responses.append({
-                    'id': str(msg.id),
-                    'title': msg.title or self._generate_title(msg),
-                    'sender': sender,
-                    'sender_email': msg.author_email,
-                    'source_type': source_type,
-                    'source': msg.source,
-                    'preview': preview,
-                    'content': msg.content,
-                    'timestamp': msg.sent_at,
-                    'channel_name': msg.channel_name,
-                    'is_processed': msg.is_processed,
-                })
+        # For proper cross-table sorting, we need to fetch enough records
+        # and sort them together. Fetch (page * page_size) from each table
+        # to ensure we have enough for proper pagination after sorting.
+        fetch_limit = page * page_size
 
-        # If no filter (all) or filter is gmail, also include Gmail threads
-        if not source_filter or source_filter == 'all':
-            gmail_threads = self.db.query(GmailThread).filter(
-                GmailThread.workspace_id == workspace_id
-            ).order_by(desc(GmailThread.thread_date)).all()
+        # Get messages from Message table (non-gmail)
+        messages_query = self.db.query(Message).filter(
+            Message.workspace_id == workspace_id,
+            Message.source != 'gmail'
+        ).order_by(desc(Message.sent_at)).limit(fetch_limit).all()
 
-            for thread in gmail_threads:
-                preview = self._get_preview(thread.content or thread.snippet)
-                sender = thread.from_name or thread.from_email or "Unknown"
+        # Get Gmail threads
+        gmail_query = self.db.query(GmailThread).filter(
+            GmailThread.workspace_id == workspace_id
+        ).order_by(desc(GmailThread.thread_date)).limit(fetch_limit).all()
 
-                message_responses.append({
-                    'id': str(thread.id),
-                    'title': thread.subject or "Email Thread",
-                    'sender': sender,
-                    'sender_email': thread.from_email,
-                    'source_type': 'email',
-                    'source': 'gmail',
-                    'preview': preview,
-                    'content': thread.content,
-                    'timestamp': thread.thread_date,
-                    'channel_name': thread.label_name,
-                    'is_processed': thread.is_processed,
-                })
+        # Combine into a unified list with normalized structure
+        combined_items = []
 
-        # Sort all items based on sort_by and sort_order
+        for msg in messages_query:
+            combined_items.append({
+                'id': str(msg.id),
+                'title': msg.title or self._generate_title(msg),
+                'author_name': msg.author_name,
+                'author_email': msg.author_email,
+                'source': msg.source,
+                'content': msg.content,
+                'timestamp': msg.sent_at,
+                'channel_name': msg.channel_name,
+                'is_processed': msg.is_processed,
+            })
+
+        for thread in gmail_query:
+            combined_items.append({
+                'id': str(thread.id),
+                'title': thread.subject or "Email Thread",
+                'author_name': thread.from_name,
+                'author_email': thread.from_email,
+                'source': 'gmail',
+                'content': thread.content,
+                'timestamp': thread.thread_date,
+                'channel_name': thread.label_name,
+                'is_processed': thread.is_processed,
+            })
+
+        # Sort combined items by the specified field
         reverse_order = sort_order != "asc"
 
         if sort_by == "sender":
-            message_responses.sort(key=lambda x: (x['sender'] or '').lower(), reverse=reverse_order)
+            combined_items.sort(
+                key=lambda x: (x['author_name'] or x['author_email'] or '').lower(),
+                reverse=reverse_order
+            )
         elif sort_by == "source":
-            message_responses.sort(key=lambda x: (x['source'] or '').lower(), reverse=reverse_order)
-        else:  # Default to timestamp
-            message_responses.sort(key=lambda x: x['timestamp'] or datetime.min.replace(tzinfo=timezone.utc), reverse=reverse_order)
+            combined_items.sort(
+                key=lambda x: (x['source'] or '').lower(),
+                reverse=reverse_order
+            )
+        else:
+            # Sort by timestamp - handle None values properly
+            # Use a very old date for None so they appear at the end for DESC
+            from datetime import datetime as dt
+            min_date = dt.min.replace(tzinfo=timezone.utc)
+            combined_items.sort(
+                key=lambda x: x['timestamp'] if x['timestamp'] else min_date,
+                reverse=reverse_order
+            )
 
-        # Get total count and paginate
-        total = len(message_responses)
-        total_pages = (total + page_size - 1) // page_size if total > 0 else 1
+        # Apply pagination
         offset = (page - 1) * page_size
-
-        # Slice for current page
-        paginated_items = message_responses[offset:offset + page_size]
+        paginated_items = combined_items[offset:offset + page_size]
 
         # Convert to response objects
-        final_responses = [
-            MessageResponse(
+        message_responses = []
+        for item in paginated_items:
+            source_type = self._get_message_type(item['source'])
+            sender = item['author_name'] or item['author_email'] or "Unknown"
+            preview = self._get_preview(item['content'])
+
+            message_responses.append(MessageResponse(
                 id=item['id'],
                 title=item['title'],
-                sender=item['sender'],
-                sender_email=item['sender_email'],
-                source_type=item['source_type'],
+                sender=sender,
+                sender_email=item['author_email'],
+                source_type=source_type,
                 source=item['source'],
-                preview=item['preview'],
+                preview=preview,
                 content=item['content'],
                 timestamp=item['timestamp'],
                 channel_name=item['channel_name'],
                 is_processed=item['is_processed'],
-            )
-            for item in paginated_items
-        ]
+            ))
 
         return MessageListResponse(
-            messages=final_responses,
+            messages=message_responses,
             total=total,
             page=page,
             page_size=page_size,
@@ -173,6 +190,87 @@ class SourcesService:
             has_next=page < total_pages,
             has_prev=page > 1,
         )
+
+    def _get_messages_single_source_paginated(
+        self,
+        workspace_id: UUID,
+        source_filter: str,
+        page: int,
+        page_size: int,
+        sort_by: str,
+        sort_order: str,
+    ) -> MessageListResponse:
+        """
+        Optimized pagination for a single source type (non-gmail).
+        Uses database-level LIMIT/OFFSET.
+        """
+        query = self.db.query(Message).filter(
+            Message.workspace_id == workspace_id,
+            Message.source == source_filter
+        )
+
+        # Get total count
+        total = query.count()
+        total_pages = (total + page_size - 1) // page_size if total > 0 else 1
+        offset = (page - 1) * page_size
+
+        # Determine sort column
+        if sort_by == "sender":
+            sort_col = Message.author_name
+        elif sort_by == "source":
+            sort_col = Message.source
+        else:
+            sort_col = Message.sent_at
+
+        # Apply sort order
+        if sort_order == "asc":
+            order_clause = asc(sort_col)
+        else:
+            order_clause = desc(sort_col)
+
+        # Get paginated results
+        messages = query.order_by(order_clause).offset(offset).limit(page_size).all()
+
+        # Convert to response
+        message_responses = []
+        for msg in messages:
+            source_type = self._get_message_type(msg.source)
+            preview = self._get_preview(msg.content)
+            sender = msg.author_name or msg.author_email or "Unknown"
+
+            message_responses.append(MessageResponse(
+                id=str(msg.id),
+                title=msg.title or self._generate_title(msg),
+                sender=sender,
+                sender_email=msg.author_email,
+                source_type=source_type,
+                source=msg.source,
+                preview=preview,
+                content=msg.content,
+                timestamp=msg.sent_at,
+                channel_name=msg.channel_name,
+                is_processed=msg.is_processed,
+            ))
+
+        return MessageListResponse(
+            messages=message_responses,
+            total=total,
+            page=page,
+            page_size=page_size,
+            total_pages=total_pages,
+            has_next=page < total_pages,
+            has_prev=page > 1,
+        )
+
+    def _get_default_title(self, source: str) -> str:
+        """Get default title based on source type"""
+        titles = {
+            'slack': 'Slack Message',
+            'gmail': 'Email Thread',
+            'gong': 'Gong Call',
+            'fathom': 'Fathom Meeting',
+        }
+        return titles.get(source, 'Message')
 
     def _get_gmail_threads_paginated(
         self,

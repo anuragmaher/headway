@@ -68,7 +68,7 @@ export function SourcesPage(): JSX.Element {
   // Pagination state
   const [messagesPage, setMessagesPage] = useState(1);
   const [syncHistoryPage, setSyncHistoryPage] = useState(1);
-  const messagesPageSize = 5;
+  const messagesPageSize = 10;
   const syncHistoryPageSize = 10;
 
   // Data state

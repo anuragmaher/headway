@@ -34,8 +34,7 @@ import {
   KeyboardDoubleArrowLeft as CollapseIcon,
   KeyboardDoubleArrowRight as ExpandIcon,
   Business as BusinessIcon,
-  Chat as ChatIcon,
-  Sync as SyncIcon,
+  Message as MessageIcon,
 } from '@mui/icons-material';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
@@ -63,8 +62,8 @@ const navigationItems = [
     path: ROUTES.DASHBOARD,
   },
   {
-    text: 'Sources',
-    icon: <SyncIcon />,
+    text: 'All Messages',
+    icon: <MessageIcon />,
     path: ROUTES.SOURCES,
   },
   {
@@ -76,11 +75,6 @@ const navigationItems = [
     text: 'Customers',
     icon: <BusinessIcon />,
     path: ROUTES.CUSTOMERS,
-  },
-  {
-    text: 'Customer Chat',
-    icon: <ChatIcon />,
-    path: ROUTES.CUSTOMERS_CHAT,
   },
   {
     text: 'Workspace Settings',
