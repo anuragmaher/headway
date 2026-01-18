@@ -7,7 +7,15 @@
       "Bash(d:/HeadwayHQ/headway/backend/.venv/Scripts/python.exe -c:*)",
       "Bash(/d/HeadwayHQ/headway/backend/.venv/Scripts/python.exe -c:*)",
       "Bash(npx tsc:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npx eslint:*)",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(alembic upgrade:*)",
+      "Bash(.venv/Scripts/python:*)",
+      "Bash(.venvScriptsalembic upgrade head)",
+      "Bash(grep:*)",
+      "Bash(tree:*)"
     ]
   }
 }

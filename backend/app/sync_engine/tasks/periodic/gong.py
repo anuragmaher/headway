@@ -2,6 +2,8 @@
 Periodic Gong sync task.
 
 Syncs Gong calls from all active connectors every 15 minutes.
+Uses optimized batch ingestion - data storage only, no AI extraction.
+AI extraction happens in a separate batch processing task.
 """
 
 import logging
@@ -12,7 +14,7 @@ from sqlalchemy.orm import Session
 from app.tasks.celery_app import celery_app
 from app.models.workspace import Workspace
 from app.models.workspace_connector import WorkspaceConnector
-from app.scripts.ingest_gong_calls import ingest_gong_calls
+from app.services.gong_ingestion_service import gong_ingestion_service
 from app.sync_engine.tasks.base import (
     engine,
     run_async_task,
@@ -20,6 +22,7 @@ from app.sync_engine.tasks.base import (
     finalize_sync_record,
     test_db_connection,
     get_active_connectors,
+    cleanup_after_task,
 )
 
 logger = logging.getLogger(__name__)
@@ -30,6 +33,8 @@ logger = logging.getLogger(__name__)
     bind=True,
     retry_kwargs={"max_retries": 3},
     default_retry_delay=300,
+    autoretry_for=(Exception,),
+    retry_backoff=True,
 )
 def sync_gong_periodic(self):
     """
@@ -87,14 +92,14 @@ def sync_gong_periodic(self):
 
                     logger.info(f"Syncing Gong calls for workspace: {workspace.name}")
 
-                    # Run the async ingestion function
+                    # Run the optimized batch ingestion (data storage only, no AI)
                     result = run_async_task(
-                        ingest_gong_calls(
+                        gong_ingestion_service.ingest_calls(
+                            db=db,
                             workspace_id=str(workspace.id),
                             limit=50,
                             days_back=1,
-                            fetch_transcripts=True,
-                            extract_features=True
+                            fetch_transcripts=True
                         )
                     )
 
@@ -166,3 +171,6 @@ def sync_gong_periodic(self):
         import traceback
         traceback.print_exc()
         raise self.retry(exc=e, countdown=600)
+    finally:
+        # Always cleanup after task to free memory
+        cleanup_after_task()

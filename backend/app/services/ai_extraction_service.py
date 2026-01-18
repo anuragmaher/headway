@@ -9,11 +9,12 @@ Analyzes customer conversations and extracts:
 - Urgency levels
 """
 
-import os
 import json
 from typing import Dict, List, Any, Optional
 from openai import OpenAI
 import logging
+
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -26,11 +27,11 @@ class AIExtractionService:
         Initialize the AI extraction service
 
         Args:
-            api_key: OpenAI API key (defaults to env variable)
+            api_key: OpenAI API key (defaults to settings)
         """
-        self.api_key = api_key or os.getenv('OPENAI_API_KEY')
+        self.api_key = api_key or settings.OPENAI_API_KEY
         if not self.api_key:
-            raise ValueError("OpenAI API key not found. Set OPENAI_API_KEY environment variable.")
+            raise ValueError("OpenAI API key not found. Set OPENAI_API_KEY in .env file.")
 
         self.client = OpenAI(api_key=self.api_key)
 

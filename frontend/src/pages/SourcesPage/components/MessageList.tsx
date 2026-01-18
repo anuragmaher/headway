@@ -73,6 +73,7 @@ const getFullDateTime = (dateString: string | null | undefined): string => {
 
 interface MessageListProps {
   messages: Message[];
+  onMessageClick?: (messageId: string) => void;
 }
 
 const getMessageIcon = (type: MessageType) => {
@@ -120,7 +121,7 @@ const getTypeLabel = (type: MessageType) => {
   }
 };
 
-export function MessageList({ messages }: MessageListProps): JSX.Element {
+export function MessageList({ messages, onMessageClick }: MessageListProps): JSX.Element {
   const theme = useTheme();
 
   if (messages.length === 0) {
@@ -133,18 +134,25 @@ export function MessageList({ messages }: MessageListProps): JSX.Element {
     );
   }
 
+  const handleMessageClick = (messageId: string) => {
+    if (onMessageClick) {
+      onMessageClick(messageId);
+    }
+  };
+
   return (
     <List disablePadding>
       {messages.map((message, index) => (
         <ListItem
           key={message.id}
+          onClick={() => handleMessageClick(message.id)}
           sx={{
             px: 2,
             py: 1.5,
             display: 'flex',
             alignItems: 'flex-start',
             gap: 1.5,
-            borderBottom: index < messages.length - 1 
+            borderBottom: index < messages.length - 1
               ? `1px solid ${alpha(theme.palette.divider, 0.06)}`
               : 'none',
             cursor: 'pointer',

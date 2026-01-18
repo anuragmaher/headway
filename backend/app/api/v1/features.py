@@ -839,9 +839,9 @@ async def create_feature(
         if new_feature.theme_id:
             from app.services.theme_slack_notification_service import theme_slack_notification_service
             from app.core.database import SessionLocal
+            from app.utils.background_tasks import submit_notification_task
             import asyncio
-            import threading
-            
+
             # Capture values before thread
             theme_id = new_feature.theme_id
             feature_name_val = new_feature.name
@@ -850,16 +850,16 @@ async def create_feature(
             urgency_val = new_feature.urgency
             source_val = "manual"
             source_id_val = str(new_feature.id)
-            
-            logger.info(f"🚀 Starting Slack notification thread for manually created feature '{feature_name_val}' in theme {theme_id}")
-            
+
+            logger.info(f"🚀 Starting Slack notification for manually created feature '{feature_name_val}' in theme {theme_id}")
+
             def send_notification():
                 """Run async notification in a new event loop with a new DB session"""
                 db_session = None
                 try:
                     # Create a new database session for this thread
                     db_session = SessionLocal()
-                    
+
                     loop = asyncio.new_event_loop()
                     asyncio.set_event_loop(loop)
                     loop.run_until_complete(
@@ -885,10 +885,9 @@ async def create_feature(
                 finally:
                     if db_session:
                         db_session.close()
-            
-            # Run in background thread (fire and forget)
-            thread = threading.Thread(target=send_notification, daemon=True)
-            thread.start()
+
+            # Run in bounded thread pool (fire and forget)
+            submit_notification_task(send_notification)
         else:
             logger.info(f"Skipping Slack notification: feature has no theme_id")
 

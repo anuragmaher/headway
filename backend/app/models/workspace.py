@@ -42,6 +42,12 @@ class Workspace(Base):
     gmail_threads = relationship("GmailThread", back_populates="workspace", cascade="all, delete-orphan")
     competitors = relationship("Competitor", back_populates="workspace", cascade="all, delete-orphan")
     sync_history = relationship("SyncHistory", back_populates="workspace", cascade="all, delete-orphan")
-    
+
+    # New AI processing pipeline relationships
+    normalized_events = relationship("NormalizedEvent", back_populates="workspace", cascade="all, delete-orphan")
+    event_chunks = relationship("EventChunk", back_populates="workspace", cascade="all, delete-orphan")
+    extracted_facts = relationship("ExtractedFact", back_populates="workspace", cascade="all, delete-orphan")
+    aggregation_runs = relationship("AggregationRun", back_populates="workspace", cascade="all, delete-orphan")
+
     def __repr__(self) -> str:
         return f"<Workspace(id={self.id}, name='{self.name}', slug='{self.slug}')>"

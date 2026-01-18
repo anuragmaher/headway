@@ -107,7 +107,85 @@ export interface SyncStatusResponse {
   error_message: string | null;
 }
 
+export interface RelatedFeature {
+  id: string;
+  title: string;
+  theme_id: string | null;
+}
+
+export interface PartyInfo {
+  name?: string;
+  email?: string;
+  role?: string;
+}
+
+export interface CustomerInfo {
+  name?: string;
+  email?: string;
+}
+
+export interface MessageDetailsResponse {
+  id: string;
+  type: string;
+  source: string;
+  title: string;
+  content: string | null;
+  sender: string;
+  sender_email: string | null;
+  channel_name: string | null;
+  sent_at: string | null;
+  created_at: string | null;
+  is_processed: boolean;
+  processed_at: string | null;
+  // Metadata
+  metadata: Record<string, unknown>;
+  ai_insights: Record<string, unknown> | null;
+  thread_id: string | null;
+  is_thread_reply: boolean;
+  // Gong/Fathom fields
+  duration: number | null;
+  duration_formatted: string | null;
+  parties: PartyInfo[];
+  participants: (string | PartyInfo)[];
+  customer_info: CustomerInfo | null;
+  recording_url: string | null;
+  has_transcript: boolean;
+  call_id: string | null;
+  session_id: string | null;
+  // Gmail fields
+  subject?: string;
+  from_name?: string;
+  from_email?: string;
+  to_emails?: string[];
+  snippet?: string;
+  message_count?: number;
+  thread_date?: string;
+  label_name?: string;
+  gmail_thread_id?: string;
+  // Related features
+  related_features: RelatedFeature[];
+}
+
+// ============ Sorting Types ============
+
+export type MessageSortField = 'timestamp' | 'sender' | 'source';
+export type SyncHistorySortField = 'type' | 'status' | 'started_at';
+export type SortOrder = 'asc' | 'desc';
+
 // ============ API Functions ============
+
+/**
+ * Get full details of a specific message
+ */
+export async function getMessageDetails(
+  workspaceId: string,
+  messageId: string
+): Promise<MessageDetailsResponse> {
+  const response = await api.get<MessageDetailsResponse>(
+    `/api/v1/sources/${workspaceId}/messages/${messageId}`
+  );
+  return response.data;
+}
 
 /**
  * Get paginated messages from all data sources
@@ -116,17 +194,21 @@ export async function getMessages(
   workspaceId: string,
   page: number = 1,
   pageSize: number = 5,
-  source?: string
+  source?: string,
+  sortBy: MessageSortField = 'timestamp',
+  sortOrder: SortOrder = 'desc'
 ): Promise<MessageListResponse> {
   const params = new URLSearchParams({
     page: page.toString(),
     page_size: pageSize.toString(),
+    sort_by: sortBy,
+    sort_order: sortOrder,
   });
-  
+
   if (source && source !== 'all') {
     params.append('source', source);
   }
-  
+
   const response = await api.get<MessageListResponse>(
     `/api/v1/sources/${workspaceId}/messages?${params.toString()}`
   );
@@ -141,21 +223,25 @@ export async function getSyncHistory(
   page: number = 1,
   pageSize: number = 10,
   source?: string,
-  syncType?: string
+  syncType?: string,
+  sortBy: SyncHistorySortField = 'started_at',
+  sortOrder: SortOrder = 'desc'
 ): Promise<SyncHistoryListResponse> {
   const params = new URLSearchParams({
     page: page.toString(),
     page_size: pageSize.toString(),
+    sort_by: sortBy,
+    sort_order: sortOrder,
   });
-  
+
   if (source && source !== 'all') {
     params.append('source', source);
   }
-  
+
   if (syncType && syncType !== 'all') {
     params.append('sync_type', syncType);
   }
-  
+
   const response = await api.get<SyncHistoryListResponse>(
     `/api/v1/sources/${workspaceId}/sync-history?${params.toString()}`
   );
@@ -298,6 +384,7 @@ export async function pollSyncCompletion(
 
 export const sourcesService = {
   getMessages,
+  getMessageDetails,
   getSyncHistory,
   getDataSourcesStatus,
   syncAllSources,

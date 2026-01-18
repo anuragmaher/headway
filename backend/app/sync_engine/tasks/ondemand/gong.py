@@ -2,6 +2,8 @@
 On-demand Gong sync task.
 
 Triggered by the Sources API when user clicks "Sync All Sources".
+Uses optimized batch ingestion - data storage only, no AI extraction.
+AI extraction happens in a separate batch processing task.
 """
 
 import logging
@@ -11,7 +13,7 @@ from sqlalchemy.orm import Session
 
 from app.tasks.celery_app import celery_app
 from app.models.workspace_connector import WorkspaceConnector
-from app.scripts.ingest_gong_calls import ingest_gong_calls
+from app.services.gong_ingestion_service import gong_ingestion_service
 from app.sync_engine.tasks.base import engine, run_async_task, update_sync_record
 
 logger = logging.getLogger(__name__)
@@ -28,6 +30,7 @@ def sync_workspace_gong(self, workspace_id: str, sync_id: str):
     On-demand task to sync Gong for a specific workspace.
 
     Triggered by the Sources API when user clicks "Sync All Sources".
+    Uses batch ingestion - AI extraction happens in separate task.
     """
     logger.info(f"🚀 Starting on-demand Gong sync for workspace {workspace_id}")
 
@@ -50,23 +53,27 @@ def sync_workspace_gong(self, workspace_id: str, sync_id: str):
                 update_sync_record(db, sync_id, "success", 0, 0)
                 return {"status": "skipped", "reason": "no_connector"}
 
-            # Run async ingestion
-            ingested_count = run_async_task(
-                ingest_gong_calls(
+            # Use batch ingestion (data storage only, no AI)
+            result = run_async_task(
+                gong_ingestion_service.ingest_calls(
+                    db=db,
                     workspace_id=workspace_id,
                     limit=100,
                     days_back=7,
-                    fetch_transcripts=True,
-                    extract_features=True
+                    fetch_transcripts=True
                 )
             )
 
-            update_sync_record(db, sync_id, "success", ingested_count, ingested_count)
-            logger.info(f"✅ Gong sync complete: {ingested_count} calls")
+            total_checked = result.get("total_checked", 0)
+            new_added = result.get("new_added", 0)
+
+            update_sync_record(db, sync_id, "success", total_checked, new_added)
+            logger.info(f"✅ Gong sync complete: {new_added} new calls")
 
             return {
                 "status": "success",
-                "total_calls": ingested_count,
+                "total_checked": total_checked,
+                "new_added": new_added,
             }
 
     except Exception as e:

@@ -122,8 +122,15 @@ const getItemSubtitle = (item: SyncedItem): string => {
     case 'slack_message':
       return `From: ${item.author_name || item.author_email || 'Unknown'}`;
     case 'gong_call':
+      if (item.customer_info?.name) {
+        return `Customer: ${item.customer_info.name}`;
+      }
+      return item.author_name || item.author_email || 'Call Recording';
     case 'fathom_session':
-      return item.author_name || item.author_email || '';
+      if (item.customer_info?.name) {
+        return `With: ${item.customer_info.name}`;
+      }
+      return item.author_name || item.author_email || 'Meeting Recording';
     case 'feature':
       return item.theme_name ? `Theme: ${item.theme_name}` : '';
     default:
@@ -358,9 +365,9 @@ export function SyncedItemCard({
                 {item.message_count} messages
               </Typography>
             )}
-            {item.duration_seconds && item.duration_seconds > 0 && (
+            {(item.duration_formatted || item.duration || item.duration_seconds) && (
               <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.65rem' }}>
-                {formatDuration(item.duration_seconds)}
+                {item.duration_formatted || formatDuration(item.duration || item.duration_seconds || 0)}
               </Typography>
             )}
           </Box>
@@ -405,28 +412,54 @@ export function SyncedItemCard({
           </Typography>
 
           {/* Participants for calls */}
-          {item.participants && item.participants.length > 0 && (
+          {(item.participants && item.participants.length > 0) || (item.parties && item.parties.length > 0) ? (
             <Box sx={{ mt: 1.5, pt: 1.5, borderTop: `1px solid ${alpha(theme.palette.divider, 0.08)}` }}>
               <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.65rem', fontWeight: 600 }}>
                 Participants:
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 0.5 }}>
-                {item.participants.map((participant, idx) => (
-                  <Chip
-                    key={idx}
-                    label={participant}
-                    size="small"
-                    sx={{
-                      height: 20,
-                      fontSize: '0.6rem',
-                      bgcolor: alpha(theme.palette.primary.main, 0.1),
-                      color: theme.palette.primary.main,
-                    }}
-                  />
-                ))}
+                {item.participants?.map((participant, idx) => {
+                  // Handle both string and object participants
+                  const label = typeof participant === 'string'
+                    ? participant
+                    : (participant as { name?: string; email?: string })?.name ||
+                      (participant as { name?: string; email?: string })?.email ||
+                      'Unknown';
+                  return (
+                    <Chip
+                      key={`p-${idx}`}
+                      label={label}
+                      size="small"
+                      sx={{
+                        height: 20,
+                        fontSize: '0.6rem',
+                        bgcolor: alpha(theme.palette.primary.main, 0.1),
+                        color: theme.palette.primary.main,
+                      }}
+                    />
+                  );
+                })}
+                {item.parties?.map((party, idx) => {
+                  // Handle party which may have name, email, or role
+                  const partyObj = party as { name?: string; email?: string; role?: string };
+                  const label = partyObj?.name || partyObj?.email || 'Unknown';
+                  return (
+                    <Chip
+                      key={`party-${idx}`}
+                      label={label}
+                      size="small"
+                      sx={{
+                        height: 20,
+                        fontSize: '0.6rem',
+                        bgcolor: alpha(theme.palette.primary.main, 0.1),
+                        color: theme.palette.primary.main,
+                      }}
+                    />
+                  );
+                })}
               </Box>
             </Box>
-          )}
+          ) : null}
         </Box>
       </Collapse>
     </Box>

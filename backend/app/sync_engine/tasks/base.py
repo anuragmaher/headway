@@ -5,12 +5,15 @@ Provides shared functionality used by all periodic and on-demand sync tasks:
 - Database engine and session management
 - Async task runner for Celery
 - SyncHistory record creation and finalization
+- Memory cleanup utilities
 """
 
 import asyncio
+import gc
 import logging
+from contextlib import contextmanager
 from datetime import datetime, timezone
-from typing import Any, Optional, List, Dict
+from typing import Any, Optional, List, Dict, Generator
 from uuid import UUID
 
 from sqlalchemy.orm import Session
@@ -33,6 +36,44 @@ def get_db_session() -> Session:
         SQLAlchemy Session
     """
     return Session(engine)
+
+
+@contextmanager
+def task_db_session() -> Generator[Session, None, None]:
+    """
+    Context manager for database sessions in Celery tasks.
+
+    Ensures proper cleanup of database sessions and connections,
+    which is critical for memory management in long-running workers.
+
+    Usage:
+        with task_db_session() as db:
+            # do work
+            db.commit()
+
+    Yields:
+        SQLAlchemy Session
+    """
+    session = Session(engine)
+    try:
+        yield session
+    except Exception:
+        session.rollback()
+        raise
+    finally:
+        session.close()
+
+
+def cleanup_after_task() -> None:
+    """
+    Cleanup function to call at the end of each task.
+
+    Forces garbage collection to free memory, which is especially
+    important for tasks that process large amounts of data.
+    """
+    # Clear any lingering references
+    gc.collect()
+    logger.debug("Task cleanup: garbage collection completed")
 
 
 def run_async_task(coro) -> Any:
