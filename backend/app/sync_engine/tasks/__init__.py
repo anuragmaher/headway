@@ -17,6 +17,8 @@ from app.sync_engine.tasks.base import (
     create_sync_record,
     finalize_sync_record,
     update_sync_record,
+    task_db_session,
+    cleanup_after_task,
 )
 
 # Periodic tasks
@@ -44,6 +46,8 @@ __all__ = [
     "create_sync_record",
     "finalize_sync_record",
     "update_sync_record",
+    "task_db_session",
+    "cleanup_after_task",
     # Periodic tasks
     "health_check",
     "sync_slack_periodic",

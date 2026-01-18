@@ -18,22 +18,38 @@ import {
   Alert,
   Pagination,
   Snackbar,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Tooltip,
 } from '@mui/material';
 import {
   Sync as SyncIcon,
   AutoAwesome as ThemeSyncIcon,
   ChatBubbleOutline as MessagesIcon,
   History as HistoryIcon,
+  Sort as SortIcon,
+  AccessTime as TimeIcon,
+  Person as PersonIcon,
+  Source as SourceIcon,
+  ArrowUpward as AscIcon,
+  ArrowDownward as DescIcon,
+  Check as CheckIcon,
 } from '@mui/icons-material';
 import { AdminLayout } from '@/shared/components/layouts';
 import { useLayoutStore } from '@/shared/store/layoutStore';
 import { useAuthStore } from '@/features/auth/store/auth-store';
-import { MessageList, SyncHistoryTable, SourceFilters, TypeFilters, SyncDetailsDrawer } from './components';
+import { MessageList, SyncHistoryTable, SourceFilters, TypeFilters, SyncDetailsDrawer, MessageDetailsDrawer } from './components';
 import { SourceType, SyncType, Message, SyncHistoryItem } from './types';
 import { useSyncHistoryPolling } from './hooks';
 import sourcesService, {
   MessageListResponse,
   SyncHistoryListResponse,
+  MessageSortField,
+  SyncHistorySortField,
+  SortOrder,
 } from '@/services/sources';
 
 export function SourcesPage(): JSX.Element {
@@ -82,9 +98,22 @@ export function SourcesPage(): JSX.Element {
   const syncPollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const themePollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Drawer state
+  // Sync Details Drawer state
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedSyncId, setSelectedSyncId] = useState<string | null>(null);
+
+  // Message Details Drawer state
+  const [messageDrawerOpen, setMessageDrawerOpen] = useState(false);
+  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
+
+  // Sorting state for Messages
+  const [messagesSortBy, setMessagesSortBy] = useState<MessageSortField>('timestamp');
+  const [messagesSortOrder, setMessagesSortOrder] = useState<SortOrder>('desc');
+  const [messagesSortAnchorEl, setMessagesSortAnchorEl] = useState<null | HTMLElement>(null);
+
+  // Sorting state for Sync History
+  const [syncHistorySortBy, setSyncHistorySortBy] = useState<SyncHistorySortField>('started_at');
+  const [syncHistorySortOrder, setSyncHistorySortOrder] = useState<SortOrder>('desc');
 
   // Cleanup function to clear polling intervals
   const clearPollingIntervals = useCallback(() => {
@@ -116,18 +145,20 @@ export function SourcesPage(): JSX.Element {
   // Fetch messages
   const fetchMessages = useCallback(async () => {
     if (!workspaceId) return;
-    
+
     setLoadingMessages(true);
     setError(null);
-    
+
     try {
       const response: MessageListResponse = await sourcesService.getMessages(
         workspaceId,
         messagesPage,
         messagesPageSize,
-        selectedSource !== 'all' ? selectedSource : undefined
+        selectedSource !== 'all' ? selectedSource : undefined,
+        messagesSortBy,
+        messagesSortOrder
       );
-      
+
       // Transform API response to frontend types
       const transformedMessages: Message[] = response.messages.map((msg) => ({
         id: msg.id,
@@ -138,7 +169,7 @@ export function SourcesPage(): JSX.Element {
         timestamp: msg.timestamp,
         source: msg.source as SourceType,
       }));
-      
+
       setMessages(transformedMessages);
       setMessagesTotal(response.total);
       setMessagesTotalPages(response.total_pages);
@@ -149,24 +180,26 @@ export function SourcesPage(): JSX.Element {
     } finally {
       setLoadingMessages(false);
     }
-  }, [workspaceId, messagesPage, selectedSource]);
+  }, [workspaceId, messagesPage, selectedSource, messagesSortBy, messagesSortOrder]);
 
   // Fetch sync history
   const fetchSyncHistory = useCallback(async () => {
     if (!workspaceId) return;
-    
+
     setLoadingSyncHistory(true);
     setError(null);
-    
+
     try {
       const response: SyncHistoryListResponse = await sourcesService.getSyncHistory(
         workspaceId,
         syncHistoryPage,
         syncHistoryPageSize,
         selectedSource !== 'all' ? selectedSource : undefined,
-        selectedType !== 'all' ? selectedType : undefined
+        selectedType !== 'all' ? selectedType : undefined,
+        syncHistorySortBy,
+        syncHistorySortOrder
       );
-      
+
       // Transform API response to frontend types
       const transformedHistory: SyncHistoryItem[] = response.items.map((item) => ({
         id: item.id,
@@ -180,7 +213,7 @@ export function SourcesPage(): JSX.Element {
         newItems: item.items_new,
         errorMessage: item.error_message,
       }));
-      
+
       setSyncHistory(transformedHistory);
       setSyncHistoryTotal(response.total);
       setSyncHistoryTotalPages(response.total_pages);
@@ -191,7 +224,7 @@ export function SourcesPage(): JSX.Element {
     } finally {
       setLoadingSyncHistory(false);
     }
-  }, [workspaceId, syncHistoryPage, selectedSource, selectedType]);
+  }, [workspaceId, syncHistoryPage, selectedSource, selectedType, syncHistorySortBy, syncHistorySortOrder]);
 
   // Fetch data based on active tab
   useEffect(() => {
@@ -489,6 +522,60 @@ export function SourcesPage(): JSX.Element {
     setSelectedSyncId(null);
   };
 
+  // Message click handler
+  const handleMessageClick = (messageId: string) => {
+    setSelectedMessageId(messageId);
+    setMessageDrawerOpen(true);
+  };
+
+  const handleMessageDrawerClose = () => {
+    setMessageDrawerOpen(false);
+    setSelectedMessageId(null);
+  };
+
+  // Sorting handlers for Messages
+  const handleMessagesSortMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setMessagesSortAnchorEl(event.currentTarget);
+  };
+
+  const handleMessagesSortMenuClose = () => {
+    setMessagesSortAnchorEl(null);
+  };
+
+  const handleMessagesSortChange = (field: MessageSortField) => {
+    if (field === messagesSortBy) {
+      // Toggle order if same field
+      setMessagesSortOrder(messagesSortOrder === 'desc' ? 'asc' : 'desc');
+    } else {
+      setMessagesSortBy(field);
+      setMessagesSortOrder('desc');
+    }
+    setMessagesPage(1);
+    handleMessagesSortMenuClose();
+  };
+
+  // Sorting handler for Sync History
+  const handleSyncHistorySortChange = (field: SyncHistorySortField) => {
+    if (field === syncHistorySortBy) {
+      // Toggle order if same field
+      setSyncHistorySortOrder(syncHistorySortOrder === 'desc' ? 'asc' : 'desc');
+    } else {
+      setSyncHistorySortBy(field);
+      setSyncHistorySortOrder('desc');
+    }
+    setSyncHistoryPage(1);
+  };
+
+  // Get sort label for display
+  const getMessagesSortLabel = () => {
+    const labels: Record<MessageSortField, string> = {
+      timestamp: 'Date',
+      sender: 'Sender',
+      source: 'Source',
+    };
+    return labels[messagesSortBy];
+  };
+
   return (
     <AdminLayout>
       <Box
@@ -636,12 +723,108 @@ export function SourcesPage(): JSX.Element {
             onSourceChange={setSelectedSource}
           />
 
-          {activeTab === 1 && (
-            <TypeFilters
-              selectedType={selectedType}
-              onTypeChange={setSelectedType}
-            />
-          )}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            {activeTab === 1 && (
+              <TypeFilters
+                selectedType={selectedType}
+                onTypeChange={setSelectedType}
+              />
+            )}
+
+            {/* Sort button for Messages tab */}
+            {activeTab === 0 && (
+              <>
+                <Tooltip title="Sort messages">
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    startIcon={<SortIcon sx={{ fontSize: 16 }} />}
+                    endIcon={messagesSortOrder === 'desc' ? <DescIcon sx={{ fontSize: 14 }} /> : <AscIcon sx={{ fontSize: 14 }} />}
+                    onClick={handleMessagesSortMenuOpen}
+                    sx={{
+                      textTransform: 'none',
+                      fontWeight: 500,
+                      fontSize: '0.75rem',
+                      borderRadius: 1.5,
+                      px: 1.25,
+                      py: 0.5,
+                      borderColor: alpha(theme.palette.divider, 0.3),
+                      color: theme.palette.text.secondary,
+                      '&:hover': {
+                        borderColor: theme.palette.primary.main,
+                        bgcolor: alpha(theme.palette.primary.main, 0.04),
+                      },
+                    }}
+                  >
+                    {getMessagesSortLabel()}
+                  </Button>
+                </Tooltip>
+                <Menu
+                  anchorEl={messagesSortAnchorEl}
+                  open={Boolean(messagesSortAnchorEl)}
+                  onClose={handleMessagesSortMenuClose}
+                  transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                  PaperProps={{
+                    sx: {
+                      minWidth: 180,
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                      borderRadius: 2,
+                    },
+                  }}
+                >
+                  <MenuItem
+                    onClick={() => handleMessagesSortChange('timestamp')}
+                    sx={{ fontSize: '0.85rem' }}
+                  >
+                    <ListItemIcon>
+                      <TimeIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Date</ListItemText>
+                    {messagesSortBy === 'timestamp' && (
+                      <CheckIcon fontSize="small" color="primary" />
+                    )}
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => handleMessagesSortChange('sender')}
+                    sx={{ fontSize: '0.85rem' }}
+                  >
+                    <ListItemIcon>
+                      <PersonIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Sender</ListItemText>
+                    {messagesSortBy === 'sender' && (
+                      <CheckIcon fontSize="small" color="primary" />
+                    )}
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => handleMessagesSortChange('source')}
+                    sx={{ fontSize: '0.85rem' }}
+                  >
+                    <ListItemIcon>
+                      <SourceIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Source</ListItemText>
+                    {messagesSortBy === 'source' && (
+                      <CheckIcon fontSize="small" color="primary" />
+                    )}
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem
+                    onClick={() => setMessagesSortOrder(messagesSortOrder === 'desc' ? 'asc' : 'desc')}
+                    sx={{ fontSize: '0.85rem' }}
+                  >
+                    <ListItemIcon>
+                      {messagesSortOrder === 'desc' ? <DescIcon fontSize="small" /> : <AscIcon fontSize="small" />}
+                    </ListItemIcon>
+                    <ListItemText>
+                      {messagesSortOrder === 'desc' ? 'Newest first' : 'Oldest first'}
+                    </ListItemText>
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+          </Box>
         </Box>
 
         {/* Error Alert */}
@@ -679,7 +862,7 @@ export function SourcesPage(): JSX.Element {
                   </Typography>
                 </Box>
               ) : (
-                <MessageList messages={messages} />
+                <MessageList messages={messages} onMessageClick={handleMessageClick} />
               )
             ) : (
               loadingSyncHistory ? (
@@ -690,7 +873,13 @@ export function SourcesPage(): JSX.Element {
                   </Typography>
                 </Box>
               ) : (
-                <SyncHistoryTable items={syncHistory} onRowClick={handleSyncRowClick} />
+                <SyncHistoryTable
+                  items={syncHistory}
+                  onRowClick={handleSyncRowClick}
+                  sortBy={syncHistorySortBy}
+                  sortOrder={syncHistorySortOrder}
+                  onSortChange={handleSyncHistorySortChange}
+                />
               )
             )}
           </Paper>
@@ -743,6 +932,16 @@ export function SourcesPage(): JSX.Element {
           open={drawerOpen}
           onClose={handleDrawerClose}
           syncId={selectedSyncId}
+          workspaceId={workspaceId}
+        />
+      )}
+
+      {/* Message Details Drawer */}
+      {workspaceId && (
+        <MessageDetailsDrawer
+          open={messageDrawerOpen}
+          onClose={handleMessageDrawerClose}
+          messageId={selectedMessageId}
           workspaceId={workspaceId}
         />
       )}

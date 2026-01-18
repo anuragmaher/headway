@@ -2,6 +2,7 @@
 Periodic sync tasks that run on Celery Beat schedule.
 
 These tasks automatically sync data sources at regular intervals.
+AI processing is handled by the state-driven AI pipeline.
 """
 
 from app.sync_engine.tasks.periodic.health import health_check

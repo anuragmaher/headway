@@ -8,7 +8,6 @@ Main service for customer chat that handles:
 4. Response formatting
 """
 
-import os
 import json
 from typing import Dict, Any, List, Optional
 from openai import OpenAI
@@ -17,6 +16,7 @@ from sqlalchemy.orm import Session
 import sqlparse
 
 from app.services.customer_query_templates import get_customer_query_templates
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -29,11 +29,11 @@ class CustomerChatService:
         Initialize the customer chat service
 
         Args:
-            api_key: OpenAI API key (defaults to env variable)
+            api_key: OpenAI API key (defaults to settings)
         """
-        self.api_key = api_key or os.getenv('OPENAI_API_KEY')
+        self.api_key = api_key or settings.OPENAI_API_KEY
         if not self.api_key:
-            raise ValueError("OpenAI API key not found. Set OPENAI_API_KEY environment variable.")
+            raise ValueError("OpenAI API key not found. Set OPENAI_API_KEY in .env file.")
 
         self.client = OpenAI(api_key=self.api_key)
         self.templates_service = get_customer_query_templates()

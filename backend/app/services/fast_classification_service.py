@@ -1,4 +1,3 @@
-import os
 import logging
 import re
 from typing import Dict, Any, List, Optional, Tuple
@@ -10,6 +9,7 @@ from sqlalchemy.orm import Session
 from app.models.message import Message
 from app.models.clustering import ClassificationSignal
 from app.core.database import get_db
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -19,9 +19,9 @@ class FastClassificationService:
 
     def __init__(self):
         """Initialize OpenAI client for embedding-based classification"""
-        api_key = os.getenv('OPENAI_API_KEY')
+        api_key = settings.OPENAI_API_KEY
         if not api_key:
-            logger.warning("OPENAI_API_KEY not found - semantic classification will be disabled")
+            logger.warning("OPENAI_API_KEY not found in .env - semantic classification will be disabled")
             self.client = None
         else:
             self.client = OpenAI(api_key=api_key)

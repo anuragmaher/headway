@@ -2,6 +2,8 @@
 On-demand Gmail sync task.
 
 Triggered by the Sources API when user clicks "Sync All Sources".
+Uses optimized batch ingestion - data storage only, no AI extraction.
+AI extraction happens in a separate batch processing task.
 """
 
 import logging
@@ -12,9 +14,8 @@ from sqlalchemy.orm import Session
 
 from app.tasks.celery_app import celery_app
 from app.models.gmail import GmailAccounts
-from app.services.gmail_ingestion_service import gmail_ingestion_service
+from app.services.gmail_batch_ingestion_service import gmail_batch_ingestion_service
 from app.sync_engine.tasks.base import engine, update_sync_record
-from app.sync_engine.tasks.periodic.gmail import _process_gmail_threads_for_ai
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +31,7 @@ def sync_workspace_gmail(self, workspace_id: str, sync_id: str):
     On-demand task to sync Gmail for a specific workspace.
 
     Triggered by the Sources API when user clicks "Sync All Sources".
+    Uses batch ingestion - AI extraction happens in separate task.
     """
     logger.info(f"🚀 Starting on-demand Gmail sync for workspace {workspace_id}")
 
@@ -53,30 +55,22 @@ def sync_workspace_gmail(self, workspace_id: str, sync_id: str):
                 return {"status": "skipped", "reason": "no_accounts"}
 
             total_ingested = 0
-            total_features = 0
+            total_checked = 0
 
             for account in gmail_accounts:
                 try:
                     logger.info(f"Syncing Gmail account: {account.gmail_email}")
 
-                    # Ingest threads
-                    result = gmail_ingestion_service.ingest_threads_for_account(
+                    # Use batch ingestion (data storage only, no AI)
+                    result = gmail_batch_ingestion_service.ingest_threads_for_account(
                         gmail_account_id=str(account.id),
                         db=db,
                         max_threads=20,
                     )
 
                     if result.get("status") != "error":
-                        ingested = result.get("count", 0)
-                        total_ingested += ingested
-
-                        # Process for AI extraction
-                        features = _process_gmail_threads_for_ai(
-                            db=db,
-                            workspace_id=workspace_id,
-                            gmail_account_id=str(account.id)
-                        )
-                        total_features += features
+                        total_ingested += result.get("new_added", 0)
+                        total_checked += result.get("total_checked", 0)
 
                         # Update account last sync time
                         account.last_synced_at = datetime.now(timezone.utc)
@@ -87,13 +81,13 @@ def sync_workspace_gmail(self, workspace_id: str, sync_id: str):
                     logger.error(f"Error syncing Gmail account {account.gmail_email}: {e}")
                     continue
 
-            update_sync_record(db, sync_id, "success", total_ingested, total_features)
-            logger.info(f"✅ Gmail sync complete: {total_ingested} threads, {total_features} features")
+            update_sync_record(db, sync_id, "success", total_checked, total_ingested)
+            logger.info(f"✅ Gmail sync complete: {total_ingested} new threads ingested")
 
             return {
                 "status": "success",
+                "total_checked": total_checked,
                 "total_ingested": total_ingested,
-                "total_features": total_features,
             }
 
     except Exception as e:

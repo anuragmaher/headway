@@ -417,12 +417,23 @@ class TranscriptIngestionService:
             if not feature_requests:
                 return
 
-            # Get themes for matching
+            # Get themes for matching (only load id and name to save memory)
             themes = self.db.query(Theme).filter(
                 Theme.workspace_id == workspace_id
             ).all()
 
             themes_dict = {theme.name.lower(): theme for theme in themes}
+
+            # Pre-load existing features grouped by theme (limit per theme to save memory)
+            # Only load essential fields for matching
+            MAX_FEATURES_PER_THEME = 100  # Limit for LLM matching to save memory
+            features_by_theme: dict = {}
+            for theme in themes:
+                theme_features = self.db.query(Feature).filter(
+                    Feature.workspace_id == workspace_id,
+                    Feature.theme_id == theme.id
+                ).order_by(Feature.mention_count.desc()).limit(MAX_FEATURES_PER_THEME).all()
+                features_by_theme[theme.id] = theme_features
 
             features_created_count = 0
             features_matched_count = 0
@@ -473,18 +484,15 @@ class TranscriptIngestionService:
                     )
                     continue
 
-                # Get all existing features in the same theme (using assigned theme)
-                existing_features_in_theme = self.db.query(Feature).filter(
-                    Feature.workspace_id == workspace_id,
-                    Feature.theme_id == assigned_theme.id if assigned_theme else None
-                ).all() if assigned_theme else []
+                # Get existing features from pre-loaded cache (memory efficient)
+                existing_features_in_theme = features_by_theme.get(assigned_theme.id, []) if assigned_theme else []
 
-                # Prepare data for LLM matching
+                # Prepare data for LLM matching (only send what's needed)
                 existing_features_data = [
                     {
                         "id": str(f.id),
                         "name": f.name,
-                        "description": f.description or ""
+                        "description": (f.description or "")[:200]  # Truncate descriptions to save tokens
                     }
                     for f in existing_features_in_theme
                 ]
@@ -564,9 +572,9 @@ class TranscriptIngestionService:
                         if assigned_theme and assigned_theme.id:
                             from app.services.theme_slack_notification_service import theme_slack_notification_service
                             from app.core.database import SessionLocal
+                            from app.utils.background_tasks import submit_notification_task
                             import asyncio
-                            import threading
-                            
+
                             # Capture values before thread
                             theme_id = assigned_theme.id
                             feature_title_val = feature_title
@@ -580,16 +588,16 @@ class TranscriptIngestionService:
                             quote_val = quote
                             customer_name_val = customer_name
                             urgency_val = feature_urgency
-                            
-                            logger.info(f"🚀 Starting Slack notification thread for matched feature '{feature_title}' in theme {assigned_theme.name}")
-                            
+
+                            logger.info(f"🚀 Starting Slack notification for matched feature '{feature_title}' in theme {assigned_theme.name}")
+
                             def send_notification():
                                 """Run async notification in a new event loop with a new DB session"""
                                 db = None
                                 try:
                                     # Create a new database session for this thread
                                     db = SessionLocal()
-                                    
+
                                     loop = asyncio.new_event_loop()
                                     asyncio.set_event_loop(loop)
                                     loop.run_until_complete(
@@ -615,10 +623,9 @@ class TranscriptIngestionService:
                                 finally:
                                     if db:
                                         db.close()
-                            
-                            # Run in background thread (fire and forget)
-                            thread = threading.Thread(target=send_notification, daemon=True)
-                            thread.start()
+
+                            # Run in bounded thread pool (fire and forget)
+                            submit_notification_task(send_notification)
                         else:
                             logger.info(f"Skipping Slack notification: assigned_theme={assigned_theme}, theme_id={assigned_theme.id if assigned_theme else None}")
                     else:
@@ -709,9 +716,9 @@ class TranscriptIngestionService:
                     if assigned_theme and assigned_theme.id:
                         from app.services.theme_slack_notification_service import theme_slack_notification_service
                         from app.core.database import SessionLocal
+                        from app.utils.background_tasks import submit_notification_task
                         import asyncio
-                        import threading
-                        
+
                         # Capture values before thread
                         theme_id = assigned_theme.id
                         feature_name_val = feature_title
@@ -725,16 +732,16 @@ class TranscriptIngestionService:
                         quote_val = quote
                         customer_name_val = customer_name
                         pain_points_val = pain_points_list
-                        
-                        logger.info(f"🚀 Starting Slack notification thread for created feature '{feature_title}' in theme {assigned_theme.name}")
-                        
+
+                        logger.info(f"🚀 Starting Slack notification for created feature '{feature_title}' in theme {assigned_theme.name}")
+
                         def send_notification():
                             """Run async notification in a new event loop with a new DB session"""
                             db = None
                             try:
                                 # Create a new database session for this thread
                                 db = SessionLocal()
-                                
+
                                 loop = asyncio.new_event_loop()
                                 asyncio.set_event_loop(loop)
                                 loop.run_until_complete(
@@ -760,10 +767,9 @@ class TranscriptIngestionService:
                             finally:
                                 if db:
                                     db.close()
-                        
-                        # Run in background thread (fire and forget)
-                        thread = threading.Thread(target=send_notification, daemon=True)
-                        thread.start()
+
+                        # Run in bounded thread pool (fire and forget)
+                        submit_notification_task(send_notification)
                     else:
                         logger.info(f"Skipping Slack notification: assigned_theme={assigned_theme}, theme_id={assigned_theme.id if assigned_theme else None}")
 

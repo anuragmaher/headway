@@ -1,4 +1,3 @@
-import os
 import logging
 from typing import Dict, Any, Optional, List
 from openai import OpenAI
@@ -10,6 +9,7 @@ from app.models.theme import Theme
 from app.models.feature import Feature
 from app.models.data_extraction_field import DataExtractionField
 from app.core.database import get_db
+from app.core.config import settings
 from sqlalchemy import func
 
 logger = logging.getLogger(__name__)
@@ -20,9 +20,9 @@ class AIProcessingService:
 
     def __init__(self):
         """Initialize OpenAI client"""
-        api_key = os.getenv('OPENAI_API_KEY')
+        api_key = settings.OPENAI_API_KEY
         if not api_key:
-            raise ValueError("OPENAI_API_KEY environment variable is required")
+            raise ValueError("OPENAI_API_KEY not found. Set OPENAI_API_KEY in .env file.")
 
         self.client = OpenAI(api_key=api_key)
         self.model = "gpt-4o-mini"  # Cost-effective model for analysis

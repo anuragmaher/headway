@@ -7,3 +7,4 @@ export { SyncHistoryTable } from './SyncHistoryTable';
 export { SourceFilters, TypeFilters } from './SourceFilters';
 export { SyncDetailsDrawer } from './SyncDetailsDrawer';
 export { SyncedItemCard } from './SyncedItemCard';
+export { MessageDetailsDrawer } from './MessageDetailsDrawer';

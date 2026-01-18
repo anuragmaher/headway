@@ -1,6 +1,7 @@
 import asyncio
 import logging
 from datetime import datetime, timedelta
+from functools import lru_cache
 from typing import List, Dict, Any, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
@@ -12,12 +13,45 @@ from app.services.slack_service import slack_service
 
 logger = logging.getLogger(__name__)
 
+# Maximum number of users to cache per integration to prevent memory leaks
+MAX_USER_CACHE_SIZE = 500
+
+# Batch commit size for memory efficiency
+BATCH_COMMIT_SIZE = 50
+
 
 class MessageIngestionService:
     """Service for ingesting messages from various integrations"""
-    
+
     def __init__(self):
-        self.user_cache: Dict[str, Dict[str, Any]] = {}  # Cache user info to avoid repeated API calls
+        # LRU-style user cache with max size to prevent memory leaks
+        self._user_cache: Dict[str, Dict[str, Any]] = {}
+        self._user_cache_order: List[str] = []  # Track insertion order for LRU eviction
+
+    def _get_cached_user(self, user_key: str) -> Optional[Dict[str, Any]]:
+        """Get user from cache"""
+        return self._user_cache.get(user_key)
+
+    def _set_cached_user(self, user_key: str, user_data: Dict[str, Any]) -> None:
+        """Set user in cache with LRU eviction"""
+        if user_key in self._user_cache:
+            # Move to end (most recently used)
+            self._user_cache_order.remove(user_key)
+            self._user_cache_order.append(user_key)
+            self._user_cache[user_key] = user_data
+        else:
+            # Evict oldest if at capacity
+            while len(self._user_cache) >= MAX_USER_CACHE_SIZE:
+                oldest_key = self._user_cache_order.pop(0)
+                del self._user_cache[oldest_key]
+            # Add new entry
+            self._user_cache[user_key] = user_data
+            self._user_cache_order.append(user_key)
+
+    def clear_user_cache(self) -> None:
+        """Clear the user cache (call periodically to free memory)"""
+        self._user_cache.clear()
+        self._user_cache_order.clear()
     
     async def ingest_slack_messages(self, integration_id: str, db: Session, hours_back: int = 24) -> Dict[str, int]:
         """
@@ -137,17 +171,18 @@ class MessageIngestionService:
             Number of messages processed
         """
         processed_count = 0
-        
+        batch_count = 0  # Track messages in current batch
+
         for message_data in messages:
             try:
                 # Get external ID first
                 external_id = message_data.get("ts")  # Slack timestamp as unique ID
-                
+
                 # Skip certain message types
                 if self._should_skip_message(message_data):
                     logger.debug(f"Skipping message {external_id}: {self._get_skip_reason(message_data)}")
                     continue
-                
+
                 # Check if message already exists
                 existing_message = db.query(Message).filter(
                     and_(
@@ -156,16 +191,16 @@ class MessageIngestionService:
                         Message.channel_id == channel_id
                     )
                 ).first()
-                
+
                 if existing_message:
                     continue  # Skip if already exists
-                
+
                 # Get author information
                 author_info = await self._get_author_info(
                     user_id=message_data.get("user"),
                     token=integration.access_token
                 )
-                
+
                 # Extract title from Slack message
                 title = self._extract_slack_title(
                     message_data=message_data,
@@ -187,7 +222,7 @@ class MessageIngestionService:
                         "reactions": message_data.get("reactions", []),
                         "thread_ts": message_data.get("thread_ts"),
                         "reply_count": message_data.get("reply_count", 0),
-                        "raw_message": message_data
+                        # Note: raw_message removed to save memory/storage - all needed fields extracted above
                     },
                     thread_id=message_data.get("thread_ts"),
                     is_thread_reply=bool(message_data.get("thread_ts") and message_data.get("thread_ts") != external_id),
@@ -195,23 +230,37 @@ class MessageIngestionService:
                     integration_id=integration.id,
                     sent_at=datetime.fromtimestamp(float(external_id))
                 )
-                
+
                 db.add(message)
                 processed_count += 1
-                
+                batch_count += 1
+
+                # Batch commit to reduce memory pressure
+                if batch_count >= BATCH_COMMIT_SIZE:
+                    try:
+                        db.commit()
+                        logger.debug(f"Batch committed {batch_count} messages from #{channel_name}")
+                        batch_count = 0
+                    except Exception as e:
+                        logger.error(f"Error in batch commit for #{channel_name}: {e}")
+                        db.rollback()
+                        batch_count = 0
+
             except Exception as e:
                 logger.error(f"Error processing message {message_data.get('ts', 'unknown')}: {e}")
                 continue
-        
-        # Commit all messages for this channel
-        try:
-            db.commit()
-            logger.info(f"Committed {processed_count} messages from #{channel_name}")
-        except Exception as e:
-            logger.error(f"Error committing messages for #{channel_name}: {e}")
-            db.rollback()
-            processed_count = 0
-        
+
+        # Commit remaining messages in the last batch
+        if batch_count > 0:
+            try:
+                db.commit()
+                logger.info(f"Committed final batch of {batch_count} messages from #{channel_name}")
+            except Exception as e:
+                logger.error(f"Error committing final batch for #{channel_name}: {e}")
+                db.rollback()
+                processed_count -= batch_count  # Subtract uncommitted messages from count
+
+        logger.info(f"Total {processed_count} new messages processed from #{channel_name}")
         return processed_count
     
     def _should_skip_message(self, message_data: Dict[str, Any]) -> bool:
@@ -323,25 +372,26 @@ class MessageIngestionService:
         """
         if not user_id:
             return {"name": "Unknown User", "email": None}
-        
-        # Check cache first
-        if user_id in self.user_cache:
-            return self.user_cache[user_id]
-        
+
+        # Check LRU cache first
+        cached = self._get_cached_user(user_id)
+        if cached:
+            return cached
+
         try:
             user_info = await slack_service.get_user_info(token, user_id)
-            
+
             # Extract relevant information
             profile = user_info.get("profile", {})
             author_info = {
                 "name": profile.get("display_name") or profile.get("real_name") or user_info.get("name", "Unknown User"),
                 "email": profile.get("email")
             }
-            
-            # Cache the result
-            self.user_cache[user_id] = author_info
+
+            # Cache the result with LRU eviction
+            self._set_cached_user(user_id, author_info)
             return author_info
-            
+
         except Exception as e:
             logger.warning(f"Failed to fetch user info for {user_id}: {e}")
             return {"name": "Unknown User", "email": None}

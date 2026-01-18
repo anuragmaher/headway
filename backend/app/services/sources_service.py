@@ -7,7 +7,7 @@ from datetime import datetime, timezone, timedelta
 from typing import List, Optional, Tuple, Dict, Any
 from uuid import UUID
 from sqlalchemy.orm import Session
-from sqlalchemy import desc, and_, or_, func
+from sqlalchemy import desc, asc, and_, or_, func
 
 from app.models.message import Message
 from app.models.integration import Integration
@@ -43,6 +43,8 @@ class SourcesService:
         page: int = 1,
         page_size: int = 5,
         source_filter: Optional[str] = None,
+        sort_by: Optional[str] = "timestamp",
+        sort_order: Optional[str] = "desc",
     ) -> MessageListResponse:
         """
         Get paginated list of messages from all sources.
@@ -56,6 +58,8 @@ class SourcesService:
             page: Page number (1-indexed)
             page_size: Number of items per page
             source_filter: Optional filter by source type (gmail, slack, gong, fathom)
+            sort_by: Field to sort by (timestamp, sender, source)
+            sort_order: Sort order (asc, desc)
 
         Returns:
             Paginated message list response
@@ -124,8 +128,15 @@ class SourcesService:
                     'is_processed': thread.is_processed,
                 })
 
-        # Sort all items by timestamp descending
-        message_responses.sort(key=lambda x: x['timestamp'] or datetime.min.replace(tzinfo=timezone.utc), reverse=True)
+        # Sort all items based on sort_by and sort_order
+        reverse_order = sort_order != "asc"
+
+        if sort_by == "sender":
+            message_responses.sort(key=lambda x: (x['sender'] or '').lower(), reverse=reverse_order)
+        elif sort_by == "source":
+            message_responses.sort(key=lambda x: (x['source'] or '').lower(), reverse=reverse_order)
+        else:  # Default to timestamp
+            message_responses.sort(key=lambda x: x['timestamp'] or datetime.min.replace(tzinfo=timezone.utc), reverse=reverse_order)
 
         # Get total count and paginate
         total = len(message_responses)
@@ -245,7 +256,181 @@ class SourcesService:
         if msg.source == 'fathom':
             return "Fathom Meeting"
         return "Message"
-    
+
+    def get_message_details(
+        self,
+        workspace_id: UUID,
+        message_id: UUID,
+    ) -> Dict[str, Any]:
+        """
+        Get full details of a specific message.
+
+        Checks both Message table and GmailThread table since messages
+        can come from either source.
+
+        Args:
+            workspace_id: Workspace UUID
+            message_id: Message UUID
+
+        Returns:
+            Complete message details
+
+        Raises:
+            HTTPException: If message not found
+        """
+        from fastapi import HTTPException, status
+
+        # First try to find in Message table
+        message = self.db.query(Message).filter(
+            Message.id == message_id,
+            Message.workspace_id == workspace_id,
+        ).first()
+
+        if message:
+            return self._format_message_details(message)
+
+        # If not found, try GmailThread table
+        gmail_thread = self.db.query(GmailThread).filter(
+            GmailThread.id == message_id,
+            GmailThread.workspace_id == workspace_id,
+        ).first()
+
+        if gmail_thread:
+            return self._format_gmail_thread_details(gmail_thread)
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Message not found"
+        )
+
+    def _format_message_details(self, msg: Message) -> Dict[str, Any]:
+        """Format Message model to detailed response"""
+        metadata = msg.message_metadata or {}
+
+        # Extract duration for Gong/Fathom
+        duration_secs = metadata.get('duration_seconds') or metadata.get('duration')
+        duration_formatted = None
+        if duration_secs:
+            try:
+                duration_secs = int(duration_secs)
+                mins, secs = divmod(duration_secs, 60)
+                hours, mins = divmod(mins, 60)
+                if hours > 0:
+                    duration_formatted = f"{hours}h {mins}m"
+                else:
+                    duration_formatted = f"{mins}m {secs}s"
+            except (ValueError, TypeError):
+                duration_secs = None
+
+        # Safely get related features
+        related_features = []
+        try:
+            if msg.features:
+                related_features = [
+                    {
+                        'id': str(f.id),
+                        'title': f.title,
+                        'theme_id': str(f.theme_id) if f.theme_id else None,
+                    }
+                    for f in msg.features
+                ]
+        except Exception:
+            # If there's any issue with the relationship, skip it
+            pass
+
+        return {
+            'id': str(msg.id),
+            'type': self._get_message_type(msg.source),
+            'source': msg.source,
+            'title': msg.title or self._generate_title(msg),
+            'content': msg.content,  # Full content, not truncated
+            'sender': msg.author_name or msg.author_email or 'Unknown',
+            'sender_email': msg.author_email,
+            'channel_name': msg.channel_name,
+            'sent_at': msg.sent_at.isoformat() if msg.sent_at else None,
+            'created_at': msg.created_at.isoformat() if msg.created_at else None,
+            'is_processed': msg.is_processed,
+            'processed_at': msg.processed_at.isoformat() if msg.processed_at else None,
+            # Metadata fields
+            'metadata': metadata,
+            'ai_insights': msg.ai_insights,
+            'thread_id': msg.thread_id,
+            'is_thread_reply': msg.is_thread_reply,
+            # Gong/Fathom specific fields
+            'duration': duration_secs,
+            'duration_formatted': duration_formatted,
+            'parties': metadata.get('parties', []),
+            'participants': metadata.get('participants', []),
+            'customer_info': {
+                'name': metadata.get('customer_name'),
+                'email': metadata.get('customer_email') or metadata.get('customer_domain'),
+            } if metadata.get('customer_name') else None,
+            'recording_url': metadata.get('recording_url'),
+            'has_transcript': metadata.get('has_transcript', False),
+            'call_id': metadata.get('call_id') or msg.external_id,
+            'session_id': metadata.get('session_id') or msg.external_id,
+            # Gmail fields (will be None/empty for non-Gmail)
+            'subject': None,
+            'from_name': None,
+            'from_email': None,
+            'to_emails': [],
+            'snippet': None,
+            'message_count': None,
+            'thread_date': None,
+            'label_name': None,
+            # Related features
+            'related_features': related_features,
+        }
+
+    def _format_gmail_thread_details(self, thread: GmailThread) -> Dict[str, Any]:
+        """Format GmailThread model to detailed response"""
+        # Parse to_emails - it's stored as text, could be comma-separated or newline-separated
+        to_emails_list = []
+        if thread.to_emails:
+            # Handle both comma and newline separated formats
+            raw_emails = thread.to_emails.replace('\n', ',').replace(';', ',')
+            to_emails_list = [e.strip() for e in raw_emails.split(',') if e.strip()]
+
+        return {
+            'id': str(thread.id),
+            'type': 'email',
+            'source': 'gmail',
+            'title': thread.subject or 'Email Thread',
+            'content': thread.content,  # Full content
+            'sender': thread.from_name or thread.from_email or 'Unknown',
+            'sender_email': thread.from_email,
+            'channel_name': thread.label_name,
+            'sent_at': thread.thread_date.isoformat() if thread.thread_date else None,
+            'created_at': thread.created_at.isoformat() if thread.created_at else None,
+            'is_processed': thread.is_processed,
+            'processed_at': thread.processed_at.isoformat() if thread.processed_at else None,
+            # Gmail specific fields
+            'subject': thread.subject,
+            'from_name': thread.from_name,
+            'from_email': thread.from_email,
+            'to_emails': to_emails_list,
+            'snippet': thread.snippet,
+            'message_count': thread.message_count,
+            'thread_date': thread.thread_date.isoformat() if thread.thread_date else None,
+            'label_name': thread.label_name,
+            # No metadata for Gmail threads
+            'metadata': {},
+            'ai_insights': thread.ai_insights,
+            'thread_id': thread.thread_id,  # Gmail's thread ID
+            'is_thread_reply': False,
+            'related_features': [],
+            # Fields that don't apply to Gmail
+            'duration': None,
+            'duration_formatted': None,
+            'parties': [],
+            'participants': [],
+            'customer_info': None,
+            'recording_url': None,
+            'has_transcript': False,
+            'call_id': None,
+            'session_id': None,
+        }
+
     # ============ Sync History Operations ============
     
     def get_sync_history_paginated(
@@ -255,6 +440,8 @@ class SourcesService:
         page_size: int = 10,
         source_filter: Optional[str] = None,
         type_filter: Optional[str] = None,  # 'source' or 'theme'
+        sort_by: Optional[str] = "started_at",
+        sort_order: Optional[str] = "desc",
     ) -> SyncHistoryListResponse:
         """
         Get paginated sync history.
@@ -265,6 +452,8 @@ class SourcesService:
             page_size: Number of items per page
             source_filter: Optional filter by source type
             type_filter: Optional filter by sync type ('source' or 'theme')
+            sort_by: Field to sort by (type, status, started_at)
+            sort_order: Sort order (asc, desc)
 
         Returns:
             Paginated sync history response
@@ -306,8 +495,22 @@ class SourcesService:
         total_pages = (total + page_size - 1) // page_size if total > 0 else 1
         offset = (page - 1) * page_size
 
-        # Get paginated results ordered by started_at descending
-        items = query.order_by(desc(SyncHistory.started_at)).offset(offset).limit(page_size).all()
+        # Determine sort column
+        sort_column_map = {
+            "type": SyncHistory.sync_type,
+            "status": SyncHistory.status,
+            "started_at": SyncHistory.started_at,
+        }
+        sort_column = sort_column_map.get(sort_by, SyncHistory.started_at)
+
+        # Apply sort order
+        if sort_order == "asc":
+            order_clause = asc(sort_column)
+        else:
+            order_clause = desc(sort_column)
+
+        # Get paginated results with dynamic sorting
+        items = query.order_by(order_clause).offset(offset).limit(page_size).all()
 
         # Convert to response format (items are tuples now, not ORM objects)
         history_responses = [
@@ -665,6 +868,9 @@ class SourcesService:
         """
         Get items that were synced in a specific sync operation.
 
+        Delegates to SyncItemsService which handles caching and
+        supports all source types (Gmail, Slack, Gong, Fathom).
+
         Args:
             workspace_id: Workspace UUID
             sync_id: Sync history UUID
@@ -674,124 +880,14 @@ class SourcesService:
         Returns:
             Dict with synced items and metadata
         """
-        # Get sync record to determine type
-        sync_record = self.db.query(SyncHistory).filter(
-            SyncHistory.id == sync_id,
-            SyncHistory.workspace_id == workspace_id
-        ).first()
-
-        if not sync_record:
-            return {
-                'items': [],
-                'total': 0,
-                'sync_type': None,
-                'source_type': None,
-            }
-
-        items = []
-        total = 0
-
-        # For source syncs, get items created during the sync window
-        if sync_record.sync_type == 'source' and sync_record.source_type:
-            if sync_record.source_type == 'gmail':
-                # Get Gmail threads created during this sync
-                from app.models.gmail import GmailThread
-
-                query = self.db.query(GmailThread).filter(
-                    GmailThread.workspace_id == workspace_id,
-                    GmailThread.created_at >= sync_record.started_at
-                )
-
-                if sync_record.completed_at:
-                    query = query.filter(GmailThread.created_at <= sync_record.completed_at)
-
-                total = query.count()
-                offset = (page - 1) * page_size
-
-                threads = query.order_by(desc(GmailThread.thread_date)).offset(offset).limit(page_size).all()
-
-                items = [{
-                    'id': str(thread.id),
-                    'type': 'gmail_thread',
-                    'subject': thread.subject,
-                    'from_name': thread.from_name,
-                    'from_email': thread.from_email,
-                    'to_emails': thread.to_emails,
-                    'snippet': thread.snippet,
-                    'content': thread.content,
-                    'message_count': thread.message_count,
-                    'thread_date': thread.thread_date.isoformat() if thread.thread_date else None,
-                    'label_name': thread.label_name,
-                    'created_at': thread.created_at.isoformat() if thread.created_at else None,
-                } for thread in threads]
-
-            elif sync_record.source_type == 'slack':
-                # Get messages created during this sync
-                query = self.db.query(Message).filter(
-                    Message.workspace_id == workspace_id,
-                    Message.source == 'slack',
-                    Message.created_at >= sync_record.started_at
-                )
-
-                if sync_record.completed_at:
-                    query = query.filter(Message.created_at <= sync_record.completed_at)
-
-                total = query.count()
-                offset = (page - 1) * page_size
-
-                messages = query.order_by(desc(Message.sent_at)).offset(offset).limit(page_size).all()
-
-                items = [{
-                    'id': str(msg.id),
-                    'type': 'slack_message',
-                    'title': msg.title,
-                    'author_name': msg.author_name,
-                    'author_email': msg.author_email,
-                    'channel_name': msg.channel_name,
-                    'content': msg.content,
-                    'sent_at': msg.sent_at.isoformat() if msg.sent_at else None,
-                    'created_at': msg.created_at.isoformat() if msg.created_at else None,
-                } for msg in messages]
-
-        elif sync_record.sync_type == 'theme':
-            # For theme syncs, get features updated during this sync
-            query = self.db.query(Feature).filter(
-                Feature.workspace_id == workspace_id,
-                Feature.updated_at >= sync_record.started_at
-            )
-
-            if sync_record.completed_at:
-                query = query.filter(Feature.updated_at <= sync_record.completed_at)
-
-            total = query.count()
-            offset = (page - 1) * page_size
-
-            features = query.order_by(desc(Feature.updated_at)).offset(offset).limit(page_size).all()
-
-            items = [{
-                'id': str(feature.id),
-                'type': 'feature',
-                'title': feature.title,
-                'description': feature.description,
-                'theme_id': str(feature.theme_id) if feature.theme_id else None,
-                'theme_name': feature.theme.name if feature.theme else None,
-                'message_count': feature.message_count,
-                'updated_at': feature.updated_at.isoformat() if feature.updated_at else None,
-            } for feature in features]
-
-        total_pages = (total + page_size - 1) // page_size if total > 0 else 1
-
-        return {
-            'items': items,
-            'total': total,
-            'page': page,
-            'page_size': page_size,
-            'total_pages': total_pages,
-            'has_next': page < total_pages,
-            'has_prev': page > 1,
-            'sync_type': sync_record.sync_type,
-            'source_type': sync_record.source_type,
-        }
+        from app.services.sync_items_service import get_sync_items_service
+        sync_items_service = get_sync_items_service(self.db)
+        return sync_items_service.get_synced_items(
+            workspace_id=workspace_id,
+            sync_id=sync_id,
+            page=page,
+            page_size=page_size,
+        )
 
 
 def get_sources_service(db: Session) -> SourcesService:

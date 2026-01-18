@@ -10,28 +10,41 @@ import sourcesService from '@/services/sources';
 export interface SyncedItem {
   id: string;
   type: 'gmail_thread' | 'slack_message' | 'feature' | 'gong_call' | 'fathom_session';
+  // Common fields
+  title?: string;
+  content?: string;
+  created_at?: string;
   // Gmail thread fields
   subject?: string;
   from_name?: string;
   from_email?: string;
+  to_emails?: string[];
   label_name?: string;
   snippet?: string;
-  content?: string;
   thread_date?: string;
   message_count?: number;
   // Slack message fields
-  title?: string;
   author_name?: string;
   author_email?: string;
   channel_name?: string;
   sent_at?: string;
   // Feature fields (theme sync)
+  theme_id?: string;
   theme_name?: string;
   description?: string;
+  updated_at?: string;
   // Gong/Fathom fields
+  duration?: number;
+  duration_formatted?: string;
   duration_seconds?: number;
-  participants?: string[];
+  participants?: Array<string | { name?: string; email?: string }>;
+  parties?: Array<{ name?: string; email?: string; role?: string }>;
   transcript?: string;
+  has_transcript?: boolean;
+  recording_url?: string;
+  call_id?: string;
+  session_id?: string;
+  customer_info?: { name?: string; email?: string };
 }
 
 interface SyncDetailsState {

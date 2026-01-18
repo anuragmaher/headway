@@ -16,6 +16,7 @@ import {
   useTheme,
   CircularProgress,
   Tooltip,
+  TableSortLabel,
 } from '@mui/material';
 import {
   Email as EmailIcon,
@@ -30,6 +31,7 @@ import {
   Add as AddIcon,
 } from '@mui/icons-material';
 import { SyncHistoryItem, SourceType } from '../types';
+import { SyncHistorySortField, SortOrder } from '@/services/sources';
 
 /**
  * Format date/time according to user's locale and timezone
@@ -85,6 +87,9 @@ const getFullDateTime = (dateString: string | null | undefined): string => {
 interface SyncHistoryTableProps {
   items: SyncHistoryItem[];
   onRowClick?: (item: SyncHistoryItem) => void;
+  sortBy?: SyncHistorySortField;
+  sortOrder?: SortOrder;
+  onSortChange?: (field: SyncHistorySortField) => void;
 }
 
 const getSourceIcon = (source: SourceType | undefined, size: 'small' | 'medium' = 'medium') => {
@@ -121,7 +126,13 @@ const getSourceColor = (source: SourceType | undefined, theme: ReturnType<typeof
   }
 };
 
-export function SyncHistoryTable({ items, onRowClick }: SyncHistoryTableProps): JSX.Element {
+export function SyncHistoryTable({
+  items,
+  onRowClick,
+  sortBy = 'started_at',
+  sortOrder = 'desc',
+  onSortChange,
+}: SyncHistoryTableProps): JSX.Element {
   const theme = useTheme();
 
   if (items.length === 0) {
@@ -145,10 +156,24 @@ export function SyncHistoryTable({ items, onRowClick }: SyncHistoryTableProps): 
     px: 2,
   };
 
+  const sortableCellSx = {
+    ...headerCellSx,
+    cursor: onSortChange ? 'pointer' : 'default',
+    '&:hover': onSortChange ? {
+      color: theme.palette.primary.main,
+    } : {},
+  };
+
   const bodyCellSx = {
     borderBottom: `1px solid ${alpha(theme.palette.divider, 0.05)}`,
     py: 1.5,
     px: 2,
+  };
+
+  const handleSort = (field: SyncHistorySortField) => {
+    if (onSortChange) {
+      onSortChange(field);
+    }
   };
 
   return (
@@ -156,10 +181,61 @@ export function SyncHistoryTable({ items, onRowClick }: SyncHistoryTableProps): 
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell sx={headerCellSx}>Type</TableCell>
+            <TableCell sx={sortableCellSx}>
+              {onSortChange ? (
+                <TableSortLabel
+                  active={sortBy === 'type'}
+                  direction={sortBy === 'type' ? sortOrder : 'desc'}
+                  onClick={() => handleSort('type')}
+                  sx={{
+                    '& .MuiTableSortLabel-icon': {
+                      fontSize: '0.9rem',
+                    },
+                  }}
+                >
+                  Type
+                </TableSortLabel>
+              ) : (
+                'Type'
+              )}
+            </TableCell>
             <TableCell sx={headerCellSx}>Source / Theme</TableCell>
-            <TableCell sx={headerCellSx}>Status</TableCell>
-            <TableCell sx={headerCellSx}>Started At</TableCell>
+            <TableCell sx={sortableCellSx}>
+              {onSortChange ? (
+                <TableSortLabel
+                  active={sortBy === 'status'}
+                  direction={sortBy === 'status' ? sortOrder : 'desc'}
+                  onClick={() => handleSort('status')}
+                  sx={{
+                    '& .MuiTableSortLabel-icon': {
+                      fontSize: '0.9rem',
+                    },
+                  }}
+                >
+                  Status
+                </TableSortLabel>
+              ) : (
+                'Status'
+              )}
+            </TableCell>
+            <TableCell sx={sortableCellSx}>
+              {onSortChange ? (
+                <TableSortLabel
+                  active={sortBy === 'started_at'}
+                  direction={sortBy === 'started_at' ? sortOrder : 'desc'}
+                  onClick={() => handleSort('started_at')}
+                  sx={{
+                    '& .MuiTableSortLabel-icon': {
+                      fontSize: '0.9rem',
+                    },
+                  }}
+                >
+                  Started At
+                </TableSortLabel>
+              ) : (
+                'Started At'
+              )}
+            </TableCell>
             <TableCell align="right" sx={headerCellSx}>Checked</TableCell>
             <TableCell align="right" sx={headerCellSx}>New Data</TableCell>
           </TableRow>

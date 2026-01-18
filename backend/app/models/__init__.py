@@ -20,6 +20,8 @@ from app.models.data_extraction_field import DataExtractionField
 from app.models.gmail import GmailAccounts, GmailLabels, GmailThread
 from app.models.competitor import Competitor
 from app.models.sync_history import SyncHistory
+from app.models.normalized_event import NormalizedEvent, EventChunk
+from app.models.extracted_fact import ExtractedFact, AggregationRun
 
 __all__ = [
     "User",
@@ -41,5 +43,9 @@ __all__ = [
     "GmailLabels",
     "GmailThread",
     "Competitor",
-    "SyncHistory"
+    "SyncHistory",
+    "NormalizedEvent",
+    "EventChunk",
+    "ExtractedFact",
+    "AggregationRun",
 ]

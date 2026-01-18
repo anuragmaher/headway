@@ -4,13 +4,14 @@ Workspace Chat Service
 Service for workspace-level chat that handles queries across ALL customers.
 """
 
-import os
 import json
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from openai import OpenAI
 import logging
 from sqlalchemy.orm import Session
 from sqlalchemy import text
+
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -18,16 +19,16 @@ logger = logging.getLogger(__name__)
 class WorkspaceChatService:
     """Service for handling workspace-level chat queries across all customers"""
 
-    def __init__(self, api_key: str = None):
+    def __init__(self, api_key: Optional[str] = None):
         """
         Initialize the workspace chat service
 
         Args:
-            api_key: OpenAI API key (defaults to env variable)
+            api_key: OpenAI API key (defaults to settings)
         """
-        self.api_key = api_key or os.getenv('OPENAI_API_KEY')
+        self.api_key = api_key or settings.OPENAI_API_KEY
         if not self.api_key:
-            raise ValueError("OpenAI API key not found. Set OPENAI_API_KEY environment variable.")
+            raise ValueError("OpenAI API key not found. Set OPENAI_API_KEY in .env file.")
 
         self.client = OpenAI(api_key=self.api_key)
 

@@ -1,12 +1,12 @@
 import json
 import logging
-import os
 from typing import List, Dict, Optional, Any
 from datetime import datetime
 from sqlalchemy.orm import Session
 from openai import OpenAI
 
 from app.core.database import get_db
+from app.core.config import settings
 from app.models.message import Message
 from app.models.feature import Feature
 from app.models.theme import Theme
@@ -21,9 +21,9 @@ class LLMMessageClassificationService:
         self.classification_cache = {}
 
         # Initialize OpenAI client
-        api_key = os.getenv('OPENAI_API_KEY')
+        api_key = settings.OPENAI_API_KEY
         if not api_key:
-            print("WARNING: OPENAI_API_KEY not set, using dummy client")
+            logger.warning("OPENAI_API_KEY not found in .env - LLM classification will be disabled")
             self.client = None
         else:
             self.client = OpenAI(api_key=api_key)

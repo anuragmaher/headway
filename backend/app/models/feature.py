@@ -15,6 +15,7 @@ class Feature(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     name = Column(String, nullable=False)
     description = Column(Text, nullable=True)
+    priority = Column(String, nullable=False, default="medium")  # low, medium, high, critical
     urgency = Column(String, nullable=False, default="medium")  # low, medium, high, critical
     status = Column(String, nullable=False, default="new")  # new, under-review, planned, shipped
     mention_count = Column(Integer, nullable=False, default=1)
@@ -27,12 +28,16 @@ class Feature(Base):
     match_confidence = Column(Float, nullable=True)  # 0.0-1.0 confidence score from LLM matching
     extraction_index = Column(Integer, nullable=True)  # Order of extraction from message/call (1st, 2nd, 3rd)
 
-    # AI reasoning and metadata
-    ai_metadata = Column(JSONB, nullable=True, default=dict)
+    # AI reasoning and metadata (renamed for consistency)
+    feature_metadata = Column(JSONB, nullable=True, default=dict)
+    ai_metadata = Column(JSONB, nullable=True, default=dict)  # Kept for backwards compatibility
 
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
+    first_mentioned_at = Column(DateTime(timezone=True), nullable=True)
+    last_mentioned_at = Column(DateTime(timezone=True), nullable=True)
+    # Keep old column names for backwards compatibility
     first_mentioned = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     last_mentioned = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
@@ -44,6 +49,7 @@ class Feature(Base):
         secondary="feature_messages",
         back_populates="features"
     )
+    extracted_facts = relationship("ExtractedFact", back_populates="feature")
 
     # Indexes for performance
     __table_args__ = (

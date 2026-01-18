@@ -50,6 +50,39 @@ def get_workspace_for_user(db: Session, current_user: dict) -> Workspace:
 # ============ Messages Endpoints ============
 
 @router.get(
+    "/{workspace_id}/messages/{message_id}",
+    status_code=status.HTTP_200_OK,
+    summary="Get single message details",
+    description="Returns full details of a specific message"
+)
+async def get_message_details(
+    workspace_id: UUID,
+    message_id: UUID,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Get full details of a specific message.
+
+    Returns the complete message including:
+    - Full content (not truncated)
+    - All metadata
+    - AI insights if processed
+    """
+    try:
+        service = get_sources_service(db)
+        return service.get_message_details(workspace_id, message_id)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching message details: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch message details"
+        )
+
+
+@router.get(
     "/{workspace_id}/messages",
     response_model=MessageListResponse,
     status_code=status.HTTP_200_OK,
@@ -61,15 +94,19 @@ async def get_messages(
     page: int = Query(default=1, ge=1, description="Page number"),
     page_size: int = Query(default=5, ge=1, le=50, description="Items per page"),
     source: Optional[str] = Query(default=None, description="Filter by source (gmail, slack, gong, fathom)"),
+    sort_by: Optional[str] = Query(default="timestamp", description="Field to sort by (timestamp, sender, source)"),
+    sort_order: Optional[str] = Query(default="desc", description="Sort order (asc, desc)"),
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> MessageListResponse:
     """
     Get paginated messages from all data sources.
-    
+
     - **page**: Page number (1-indexed)
     - **page_size**: Number of items per page (default: 5, max: 50)
     - **source**: Optional filter by source type
+    - **sort_by**: Field to sort by (timestamp, sender, source)
+    - **sort_order**: Sort order (asc, desc)
     """
     try:
         service = get_sources_service(db)
@@ -78,6 +115,8 @@ async def get_messages(
             page=page,
             page_size=page_size,
             source_filter=source,
+            sort_by=sort_by,
+            sort_order=sort_order,
         )
     except Exception as e:
         logger.error(f"Error fetching messages: {e}")
@@ -102,16 +141,20 @@ async def get_sync_history(
     page_size: int = Query(default=10, ge=1, le=50, description="Items per page"),
     source: Optional[str] = Query(default=None, description="Filter by source (gmail, slack, gong, fathom)"),
     sync_type: Optional[str] = Query(default=None, description="Filter by sync type (source, theme)"),
+    sort_by: Optional[str] = Query(default="started_at", description="Field to sort by (type, status, started_at)"),
+    sort_order: Optional[str] = Query(default="desc", description="Sort order (asc, desc)"),
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> SyncHistoryListResponse:
     """
     Get paginated sync history.
-    
+
     - **page**: Page number (1-indexed)
     - **page_size**: Number of items per page (default: 10, max: 50)
     - **source**: Optional filter by source type
     - **sync_type**: Optional filter by sync type ('source' or 'theme')
+    - **sort_by**: Field to sort by (type, status, started_at)
+    - **sort_order**: Sort order (asc, desc)
     """
     try:
         service = get_sources_service(db)
@@ -121,6 +164,8 @@ async def get_sync_history(
             page_size=page_size,
             source_filter=source,
             type_filter=sync_type,
+            sort_by=sort_by,
+            sort_order=sort_order,
         )
     except Exception as e:
         logger.error(f"Error fetching sync history: {e}")

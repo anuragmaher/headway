@@ -18,7 +18,11 @@ logger = logging.getLogger(__name__)
 
 class GmailIngestionService:
     """Service for ingesting Gmail threads from selected labels"""
-    
+
+    # Memory optimization constants
+    MAX_CONTENT_LENGTH = 50000  # Max characters for thread content (50KB)
+    MAX_MESSAGE_BODY_LENGTH = 10000  # Max characters per individual message body
+
     def __init__(self):
         self.max_threads_per_label = 5  # Fetch last 5 threads per label
     
@@ -282,7 +286,11 @@ class GmailIngestionService:
                     content_parts.append(f"--- From: {msg_from} | Date: {msg_date} ---\n{body}")
             
             full_content = "\n\n".join(content_parts)
-            
+
+            # Truncate full content to prevent memory issues with very long threads
+            if len(full_content) > self.MAX_CONTENT_LENGTH:
+                full_content = full_content[:self.MAX_CONTENT_LENGTH] + "\n\n... [content truncated for storage efficiency]"
+
             # Get snippet from thread
             snippet = thread_data.get("snippet", "")
             
@@ -310,52 +318,66 @@ class GmailIngestionService:
     
     def _extract_message_body(self, message: Dict[str, Any]) -> str:
         """
-        Extract the body text from a Gmail message
-        
+        Extract the body text from a Gmail message with truncation for memory efficiency
+
         Args:
             message: Gmail message data
-            
+
         Returns:
-            Extracted body text
+            Extracted body text (truncated to MAX_MESSAGE_BODY_LENGTH)
         """
         try:
             payload = message.get("payload", {})
-            
+            body_text = ""
+
             # Try to get body directly
             body_data = payload.get("body", {}).get("data")
             if body_data:
-                return base64.urlsafe_b64decode(body_data).decode("utf-8", errors="ignore")
-            
-            # Check for multipart message
-            parts = payload.get("parts", [])
-            for part in parts:
-                mime_type = part.get("mimeType", "")
-                
-                # Prefer plain text
-                if mime_type == "text/plain":
-                    data = part.get("body", {}).get("data")
-                    if data:
-                        return base64.urlsafe_b64decode(data).decode("utf-8", errors="ignore")
-                
-                # Check nested parts
-                nested_parts = part.get("parts", [])
-                for nested in nested_parts:
-                    if nested.get("mimeType") == "text/plain":
-                        data = nested.get("body", {}).get("data")
+                body_text = base64.urlsafe_b64decode(body_data).decode("utf-8", errors="ignore")
+            else:
+                # Check for multipart message
+                parts = payload.get("parts", [])
+                for part in parts:
+                    mime_type = part.get("mimeType", "")
+
+                    # Prefer plain text
+                    if mime_type == "text/plain":
+                        data = part.get("body", {}).get("data")
                         if data:
-                            return base64.urlsafe_b64decode(data).decode("utf-8", errors="ignore")
-            
-            # Fallback to HTML and strip tags
-            for part in parts:
-                if part.get("mimeType") == "text/html":
-                    data = part.get("body", {}).get("data")
-                    if data:
-                        html = base64.urlsafe_b64decode(data).decode("utf-8", errors="ignore")
-                        return self._strip_html_tags(html)
-            
-            # Use snippet as last resort
-            return message.get("snippet", "")
-            
+                            body_text = base64.urlsafe_b64decode(data).decode("utf-8", errors="ignore")
+                            break
+
+                    # Check nested parts
+                    nested_parts = part.get("parts", [])
+                    for nested in nested_parts:
+                        if nested.get("mimeType") == "text/plain":
+                            data = nested.get("body", {}).get("data")
+                            if data:
+                                body_text = base64.urlsafe_b64decode(data).decode("utf-8", errors="ignore")
+                                break
+                    if body_text:
+                        break
+
+                # Fallback to HTML and strip tags
+                if not body_text:
+                    for part in parts:
+                        if part.get("mimeType") == "text/html":
+                            data = part.get("body", {}).get("data")
+                            if data:
+                                html = base64.urlsafe_b64decode(data).decode("utf-8", errors="ignore")
+                                body_text = self._strip_html_tags(html)
+                                break
+
+                # Use snippet as last resort
+                if not body_text:
+                    body_text = message.get("snippet", "")
+
+            # Truncate to save memory
+            if len(body_text) > self.MAX_MESSAGE_BODY_LENGTH:
+                body_text = body_text[:self.MAX_MESSAGE_BODY_LENGTH] + "... [truncated]"
+
+            return body_text
+
         except Exception as e:
             logger.warning(f"Error extracting message body: {str(e)}")
             return message.get("snippet", "")

@@ -2,6 +2,8 @@
 Periodic Slack sync task.
 
 Syncs Slack messages from all active integrations every 15 minutes.
+Uses optimized batch ingestion - data storage only, no AI extraction.
+AI extraction happens in a separate batch processing task.
 """
 
 import logging
@@ -12,7 +14,7 @@ from sqlalchemy.orm import Session
 from app.tasks.celery_app import celery_app
 from app.models.workspace import Workspace
 from app.models.integration import Integration
-from app.services.message_ingestion_service import message_ingestion_service
+from app.services.slack_batch_ingestion_service import slack_batch_ingestion_service
 from app.sync_engine.tasks.base import (
     engine,
     run_async_task,
@@ -20,6 +22,7 @@ from app.sync_engine.tasks.base import (
     finalize_sync_record,
     test_db_connection,
     get_active_integrations,
+    cleanup_after_task,
 )
 
 logger = logging.getLogger(__name__)
@@ -30,6 +33,8 @@ logger = logging.getLogger(__name__)
     bind=True,
     retry_kwargs={"max_retries": 3},
     default_retry_delay=300,
+    autoretry_for=(Exception,),
+    retry_backoff=True,
 )
 def sync_slack_periodic(self):
     """
@@ -39,12 +44,13 @@ def sync_slack_periodic(self):
     - Runs every 15 minutes
     - Only syncs active Slack integrations
     - Fetches messages from selected channels
+    - Stores messages in Message table with is_processed=False
     - Creates SyncHistory records for tracking
-    - Updates the database
+
+    AI extraction is NOT performed here - it happens in a separate batch task.
     """
     try:
-        logger.info("🚀 Starting periodic Slack sync task")
-        logger.info("📊 SyncHistory tracking enabled for periodic Slack sync")
+        logger.info("🚀 Starting periodic Slack sync task (batch ingestion only)")
 
         with Session(engine) as db:
             # Test database connection first
@@ -88,9 +94,9 @@ def sync_slack_periodic(self):
 
                     logger.info(f"Syncing Slack for workspace: {workspace.name} (Integration: {integration.external_team_name})")
 
-                    # Sync messages from this integration
+                    # Use optimized batch ingestion (data storage only, no AI)
                     result = run_async_task(
-                        message_ingestion_service.ingest_slack_messages(
+                        slack_batch_ingestion_service.ingest_messages(
                             integration_id=str(integration.id),
                             db=db,
                             hours_back=24
@@ -100,6 +106,7 @@ def sync_slack_periodic(self):
                     # Extract counts from result
                     total_checked = result.get("total_checked", 0)
                     new_added = result.get("new_added", 0)
+                    duplicates_skipped = result.get("duplicates_skipped", 0)
 
                     # Only create sync history record if new data was found
                     if new_added > 0:
@@ -165,3 +172,6 @@ def sync_slack_periodic(self):
         import traceback
         traceback.print_exc()
         raise self.retry(exc=e, countdown=600)
+    finally:
+        # Always cleanup after task to free memory
+        cleanup_after_task()
