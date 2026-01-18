@@ -6,8 +6,9 @@ import os
 class Settings(BaseSettings):
     """Application settings"""
     
-    # Database - Supabase
-    DATABASE_URL: str = "postgresql://postgres.wyoakbnxehosonecuovy:YOUR_DB_PASSWORD@aws-0-us-west-1.pooler.supabase.com:6543/postgres"
+    # Database - Set via environment variable
+    # Local: Supabase, Production: Railway PostgreSQL
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://postgres.wyoakbnxehosonecuovy:YOUR_DB_PASSWORD@aws-0-us-west-1.pooler.supabase.com:6543/postgres")
     SUPABASE_URL: str = "https://wyoakbnxehosonecuovy.supabase.co"
     SUPABASE_KEY: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5b2FrYm54ZWhvc29uZWN1b3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA1NjI2MTYsImV4cCI6MjA0NjEzODYxNn0.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5b2FrYm54ZWhvc29uZWN1b3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA1NjI2MTYsImV4cCI6MjA0NjEzODYxNn0"
     
@@ -17,8 +18,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 525600 * 100  # ~100 years (effectively never expires)
     EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
     
-    # Redis Configuration
-    REDIS_URL: str = "redis://localhost:6379/0"
+    # Redis Configuration - Set via environment variable for production
+    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
     
     # AI Integration
     ANTHROPIC_API_KEY: Optional[str] = None

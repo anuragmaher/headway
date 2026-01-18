@@ -395,6 +395,10 @@ def update_sync_record(
             record.items_new = items_new
             if error_message:
                 record.error_message = error_message
+            # Update started_at when transitioning to in_progress
+            # This ensures the timestamp is set when task actually starts, not when API queued it
+            if status == "in_progress":
+                record.started_at = datetime.now(timezone.utc)
             if status in ("success", "failed"):
                 record.completed_at = datetime.now(timezone.utc)
             db.commit()

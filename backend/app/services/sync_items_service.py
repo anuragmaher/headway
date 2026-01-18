@@ -296,6 +296,12 @@ class SyncItemsService:
         for session in sessions:
             metadata = session.message_metadata or {}
             duration_secs = metadata.get('duration_seconds') or metadata.get('duration')
+            # Get participants from calendar_invitees
+            calendar_invitees = metadata.get('calendar_invitees', [])
+            participants = [
+                {'name': inv.get('name'), 'email': inv.get('email')}
+                for inv in calendar_invitees if inv.get('name') or inv.get('email')
+            ]
             items.append({
                 'id': str(session.id),
                 'type': 'fathom_session',
@@ -308,6 +314,8 @@ class SyncItemsService:
                 'duration_formatted': self._format_duration(duration_secs),
                 'recording_url': metadata.get('recording_url'),
                 'session_id': metadata.get('session_id') or session.external_id,
+                'participants': participants,
+                'has_transcript': metadata.get('has_transcript', False),
                 'customer_info': {
                     'name': metadata.get('customer_name'),
                     'email': metadata.get('customer_email'),
