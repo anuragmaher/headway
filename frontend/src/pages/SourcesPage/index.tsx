@@ -43,9 +43,8 @@ import { useLayoutStore } from '@/shared/store/layoutStore';
 import { useAuthStore } from '@/features/auth/store/auth-store';
 import { MessageList, SyncHistoryTable, SourceFilters, TypeFilters, SyncDetailsDrawer, MessageDetailsDrawer } from './components';
 import { SourceType, SyncType, Message, SyncHistoryItem } from './types';
-import { useSyncHistoryPolling } from './hooks';
+import { useSyncHistoryPolling, useMessages, useInvalidateMessages } from './hooks';
 import sourcesService, {
-  MessageListResponse,
   SyncHistoryListResponse,
   MessageSortField,
   SyncHistorySortField,
@@ -71,17 +70,49 @@ export function SourcesPage(): JSX.Element {
   const messagesPageSize = 10;
   const syncHistoryPageSize = 10;
 
-  // Data state
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [messagesTotal, setMessagesTotal] = useState(0);
-  const [messagesTotalPages, setMessagesTotalPages] = useState(1);
-  
+  // Sorting state for Messages (moved up for hook dependency)
+  const [messagesSortBy, setMessagesSortBy] = useState<MessageSortField>('timestamp');
+  const [messagesSortOrder, setMessagesSortOrder] = useState<SortOrder>('desc');
+  const [messagesSortAnchorEl, setMessagesSortAnchorEl] = useState<null | HTMLElement>(null);
+
+  // Use React Query for messages - provides caching, prefetching, and deduplication
+  const {
+    messages: messagesData,
+    total: messagesTotal,
+    totalPages: messagesTotalPages,
+    isLoading: loadingMessages,
+    isFetching: fetchingMessages,
+    refetch: refetchMessages,
+  } = useMessages({
+    workspaceId,
+    page: messagesPage,
+    pageSize: messagesPageSize,
+    source: selectedSource,
+    sortBy: messagesSortBy,
+    sortOrder: messagesSortOrder,
+    enabled: activeTab === 0,
+  });
+
+  // Invalidate messages cache hook
+  const invalidateMessages = useInvalidateMessages();
+
+  // Transform API messages to frontend format
+  const messages: Message[] = messagesData.map((msg) => ({
+    id: msg.id,
+    title: msg.title || 'Untitled',
+    sender: msg.sender || msg.sender_email || 'Unknown',
+    sourceType: msg.source_type as Message['sourceType'],
+    preview: msg.preview || '',
+    timestamp: msg.timestamp,
+    source: msg.source as SourceType,
+  }));
+
+  // Data state for sync history (not using React Query for now)
   const [syncHistory, setSyncHistory] = useState<SyncHistoryItem[]>([]);
   const [syncHistoryTotal, setSyncHistoryTotal] = useState(0);
   const [syncHistoryTotalPages, setSyncHistoryTotalPages] = useState(1);
 
   // Loading states
-  const [loadingMessages, setLoadingMessages] = useState(false);
   const [loadingSyncHistory, setLoadingSyncHistory] = useState(false);
   const [syncingAll, setSyncingAll] = useState(false);
   const [syncingThemes, setSyncingThemes] = useState(false);
@@ -105,11 +136,6 @@ export function SourcesPage(): JSX.Element {
   // Message Details Drawer state
   const [messageDrawerOpen, setMessageDrawerOpen] = useState(false);
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
-
-  // Sorting state for Messages
-  const [messagesSortBy, setMessagesSortBy] = useState<MessageSortField>('timestamp');
-  const [messagesSortOrder, setMessagesSortOrder] = useState<SortOrder>('desc');
-  const [messagesSortAnchorEl, setMessagesSortAnchorEl] = useState<null | HTMLElement>(null);
 
   // Sorting state for Sync History
   const [syncHistorySortBy, setSyncHistorySortBy] = useState<SyncHistorySortField>('started_at');
@@ -141,46 +167,6 @@ export function SourcesPage(): JSX.Element {
       clearPollingIntervals(); // Clean up intervals on unmount
     };
   }, [setHeaderContent, clearPollingIntervals]);
-
-  // Fetch messages
-  const fetchMessages = useCallback(async () => {
-    if (!workspaceId) return;
-
-    setLoadingMessages(true);
-    setError(null);
-
-    try {
-      const response: MessageListResponse = await sourcesService.getMessages(
-        workspaceId,
-        messagesPage,
-        messagesPageSize,
-        selectedSource !== 'all' ? selectedSource : undefined,
-        messagesSortBy,
-        messagesSortOrder
-      );
-
-      // Transform API response to frontend types
-      const transformedMessages: Message[] = response.messages.map((msg) => ({
-        id: msg.id,
-        title: msg.title || 'Untitled',
-        sender: msg.sender || msg.sender_email || 'Unknown',
-        sourceType: msg.source_type as Message['sourceType'],
-        preview: msg.preview || '',
-        timestamp: msg.timestamp,
-        source: msg.source as SourceType,
-      }));
-
-      setMessages(transformedMessages);
-      setMessagesTotal(response.total);
-      setMessagesTotalPages(response.total_pages);
-    } catch (err) {
-      console.error('Error fetching messages:', err);
-      setError('Failed to load messages');
-      setMessages([]);
-    } finally {
-      setLoadingMessages(false);
-    }
-  }, [workspaceId, messagesPage, selectedSource, messagesSortBy, messagesSortOrder]);
 
   // Fetch sync history
   const fetchSyncHistory = useCallback(async () => {
@@ -226,14 +212,12 @@ export function SourcesPage(): JSX.Element {
     }
   }, [workspaceId, syncHistoryPage, selectedSource, selectedType, syncHistorySortBy, syncHistorySortOrder]);
 
-  // Fetch data based on active tab
+  // Fetch sync history when tab changes (messages handled by React Query)
   useEffect(() => {
-    if (activeTab === 0) {
-      fetchMessages();
-    } else {
+    if (activeTab === 1) {
       fetchSyncHistory();
     }
-  }, [activeTab, fetchMessages, fetchSyncHistory]);
+  }, [activeTab, fetchSyncHistory]);
 
   // Reset page when source filter changes
   useEffect(() => {
@@ -327,6 +311,9 @@ export function SourcesPage(): JSX.Element {
               themePollingIntervalRef.current = null;
             }
             setSyncingThemes(false);
+
+            // Invalidate messages cache to refresh with new data
+            invalidateMessages();
 
             if (syncStatus.status === 'success') {
               setSnackbarMessage('Theme sync completed successfully!');
@@ -456,6 +443,9 @@ export function SourcesPage(): JSX.Element {
                 syncPollingIntervalRef.current = null;
               }
               setSyncingAll(false);
+
+              // Invalidate messages cache to refresh with new data
+              invalidateMessages();
 
               const successCount = statuses.filter(s => s?.status === 'success').length;
               const failedCount = statuses.filter(s => s?.status === 'failed').length;
@@ -854,7 +844,7 @@ export function SourcesPage(): JSX.Element {
             }}
           >
             {activeTab === 0 ? (
-              loadingMessages ? (
+              loadingMessages && messages.length === 0 ? (
                 <Box sx={{ py: 6, textAlign: 'center' }}>
                   <CircularProgress size={24} />
                   <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
@@ -862,7 +852,28 @@ export function SourcesPage(): JSX.Element {
                   </Typography>
                 </Box>
               ) : (
-                <MessageList messages={messages} onMessageClick={handleMessageClick} />
+                <Box sx={{ position: 'relative' }}>
+                  {/* Show subtle indicator while refreshing */}
+                  {fetchingMessages && (
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: 2,
+                        bgcolor: 'primary.main',
+                        opacity: 0.6,
+                        animation: 'pulse 1.5s ease-in-out infinite',
+                        '@keyframes pulse': {
+                          '0%, 100%': { opacity: 0.3 },
+                          '50%': { opacity: 0.7 },
+                        },
+                      }}
+                    />
+                  )}
+                  <MessageList messages={messages} onMessageClick={handleMessageClick} />
+                </Box>
               )
             ) : (
               loadingSyncHistory ? (
