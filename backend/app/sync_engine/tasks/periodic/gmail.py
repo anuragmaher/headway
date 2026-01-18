@@ -112,6 +112,7 @@ def sync_gmail_periodic(self):
                                 source_type="gmail",
                                 source_name=account.gmail_email or "Gmail",
                                 gmail_account_id=str(account.id),
+                                trigger_type="periodic",  # This is a scheduled periodic sync
                             )
                             finalize_sync_record(
                                 db=db,
@@ -139,6 +140,7 @@ def sync_gmail_periodic(self):
                             source_type="gmail",
                             source_name=account.gmail_email or "Gmail",
                             gmail_account_id=str(account.id),
+                            trigger_type="periodic",  # This is a scheduled periodic sync
                         )
                         finalize_sync_record(
                             db=db,
@@ -166,6 +168,7 @@ def sync_gmail_periodic(self):
                             source_type="gmail",
                             source_name=account.gmail_email or "Gmail",
                             gmail_account_id=str(account.id),
+                            trigger_type="periodic",  # This is a scheduled periodic sync
                         )
                         finalize_sync_record(
                             db=db,

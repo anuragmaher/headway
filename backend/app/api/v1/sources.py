@@ -28,6 +28,7 @@ from app.schemas.sources import (
     SyncOperationResponse,
     SyncSourceRequest,
     SyncThemeRequest,
+    AIInsightsStatusResponse,
 )
 from app.models.workspace import Workspace
 from sqlalchemy.orm import Session
@@ -516,6 +517,7 @@ async def get_synced_items(
     sync_id: UUID,
     page: int = Query(default=1, ge=1, description="Page number"),
     page_size: int = Query(default=20, ge=1, le=50, description="Items per page"),
+    refresh: bool = Query(default=False, description="Force refresh from database, bypassing cache"),
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -526,10 +528,14 @@ async def get_synced_items(
     - Gmail threads (for Gmail syncs)
     - Slack messages (for Slack syncs)
     - Features (for theme syncs)
+
+    Use refresh=true to bypass cache and get the latest data.
     """
     try:
         service = get_sources_service(db)
-        result = service.get_synced_items(workspace_id, sync_id, page, page_size)
+        result = service.get_synced_items(
+            workspace_id, sync_id, page, page_size, force_refresh=refresh
+        )
         return result
 
     except Exception as e:
@@ -537,4 +543,272 @@ async def get_synced_items(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to fetch synced items"
+        )
+
+
+# ============ AI Insights Endpoints ============
+
+@router.get(
+    "/{workspace_id}/ai-insights/status",
+    response_model=AIInsightsStatusResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get AI insights processing status",
+    description="Returns the current status of AI insights processing for the workspace"
+)
+async def get_ai_insights_status(
+    workspace_id: UUID,
+    source_type: Optional[str] = Query(default=None, description="Filter by source type"),
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> AIInsightsStatusResponse:
+    """
+    Get AI insights processing status for a workspace.
+
+    Returns:
+    - Total messages count
+    - Processed messages count
+    - Pending messages count
+    - Failed messages count
+    - Processing percentage
+    """
+    try:
+        from app.models.message import Message
+        from app.models.gmail import GmailThread
+        from sqlalchemy import func, and_
+
+        # Build base query for messages
+        msg_query = db.query(Message).filter(Message.workspace_id == workspace_id)
+        if source_type:
+            msg_query = msg_query.filter(Message.source == source_type)
+
+        # Count messages by processing status
+        total_messages = msg_query.count()
+        processed_messages = msg_query.filter(Message.is_processed == True).count()
+        failed_messages = msg_query.filter(
+            Message.ai_processing_error.isnot(None)
+        ).count()
+
+        # Also count Gmail threads for the workspace
+        gmail_query = db.query(GmailThread).filter(
+            GmailThread.workspace_id == workspace_id
+        )
+        if source_type and source_type == "gmail":
+            total_gmail = gmail_query.count()
+            processed_gmail = gmail_query.filter(GmailThread.is_processed == True).count()
+            failed_gmail = gmail_query.filter(
+                GmailThread.ai_processing_error.isnot(None)
+            ).count()
+        elif source_type is None:
+            total_gmail = gmail_query.count()
+            processed_gmail = gmail_query.filter(GmailThread.is_processed == True).count()
+            failed_gmail = gmail_query.filter(
+                GmailThread.ai_processing_error.isnot(None)
+            ).count()
+        else:
+            total_gmail = 0
+            processed_gmail = 0
+            failed_gmail = 0
+
+        # Combine counts
+        total = total_messages + total_gmail
+        processed = processed_messages + processed_gmail
+        failed = failed_messages + failed_gmail
+        pending = total - processed - failed
+
+        # Get last processed timestamp
+        last_processed_msg = msg_query.filter(
+            Message.ai_processed_at.isnot(None)
+        ).order_by(Message.ai_processed_at.desc()).first()
+
+        last_processed_gmail = gmail_query.filter(
+            GmailThread.ai_processed_at.isnot(None)
+        ).order_by(GmailThread.ai_processed_at.desc()).first()
+
+        last_processed_at = None
+        if last_processed_msg and last_processed_gmail:
+            last_processed_at = max(
+                last_processed_msg.ai_processed_at,
+                last_processed_gmail.ai_processed_at
+            )
+        elif last_processed_msg:
+            last_processed_at = last_processed_msg.ai_processed_at
+        elif last_processed_gmail:
+            last_processed_at = last_processed_gmail.ai_processed_at
+
+        return AIInsightsStatusResponse(
+            total_messages=total,
+            processed_messages=processed,
+            pending_messages=pending,
+            failed_messages=failed,
+            processing_percentage=round((processed / total * 100) if total > 0 else 0.0, 2),
+            last_processed_at=last_processed_at,
+        )
+
+    except Exception as e:
+        logger.error(f"Error fetching AI insights status: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch AI insights status"
+        )
+
+
+# ============ On-Demand AI Insights Endpoints ============
+# NOTE: AI insights extraction is now fully on-demand (triggered when user views a message)
+# The Celery-based batch processing endpoints have been removed in favor of this approach
+
+@router.get(
+    "/{workspace_id}/messages/{message_id}/ai-insights",
+    status_code=status.HTTP_200_OK,
+    summary="Get AI insights for a message (on-demand extraction)",
+    description="Returns AI insights for a message, extracting them on-demand if not already cached/persisted"
+)
+async def get_message_ai_insights(
+    workspace_id: UUID,
+    message_id: UUID,
+    force_refresh: bool = Query(default=False, description="Force re-extraction even if cached"),
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Get AI insights for a specific message.
+
+    This endpoint implements on-demand AI insights extraction:
+    1. First checks Redis cache for fast access
+    2. Falls back to database if not in cache
+    3. Extracts via AI API if not found anywhere
+    4. Caches and persists the result
+
+    The response includes a 'source' field indicating where the insights came from:
+    - 'cache': Retrieved from Redis cache
+    - 'database': Retrieved from database
+    - 'extracted': Newly extracted via AI API
+    - 'error': Extraction failed
+
+    Args:
+        workspace_id: Workspace UUID
+        message_id: Message UUID
+        force_refresh: Set to true to bypass cache and re-extract insights
+    """
+    try:
+        from app.services.ai_insights_ondemand_service import get_ondemand_ai_insights_service
+
+        service = get_ondemand_ai_insights_service(db)
+        insights, source = service.get_or_extract_insights(
+            workspace_id=workspace_id,
+            message_id=message_id,
+            force_refresh=force_refresh,
+        )
+
+        return {
+            "message_id": str(message_id),
+            "workspace_id": str(workspace_id),
+            "ai_insights": insights,
+            "source": source,
+            "is_error": source == "error",
+            "is_cached": source == "cache",
+            "is_extracted": source == "extracted",
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting AI insights for message {message_id}: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get AI insights: {str(e)}"
+        )
+
+
+@router.post(
+    "/{workspace_id}/messages/{message_id}/ai-insights/invalidate",
+    status_code=status.HTTP_200_OK,
+    summary="Invalidate AI insights cache for a message",
+    description="Clears the cached AI insights for a message, forcing re-extraction on next access"
+)
+async def invalidate_message_ai_insights(
+    workspace_id: UUID,
+    message_id: UUID,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Invalidate cached AI insights for a message.
+
+    Use this when:
+    - Message content has changed
+    - Themes have been updated
+    - You want to force re-extraction
+    """
+    try:
+        from app.services.ai_insights_ondemand_service import get_ondemand_ai_insights_service
+
+        service = get_ondemand_ai_insights_service(db)
+        invalidated = service.invalidate_cache(workspace_id, message_id)
+
+        return {
+            "message_id": str(message_id),
+            "invalidated": invalidated,
+            "message": "Cache invalidated successfully" if invalidated else "No cache entry found"
+        }
+
+    except Exception as e:
+        logger.error(f"Error invalidating AI insights cache: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to invalidate cache: {str(e)}"
+        )
+
+
+@router.post(
+    "/{workspace_id}/ai-insights/preload",
+    status_code=status.HTTP_200_OK,
+    summary="Preload AI insights cache for multiple messages",
+    description="Preloads the cache with existing database insights for faster access"
+)
+async def preload_ai_insights_cache(
+    workspace_id: UUID,
+    message_ids: list[str],
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Preload AI insights cache for multiple messages.
+
+    This does NOT extract new insights - it only caches existing ones
+    from the database for faster subsequent access.
+
+    Useful for:
+    - Preloading a page of messages
+    - Warming the cache after page load
+    """
+    try:
+        from app.services.ai_insights_ondemand_service import get_ondemand_ai_insights_service
+
+        service = get_ondemand_ai_insights_service(db)
+        uuids = [UUID(mid) for mid in message_ids]
+        results = service.batch_preload_cache(workspace_id, uuids)
+
+        cached_count = sum(1 for v in results.values() if v)
+
+        return {
+            "workspace_id": str(workspace_id),
+            "total_requested": len(message_ids),
+            "cached_count": cached_count,
+            "results": results,
+        }
+
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid message ID format: {str(e)}"
+        )
+    except Exception as e:
+        logger.error(f"Error preloading AI insights cache: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to preload cache: {str(e)}"
         )

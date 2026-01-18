@@ -29,6 +29,8 @@ import {
   Schedule as ScheduleIcon,
   LocalOffer as TagIcon,
   Add as AddIcon,
+  TouchApp as ManualIcon,
+  AutoMode as PeriodicIcon,
 } from '@mui/icons-material';
 import { SyncHistoryItem, SourceType } from '../types';
 import { SyncHistorySortField, SortOrder } from '@/services/sources';
@@ -254,28 +256,59 @@ export function SyncHistoryTable({
             >
               {/* Type */}
               <TableCell sx={bodyCellSx}>
-                <Chip
-                  icon={item.type === 'source' 
-                    ? <SyncIcon sx={{ fontSize: 12 }} /> 
-                    : <ThemeSyncIcon sx={{ fontSize: 12 }} />
-                  }
-                  label={item.type === 'source' ? 'Source Sync' : 'Theme Sync'}
-                  size="small"
-                  sx={{
-                    height: 22,
-                    fontSize: '0.7rem',
-                    fontWeight: 500,
-                    bgcolor: item.type === 'source'
-                      ? alpha(theme.palette.text.primary, 0.05)
-                      : alpha(theme.palette.secondary.main, 0.1),
-                    color: item.type === 'source'
-                      ? theme.palette.text.secondary
-                      : theme.palette.secondary.main,
-                    borderRadius: 1,
-                    '& .MuiChip-icon': { color: 'inherit' },
-                    '& .MuiChip-label': { px: 0.75 },
-                  }}
-                />
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                  <Chip
+                    icon={item.type === 'source'
+                      ? <SyncIcon sx={{ fontSize: 12 }} />
+                      : <ThemeSyncIcon sx={{ fontSize: 12 }} />
+                    }
+                    label={item.type === 'source' ? 'Source Sync' : 'Theme Sync'}
+                    size="small"
+                    sx={{
+                      height: 22,
+                      fontSize: '0.7rem',
+                      fontWeight: 500,
+                      bgcolor: item.type === 'source'
+                        ? alpha(theme.palette.text.primary, 0.05)
+                        : alpha(theme.palette.secondary.main, 0.1),
+                      color: item.type === 'source'
+                        ? theme.palette.text.secondary
+                        : theme.palette.secondary.main,
+                      borderRadius: 1,
+                      '& .MuiChip-icon': { color: 'inherit' },
+                      '& .MuiChip-label': { px: 0.75 },
+                    }}
+                  />
+                  {/* Trigger type indicator */}
+                  <Tooltip
+                    title={item.triggerType === 'periodic' ? 'Auto sync (scheduled)' : 'Manual sync'}
+                    arrow
+                    placement="top"
+                  >
+                    <Box
+                      sx={{
+                        width: 18,
+                        height: 18,
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        bgcolor: item.triggerType === 'periodic'
+                          ? alpha(theme.palette.info.main, 0.12)
+                          : alpha(theme.palette.text.primary, 0.05),
+                        color: item.triggerType === 'periodic'
+                          ? theme.palette.info.main
+                          : theme.palette.text.secondary,
+                      }}
+                    >
+                      {item.triggerType === 'periodic' ? (
+                        <PeriodicIcon sx={{ fontSize: 11 }} />
+                      ) : (
+                        <ManualIcon sx={{ fontSize: 11 }} />
+                      )}
+                    </Box>
+                  </Tooltip>
+                </Box>
               </TableCell>
 
               {/* Source / Theme */}

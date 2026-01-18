@@ -2,13 +2,16 @@
  * Types for the Sources/Data Sync page
  */
 
-export type SourceType = 'all' | 'gmail' | 'outlook' | 'gong' | 'fathom' | 'slack';
+export type SourceType = 'all' | 'gmail' | 'gong' | 'fathom' | 'slack';
 
 export type MessageType = 'email' | 'transcript' | 'meeting' | 'slack';
 
 export type SyncType = 'all' | 'source' | 'theme';
 
 export type SyncStatus = 'pending' | 'in_progress' | 'success' | 'failed';
+
+/** How the sync was triggered */
+export type TriggerType = 'manual' | 'periodic';
 
 export interface Message {
   id: string;
@@ -27,6 +30,7 @@ export interface SyncHistoryItem {
   sourceType?: SourceType;
   sourceIcons?: SourceType[];
   status: SyncStatus;
+  triggerType: TriggerType;
   startedAt: string;
   processed: number;
   newItems: number;

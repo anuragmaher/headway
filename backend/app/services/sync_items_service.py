@@ -9,7 +9,7 @@ This service:
 """
 
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Any, Dict, List, Optional
 from uuid import UUID
 
@@ -23,6 +23,7 @@ from app.models.gmail import GmailThread
 from app.services.cache_service import (
     cache_sync_items,
     get_cached_sync_items,
+    invalidate_sync_items_cache,
 )
 
 logger = logging.getLogger(__name__)
@@ -41,6 +42,7 @@ class SyncItemsService:
         page: int = 1,
         page_size: int = 20,
         use_cache: bool = True,
+        force_refresh: bool = False,
     ) -> Dict[str, Any]:
         """
         Get items that were synced in a specific sync operation.
@@ -51,18 +53,12 @@ class SyncItemsService:
             page: Page number
             page_size: Items per page
             use_cache: Whether to use caching (default True)
+            force_refresh: Force bypass cache and fetch fresh data
 
         Returns:
             Dict with synced items and metadata
         """
-        # Try cache first
-        if use_cache:
-            cached = get_cached_sync_items(str(workspace_id), str(sync_id), page)
-            if cached:
-                logger.debug(f"Cache hit for sync items: {sync_id}, page {page}")
-                return cached
-
-        # Get sync record to determine type
+        # Get sync record first to check status
         sync_record = self.db.query(SyncHistory).filter(
             SyncHistory.id == sync_id,
             SyncHistory.workspace_id == workspace_id
@@ -70,6 +66,16 @@ class SyncItemsService:
 
         if not sync_record:
             return self._empty_response(None, None)
+
+        # Don't use cache for in-progress syncs or when force_refresh is True
+        should_use_cache = use_cache and not force_refresh and sync_record.status == 'success'
+
+        # Try cache first (only for completed syncs)
+        if should_use_cache:
+            cached = get_cached_sync_items(str(workspace_id), str(sync_id), page)
+            if cached:
+                logger.debug(f"Cache hit for sync items: {sync_id}, page {page}")
+                return cached
 
         # Route to appropriate handler based on sync type
         if sync_record.sync_type == 'source' and sync_record.source_type:
@@ -79,8 +85,8 @@ class SyncItemsService:
         else:
             result = self._empty_response(sync_record.sync_type, sync_record.source_type)
 
-        # Cache the result
-        if use_cache and result.get('items'):
+        # Only cache completed syncs with items
+        if should_use_cache and result.get('items'):
             cache_sync_items(str(workspace_id), str(sync_id), page, result)
 
         return result
@@ -150,6 +156,30 @@ class SyncItemsService:
         logger.warning(f"Unknown source type: {source_type}")
         return self._empty_response('source', source_type)
 
+    def _get_time_window(self, sync_record: SyncHistory) -> tuple:
+        """
+        Get time window for querying synced items with tolerance.
+
+        Uses tolerance to account for:
+        - Database transaction timing
+        - Clock skew
+        - Items committed slightly before/after sync boundaries
+
+        Returns:
+            Tuple of (start_time, end_time) with tolerances applied
+        """
+        # Start 2 seconds before to catch items created right at sync start
+        start_time = sync_record.started_at - timedelta(seconds=2)
+
+        if sync_record.completed_at:
+            # Add 10 second tolerance after completion for items committed slightly after
+            end_time = sync_record.completed_at + timedelta(seconds=10)
+        else:
+            # Sync still in progress - use current time with some buffer
+            end_time = datetime.now(timezone.utc) + timedelta(seconds=5)
+
+        return start_time, end_time
+
     def _get_gmail_items(
         self,
         sync_record: SyncHistory,
@@ -158,13 +188,13 @@ class SyncItemsService:
         page_size: int
     ) -> Dict[str, Any]:
         """Get Gmail threads synced during this operation."""
+        start_time, end_time = self._get_time_window(sync_record)
+
         query = self.db.query(GmailThread).filter(
             GmailThread.workspace_id == workspace_id,
-            GmailThread.created_at >= sync_record.started_at
+            GmailThread.created_at >= start_time,
+            GmailThread.created_at <= end_time
         )
-
-        if sync_record.completed_at:
-            query = query.filter(GmailThread.created_at <= sync_record.completed_at)
 
         total = query.count()
         offset = (page - 1) * page_size
@@ -196,14 +226,14 @@ class SyncItemsService:
         page_size: int
     ) -> Dict[str, Any]:
         """Get Slack messages synced during this operation."""
+        start_time, end_time = self._get_time_window(sync_record)
+
         query = self.db.query(Message).filter(
             Message.workspace_id == workspace_id,
             Message.source == 'slack',
-            Message.created_at >= sync_record.started_at
+            Message.created_at >= start_time,
+            Message.created_at <= end_time
         )
-
-        if sync_record.completed_at:
-            query = query.filter(Message.created_at <= sync_record.completed_at)
 
         total = query.count()
         offset = (page - 1) * page_size
@@ -231,14 +261,14 @@ class SyncItemsService:
         page_size: int
     ) -> Dict[str, Any]:
         """Get Gong calls synced during this operation."""
+        start_time, end_time = self._get_time_window(sync_record)
+
         query = self.db.query(Message).filter(
             Message.workspace_id == workspace_id,
             Message.source == 'gong',
-            Message.created_at >= sync_record.started_at
+            Message.created_at >= start_time,
+            Message.created_at <= end_time
         )
-
-        if sync_record.completed_at:
-            query = query.filter(Message.created_at <= sync_record.completed_at)
 
         total = query.count()
         offset = (page - 1) * page_size
@@ -279,14 +309,14 @@ class SyncItemsService:
         page_size: int
     ) -> Dict[str, Any]:
         """Get Fathom sessions synced during this operation."""
+        start_time, end_time = self._get_time_window(sync_record)
+
         query = self.db.query(Message).filter(
             Message.workspace_id == workspace_id,
             Message.source == 'fathom',
-            Message.created_at >= sync_record.started_at
+            Message.created_at >= start_time,
+            Message.created_at <= end_time
         )
-
-        if sync_record.completed_at:
-            query = query.filter(Message.created_at <= sync_record.completed_at)
 
         total = query.count()
         offset = (page - 1) * page_size
@@ -334,13 +364,13 @@ class SyncItemsService:
         page_size: int
     ) -> Dict[str, Any]:
         """Get features updated during theme sync."""
+        start_time, end_time = self._get_time_window(sync_record)
+
         query = self.db.query(Feature).filter(
             Feature.workspace_id == workspace_id,
-            Feature.updated_at >= sync_record.started_at
+            Feature.updated_at >= start_time,
+            Feature.updated_at <= end_time
         )
-
-        if sync_record.completed_at:
-            query = query.filter(Feature.updated_at <= sync_record.completed_at)
 
         total = query.count()
         offset = (page - 1) * page_size

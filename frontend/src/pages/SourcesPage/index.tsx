@@ -41,9 +41,10 @@ import {
 import { AdminLayout } from '@/shared/components/layouts';
 import { useLayoutStore } from '@/shared/store/layoutStore';
 import { useAuthStore } from '@/features/auth/store/auth-store';
-import { MessageList, SyncHistoryTable, SourceFilters, TypeFilters, SyncDetailsDrawer, MessageDetailsDrawer } from './components';
+import { MessageList, SyncHistoryTable, SourceFilters, TypeFilters, SyncDetailsDrawer, MessageDetailPanel } from './components';
 import { SourceType, SyncType, Message, SyncHistoryItem } from './types';
 import { useSyncHistoryPolling, useMessages, useInvalidateMessages } from './hooks';
+import { useMessageDetailsStore } from './store';
 import sourcesService, {
   SyncHistoryListResponse,
   MessageSortField,
@@ -133,9 +134,8 @@ export function SourcesPage(): JSX.Element {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedSyncId, setSelectedSyncId] = useState<string | null>(null);
 
-  // Message Details Drawer state
-  const [messageDrawerOpen, setMessageDrawerOpen] = useState(false);
-  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
+  // Message Details Panel state (Zustand store)
+  const { isOpen: messageDetailOpen, openPanel: openMessageDetail, closePanel: closeMessageDetail } = useMessageDetailsStore();
 
   // Sorting state for Sync History
   const [syncHistorySortBy, setSyncHistorySortBy] = useState<SyncHistorySortField>('started_at');
@@ -194,6 +194,7 @@ export function SourcesPage(): JSX.Element {
         sourceType: item.source_type as SourceType | undefined,
         sourceIcons: item.theme_sources as SourceType[] | undefined,
         status: item.status as SyncHistoryItem['status'],
+        triggerType: (item.trigger_type as SyncHistoryItem['triggerType']) || 'manual',
         startedAt: item.started_at,
         processed: item.items_processed,
         newItems: item.items_new,
@@ -294,6 +295,7 @@ export function SourcesPage(): JSX.Element {
                 sourceType: undefined,
                 sourceIcons: undefined,
                 status: syncStatus.status as SyncHistoryItem['status'],
+                triggerType: 'manual',  // User-initiated theme sync
                 startedAt: syncStatus.started_at || new Date().toISOString(),
                 processed: syncStatus.items_processed,
                 newItems: syncStatus.items_new,
@@ -421,6 +423,7 @@ export function SourcesPage(): JSX.Element {
                     sourceType: syncStatus.source_type as SourceType | undefined,
                     sourceIcons: undefined,
                     status: syncStatus.status as SyncHistoryItem['status'],
+                    triggerType: 'manual',  // User-initiated source sync
                     startedAt: syncStatus.started_at || new Date().toISOString(),
                     processed: syncStatus.items_processed,
                     newItems: syncStatus.items_new,
@@ -512,15 +515,11 @@ export function SourcesPage(): JSX.Element {
     setSelectedSyncId(null);
   };
 
-  // Message click handler
+  // Message click handler - opens split-screen panel
   const handleMessageClick = (messageId: string) => {
-    setSelectedMessageId(messageId);
-    setMessageDrawerOpen(true);
-  };
-
-  const handleMessageDrawerClose = () => {
-    setMessageDrawerOpen(false);
-    setSelectedMessageId(null);
+    if (workspaceId) {
+      openMessageDetail(messageId, workspaceId);
+    }
   };
 
   // Sorting handlers for Messages
@@ -572,10 +571,19 @@ export function SourcesPage(): JSX.Element {
         sx={{
           height: '100%',
           display: 'flex',
-          flexDirection: 'column',
           overflow: 'hidden',
         }}
       >
+        {/* Main Content Area */}
+        <Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            transition: 'all 0.3s ease',
+          }}
+        >
         {/* Header with Tabs and Actions */}
         <Box
           sx={{
@@ -824,100 +832,154 @@ export function SourcesPage(): JSX.Element {
           </Alert>
         )}
 
-        {/* Content Area */}
+        {/* Content Area - Split Screen for Messages tab */}
         <Box
           sx={{
             flex: 1,
-            overflow: 'auto',
+            display: 'flex',
+            overflow: 'hidden',
             bgcolor: theme.palette.background.default,
+            position: 'relative',
           }}
         >
-          <Paper
-            elevation={0}
+          {/* Left Panel - Message List */}
+          <Box
             sx={{
-              mx: 2.5,
-              my: 1.5,
-              borderRadius: 2,
-              border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
-              bgcolor: theme.palette.background.paper,
+              width: messageDetailOpen && activeTab === 0 ? '50%' : '100%',
               overflow: 'hidden',
+              minWidth: 0,
+              pl: 2.5,
+              pr: messageDetailOpen && activeTab === 0 ? 0 : 2.5,
+              py: 1.5,
+              transition: 'width 0.25s ease-out, padding-right 0.25s ease-out',
             }}
           >
-            {activeTab === 0 ? (
-              loadingMessages && messages.length === 0 ? (
-                <Box sx={{ py: 6, textAlign: 'center' }}>
-                  <CircularProgress size={24} />
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                    Loading messages...
-                  </Typography>
-                </Box>
+            <Paper
+              elevation={0}
+              sx={{
+                borderRadius: 2,
+                border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+                bgcolor: theme.palette.background.paper,
+                overflow: 'hidden',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              {activeTab === 0 ? (
+                loadingMessages && messages.length === 0 ? (
+                  <Box sx={{ py: 6, textAlign: 'center' }}>
+                    <CircularProgress size={24} />
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                      Loading messages...
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      flex: 1,
+                      overflow: 'auto',
+                      // Hide scrollbar but keep scrollable
+                      scrollbarWidth: 'none', // Firefox
+                      msOverflowStyle: 'none', // IE
+                      '&::-webkit-scrollbar': { display: 'none' }, // Chrome, Safari
+                    }}
+                  >
+                    {/* Show subtle indicator while refreshing */}
+                    {fetchingMessages && (
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          height: 2,
+                          bgcolor: 'primary.main',
+                          opacity: 0.6,
+                          zIndex: 1,
+                          animation: 'pulse 1.5s ease-in-out infinite',
+                          '@keyframes pulse': {
+                            '0%, 100%': { opacity: 0.3 },
+                            '50%': { opacity: 0.7 },
+                          },
+                        }}
+                      />
+                    )}
+                    <MessageList messages={messages} onMessageClick={handleMessageClick} />
+                  </Box>
+                )
               ) : (
-                <Box sx={{ position: 'relative' }}>
-                  {/* Show subtle indicator while refreshing */}
-                  {fetchingMessages && (
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: 2,
-                        bgcolor: 'primary.main',
-                        opacity: 0.6,
-                        animation: 'pulse 1.5s ease-in-out infinite',
-                        '@keyframes pulse': {
-                          '0%, 100%': { opacity: 0.3 },
-                          '50%': { opacity: 0.7 },
-                        },
-                      }}
+                loadingSyncHistory ? (
+                  <Box sx={{ py: 6, textAlign: 'center' }}>
+                    <CircularProgress size={24} />
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                      Loading sync history...
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box
+                    sx={{
+                      flex: 1,
+                      overflow: 'auto',
+                      scrollbarWidth: 'none',
+                      msOverflowStyle: 'none',
+                      '&::-webkit-scrollbar': { display: 'none' },
+                    }}
+                  >
+                    <SyncHistoryTable
+                      items={syncHistory}
+                      onRowClick={handleSyncRowClick}
+                      sortBy={syncHistorySortBy}
+                      sortOrder={syncHistorySortOrder}
+                      onSortChange={handleSyncHistorySortChange}
                     />
-                  )}
-                  <MessageList messages={messages} onMessageClick={handleMessageClick} />
-                </Box>
-              )
-            ) : (
-              loadingSyncHistory ? (
-                <Box sx={{ py: 6, textAlign: 'center' }}>
-                  <CircularProgress size={24} />
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                    Loading sync history...
-                  </Typography>
-                </Box>
-              ) : (
-                <SyncHistoryTable
-                  items={syncHistory}
-                  onRowClick={handleSyncRowClick}
-                  sortBy={syncHistorySortBy}
-                  sortOrder={syncHistorySortOrder}
-                  onSortChange={handleSyncHistorySortChange}
-                />
-              )
-            )}
-          </Paper>
+                  </Box>
+                )
+              )}
 
-          {/* Pagination */}
-          {activeTab === 0 && messagesTotalPages > 1 && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', pb: 2 }}>
-              <Pagination
-                count={messagesTotalPages}
-                page={messagesPage}
-                onChange={handleMessagesPageChange}
-                size="small"
-                color="primary"
-              />
-            </Box>
-          )}
-          {activeTab === 1 && syncHistoryTotalPages > 1 && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', pb: 2 }}>
-              <Pagination
-                count={syncHistoryTotalPages}
-                page={syncHistoryPage}
-                onChange={handleSyncHistoryPageChange}
-                size="small"
-                color="primary"
-              />
-            </Box>
-          )}
+              {/* Pagination - Inside Paper */}
+              {activeTab === 0 && messagesTotalPages > 1 && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    py: 1.5,
+                    borderTop: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
+                  }}
+                >
+                  <Pagination
+                    count={messagesTotalPages}
+                    page={messagesPage}
+                    onChange={handleMessagesPageChange}
+                    size="small"
+                    color="primary"
+                  />
+                </Box>
+              )}
+              {activeTab === 1 && syncHistoryTotalPages > 1 && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    py: 1.5,
+                    borderTop: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
+                  }}
+                >
+                  <Pagination
+                    count={syncHistoryTotalPages}
+                    page={syncHistoryPage}
+                    onChange={handleSyncHistoryPageChange}
+                    size="small"
+                    color="primary"
+                  />
+                </Box>
+              )}
+            </Paper>
+          </Box>
+
+          {/* Right Panel - Message Detail Split-Screen */}
+          {activeTab === 0 && <MessageDetailPanel />}
         </Box>
 
         {/* Snackbar for notifications */}
@@ -935,6 +997,7 @@ export function SourcesPage(): JSX.Element {
             {snackbarMessage}
           </Alert>
         </Snackbar>
+        </Box>
       </Box>
 
       {/* Sync Details Drawer */}
@@ -943,16 +1006,6 @@ export function SourcesPage(): JSX.Element {
           open={drawerOpen}
           onClose={handleDrawerClose}
           syncId={selectedSyncId}
-          workspaceId={workspaceId}
-        />
-      )}
-
-      {/* Message Details Drawer */}
-      {workspaceId && (
-        <MessageDetailsDrawer
-          open={messageDrawerOpen}
-          onClose={handleMessageDrawerClose}
-          messageId={selectedMessageId}
           workspaceId={workspaceId}
         />
       )}

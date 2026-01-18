@@ -24,7 +24,6 @@ interface TypeFiltersProps {
 const sourceOptions: { value: SourceType; label: string }[] = [
   { value: 'all', label: 'All Sources' },
   { value: 'gmail', label: 'Gmail' },
-  { value: 'outlook', label: 'Outlook' },
   { value: 'gong', label: 'Gong' },
   { value: 'fathom', label: 'Fathom' },
   { value: 'slack', label: 'Slack' },

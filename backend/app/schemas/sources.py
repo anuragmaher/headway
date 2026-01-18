@@ -39,6 +39,12 @@ class SyncStatus(str, Enum):
     FAILED = "failed"
 
 
+class TriggerType(str, Enum):
+    """How the sync was triggered"""
+    MANUAL = "manual"  # User-initiated on-demand sync
+    PERIODIC = "periodic"  # Celery scheduled periodic sync
+
+
 # ============ Message Schemas ============
 
 class MessageResponse(BaseModel):
@@ -81,6 +87,7 @@ class SyncHistoryResponse(BaseModel):
     theme_name: Optional[str] = None
     theme_sources: Optional[List[str]] = None  # Sources that contributed to theme
     status: str  # pending, in_progress, success, failed
+    trigger_type: str = "manual"  # 'manual' (user-initiated) or 'periodic' (celery scheduled)
     started_at: datetime
     completed_at: Optional[datetime] = None
     items_processed: int = 0
@@ -159,3 +166,36 @@ class DataSourcesStatusResponse(BaseModel):
     sources: List[DataSourceStatus]
     total_messages: int
     last_sync_at: Optional[datetime] = None
+
+
+# ============ AI Insights Schemas ============
+
+class ReprocessInsightsRequest(BaseModel):
+    """Request to reprocess AI insights"""
+    source_type: Optional[str] = None  # Filter by source (gmail, slack, gong, fathom)
+    force_reprocess: bool = False  # If True, reprocess even already processed items
+    batch_size: int = Field(default=50, ge=1, le=200)  # Items to process
+
+
+class ReprocessMessageInsightsRequest(BaseModel):
+    """Request to reprocess AI insights for a single message"""
+    force_reprocess: bool = True  # Usually want to force for single message
+
+
+class AIInsightsStatusResponse(BaseModel):
+    """Response showing AI insights processing status"""
+    total_messages: int
+    processed_messages: int
+    pending_messages: int
+    failed_messages: int
+    processing_percentage: float
+    last_processed_at: Optional[datetime] = None
+
+
+class ReprocessInsightsResponse(BaseModel):
+    """Response for AI insights reprocessing request"""
+    message: str
+    task_id: str
+    status: str
+    items_queued: int
+    source_type: Optional[str] = None
