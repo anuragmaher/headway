@@ -640,20 +640,61 @@ class SourcesService:
         )
     
     # ============ Data Source Status ============
-    
+
     def get_data_sources_status(self, workspace_id: UUID) -> DataSourcesStatusResponse:
         """
         Get status of all connected data sources for a workspace.
-        
+
+        Optimized to use batch queries instead of N+1 pattern.
+
         Args:
             workspace_id: Workspace UUID
-            
+
         Returns:
             Status of all data sources
         """
+        from sqlalchemy import text
+
         sources: List[DataSourceStatus] = []
-        
-        # Check Slack integrations
+        workspace_str = str(workspace_id)
+
+        # Batch query: Get all message counts by source in a single query
+        message_counts_query = text("""
+            SELECT source, COUNT(*) as count
+            FROM messages
+            WHERE workspace_id = :workspace_id
+            GROUP BY source
+        """)
+        message_counts_result = self.db.execute(
+            message_counts_query, {"workspace_id": workspace_str}
+        )
+        message_counts = {row[0]: row[1] for row in message_counts_result}
+
+        # Batch query: Get gmail thread counts by account in a single query
+        gmail_counts_query = text("""
+            SELECT gmail_account_id::text, COUNT(*) as count
+            FROM gmail_threads
+            WHERE workspace_id = :workspace_id
+            GROUP BY gmail_account_id
+        """)
+        gmail_counts_result = self.db.execute(
+            gmail_counts_query, {"workspace_id": workspace_str}
+        )
+        gmail_thread_counts = {row[0]: row[1] for row in gmail_counts_result}
+
+        # Batch query: Get message counts by integration_id for Slack
+        slack_counts_query = text("""
+            SELECT integration_id::text, COUNT(*) as count
+            FROM messages
+            WHERE workspace_id = :workspace_id AND source = 'slack'
+            GROUP BY integration_id
+        """)
+        slack_counts_result = self.db.execute(
+            slack_counts_query, {"workspace_id": workspace_str}
+        )
+        slack_message_counts = {row[0]: row[1] for row in slack_counts_result}
+
+        # Get Slack integrations (single query)
         slack_integrations = self.db.query(Integration).filter(
             and_(
                 Integration.workspace_id == workspace_id,
@@ -661,15 +702,11 @@ class SourcesService:
                 Integration.is_active == True
             )
         ).all()
-        
+
         for integration in slack_integrations:
-            message_count = self.db.query(func.count(Message.id)).filter(
-                and_(
-                    Message.workspace_id == workspace_id,
-                    Message.integration_id == integration.id
-                )
-            ).scalar() or 0
-            
+            integration_id_str = str(integration.id)
+            message_count = slack_message_counts.get(integration_id_str, 0)
+
             sources.append(DataSourceStatus(
                 source_type="slack",
                 source_name=integration.external_team_name or "Slack",
@@ -678,48 +715,32 @@ class SourcesService:
                 sync_status=integration.sync_status,
                 message_count=message_count,
             ))
-        
-        # Check Gmail accounts
+
+        # Get Gmail accounts (single query)
         gmail_accounts = self.db.query(GmailAccounts).filter(
             and_(
                 GmailAccounts.workspace_id == workspace_id,
                 GmailAccounts.access_token.isnot(None)
             )
         ).all()
-        
+
+        # Get gmail message count from batch result (not per-account N+1)
+        gmail_message_count = message_counts.get('gmail', 0)
+
         for account in gmail_accounts:
-            # Count Gmail threads
-            thread_count = self.db.query(func.count(GmailThread.id)).filter(
-                GmailThread.gmail_account_id == account.id
-            ).scalar() or 0
-            
-            # Also count messages from gmail integration
-            gmail_integration = self.db.query(Integration).filter(
-                and_(
-                    Integration.workspace_id == workspace_id,
-                    Integration.provider == "gmail"
-                )
-            ).first()
-            
-            message_count = 0
-            if gmail_integration:
-                message_count = self.db.query(func.count(Message.id)).filter(
-                    and_(
-                        Message.workspace_id == workspace_id,
-                        Message.source == "gmail"
-                    )
-                ).scalar() or 0
-            
+            account_id_str = str(account.id)
+            thread_count = gmail_thread_counts.get(account_id_str, 0)
+
             sources.append(DataSourceStatus(
                 source_type="gmail",
                 source_name=account.gmail_email or "Gmail",
                 is_active=True,
                 last_synced_at=account.last_synced_at,
                 sync_status=account.sync_status,
-                message_count=message_count + thread_count,
+                message_count=gmail_message_count + thread_count,
             ))
-        
-        # Check Gong connectors
+
+        # Get Gong connectors (single query)
         gong_connectors = self.db.query(WorkspaceConnector).filter(
             and_(
                 WorkspaceConnector.workspace_id == workspace_id,
@@ -727,25 +748,20 @@ class SourcesService:
                 WorkspaceConnector.is_active == True
             )
         ).all()
-        
+
+        gong_message_count = message_counts.get('gong', 0)
+
         for connector in gong_connectors:
-            message_count = self.db.query(func.count(Message.id)).filter(
-                and_(
-                    Message.workspace_id == workspace_id,
-                    Message.source == "gong"
-                )
-            ).scalar() or 0
-            
             sources.append(DataSourceStatus(
                 source_type="gong",
                 source_name="Gong",
                 is_active=connector.is_active,
-                last_synced_at=None,  # Connectors don't track this
+                last_synced_at=None,
                 sync_status="active",
-                message_count=message_count,
+                message_count=gong_message_count,
             ))
-        
-        # Check Fathom connectors
+
+        # Get Fathom connectors (single query)
         fathom_connectors = self.db.query(WorkspaceConnector).filter(
             and_(
                 WorkspaceConnector.workspace_id == workspace_id,
@@ -753,24 +769,19 @@ class SourcesService:
                 WorkspaceConnector.is_active == True
             )
         ).all()
-        
+
+        fathom_message_count = message_counts.get('fathom', 0)
+
         for connector in fathom_connectors:
-            message_count = self.db.query(func.count(Message.id)).filter(
-                and_(
-                    Message.workspace_id == workspace_id,
-                    Message.source == "fathom"
-                )
-            ).scalar() or 0
-            
             sources.append(DataSourceStatus(
                 source_type="fathom",
                 source_name="Fathom",
                 is_active=connector.is_active,
                 last_synced_at=None,
                 sync_status="active",
-                message_count=message_count,
+                message_count=fathom_message_count,
             ))
-        
+
         # Calculate totals
         total_messages = sum(s.message_count for s in sources)
         last_sync = None
@@ -778,7 +789,7 @@ class SourcesService:
             if s.last_synced_at:
                 if last_sync is None or s.last_synced_at > last_sync:
                     last_sync = s.last_synced_at
-        
+
         return DataSourcesStatusResponse(
             sources=sources,
             total_messages=total_messages,

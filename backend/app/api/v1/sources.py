@@ -15,6 +15,10 @@ from typing import Optional
 
 from app.core.deps import get_current_user, get_db
 from app.services.sources_service import SourcesService, get_sources_service
+from app.services.messages_optimized_service import (
+    OptimizedMessagesService,
+    get_optimized_messages_service,
+)
 from app.schemas.sources import (
     MessageListResponse,
     SyncHistoryListResponse,
@@ -86,40 +90,50 @@ async def get_message_details(
     "/{workspace_id}/messages",
     response_model=MessageListResponse,
     status_code=status.HTTP_200_OK,
-    summary="Get paginated messages from all sources",
-    description="Returns paginated list of messages from all connected data sources (Gmail, Slack, Gong, Fathom)"
+    summary="Get paginated messages from all sources (optimized)",
+    description="Returns paginated list of messages using optimized SQL UNION query with Redis caching"
 )
 async def get_messages(
     workspace_id: UUID,
     page: int = Query(default=1, ge=1, description="Page number"),
-    page_size: int = Query(default=5, ge=1, le=50, description="Items per page"),
+    page_size: int = Query(default=10, ge=1, le=50, description="Items per page"),
     source: Optional[str] = Query(default=None, description="Filter by source (gmail, slack, gong, fathom)"),
     sort_by: Optional[str] = Query(default="timestamp", description="Field to sort by (timestamp, sender, source)"),
     sort_order: Optional[str] = Query(default="desc", description="Sort order (asc, desc)"),
+    cursor: Optional[str] = Query(default=None, description="Cursor for cursor-based pagination (ISO timestamp)"),
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> MessageListResponse:
     """
-    Get paginated messages from all data sources.
+    Get paginated messages from all data sources (optimized).
+
+    This endpoint uses:
+    - SQL UNION for efficient cross-table queries
+    - Redis caching for counts
+    - Database-level sorting and pagination
 
     - **page**: Page number (1-indexed)
-    - **page_size**: Number of items per page (default: 5, max: 50)
+    - **page_size**: Number of items per page (default: 10, max: 50)
     - **source**: Optional filter by source type
     - **sort_by**: Field to sort by (timestamp, sender, source)
     - **sort_order**: Sort order (asc, desc)
+    - **cursor**: Optional cursor for infinite scroll (ISO timestamp from last item)
     """
     try:
-        service = get_sources_service(db)
-        return service.get_messages_paginated(
+        service = get_optimized_messages_service(db)
+        return service.get_messages_fast(
             workspace_id=workspace_id,
             page=page,
             page_size=page_size,
             source_filter=source,
             sort_by=sort_by,
             sort_order=sort_order,
+            cursor=cursor,
         )
     except Exception as e:
         logger.error(f"Error fetching messages: {e}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to fetch messages"
