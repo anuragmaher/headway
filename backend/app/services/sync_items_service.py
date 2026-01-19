@@ -3,9 +3,10 @@ Sync Items Service - Handles retrieval of synced items with caching.
 
 This service:
 - Retrieves items synced during a specific sync operation
+- Uses stored synced_item_ids for reliable retrieval (primary method)
+- Falls back to time-window matching for backward compatibility
 - Supports all source types (Gmail, Slack, Gong, Fathom)
 - Uses Redis caching for fast retrieval
-- Falls back to database when cache misses
 """
 
 import logging
@@ -46,6 +47,9 @@ class SyncItemsService:
     ) -> Dict[str, Any]:
         """
         Get items that were synced in a specific sync operation.
+
+        Uses stored synced_item_ids when available (primary method).
+        Falls back to time-window matching for older sync records.
 
         Args:
             workspace_id: Workspace UUID
@@ -156,9 +160,14 @@ class SyncItemsService:
         logger.warning(f"Unknown source type: {source_type}")
         return self._empty_response('source', source_type)
 
+    def _has_stored_ids(self, sync_record: SyncHistory) -> bool:
+        """Check if sync record has stored item IDs."""
+        return bool(sync_record.synced_item_ids and len(sync_record.synced_item_ids) > 0)
+
     def _get_time_window(self, sync_record: SyncHistory) -> tuple:
         """
         Get time window for querying synced items with tolerance.
+        Used as fallback when synced_item_ids is not available.
 
         Uses tolerance to account for:
         - Database transaction timing
@@ -188,6 +197,12 @@ class SyncItemsService:
         page_size: int
     ) -> Dict[str, Any]:
         """Get Gmail threads synced during this operation."""
+        # Use stored IDs if available (primary method)
+        if self._has_stored_ids(sync_record):
+            return self._get_gmail_items_by_ids(sync_record, workspace_id, page, page_size)
+
+        # Fallback to time-window matching for backward compatibility
+        logger.debug(f"Using time-window fallback for Gmail sync {sync_record.id}")
         start_time, end_time = self._get_time_window(sync_record)
 
         query = self.db.query(GmailThread).filter(
@@ -200,6 +215,47 @@ class SyncItemsService:
         offset = (page - 1) * page_size
         threads = query.order_by(desc(GmailThread.thread_date)).offset(offset).limit(page_size).all()
 
+        return self._format_gmail_threads(threads, total, page, page_size)
+
+    def _get_gmail_items_by_ids(
+        self,
+        sync_record: SyncHistory,
+        workspace_id: UUID,
+        page: int,
+        page_size: int
+    ) -> Dict[str, Any]:
+        """Get Gmail threads by stored IDs."""
+        item_ids = sync_record.synced_item_ids
+        total = len(item_ids)
+
+        if total == 0:
+            return self._empty_response('source', 'gmail')
+
+        # Paginate the IDs
+        offset = (page - 1) * page_size
+        page_ids = item_ids[offset:offset + page_size]
+
+        if not page_ids:
+            return self._empty_response('source', 'gmail')
+
+        # Convert string UUIDs to UUID objects for query
+        uuid_ids = [UUID(id_str) for id_str in page_ids]
+
+        threads = self.db.query(GmailThread).filter(
+            GmailThread.id.in_(uuid_ids),
+            GmailThread.workspace_id == workspace_id
+        ).order_by(desc(GmailThread.thread_date)).all()
+
+        return self._format_gmail_threads(threads, total, page, page_size)
+
+    def _format_gmail_threads(
+        self,
+        threads: List[GmailThread],
+        total: int,
+        page: int,
+        page_size: int
+    ) -> Dict[str, Any]:
+        """Format Gmail threads into response items."""
         items = [{
             'id': str(thread.id),
             'type': 'gmail_thread',
@@ -209,7 +265,7 @@ class SyncItemsService:
             'from_email': thread.from_email,
             'to_emails': thread.to_emails,
             'snippet': thread.snippet,
-            'content': thread.content[:500] if thread.content else None,  # Limit content size
+            'content': thread.content[:500] if thread.content else None,
             'message_count': thread.message_count,
             'thread_date': thread.thread_date.isoformat() if thread.thread_date else None,
             'label_name': thread.label_name,
@@ -226,6 +282,12 @@ class SyncItemsService:
         page_size: int
     ) -> Dict[str, Any]:
         """Get Slack messages synced during this operation."""
+        # Use stored IDs if available (primary method)
+        if self._has_stored_ids(sync_record):
+            return self._get_messages_by_ids(sync_record, workspace_id, page, page_size, 'slack')
+
+        # Fallback to time-window matching
+        logger.debug(f"Using time-window fallback for Slack sync {sync_record.id}")
         start_time, end_time = self._get_time_window(sync_record)
 
         query = self.db.query(Message).filter(
@@ -239,6 +301,16 @@ class SyncItemsService:
         offset = (page - 1) * page_size
         messages = query.order_by(desc(Message.sent_at)).offset(offset).limit(page_size).all()
 
+        return self._format_slack_messages(messages, total, page, page_size)
+
+    def _format_slack_messages(
+        self,
+        messages: List[Message],
+        total: int,
+        page: int,
+        page_size: int
+    ) -> Dict[str, Any]:
+        """Format Slack messages into response items."""
         items = [{
             'id': str(msg.id),
             'type': 'slack_message',
@@ -246,7 +318,7 @@ class SyncItemsService:
             'author_name': msg.author_name,
             'author_email': msg.author_email,
             'channel_name': msg.channel_name,
-            'content': msg.content[:500] if msg.content else None,  # Limit content size
+            'content': msg.content[:500] if msg.content else None,
             'sent_at': msg.sent_at.isoformat() if msg.sent_at else None,
             'created_at': msg.created_at.isoformat() if msg.created_at else None,
         } for msg in messages]
@@ -261,6 +333,12 @@ class SyncItemsService:
         page_size: int
     ) -> Dict[str, Any]:
         """Get Gong calls synced during this operation."""
+        # Use stored IDs if available (primary method)
+        if self._has_stored_ids(sync_record):
+            return self._get_messages_by_ids(sync_record, workspace_id, page, page_size, 'gong')
+
+        # Fallback to time-window matching
+        logger.debug(f"Using time-window fallback for Gong sync {sync_record.id}")
         start_time, end_time = self._get_time_window(sync_record)
 
         query = self.db.query(Message).filter(
@@ -274,6 +352,16 @@ class SyncItemsService:
         offset = (page - 1) * page_size
         calls = query.order_by(desc(Message.sent_at)).offset(offset).limit(page_size).all()
 
+        return self._format_gong_calls(calls, total, page, page_size)
+
+    def _format_gong_calls(
+        self,
+        calls: List[Message],
+        total: int,
+        page: int,
+        page_size: int
+    ) -> Dict[str, Any]:
+        """Format Gong calls into response items."""
         items = []
         for call in calls:
             metadata = call.message_metadata or {}
@@ -285,7 +373,7 @@ class SyncItemsService:
                 'author_name': call.author_name,
                 'author_email': call.author_email,
                 'channel_name': call.channel_name or 'Gong Calls',
-                'content': call.content[:500] if call.content else None,  # Limit content
+                'content': call.content[:500] if call.content else None,
                 'duration': duration_secs,
                 'duration_formatted': self._format_duration(duration_secs),
                 'parties': metadata.get('parties', []),
@@ -309,6 +397,12 @@ class SyncItemsService:
         page_size: int
     ) -> Dict[str, Any]:
         """Get Fathom sessions synced during this operation."""
+        # Use stored IDs if available (primary method)
+        if self._has_stored_ids(sync_record):
+            return self._get_messages_by_ids(sync_record, workspace_id, page, page_size, 'fathom')
+
+        # Fallback to time-window matching
+        logger.debug(f"Using time-window fallback for Fathom sync {sync_record.id}")
         start_time, end_time = self._get_time_window(sync_record)
 
         query = self.db.query(Message).filter(
@@ -322,6 +416,16 @@ class SyncItemsService:
         offset = (page - 1) * page_size
         sessions = query.order_by(desc(Message.sent_at)).offset(offset).limit(page_size).all()
 
+        return self._format_fathom_sessions(sessions, total, page, page_size)
+
+    def _format_fathom_sessions(
+        self,
+        sessions: List[Message],
+        total: int,
+        page: int,
+        page_size: int
+    ) -> Dict[str, Any]:
+        """Format Fathom sessions into response items."""
         items = []
         for session in sessions:
             metadata = session.message_metadata or {}
@@ -339,7 +443,7 @@ class SyncItemsService:
                 'author_name': session.author_name,
                 'author_email': session.author_email,
                 'channel_name': session.channel_name or 'Fathom Sessions',
-                'content': session.content[:500] if session.content else None,  # Limit content
+                'content': session.content[:500] if session.content else None,
                 'duration': duration_secs,
                 'duration_formatted': self._format_duration(duration_secs),
                 'recording_url': metadata.get('recording_url'),
@@ -356,6 +460,47 @@ class SyncItemsService:
 
         return self._paginate_response(items, total, page, page_size, 'source', 'fathom')
 
+    def _get_messages_by_ids(
+        self,
+        sync_record: SyncHistory,
+        workspace_id: UUID,
+        page: int,
+        page_size: int,
+        source_type: str
+    ) -> Dict[str, Any]:
+        """Get messages (Slack/Gong/Fathom) by stored IDs."""
+        item_ids = sync_record.synced_item_ids
+        total = len(item_ids)
+
+        if total == 0:
+            return self._empty_response('source', source_type)
+
+        # Paginate the IDs
+        offset = (page - 1) * page_size
+        page_ids = item_ids[offset:offset + page_size]
+
+        if not page_ids:
+            return self._empty_response('source', source_type)
+
+        # Convert string UUIDs to UUID objects for query
+        uuid_ids = [UUID(id_str) for id_str in page_ids]
+
+        messages = self.db.query(Message).filter(
+            Message.id.in_(uuid_ids),
+            Message.workspace_id == workspace_id,
+            Message.source == source_type
+        ).order_by(desc(Message.sent_at)).all()
+
+        # Format based on source type
+        if source_type == 'slack':
+            return self._format_slack_messages(messages, total, page, page_size)
+        elif source_type == 'gong':
+            return self._format_gong_calls(messages, total, page, page_size)
+        elif source_type == 'fathom':
+            return self._format_fathom_sessions(messages, total, page, page_size)
+
+        return self._empty_response('source', source_type)
+
     def _get_theme_items(
         self,
         sync_record: SyncHistory,
@@ -364,6 +509,12 @@ class SyncItemsService:
         page_size: int
     ) -> Dict[str, Any]:
         """Get features updated during theme sync."""
+        # Use stored IDs if available (primary method)
+        if self._has_stored_ids(sync_record):
+            return self._get_features_by_ids(sync_record, workspace_id, page, page_size)
+
+        # Fallback to time-window matching
+        logger.debug(f"Using time-window fallback for theme sync {sync_record.id}")
         start_time, end_time = self._get_time_window(sync_record)
 
         query = self.db.query(Feature).filter(
@@ -376,6 +527,47 @@ class SyncItemsService:
         offset = (page - 1) * page_size
         features = query.order_by(desc(Feature.updated_at)).offset(offset).limit(page_size).all()
 
+        return self._format_features(features, total, page, page_size)
+
+    def _get_features_by_ids(
+        self,
+        sync_record: SyncHistory,
+        workspace_id: UUID,
+        page: int,
+        page_size: int
+    ) -> Dict[str, Any]:
+        """Get features by stored IDs."""
+        item_ids = sync_record.synced_item_ids
+        total = len(item_ids)
+
+        if total == 0:
+            return self._empty_response('theme', None)
+
+        # Paginate the IDs
+        offset = (page - 1) * page_size
+        page_ids = item_ids[offset:offset + page_size]
+
+        if not page_ids:
+            return self._empty_response('theme', None)
+
+        # Convert string UUIDs to UUID objects for query
+        uuid_ids = [UUID(id_str) for id_str in page_ids]
+
+        features = self.db.query(Feature).filter(
+            Feature.id.in_(uuid_ids),
+            Feature.workspace_id == workspace_id
+        ).order_by(desc(Feature.updated_at)).all()
+
+        return self._format_features(features, total, page, page_size)
+
+    def _format_features(
+        self,
+        features: List[Feature],
+        total: int,
+        page: int,
+        page_size: int
+    ) -> Dict[str, Any]:
+        """Format features into response items."""
         items = [{
             'id': str(feature.id),
             'type': 'feature',

@@ -22,6 +22,7 @@ from app.models.competitor import Competitor
 from app.models.sync_history import SyncHistory
 from app.models.normalized_event import NormalizedEvent, EventChunk
 from app.models.extracted_fact import ExtractedFact, AggregationRun
+from app.models.ai_message_insight import AIMessageInsight, AIInsightsProgress, AIInsightsConfig
 
 __all__ = [
     "User",
@@ -48,4 +49,7 @@ __all__ = [
     "EventChunk",
     "ExtractedFact",
     "AggregationRun",
+    "AIMessageInsight",
+    "AIInsightsProgress",
+    "AIInsightsConfig",
 ]

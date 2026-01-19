@@ -14,6 +14,7 @@ Usage:
 """
 
 import logging
+import uuid as uuid_module
 from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional, Set
 from uuid import UUID
@@ -51,7 +52,7 @@ class BatchDatabaseService:
         integration_id: Optional[str] = None,
         source: str = "unknown",
         batch_size: int = DEFAULT_BATCH_SIZE,
-    ) -> Dict[str, int]:
+    ) -> Dict[str, Any]:
         """
         Batch insert messages with duplicate detection.
 
@@ -67,14 +68,19 @@ class BatchDatabaseService:
             batch_size: Number of records per batch
 
         Returns:
-            Dict with 'total_checked', 'new_added', 'duplicates_skipped'
+            Dict with:
+                - 'total_checked': Total messages checked
+                - 'new_added': Number of new messages inserted
+                - 'duplicates_skipped': Number of duplicates skipped
+                - 'inserted_ids': List of UUID strings for newly inserted messages
         """
         if not messages:
-            return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+            return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
         total_checked = len(messages)
         new_added = 0
         duplicates_skipped = 0
+        inserted_ids: List[str] = []
 
         try:
             # Get existing external_ids in one query for duplicate detection
@@ -100,7 +106,8 @@ class BatchDatabaseService:
                 return {
                     "total_checked": total_checked,
                     "new_added": 0,
-                    "duplicates_skipped": duplicates_skipped
+                    "duplicates_skipped": duplicates_skipped,
+                    "inserted_ids": []
                 }
 
             # Process in batches
@@ -118,6 +125,8 @@ class BatchDatabaseService:
                     )
                     if mapping:
                         message_mappings.append(mapping)
+                        # Track the generated ID
+                        inserted_ids.append(str(mapping["id"]))
 
                 if message_mappings:
                     # Bulk insert
@@ -139,7 +148,8 @@ class BatchDatabaseService:
         return {
             "total_checked": total_checked,
             "new_added": new_added,
-            "duplicates_skipped": duplicates_skipped
+            "duplicates_skipped": duplicates_skipped,
+            "inserted_ids": inserted_ids
         }
 
     def _get_existing_external_ids(
@@ -188,6 +198,7 @@ class BatchDatabaseService:
         Prepare a message dictionary for bulk_insert_mappings.
 
         Returns None if required fields are missing.
+        Generates UUID upfront so it can be tracked for sync history.
         """
         external_id = msg.get("external_id")
         if not external_id:
@@ -205,7 +216,11 @@ class BatchDatabaseService:
         elif not isinstance(sent_at, datetime):
             sent_at = now
 
+        # Generate UUID upfront so we can track it for sync history
+        message_id = uuid_module.uuid4()
+
         mapping = {
+            "id": message_id,  # Pre-generate ID for tracking
             "external_id": external_id,
             "content": msg.get("content", ""),
             "source": source,

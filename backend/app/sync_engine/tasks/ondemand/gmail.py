@@ -56,6 +56,7 @@ def sync_workspace_gmail(self, workspace_id: str, sync_id: str):
 
             total_ingested = 0
             total_checked = 0
+            all_inserted_ids = []
 
             for account in gmail_accounts:
                 try:
@@ -71,6 +72,7 @@ def sync_workspace_gmail(self, workspace_id: str, sync_id: str):
                     if result.get("status") != "error":
                         total_ingested += result.get("new_added", 0)
                         total_checked += result.get("total_checked", 0)
+                        all_inserted_ids.extend(result.get("inserted_ids", []))
 
                         # Update account last sync time
                         account.last_synced_at = datetime.now(timezone.utc)
@@ -81,7 +83,7 @@ def sync_workspace_gmail(self, workspace_id: str, sync_id: str):
                     logger.error(f"Error syncing Gmail account {account.gmail_email}: {e}")
                     continue
 
-            update_sync_record(db, sync_id, "success", total_checked, total_ingested)
+            update_sync_record(db, sync_id, "success", total_checked, total_ingested, synced_item_ids=all_inserted_ids)
             logger.info(f"✅ Gmail sync complete: {total_ingested} new threads ingested")
 
             return {

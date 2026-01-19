@@ -66,8 +66,9 @@ def sync_workspace_gong(self, workspace_id: str, sync_id: str):
 
             total_checked = result.get("total_checked", 0)
             new_added = result.get("new_added", 0)
+            inserted_ids = result.get("inserted_ids", [])
 
-            update_sync_record(db, sync_id, "success", total_checked, new_added)
+            update_sync_record(db, sync_id, "success", total_checked, new_added, synced_item_ids=inserted_ids)
             logger.info(f"✅ Gong sync complete: {new_added} new calls")
 
             return {

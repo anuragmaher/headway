@@ -140,7 +140,6 @@ export interface MessageDetailsResponse {
   processed_at: string | null;
   // Metadata
   metadata: Record<string, unknown>;
-  ai_insights: Record<string, unknown> | null;
   thread_id: string | null;
   is_thread_reply: boolean;
   // Gong/Fathom fields
@@ -165,6 +164,78 @@ export interface MessageDetailsResponse {
   gmail_thread_id?: string;
   // Related features
   related_features: RelatedFeature[];
+}
+
+// ============ AI Insights Types ============
+
+/** Theme assigned by AI insights */
+export interface AIInsightsTheme {
+  theme_id: string;
+  theme_name: string;
+  confidence: number;
+  explanation: string | null;
+}
+
+/** AI insights status for a message */
+export type AIInsightsStatus = 'queued' | 'processing' | 'completed' | 'failed' | 'none';
+
+/** AI insights for a single message */
+export interface AIInsightsResponse {
+  id: string;
+  message_id: string;
+  status: AIInsightsStatus;
+  themes: AIInsightsTheme[] | null;
+  summary: string | null;
+  pain_point: string | null;
+  feature_request: string | null;
+  explanation: string | null;
+  sentiment: string | null;
+  urgency: string | null;
+  keywords: string[] | null;
+  locked_theme_id: string | null;
+  locked_theme_name: string | null;
+  model_version: string;
+  tokens_used: number | null;
+  latency_ms: number | null;
+  created_at: string;
+  completed_at: string | null;
+  error_message: string | null;
+}
+
+/** Workspace-level AI insights progress for UI progress indicator */
+export interface AIInsightsProgressResponse {
+  workspace_id: string;
+  // Progress counts (for recent messages)
+  total_eligible: number;
+  completed_count: number;
+  pending_count: number;
+  processing_count: number;
+  failed_count: number;
+  // Computed fields
+  percent_complete: number; // 0.0 - 100.0
+  // Rate information
+  avg_processing_rate_per_hour: number | null;
+  estimated_time_remaining_minutes: number | null;
+  // Time window
+  progress_window_days: number;
+  // Feature flag
+  ai_insights_enabled: boolean;
+  // Timestamps
+  last_sync_at: string | null;
+}
+
+/** Request to queue a message for AI insights */
+export interface QueueInsightsRequest {
+  message_id: string;
+  priority?: number; // 1-10, lower = higher priority
+}
+
+/** Response for queue insights request */
+export interface QueueInsightsResponse {
+  status: string;
+  message_id: string;
+  insight_id: string | null;
+  error: string | null;
 }
 
 // ============ Sorting Types ============
@@ -390,129 +461,80 @@ export async function pollSyncCompletion(
   });
 }
 
-// ============ AI Insights Types ============
-
-export interface AIInsightsResponse {
-  message_id: string;
-  workspace_id: string;
-  ai_insights: Record<string, unknown>;
-  source: 'cache' | 'database' | 'extracted' | 'error';
-  is_error: boolean;
-  is_cached: boolean;
-  is_extracted: boolean;
-}
-
-export interface ClassifiedTheme {
-  name: string;
-  confidence: number;
-  theme_id?: string;
-  reasoning?: string;
-}
-
-export interface FeatureRequest {
-  title: string;
-  description: string;
-  urgency?: string;
-  quote?: string;
-}
-
-export interface PainPoint {
-  description: string;
-  impact?: string;
-  severity?: string;
-  quote?: string;
-}
-
-export interface Sentiment {
-  overall: 'positive' | 'neutral' | 'negative';
-  score: number;
-  reasoning?: string;
-}
-
-export interface AIInsights {
-  classified_themes: ClassifiedTheme[];
-  feature_requests: FeatureRequest[];
-  pain_points: PainPoint[];
-  sentiment: Sentiment;
-  summary?: string;
-  key_topics: string[];
-  classification_reasoning?: string;
-  extraction_metadata?: {
-    model?: string;
-    tokens_used?: number;
-    source_type?: string;
-    extracted_at?: string;
-    content_length?: number;
-    themes_provided?: number;
-    extraction_mode?: string;
-    skipped?: boolean;
-    skip_reason?: string;
-    error?: string;
-  };
-}
-
 // ============ AI Insights API Functions ============
 
 /**
- * Get AI insights for a specific message (on-demand extraction)
- *
- * This function implements the smart caching strategy:
- * 1. Checks Redis cache first
- * 2. Falls back to database
- * 3. Extracts via AI API if not found
- * 4. Caches and persists the result
- *
- * @param workspaceId - Workspace UUID
- * @param messageId - Message UUID
- * @param forceRefresh - Force re-extraction even if cached
+ * Get workspace-level AI insights progress stats
+ * Used for the global progress indicator
  */
-export async function getMessageAIInsights(
-  workspaceId: string,
-  messageId: string,
-  forceRefresh: boolean = false
-): Promise<AIInsightsResponse> {
-  const params = new URLSearchParams();
-  if (forceRefresh) {
-    params.append('force_refresh', 'true');
-  }
-
-  const queryString = params.toString();
-  const url = `/api/v1/sources/${workspaceId}/messages/${messageId}/ai-insights${queryString ? `?${queryString}` : ''}`;
-
-  const response = await api.get<AIInsightsResponse>(url);
-  return response.data;
-}
-
-/**
- * Invalidate AI insights cache for a message
- * Use this when message content changes or you want to force re-extraction
- */
-export async function invalidateMessageAIInsights(
-  workspaceId: string,
-  messageId: string
-): Promise<{ message_id: string; invalidated: boolean; message: string }> {
-  const response = await api.post(
-    `/api/v1/sources/${workspaceId}/messages/${messageId}/ai-insights/invalidate`
+export async function getAIInsightsProgress(
+  workspaceId: string
+): Promise<AIInsightsProgressResponse> {
+  const response = await api.get<AIInsightsProgressResponse>(
+    `/api/v1/sources/${workspaceId}/ai-insights/progress`
   );
   return response.data;
 }
 
 /**
- * Preload AI insights cache for multiple messages
- * This only caches existing insights from database, does NOT extract new ones
+ * Get AI insights for a specific message
  */
-export async function preloadAIInsightsCache(
+export async function getMessageAIInsights(
   workspaceId: string,
-  messageIds: string[]
-): Promise<{
-  workspace_id: string;
-  total_requested: number;
-  cached_count: number;
-  results: Record<string, boolean>;
-}> {
-  const response = await api.post(
-    `/api/v1/sources/${workspaceId}/ai-insights/preload`,
-    messageIds
+  messageId: string
+): Promise<AIInsightsResponse | null> {
+  try {
+    const response = await api.get<AIInsightsResponse>(
+      `/api/v1/sources/${workspaceId}/messages/${messageId}/ai-insights`
+    );
+    return response.data;
+  } catch (error) {
+    // Return null if no insights exist (404)
+    return null;
+  }
+}
+
+/**
+ * Queue a message for AI insights processing
+ */
+export async function queueMessageForInsights(
+  workspaceId: string,
+  messageId: string,
+  priority: number = 5
+): Promise<QueueInsightsResponse> {
+  const response = await api.post<QueueInsightsResponse>(
+    `/api/v1/sources/${workspaceId}/messages/${messageId}/ai-insights/queue`,
+    { message_id: messageId, priority }
+  );
+  return response.data;
+}
+
+/**
+ * Get paginated messages that have AI insights completed
+ * Used for "All Messages" tab to show only AI-ready messages
+ */
+export async function getMessagesWithInsights(
+  workspaceId: string,
+  page: number = 1,
+  pageSize: number = 10,
+  source?: string,
+  sortBy: MessageSortField = 'timestamp',
+  sortOrder: SortOrder = 'desc'
+): Promise<MessageListResponse> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    page_size: pageSize.toString(),
+    sort_by: sortBy,
+    sort_order: sortOrder,
+    has_insights: 'true', // Filter for messages with completed AI insights
+  });
+
+  if (source && source !== 'all') {
+    params.append('source', source);
+  }
+
+  const response = await api.get<MessageListResponse>(
+    `/api/v1/sources/${workspaceId}/messages?${params.toString()}`
   );
   return response.data;
 }
@@ -527,10 +549,11 @@ export const sourcesService = {
   getSyncStatus,
   getSyncedItems,
   pollSyncCompletion,
-  // AI Insights (on-demand)
+  // AI Insights
+  getAIInsightsProgress,
   getMessageAIInsights,
-  invalidateMessageAIInsights,
-  preloadAIInsightsCache,
+  queueMessageForInsights,
+  getMessagesWithInsights,
 };
 
 export default sourcesService;

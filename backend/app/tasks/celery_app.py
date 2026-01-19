@@ -43,6 +43,8 @@ celery_app = Celery(
         "app.sync_engine.tasks.ai_pipeline.tier1_classification",
         "app.sync_engine.tasks.ai_pipeline.tier2_extraction",
         "app.sync_engine.tasks.ai_pipeline.tier3_aggregation",
+        # === AI INSIGHTS (dedicated per-message insights) ===
+        "app.sync_engine.tasks.ai_insights.worker",
     ]
 )
 
@@ -52,6 +54,7 @@ celery_app.autodiscover_tasks([
     'app.sync_engine.tasks.periodic',
     'app.sync_engine.tasks.ondemand',
     'app.sync_engine.tasks.ai_pipeline',
+    'app.sync_engine.tasks.ai_insights',
 ], force=True)
 
 # Configure Celery with memory optimization for production
@@ -104,6 +107,21 @@ celery_config = {
 
     # Beat schedule persistence
     "beat_scheduler": "celery.beat:PersistentScheduler",
+
+    # === QUEUE ROUTING ===
+    # Route ai_insights tasks to dedicated queue for independent scaling
+    "task_routes": {
+        "app.sync_engine.tasks.ai_insights.*": {"queue": "ai_insights"},
+    },
+
+    # Queue definitions with priority support
+    "task_queues": {
+        "celery": {"exchange": "celery", "routing_key": "celery"},
+        "ai_insights": {"exchange": "ai_insights", "routing_key": "ai_insights"},
+    },
+
+    # Default queue for tasks without explicit routing
+    "task_default_queue": "celery",
 }
 
 # Platform-specific settings
@@ -204,6 +222,40 @@ celery_app.conf.beat_schedule = {
         "task": "app.sync_engine.tasks.ai_pipeline.cleanup_stale_processing",
         "schedule": schedule(run_every=900),  # Every 15 minutes
     },
+
+    # === AI INSIGHTS (Per-Message Insights) ===
+    # Dedicated queue for AI insights - safe to pause/scale independently
+    # Does NOT block ingestion or feature extraction
+
+    # Process fresh messages (Mode A): Shortly after normalization
+    # Queues recently created messages for AI insights
+    "ai-insights-fresh-messages": {
+        "task": "app.sync_engine.tasks.ai_insights.process_fresh_messages",
+        "schedule": schedule(run_every=300),  # Every 5 minutes
+        "options": {"queue": "ai_insights"},
+    },
+
+    # Backfill older messages (Mode B): When queue is idle
+    # Small batches, oldest or highest-signal first
+    "ai-insights-backfill": {
+        "task": "app.sync_engine.tasks.ai_insights.backfill_insights",
+        "schedule": schedule(run_every=1800),  # Every 30 minutes
+        "options": {"queue": "ai_insights"},
+    },
+
+    # Update progress stats for UI progress bar
+    "ai-insights-progress-update": {
+        "task": "app.sync_engine.tasks.ai_insights.update_progress",
+        "schedule": schedule(run_every=60),  # Every minute
+        "options": {"queue": "ai_insights"},
+    },
+
+    # Cleanup stale AI insights processing states
+    "ai-insights-cleanup-stale": {
+        "task": "app.sync_engine.tasks.ai_insights.cleanup_stale",
+        "schedule": schedule(run_every=900),  # Every 15 minutes
+        "options": {"queue": "ai_insights"},
+    },
 }
 
 logger.info(f"Celery app initialized with broker: {settings.REDIS_URL}")
@@ -219,3 +271,9 @@ logger.info("  Each stage triggers the next automatically when items are process
 logger.info("  Scheduled tasks (every 5 min) serve as catch-up for missed items.")
 logger.info("  - Stale cleanup: every 15 minutes")
 logger.info("  - Old facts cleanup: every 24 hours")
+logger.info("AI Insights - Dedicated queue for per-message insights:")
+logger.info("  Queue: ai_insights (low priority, rate-limited)")
+logger.info("  - Fresh messages: every 5 minutes")
+logger.info("  - Backfill: every 30 minutes (when queue idle)")
+logger.info("  - Progress update: every minute")
+logger.info("  - Stale cleanup: every 15 minutes")

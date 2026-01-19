@@ -56,6 +56,7 @@ class OptimizedMessagesService:
         sort_by: str = "timestamp",
         sort_order: str = "desc",
         cursor: Optional[str] = None,
+        has_insights: Optional[bool] = None,
     ) -> MessageListResponse:
         """
         Get paginated messages with optimized performance.
@@ -71,6 +72,7 @@ class OptimizedMessagesService:
             sort_by: Sort field (timestamp, sender, source)
             sort_order: Sort direction (asc, desc)
             cursor: Optional cursor for cursor-based pagination (ISO timestamp)
+            has_insights: If True, only return messages with completed AI insights
 
         Returns:
             MessageListResponse with paginated results
@@ -80,6 +82,17 @@ class OptimizedMessagesService:
         # Validate and sanitize inputs
         page_size = min(max(page_size, 1), 50)
         sort_order = "ASC" if sort_order.lower() == "asc" else "DESC"
+
+        # If filtering by has_insights, use separate query path
+        if has_insights is True:
+            return self._get_messages_with_insights(
+                workspace_id=workspace_id,
+                page=page,
+                page_size=page_size,
+                source_filter=source_filter,
+                sort_by=sort_by,
+                sort_order=sort_order,
+            )
 
         # Get cached count or compute
         total = self._get_cached_count(workspace_str, source_filter)
@@ -405,6 +418,179 @@ class OptimizedMessagesService:
     def invalidate_count_cache(self, workspace_id: str) -> None:
         """Invalidate cached counts for a workspace."""
         self.cache.delete_pattern("message_count", f"{workspace_id}:*")
+
+    def _get_messages_with_insights(
+        self,
+        workspace_id: UUID,
+        page: int,
+        page_size: int,
+        source_filter: Optional[str],
+        sort_by: str,
+        sort_order: str,
+    ) -> MessageListResponse:
+        """
+        Get messages that have completed AI insights.
+
+        This joins messages/gmail_threads with ai_message_insights table
+        to return only messages with completed insights.
+        """
+        workspace_str = str(workspace_id)
+        offset = (page - 1) * page_size
+
+        # Determine sort column
+        sort_col_map = {
+            "timestamp": "m.sort_timestamp",
+            "sender": "m.sender",
+            "source": "m.source",
+        }
+        sort_col = sort_col_map.get(sort_by, "m.sort_timestamp")
+
+        # Build source condition
+        source_condition = ""
+        params: Dict[str, Any] = {
+            "workspace_id": workspace_str,
+            "limit": page_size,
+            "offset": offset,
+        }
+
+        if source_filter and source_filter not in ('all',):
+            if source_filter == 'gmail':
+                source_condition = "AND m.source = 'gmail'"
+            else:
+                source_condition = "AND m.source = :source_filter"
+                params["source_filter"] = source_filter
+
+        # Query messages that have completed AI insights
+        # Uses a CTE to combine messages and gmail_threads, then joins with ai_message_insights
+        query = text(f"""
+            WITH combined_messages AS (
+                -- Non-gmail messages
+                SELECT
+                    id,
+                    COALESCE(title,
+                        CASE source
+                            WHEN 'slack' THEN 'Slack Message'
+                            WHEN 'gong' THEN 'Gong Call'
+                            WHEN 'fathom' THEN 'Fathom Meeting'
+                            ELSE 'Message'
+                        END
+                    ) as title,
+                    COALESCE(author_name, author_email, 'Unknown') as sender,
+                    author_email as sender_email,
+                    CASE source
+                        WHEN 'slack' THEN 'slack'
+                        WHEN 'gong' THEN 'transcript'
+                        WHEN 'fathom' THEN 'meeting'
+                        ELSE 'email'
+                    END as source_type,
+                    source,
+                    COALESCE(SUBSTRING(content FROM 1 FOR 150), '') as preview,
+                    sent_at as sort_timestamp,
+                    channel_name,
+                    is_processed,
+                    workspace_id
+                FROM messages
+                WHERE workspace_id = :workspace_id
+                AND source != 'gmail'
+
+                UNION ALL
+
+                -- Gmail threads
+                SELECT
+                    id,
+                    COALESCE(subject, 'Email Thread') as title,
+                    COALESCE(from_name, from_email, 'Unknown') as sender,
+                    from_email as sender_email,
+                    'email' as source_type,
+                    'gmail' as source,
+                    COALESCE(SUBSTRING(content FROM 1 FOR 150), snippet, '') as preview,
+                    thread_date as sort_timestamp,
+                    label_name as channel_name,
+                    is_processed,
+                    workspace_id
+                FROM gmail_threads
+                WHERE workspace_id = :workspace_id
+            )
+            SELECT
+                m.id::text,
+                m.title,
+                m.sender,
+                m.sender_email,
+                m.source_type,
+                m.source,
+                m.preview,
+                m.sort_timestamp,
+                m.channel_name,
+                m.is_processed
+            FROM combined_messages m
+            INNER JOIN ai_message_insights ami ON ami.message_id = m.id
+            WHERE ami.workspace_id = :workspace_id
+            AND ami.status = 'completed'
+            {source_condition}
+            ORDER BY {sort_col} {sort_order} NULLS LAST
+            LIMIT :limit OFFSET :offset
+        """)
+
+        # Count query for pagination
+        count_query = text(f"""
+            WITH combined_messages AS (
+                SELECT id, source, workspace_id
+                FROM messages
+                WHERE workspace_id = :workspace_id AND source != 'gmail'
+
+                UNION ALL
+
+                SELECT id, 'gmail' as source, workspace_id
+                FROM gmail_threads
+                WHERE workspace_id = :workspace_id
+            )
+            SELECT COUNT(*)
+            FROM combined_messages m
+            INNER JOIN ai_message_insights ami ON ami.message_id = m.id
+            WHERE ami.workspace_id = :workspace_id
+            AND ami.status = 'completed'
+            {source_condition}
+        """)
+
+        # Execute count
+        count_result = self.db.execute(count_query, params)
+        total = count_result.scalar() or 0
+
+        if total == 0:
+            return self._empty_response(page, page_size)
+
+        # Execute main query
+        result = self.db.execute(query, params)
+        rows = result.fetchall()
+
+        # Convert to response objects
+        messages = []
+        for row in rows:
+            messages.append(MessageResponse(
+                id=row[0],
+                title=row[1],
+                sender=row[2],
+                sender_email=row[3],
+                source_type=row[4],
+                source=row[5],
+                preview=row[6],
+                content=None,
+                timestamp=row[7],
+                channel_name=row[8],
+                is_processed=row[9],
+            ))
+
+        total_pages = (total + page_size - 1) // page_size
+
+        return MessageListResponse(
+            messages=messages,
+            total=total,
+            page=page,
+            page_size=page_size,
+            total_pages=total_pages,
+            has_next=page < total_pages,
+            has_prev=page > 1,
+        )
 
     def get_messages_batch(
         self,

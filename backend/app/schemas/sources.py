@@ -170,32 +170,76 @@ class DataSourcesStatusResponse(BaseModel):
 
 # ============ AI Insights Schemas ============
 
-class ReprocessInsightsRequest(BaseModel):
-    """Request to reprocess AI insights"""
-    source_type: Optional[str] = None  # Filter by source (gmail, slack, gong, fathom)
-    force_reprocess: bool = False  # If True, reprocess even already processed items
-    batch_size: int = Field(default=50, ge=1, le=200)  # Items to process
+class AIInsightsTheme(BaseModel):
+    """Theme assigned to a message by AI insights"""
+    theme_id: str
+    theme_name: str
+    confidence: float
+    explanation: Optional[str] = None
 
 
-class ReprocessMessageInsightsRequest(BaseModel):
-    """Request to reprocess AI insights for a single message"""
-    force_reprocess: bool = True  # Usually want to force for single message
+class AIInsightsResponse(BaseModel):
+    """AI insights for a single message"""
+    id: str
+    message_id: str
+    status: str  # queued, processing, completed, failed
+    themes: Optional[List[AIInsightsTheme]] = None
+    summary: Optional[str] = None
+    pain_point: Optional[str] = None
+    feature_request: Optional[str] = None
+    explanation: Optional[str] = None
+    sentiment: Optional[str] = None
+    urgency: Optional[str] = None
+    keywords: Optional[List[str]] = None
+    locked_theme_id: Optional[str] = None
+    locked_theme_name: Optional[str] = None
+    model_version: str
+    tokens_used: Optional[int] = None
+    latency_ms: Optional[float] = None
+    created_at: datetime
+    completed_at: Optional[datetime] = None
+    error_message: Optional[str] = None
+
+    class Config:
+        from_attributes = True
 
 
-class AIInsightsStatusResponse(BaseModel):
-    """Response showing AI insights processing status"""
-    total_messages: int
-    processed_messages: int
-    pending_messages: int
-    failed_messages: int
-    processing_percentage: float
-    last_processed_at: Optional[datetime] = None
+class AIInsightsProgressResponse(BaseModel):
+    """Workspace-level AI insights progress for UI progress bar"""
+    workspace_id: str
+    # Progress counts (for recent messages)
+    total_eligible: int
+    completed_count: int
+    pending_count: int
+    processing_count: int
+    failed_count: int
+    # Computed fields
+    percent_complete: float  # 0.0 - 100.0
+    # Rate information
+    avg_processing_rate_per_hour: Optional[float] = None
+    estimated_time_remaining_minutes: Optional[float] = None
+    # Time window
+    progress_window_days: int = 7
+    # Feature flag
+    ai_insights_enabled: bool = True
+    # Timestamps
+    last_sync_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
 
 
-class ReprocessInsightsResponse(BaseModel):
-    """Response for AI insights reprocessing request"""
-    message: str
-    task_id: str
+class QueueInsightsRequest(BaseModel):
+    """Request to queue a message for AI insights"""
+    message_id: str
+    priority: int = Field(default=5, ge=1, le=10, description="Priority 1-10, lower = higher priority")
+
+
+class QueueInsightsResponse(BaseModel):
+    """Response for queue insights request"""
     status: str
-    items_queued: int
-    source_type: Optional[str] = None
+    message_id: str
+    insight_id: Optional[str] = None
+    error: Optional[str] = None
+
+

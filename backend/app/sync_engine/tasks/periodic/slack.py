@@ -103,10 +103,11 @@ def sync_slack_periodic(self):
                         )
                     )
 
-                    # Extract counts from result
+                    # Extract counts and IDs from result
                     total_checked = result.get("total_checked", 0)
                     new_added = result.get("new_added", 0)
                     duplicates_skipped = result.get("duplicates_skipped", 0)
+                    inserted_ids = result.get("inserted_ids", [])
 
                     # Only create sync history record if new data was found
                     if new_added > 0:
@@ -124,6 +125,7 @@ def sync_slack_periodic(self):
                             status="success",
                             items_processed=total_checked,
                             items_new=new_added,
+                            synced_item_ids=inserted_ids,
                         )
                         logger.info(f"✅ Checked {total_checked} messages, added {new_added} new for {workspace.name}")
                     else:

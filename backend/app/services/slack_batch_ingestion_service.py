@@ -128,6 +128,7 @@ class SlackBatchIngestionService:
             total_checked = 0
             total_new = 0
             total_skipped = 0
+            all_inserted_ids: List[str] = []
 
             # Process each selected channel
             for channel_info in selected_channels:
@@ -147,6 +148,7 @@ class SlackBatchIngestionService:
                     total_checked += result.get("total_checked", 0)
                     total_new += result.get("new_added", 0)
                     total_skipped += result.get("duplicates_skipped", 0)
+                    all_inserted_ids.extend(result.get("inserted_ids", []))
 
                     logger.info(
                         f"Channel #{channel_name}: checked {result.get('total_checked', 0)}, "
@@ -171,7 +173,8 @@ class SlackBatchIngestionService:
             return {
                 "total_checked": total_checked,
                 "new_added": total_new,
-                "duplicates_skipped": total_skipped
+                "duplicates_skipped": total_skipped,
+                "inserted_ids": all_inserted_ids
             }
 
         except Exception as e:
@@ -283,13 +286,15 @@ class SlackBatchIngestionService:
                 return {
                     "total_checked": total_checked,
                     "new_added": result.get("new_added", 0),
-                    "duplicates_skipped": duplicates_skipped + result.get("duplicates_skipped", 0)
+                    "duplicates_skipped": duplicates_skipped + result.get("duplicates_skipped", 0),
+                    "inserted_ids": result.get("inserted_ids", [])
                 }
 
             return {
                 "total_checked": total_checked,
                 "new_added": 0,
-                "duplicates_skipped": duplicates_skipped
+                "duplicates_skipped": duplicates_skipped,
+                "inserted_ids": []
             }
 
         except Exception as e:
