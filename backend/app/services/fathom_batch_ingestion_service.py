@@ -78,20 +78,20 @@ class FathomBatchIngestionService:
             min_duration_seconds: Minimum session duration to include
 
         Returns:
-            Dict with 'total_checked', 'new_added', 'duplicates_skipped'
+            Dict with 'total_checked', 'new_added', 'duplicates_skipped', 'inserted_ids'
         """
         try:
             # Validate workspace
             workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
             if not workspace:
                 logger.error(f"Workspace {workspace_id} not found")
-                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
             # Get Fathom credentials from connector
             credentials = self._get_credentials(db, workspace_id)
             if not credentials:
                 logger.error(f"Fathom credentials not found for workspace {workspace_id}")
-                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
             # Get or create integration record
             integration = self._get_or_create_integration(db, workspace_id)
@@ -112,7 +112,7 @@ class FathomBatchIngestionService:
 
             if not sessions:
                 logger.info("No Fathom sessions found in date range")
-                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
             # Prepare messages for batch insert
             messages = []
@@ -154,7 +154,7 @@ class FathomBatchIngestionService:
             logger.error(f"Error in Fathom ingestion: {e}")
             import traceback
             traceback.print_exc()
-            return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+            return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
     def _get_credentials(self, db: Session, workspace_id: str) -> Optional[Dict[str, str]]:
         """Get Fathom API credentials from workspace connector."""

@@ -62,6 +62,8 @@ class SyncItemsService:
         Returns:
             Dict with synced items and metadata
         """
+        logger.info(f"get_synced_items called: workspace_id={workspace_id}, sync_id={sync_id}, page={page}, force_refresh={force_refresh}")
+
         # Get sync record first to check status
         sync_record = self.db.query(SyncHistory).filter(
             SyncHistory.id == sync_id,
@@ -69,7 +71,17 @@ class SyncItemsService:
         ).first()
 
         if not sync_record:
+            logger.warning(f"Sync record not found: sync_id={sync_id}, workspace_id={workspace_id}")
             return self._empty_response(None, None)
+
+        logger.info(
+            f"Found sync record: id={sync_record.id}, "
+            f"sync_type={sync_record.sync_type}, "
+            f"source_type={sync_record.source_type}, "
+            f"status={sync_record.status}, "
+            f"items_new={sync_record.items_new}, "
+            f"synced_item_ids count={len(sync_record.synced_item_ids) if sync_record.synced_item_ids else 0}"
+        )
 
         # Don't use cache for in-progress syncs or when force_refresh is True
         should_use_cache = use_cache and not force_refresh and sync_record.status == 'success'
@@ -88,6 +100,8 @@ class SyncItemsService:
             result = self._get_theme_items(sync_record, workspace_id, page, page_size)
         else:
             result = self._empty_response(sync_record.sync_type, sync_record.source_type)
+
+        logger.info(f"Returning {len(result.get('items', []))} items for sync {sync_id}")
 
         # Only cache completed syncs with items
         if should_use_cache and result.get('items'):
@@ -162,7 +176,14 @@ class SyncItemsService:
 
     def _has_stored_ids(self, sync_record: SyncHistory) -> bool:
         """Check if sync record has stored item IDs."""
-        return bool(sync_record.synced_item_ids and len(sync_record.synced_item_ids) > 0)
+        has_ids = bool(sync_record.synced_item_ids and len(sync_record.synced_item_ids) > 0)
+        logger.info(
+            f"Checking stored IDs for sync {sync_record.id}: "
+            f"has_ids={has_ids}, "
+            f"synced_item_ids={sync_record.synced_item_ids[:3] if sync_record.synced_item_ids else None}..., "
+            f"count={len(sync_record.synced_item_ids) if sync_record.synced_item_ids else 0}"
+        )
+        return has_ids
 
     def _get_time_window(self, sync_record: SyncHistory) -> tuple:
         """
@@ -228,23 +249,33 @@ class SyncItemsService:
         item_ids = sync_record.synced_item_ids
         total = len(item_ids)
 
+        logger.info(f"Getting Gmail items by IDs: total={total}, page={page}, page_size={page_size}")
+
         if total == 0:
+            logger.info("No stored IDs found, returning empty response")
             return self._empty_response('source', 'gmail')
 
         # Paginate the IDs
         offset = (page - 1) * page_size
         page_ids = item_ids[offset:offset + page_size]
 
+        logger.info(f"Paginated IDs: offset={offset}, page_ids count={len(page_ids)}")
+
         if not page_ids:
+            logger.info("No IDs in current page, returning empty response")
             return self._empty_response('source', 'gmail')
 
         # Convert string UUIDs to UUID objects for query
         uuid_ids = [UUID(id_str) for id_str in page_ids]
 
+        logger.info(f"Querying GmailThread with {len(uuid_ids)} UUIDs for workspace {workspace_id}")
+
         threads = self.db.query(GmailThread).filter(
             GmailThread.id.in_(uuid_ids),
             GmailThread.workspace_id == workspace_id
         ).order_by(desc(GmailThread.thread_date)).all()
+
+        logger.info(f"Found {len(threads)} Gmail threads in database")
 
         return self._format_gmail_threads(threads, total, page, page_size)
 
@@ -472,24 +503,34 @@ class SyncItemsService:
         item_ids = sync_record.synced_item_ids
         total = len(item_ids)
 
+        logger.info(f"Getting {source_type} messages by IDs: total={total}, page={page}, page_size={page_size}")
+
         if total == 0:
+            logger.info(f"No stored IDs found for {source_type}, returning empty response")
             return self._empty_response('source', source_type)
 
         # Paginate the IDs
         offset = (page - 1) * page_size
         page_ids = item_ids[offset:offset + page_size]
 
+        logger.info(f"Paginated IDs for {source_type}: offset={offset}, page_ids count={len(page_ids)}")
+
         if not page_ids:
+            logger.info(f"No IDs in current page for {source_type}, returning empty response")
             return self._empty_response('source', source_type)
 
         # Convert string UUIDs to UUID objects for query
         uuid_ids = [UUID(id_str) for id_str in page_ids]
+
+        logger.info(f"Querying Message with {len(uuid_ids)} UUIDs for workspace {workspace_id}, source {source_type}")
 
         messages = self.db.query(Message).filter(
             Message.id.in_(uuid_ids),
             Message.workspace_id == workspace_id,
             Message.source == source_type
         ).order_by(desc(Message.sent_at)).all()
+
+        logger.info(f"Found {len(messages)} {source_type} messages in database")
 
         # Format based on source type
         if source_type == 'slack':

@@ -79,20 +79,20 @@ class GongIngestionService:
             fetch_transcripts: Whether to fetch full transcripts
 
         Returns:
-            Dict with 'total_checked', 'new_added', 'duplicates_skipped'
+            Dict with 'total_checked', 'new_added', 'duplicates_skipped', 'inserted_ids'
         """
         try:
             # Validate workspace
             workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
             if not workspace:
                 logger.error(f"Workspace {workspace_id} not found")
-                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
             # Get Gong credentials from connector
             credentials = self._get_credentials(db, workspace_id)
             if not credentials:
                 logger.error(f"Gong credentials not found for workspace {workspace_id}")
-                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
             # Get or create integration record
             integration = self._get_or_create_integration(db, workspace_id)
@@ -107,7 +107,7 @@ class GongIngestionService:
 
             if not calls:
                 logger.info("No Gong calls found in date range")
-                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
             # Prepare messages for batch insert
             messages = []
@@ -151,7 +151,7 @@ class GongIngestionService:
             logger.error(f"Error in Gong ingestion: {e}")
             import traceback
             traceback.print_exc()
-            return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+            return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
     def _get_credentials(self, db: Session, workspace_id: str) -> Optional[Dict[str, str]]:
         """Get Gong API credentials from workspace connector."""

@@ -231,15 +231,15 @@ celery_app.conf.beat_schedule = {
     # Queues recently created messages for AI insights
     "ai-insights-fresh-messages": {
         "task": "app.sync_engine.tasks.ai_insights.process_fresh_messages",
-        "schedule": schedule(run_every=300),  # Every 5 minutes
+        "schedule": schedule(run_every=1800),  # Every 30 minutes
         "options": {"queue": "ai_insights"},
     },
 
-    # Backfill older messages (Mode B): When queue is idle
+    # Backfill older messages (Mode B): Process older messages frequently
     # Small batches, oldest or highest-signal first
     "ai-insights-backfill": {
         "task": "app.sync_engine.tasks.ai_insights.backfill_insights",
-        "schedule": schedule(run_every=1800),  # Every 30 minutes
+        "schedule": schedule(run_every=120),  # Every 2 minutes
         "options": {"queue": "ai_insights"},
     },
 
@@ -273,7 +273,7 @@ logger.info("  - Stale cleanup: every 15 minutes")
 logger.info("  - Old facts cleanup: every 24 hours")
 logger.info("AI Insights - Dedicated queue for per-message insights:")
 logger.info("  Queue: ai_insights (low priority, rate-limited)")
-logger.info("  - Fresh messages: every 5 minutes")
-logger.info("  - Backfill: every 30 minutes (when queue idle)")
+logger.info("  - Fresh messages: every 30 minutes")
+logger.info("  - Backfill (older messages): every 2 minutes")
 logger.info("  - Progress update: every minute")
 logger.info("  - Stale cleanup: every 15 minutes")
