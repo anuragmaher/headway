@@ -72,6 +72,10 @@ class SyncHistory(Base):
     items_processed = Column(Integer, nullable=False, default=0)
     items_new = Column(Integer, nullable=False, default=0)
     items_updated = Column(Integer, nullable=False, default=0)
+
+    # Synced item IDs - stores UUIDs of items created/updated during this sync
+    # This provides reliable item tracking instead of time-window matching
+    synced_item_ids = Column(JSONB, nullable=True, default=list)  # List of UUID strings
     
     # Timestamps
     started_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)

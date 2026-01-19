@@ -1,551 +1,348 @@
 """
-AI Insights Service - Centralized AI extraction for all message sources
+AI Insights Service for per-message analysis.
 
-This service provides:
-- Unified AI insights extraction for Gmail, Slack, Gong, Fathom
-- Theme classification with confidence scoring
-- Feature request, pain point, and sentiment extraction
-- Batch processing support for efficiency
+Generates AI insights for individual messages including:
+- Theme classification (from existing system themes ONLY)
+- Summary generation
+- Pain point extraction
+- Feature request extraction
+- Explanation of why themes apply
 
-Architecture:
-- Uses OpenAI GPT-4o-mini for cost-effective extraction
-- Supports workspace themes for context-aware extraction
-- Returns structured insights stored in ai_insights JSONB column
+Key constraints:
+- Temperature = 0 for deterministic output
+- Strict JSON output
+- AI NEVER invents, renames, or redefines themes
+- AI only selects from themes provided in prompt
+- Locked themes from feature pipeline cannot be overridden
 """
 
 import json
-import hashlib
 import logging
-from typing import Dict, List, Any, Optional, Tuple
-from datetime import datetime, timezone
-from uuid import UUID
+import time
+from typing import Dict, Any, Optional, List
+from dataclasses import dataclass, field
 
 from openai import OpenAI
-from sqlalchemy.orm import Session
+from openai import RateLimitError, APITimeoutError, APIConnectionError
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception_type,
+)
 
 from app.core.config import settings
-from app.models.theme import Theme
 
 logger = logging.getLogger(__name__)
+
+# Prompt version for tracking
+AI_INSIGHTS_PROMPT_VERSION = "v1.0.0"
+
+
+@dataclass
+class AIInsightsResult:
+    """Result from AI insights generation."""
+    themes: List[Dict[str, Any]] = field(default_factory=list)  # [{theme_id, theme_name, confidence, explanation}]
+    summary: Optional[str] = None
+    pain_point: Optional[str] = None
+    feature_request: Optional[str] = None
+    explanation: Optional[str] = None
+    sentiment: Optional[str] = None  # positive, negative, neutral
+    urgency: Optional[str] = None  # low, medium, high, critical
+    keywords: List[str] = field(default_factory=list)
+    tokens_used: int = 0
+    latency_ms: float = 0.0
+    model: str = ""
+    prompt_version: str = AI_INSIGHTS_PROMPT_VERSION
+    error: Optional[str] = None
+
+
+# System prompt for AI insights generation
+AI_INSIGHTS_SYSTEM_PROMPT = """You are an AI assistant analyzing customer feedback messages for a product intelligence platform.
+
+Your task is to analyze a single message and extract structured insights.
+
+CRITICAL RULES:
+1. You may ONLY select themes from the provided theme list - NEVER invent new themes
+2. You may ONLY use theme IDs and names exactly as provided
+3. If no theme fits, return an empty themes array
+4. If a "locked_theme" is provided, you MUST include it in your response and explain why it applies
+5. Be concise but thorough in your analysis
+6. Use temperature=0 for deterministic, consistent output
+
+Output STRICT JSON with this exact structure:
+{
+    "themes": [
+        {
+            "theme_id": "uuid-string",
+            "theme_name": "Exact Theme Name",
+            "confidence": 0.0-1.0,
+            "explanation": "Why this theme applies to this message"
+        }
+    ],
+    "summary": "1-2 sentence summary of the message content",
+    "pain_point": "The user's pain point or problem (null if none)",
+    "feature_request": "The feature request or desired capability (null if none)",
+    "explanation": "Overall explanation of the analysis",
+    "sentiment": "positive|negative|neutral",
+    "urgency": "low|medium|high|critical",
+    "keywords": ["keyword1", "keyword2"]
+}"""
+
+
+def build_ai_insights_prompt(
+    message_content: str,
+    message_title: Optional[str],
+    source_type: str,
+    author_name: Optional[str],
+    author_role: Optional[str],
+    available_themes: List[Dict[str, Any]],
+    locked_theme: Optional[Dict[str, Any]] = None,
+) -> tuple[str, str]:
+    """
+    Build the prompt for AI insights generation.
+
+    Args:
+        message_content: The message text to analyze
+        message_title: Optional title/subject of the message
+        source_type: Source type (slack, gmail, gong, fathom)
+        author_name: Name of message author
+        author_role: Role of author (internal, external, customer)
+        available_themes: List of themes the AI can select from
+        locked_theme: Theme already assigned by feature pipeline (cannot be overridden)
+
+    Returns:
+        Tuple of (system_prompt, user_prompt)
+    """
+    # Format available themes for the prompt
+    themes_text = "AVAILABLE THEMES (you may ONLY select from these):\n"
+    for theme in available_themes:
+        themes_text += f"- ID: {theme['id']}, Name: \"{theme['name']}\""
+        if theme.get('description'):
+            themes_text += f", Description: {theme['description']}"
+        themes_text += "\n"
+
+    if not available_themes:
+        themes_text = "AVAILABLE THEMES: None (return empty themes array)\n"
+
+    # Format locked theme if present
+    locked_theme_text = ""
+    if locked_theme:
+        locked_theme_text = f"""
+LOCKED THEME (MUST be included in your response):
+- ID: {locked_theme['id']}
+- Name: "{locked_theme['name']}"
+This theme was assigned by the feature extraction pipeline and is canonical.
+You must include this theme and explain why it applies.
+"""
+
+    # Build user prompt
+    user_prompt = f"""Analyze this message and extract insights.
+
+{themes_text}
+{locked_theme_text}
+
+MESSAGE DETAILS:
+- Source: {source_type}
+- Author: {author_name or 'Unknown'}
+- Role: {author_role or 'Unknown'}
+- Title: {message_title or 'No title'}
+
+MESSAGE CONTENT:
+\"\"\"
+{message_content[:4000]}
+\"\"\"
+
+Provide your analysis in the specified JSON format."""
+
+    return AI_INSIGHTS_SYSTEM_PROMPT, user_prompt
+
+
+# Retry decorator for OpenAI API calls
+def with_retry(func):
+    """Decorator for retry logic with exponential backoff."""
+    return retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=30),
+        retry=retry_if_exception_type((RateLimitError, APITimeoutError, APIConnectionError)),
+        before_sleep=lambda retry_state: logger.warning(
+            f"Retrying {func.__name__} after {retry_state.outcome.exception()}, "
+            f"attempt {retry_state.attempt_number}"
+        )
+    )(func)
 
 
 class AIInsightsService:
     """
-    Centralized service for extracting AI insights from messages.
+    Service for generating AI insights for individual messages.
 
-    This service handles:
-    1. Theme relevance classification
-    2. Feature request extraction
-    3. Pain point identification
-    4. Sentiment analysis
-    5. Classified themes with confidence scores
+    Features:
+    - Single-message granularity (no batching)
+    - Temperature = 0 for deterministic output
+    - Strict JSON output
+    - Theme constraints enforced
+    - Retry logic with exponential backoff
     """
 
-    # Processing thresholds
-    MIN_CONTENT_LENGTH = 50  # Minimum characters to process
-    MAX_CONTENT_LENGTH = 8000  # Max characters sent to AI
-    RELEVANCE_THRESHOLD = 0.4  # Minimum confidence to extract
+    DEFAULT_MODEL = "gpt-4o-mini"
+    REQUEST_TIMEOUT = 60  # seconds
 
     def __init__(self, api_key: Optional[str] = None):
-        """Initialize the AI Insights Service."""
+        """
+        Initialize the AI insights service.
+
+        Args:
+            api_key: OpenAI API key (defaults to settings)
+        """
         self.api_key = api_key or settings.OPENAI_API_KEY
         if not self.api_key:
-            raise ValueError("OpenAI API key not found. Set OPENAI_API_KEY in environment.")
+            raise ValueError("OpenAI API key not found. Set OPENAI_API_KEY in .env file.")
 
-        self.client = OpenAI(api_key=self.api_key)
-        self._themes_cache: Dict[str, Tuple[List[Dict], datetime]] = {}
-        self._cache_ttl_seconds = 300  # 5 minutes
+        self.client = OpenAI(
+            api_key=self.api_key,
+            timeout=self.REQUEST_TIMEOUT,
+            max_retries=0,  # We handle retries ourselves
+        )
 
-    def get_workspace_themes(
+    @with_retry
+    def generate_insights(
         self,
-        db: Session,
-        workspace_id: UUID,
-        use_cache: bool = True
-    ) -> List[Dict[str, str]]:
+        message_content: str,
+        available_themes: List[Dict[str, Any]],
+        message_title: Optional[str] = None,
+        source_type: str = "unknown",
+        author_name: Optional[str] = None,
+        author_role: Optional[str] = None,
+        locked_theme: Optional[Dict[str, Any]] = None,
+    ) -> AIInsightsResult:
         """
-        Get themes for a workspace with caching.
+        Generate AI insights for a single message.
 
         Args:
-            db: Database session
-            workspace_id: Workspace UUID
-            use_cache: Whether to use cached themes
+            message_content: The message text to analyze
+            available_themes: List of themes the AI can select from
+            message_title: Optional title/subject
+            source_type: Source type (slack, gmail, gong, fathom)
+            author_name: Name of message author
+            author_role: Role of author
+            locked_theme: Theme already assigned by feature pipeline
 
         Returns:
-            List of theme dictionaries with 'id', 'name', 'description'
+            AIInsightsResult with all extracted insights
         """
-        cache_key = str(workspace_id)
-        now = datetime.now(timezone.utc)
+        start_time = time.time()
 
-        # Check cache
-        if use_cache and cache_key in self._themes_cache:
-            themes, cached_at = self._themes_cache[cache_key]
-            if (now - cached_at).total_seconds() < self._cache_ttl_seconds:
-                return themes
-
-        # Fetch from database
-        db_themes = db.query(Theme).filter(
-            Theme.workspace_id == workspace_id
-        ).all()
-
-        themes = [
-            {
-                'id': str(theme.id),
-                'name': theme.name,
-                'description': theme.description or ''
-            }
-            for theme in db_themes
-        ]
-
-        # Update cache
-        self._themes_cache[cache_key] = (themes, now)
-
-        return themes
-
-    def clear_themes_cache(self, workspace_id: Optional[UUID] = None) -> None:
-        """Clear themes cache for a workspace or all workspaces."""
-        if workspace_id:
-            self._themes_cache.pop(str(workspace_id), None)
-        else:
-            self._themes_cache.clear()
-
-    def should_process(self, content: str) -> Tuple[bool, str]:
-        """
-        Check if content should be processed for AI insights.
-
-        Args:
-            content: The message content
-
-        Returns:
-            Tuple of (should_process, reason)
-        """
-        if not content:
-            return False, "empty_content"
-
-        cleaned = content.strip()
-        if len(cleaned) < self.MIN_CONTENT_LENGTH:
-            return False, "content_too_short"
-
-        # Check for low-value content patterns
-        low_value_patterns = [
-            'out of office',
-            'automatic reply',
-            'unsubscribe',
-            'this email was sent',
-            'do not reply',
-            'no-reply',
-        ]
-
-        content_lower = cleaned.lower()
-        for pattern in low_value_patterns:
-            if pattern in content_lower:
-                return False, f"low_value_pattern:{pattern}"
-
-        return True, "ok"
-
-    def extract_insights(
-        self,
-        content: str,
-        source_type: str,
-        themes: Optional[List[Dict[str, str]]] = None,
-        metadata: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
-        """
-        Extract comprehensive AI insights from content.
-
-        Args:
-            content: The message/transcript content
-            source_type: Source type (gmail, slack, gong, fathom)
-            themes: Optional list of workspace themes
-            metadata: Optional metadata (customer_name, sender, etc.)
-
-        Returns:
-            Dictionary containing all extracted insights
-        """
         try:
-            # Validate content
-            should_process, reason = self.should_process(content)
-            if not should_process:
-                logger.debug(f"Skipping AI extraction: {reason}")
-                return self._empty_insights(skip_reason=reason)
+            system_prompt, user_prompt = build_ai_insights_prompt(
+                message_content=message_content,
+                message_title=message_title,
+                source_type=source_type,
+                author_name=author_name,
+                author_role=author_role,
+                available_themes=available_themes,
+                locked_theme=locked_theme,
+            )
 
-            # Truncate content if needed
-            processed_content = content[:self.MAX_CONTENT_LENGTH]
-
-            # Build the extraction prompt
-            system_prompt = self._build_system_prompt(source_type, themes)
-            user_prompt = self._build_user_prompt(processed_content, metadata)
-
-            # Call OpenAI API
             response = self.client.chat.completions.create(
-                model="gpt-4o-mini",
+                model=self.DEFAULT_MODEL,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ],
-                temperature=0.3,
-                response_format={"type": "json_object"}
+                temperature=0,  # Deterministic output
+                response_format={"type": "json_object"},
+                max_tokens=1500
             )
 
-            # Parse response
+            latency_ms = (time.time() - start_time) * 1000
             result = json.loads(response.choices[0].message.content)
 
-            # Add metadata
-            result['extraction_metadata'] = {
-                'model': 'gpt-4o-mini',
-                'tokens_used': response.usage.total_tokens,
-                'source_type': source_type,
-                'extracted_at': datetime.now(timezone.utc).isoformat(),
-                'content_length': len(content),
-                'themes_provided': len(themes) if themes else 0
-            }
-
-            # Process classified themes
-            if themes and result.get('classified_themes'):
-                result['classified_themes'] = self._enrich_classified_themes(
-                    result['classified_themes'],
-                    themes
-                )
-
-            logger.info(
-                f"AI extraction complete: "
-                f"features={len(result.get('feature_requests', []))}, "
-                f"pain_points={len(result.get('pain_points', []))}, "
-                f"themes={len(result.get('classified_themes', []))}"
+            # Validate themes are from allowed list
+            validated_themes = self._validate_themes(
+                result.get("themes", []),
+                available_themes,
+                locked_theme
             )
 
-            return result
+            return AIInsightsResult(
+                themes=validated_themes,
+                summary=result.get("summary"),
+                pain_point=result.get("pain_point"),
+                feature_request=result.get("feature_request"),
+                explanation=result.get("explanation"),
+                sentiment=result.get("sentiment"),
+                urgency=result.get("urgency"),
+                keywords=result.get("keywords", []),
+                tokens_used=response.usage.total_tokens,
+                latency_ms=latency_ms,
+                model=self.DEFAULT_MODEL,
+                prompt_version=AI_INSIGHTS_PROMPT_VERSION,
+            )
 
         except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse AI response as JSON: {e}")
-            return self._empty_insights(error=f"JSON parsing error: {str(e)}")
-
-        except Exception as e:
-            logger.error(f"Error extracting AI insights: {e}")
-            return self._empty_insights(error=str(e))
-
-    def classify_themes_only(
-        self,
-        content: str,
-        themes: List[Dict[str, str]]
-    ) -> Dict[str, Any]:
-        """
-        Quick theme classification without full extraction.
-
-        Useful for:
-        - Quick filtering before full extraction
-        - Batch classification of many messages
-
-        Args:
-            content: Message content
-            themes: List of workspace themes
-
-        Returns:
-            Dictionary with classified_themes and confidence
-        """
-        try:
-            if not themes:
-                return {
-                    'classified_themes': [],
-                    'is_relevant': True,
-                    'confidence': 1.0,
-                    'reasoning': 'No themes to classify against'
-                }
-
-            should_process, reason = self.should_process(content)
-            if not should_process:
-                return {
-                    'classified_themes': [],
-                    'is_relevant': False,
-                    'confidence': 0.0,
-                    'reasoning': reason
-                }
-
-            themes_text = "\n".join([
-                f"- **{t['name']}**: {t['description']}"
-                for t in themes
-            ])
-
-            system_prompt = """You are an AI that classifies messages into product themes.
-
-Analyze the message and determine which themes it relates to.
-
-Return a JSON object:
-{
-  "classified_themes": [
-    {
-      "name": "exact theme name",
-      "confidence": 0.0-1.0,
-      "reasoning": "brief explanation"
-    }
-  ],
-  "is_relevant": true/false,
-  "overall_confidence": 0.0-1.0,
-  "summary": "one sentence summary of what this message is about"
-}
-
-Rules:
-- Only include themes with confidence > 0.5
-- Use EXACT theme names from the provided list
-- A message can match multiple themes
-- is_relevant should be true if ANY theme matches with confidence > 0.5"""
-
-            user_prompt = f"""Available themes:
-{themes_text}
-
-Message to classify:
-{content[:3000]}
-
-Classify this message."""
-
-            response = self.client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                temperature=0.2,
-                response_format={"type": "json_object"}
+            logger.error(f"AI Insights JSON decode error: {e}")
+            return AIInsightsResult(
+                error=f"JSON decode error: {str(e)}",
+                latency_ms=(time.time() - start_time) * 1000,
+                model=self.DEFAULT_MODEL,
+                prompt_version=AI_INSIGHTS_PROMPT_VERSION,
             )
 
-            result = json.loads(response.choices[0].message.content)
-
-            # Enrich with theme IDs
-            if result.get('classified_themes'):
-                result['classified_themes'] = self._enrich_classified_themes(
-                    result['classified_themes'],
-                    themes
-                )
-
-            return result
-
         except Exception as e:
-            logger.error(f"Error classifying themes: {e}")
-            return {
-                'classified_themes': [],
-                'is_relevant': True,  # Default to true to avoid filtering
-                'confidence': 0.5,
-                'reasoning': f'Classification error: {str(e)}'
-            }
+            logger.error(f"AI Insights generation error: {e}")
+            return AIInsightsResult(
+                error=f"Generation error: {str(e)}",
+                latency_ms=(time.time() - start_time) * 1000,
+                model=self.DEFAULT_MODEL,
+                prompt_version=AI_INSIGHTS_PROMPT_VERSION,
+            )
 
-    def extract_batch(
+    def _validate_themes(
         self,
-        items: List[Dict[str, Any]],
-        themes: Optional[List[Dict[str, str]]] = None,
-        classify_only: bool = False
+        ai_themes: List[Dict[str, Any]],
+        available_themes: List[Dict[str, Any]],
+        locked_theme: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         """
-        Process multiple items for AI insights.
+        Validate that AI-selected themes are from the allowed list.
 
         Args:
-            items: List of dicts with 'id', 'content', 'source_type', 'metadata'
-            themes: Optional workspace themes
-            classify_only: If True, only classify themes (faster)
+            ai_themes: Themes returned by AI
+            available_themes: Allowed themes
+            locked_theme: Locked theme that must be included
 
         Returns:
-            List of results with 'id' and 'insights' for each item
+            Validated list of themes
         """
-        results = []
+        # Create lookup for available themes
+        available_ids = {str(t['id']) for t in available_themes}
+        available_names = {t['name'].lower() for t in available_themes}
 
-        for item in items:
-            try:
-                item_id = item.get('id')
-                content = item.get('content', '')
-                source_type = item.get('source_type', 'unknown')
-                metadata = item.get('metadata')
+        validated = []
 
-                if classify_only:
-                    insights = self.classify_themes_only(content, themes or [])
-                else:
-                    insights = self.extract_insights(
-                        content=content,
-                        source_type=source_type,
-                        themes=themes,
-                        metadata=metadata
-                    )
+        # Process AI-selected themes
+        for theme in ai_themes:
+            theme_id = str(theme.get('theme_id', ''))
+            theme_name = theme.get('theme_name', '')
 
-                results.append({
-                    'id': item_id,
-                    'insights': insights,
-                    'success': 'error' not in insights
+            # Check if theme is valid
+            if theme_id in available_ids or theme_name.lower() in available_names:
+                validated.append(theme)
+            else:
+                logger.warning(f"AI selected invalid theme: {theme_name} ({theme_id})")
+
+        # Ensure locked theme is included
+        if locked_theme:
+            locked_id = str(locked_theme['id'])
+            if not any(str(t.get('theme_id', '')) == locked_id for t in validated):
+                validated.insert(0, {
+                    'theme_id': locked_id,
+                    'theme_name': locked_theme['name'],
+                    'confidence': 1.0,
+                    'explanation': 'Locked theme from feature extraction pipeline'
                 })
 
-            except Exception as e:
-                logger.error(f"Error processing item {item.get('id')}: {e}")
-                results.append({
-                    'id': item.get('id'),
-                    'insights': self._empty_insights(error=str(e)),
-                    'success': False
-                })
-
-        return results
-
-    def _build_system_prompt(
-        self,
-        source_type: str,
-        themes: Optional[List[Dict[str, str]]] = None
-    ) -> str:
-        """Build the system prompt for AI extraction."""
-
-        # Source-specific context
-        source_context = {
-            'gmail': "This is an email conversation. Look for feature requests, feedback, and issues mentioned in the email thread.",
-            'slack': "This is a Slack message or thread. Look for feature discussions, bug reports, and user feedback.",
-            'gong': "This is a sales/customer call transcript from Gong. Look for feature requests, pain points, and customer needs mentioned during the call.",
-            'fathom': "This is a meeting transcript from Fathom. Look for action items, feature requests, and discussed improvements."
-        }.get(source_type, "This is a customer communication.")
-
-        # Themes context
-        themes_context = ""
-        if themes:
-            themes_list = "\n".join([
-                f"- **{t['name']}**: {t['description']}"
-                for t in themes
-            ])
-            themes_context = f"""
-
-**PRODUCT THEMES:**
-Classify content against these themes. Use EXACT theme names.
-{themes_list}
-"""
-
-        return f"""You are an AI assistant that extracts actionable insights from customer communications.
-
-{source_context}
-{themes_context}
-
-Extract and return a JSON object with:
-
-{{
-  "classified_themes": [
-    {{
-      "name": "exact theme name from list",
-      "confidence": 0.0-1.0,
-      "reasoning": "why this theme matches"
-    }}
-  ],
-  "feature_requests": [
-    {{
-      "title": "brief title (5-10 words)",
-      "description": "what they want and why",
-      "urgency": "low|medium|high|critical",
-      "quote": "exact supporting quote"
-    }}
-  ],
-  "pain_points": [
-    {{
-      "description": "the problem or frustration",
-      "impact": "how it affects them",
-      "severity": "low|medium|high",
-      "quote": "supporting quote"
-    }}
-  ],
-  "sentiment": {{
-    "overall": "positive|neutral|negative",
-    "score": 0.0-1.0,
-    "reasoning": "brief explanation"
-  }},
-  "summary": "2-3 sentence summary of the key points",
-  "key_topics": ["topic1", "topic2", "topic3"],
-  "classification_reasoning": "explain why you classified this way"
-}}
-
-IMPORTANT RULES:
-1. Feature requests must be NEW capabilities, not questions about existing features
-2. Do NOT include pricing, billing, or sales inquiries as feature requests
-3. Pain points should be actual frustrations, not simple questions
-4. Only include themes with confidence > 0.5
-5. Be specific and actionable - vague insights are not useful
-6. If nothing actionable found, return empty arrays (that's okay)
-7. classification_reasoning should explain WHY you made these classifications
-8. CRITICAL: Extract AT MOST ONE feature request and AT MOST ONE pain point
-   - If multiple feature requests exist, pick the MOST important/urgent one
-   - If multiple pain points exist, pick the MOST severe/impactful one
-   - Combine related items into a single comprehensive entry if needed"""
-
-    def _build_user_prompt(
-        self,
-        content: str,
-        metadata: Optional[Dict[str, Any]] = None
-    ) -> str:
-        """Build the user prompt with content and metadata."""
-
-        context_parts = []
-
-        if metadata:
-            if metadata.get('sender'):
-                context_parts.append(f"From: {metadata['sender']}")
-            if metadata.get('customer_name'):
-                context_parts.append(f"Customer: {metadata['customer_name']}")
-            if metadata.get('subject'):
-                context_parts.append(f"Subject: {metadata['subject']}")
-            if metadata.get('channel'):
-                context_parts.append(f"Channel: {metadata['channel']}")
-
-        context = "\n".join(context_parts)
-
-        return f"""{context}
-
-Content:
----
-{content}
----
-
-Extract all insights from this content."""
-
-    def _enrich_classified_themes(
-        self,
-        classified_themes: List[Dict],
-        workspace_themes: List[Dict[str, str]]
-    ) -> List[Dict]:
-        """Add theme IDs to classified themes."""
-
-        theme_id_map = {
-            t['name'].lower(): t['id']
-            for t in workspace_themes
-        }
-
-        enriched = []
-        for theme in classified_themes:
-            theme_name = theme.get('name', '')
-            theme_id = theme_id_map.get(theme_name.lower())
-
-            enriched.append({
-                **theme,
-                'theme_id': theme_id
-            })
-
-        return enriched
-
-    def _empty_insights(
-        self,
-        skip_reason: Optional[str] = None,
-        error: Optional[str] = None
-    ) -> Dict[str, Any]:
-        """Return empty insights structure."""
-        return {
-            'classified_themes': [],
-            'feature_requests': [],
-            'pain_points': [],
-            'sentiment': {
-                'overall': 'neutral',
-                'score': 0.5,
-                'reasoning': 'No analysis performed'
-            },
-            'summary': None,
-            'key_topics': [],
-            'classification_reasoning': None,
-            'extraction_metadata': {
-                'skipped': True,
-                'skip_reason': skip_reason,
-                'error': error,
-                'extracted_at': datetime.now(timezone.utc).isoformat()
-            }
-        }
-
-    def compute_content_hash(self, content: str) -> str:
-        """Compute a hash for content deduplication."""
-        normalized = ' '.join(content.lower().split())
-        return hashlib.sha256(normalized.encode()).hexdigest()[:16]
+        return validated
 
 
 # Singleton instance
@@ -553,7 +350,7 @@ _ai_insights_service: Optional[AIInsightsService] = None
 
 
 def get_ai_insights_service() -> AIInsightsService:
-    """Get or create the AI Insights Service singleton."""
+    """Get or create the AI insights service singleton."""
     global _ai_insights_service
     if _ai_insights_service is None:
         _ai_insights_service = AIInsightsService()

@@ -56,6 +56,7 @@ def sync_workspace_slack(self, workspace_id: str, sync_id: str, hours_back: int 
 
             total_checked = 0
             total_new = 0
+            all_inserted_ids = []
 
             for integration in integrations:
                 try:
@@ -72,6 +73,7 @@ def sync_workspace_slack(self, workspace_id: str, sync_id: str, hours_back: int 
 
                     total_checked += result.get("total_checked", 0)
                     total_new += result.get("new_added", 0)
+                    all_inserted_ids.extend(result.get("inserted_ids", []))
 
                     # Update integration last sync time
                     integration.last_synced_at = datetime.now(timezone.utc)
@@ -82,7 +84,7 @@ def sync_workspace_slack(self, workspace_id: str, sync_id: str, hours_back: int 
                     logger.error(f"Error syncing Slack integration {integration.id}: {e}")
                     continue
 
-            update_sync_record(db, sync_id, "success", total_checked, total_new)
+            update_sync_record(db, sync_id, "success", total_checked, total_new, synced_item_ids=all_inserted_ids)
             logger.info(f"✅ Slack sync complete: {total_new} new messages")
 
             return {

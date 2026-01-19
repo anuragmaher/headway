@@ -21,6 +21,7 @@ Usage:
 import logging
 import base64
 import re
+import uuid as uuid_module
 from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional, Set
 from email.utils import parsedate_to_datetime
@@ -123,6 +124,7 @@ class GmailBatchIngestionService:
             total_checked = 0
             total_new = 0
             total_skipped = 0
+            all_inserted_ids: List[str] = []
             errors = []
 
             # Process each label
@@ -141,6 +143,7 @@ class GmailBatchIngestionService:
                     total_checked += result.get("total_checked", 0)
                     total_new += result.get("new_added", 0)
                     total_skipped += result.get("duplicates_skipped", 0)
+                    all_inserted_ids.extend(result.get("inserted_ids", []))
 
                     logger.info(
                         f"Label {label.label_name}: checked {result.get('total_checked', 0)}, "
@@ -169,6 +172,7 @@ class GmailBatchIngestionService:
                 "total_checked": total_checked,
                 "new_added": total_new,
                 "duplicates_skipped": total_skipped,
+                "inserted_ids": all_inserted_ids,
                 "errors": errors if errors else None
             }
 
@@ -195,7 +199,7 @@ class GmailBatchIngestionService:
         label: GmailLabels,
         db: Session,
         max_threads: int = 10
-    ) -> Dict[str, int]:
+    ) -> Dict[str, Any]:
         """
         Batch fetch threads from a label with efficient duplicate detection.
 
@@ -207,7 +211,7 @@ class GmailBatchIngestionService:
             max_threads: Maximum threads to fetch
 
         Returns:
-            Dict with counts
+            Dict with counts and inserted_ids
         """
         try:
             # Step 1: List thread IDs from Gmail
@@ -221,7 +225,7 @@ class GmailBatchIngestionService:
 
             if not threads:
                 logger.info(f"No threads found in label {label.label_name}")
-                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
             total_checked = len(threads)
             thread_ids = [t["id"] for t in threads]
@@ -242,11 +246,13 @@ class GmailBatchIngestionService:
                 return {
                     "total_checked": total_checked,
                     "new_added": 0,
-                    "duplicates_skipped": duplicates_skipped
+                    "duplicates_skipped": duplicates_skipped,
+                    "inserted_ids": []
                 }
 
             # Step 4: Fetch full details for new threads only
             thread_records = []
+            inserted_ids: List[str] = []
             for thread_id in new_thread_ids:
                 try:
                     thread_data = gmail_client.users().threads().get(
@@ -262,6 +268,9 @@ class GmailBatchIngestionService:
                     )
 
                     if record:
+                        # Pre-generate UUID for tracking
+                        record.id = uuid_module.uuid4()
+                        inserted_ids.append(str(record.id))
                         thread_records.append(record)
 
                 except Exception as e:
@@ -277,7 +286,8 @@ class GmailBatchIngestionService:
             return {
                 "total_checked": total_checked,
                 "new_added": len(thread_records),
-                "duplicates_skipped": duplicates_skipped
+                "duplicates_skipped": duplicates_skipped,
+                "inserted_ids": inserted_ids
             }
 
         except Exception as e:

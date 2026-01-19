@@ -7,6 +7,6 @@ export { LoginPage } from './LoginPage';
 export { RegisterPage } from './RegisterPage';
 export { DashboardPage } from './DashboardPage';
 export { ExecutiveInsightsPage } from './ExecutiveInsightsPage';
-export { SourcesPage } from './SourcesPage';
+export { SourcesPage } from './AllMessages';
 export { CustomersPage } from './CustomersPage';
 export { NotFoundPage } from './NotFoundPage';

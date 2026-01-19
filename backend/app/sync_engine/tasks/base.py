@@ -335,7 +335,8 @@ def finalize_sync_record(
     status: str,
     items_processed: int = 0,
     items_new: int = 0,
-    error_message: Optional[str] = None
+    error_message: Optional[str] = None,
+    synced_item_ids: Optional[List[str]] = None
 ) -> None:
     """
     Finalize a SyncHistory record after sync completes.
@@ -347,6 +348,7 @@ def finalize_sync_record(
         items_processed: Number of items processed
         items_new: Number of new items
         error_message: Error message if failed
+        synced_item_ids: List of UUID strings for items synced in this operation
     """
     try:
         sync_record.status = status
@@ -357,9 +359,13 @@ def finalize_sync_record(
         if error_message:
             sync_record.error_message = error_message
 
+        # Store synced item IDs for reliable retrieval
+        if synced_item_ids:
+            sync_record.synced_item_ids = synced_item_ids
+
         db.flush()
         db.commit()
-        logger.info(f"✅ Finalized SyncHistory: id={sync_record.id}, status={status}, processed={items_processed}")
+        logger.info(f"✅ Finalized SyncHistory: id={sync_record.id}, status={status}, processed={items_processed}, item_ids={len(synced_item_ids or [])}")
 
     except Exception as e:
         logger.error(f"❌ Failed to finalize SyncHistory record: {e}")
@@ -375,7 +381,8 @@ def update_sync_record(
     status: str,
     items_processed: int = 0,
     items_new: int = 0,
-    error_message: Optional[str] = None
+    error_message: Optional[str] = None,
+    synced_item_ids: Optional[List[str]] = None
 ) -> None:
     """
     Update sync history record by ID.
@@ -389,6 +396,7 @@ def update_sync_record(
         items_processed: Number of items processed
         items_new: Number of new items
         error_message: Error message if failed
+        synced_item_ids: List of UUID strings for items synced in this operation
     """
     try:
         record = db.query(SyncHistory).filter(SyncHistory.id == UUID(sync_id)).first()
@@ -398,6 +406,9 @@ def update_sync_record(
             record.items_new = items_new
             if error_message:
                 record.error_message = error_message
+            # Store synced item IDs for reliable retrieval
+            if synced_item_ids:
+                record.synced_item_ids = synced_item_ids
             # Update started_at when transitioning to in_progress
             # This ensures the timestamp is set when task actually starts, not when API queued it
             if status == "in_progress":
@@ -405,7 +416,7 @@ def update_sync_record(
             if status in ("success", "failed"):
                 record.completed_at = datetime.now(timezone.utc)
             db.commit()
-            logger.info(f"📝 Updated SyncHistory: id={sync_id}, status={status}")
+            logger.info(f"📝 Updated SyncHistory: id={sync_id}, status={status}, item_ids={len(synced_item_ids or [])}")
     except Exception as e:
         logger.error(f"Failed to update sync record {sync_id}: {e}")
         db.rollback()
