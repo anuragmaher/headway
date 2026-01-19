@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Text, Table, Index
+from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Text, Table, Index, Integer
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -45,6 +45,13 @@ class Message(Base):
     # Processing status
     is_processed = Column(Boolean, default=False, nullable=False)
     processed_at = Column(DateTime(timezone=True), nullable=True)
+
+    # AI Processing state management
+    ai_processed_at = Column(DateTime(timezone=True), nullable=True)
+    ai_processing_error = Column(Text, nullable=True)
+    ai_processing_retry_count = Column(Integer, default=0, nullable=False)
+    processing_lock_token = Column(String(36), nullable=True)
+    processing_locked_at = Column(DateTime(timezone=True), nullable=True)
     
     # Relationships
     workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), nullable=False)

@@ -116,6 +116,7 @@ def sync_slack_periodic(self):
                             source_type="slack",
                             source_name=integration.external_team_name or "Slack",
                             integration_id=str(integration.id),
+                            trigger_type="periodic",  # This is a scheduled periodic sync
                         )
                         finalize_sync_record(
                             db=db,
@@ -144,6 +145,7 @@ def sync_slack_periodic(self):
                             source_type="slack",
                             source_name=integration.external_team_name or "Slack",
                             integration_id=str(integration.id),
+                            trigger_type="periodic",  # This is a scheduled periodic sync
                         )
                         finalize_sync_record(
                             db=db,

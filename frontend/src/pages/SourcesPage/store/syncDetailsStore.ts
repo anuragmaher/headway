@@ -85,10 +85,18 @@ export const useSyncDetailsStore = create<SyncDetailsState>((set, get) => ({
       const details = await sourcesService.getSyncStatus(workspaceId, syncId);
       set({ syncDetails: details });
 
-      // If successful, fetch the actual synced items
+      // If successful, fetch the actual synced items with force refresh
+      // to ensure we get the latest data (not cached stale data)
       if (details.status === 'success') {
         try {
-          const itemsResponse = await sourcesService.getSyncedItems(workspaceId, syncId, 1, 50);
+          // Use forceRefresh=true to bypass cache and get fresh data
+          const itemsResponse = await sourcesService.getSyncedItems(
+            workspaceId,
+            syncId,
+            1,
+            50,
+            true  // forceRefresh - always get fresh data when opening drawer
+          );
           set({
             syncedItems: itemsResponse.items || [],
             syncedItemsTotal: itemsResponse.total || 0,

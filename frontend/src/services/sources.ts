@@ -39,6 +39,7 @@ export interface SyncHistoryItem {
   theme_name: string | null;
   theme_sources: string[] | null;
   status: 'pending' | 'in_progress' | 'success' | 'failed';
+  trigger_type: 'manual' | 'periodic';
   started_at: string;
   completed_at: string | null;
   items_processed: number;
@@ -304,17 +305,24 @@ export async function getSyncStatus(
 
 /**
  * Get synced items for a specific sync operation
+ * @param forceRefresh - Set to true to bypass cache and get fresh data from DB
  */
 export async function getSyncedItems(
   workspaceId: string,
   syncId: string,
   page: number = 1,
-  pageSize: number = 20
+  pageSize: number = 20,
+  forceRefresh: boolean = false
 ): Promise<any> {
   const params = new URLSearchParams({
     page: page.toString(),
     page_size: pageSize.toString(),
   });
+
+  // Force refresh to bypass cache for fresh data
+  if (forceRefresh) {
+    params.append('refresh', 'true');
+  }
 
   const response = await api.get(
     `/api/v1/sources/${workspaceId}/sync-items/${syncId}?${params.toString()}`
@@ -382,6 +390,133 @@ export async function pollSyncCompletion(
   });
 }
 
+// ============ AI Insights Types ============
+
+export interface AIInsightsResponse {
+  message_id: string;
+  workspace_id: string;
+  ai_insights: Record<string, unknown>;
+  source: 'cache' | 'database' | 'extracted' | 'error';
+  is_error: boolean;
+  is_cached: boolean;
+  is_extracted: boolean;
+}
+
+export interface ClassifiedTheme {
+  name: string;
+  confidence: number;
+  theme_id?: string;
+  reasoning?: string;
+}
+
+export interface FeatureRequest {
+  title: string;
+  description: string;
+  urgency?: string;
+  quote?: string;
+}
+
+export interface PainPoint {
+  description: string;
+  impact?: string;
+  severity?: string;
+  quote?: string;
+}
+
+export interface Sentiment {
+  overall: 'positive' | 'neutral' | 'negative';
+  score: number;
+  reasoning?: string;
+}
+
+export interface AIInsights {
+  classified_themes: ClassifiedTheme[];
+  feature_requests: FeatureRequest[];
+  pain_points: PainPoint[];
+  sentiment: Sentiment;
+  summary?: string;
+  key_topics: string[];
+  classification_reasoning?: string;
+  extraction_metadata?: {
+    model?: string;
+    tokens_used?: number;
+    source_type?: string;
+    extracted_at?: string;
+    content_length?: number;
+    themes_provided?: number;
+    extraction_mode?: string;
+    skipped?: boolean;
+    skip_reason?: string;
+    error?: string;
+  };
+}
+
+// ============ AI Insights API Functions ============
+
+/**
+ * Get AI insights for a specific message (on-demand extraction)
+ *
+ * This function implements the smart caching strategy:
+ * 1. Checks Redis cache first
+ * 2. Falls back to database
+ * 3. Extracts via AI API if not found
+ * 4. Caches and persists the result
+ *
+ * @param workspaceId - Workspace UUID
+ * @param messageId - Message UUID
+ * @param forceRefresh - Force re-extraction even if cached
+ */
+export async function getMessageAIInsights(
+  workspaceId: string,
+  messageId: string,
+  forceRefresh: boolean = false
+): Promise<AIInsightsResponse> {
+  const params = new URLSearchParams();
+  if (forceRefresh) {
+    params.append('force_refresh', 'true');
+  }
+
+  const queryString = params.toString();
+  const url = `/api/v1/sources/${workspaceId}/messages/${messageId}/ai-insights${queryString ? `?${queryString}` : ''}`;
+
+  const response = await api.get<AIInsightsResponse>(url);
+  return response.data;
+}
+
+/**
+ * Invalidate AI insights cache for a message
+ * Use this when message content changes or you want to force re-extraction
+ */
+export async function invalidateMessageAIInsights(
+  workspaceId: string,
+  messageId: string
+): Promise<{ message_id: string; invalidated: boolean; message: string }> {
+  const response = await api.post(
+    `/api/v1/sources/${workspaceId}/messages/${messageId}/ai-insights/invalidate`
+  );
+  return response.data;
+}
+
+/**
+ * Preload AI insights cache for multiple messages
+ * This only caches existing insights from database, does NOT extract new ones
+ */
+export async function preloadAIInsightsCache(
+  workspaceId: string,
+  messageIds: string[]
+): Promise<{
+  workspace_id: string;
+  total_requested: number;
+  cached_count: number;
+  results: Record<string, boolean>;
+}> {
+  const response = await api.post(
+    `/api/v1/sources/${workspaceId}/ai-insights/preload`,
+    messageIds
+  );
+  return response.data;
+}
+
 export const sourcesService = {
   getMessages,
   getMessageDetails,
@@ -392,6 +527,10 @@ export const sourcesService = {
   getSyncStatus,
   getSyncedItems,
   pollSyncCompletion,
+  // AI Insights (on-demand)
+  getMessageAIInsights,
+  invalidateMessageAIInsights,
+  preloadAIInsightsCache,
 };
 
 export default sourcesService;

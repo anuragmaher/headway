@@ -267,6 +267,7 @@ def create_sync_record(
     gmail_account_id: Optional[str] = None,
     connector_id: Optional[str] = None,
     initial_status: str = "in_progress",
+    trigger_type: str = "manual",
 ) -> SyncHistory:
     """
     Create a SyncHistory record for sync tasks.
@@ -283,12 +284,13 @@ def create_sync_record(
         gmail_account_id: Optional Gmail account UUID
         connector_id: Optional connector UUID
         initial_status: Initial status (default: in_progress)
+        trigger_type: How sync was triggered - 'manual' (user) or 'periodic' (celery)
 
     Returns:
         Created SyncHistory record
     """
     try:
-        logger.info(f"📝 Creating SyncHistory for workspace={workspace_id}, source={source_type}")
+        logger.info(f"📝 Creating SyncHistory for workspace={workspace_id}, source={source_type}, trigger={trigger_type}")
 
         sync_record = SyncHistory(
             workspace_id=UUID(workspace_id),
@@ -297,6 +299,7 @@ def create_sync_record(
             source_name=source_name,
             status=initial_status,  # Set status directly to in_progress
             started_at=datetime.now(timezone.utc),  # Set started_at immediately
+            trigger_type=trigger_type,  # Track how sync was triggered
             items_processed=0,
             items_new=0,
         )

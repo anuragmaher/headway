@@ -420,21 +420,45 @@ class SourcesService:
             except (ValueError, TypeError):
                 duration_secs = None
 
-        # Safely get related features
+        # Safely get related features with enhanced theme information
         related_features = []
+        classified_themes = []
         try:
             if msg.features:
-                related_features = [
-                    {
+                theme_map: Dict[str, Dict[str, Any]] = {}
+                for f in msg.features:
+                    feature_data = {
                         'id': str(f.id),
                         'title': f.title,
                         'theme_id': str(f.theme_id) if f.theme_id else None,
+                        'confidence': f.match_confidence,
                     }
-                    for f in msg.features
-                ]
+                    related_features.append(feature_data)
+
+                    # Group by theme for classified_themes
+                    if f.theme_id and f.theme:
+                        theme_key = str(f.theme_id)
+                        if theme_key not in theme_map:
+                            theme_map[theme_key] = {
+                                'name': f.theme.name if f.theme else 'Unknown',
+                                'confidence': f.match_confidence or 0.7,
+                                'theme_id': theme_key,
+                                'feature_count': 0,
+                            }
+                        theme_map[theme_key]['feature_count'] += 1
+                        # Use highest confidence among features
+                        if f.match_confidence and f.match_confidence > theme_map[theme_key]['confidence']:
+                            theme_map[theme_key]['confidence'] = f.match_confidence
+
+                classified_themes = list(theme_map.values())
         except Exception:
             # If there's any issue with the relationship, skip it
             pass
+
+        # Enrich ai_insights with classified_themes if not already present
+        ai_insights = msg.ai_insights or {}
+        if isinstance(ai_insights, dict) and 'classified_themes' not in ai_insights and classified_themes:
+            ai_insights = {**ai_insights, 'classified_themes': classified_themes}
 
         return {
             'id': str(msg.id),
@@ -451,7 +475,7 @@ class SourcesService:
             'processed_at': msg.processed_at.isoformat() if msg.processed_at else None,
             # Metadata fields
             'metadata': metadata,
-            'ai_insights': msg.ai_insights,
+            'ai_insights': ai_insights,  # Enhanced with classified_themes
             'thread_id': msg.thread_id,
             'is_thread_reply': msg.is_thread_reply,
             # Gong/Fathom specific fields
@@ -565,6 +589,7 @@ class SourcesService:
             SyncHistory.theme_name,
             SyncHistory.theme_sources,
             SyncHistory.status,
+            SyncHistory.trigger_type,
             SyncHistory.started_at,
             SyncHistory.completed_at,
             SyncHistory.items_processed,
@@ -611,20 +636,25 @@ class SourcesService:
         items = query.order_by(order_clause).offset(offset).limit(page_size).all()
 
         # Convert to response format (items are tuples now, not ORM objects)
+        # Index mapping for query columns:
+        # 0=id, 1=sync_type, 2=source_type, 3=source_name, 4=theme_name,
+        # 5=theme_sources, 6=status, 7=trigger_type, 8=started_at, 9=completed_at,
+        # 10=items_processed, 11=items_new, 12=error_message
         history_responses = [
             SyncHistoryResponse(
-                id=str(item[0]),  # id
-                sync_type=item[1],  # sync_type
-                source_type=item[2],  # source_type
-                source_name=item[3],  # source_name
-                theme_name=item[4],  # theme_name
-                theme_sources=item[5],  # theme_sources
-                status=item[6],  # status
-                started_at=item[7],  # started_at
-                completed_at=item[8],  # completed_at
-                items_processed=item[9],  # items_processed
-                items_new=item[10],  # items_new
-                error_message=item[11],  # error_message
+                id=str(item[0]),
+                sync_type=item[1],
+                source_type=item[2],
+                source_name=item[3],
+                theme_name=item[4],
+                theme_sources=item[5],
+                status=item[6],
+                trigger_type=item[7] or "manual",  # Default to manual for backwards compatibility
+                started_at=item[8],
+                completed_at=item[9],
+                items_processed=item[10],
+                items_new=item[11],
+                error_message=item[12],
             )
             for item in items
         ]
@@ -973,6 +1003,7 @@ class SourcesService:
         sync_id: UUID,
         page: int = 1,
         page_size: int = 20,
+        force_refresh: bool = False,
     ) -> Dict[str, Any]:
         """
         Get items that were synced in a specific sync operation.
@@ -985,6 +1016,7 @@ class SourcesService:
             sync_id: Sync history UUID
             page: Page number
             page_size: Items per page
+            force_refresh: Force bypass cache and fetch fresh data
 
         Returns:
             Dict with synced items and metadata
@@ -996,6 +1028,7 @@ class SourcesService:
             sync_id=sync_id,
             page=page,
             page_size=page_size,
+            force_refresh=force_refresh,
         )
 
 

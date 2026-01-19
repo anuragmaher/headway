@@ -26,6 +26,12 @@ class SyncStatus(str, enum.Enum):
     FAILED = "failed"
 
 
+class TriggerType(str, enum.Enum):
+    """How the sync was triggered"""
+    MANUAL = "manual"  # User-initiated on-demand sync
+    PERIODIC = "periodic"  # Celery scheduled periodic sync
+
+
 class SyncHistory(Base):
     """
     Model for tracking synchronization history of data sources and themes.
@@ -58,6 +64,9 @@ class SyncHistory(Base):
     # Sync status
     status = Column(String, nullable=False, default="pending")  # pending, in_progress, success, failed
     error_message = Column(Text, nullable=True)
+
+    # Trigger type: how the sync was initiated
+    trigger_type = Column(String, nullable=False, default="manual")  # 'manual' or 'periodic'
     
     # Metrics
     items_processed = Column(Integer, nullable=False, default=0)
@@ -81,6 +90,7 @@ class SyncHistory(Base):
         Index('idx_sync_history_workspace_type', 'workspace_id', 'sync_type'),
         Index('idx_sync_history_workspace_started', 'workspace_id', 'started_at'),
         Index('idx_sync_history_status', 'status'),
+        Index('idx_sync_history_trigger_type', 'trigger_type'),
     )
     
     def __repr__(self) -> str:

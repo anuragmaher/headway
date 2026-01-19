@@ -115,6 +115,7 @@ def sync_gong_periodic(self):
                             source_type="gong",
                             source_name="Gong",
                             connector_id=str(connector.id),
+                            trigger_type="periodic",  # This is a scheduled periodic sync
                         )
                         finalize_sync_record(
                             db=db,
@@ -143,6 +144,7 @@ def sync_gong_periodic(self):
                             source_type="gong",
                             source_name="Gong",
                             connector_id=str(connector.id),
+                            trigger_type="periodic",  # This is a scheduled periodic sync
                         )
                         finalize_sync_record(
                             db=db,
