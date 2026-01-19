@@ -90,7 +90,8 @@ class GmailBatchIngestionService:
                     "error": "Gmail account not found",
                     "total_checked": 0,
                     "new_added": 0,
-                    "duplicates_skipped": 0
+                    "duplicates_skipped": 0,
+                    "inserted_ids": []
                 }
 
             # Update sync status
@@ -115,6 +116,7 @@ class GmailBatchIngestionService:
                     "total_checked": 0,
                     "new_added": 0,
                     "duplicates_skipped": 0,
+                    "inserted_ids": [],
                     "message": "No labels selected"
                 }
 
@@ -189,7 +191,8 @@ class GmailBatchIngestionService:
                 "error": str(e),
                 "total_checked": 0,
                 "new_added": 0,
-                "duplicates_skipped": 0
+                "duplicates_skipped": 0,
+                "inserted_ids": []
             }
 
     def _batch_fetch_threads_from_label(

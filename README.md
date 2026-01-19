@@ -35,6 +35,35 @@ npm install
 npm run dev
 ```
 
+### Celery Workers (Background Tasks)
+
+The backend uses Celery for background task processing. Make sure Redis is running first.
+
+```bash
+cd backend
+
+# Start the main Celery worker (handles sync tasks)
+celery -A app.tasks.celery_app worker --loglevel=info
+
+# Start the AI Insights worker (dedicated queue for AI processing)
+celery -A app.tasks.celery_app worker --loglevel=info -Q ai_insights
+
+# Start both workers in one command (recommended for development)
+celery -A app.tasks.celery_app worker --loglevel=info -Q celery,ai_insights
+
+# Start Celery Beat scheduler (for periodic tasks)
+celery -A app.tasks.celery_app beat --loglevel=info
+
+# Run worker with beat embedded (all-in-one for development)
+celery -A app.tasks.celery_app worker --beat --loglevel=info -Q celery,ai_insights
+```
+
+**AI Insights Tasks:**
+- `process_fresh_messages` - Processes new messages shortly after sync
+- `backfill_insights` - Backfills older messages when queue is idle
+- `update_progress_stats` - Updates progress stats for UI progress bar
+- `cleanup_stale_insights` - Resets stuck processing states
+
 ### Development URLs
 
 - Frontend: http://localhost:5173

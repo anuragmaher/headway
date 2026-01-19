@@ -351,6 +351,15 @@ def finalize_sync_record(
         synced_item_ids: List of UUID strings for items synced in this operation
     """
     try:
+        logger.info(
+            f"📝 finalize_sync_record called: sync_id={sync_record.id}, "
+            f"status={status}, items_processed={items_processed}, items_new={items_new}, "
+            f"synced_item_ids provided={synced_item_ids is not None}, "
+            f"synced_item_ids count={len(synced_item_ids) if synced_item_ids else 0}"
+        )
+        if synced_item_ids:
+            logger.info(f"   First 3 IDs: {synced_item_ids[:3]}")
+
         sync_record.status = status
         sync_record.items_processed = items_processed
         sync_record.items_new = items_new
@@ -362,10 +371,17 @@ def finalize_sync_record(
         # Store synced item IDs for reliable retrieval
         if synced_item_ids:
             sync_record.synced_item_ids = synced_item_ids
+            logger.info(f"   Set synced_item_ids on record, now has {len(sync_record.synced_item_ids)} IDs")
 
         db.flush()
         db.commit()
-        logger.info(f"✅ Finalized SyncHistory: id={sync_record.id}, status={status}, processed={items_processed}, item_ids={len(synced_item_ids or [])}")
+
+        # Verify after commit
+        db.refresh(sync_record)
+        logger.info(
+            f"✅ Finalized SyncHistory: id={sync_record.id}, status={status}, "
+            f"processed={items_processed}, item_ids after commit={len(sync_record.synced_item_ids or [])}"
+        )
 
     except Exception as e:
         logger.error(f"❌ Failed to finalize SyncHistory record: {e}")

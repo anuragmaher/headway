@@ -113,17 +113,17 @@ class SlackBatchIngestionService:
 
             if not integration:
                 logger.error(f"Integration {integration_id} not found or not active")
-                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
             if not integration.access_token:
                 logger.error(f"No access token for integration {integration_id}")
-                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
             # Get selected channels
             selected_channels = integration.provider_metadata.get("selected_channels", [])
             if not selected_channels:
                 logger.warning(f"No channels selected for integration {integration_id}")
-                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
             total_checked = 0
             total_new = 0
@@ -183,7 +183,7 @@ class SlackBatchIngestionService:
                 integration.sync_status = "error"
                 integration.sync_error = str(e)
                 db.commit()
-            return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+            return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
     async def _batch_process_channel(
         self,
@@ -213,7 +213,7 @@ class SlackBatchIngestionService:
             )
 
             if not messages:
-                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0}
+                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
             total_checked = len(messages)
 
