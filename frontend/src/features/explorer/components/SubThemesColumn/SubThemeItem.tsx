@@ -12,6 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
   Chip,
+  useTheme,
 } from '@mui/material';
 import {
   MoreHoriz as DotsIcon,
@@ -51,6 +52,7 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
   onLock,
   onUnlock,
 }) => {
+  const muiTheme = useTheme();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -106,7 +108,9 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
         borderLeft: '2px solid',
         borderColor: isSelected ? '#3B82F6' : 'transparent',
         '&:hover': {
-          bgcolor: isSelected ? 'rgba(59, 130, 246, 0.12)' : 'rgba(0, 0, 0, 0.04)',
+          bgcolor: isSelected
+            ? 'rgba(59, 130, 246, 0.12)'
+            : muiTheme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)',
         },
       }}
     >
@@ -142,7 +146,7 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
                 height: 18,
                 fontSize: '0.625rem',
                 fontWeight: 600,
-                bgcolor: 'rgba(0,0,0,0.04)',
+                bgcolor: muiTheme.palette.mode === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
                 color: 'text.secondary',
                 '& .MuiChip-label': { px: 1 },
               }}
@@ -169,7 +173,10 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
               p: 0.25,
               mt: 0.25,
               opacity: 0.6,
-              '&:hover': { opacity: 1, bgcolor: 'rgba(0,0,0,0.06)' },
+              '&:hover': {
+                opacity: 1,
+                bgcolor: muiTheme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+              },
             }}
           >
             <DotsIcon sx={{ fontSize: 16 }} />

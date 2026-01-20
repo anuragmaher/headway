@@ -32,7 +32,6 @@ export const ThemesColumn: React.FC<ThemesColumnProps> = ({
     unlockTheme,
   } = useExplorerActions();
 
-  const totalMentions = themes.reduce((sum, t) => sum + t.feedbackCount, 0);
 
   const handleThemeSelect = (themeId: string) => {
     selectTheme(themeId);
@@ -88,28 +87,17 @@ export const ThemesColumn: React.FC<ThemesColumnProps> = ({
           borderColor: 'divider',
         }}
       >
-        <Box>
-          <Typography
-            sx={{
-              fontSize: '0.6875rem',
-              fontWeight: 600,
-              letterSpacing: '0.5px',
-              color: 'text.secondary',
-              textTransform: 'uppercase',
-            }}
-          >
-            Themes
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: '0.75rem',
-              color: 'text.disabled',
-              mt: 0.25,
-            }}
-          >
-            {totalMentions.toLocaleString()} total mentions
-          </Typography>
-        </Box>
+        <Typography
+          sx={{
+            fontSize: '0.6875rem',
+            fontWeight: 600,
+            letterSpacing: '0.5px',
+            color: 'text.secondary',
+            textTransform: 'uppercase',
+          }}
+        >
+          Themes
+        </Typography>
         <Tooltip title="Add Theme">
           <IconButton
             size="small"

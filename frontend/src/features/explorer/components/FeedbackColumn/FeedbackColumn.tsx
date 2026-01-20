@@ -3,7 +3,7 @@
  * Shows the actual customer feedback linked to features
  */
 import React from 'react';
-import { Box, Typography, Skeleton, Fade } from '@mui/material';
+import { Box, Typography, Skeleton, Fade, useTheme } from '@mui/material';
 import { FeedbackCard } from './FeedbackCard';
 import {
   useFeedbackItems,
@@ -21,6 +21,7 @@ interface FeedbackColumnProps {
 export const FeedbackColumn: React.FC<FeedbackColumnProps> = ({
   minWidth = 400,
 }) => {
+  const theme = useTheme();
   const feedbackItems = useFeedbackItems();
   const selectedTheme = useSelectedTheme();
   const selectedSubTheme = useSelectedSubTheme();
@@ -46,7 +47,7 @@ export const FeedbackColumn: React.FC<FeedbackColumnProps> = ({
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          bgcolor: '#FAFAFA',
+          bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
         }}
       >
         <Box
@@ -96,7 +97,7 @@ export const FeedbackColumn: React.FC<FeedbackColumnProps> = ({
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          bgcolor: '#FAFAFA',
+          bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
         }}
       >
         <Box
@@ -144,7 +145,7 @@ export const FeedbackColumn: React.FC<FeedbackColumnProps> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        bgcolor: '#FAFAFA',
+        bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
       }}
     >
       {/* Header */}

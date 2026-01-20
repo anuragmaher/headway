@@ -3,7 +3,7 @@
  * Enterprise-grade exploration and triage workspace for product managers
  */
 import React, { useEffect } from 'react';
-import { Box, CircularProgress, Alert, AlertTitle } from '@mui/material';
+import { Box, CircularProgress, Alert, AlertTitle, useTheme } from '@mui/material';
 import { ThemesColumn } from './ThemesColumn';
 import { SubThemesColumn } from './SubThemesColumn';
 import { FeedbackColumn } from './FeedbackColumn';
@@ -22,6 +22,7 @@ interface ThemeExplorerProps {
 }
 
 export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
+  const theme = useTheme();
   const {
     isInitializing,
     isInitialized,
@@ -62,7 +63,7 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
           alignItems: 'center',
           justifyContent: 'center',
           height: '100%',
-          bgcolor: '#FAFAFA',
+          bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
         }}
       >
         <CircularProgress size={28} />
@@ -79,7 +80,7 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
           alignItems: 'center',
           justifyContent: 'center',
           height: '100%',
-          bgcolor: '#FAFAFA',
+          bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
           p: 4,
         }}
       >
@@ -103,7 +104,7 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
         height: '100%',
         width: '100%',
         overflow: 'hidden',
-        bgcolor: '#FAFAFA',
+        bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
       }}
     >
       {/* Left Column - Themes */}

@@ -11,6 +11,7 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
+  useTheme,
 } from '@mui/material';
 import {
   MoreHoriz as DotsIcon,
@@ -40,6 +41,7 @@ export const ThemeItem: React.FC<ThemeItemProps> = ({
   onLock,
   onUnlock,
 }) => {
+  const muiTheme = useTheme();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -91,7 +93,9 @@ export const ThemeItem: React.FC<ThemeItemProps> = ({
         borderLeft: '2px solid',
         borderColor: isSelected ? theme.color || '#3B82F6' : 'transparent',
         '&:hover': {
-          bgcolor: isSelected ? 'rgba(59, 130, 246, 0.12)' : 'rgba(0, 0, 0, 0.04)',
+          bgcolor: isSelected
+            ? 'rgba(59, 130, 246, 0.12)'
+            : muiTheme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)',
         },
       }}
     >
@@ -145,7 +149,10 @@ export const ThemeItem: React.FC<ThemeItemProps> = ({
           sx={{
             p: 0.25,
             opacity: 0.6,
-            '&:hover': { opacity: 1, bgcolor: 'rgba(0,0,0,0.06)' },
+            '&:hover': {
+              opacity: 1,
+              bgcolor: muiTheme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+            },
           }}
         >
           <DotsIcon sx={{ fontSize: 16 }} />
