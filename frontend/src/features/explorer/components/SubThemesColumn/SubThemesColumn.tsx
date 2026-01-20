@@ -3,7 +3,7 @@
  * Clean, minimal design with back navigation
  */
 import React from 'react';
-import { Box, Typography, IconButton, Tooltip, Skeleton, Chip } from '@mui/material';
+import { Box, Typography, IconButton, Tooltip, Skeleton, useTheme } from '@mui/material';
 import { Add as AddIcon, ArrowBack as BackIcon } from '@mui/icons-material';
 import { SubThemeItem } from './SubThemeItem';
 import {
@@ -21,6 +21,7 @@ interface SubThemesColumnProps {
 export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
   width = 260,
 }) => {
+  const theme = useTheme();
   const subThemes = useSubThemes();
   const selectedTheme = useSelectedTheme();
   const selectedSubThemeId = useSelectedSubThemeId();
@@ -35,8 +36,6 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
     lockSubTheme,
     unlockSubTheme,
   } = useExplorerActions();
-
-  const totalMentions = subThemes.reduce((sum, st) => sum + st.feedbackCount, 0);
 
   const handleBack = () => {
     selectTheme(null);
@@ -189,7 +188,7 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
                 mt: 0.25,
               }}
             >
-              {subThemes.length} features · {totalMentions.toLocaleString()} mentions
+              {subThemes.length} features
             </Typography>
           </Box>
           <Tooltip title="Add Feature">
@@ -267,51 +266,6 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
           </Box>
         ) : (
           <>
-            {/* "All" option */}
-            <Box
-              onClick={() => selectSubTheme(null)}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                px: 1.5,
-                py: 1,
-                mx: 0.75,
-                my: 0.25,
-                borderRadius: 1,
-                cursor: 'pointer',
-                transition: 'all 0.12s ease',
-                bgcolor: selectedSubThemeId === null ? 'rgba(59, 130, 246, 0.08)' : 'transparent',
-                borderLeft: '2px solid',
-                borderColor: selectedSubThemeId === null ? '#3B82F6' : 'transparent',
-                '&:hover': {
-                  bgcolor: selectedSubThemeId === null ? 'rgba(59, 130, 246, 0.12)' : 'rgba(0, 0, 0, 0.04)',
-                },
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: '0.8125rem',
-                  fontWeight: selectedSubThemeId === null ? 600 : 500,
-                  color: selectedSubThemeId === null ? 'text.primary' : 'text.secondary',
-                }}
-              >
-                All Features
-              </Typography>
-              <Chip
-                label={totalMentions}
-                size="small"
-                sx={{
-                  height: 18,
-                  fontSize: '0.625rem',
-                  fontWeight: 600,
-                  bgcolor: 'rgba(0,0,0,0.04)',
-                  color: 'text.secondary',
-                  '& .MuiChip-label': { px: 1 },
-                }}
-              />
-            </Box>
-
             {/* Feature items */}
             {subThemes.map((subTheme) => (
               <SubThemeItem

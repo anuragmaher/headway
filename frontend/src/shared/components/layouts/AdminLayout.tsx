@@ -26,15 +26,15 @@ import {
 } from '@mui/material';
 import {
   Menu as MenuIcon,
-  Dashboard as DashboardIcon,
-  Category as CategoryIcon,
-  Settings as SettingsIcon,
-  Logout as LogoutIcon,
-  Person as PersonIcon,
-  KeyboardDoubleArrowLeft as CollapseIcon,
-  KeyboardDoubleArrowRight as ExpandIcon,
-  Business as BusinessIcon,
-  Message as MessageIcon,
+  GridViewRounded as DashboardIcon,
+  AutoAwesomeRounded as ThemesIcon,
+  SettingsRounded as SettingsIcon,
+  LogoutRounded as LogoutIcon,
+  PersonRounded as PersonIcon,
+  ChevronLeftRounded as CollapseIcon,
+  ChevronRightRounded as ExpandIcon,
+  PeopleAltRounded as CustomersIcon,
+  InboxRounded as MessagesIcon,
 } from '@mui/icons-material';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
@@ -48,8 +48,8 @@ import { useLayoutStore } from '@/shared/store/layoutStore';
 import { useWorkspaceSettingsStore } from '@/shared/store/WorkspaceStore/workspaceSettingsStore';
 import { ROUTES } from '@/lib/constants/routes';
 
-const DRAWER_WIDTH = 260;
-const DRAWER_WIDTH_COLLAPSED = 72;
+const DRAWER_WIDTH = 220;
+const DRAWER_WIDTH_COLLAPSED = 64;
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -58,27 +58,27 @@ interface AdminLayoutProps {
 const navigationItems = [
   {
     text: 'Dashboard',
-    icon: <DashboardIcon />,
+    icon: <DashboardIcon sx={{ fontSize: 20 }} />,
     path: ROUTES.DASHBOARD,
   },
   {
-    text: 'All Messages',
-    icon: <MessageIcon />,
+    text: 'Messages',
+    icon: <MessagesIcon sx={{ fontSize: 20 }} />,
     path: ROUTES.SOURCES,
   },
   {
     text: 'Themes',
-    icon: <CategoryIcon />,
+    icon: <ThemesIcon sx={{ fontSize: 20 }} />,
     path: ROUTES.THEMES,
   },
   {
     text: 'Customers',
-    icon: <BusinessIcon />,
+    icon: <CustomersIcon sx={{ fontSize: 20 }} />,
     path: ROUTES.CUSTOMERS,
   },
   {
-    text: 'Workspace Settings',
-    icon: <SettingsIcon />,
+    text: 'Settings',
+    icon: <SettingsIcon sx={{ fontSize: 20 }} />,
     path: ROUTES.SETTINGS_WORKSPACE,
   },
 ];
@@ -304,66 +304,71 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   const currentDrawerWidth = collapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH;
 
   const drawer = (
-    <Box sx={{ 
-      height: '100%', 
+    <Box sx={{
+      height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      background: theme.palette.mode === 'dark' 
-        ? `linear-gradient(180deg, ${alpha('#0f0f23', 0.98)} 0%, ${alpha('#1a1a2e', 0.95)} 100%)`
-        : `linear-gradient(180deg, ${alpha('#fafafa', 0.98)} 0%, ${alpha('#f5f5f5', 0.95)} 100%)`,
-      borderRight: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+      background: theme.palette.mode === 'dark'
+        ? '#1A1A1A'
+        : '#fafbfc',
       overflow: 'hidden',
     }}>
-      {/* Logo and branding */}
-      <Box sx={{ 
-        p: 2,
+      {/* Compact Logo header - matches AppBar height (48px) */}
+      <Box sx={{
+        px: collapsed ? 1 : 1.5,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: collapsed ? 'center' : 'flex-start',
-        gap: 1.5,
-        minHeight: 64,
-        borderBottom: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
+        justifyContent: collapsed ? 'center' : 'space-between',
+        height: 48,
+        minHeight: 48,
       }}>
-        <Box sx={{
-          width: 40,
-          height: 40,
-          borderRadius: 2,
-          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: `0 4px 14px ${alpha(theme.palette.primary.main, 0.4)}`,
-          flexShrink: 0,
-        }}>
-          <Typography variant="h6" sx={{ color: 'white', fontWeight: 800, fontSize: '1.2rem' }}>
-            H
-          </Typography>
-        </Box>
-        {!collapsed && (
-          <Box sx={{ overflow: 'hidden' }}>
-            <Typography variant="h6" sx={{ 
-              fontWeight: 700, 
-              color: 'text.primary', 
-              fontSize: '1rem',
-              lineHeight: 1.2,
-              whiteSpace: 'nowrap',
-            }}>
-              HeadwayHQ
-            </Typography>
-            <Typography variant="caption" sx={{ 
-              color: 'text.secondary', 
-              fontSize: '0.7rem',
-              whiteSpace: 'nowrap',
-            }}>
-              Product Intelligence
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box sx={{
+            width: 28,
+            height: 28,
+            borderRadius: 1,
+            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <Typography sx={{ color: 'white', fontWeight: 700, fontSize: '0.85rem' }}>
+              H
             </Typography>
           </Box>
+          {!collapsed && (
+            <Typography sx={{
+              fontWeight: 600,
+              color: 'text.primary',
+              fontSize: '0.875rem',
+              letterSpacing: '-0.01em',
+            }}>
+              Headway
+            </Typography>
+          )}
+        </Box>
+        {!collapsed && (
+          <IconButton
+            onClick={handleDrawerCollapse}
+            size="small"
+            sx={{
+              width: 24,
+              height: 24,
+              color: theme.palette.text.secondary,
+              '&:hover': {
+                bgcolor: alpha(theme.palette.action.hover, 0.08),
+              },
+            }}
+          >
+            <CollapseIcon sx={{ fontSize: 18 }} />
+          </IconButton>
         )}
       </Box>
 
       {/* Navigation */}
-      <Box sx={{ flex: 1, py: 2, px: collapsed ? 1 : 1.5, overflow: 'auto' }}>
-        <List disablePadding>
+      <Box sx={{ flex: 1, py: 1, px: collapsed ? 0.75 : 1, overflow: 'auto' }}>
+        <List disablePadding sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
           {navigationItems.map((item) => {
             const isActive = location.pathname === item.path;
 
@@ -373,26 +378,24 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
                 to={item.path}
                 selected={isActive}
                 sx={{
-                  borderRadius: 2,
-                  py: 1.25,
-                  px: collapsed ? 0 : 1.5,
-                  mb: 0.5,
+                  borderRadius: 1.5,
+                  py: 0.875,
+                  px: collapsed ? 0 : 1.25,
                   justifyContent: collapsed ? 'center' : 'flex-start',
-                  minHeight: 48,
-                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                  minHeight: 36,
+                  transition: 'all 0.15s ease',
                   position: 'relative',
                   '&.Mui-selected': {
-                    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.15)} 0%, ${alpha(theme.palette.primary.main, 0.08)} 100%)`,
+                    bgcolor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.15 : 0.08),
                     '&::before': {
                       content: '""',
                       position: 'absolute',
                       left: 0,
-                      top: '20%',
-                      bottom: '20%',
-                      width: 3,
-                      borderRadius: '0 4px 4px 0',
+                      top: '25%',
+                      bottom: '25%',
+                      width: 2,
+                      borderRadius: '0 2px 2px 0',
                       background: theme.palette.primary.main,
-                      boxShadow: `0 0 8px ${alpha(theme.palette.primary.main, 0.5)}`,
                     },
                     '& .MuiListItemIcon-root': {
                       color: theme.palette.primary.main,
@@ -402,18 +405,18 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
                       fontWeight: 600,
                     },
                     '&:hover': {
-                      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.2)} 0%, ${alpha(theme.palette.primary.main, 0.12)} 100%)`,
+                      bgcolor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.2 : 0.12),
                     },
                   },
                   '&:hover': {
-                    background: alpha(theme.palette.action.hover, 0.08),
+                    bgcolor: alpha(theme.palette.action.hover, 0.06),
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
                     color: isActive ? theme.palette.primary.main : theme.palette.text.secondary,
-                    minWidth: collapsed ? 0 : 40,
+                    minWidth: collapsed ? 0 : 32,
                     justifyContent: 'center',
                   }}
                 >
@@ -424,7 +427,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
                     primary={item.text}
                     primaryTypographyProps={{
                       sx: {
-                        fontSize: '0.875rem',
+                        fontSize: '0.8125rem',
                         fontWeight: isActive ? 600 : 500,
                         color: isActive ? theme.palette.primary.main : theme.palette.text.primary,
                       }
@@ -449,34 +452,32 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
         </List>
       </Box>
 
-      {/* Collapse/Expand Toggle at bottom */}
-      <Box sx={{ 
-        p: 1.5,
-        borderTop: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
-        display: { xs: 'none', sm: 'flex' },
-        justifyContent: collapsed ? 'center' : 'flex-end',
-      }}>
-        <Tooltip title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} placement="right" arrow>
-          <IconButton
-            onClick={handleDrawerCollapse}
-            size="small"
-            sx={{
-              width: 36,
-              height: 36,
-              borderRadius: 2,
-              bgcolor: alpha(theme.palette.primary.main, 0.08),
-              color: theme.palette.primary.main,
-              '&:hover': {
-                bgcolor: alpha(theme.palette.primary.main, 0.15),
-                transform: 'scale(1.05)',
-              },
-              transition: 'all 0.2s ease',
-            }}
-          >
-            {collapsed ? <ExpandIcon fontSize="small" /> : <CollapseIcon fontSize="small" />}
-          </IconButton>
-        </Tooltip>
-      </Box>
+      {/* Expand button at bottom (only when collapsed) */}
+      {collapsed && (
+        <Box sx={{
+          p: 1,
+          borderTop: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
+          display: { xs: 'none', sm: 'flex' },
+          justifyContent: 'center',
+        }}>
+          <Tooltip title="Expand" placement="right" arrow>
+            <IconButton
+              onClick={handleDrawerCollapse}
+              size="small"
+              sx={{
+                width: 28,
+                height: 28,
+                color: theme.palette.text.secondary,
+                '&:hover': {
+                  bgcolor: alpha(theme.palette.action.hover, 0.08),
+                },
+              }}
+            >
+              <ExpandIcon sx={{ fontSize: 18 }} />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      )}
     </Box>
   );
 
@@ -498,7 +499,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
         width: '100vw',
         overflow: 'hidden',
       }}>
-      {/* App Bar */}
+      {/* Compact App Bar */}
       <AppBar
         position="fixed"
         elevation={0}
@@ -506,32 +507,46 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
           left: { xs: 0, sm: currentDrawerWidth },
           width: { xs: '100%', sm: `calc(100% - ${currentDrawerWidth}px)` },
           transition: 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          background: alpha(theme.palette.background.paper, 0.8),
-          backdropFilter: 'blur(12px)',
+          background: theme.palette.mode === 'dark' ? '#1A1A1A' : '#fafbfc',
+          backdropFilter: 'none',
           borderBottom: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+          borderRadius: 0,
           color: theme.palette.text.primary,
         }}
       >
-        <Toolbar>
+        <Toolbar
+          sx={{
+            minHeight: { xs: 48, sm: 48 },
+            height: 48,
+            px: { xs: 1.5, sm: 2 },
+          }}
+        >
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+            size="small"
+            sx={{ mr: 1.5, display: { sm: 'none' } }}
           >
-            <MenuIcon />
+            <MenuIcon fontSize="small" />
           </IconButton>
 
-          <Box sx={{ flexGrow: 1 }}>
+          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', minWidth: 0 }}>
             {headerContent ? (
               headerContent
             ) : (
-              <Typography variant="h6" noWrap component="div" sx={{ 
-                fontWeight: 600, 
-                fontSize: '1.1rem',
-                color: theme.palette.text.primary,
-              }}>
+              <Typography
+                variant="subtitle1"
+                noWrap
+                component="div"
+                sx={{
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                  color: theme.palette.text.secondary,
+                  letterSpacing: '-0.01em',
+                }}
+              >
                 {navigationItems.find(item =>
                   location.pathname === item.path
                 )?.text || 'HeadwayHQ'}
@@ -540,14 +555,15 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <ThemeToggle />
+            <ThemeToggle size="small" />
 
             <IconButton
               onClick={handleProfileMenuOpen}
               aria-label="account menu"
+              size="small"
               sx={{
-                p: 0.5,
-                borderRadius: 2,
+                p: 0.25,
+                borderRadius: 1.5,
                 transition: 'all 0.2s ease',
                 '&:hover': {
                   bgcolor: alpha(theme.palette.primary.main, 0.08),
@@ -555,10 +571,10 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
               }}
             >
               <Avatar sx={{
-                width: 34,
-                height: 34,
+                width: 28,
+                height: 28,
                 background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-                fontSize: '0.9rem',
+                fontSize: '0.75rem',
                 fontWeight: 600,
               }}>
                 {user?.first_name?.[0] || user?.email[0].toUpperCase()}
@@ -574,27 +590,27 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               PaperProps={{
                 sx: {
-                  mt: 1,
+                  mt: 0.5,
                   borderRadius: 2,
-                  minWidth: 180,
-                  boxShadow: `0 4px 20px ${alpha(theme.palette.common.black, 0.15)}`,
+                  minWidth: 160,
+                  boxShadow: `0 4px 20px ${alpha(theme.palette.common.black, 0.12)}`,
                 }
               }}
             >
-              <MenuItem onClick={() => navigate(ROUTES.SETTINGS_PROFILE)}>
+              <MenuItem onClick={() => navigate(ROUTES.SETTINGS_PROFILE)} sx={{ py: 1, fontSize: '0.875rem' }}>
                 <ListItemIcon>
                   <PersonIcon fontSize="small" />
                 </ListItemIcon>
                 Profile
               </MenuItem>
-              <MenuItem onClick={() => navigate(ROUTES.SETTINGS_WORKSPACE)}>
+              <MenuItem onClick={() => navigate(ROUTES.SETTINGS_WORKSPACE)} sx={{ py: 1, fontSize: '0.875rem' }}>
                 <ListItemIcon>
                   <SettingsIcon fontSize="small" />
                 </ListItemIcon>
-                Workspace Settings
+                Settings
               </MenuItem>
-              <Divider />
-              <MenuItem onClick={handleLogout}>
+              <Divider sx={{ my: 0.5 }} />
+              <MenuItem onClick={handleLogout} sx={{ py: 1, fontSize: '0.875rem' }}>
                 <ListItemIcon>
                   <LogoutIcon fontSize="small" />
                 </ListItemIcon>
@@ -636,6 +652,8 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
             width: currentDrawerWidth,
             transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             border: 'none',
+            borderRight: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+            borderRadius: 0,
             overflowX: 'hidden',
           },
         }}
@@ -657,7 +675,8 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
           overflow: 'hidden',
         }}
       >
-        <Toolbar /> {/* Spacer for fixed AppBar */}
+        {/* Compact spacer for fixed AppBar (48px height) */}
+        <Box sx={{ minHeight: 48, flexShrink: 0 }} />
         <Box
           sx={{
             flexGrow: 1,

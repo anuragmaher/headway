@@ -4,7 +4,7 @@
  * Source-specific formatting for Slack, Gmail, transcripts
  */
 import React, { useState } from 'react';
-import { Box, Typography, Chip, Collapse, IconButton, Divider } from '@mui/material';
+import { Box, Typography, Chip, Collapse, IconButton, Divider, useTheme } from '@mui/material';
 import {
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
@@ -58,6 +58,7 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
   isSelected,
   onSelect,
 }) => {
+  const muiTheme = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleToggleExpand = (e: React.MouseEvent) => {
@@ -90,7 +91,9 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
         overflow: 'hidden',
         '&:hover': {
           borderColor: 'rgba(59, 130, 246, 0.25)',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+          boxShadow: muiTheme.palette.mode === 'dark'
+            ? '0 2px 8px rgba(0,0,0,0.2)'
+            : '0 2px 8px rgba(0,0,0,0.04)',
         },
       }}
     >
@@ -202,7 +205,10 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
             width: 24,
             height: 24,
             color: 'text.disabled',
-            '&:hover': { color: 'text.secondary', bgcolor: 'rgba(0,0,0,0.04)' },
+            '&:hover': {
+              color: 'text.secondary',
+              bgcolor: muiTheme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+            },
           }}
         >
           {isExpanded ? <ExpandLessIcon sx={{ fontSize: 18 }} /> : <ExpandMoreIcon sx={{ fontSize: 18 }} />}
@@ -212,7 +218,7 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
       {/* Expanded Content */}
       <Collapse in={isExpanded}>
         <Divider />
-        <Box sx={{ p: 2, bgcolor: 'rgba(0,0,0,0.01)' }}>
+        <Box sx={{ p: 2, bgcolor: muiTheme.palette.mode === 'dark' ? 'rgba(255,255,255,0.01)' : 'rgba(0,0,0,0.01)' }}>
           {/* Source-specific content rendering */}
           {renderSourceContent(feedback)}
         </Box>
