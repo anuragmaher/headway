@@ -11,7 +11,7 @@ import { ROUTES } from '@/lib/constants/routes';
 import { LandingPage } from '@/pages/LandingPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
-import { ThemesPage } from '@/pages/Themes';
+import { ThemesExplorerPage } from '@/pages/ThemesExplorer';
 import { WorkspaceSettingsPage } from '@/pages/WorkspaceSettingsPage';
 import { CustomersPage } from '@/pages/CustomersPage';
 import CustomersChatPage from '@/pages/CustomersChatPage';
@@ -113,7 +113,7 @@ export function AppRouter(): JSX.Element {
           path={ROUTES.THEMES}
           element={
             <ProtectedRoute>
-              <ThemesPage />
+              <ThemesExplorerPage />
             </ProtectedRoute>
           }
         />
