@@ -1,0 +1,265 @@
+/**
+ * Explorer Store - Main Zustand store combining all slices
+ * Manages the three-column Theme Explorer state
+ */
+import { create } from 'zustand';
+import { devtools, subscribeWithSelector } from 'zustand/middleware';
+import {
+  createThemeSlice,
+  createSubThemeSlice,
+  createFeedbackSlice,
+  createUISlice,
+  type ThemeSlice,
+  type SubThemeSlice,
+  type FeedbackSlice,
+  type UISlice,
+} from './slices';
+import { useAuthStore } from '../../../features/auth/store/auth-store';
+
+// ============================================================================
+// Store Type Definition
+// ============================================================================
+
+export interface ExplorerStore extends ThemeSlice, SubThemeSlice, FeedbackSlice, UISlice {
+  // Utility methods
+  getWorkspaceId: () => string | null;
+  getAuthToken: () => string | null;
+
+  // Initialization
+  initialize: () => Promise<void>;
+  reset: () => void;
+
+  // Global loading state
+  isInitializing: boolean;
+  isInitialized: boolean;
+}
+
+// ============================================================================
+// Store Implementation
+// ============================================================================
+
+export const useExplorerStore = create<ExplorerStore>()(
+  devtools(
+    subscribeWithSelector((set, get, api) => ({
+      // Combine all slices
+      ...createThemeSlice(set, get, api),
+      ...createSubThemeSlice(set, get, api),
+      ...createFeedbackSlice(set, get, api),
+      ...createUISlice(set, get, api),
+
+      // Global state
+      isInitializing: false,
+      isInitialized: false,
+
+      // Utility methods
+      getWorkspaceId: () => {
+        const authState = useAuthStore.getState();
+        return authState.tokens?.workspace_id || null;
+      },
+
+      getAuthToken: () => {
+        const authState = useAuthStore.getState();
+        return authState.tokens?.access_token || null;
+      },
+
+      // Initialize the explorer
+      initialize: async () => {
+        const { isInitialized, isInitializing } = get();
+        if (isInitialized || isInitializing) return;
+
+        set({ isInitializing: true });
+
+        try {
+          await get().fetchThemes();
+          set({ isInitialized: true, isInitializing: false });
+        } catch (error) {
+          set({ isInitializing: false });
+          throw error;
+        }
+      },
+
+      // Reset all state
+      reset: () => {
+        set({
+          // Theme state
+          themes: [],
+          isLoadingThemes: false,
+          themesError: null,
+
+          // SubTheme state
+          subThemes: [],
+          isLoadingSubThemes: false,
+          subThemesError: null,
+
+          // Feedback state
+          feedbackItems: [],
+          totalFeedback: 0,
+          hasMoreFeedback: false,
+          nextCursor: null,
+          isLoadingFeedback: false,
+          isLoadingMoreFeedback: false,
+          feedbackError: null,
+          filters: {
+            sources: [],
+            tags: [],
+            urgency: [],
+            dateRange: null,
+            searchQuery: '',
+          },
+          sortBy: 'recent',
+
+          // UI state
+          selectedThemeId: null,
+          selectedSubThemeId: null,
+          selectedFeedbackId: null,
+          expandedFeedbackId: null,
+          activeColumn: 'themes',
+          isSearchOpen: false,
+          isFilterPanelOpen: false,
+          isDetailPanelOpen: false,
+          isAddThemeDialogOpen: false,
+          isAddSubThemeDialogOpen: false,
+          isEditThemeDialogOpen: false,
+          isEditSubThemeDialogOpen: false,
+          isMergeDialogOpen: false,
+          isDeleteConfirmOpen: false,
+          editingThemeId: null,
+          editingSubThemeId: null,
+          deletingItemId: null,
+          deletingItemType: null,
+          mergeSourceId: null,
+
+          // Global state
+          isInitializing: false,
+          isInitialized: false,
+        });
+      },
+    })),
+    { name: 'explorer-store' }
+  )
+);
+
+// ============================================================================
+// Selector Hooks for Performance Optimization
+// ============================================================================
+
+// Theme selectors
+export const useThemes = () => useExplorerStore((state) => state.themes);
+export const useSelectedTheme = () => {
+  const themes = useExplorerStore((state) => state.themes);
+  const selectedThemeId = useExplorerStore((state) => state.selectedThemeId);
+  return themes.find((t) => t.id === selectedThemeId) || null;
+};
+export const useIsLoadingThemes = () => useExplorerStore((state) => state.isLoadingThemes);
+export const useThemesError = () => useExplorerStore((state) => state.themesError);
+
+// SubTheme selectors
+export const useSubThemes = () => useExplorerStore((state) => state.subThemes);
+export const useSelectedSubTheme = () => {
+  const subThemes = useExplorerStore((state) => state.subThemes);
+  const selectedSubThemeId = useExplorerStore((state) => state.selectedSubThemeId);
+  return subThemes.find((st) => st.id === selectedSubThemeId) || null;
+};
+export const useIsLoadingSubThemes = () => useExplorerStore((state) => state.isLoadingSubThemes);
+export const useSubThemesError = () => useExplorerStore((state) => state.subThemesError);
+
+// Feedback selectors
+export const useFeedbackItems = () => useExplorerStore((state) => state.feedbackItems);
+export const useSelectedFeedback = () => {
+  const feedbackItems = useExplorerStore((state) => state.feedbackItems);
+  const selectedFeedbackId = useExplorerStore((state) => state.selectedFeedbackId);
+  return feedbackItems.find((f) => f.id === selectedFeedbackId) || null;
+};
+export const useExpandedFeedback = () => {
+  const feedbackItems = useExplorerStore((state) => state.feedbackItems);
+  const expandedFeedbackId = useExplorerStore((state) => state.expandedFeedbackId);
+  return feedbackItems.find((f) => f.id === expandedFeedbackId) || null;
+};
+export const useIsLoadingFeedback = () => useExplorerStore((state) => state.isLoadingFeedback);
+export const useFeedbackError = () => useExplorerStore((state) => state.feedbackError);
+export const useFilters = () => useExplorerStore((state) => state.filters);
+export const useSortBy = () => useExplorerStore((state) => state.sortBy);
+
+// UI selectors
+export const useSelectedThemeId = () => useExplorerStore((state) => state.selectedThemeId);
+export const useSelectedSubThemeId = () => useExplorerStore((state) => state.selectedSubThemeId);
+export const useSelectedFeedbackId = () => useExplorerStore((state) => state.selectedFeedbackId);
+export const useActiveColumn = () => useExplorerStore((state) => state.activeColumn);
+export const useIsSearchOpen = () => useExplorerStore((state) => state.isSearchOpen);
+export const useIsFilterPanelOpen = () => useExplorerStore((state) => state.isFilterPanelOpen);
+export const useIsDetailPanelOpen = () => useExplorerStore((state) => state.isDetailPanelOpen);
+
+// Dialog selectors
+export const useIsAddThemeDialogOpen = () => useExplorerStore((state) => state.isAddThemeDialogOpen);
+export const useIsAddSubThemeDialogOpen = () => useExplorerStore((state) => state.isAddSubThemeDialogOpen);
+export const useIsEditThemeDialogOpen = () => useExplorerStore((state) => state.isEditThemeDialogOpen);
+export const useIsEditSubThemeDialogOpen = () => useExplorerStore((state) => state.isEditSubThemeDialogOpen);
+export const useEditingThemeId = () => useExplorerStore((state) => state.editingThemeId);
+export const useEditingSubThemeId = () => useExplorerStore((state) => state.editingSubThemeId);
+
+// Action selectors
+export const useExplorerActions = () => {
+  const store = useExplorerStore();
+  return {
+    // Theme actions
+    fetchThemes: store.fetchThemes,
+    createTheme: store.createTheme,
+    updateTheme: store.updateTheme,
+    deleteTheme: store.deleteTheme,
+    lockTheme: store.lockTheme,
+    unlockTheme: store.unlockTheme,
+
+    // SubTheme actions
+    fetchSubThemes: store.fetchSubThemes,
+    createSubTheme: store.createSubTheme,
+    updateSubTheme: store.updateSubTheme,
+    deleteSubTheme: store.deleteSubTheme,
+    mergeSubThemes: store.mergeSubThemes,
+    lockSubTheme: store.lockSubTheme,
+    unlockSubTheme: store.unlockSubTheme,
+
+    // Feedback actions
+    fetchFeedback: store.fetchFeedback,
+    moveFeedback: store.moveFeedback,
+    setFilters: store.setFilters,
+    setSortBy: store.setSortBy,
+    setSearchQuery: store.setSearchQuery,
+    clearFilters: store.clearFilters,
+
+    // Selection actions
+    selectTheme: store.selectTheme,
+    selectSubTheme: store.selectSubTheme,
+    selectFeedback: store.selectFeedback,
+    expandFeedback: store.expandFeedback,
+
+    // Navigation actions
+    navigateToTheme: store.navigateToTheme,
+    navigateToSubTheme: store.navigateToSubTheme,
+    navigateToFeedback: store.navigateToFeedback,
+    navigateBack: store.navigateBack,
+
+    // Panel actions
+    toggleSearch: store.toggleSearch,
+    toggleFilterPanel: store.toggleFilterPanel,
+    openDetailPanel: store.openDetailPanel,
+    closeDetailPanel: store.closeDetailPanel,
+
+    // Dialog actions
+    openAddThemeDialog: store.openAddThemeDialog,
+    closeAddThemeDialog: store.closeAddThemeDialog,
+    openAddSubThemeDialog: store.openAddSubThemeDialog,
+    closeAddSubThemeDialog: store.closeAddSubThemeDialog,
+    openEditThemeDialog: store.openEditThemeDialog,
+    closeEditThemeDialog: store.closeEditThemeDialog,
+    openEditSubThemeDialog: store.openEditSubThemeDialog,
+    closeEditSubThemeDialog: store.closeEditSubThemeDialog,
+    openMergeDialog: store.openMergeDialog,
+    closeMergeDialog: store.closeMergeDialog,
+    openDeleteConfirm: store.openDeleteConfirm,
+    closeDeleteConfirm: store.closeDeleteConfirm,
+
+    // Global actions
+    initialize: store.initialize,
+    reset: store.reset,
+  };
+};

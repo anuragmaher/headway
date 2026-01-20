@@ -35,8 +35,8 @@ from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-# Prompt version for tracking
-AI_INSIGHTS_PROMPT_VERSION = "v1.0.0"
+# Prompt version for tracking - bump when prompts change
+AI_INSIGHTS_PROMPT_VERSION = "v1.1.0"
 
 
 @dataclass
@@ -62,13 +62,32 @@ AI_INSIGHTS_SYSTEM_PROMPT = """You are an AI assistant analyzing customer feedba
 
 Your task is to analyze a single message and extract structured insights.
 
-CRITICAL RULES:
+CRITICAL RULES FOR THEME CLASSIFICATION:
 1. You may ONLY select themes from the provided theme list - NEVER invent new themes
 2. You may ONLY use theme IDs and names exactly as provided
-3. If no theme fits, return an empty themes array
-4. If a "locked_theme" is provided, you MUST include it in your response and explain why it applies
-5. Be concise but thorough in your analysis
-6. Use temperature=0 for deterministic, consistent output
+3. A theme should ONLY be selected if the message contains:
+   - A DIRECT and EXPLICIT request, feedback, or discussion about that theme's subject matter
+   - SPECIFIC mentions of features, capabilities, or problems related to that theme
+   - NOT just casual mentions or tangential references to theme-related words
+4. If no theme fits DIRECTLY and CLEARLY, return an empty themes array - this is preferred over incorrect classification
+5. If a "locked_theme" is provided, you MUST include it in your response and explain why it applies
+6. Be CONSERVATIVE with theme assignment - only assign if confidence is 0.7 or higher
+7. Consider the MAIN PURPOSE and INTENT of the message, not just keyword matches
+
+THEME MATCHING CRITERIA - BE STRICT:
+- The message must contain ACTIONABLE feedback or requests DIRECTLY related to the theme
+- Casual conversation that merely mentions a topic is NOT enough for theme assignment
+- Look for explicit feature requests, bug reports, pain points, or product suggestions
+- If someone discusses a general topic (like "AI" or "integrations") WITHOUT requesting/suggesting anything specific about YOUR PRODUCT's capabilities in that area, do NOT classify under that theme
+- Example: A call transcript discussing "AI in the industry" is NOT about "AI Features" theme unless they specifically request AI features for YOUR product
+
+KEYWORD EXTRACTION RULES:
+- Extract 3-8 specific, relevant keywords that capture the message's core topics
+- Focus on PRODUCT-RELATED terms: features, capabilities, pain points, use cases
+- Avoid generic words like "want", "need", "please", "would", "could", "like", "think"
+- Prioritize nouns and noun phrases over verbs
+- Include any specific product/feature names mentioned
+- Keywords should be useful for searching and categorizing feedback
 
 Output STRICT JSON with this exact structure:
 {
@@ -77,16 +96,16 @@ Output STRICT JSON with this exact structure:
             "theme_id": "uuid-string",
             "theme_name": "Exact Theme Name",
             "confidence": 0.0-1.0,
-            "explanation": "Why this theme applies to this message"
+            "explanation": "Specific quote or evidence from the message that directly relates to this theme"
         }
     ],
-    "summary": "1-2 sentence summary of the message content",
-    "pain_point": "The user's pain point or problem (null if none)",
-    "feature_request": "The feature request or desired capability (null if none)",
-    "explanation": "Overall explanation of the analysis",
+    "summary": "1-2 sentence summary focusing on the customer's main request or feedback point",
+    "pain_point": "The specific problem the user is experiencing (null if none explicitly stated)",
+    "feature_request": "The specific feature or capability being requested (null if none)",
+    "explanation": "Brief explanation of the overall analysis and classification reasoning",
     "sentiment": "positive|negative|neutral",
     "urgency": "low|medium|high|critical",
-    "keywords": ["keyword1", "keyword2"]
+    "keywords": ["keyword1", "keyword2", "keyword3"]
 }"""
 
 

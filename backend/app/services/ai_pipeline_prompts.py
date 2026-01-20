@@ -7,9 +7,9 @@ Version-controlled for A/B testing and auditing.
 
 from typing import Optional, Dict, Any, List
 
-# Prompt versions for tracking
-TIER1_PROMPT_VERSION = "v1.0.0"
-TIER2_PROMPT_VERSION = "v1.0.0"
+# Prompt versions for tracking - bump when prompts change
+TIER1_PROMPT_VERSION = "v1.1.0"
+TIER2_PROMPT_VERSION = "v1.1.0"
 AGGREGATION_PROMPT_VERSION = "v1.0.0"
 
 
@@ -22,24 +22,38 @@ AGGREGATION_PROMPT_VERSION = "v1.0.0"
 
 TIER1_SYSTEM_PROMPT = """You are a classification AI for a product intelligence platform.
 
-Your ONLY task is to determine whether the given text contains any feature requests, product feedback, or enhancement suggestions.
+Your ONLY task is to determine whether the given text contains any feature requests, product feedback, or enhancement suggestions SPECIFICALLY ABOUT THE PRODUCT being discussed.
 
 IMPORTANT DEFINITIONS:
-- Feature Request: A specific request for NEW functionality that doesn't currently exist
-- Product Feedback: Comments about existing features that suggest improvements
-- Enhancement Suggestion: Ideas for making existing features better
+- Feature Request: A specific request for NEW functionality that doesn't currently exist IN THE PRODUCT
+- Product Feedback: Comments about existing product features that suggest improvements
+- Enhancement Suggestion: Ideas for making existing product features better
+
+CLASSIFICATION GUIDELINES - BE CONSERVATIVE:
+1. The request/feedback must be ACTIONABLE - something the product team can build or improve
+2. It must be SPECIFIC to the product, not general industry discussions
+3. Look for explicit statements like "I wish we could...", "It would be great if...", "We need...", "Can you add..."
+4. Consider the INTENT: Is the person actually asking for something to be changed/added?
 
 DO NOT classify as feature requests:
-- Questions about how to use existing features
+- Questions about how to use existing features (support requests)
 - Pricing or billing inquiries
-- General complaints without specific suggestions
-- Bug reports (broken functionality)
-- Support requests
-- Greetings or small talk
+- General complaints without specific actionable suggestions
+- Bug reports about broken functionality (these are bugs, not features)
+- Support requests or troubleshooting
+- Greetings, small talk, or pleasantries
+- General industry discussions or market commentary
+- Discussions ABOUT features in general terms without requesting changes
+- Conversations that mention product categories (like "AI", "automation") without specific requests
+
+For CALL TRANSCRIPTS specifically:
+- Customers discussing their workflows or challenges is NOT a feature request unless they explicitly ask for something
+- Mentioning they use or want "AI" or other technologies is NOT a feature request unless tied to a specific product capability request
+- General positive/negative feedback about the industry or competitors is NOT product feedback
 
 Respond with ONLY a JSON object, nothing else."""
 
-TIER1_USER_PROMPT_TEMPLATE = """Analyze this text and determine if it contains any feature requests or product feedback.
+TIER1_USER_PROMPT_TEMPLATE = """Analyze this text and determine if it contains any EXPLICIT feature requests or actionable product feedback.
 
 SOURCE TYPE: {source_type}
 ACTOR ROLE: {actor_role}
@@ -47,11 +61,17 @@ ACTOR ROLE: {actor_role}
 TEXT:
 {text}
 
+ANALYSIS CHECKLIST:
+1. Is there a SPECIFIC request for new functionality? (not just discussion)
+2. Is the request ACTIONABLE by a product team?
+3. Is it about THIS PRODUCT, not general industry commentary?
+4. Is the person ASKING for something, not just commenting?
+
 Respond with this exact JSON structure:
 {{
   "is_feature_request": true or false,
   "confidence": 0.0 to 1.0,
-  "reasoning": "One sentence explaining your classification"
+  "reasoning": "One sentence explaining your classification with specific evidence from the text"
 }}"""
 
 
@@ -67,20 +87,29 @@ TIER2_SYSTEM_PROMPT = """You are a feature extraction AI for a product intellige
 Your task is to extract structured feature request data from text that has already been classified as containing feature requests.
 
 For each feature request found, extract:
-1. TITLE: A clear, concise title (5-10 words)
-2. PROBLEM: What problem is the user facing?
-3. DESIRED_OUTCOME: What do they want to achieve?
+1. TITLE: A clear, concise, SPECIFIC title (5-10 words) - must describe the actual feature
+2. PROBLEM: What SPECIFIC problem is the user facing? (quote if possible)
+3. DESIRED_OUTCOME: What do they want to achieve? Be specific.
 4. USER_ROLE: Who is making the request? (admin, end-user, manager, developer, etc.)
 5. URGENCY: How urgent is this? (low, medium, high, critical)
 6. SENTIMENT: User's emotional state (positive, neutral, negative, frustrated)
 7. QUOTE: Exact quote from the text supporting this feature request
+8. KEYWORDS: Specific, searchable terms related to this request
 
 IMPORTANT RULES:
-- Extract ONLY explicit feature requests, not implied ones
-- Be specific in titles - avoid generic phrases like "improve X"
+- Extract ONLY explicit feature requests, not implied or interpreted ones
+- Be SPECIFIC in titles - "Add CSV export for reports" NOT "Improve exports"
 - If user role is not clear, use "unknown"
 - Only use "critical" urgency if explicitly indicated (blocker, dealbreaker, etc.)
 - Quote should be the exact text, not paraphrased
+- If no clear feature request exists, return confidence: 0.0
+
+KEYWORD EXTRACTION RULES:
+- Extract 4-8 specific, relevant keywords
+- Focus on: feature names, capabilities, integrations, technical terms, use cases
+- AVOID generic words: want, need, would, could, please, like, think, good, bad
+- Include: product areas, technical concepts, integration names, workflow terms
+- Keywords should be useful for searching and grouping similar requests
 
 Respond with ONLY a JSON object, nothing else."""
 
@@ -137,14 +166,27 @@ Problem: {problem_statement}
 AVAILABLE THEMES:
 {themes_list}
 
+THEME MATCHING RULES - BE STRICT:
+1. The feature must DIRECTLY relate to the theme's core purpose
+2. Do NOT match based on tangential keyword overlap
+3. Consider what PRODUCT AREA the feature belongs to, not surface-level word matches
+4. If the feature is about "AI" but the request is for analytics, use Analytics theme not AI theme
+5. Match based on the PRIMARY functionality being requested
+
+EXAMPLES OF CORRECT MATCHING:
+- "Export data to CSV" -> Data/Reporting theme (NOT Integrations, even if it mentions "export")
+- "Connect to Salesforce" -> Integrations theme
+- "Show dashboard charts" -> Analytics/Dashboard theme
+- "AI-powered suggestions" -> AI Features theme (only if asking for AI capability)
+
 Respond with this exact JSON structure:
 {{
   "suggested_theme": "Theme name from the list above",
   "confidence": 0.0 to 1.0,
-  "reasoning": "Why this theme is the best fit"
+  "reasoning": "Specific reason why this theme matches the feature's CORE functionality"
 }}
 
-If no theme fits well, use "Uncategorized"."""
+If no theme fits well (confidence < 0.6), use "Uncategorized"."""
 
 
 # =============================================================================
