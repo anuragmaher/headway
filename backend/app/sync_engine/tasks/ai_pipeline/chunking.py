@@ -2,12 +2,15 @@
 Semantic Chunking Task - State-Driven Execution
 
 Splits large NormalizedEvents into semantic chunks for efficient AI processing.
-Runs AFTER signal scoring, only on events that passed the signal threshold.
+Runs AFTER signal scoring, processes ALL scored events (no pre-filtering).
 
 State-Driven Model:
-- Queries rows where: processing_stage='scored' AND chunked_at IS NULL AND skip_ai_processing=False AND lock_token IS NULL
+- Queries rows where: processing_stage='scored' AND chunked_at IS NULL AND lock_token IS NULL
 - Uses row-level locking to prevent duplicate processing
 - Sets chunked_at timestamp on completion for idempotent execution
+
+NOTE: All events proceed to Tier-1 classification. The ONLY filter that prevents
+      messages from reaching Tier-2 extraction is the Tier-1 score (0-10, >= 6 passes).
 """
 
 import logging
@@ -59,10 +62,13 @@ def chunk_normalized_events(
     Split scored normalized events into semantic chunks.
 
     State-Driven Execution:
-    - Finds rows: processing_stage='scored' AND chunked_at IS NULL AND skip_ai_processing=False
+    - Finds rows: processing_stage='scored' AND chunked_at IS NULL
     - Acquires row-level locks to prevent race conditions
     - Creates EventChunk records for large texts
     - Sets chunked_at timestamp on completion (idempotent marker)
+
+    NOTE: All events proceed to Tier-1. Only the Tier-1 score >= 6 determines
+          whether content reaches Tier-2 extraction.
 
     Args:
         workspace_id: Optional workspace to limit processing
@@ -87,13 +93,13 @@ def chunk_normalized_events(
             # Build state-driven filter conditions:
             # 1. processing_stage = 'scored' (eligible for chunking)
             # 2. chunked_at IS NULL (not yet chunked - idempotent check)
-            # 3. skip_ai_processing = False (passed signal threshold)
-            # 4. lock_token IS NULL (not locked - added by acquire_rows)
-            # 5. retry_count < MAX_RETRIES (not exhausted retries)
+            # 3. lock_token IS NULL (not locked - added by acquire_rows)
+            # 4. retry_count < MAX_RETRIES (not exhausted retries)
+            # NOTE: Removed skip_ai_processing filter - all events go to Tier-1
+            #       The only filter should be the Tier-1 score (0-10, >= 6 passes)
             filter_conditions = [
                 NormalizedEvent.processing_stage == "scored",
                 NormalizedEvent.chunked_at.is_(None),
-                NormalizedEvent.skip_ai_processing == False,
                 NormalizedEvent.retry_count < MAX_RETRIES,
             ]
 

@@ -1,8 +1,18 @@
 """
 AI Insights Worker Tasks
 
-Dedicated Celery tasks for AI insights processing.
-Queue: ai_insights (low priority, rate-limited)
+Celery tasks for AI insights processing (runs on default queue).
+
+IMPORTANT: AI insights are ONLY processed for messages that have passed Tier-2 extraction.
+This means a message must be linked to at least one feature via the feature_messages table.
+There is NO other way for a message to be eligible for AI insights.
+
+Flow:
+1. Message goes through Tier-1 classification (score 0-10)
+2. If score >= 6, message goes to Tier-2 extraction
+3. Tier-2 links message to a feature (new or existing)
+4. After linking, message is automatically queued for AI insights
+5. AI insights are extracted (themes, summary, pain_point, customer_usecase, etc.)
 
 Features:
 - Process one message at a time
@@ -17,7 +27,6 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Optional, List, Dict, Any
 
-from celery import shared_task
 from sqlalchemy import and_, or_, func
 from sqlalchemy.orm import Session
 
@@ -26,10 +35,9 @@ from app.sync_engine.tasks.base import (
     task_db_session,
     cleanup_after_task,
 )
-from app.models.message import Message
+from app.models.message import Message, feature_messages
 from app.models.theme import Theme
 from app.models.feature import Feature
-from app.models.normalized_event import NormalizedEvent
 from app.models.ai_message_insight import (
     AIMessageInsight,
     AIInsightsProgress,
@@ -40,12 +48,11 @@ from app.services.ai_insights_service import get_ai_insights_service
 logger = logging.getLogger(__name__)
 
 # Constants
-AI_INSIGHTS_QUEUE = "ai_insights"
 DEFAULT_MODEL_VERSION = "v1.0.0"
 MAX_RETRY_COUNT = 3
 LOCK_TIMEOUT_MINUTES = 30
-MIN_SIGNAL_SCORE = 0.3
 PROGRESS_WINDOW_DAYS = 7
+# NOTE: MIN_SIGNAL_SCORE removed - AI insights only runs on Tier-2 passed messages
 
 
 def get_or_create_config(db: Session) -> AIInsightsConfig:
@@ -186,6 +193,10 @@ def is_message_eligible(
     """
     Check if a message is eligible for AI insights processing.
 
+    ONLY messages that have passed Tier-2 extraction (linked to a feature via
+    feature_messages table) are eligible for AI insights. This is the ONLY
+    eligibility criteria - no other metrics are used.
+
     Args:
         db: Database session
         message: Message to check
@@ -198,25 +209,23 @@ def is_message_eligible(
     if not message.content or len(message.content.strip()) < 10:
         return False, "Content too short"
 
-    # Check if normalized event exists with signal score
-    normalized = db.query(NormalizedEvent).filter(
-        and_(
-            NormalizedEvent.source_table == "messages",
-            NormalizedEvent.source_record_id == message.id,
-        )
+    # ONLY messages that passed Tier-2 (have feature links) are eligible
+    # This is the ONLY criteria - a message must be linked to at least one feature
+    feature_link = db.execute(
+        feature_messages.select().where(
+            feature_messages.c.message_id == message.id
+        ).limit(1)
     ).first()
 
-    if normalized and normalized.signal_score is not None:
-        if normalized.signal_score < config.min_signal_score:
-            return False, f"Signal score {normalized.signal_score} below threshold {config.min_signal_score}"
+    if not feature_link:
+        return False, "Not passed Tier-2 (no feature linked)"
 
-    return True, "Eligible"
+    return True, "Eligible (passed Tier-2)"
 
 
 @celery_app.task(
     name="app.sync_engine.tasks.ai_insights.process_single_message",
     bind=True,
-    queue=AI_INSIGHTS_QUEUE,
     max_retries=MAX_RETRY_COUNT,
     default_retry_delay=60,
     soft_time_limit=120,
@@ -318,11 +327,31 @@ def process_single_message_insights(
             if not message:
                 insight.status = "failed"
                 insight.error_message = "Message not found"
+                insight.lock_token = None
+                insight.locked_at = None
                 db.commit()
                 return {
                     "status": "error",
                     "message_id": message_id,
                     "error": "Message not found",
+                }
+
+            # CRITICAL: Check if message passed Tier-2 (linked to a feature)
+            # AI insights should ONLY run on messages that passed Tier-2 extraction
+            config = get_or_create_config(db)
+            eligible, reason = is_message_eligible(db, message, config)
+            if not eligible:
+                logger.info(f"Message {message_id} not eligible for AI insights: {reason}")
+                # Mark as skipped, not failed
+                insight.status = "failed"
+                insight.error_message = f"Not eligible: {reason}"
+                insight.lock_token = None
+                insight.locked_at = None
+                db.commit()
+                return {
+                    "status": "not_eligible",
+                    "message_id": message_id,
+                    "reason": reason,
                 }
 
             # Get available themes
@@ -363,6 +392,7 @@ def process_single_message_insights(
                 insight.summary = result.summary
                 insight.pain_point = result.pain_point
                 insight.feature_request = result.feature_request
+                insight.customer_usecase = result.customer_usecase
                 insight.explanation = result.explanation
                 insight.sentiment = result.sentiment
                 insight.urgency = result.urgency
@@ -424,7 +454,6 @@ def process_single_message_insights(
 
 @celery_app.task(
     name="app.sync_engine.tasks.ai_insights.queue_message",
-    queue=AI_INSIGHTS_QUEUE,
 )
 def queue_message_for_insights(
     message_id: str,
@@ -496,7 +525,6 @@ def queue_message_for_insights(
             # Dispatch processing task
             process_single_message_insights.apply_async(
                 args=[message_id, workspace_id, model_version],
-                queue=AI_INSIGHTS_QUEUE,
                 priority=priority,
             )
 
@@ -517,16 +545,15 @@ def queue_message_for_insights(
 
 @celery_app.task(
     name="app.sync_engine.tasks.ai_insights.process_fresh_messages",
-    queue=AI_INSIGHTS_QUEUE,
     soft_time_limit=300,
     time_limit=360,
 )
 def process_fresh_messages(hours_back: int = 1, batch_size: int = 20) -> Dict[str, Any]:
     """
-    Process AI insights for fresh messages.
+    Process AI insights for fresh messages that passed Tier-2.
 
-    Mode A: Trigger AI insights shortly after normalization.
-    Finds recently created messages without AI insights and queues them.
+    ONLY processes messages that have been linked to features via Tier-2 extraction.
+    This is the ONLY criteria for AI insights eligibility.
 
     Args:
         hours_back: How far back to look for messages
@@ -535,7 +562,7 @@ def process_fresh_messages(hours_back: int = 1, batch_size: int = 20) -> Dict[st
     Returns:
         Dict with processing stats
     """
-    logger.info(f"🔍 Looking for fresh messages (last {hours_back}h)")
+    logger.info(f"🔍 Looking for fresh Tier-2 passed messages (last {hours_back}h)")
 
     try:
         with task_db_session() as db:
@@ -547,41 +574,45 @@ def process_fresh_messages(hours_back: int = 1, batch_size: int = 20) -> Dict[st
 
             cutoff = datetime.now(timezone.utc) - timedelta(hours=hours_back)
 
-            # Find messages without AI insights
             # Subquery to find messages that already have insights
             insights_subq = db.query(AIMessageInsight.message_id).filter(
                 AIMessageInsight.model_version == config.current_model_version
             ).subquery()
 
-            # Get eligible messages
+            # Subquery to get message IDs that have feature links (passed Tier-2)
+            tier2_passed_subq = db.query(feature_messages.c.message_id).distinct().subquery()
+
+            # Get messages that:
+            # 1. Were created within the time window
+            # 2. Don't already have AI insights
+            # 3. Have passed Tier-2 (have feature links)
             messages = db.query(Message).filter(
                 and_(
                     Message.created_at >= cutoff,
                     Message.id.notin_(db.query(insights_subq)),
+                    Message.id.in_(db.query(tier2_passed_subq)),
                 )
             ).order_by(Message.created_at.desc()).limit(batch_size).all()
 
             if not messages:
-                logger.info("No fresh messages to process")
+                logger.info("No fresh Tier-2 passed messages to process")
                 return {"status": "ok", "processed": 0}
 
             queued_count = 0
             for message in messages:
-                # Check eligibility
-                eligible, reason = is_message_eligible(db, message, config)
-                if not eligible:
-                    logger.debug(f"Message {message.id} not eligible: {reason}")
+                # Basic content check
+                if not message.content or len(message.content.strip()) < 10:
+                    logger.debug(f"Message {message.id} content too short")
                     continue
 
                 # Queue for processing
                 queue_message_for_insights.apply_async(
                     args=[str(message.id), str(message.workspace_id), config.current_model_version],
-                    queue=AI_INSIGHTS_QUEUE,
                     priority=3,  # Higher priority for fresh messages
                 )
                 queued_count += 1
 
-            logger.info(f"✓ Queued {queued_count} fresh messages for AI insights")
+            logger.info(f"✓ Queued {queued_count} fresh Tier-2 passed messages for AI insights")
             return {
                 "status": "ok",
                 "processed": queued_count,
@@ -599,16 +630,15 @@ def process_fresh_messages(hours_back: int = 1, batch_size: int = 20) -> Dict[st
 
 @celery_app.task(
     name="app.sync_engine.tasks.ai_insights.backfill_insights",
-    queue=AI_INSIGHTS_QUEUE,
     soft_time_limit=600,
     time_limit=720,
 )
 def backfill_insights(batch_size: int = 10) -> Dict[str, Any]:
     """
-    Backfill AI insights for older messages.
+    Backfill AI insights for older messages that passed Tier-2.
 
-    Mode B: When queue is idle, process older messages without AI insights.
-    Small batches, oldest or highest-signal first.
+    ONLY processes messages that have been linked to features via Tier-2 extraction.
+    This is the ONLY criteria for AI insights eligibility.
 
     Args:
         batch_size: Maximum messages to process per run
@@ -616,7 +646,7 @@ def backfill_insights(batch_size: int = 10) -> Dict[str, Any]:
     Returns:
         Dict with processing stats
     """
-    logger.info(f"📚 Running AI insights backfill (batch_size={batch_size})")
+    logger.info(f"📚 Running AI insights backfill for Tier-2 passed messages (batch_size={batch_size})")
 
     try:
         with task_db_session() as db:
@@ -643,48 +673,44 @@ def backfill_insights(batch_size: int = 10) -> Dict[str, Any]:
                 AIMessageInsight.model_version == config.current_model_version
             ).subquery()
 
-            # Find oldest messages without insights, prioritize by signal score
-            # Join with normalized_events to get signal score
-            messages_query = db.query(Message).outerjoin(
-                NormalizedEvent,
-                and_(
-                    NormalizedEvent.source_table == "messages",
-                    NormalizedEvent.source_record_id == Message.id,
-                )
-            ).filter(
+            # Subquery to get message IDs that have feature links (passed Tier-2)
+            tier2_passed_subq = db.query(feature_messages.c.message_id).distinct().subquery()
+
+            # Find oldest messages that:
+            # 1. Don't have insights
+            # 2. Have passed Tier-2 (have feature links)
+            # 3. Are within the age cutoff
+            messages_query = db.query(Message).filter(
                 and_(
                     Message.created_at >= max_age_cutoff,
                     Message.id.notin_(db.query(insights_subq)),
+                    Message.id.in_(db.query(tier2_passed_subq)),
                 )
             ).order_by(
-                # Prioritize higher signal scores, then older messages
-                NormalizedEvent.signal_score.desc().nulls_last(),
-                Message.created_at.asc(),
+                Message.created_at.asc(),  # Oldest first
             ).limit(config.backfill_batch_size)
 
             messages = messages_query.all()
 
             if not messages:
-                logger.info("No messages to backfill")
+                logger.info("No Tier-2 passed messages to backfill")
                 return {"status": "ok", "processed": 0}
 
             queued_count = 0
             for message in messages:
-                # Check eligibility
-                eligible, reason = is_message_eligible(db, message, config)
-                if not eligible:
-                    logger.debug(f"Message {message.id} not eligible: {reason}")
+                # Basic content check
+                if not message.content or len(message.content.strip()) < 10:
+                    logger.debug(f"Message {message.id} content too short")
                     continue
 
                 # Queue for processing with lower priority
                 queue_message_for_insights.apply_async(
                     args=[str(message.id), str(message.workspace_id), config.current_model_version],
-                    queue=AI_INSIGHTS_QUEUE,
                     priority=7,  # Lower priority for backfill
                 )
                 queued_count += 1
 
-            logger.info(f"✓ Queued {queued_count} messages for backfill")
+            logger.info(f"✓ Queued {queued_count} Tier-2 passed messages for backfill")
             return {
                 "status": "ok",
                 "processed": queued_count,
@@ -702,7 +728,6 @@ def backfill_insights(batch_size: int = 10) -> Dict[str, Any]:
 
 @celery_app.task(
     name="app.sync_engine.tasks.ai_insights.update_progress",
-    queue=AI_INSIGHTS_QUEUE,
     soft_time_limit=60,
     time_limit=120,
 )
@@ -796,7 +821,6 @@ def update_progress_stats() -> Dict[str, Any]:
 
 @celery_app.task(
     name="app.sync_engine.tasks.ai_insights.cleanup_stale",
-    queue=AI_INSIGHTS_QUEUE,
     soft_time_limit=60,
     time_limit=120,
 )
@@ -837,7 +861,6 @@ def cleanup_stale_insights() -> Dict[str, Any]:
                     # Re-queue for processing
                     queue_message_for_insights.apply_async(
                         args=[str(insight.message_id), str(insight.workspace_id), insight.model_version],
-                        queue=AI_INSIGHTS_QUEUE,
                         priority=5,
                     )
                 else:

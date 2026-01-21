@@ -37,8 +37,9 @@ logger = logging.getLogger(__name__)
 # Batch size for classification
 CLASSIFICATION_BATCH_SIZE = 20
 
-# Minimum confidence to proceed to extraction
-MIN_CLASSIFICATION_CONFIDENCE = 0.6
+# Minimum score to proceed to extraction (0-10 scale)
+# Score >= 6 means likely contains feature request/feedback
+MIN_CLASSIFICATION_SCORE = 6.0
 
 # Max retries before giving up on a row
 MAX_RETRIES = 3
@@ -58,7 +59,7 @@ def classify_events(
     self,
     workspace_id: Optional[str] = None,
     batch_size: int = CLASSIFICATION_BATCH_SIZE,
-    min_confidence: float = MIN_CLASSIFICATION_CONFIDENCE,
+    min_score: float = MIN_CLASSIFICATION_SCORE,
 ) -> Dict[str, Any]:
     """
     Classify chunked events using Tier-1 AI.
@@ -69,10 +70,15 @@ def classify_events(
     - Acquires row-level locks to prevent race conditions
     - Sets classified_at timestamp on completion (idempotent marker)
 
+    Scoring:
+    - Uses single score metric (0-10)
+    - Score >= 6 proceeds to extraction
+    - Score < 6 is skipped
+
     Args:
         workspace_id: Optional workspace to limit processing
         batch_size: Number of records to process per batch
-        min_confidence: Minimum confidence to proceed to extraction
+        min_score: Minimum score (0-10) to proceed to extraction (default: 6)
 
     Returns:
         Dict with processing stats
@@ -97,7 +103,7 @@ def classify_events(
 
             # Process non-chunked events first
             non_chunked_stats = _classify_non_chunked_events(
-                db, ai_service, workspace_id, batch_size // 2, min_confidence, lock_token
+                db, ai_service, workspace_id, batch_size // 2, min_score, lock_token
             )
             total_classified += non_chunked_stats["classified"]
             total_relevant += non_chunked_stats["relevant"]
@@ -106,7 +112,7 @@ def classify_events(
 
             # Process chunks
             chunk_stats = _classify_chunks(
-                db, ai_service, workspace_id, batch_size // 2, min_confidence, lock_token
+                db, ai_service, workspace_id, batch_size // 2, min_score, lock_token
             )
             total_classified += chunk_stats["classified"]
             total_relevant += chunk_stats["relevant"]
@@ -159,7 +165,7 @@ def _classify_non_chunked_events(
     ai_service,
     workspace_id: Optional[str],
     batch_size: int,
-    min_confidence: float,
+    min_score: float,
     lock_token,
 ) -> Dict[str, int]:
     """
@@ -169,17 +175,20 @@ def _classify_non_chunked_events(
     - processing_stage='chunked' (ready for classification)
     - classified_at IS NULL (not yet classified - idempotent)
     - is_chunked=False (doesn't have chunks)
-    - skip_ai_processing=False (passed signal scoring)
+
+    Scoring:
+    - Score >= min_score (default 6) proceeds to extraction
+    - Score < min_score is skipped
     """
     import uuid as uuid_module
     stats = {"classified": 0, "relevant": 0, "skipped": 0, "errors": 0}
 
     # Build state-driven filter conditions
+    # Removed skip_ai_processing filter - only use score-based filtering
     filter_conditions = [
         NormalizedEvent.processing_stage == "chunked",
         NormalizedEvent.classified_at.is_(None),
         NormalizedEvent.is_chunked == False,
-        NormalizedEvent.skip_ai_processing == False,
         NormalizedEvent.retry_count < MAX_RETRIES,
     ]
 
@@ -206,21 +215,21 @@ def _classify_non_chunked_events(
 
     for event in events:
         try:
-            # Call Tier-1 AI classification
+            # Call Tier-1 AI scoring
             result = ai_service.tier1_classify(
                 text=event.clean_text,
                 source_type=event.source_type,
                 actor_role=event.actor_role,
             )
 
-            # Update event with classification results
-            event.is_feature_relevant = result.is_feature_relevant
-            event.classification_confidence = result.confidence
+            # Update event with score results
+            # Store score in classification_confidence field (normalized to 0-1)
+            event.classification_confidence = result.confidence  # score/10
             event.classification_timestamp = datetime.now(timezone.utc)
 
-            # Determine next stage
-            if result.is_feature_relevant and result.confidence >= min_confidence:
-                # Mark as classified with state-driven timestamp
+            # Single decision: score >= min_score proceeds to extraction
+            if result.score >= min_score:
+                event.is_feature_relevant = True
                 mark_row_processed(
                     row=event,
                     stage="classified",
@@ -229,8 +238,7 @@ def _classify_non_chunked_events(
                 )
                 stats["relevant"] += 1
             else:
-                # Skip extraction for non-relevant or low-confidence
-                event.skip_ai_processing = True
+                event.is_feature_relevant = False
                 mark_row_processed(
                     row=event,
                     stage="completed",
@@ -259,7 +267,7 @@ def _classify_chunks(
     ai_service,
     workspace_id: Optional[str],
     batch_size: int,
-    min_confidence: float,
+    min_score: float,
     lock_token,
 ) -> Dict[str, int]:
     """
@@ -268,16 +276,19 @@ def _classify_chunks(
     State-Driven filter:
     - processing_stage='pending' (ready for classification)
     - classified_at IS NULL (not yet classified - idempotent)
-    - skip_extraction=False (not marked to skip)
+
+    Scoring:
+    - Score >= min_score (default 6) proceeds to extraction
+    - Score < min_score is skipped
     """
     import uuid as uuid_module
     stats = {"classified": 0, "relevant": 0, "skipped": 0, "errors": 0}
 
     # Build state-driven filter conditions
+    # Removed skip_extraction filter - only use score-based filtering
     filter_conditions = [
         EventChunk.processing_stage == "pending",
         EventChunk.classified_at.is_(None),
-        EventChunk.skip_extraction == False,
         EventChunk.retry_count < MAX_RETRIES,
     ]
 
@@ -307,20 +318,20 @@ def _classify_chunks(
             # Get parent event for context
             parent_event = chunk.normalized_event
 
-            # Call Tier-1 AI classification
+            # Call Tier-1 AI scoring
             result = ai_service.tier1_classify(
                 text=chunk.chunk_text,
                 source_type=parent_event.source_type if parent_event else "unknown",
                 actor_role=parent_event.actor_role if parent_event else None,
             )
 
-            # Update chunk with classification results
-            chunk.is_feature_relevant = result.is_feature_relevant
-            chunk.classification_confidence = result.confidence
+            # Update chunk with score results
+            chunk.classification_confidence = result.confidence  # score/10
             chunk.classification_timestamp = datetime.now(timezone.utc)
 
-            # Determine next stage
-            if result.is_feature_relevant and result.confidence >= min_confidence:
+            # Single decision: score >= min_score proceeds to extraction
+            if result.score >= min_score:
+                chunk.is_feature_relevant = True
                 mark_row_processed(
                     row=chunk,
                     stage="classified",
@@ -329,8 +340,7 @@ def _classify_chunks(
                 )
                 stats["relevant"] += 1
             else:
-                # Skip extraction for non-relevant or low-confidence
-                chunk.skip_extraction = True
+                chunk.is_feature_relevant = False
                 mark_row_processed(
                     row=chunk,
                     stage="completed",

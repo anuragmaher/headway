@@ -193,6 +193,7 @@ from app.api.v1.workspaces import router as workspaces_router
 from app.api.v1.endpoints.customers import router as customers_router
 from app.api.v1.gmail import router as gmail
 from app.api.v1.sources import router as sources_router
+from app.api.v1.onboarding import router as onboarding_router
 
 app.include_router(auth_router, prefix="/api/v1/auth", tags=["authentication"])
 app.include_router(slack_router, prefix="/api/v1/slack", tags=["slack"])
@@ -204,6 +205,7 @@ app.include_router(workspaces_router, prefix="/api/v1/workspaces", tags=["worksp
 app.include_router(customers_router, prefix="/api/v1/customers", tags=["customers"])
 app.include_router(gmail, prefix="/api/v1", tags=["gmail"])
 app.include_router(sources_router, prefix="/api/v1/sources", tags=["sources"])
+app.include_router(onboarding_router, prefix="/api/v1", tags=["onboarding"])
 
 if __name__ == "__main__":
     import uvicorn

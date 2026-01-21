@@ -36,7 +36,7 @@ from app.core.config import settings
 logger = logging.getLogger(__name__)
 
 # Prompt version for tracking - bump when prompts change
-AI_INSIGHTS_PROMPT_VERSION = "v1.1.0"
+AI_INSIGHTS_PROMPT_VERSION = "v1.2.0"  # Added customer_usecase and improved pain_point extraction
 
 
 @dataclass
@@ -44,8 +44,9 @@ class AIInsightsResult:
     """Result from AI insights generation."""
     themes: List[Dict[str, Any]] = field(default_factory=list)  # [{theme_id, theme_name, confidence, explanation}]
     summary: Optional[str] = None
-    pain_point: Optional[str] = None
+    pain_point: Optional[str] = None  # Customer's exact words describing their problem
     feature_request: Optional[str] = None
+    customer_usecase: Optional[str] = None  # What the customer is trying to accomplish
     explanation: Optional[str] = None
     sentiment: Optional[str] = None  # positive, negative, neutral
     urgency: Optional[str] = None  # low, medium, high, critical
@@ -81,6 +82,21 @@ THEME MATCHING CRITERIA - BE STRICT:
 - If someone discusses a general topic (like "AI" or "integrations") WITHOUT requesting/suggesting anything specific about YOUR PRODUCT's capabilities in that area, do NOT classify under that theme
 - Example: A call transcript discussing "AI in the industry" is NOT about "AI Features" theme unless they specifically request AI features for YOUR product
 
+PAIN POINT EXTRACTION RULES - INCLUDE EXACT QUOTES:
+- Extract the EXACT words and phrases the customer used to describe their problem
+- Use quotation marks around the customer's actual language
+- Include the specific frustration, difficulty, or challenge they mentioned
+- Format: "Customer said: '[exact quote]'" followed by brief context if needed
+- If multiple pain points exist, combine them with the most important quotes
+- Example: "Customer said: 'I spend hours every week manually exporting data' - frustrated with lack of automation"
+
+CUSTOMER USE CASE EXTRACTION RULES:
+- Identify what the customer is trying to ACCOMPLISH or ACHIEVE
+- Focus on their business goal, workflow, or task they're working on
+- Be specific about the context and scenario
+- Examples: "Generating weekly sales reports for management", "Onboarding new team members", "Tracking customer support tickets across channels"
+- If no clear use case is mentioned, return null
+
 KEYWORD EXTRACTION RULES:
 - Extract 3-8 specific, relevant keywords that capture the message's core topics
 - Focus on PRODUCT-RELATED terms: features, capabilities, pain points, use cases
@@ -100,8 +116,9 @@ Output STRICT JSON with this exact structure:
         }
     ],
     "summary": "1-2 sentence summary focusing on the customer's main request or feedback point",
-    "pain_point": "The specific problem the user is experiencing (null if none explicitly stated)",
+    "pain_point": "Customer said: '[exact quote from message]' - brief context. Use their EXACT words. Null if no pain point.",
     "feature_request": "The specific feature or capability being requested (null if none)",
+    "customer_usecase": "What the customer is trying to accomplish (e.g., 'Generating monthly compliance reports'). Null if not clear.",
     "explanation": "Brief explanation of the overall analysis and classification reasoning",
     "sentiment": "positive|negative|neutral",
     "urgency": "low|medium|high|critical",
@@ -288,6 +305,7 @@ class AIInsightsService:
                 summary=result.get("summary"),
                 pain_point=result.get("pain_point"),
                 feature_request=result.get("feature_request"),
+                customer_usecase=result.get("customer_usecase"),
                 explanation=result.get("explanation"),
                 sentiment=result.get("sentiment"),
                 urgency=result.get("urgency"),

@@ -10,6 +10,9 @@ export const ROUTES = {
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',
 
+  // Onboarding route (requires auth, but not completed onboarding)
+  ONBOARDING: '/onboarding',
+
   // Protected routes
   DASHBOARD: '/dashboard',
 

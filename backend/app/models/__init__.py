@@ -23,6 +23,7 @@ from app.models.sync_history import SyncHistory
 from app.models.normalized_event import NormalizedEvent, EventChunk
 from app.models.extracted_fact import ExtractedFact, AggregationRun
 from app.models.ai_message_insight import AIMessageInsight, AIInsightsProgress, AIInsightsConfig
+from app.models.onboarding_progress import OnboardingProgress
 
 __all__ = [
     "User",
@@ -52,4 +53,5 @@ __all__ = [
     "AIMessageInsight",
     "AIInsightsProgress",
     "AIInsightsConfig",
+    "OnboardingProgress",
 ]

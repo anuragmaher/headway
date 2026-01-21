@@ -44,19 +44,28 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class Tier1Result:
-    """Result from Tier-1 classification."""
-    is_feature_relevant: bool
-    confidence: float
+    """Result from Tier-1 scoring (0-10 scale)."""
+    score: float  # 0-10 score, proceed to extraction if >= 6
     reasoning: str
     tokens_used: int = 0
     model: str = ""
     prompt_version: str = ""
     latency_ms: float = 0.0
 
+    @property
+    def is_feature_relevant(self) -> bool:
+        """For backwards compatibility - returns True if score >= 6."""
+        return self.score >= 6.0
+
+    @property
+    def confidence(self) -> float:
+        """For backwards compatibility - converts score to 0-1 range."""
+        return self.score / 10.0
+
 
 @dataclass
 class Tier2Result:
-    """Result from Tier-2 extraction."""
+    """Result from Tier-2 extraction with theme assignment and feature matching."""
     feature_title: str
     feature_description: Optional[str] = None
     problem_statement: Optional[str] = None
@@ -68,6 +77,15 @@ class Tier2Result:
     sentiment: Optional[str] = None
     keywords: Optional[List[str]] = None
     confidence: float = 0.0
+    # Theme assignment
+    theme_name: Optional[str] = None
+    theme_confidence: float = 0.0
+    # Feature matching
+    matched_feature_id: Optional[str] = None
+    matched_feature_name: Optional[str] = None
+    match_confidence: float = 0.0
+    is_new_feature: bool = True  # True if no existing feature matched
+    # Metadata
     tokens_used: int = 0
     model: str = ""
     prompt_version: str = ""
@@ -218,9 +236,13 @@ class TieredAIService:
             latency_ms = (time.time() - start_time) * 1000
             result = json.loads(response.choices[0].message.content)
 
+            # Parse score (0-10) from new prompt format
+            score = float(result.get("score", 0))
+            # Clamp score to 0-10 range
+            score = max(0.0, min(10.0, score))
+
             return Tier1Result(
-                is_feature_relevant=result.get("is_feature_request", False),
-                confidence=float(result.get("confidence", 0.0)),
+                score=score,
                 reasoning=result.get("reasoning", "No reasoning provided"),
                 tokens_used=response.usage.total_tokens,
                 model=self.DEFAULT_MODEL,
@@ -231,8 +253,7 @@ class TieredAIService:
         except json.JSONDecodeError as e:
             logger.error(f"Tier-1 JSON decode error: {e}")
             return Tier1Result(
-                is_feature_relevant=False,
-                confidence=0.0,
+                score=0.0,
                 reasoning=f"JSON decode error: {str(e)}",
                 tokens_used=0,
                 model=self.DEFAULT_MODEL,
@@ -243,8 +264,7 @@ class TieredAIService:
         except Exception as e:
             logger.error(f"Tier-1 classification error: {e}")
             return Tier1Result(
-                is_feature_relevant=True,  # Default to processing on error
-                confidence=0.5,
+                score=6.0,  # Default to processing on error (threshold score)
                 reasoning=f"Error during classification: {str(e)}",
                 tokens_used=0,
                 model=self.DEFAULT_MODEL,
@@ -287,9 +307,12 @@ class TieredAIService:
                 latency_ms = (time.time() - start_time) * 1000
                 result = json.loads(response.choices[0].message.content)
 
+                # Parse score (0-10) from new prompt format
+                score = float(result.get("score", 0))
+                score = max(0.0, min(10.0, score))
+
                 return Tier1Result(
-                    is_feature_relevant=result.get("is_feature_request", False),
-                    confidence=float(result.get("confidence", 0.0)),
+                    score=score,
                     reasoning=result.get("reasoning", "No reasoning provided"),
                     tokens_used=response.usage.total_tokens,
                     model=self.DEFAULT_MODEL,
@@ -300,8 +323,7 @@ class TieredAIService:
             except Exception as e:
                 logger.error(f"Tier-1 async classification error: {e}")
                 return Tier1Result(
-                    is_feature_relevant=True,
-                    confidence=0.5,
+                    score=6.0,  # Default to processing on error
                     reasoning=f"Error: {str(e)}",
                     tokens_used=0,
                     model=self.DEFAULT_MODEL,
@@ -373,12 +395,14 @@ class TieredAIService:
         actor_name: Optional[str] = None,
         actor_role: Optional[str] = None,
         title: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        themes: Optional[List[Dict[str, Any]]] = None,
+        existing_features: Optional[List[Dict[str, Any]]] = None,
     ) -> Tier2Result:
         """
-        Tier-2 Extraction: Extract structured feature request data.
+        Tier-2 Extraction: Extract feature, assign theme, and match with existing features.
 
         Only called for content that passed Tier-1 classification.
+        Now includes theme assignment and feature matching in a single call.
         """
         start_time = time.time()
 
@@ -389,7 +413,8 @@ class TieredAIService:
                 actor_name=actor_name or "Unknown",
                 actor_role=actor_role or "unknown",
                 title=title,
-                metadata=metadata,
+                themes=themes,
+                existing_features=existing_features,
             )
 
             response = self.client.chat.completions.create(
@@ -400,16 +425,37 @@ class TieredAIService:
                 ],
                 temperature=0.2,
                 response_format={"type": "json_object"},
-                max_tokens=1500
+                max_tokens=2000
             )
 
             latency_ms = (time.time() - start_time) * 1000
             result = json.loads(response.choices[0].message.content)
 
-            feature = result.get("feature_request", {})
+            # Parse feature request
+            feature = result.get("feature_request") or {}
             if not feature:
-                features = result.get("feature_requests", [])
-                feature = features[0] if features else {}
+                # No valid feature found
+                return Tier2Result(
+                    feature_title="No Feature Found",
+                    confidence=0.0,
+                    is_new_feature=False,
+                    tokens_used=response.usage.total_tokens,
+                    model=self.DEFAULT_MODEL,
+                    prompt_version=TIER2_PROMPT_VERSION,
+                    latency_ms=latency_ms
+                )
+
+            # Parse theme assignment
+            theme_assignment = result.get("theme_assignment") or {}
+            theme_name = theme_assignment.get("theme_name")
+            theme_confidence = float(theme_assignment.get("confidence", 0.0))
+
+            # Parse feature match
+            feature_match = result.get("feature_match") or {}
+            matched = feature_match.get("matched", False)
+            matched_feature_id = feature_match.get("existing_feature_id") if matched else None
+            matched_feature_name = feature_match.get("existing_feature_name") if matched else None
+            match_confidence = float(feature_match.get("match_confidence", 0.0))
 
             return Tier2Result(
                 feature_title=feature.get("title", feature.get("feature_title", "Untitled Feature")),
@@ -422,7 +468,16 @@ class TieredAIService:
                 urgency_hint=feature.get("urgency", feature.get("urgency_hint")),
                 sentiment=feature.get("sentiment"),
                 keywords=feature.get("keywords", []),
-                confidence=float(result.get("confidence", feature.get("confidence", 0.7))),
+                confidence=float(result.get("confidence", 0.7)),
+                # Theme assignment
+                theme_name=theme_name,
+                theme_confidence=theme_confidence,
+                # Feature matching
+                matched_feature_id=matched_feature_id,
+                matched_feature_name=matched_feature_name,
+                match_confidence=match_confidence,
+                is_new_feature=not matched,
+                # Metadata
                 tokens_used=response.usage.total_tokens,
                 model=self.DEFAULT_MODEL,
                 prompt_version=TIER2_PROMPT_VERSION,
@@ -434,6 +489,7 @@ class TieredAIService:
             return Tier2Result(
                 feature_title="Extraction Failed",
                 confidence=0.0,
+                is_new_feature=False,
                 tokens_used=0,
                 model=self.DEFAULT_MODEL,
                 prompt_version=TIER2_PROMPT_VERSION,
@@ -445,6 +501,7 @@ class TieredAIService:
             return Tier2Result(
                 feature_title="Extraction Error",
                 confidence=0.0,
+                is_new_feature=False,
                 tokens_used=0,
                 model=self.DEFAULT_MODEL,
                 prompt_version=TIER2_PROMPT_VERSION,
@@ -462,7 +519,8 @@ class TieredAIService:
         actor_name: Optional[str] = None,
         actor_role: Optional[str] = None,
         title: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        themes: Optional[List[Dict[str, Any]]] = None,
+        existing_features: Optional[List[Dict[str, Any]]] = None,
     ) -> Tier2Result:
         """Async version of tier2_extract for concurrent processing."""
         start_time = time.time()
@@ -475,7 +533,8 @@ class TieredAIService:
                     actor_name=actor_name or "Unknown",
                     actor_role=actor_role or "unknown",
                     title=title,
-                    metadata=metadata,
+                    themes=themes,
+                    existing_features=existing_features,
                 )
 
                 response = await self.async_client.chat.completions.create(
@@ -486,16 +545,36 @@ class TieredAIService:
                     ],
                     temperature=0.2,
                     response_format={"type": "json_object"},
-                    max_tokens=1500
+                    max_tokens=2000
                 )
 
                 latency_ms = (time.time() - start_time) * 1000
                 result = json.loads(response.choices[0].message.content)
 
-                feature = result.get("feature_request", {})
+                # Parse feature request
+                feature = result.get("feature_request") or {}
                 if not feature:
-                    features = result.get("feature_requests", [])
-                    feature = features[0] if features else {}
+                    return Tier2Result(
+                        feature_title="No Feature Found",
+                        confidence=0.0,
+                        is_new_feature=False,
+                        tokens_used=response.usage.total_tokens,
+                        model=self.DEFAULT_MODEL,
+                        prompt_version=TIER2_PROMPT_VERSION,
+                        latency_ms=latency_ms
+                    )
+
+                # Parse theme assignment
+                theme_assignment = result.get("theme_assignment") or {}
+                theme_name = theme_assignment.get("theme_name")
+                theme_confidence = float(theme_assignment.get("confidence", 0.0))
+
+                # Parse feature match
+                feature_match = result.get("feature_match") or {}
+                matched = feature_match.get("matched", False)
+                matched_feature_id = feature_match.get("existing_feature_id") if matched else None
+                matched_feature_name = feature_match.get("existing_feature_name") if matched else None
+                match_confidence = float(feature_match.get("match_confidence", 0.0))
 
                 return Tier2Result(
                     feature_title=feature.get("title", feature.get("feature_title", "Untitled Feature")),
@@ -508,7 +587,13 @@ class TieredAIService:
                     urgency_hint=feature.get("urgency", feature.get("urgency_hint")),
                     sentiment=feature.get("sentiment"),
                     keywords=feature.get("keywords", []),
-                    confidence=float(result.get("confidence", feature.get("confidence", 0.7))),
+                    confidence=float(result.get("confidence", 0.7)),
+                    theme_name=theme_name,
+                    theme_confidence=theme_confidence,
+                    matched_feature_id=matched_feature_id,
+                    matched_feature_name=matched_feature_name,
+                    match_confidence=match_confidence,
+                    is_new_feature=not matched,
                     tokens_used=response.usage.total_tokens,
                     model=self.DEFAULT_MODEL,
                     prompt_version=TIER2_PROMPT_VERSION,
@@ -520,6 +605,7 @@ class TieredAIService:
                 return Tier2Result(
                     feature_title="Extraction Error",
                     confidence=0.0,
+                    is_new_feature=False,
                     tokens_used=0,
                     model=self.DEFAULT_MODEL,
                     prompt_version=TIER2_PROMPT_VERSION,

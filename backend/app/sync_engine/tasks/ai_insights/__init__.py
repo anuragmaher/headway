@@ -1,14 +1,12 @@
 """
 AI Insights Celery Tasks
 
-Dedicated worker and queue for AI insights processing.
-Queue name: ai_insights
+Tasks for AI insights processing (runs on default celery queue).
 
 Features:
-- Low priority, rate-limited processing
-- Safe to pause/scale independently
-- Does not block ingestion or feature extraction
+- Rate-limited processing
 - Processes one message at a time
+- Idempotent with progress tracking
 """
 
 from app.sync_engine.tasks.ai_insights.worker import (

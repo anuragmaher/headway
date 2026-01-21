@@ -39,8 +39,9 @@ class AIMessageInsight(Base):
     # AI-generated insights
     themes = Column(JSONB, nullable=True)  # [{theme_id, theme_name, confidence, explanation}]
     summary = Column(Text, nullable=True)  # Short summary of message
-    pain_point = Column(Text, nullable=True)  # Extracted pain point (if any)
+    pain_point = Column(Text, nullable=True)  # Extracted pain point with exact customer quotes
     feature_request = Column(Text, nullable=True)  # Extracted feature request (if any)
+    customer_usecase = Column(Text, nullable=True)  # What the customer is trying to accomplish
     explanation = Column(Text, nullable=True)  # Why themes apply
 
     # Additional metadata from AI

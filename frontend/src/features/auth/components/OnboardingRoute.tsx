@@ -1,6 +1,7 @@
 /**
- * Protected route component that requires authentication
- * Redirects to onboarding if user hasn't completed it
+ * OnboardingRoute - Auth wrapper for onboarding page
+ * Requires authentication but only accessible if onboarding is NOT completed.
+ * Redirects to dashboard if user has already completed onboarding.
  */
 
 import { Navigate, useLocation } from 'react-router-dom';
@@ -8,13 +9,11 @@ import { useIsAuthenticated, useUser } from '../store/auth-store';
 import { ROUTES } from '@/lib/constants/routes';
 import { Loading } from '@/shared/components';
 
-interface ProtectedRouteProps {
+interface OnboardingRouteProps {
   children: React.ReactNode;
 }
 
-export function ProtectedRoute({
-  children
-}: ProtectedRouteProps): JSX.Element {
+export function OnboardingRoute({ children }: OnboardingRouteProps): JSX.Element {
   const isAuthenticated = useIsAuthenticated();
   const user = useUser();
   const location = useLocation();
@@ -35,11 +34,11 @@ export function ProtectedRoute({
     );
   }
 
-  // Redirect to onboarding if user hasn't completed it
-  if (user && !user.onboarding_completed) {
-    return <Navigate to={ROUTES.ONBOARDING} replace />;
+  // Redirect to dashboard if onboarding is already completed
+  if (user?.onboarding_completed) {
+    return <Navigate to={ROUTES.DASHBOARD} replace />;
   }
 
-  // Pages are responsible for their own layout (AdminLayout, etc.)
+  // Render onboarding page for authenticated users who haven't completed onboarding
   return <>{children}</>;
 }
