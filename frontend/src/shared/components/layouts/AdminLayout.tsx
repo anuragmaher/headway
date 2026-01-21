@@ -41,7 +41,7 @@ import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { PageTransition } from '@/shared/components/PageTransition';
 import { OnboardingWizard } from '@/shared/components/OnboardingWizard/OnboardingWizard';
 import { GmailLabelSelectionScreen } from '@/shared/components/OnboardingWizard/GmailLabelSelectionScreen';
-import { ConnectDataSourcesBanner } from '@/shared/components/ConnectDataSourcesBanner';
+import { OnboardingChecklist } from '@/shared/components/OnboardingChecklist';
 import { useAuthActions, useUser, useAuthStore } from '@/features/auth/store/auth-store';
 import { useOnboardingStore } from '@/shared/store/onboardingStore';
 import { useLayoutStore } from '@/shared/store/layoutStore';
@@ -258,12 +258,18 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
     handleProfileMenuClose();
   };
 
-  // Handle banner button click - open wizard at data sources step
-  const handleBannerConnectClick = () => {
-    // Set the continue step to 1 (data sources step)
-    localStorage.setItem('onboarding-continue-step', '1');
+  // Handle checklist step click - open wizard at the specified step
+  const handleChecklistStepClick = (stepIndex: number) => {
+    // Set the continue step to navigate to the clicked step
+    localStorage.setItem('onboarding-continue-step', stepIndex.toString());
     // Open the wizard
     setWizardOpenFromBanner(true);
+  };
+
+  // Handle checklist dismiss
+  const handleChecklistDismiss = () => {
+    // The checklist component handles its own sessionStorage state
+    // This callback is just for any additional cleanup if needed
   };
 
   // Clean up continue step when wizard closes
@@ -281,22 +287,11 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
     localStorage.removeItem('onboarding-continue-step');
   };
 
-  // Determine if banner should be shown
-  // Show when: user has no data sources connected (regardless of onboarding status)
-  const dataSources = getDataSources();
-  const hasDataSources = !isLoadingIntegrations && dataSources.length > 0;
-  
-  // Clear banner dismissed state when data sources are connected
-  // This ensures banner can show again if user later disconnects all sources
-  useEffect(() => {
-    if (hasDataSources) {
-      sessionStorage.removeItem('headway-datasource-banner-dismissed');
-    }
-  }, [hasDataSources]);
-  
-  const shouldShowBanner = 
+  // Determine if checklist should be shown
+  // Show when: onboarding is not complete (regardless of which steps are done)
+  const shouldShowChecklist =
     !isLoadingIntegrations &&
-    !hasDataSources &&
+    !isOnboardingComplete &&
     !showOnboardingDialog &&
     !wizardOpenFromBanner &&
     !hideWizardForLabels;
@@ -689,9 +684,12 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
           </PageTransition>
         </Box>
         
-        {/* Connect Data Sources Banner - Fixed position in right corner */}
-        {shouldShowBanner && (
-          <ConnectDataSourcesBanner onConnectClick={handleBannerConnectClick} />
+        {/* Onboarding Checklist - Fixed position in right corner */}
+        {shouldShowChecklist && (
+          <OnboardingChecklist
+            onStepClick={handleChecklistStepClick}
+            onDismiss={handleChecklistDismiss}
+          />
         )}
       </Box>
 

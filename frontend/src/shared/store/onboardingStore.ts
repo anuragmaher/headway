@@ -1,6 +1,6 @@
 /**
  * Zustand store for Onboarding state management
- * Checks if user has completed onboarding: company details, data sources, and themes
+ * Checks if user has completed onboarding: company details, data sources, themes, and competitors
  */
 
 import { create } from 'zustand';
@@ -10,10 +10,11 @@ import { slackService } from '@/services/slack';
 import { getGmailAccounts } from '@/services/gmail';
 import { API_BASE_URL } from '@/config/api.config';
 
-interface OnboardingStatus {
+export interface OnboardingStatus {
   companyDetails: boolean;
   dataSources: boolean;
   themes: boolean;
+  competitors: boolean;
 }
 
 interface OnboardingState {
@@ -53,6 +54,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
     companyDetails: false,
     dataSources: false,
     themes: false,
+    competitors: false,
   },
 
   checkOnboardingStatus: async (workspaceId: string, accessToken: string) => {
@@ -89,6 +91,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
           companyDetails: true,
           dataSources: true,
           themes: true,
+          competitors: true,
         } : currentState.onboardingStatus,
       });
       return;
@@ -101,24 +104,29 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
 
     try {
       // Run all checks in parallel for better performance
-      const [companyDetailsResult, dataSourcesResult, themesResult] = await Promise.all([
+      const [companyDetailsResult, dataSourcesResult, themesResult, competitorsResult] = await Promise.all([
         checkCompanyDetails(workspaceId),
         checkDataSources(workspaceId),
         checkThemes(workspaceId, accessToken),
+        checkCompetitors(workspaceId, accessToken),
       ]);
 
       console.log('[Onboarding] Check results:', {
         companyDetails: companyDetailsResult,
         dataSources: dataSourcesResult,
         themes: themesResult,
+        competitors: competitorsResult,
       });
 
       const onboardingStatus: OnboardingStatus = {
         companyDetails: companyDetailsResult,
         dataSources: dataSourcesResult,
         themes: themesResult,
+        competitors: competitorsResult,
       };
 
+      // Core onboarding is complete if company details, data sources, and themes are done
+      // Competitors is tracked separately but included for checklist purposes
       const isComplete = companyDetailsResult && dataSourcesResult && themesResult;
       
       // Check if user previously dismissed the onboarding dialog for THIS workspace
@@ -155,6 +163,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
           companyDetails: false,
           dataSources: false,
           themes: false,
+          competitors: false,
         },
       });
     }
@@ -179,6 +188,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
         companyDetails: false,
         dataSources: false,
         themes: false,
+        competitors: false,
       },
     });
   },
@@ -302,7 +312,7 @@ async function checkThemes(workspaceId: string, accessToken: string): Promise<bo
     console.log('[Onboarding] Checking themes...');
     const url = `${API_BASE_URL}/api/v1/features/themes?workspace_id=${workspaceId}`;
     console.log('[Onboarding] Themes URL:', url);
-    
+
     const response = await fetch(url, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
@@ -317,12 +327,44 @@ async function checkThemes(workspaceId: string, accessToken: string): Promise<bo
 
     const themes = await response.json();
     console.log('[Onboarding] Themes count:', Array.isArray(themes) ? themes.length : 'not an array');
-    
+
     const hasThemes = Array.isArray(themes) && themes.length > 0;
     console.log('[Onboarding] Has themes:', hasThemes);
     return hasThemes;
   } catch (error) {
     console.error('[Onboarding] Failed to check themes:', error);
+    return false;
+  }
+}
+
+// Helper function to check if any competitors exist
+async function checkCompetitors(workspaceId: string, accessToken: string): Promise<boolean> {
+  try {
+    console.log('[Onboarding] Checking competitors...');
+    const url = `${API_BASE_URL}/api/v1/workspaces/${workspaceId}/competitors`;
+
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      console.error('[Onboarding] Competitors fetch failed:', response.status);
+      // Return false on error - competitors are optional
+      return false;
+    }
+
+    const data = await response.json();
+    const competitors = data.competitors || [];
+    console.log('[Onboarding] Competitors count:', competitors.length);
+
+    const hasCompetitors = competitors.length > 0;
+    console.log('[Onboarding] Has competitors:', hasCompetitors);
+    return hasCompetitors;
+  } catch (error) {
+    console.error('[Onboarding] Failed to check competitors:', error);
     return false;
   }
 }

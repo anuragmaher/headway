@@ -331,17 +331,18 @@ export function OnboardingWizard({
   };
 
   // Check if a step is completed
+  // IMPORTANT: Completion is based ONLY on actual data status, NOT navigation
+  // This prevents the bug where skipping a step would mark it as completed
   const isStepCompleted = (step: number) => {
     switch (step) {
       case 0:
-        return onboardingStatus.companyDetails || activeStep > 0;
+        return onboardingStatus.companyDetails;
       case 1:
-        return onboardingStatus.dataSources || activeStep > 1;
+        return onboardingStatus.dataSources;
       case 2:
-        // Themes is completed if we're on competitors step (step 3) or if onboarding says so
-        return onboardingStatus.themes || activeStep > 2;
+        return onboardingStatus.themes;
       case 3:
-        return false; // Competitors is the last step
+        return onboardingStatus.competitors;
       default:
         return false;
     }
