@@ -3,6 +3,7 @@
  */
 
 import api from '@/services/api';
+import type { User } from '@/features/auth/types/auth.types';
 import type {
   CompanySetupData,
   CompanyDataResponse,
@@ -95,20 +96,7 @@ export async function resetOnboardingProgress(
   });
 }
 
-export interface UserResponse {
-  id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  company_name: string | null;
-  company_id: string | null;
-  is_active: boolean;
-  onboarding_completed: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export async function completeOnboarding(): Promise<UserResponse> {
+export async function completeOnboarding(): Promise<User> {
   const response = await api.post('/api/v1/auth/complete-onboarding');
   return response.data;
 }

@@ -39,9 +39,6 @@ import {
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { PageTransition } from '@/shared/components/PageTransition';
-import { OnboardingWizard } from '@/shared/components/OnboardingWizard/OnboardingWizard';
-import { GmailLabelSelectionScreen } from '@/shared/components/OnboardingWizard/GmailLabelSelectionScreen';
-import { OnboardingChecklist } from '@/shared/components/OnboardingChecklist';
 import { ConnectDataSourcesBanner } from '@/shared/components/ConnectDataSourcesBanner';
 import { useAuthActions, useUser, useAuthStore } from '@/features/auth/store/auth-store';
 import { useLayoutStore } from '@/shared/store/layoutStore';
@@ -146,43 +143,6 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
     handleProfileMenuClose();
   };
 
-  // Handle checklist step click - open wizard at the specified step
-  const handleChecklistStepClick = (stepIndex: number) => {
-    // Set the continue step to navigate to the clicked step
-    localStorage.setItem('onboarding-continue-step', stepIndex.toString());
-    // Open the wizard
-    setWizardOpenFromBanner(true);
-  };
-
-  // Handle checklist dismiss
-  const handleChecklistDismiss = () => {
-    // The checklist component handles its own sessionStorage state
-    // This callback is just for any additional cleanup if needed
-  };
-
-  // Clean up continue step when wizard closes
-  const handleWizardComplete = () => {
-    completeOnboarding();
-    setWizardOpenFromBanner(false);
-    localStorage.removeItem('onboarding-continue-step');
-    // Dispatch event to refresh themes if user is on themes page
-    window.dispatchEvent(new CustomEvent('onboarding-complete'));
-  };
-
-  const handleWizardDismiss = () => {
-    dismissOnboarding();
-    setWizardOpenFromBanner(false);
-    localStorage.removeItem('onboarding-continue-step');
-  };
-
-  // Determine if checklist should be shown
-  // Show when: onboarding is not complete (regardless of which steps are done)
-  const shouldShowChecklist =
-    !isLoadingIntegrations &&
-    !isOnboardingComplete &&
-    !showOnboardingDialog &&
-    !wizardOpenFromBanner &&
-    !hideWizardForLabels;
   // Determine if banner should be shown (when no data sources connected)
   const dataSources = getDataSources();
   const hasDataSources = !isLoadingIntegrations && dataSources.length > 0;
@@ -531,7 +491,7 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
         component="main"
         sx={{
           flexGrow: 1,
-          minWidth: 0, // Important: allows flex item to shrink below content size
+          minWidth: 0,
           height: '100vh',
           display: 'flex',
           flexDirection: 'column',
@@ -539,68 +499,19 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
           overflow: 'hidden',
         }}
       >
-        {/* Compact spacer for fixed AppBar (48px height) */}
         <Box sx={{ minHeight: 48, flexShrink: 0 }} />
-        <Box
-          sx={{
-            flexGrow: 1,
-            overflowX: 'hidden',
-            overflowY: 'auto',
-          }}
-        >
+        <Box sx={{ flexGrow: 1, overflowX: 'hidden', overflowY: 'auto' }}>
           <PageTransition>
             {children}
           </PageTransition>
         </Box>
-        
-        {/* Onboarding Checklist - Fixed position in right corner */}
-        {shouldShowChecklist && (
-          <OnboardingChecklist
-            onStepClick={handleChecklistStepClick}
-            onDismiss={handleChecklistDismiss}
-          />
+
+        {/* Connect Data Sources Banner */}
+        {shouldShowBanner && (
+          <ConnectDataSourcesBanner onConnectClick={() => navigate(ROUTES.SETTINGS_WORKSPACE)} />
         )}
       </Box>
-
-      {/* Gmail Label Selection Screen - shown when returning from Gmail OAuth during onboarding */}
-      {showGmailLabelScreen && <GmailLabelSelectionScreen />}
-
-                  {/* Onboarding Wizard - shown for new users who haven't completed setup */}
-                  {/* Hide wizard when Gmail label selection screen is active */}
-                  {!hideWizardForLabels && (
-                    <OnboardingWizard
-                      open={showOnboardingDialog || wizardOpenFromBanner}
-                      onComplete={handleWizardComplete}
-                      onDismiss={handleWizardDismiss}
-                    />
-                  )}
     </Box>
-        {/* Main content */}
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            minWidth: 0,
-            height: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-            background: theme.palette.background.default,
-            overflow: 'hidden',
-          }}
-        >
-          <Box sx={{ minHeight: 48, flexShrink: 0 }} />
-          <Box sx={{ flexGrow: 1, overflowX: 'hidden', overflowY: 'auto' }}>
-            <PageTransition>
-              {children}
-            </PageTransition>
-          </Box>
-
-          {/* Connect Data Sources Banner */}
-          {shouldShowBanner && (
-            <ConnectDataSourcesBanner onConnectClick={() => navigate(ROUTES.SETTINGS_WORKSPACE)} />
-          )}
-        </Box>
-      </Box>
     </>
   );
 }
