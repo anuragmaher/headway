@@ -8,52 +8,39 @@ Version-controlled for A/B testing and auditing.
 from typing import Optional, Dict, Any, List
 
 # Prompt versions for tracking - bump when prompts change
-TIER1_PROMPT_VERSION = "v1.1.0"
-TIER2_PROMPT_VERSION = "v1.1.0"
+TIER1_PROMPT_VERSION = "v2.0.0"  # Changed to score-based (0-10) instead of boolean
+TIER2_PROMPT_VERSION = "v2.0.0"  # Changed to include theme assignment and feature matching
 AGGREGATION_PROMPT_VERSION = "v1.0.0"
 
 
 # =============================================================================
 # TIER 1: Classification Prompt
-# Purpose: Quick determination of whether content contains feature requests
+# Purpose: Quick scoring of whether content contains feature requests
 # Model: gpt-4o-mini (cheap and fast)
-# Expected output: JSON with is_feature_request (bool) and confidence (float)
+# Expected output: JSON with score (0-10) - proceed to extraction if score >= 6
 # =============================================================================
 
 TIER1_SYSTEM_PROMPT = """You are a classification AI for a product intelligence platform.
 
-Your ONLY task is to determine whether the given text contains any feature requests, product feedback, or enhancement suggestions SPECIFICALLY ABOUT THE PRODUCT being discussed.
+Your task is to score how likely the given text contains feature requests, product feedback, or enhancement suggestions.
 
-IMPORTANT DEFINITIONS:
-- Feature Request: A specific request for NEW functionality that doesn't currently exist IN THE PRODUCT
-- Product Feedback: Comments about existing product features that suggest improvements
-- Enhancement Suggestion: Ideas for making existing product features better
+WHAT TO LOOK FOR:
+- Feature Request: A request for NEW functionality (e.g., "I wish we could...", "Can you add...", "We need...")
+- Product Feedback: Comments suggesting improvements to existing features
+- Enhancement Suggestion: Ideas for making features better
+- Pain points that imply a need for new/improved functionality
 
-CLASSIFICATION GUIDELINES - BE CONSERVATIVE:
-1. The request/feedback must be ACTIONABLE - something the product team can build or improve
-2. It must be SPECIFIC to the product, not general industry discussions
-3. Look for explicit statements like "I wish we could...", "It would be great if...", "We need...", "Can you add..."
-4. Consider the INTENT: Is the person actually asking for something to be changed/added?
+SCORING GUIDE (0-10):
+- 0-2: No feature-related content (greetings, support questions, billing inquiries, general chat)
+- 3-5: Some discussion of features/functionality but no clear request or suggestion
+- 6-7: Contains implicit feedback or suggestions that could inform product decisions
+- 8-10: Contains explicit feature requests or clear product improvement suggestions
 
-DO NOT classify as feature requests:
-- Questions about how to use existing features (support requests)
-- Pricing or billing inquiries
-- General complaints without specific actionable suggestions
-- Bug reports about broken functionality (these are bugs, not features)
-- Support requests or troubleshooting
-- Greetings, small talk, or pleasantries
-- General industry discussions or market commentary
-- Discussions ABOUT features in general terms without requesting changes
-- Conversations that mention product categories (like "AI", "automation") without specific requests
-
-For CALL TRANSCRIPTS specifically:
-- Customers discussing their workflows or challenges is NOT a feature request unless they explicitly ask for something
-- Mentioning they use or want "AI" or other technologies is NOT a feature request unless tied to a specific product capability request
-- General positive/negative feedback about the industry or competitors is NOT product feedback
+Be INCLUSIVE - if the text mentions any pain points, wishes, needs, or suggestions related to product functionality, give it a score of 6 or higher to ensure it gets further analysis.
 
 Respond with ONLY a JSON object, nothing else."""
 
-TIER1_USER_PROMPT_TEMPLATE = """Analyze this text and determine if it contains any EXPLICIT feature requests or actionable product feedback.
+TIER1_USER_PROMPT_TEMPLATE = """Score this text for feature request relevance.
 
 SOURCE TYPE: {source_type}
 ACTOR ROLE: {actor_role}
@@ -61,59 +48,46 @@ ACTOR ROLE: {actor_role}
 TEXT:
 {text}
 
-ANALYSIS CHECKLIST:
-1. Is there a SPECIFIC request for new functionality? (not just discussion)
-2. Is the request ACTIONABLE by a product team?
-3. Is it about THIS PRODUCT, not general industry commentary?
-4. Is the person ASKING for something, not just commenting?
-
 Respond with this exact JSON structure:
 {{
-  "is_feature_request": true or false,
-  "confidence": 0.0 to 1.0,
-  "reasoning": "One sentence explaining your classification with specific evidence from the text"
+  "score": 0 to 10,
+  "reasoning": "Brief explanation of the score"
 }}"""
 
 
 # =============================================================================
 # TIER 2: Structured Extraction Prompt
-# Purpose: Extract detailed feature request information
+# Purpose: Extract feature request, assign to theme, and match with existing features
 # Model: gpt-4o-mini
-# Expected output: Strict JSON schema with feature details
+# Expected output: JSON with feature details, theme assignment, and feature match
 # =============================================================================
 
 TIER2_SYSTEM_PROMPT = """You are a feature extraction AI for a product intelligence platform.
 
-Your task is to extract structured feature request data from text that has already been classified as containing feature requests.
+Your task is to:
+1. Extract structured feature request data from text
+2. Assign the request to the MOST appropriate theme (REQUIRED)
+3. Match with an existing feature if one exists, or indicate a new feature should be created
 
-For each feature request found, extract:
-1. TITLE: A clear, concise, SPECIFIC title (5-10 words) - must describe the actual feature
-2. PROBLEM: What SPECIFIC problem is the user facing? (quote if possible)
-3. DESIRED_OUTCOME: What do they want to achieve? Be specific.
-4. USER_ROLE: Who is making the request? (admin, end-user, manager, developer, etc.)
-5. URGENCY: How urgent is this? (low, medium, high, critical)
-6. SENTIMENT: User's emotional state (positive, neutral, negative, frustrated)
-7. QUOTE: Exact quote from the text supporting this feature request
-8. KEYWORDS: Specific, searchable terms related to this request
-
-IMPORTANT RULES:
-- Extract ONLY explicit feature requests, not implied or interpreted ones
+FEATURE EXTRACTION:
+- Extract ONLY explicit feature requests from the text
 - Be SPECIFIC in titles - "Add CSV export for reports" NOT "Improve exports"
-- If user role is not clear, use "unknown"
-- Only use "critical" urgency if explicitly indicated (blocker, dealbreaker, etc.)
-- Quote should be the exact text, not paraphrased
 - If no clear feature request exists, return confidence: 0.0
 
-KEYWORD EXTRACTION RULES:
-- Extract 4-8 specific, relevant keywords
-- Focus on: feature names, capabilities, integrations, technical terms, use cases
-- AVOID generic words: want, need, would, could, please, like, think, good, bad
-- Include: product areas, technical concepts, integration names, workflow terms
-- Keywords should be useful for searching and grouping similar requests
+THEME ASSIGNMENT (REQUIRED):
+- You MUST assign every feature request to exactly ONE theme
+- Choose the theme that BEST matches the feature's primary functionality
+- Match based on the core purpose of the feature, not surface keywords
+
+FEATURE MATCHING:
+- Check if the extracted feature matches any EXISTING feature in the list
+- Match if they describe the SAME capability (even if worded differently)
+- If matched: return the existing feature's ID - this will increment its mention count
+- If no match: indicate a new feature should be created
 
 Respond with ONLY a JSON object, nothing else."""
 
-TIER2_USER_PROMPT_TEMPLATE = """Extract feature request details from this text.
+TIER2_USER_PROMPT_TEMPLATE = """Extract feature request, assign theme, and check for existing feature match.
 
 SOURCE TYPE: {source_type}
 ACTOR: {actor_name} ({actor_role})
@@ -122,8 +96,11 @@ TITLE/SUBJECT: {title}
 TEXT:
 {text}
 
-ADDITIONAL CONTEXT:
-{metadata}
+AVAILABLE THEMES:
+{themes_list}
+
+EXISTING FEATURES:
+{features_list}
 
 Respond with this exact JSON structure:
 {{
@@ -139,15 +116,25 @@ Respond with this exact JSON structure:
     "sentiment": "positive|neutral|negative|frustrated",
     "keywords": ["relevant", "keywords", "list"]
   }},
+  "theme_assignment": {{
+    "theme_name": "Name of the assigned theme from the list",
+    "confidence": 0.0 to 1.0,
+    "reasoning": "Why this theme fits best"
+  }},
+  "feature_match": {{
+    "matched": true or false,
+    "existing_feature_id": "UUID of matched feature or null",
+    "existing_feature_name": "Name of matched feature or null",
+    "match_confidence": 0.0 to 1.0,
+    "reasoning": "Why this matches (or why no match)"
+  }},
   "confidence": 0.0 to 1.0
 }}
 
 If no valid feature request is found, return:
 {{
-  "feature_request": {{
-    "title": "No Feature Request Found",
-    "description": null
-  }},
+  "feature_request": null,
+  "feature_match": null,
   "confidence": 0.0
 }}"""
 
@@ -185,8 +172,7 @@ Respond with this exact JSON structure:
   "confidence": 0.0 to 1.0,
   "reasoning": "Specific reason why this theme matches the feature's CORE functionality"
 }}
-
-If no theme fits well (confidence < 0.6), use "Uncategorized"."""
+"""
 
 
 # =============================================================================
@@ -236,7 +222,7 @@ def build_tier1_prompt(
     source_type: str = "unknown",
     actor_role: Optional[str] = None,
 ) -> tuple:
-    """Build Tier-1 classification prompt."""
+    """Build Tier-1 scoring prompt. Returns score 0-10."""
     return (
         TIER1_SYSTEM_PROMPT,
         TIER1_USER_PROMPT_TEMPLATE.format(
@@ -253,27 +239,36 @@ def build_tier2_prompt(
     actor_name: str = "Unknown",
     actor_role: str = "unknown",
     title: Optional[str] = None,
-    metadata: Optional[Dict[str, Any]] = None,
+    themes: Optional[List[Dict[str, Any]]] = None,
+    existing_features: Optional[List[Dict[str, Any]]] = None,
 ) -> tuple:
-    """Build Tier-2 extraction prompt."""
-    # Format metadata for the prompt
-    metadata_str = "None"
-    if metadata:
-        meta_items = []
-        for key, value in metadata.items():
-            if value and key not in ("raw_message", "html_content"):
-                meta_items.append(f"- {key}: {value}")
-        metadata_str = "\n".join(meta_items[:10]) if meta_items else "None"
+    """Build Tier-2 extraction prompt with themes and existing features."""
+    # Format themes list
+    themes_list = "No themes defined"
+    if themes:
+        themes_list = "\n".join([
+            f"- {theme['name']}: {theme.get('description', 'No description')}"
+            for theme in themes
+        ])
+
+    # Format existing features list
+    features_list = "No existing features"
+    if existing_features:
+        features_list = "\n".join([
+            f"- ID: {f['id']} | Name: {f['name']} | Theme: {f.get('theme_name', 'Uncategorized')}"
+            for f in existing_features[:30]  # Limit to 30 features to avoid token limits
+        ])
 
     return (
         TIER2_SYSTEM_PROMPT,
         TIER2_USER_PROMPT_TEMPLATE.format(
-            text=text[:6000],  # Slightly larger limit for extraction
+            text=text[:5000],  # Limit text to leave room for themes/features
             source_type=source_type,
             actor_name=actor_name,
             actor_role=actor_role,
             title=title or "N/A",
-            metadata=metadata_str,
+            themes_list=themes_list,
+            features_list=features_list,
         )
     )
 

@@ -5,6 +5,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute';
 import { PublicRoute } from '@/features/auth/components/PublicRoute';
+import { OnboardingRoute } from '@/features/auth/components/OnboardingRoute';
 import { ROUTES } from '@/lib/constants/routes';
 
 // Page imports
@@ -19,6 +20,7 @@ import { NotFoundPage } from '@/pages/NotFoundPage';
 import { ExecutiveInsightsPage } from '@/pages/ExecutiveInsightsPage';
 import { SourcesPage } from '@/pages/AllMessages';
 import { GmailCallbackPage } from '@/pages/GmailCallbackPage';
+import { OnboardingPage } from '@/pages/OnboardingPage';
 
 export function AppRouter(): JSX.Element {
   return (
@@ -43,13 +45,23 @@ export function AppRouter(): JSX.Element {
           } 
         />
         
-        <Route 
-          path={ROUTES.REGISTER} 
+        <Route
+          path={ROUTES.REGISTER}
           element={
             <PublicRoute>
               <RegisterPage />
             </PublicRoute>
-          } 
+          }
+        />
+
+        {/* Onboarding route - requires auth but not completed onboarding */}
+        <Route
+          path={ROUTES.ONBOARDING}
+          element={
+            <OnboardingRoute>
+              <OnboardingPage />
+            </OnboardingRoute>
+          }
         />
 
         {/* Protected routes */}

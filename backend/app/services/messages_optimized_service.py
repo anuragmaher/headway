@@ -1,11 +1,16 @@
 """
 Optimized Messages Service - High-performance message loading for large datasets.
 
+IMPORTANT: Only messages that have passed Tier-2 extraction (linked to a feature
+via feature_messages table) are shown in the All Messages section. This ensures
+users only see relevant, analyzed messages.
+
 This service provides:
 - SQL UNION-based cross-table queries for efficient pagination
 - Redis caching for counts and frequently accessed data
 - Cursor-based pagination for infinite scroll scenarios
 - Batch loading to minimize round trips
+- Feature-linked message filtering (only Tier-2 passed messages)
 
 Production-ready optimizations:
 - Single query for paginated data using UNION ALL
@@ -130,11 +135,16 @@ class OptimizedMessagesService:
         workspace_id: str,
         source_filter: Optional[str]
     ) -> int:
-        """Get message count with Redis caching."""
+        """
+        Get message count with Redis caching.
+
+        Uses 'feature_linked_message_count' cache key since we now only
+        count messages that have passed Tier-2 (linked to features).
+        """
         cache_key_parts = [workspace_id, source_filter or "all"]
 
-        # Try cache first
-        cached = self.cache.get("message_count", *cache_key_parts)
+        # Try cache first - using new key for feature-linked counts
+        cached = self.cache.get("feature_linked_message_count", *cache_key_parts)
         if cached is not None:
             return int(cached)
 
@@ -143,7 +153,7 @@ class OptimizedMessagesService:
 
         # Cache the result
         self.cache.set(
-            "message_count",
+            "feature_linked_message_count",
             *cache_key_parts,
             value=count,
             ttl=MESSAGE_COUNT_TTL
@@ -156,25 +166,33 @@ class OptimizedMessagesService:
         workspace_id: str,
         source_filter: Optional[str]
     ) -> int:
-        """Compute total message count using optimized query."""
+        """
+        Compute total message count using optimized query.
+
+        IMPORTANT: Only counts messages that have passed Tier-2 extraction
+        (linked to a feature via feature_messages table).
+        """
 
         if source_filter == 'gmail':
-            # Gmail only - single table
+            # Gmail only - currently gmail_threads are not linked via feature_messages
+            # So this returns 0 until gmail integration uses the same linking mechanism
             query = text("""
-                SELECT COUNT(*)
-                FROM gmail_threads
-                WHERE workspace_id = :workspace_id
+                SELECT COUNT(DISTINCT gt.id)
+                FROM gmail_threads gt
+                INNER JOIN feature_messages fm ON fm.message_id = gt.id
+                WHERE gt.workspace_id = :workspace_id
             """)
             result = self.db.execute(query, {"workspace_id": workspace_id})
             return result.scalar() or 0
 
         elif source_filter and source_filter not in ('all', 'gmail'):
-            # Specific non-gmail source - single table
+            # Specific non-gmail source - only messages linked to features
             query = text("""
-                SELECT COUNT(*)
-                FROM messages
-                WHERE workspace_id = :workspace_id
-                AND source = :source
+                SELECT COUNT(DISTINCT m.id)
+                FROM messages m
+                INNER JOIN feature_messages fm ON fm.message_id = m.id
+                WHERE m.workspace_id = :workspace_id
+                AND m.source = :source
             """)
             result = self.db.execute(query, {
                 "workspace_id": workspace_id,
@@ -183,18 +201,21 @@ class OptimizedMessagesService:
             return result.scalar() or 0
 
         else:
-            # All sources - use fast count query
-            # Count both tables separately (faster than UNION for counting)
+            # All sources - only messages linked to features
+            # Count messages that have feature links
             messages_query = text("""
-                SELECT COUNT(*)
-                FROM messages
-                WHERE workspace_id = :workspace_id
-                AND source != 'gmail'
+                SELECT COUNT(DISTINCT m.id)
+                FROM messages m
+                INNER JOIN feature_messages fm ON fm.message_id = m.id
+                WHERE m.workspace_id = :workspace_id
+                AND m.source != 'gmail'
             """)
+            # Gmail threads that have feature links
             gmail_query = text("""
-                SELECT COUNT(*)
-                FROM gmail_threads
-                WHERE workspace_id = :workspace_id
+                SELECT COUNT(DISTINCT gt.id)
+                FROM gmail_threads gt
+                INNER JOIN feature_messages fm ON fm.message_id = gt.id
+                WHERE gt.workspace_id = :workspace_id
             """)
 
             msg_count = self.db.execute(
@@ -220,11 +241,15 @@ class OptimizedMessagesService:
         """
         Execute optimized UNION ALL query for cross-table pagination.
 
+        IMPORTANT: Only returns messages that have passed Tier-2 extraction
+        (linked to a feature via feature_messages table).
+
         This approach:
         1. Uses database-level UNION for combining tables
-        2. Applies sorting at database level (not in Python)
-        3. Uses LIMIT/OFFSET for proper pagination
-        4. Only selects needed columns (no full content for list view)
+        2. Joins with feature_messages to filter only feature-linked messages
+        3. Applies sorting at database level (not in Python)
+        4. Uses LIMIT/OFFSET for proper pagination
+        5. Only selects needed columns (no full content for list view)
         """
         workspace_str = str(workspace_id)
 
@@ -251,21 +276,22 @@ class OptimizedMessagesService:
                 pass  # Invalid cursor, ignore
 
         if source_filter == 'gmail':
-            # Gmail only query
+            # Gmail only query - only gmail_threads linked to features
             query = text(f"""
-                SELECT
-                    id::text,
-                    COALESCE(subject, 'Email Thread') as title,
-                    COALESCE(from_name, from_email, 'Unknown') as sender,
-                    from_email as sender_email,
+                SELECT DISTINCT
+                    gt.id::text,
+                    COALESCE(gt.subject, 'Email Thread') as title,
+                    COALESCE(gt.from_name, gt.from_email, 'Unknown') as sender,
+                    gt.from_email as sender_email,
                     'email' as source_type,
                     'gmail' as source,
-                    COALESCE(SUBSTRING(content FROM 1 FOR 150), snippet, '') as preview,
-                    thread_date as sort_timestamp,
-                    label_name as channel_name,
-                    is_processed
-                FROM gmail_threads
-                WHERE workspace_id = :workspace_id
+                    COALESCE(SUBSTRING(gt.content FROM 1 FOR 150), gt.snippet, '') as preview,
+                    gt.thread_date as sort_timestamp,
+                    gt.label_name as channel_name,
+                    gt.is_processed
+                FROM gmail_threads gt
+                INNER JOIN feature_messages fm ON fm.message_id = gt.id
+                WHERE gt.workspace_id = :workspace_id
                 {cursor_condition}
                 ORDER BY {sort_col} {sort_order} NULLS LAST
                 LIMIT :limit OFFSET :offset
@@ -278,34 +304,35 @@ class OptimizedMessagesService:
             }
 
         elif source_filter and source_filter not in ('all', 'gmail'):
-            # Single non-gmail source
+            # Single non-gmail source - only messages linked to features
             query = text(f"""
-                SELECT
-                    id::text,
-                    COALESCE(title,
-                        CASE source
+                SELECT DISTINCT
+                    m.id::text,
+                    COALESCE(m.title,
+                        CASE m.source
                             WHEN 'slack' THEN 'Slack Message'
                             WHEN 'gong' THEN 'Gong Call'
                             WHEN 'fathom' THEN 'Fathom Meeting'
                             ELSE 'Message'
                         END
                     ) as title,
-                    COALESCE(author_name, author_email, 'Unknown') as sender,
-                    author_email as sender_email,
-                    CASE source
+                    COALESCE(m.author_name, m.author_email, 'Unknown') as sender,
+                    m.author_email as sender_email,
+                    CASE m.source
                         WHEN 'slack' THEN 'slack'
                         WHEN 'gong' THEN 'transcript'
                         WHEN 'fathom' THEN 'meeting'
                         ELSE 'email'
                     END as source_type,
-                    source,
-                    COALESCE(SUBSTRING(content FROM 1 FOR 150), '') as preview,
-                    sent_at as sort_timestamp,
-                    channel_name,
-                    is_processed
-                FROM messages
-                WHERE workspace_id = :workspace_id
-                AND source = :source_filter
+                    m.source,
+                    COALESCE(SUBSTRING(m.content FROM 1 FOR 150), '') as preview,
+                    m.sent_at as sort_timestamp,
+                    m.channel_name,
+                    m.is_processed
+                FROM messages m
+                INNER JOIN feature_messages fm ON fm.message_id = m.id
+                WHERE m.workspace_id = :workspace_id
+                AND m.source = :source_filter
                 {cursor_condition}
                 ORDER BY {sort_col} {sort_order} NULLS LAST
                 LIMIT :limit OFFSET :offset
@@ -319,53 +346,55 @@ class OptimizedMessagesService:
             }
 
         else:
-            # All sources - UNION ALL query
+            # All sources - UNION ALL query with feature_messages join
             query = text(f"""
                 WITH combined_messages AS (
-                    -- Non-gmail messages
-                    SELECT
-                        id::text,
-                        COALESCE(title,
-                            CASE source
+                    -- Non-gmail messages linked to features
+                    SELECT DISTINCT
+                        m.id::text as id,
+                        COALESCE(m.title,
+                            CASE m.source
                                 WHEN 'slack' THEN 'Slack Message'
                                 WHEN 'gong' THEN 'Gong Call'
                                 WHEN 'fathom' THEN 'Fathom Meeting'
                                 ELSE 'Message'
                             END
                         ) as title,
-                        COALESCE(author_name, author_email, 'Unknown') as sender,
-                        author_email as sender_email,
-                        CASE source
+                        COALESCE(m.author_name, m.author_email, 'Unknown') as sender,
+                        m.author_email as sender_email,
+                        CASE m.source
                             WHEN 'slack' THEN 'slack'
                             WHEN 'gong' THEN 'transcript'
                             WHEN 'fathom' THEN 'meeting'
                             ELSE 'email'
                         END as source_type,
-                        source,
-                        COALESCE(SUBSTRING(content FROM 1 FOR 150), '') as preview,
-                        sent_at as sort_timestamp,
-                        channel_name,
-                        is_processed
-                    FROM messages
-                    WHERE workspace_id = :workspace_id
-                    AND source != 'gmail'
+                        m.source,
+                        COALESCE(SUBSTRING(m.content FROM 1 FOR 150), '') as preview,
+                        m.sent_at as sort_timestamp,
+                        m.channel_name,
+                        m.is_processed
+                    FROM messages m
+                    INNER JOIN feature_messages fm ON fm.message_id = m.id
+                    WHERE m.workspace_id = :workspace_id
+                    AND m.source != 'gmail'
 
                     UNION ALL
 
-                    -- Gmail threads
-                    SELECT
-                        id::text,
-                        COALESCE(subject, 'Email Thread') as title,
-                        COALESCE(from_name, from_email, 'Unknown') as sender,
-                        from_email as sender_email,
+                    -- Gmail threads linked to features
+                    SELECT DISTINCT
+                        gt.id::text as id,
+                        COALESCE(gt.subject, 'Email Thread') as title,
+                        COALESCE(gt.from_name, gt.from_email, 'Unknown') as sender,
+                        gt.from_email as sender_email,
                         'email' as source_type,
                         'gmail' as source,
-                        COALESCE(SUBSTRING(content FROM 1 FOR 150), snippet, '') as preview,
-                        thread_date as sort_timestamp,
-                        label_name as channel_name,
-                        is_processed
-                    FROM gmail_threads
-                    WHERE workspace_id = :workspace_id
+                        COALESCE(SUBSTRING(gt.content FROM 1 FOR 150), gt.snippet, '') as preview,
+                        gt.thread_date as sort_timestamp,
+                        gt.label_name as channel_name,
+                        gt.is_processed
+                    FROM gmail_threads gt
+                    INNER JOIN feature_messages fm ON fm.message_id = gt.id
+                    WHERE gt.workspace_id = :workspace_id
                 )
                 SELECT *
                 FROM combined_messages
@@ -417,7 +446,7 @@ class OptimizedMessagesService:
 
     def invalidate_count_cache(self, workspace_id: str) -> None:
         """Invalidate cached counts for a workspace."""
-        self.cache.delete_pattern("message_count", f"{workspace_id}:*")
+        self.cache.delete_pattern("feature_linked_message_count", f"{workspace_id}:*")
 
     def _get_messages_with_insights(
         self,

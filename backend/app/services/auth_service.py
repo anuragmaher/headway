@@ -29,10 +29,53 @@ logger = logging.getLogger(__name__)
 
 class AuthService:
     """Service class for authentication operations"""
-    
+
     def __init__(self, db: Session):
         self.db = db
-    
+
+    def _ensure_workspace_exists(self, company: Company, owner_id: str) -> Optional[Workspace]:
+        """
+        Ensure a workspace exists for the given company.
+        Creates one if it doesn't exist.
+
+        Args:
+            company: Company to create workspace for
+            owner_id: User ID to set as workspace owner
+
+        Returns:
+            Workspace if created/found, None if creation failed
+        """
+        try:
+            existing_workspace = self.db.query(Workspace).filter(
+                Workspace.company_id == company.id
+            ).first()
+
+            if existing_workspace:
+                return existing_workspace
+
+            # Generate slug from company name
+            workspace_slug = company.name.lower().replace(" ", "-").replace(".", "-")
+
+            workspace = Workspace(
+                name=company.name,
+                slug=workspace_slug,
+                company_id=company.id,
+                owner_id=owner_id,
+                is_active=True
+            )
+            self.db.add(workspace)
+            self.db.commit()
+            logger.info(f"Workspace '{company.name}' created for company {company.id}")
+            return workspace
+
+        except IntegrityError as e:
+            self.db.rollback()
+            logger.warning(f"Failed to create workspace: {str(e)}")
+            return None
+        except Exception as e:
+            logger.warning(f"Error ensuring workspace exists: {str(e)}")
+            return None
+
     def register_user(self, user_data: UserCreate) -> User:
         """
         Register a new user and optionally create a new company.
@@ -118,14 +161,18 @@ class AuthService:
             self.db.add(user)
             self.db.commit()
             self.db.refresh(user)
+
+            # Ensure workspace exists for the company
+            self._ensure_workspace_exists(company, user.id)
+
             return user
-            
+
         except IntegrityError as e:
             self.db.rollback()
             error_detail = "Failed to create user"
             if "email" in str(e.orig).lower():
                 error_detail = "Email already registered"
-            
+
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=error_detail
@@ -297,47 +344,7 @@ class AuthService:
                 logger.info(f"New user created via Google OAuth: {email}")
 
                 # Ensure workspace exists for the company
-                # If user is the owner, they become the workspace owner; otherwise, find existing workspace owner
-                try:
-                    # Check if workspace already exists for this company
-                    existing_workspace = self.db.query(Workspace).filter(
-                        Workspace.company_id == company.id
-                    ).first()
-
-                    if not existing_workspace:
-                        # Generate slug from company name (using company.name instead of company_name)
-                        workspace_slug = company.name.replace(".", "-")
-
-                        # If user is owner, use them as workspace owner; otherwise find existing owner
-                        workspace_owner_id = user.id if user_role == "owner" else None
-
-                        # If user is not owner, find another owner in the company
-                        if user_role == "member":
-                            owner_user = self.db.query(User).filter(
-                                User.company_id == company.id,
-                                User.role == "owner"
-                            ).first()
-                            workspace_owner_id = owner_user.id if owner_user else user.id
-
-                        workspace = Workspace(
-                            name=company.name,
-                            slug=workspace_slug,
-                            company_id=company.id,
-                            owner_id=workspace_owner_id,
-                            is_active=True
-                        )
-                        self.db.add(workspace)
-                        self.db.commit()
-                        logger.info(f"Workspace '{company.name}' created for company {company.id}")
-                    else:
-                        logger.info(f"Workspace already exists for company {company.id}, reusing it for user {email}")
-                except IntegrityError as workspace_error:
-                    self.db.rollback()
-                    logger.warning(f"Failed to create workspace: {str(workspace_error)}")
-                    # Don't fail the login if workspace creation fails, just log it
-                except Exception as workspace_error:
-                    logger.warning(f"Error ensuring workspace exists: {str(workspace_error)}")
-                    # Don't fail the login if workspace creation fails, just log it
+                self._ensure_workspace_exists(company, user.id)
 
                 return user
 
@@ -487,41 +494,51 @@ class AuthService:
     def refresh_access_token(self, refresh_token: str) -> dict:
         """
         Create new access token from refresh token.
-        
+
         Args:
             refresh_token: Valid refresh token
-            
+
         Returns:
             Dictionary with new access_token and token info
-            
+
         Raises:
             HTTPException: If refresh token invalid or user not found
         """
         user_id = verify_refresh_token(refresh_token)
-        
+
         if not user_id:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid refresh token"
             )
-        
+
         user = self.get_user_by_id(user_id)
-        
+
         if not user or not user.is_active:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="User not found or inactive"
             )
-        
+
         # Create new access token (keep same refresh token)
         access_token = create_access_token(subject=str(user.id))
-        
-        return {
+
+        tokens = {
             "access_token": access_token,
             "refresh_token": refresh_token,  # Return same refresh token
             "token_type": "bearer",
             "expires_in": settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
         }
+
+        # Get user's workspace by company
+        workspace = self.db.query(Workspace).filter(
+            Workspace.company_id == user.company_id
+        ).first()
+
+        if workspace:
+            tokens['workspace_id'] = workspace.id
+
+        return tokens
     
     def complete_onboarding(self, user_id: str) -> User:
         """

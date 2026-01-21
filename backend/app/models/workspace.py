@@ -49,5 +49,8 @@ class Workspace(Base):
     extracted_facts = relationship("ExtractedFact", back_populates="workspace", cascade="all, delete-orphan")
     aggregation_runs = relationship("AggregationRun", back_populates="workspace", cascade="all, delete-orphan")
 
+    # Onboarding progress
+    onboarding_progress = relationship("OnboardingProgress", back_populates="workspace", uselist=False, cascade="all, delete-orphan")
+
     def __repr__(self) -> str:
         return f"<Workspace(id={self.id}, name='{self.name}', slug='{self.slug}')>"

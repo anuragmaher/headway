@@ -97,15 +97,25 @@ async def login(
     
     auth_service = AuthService(db)
     user = auth_service.authenticate_user(login_data)
-    
+
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     tokens = auth_service.create_tokens(user)
+
+    # Get user's workspace by company (not by owner)
+    from app.models.workspace import Workspace
+    workspace = db.query(Workspace).filter(
+        Workspace.company_id == user.company_id
+    ).first()
+
+    if workspace:
+        tokens['workspace_id'] = workspace.id
+
     return Token(**tokens)
 
 
