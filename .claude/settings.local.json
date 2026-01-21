@@ -15,7 +15,14 @@
       "Bash(.venv/Scripts/python:*)",
       "Bash(.venvScriptsalembic upgrade head)",
       "Bash(grep:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(find:*)",
+      "Bash(uvicorn app.main:app:*)",
+      "Bash(npm run dev:*)",
+      "Bash(source venv/bin/activate)",
+      "Bash(pip install:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill -9)"
     ]
   }
 }

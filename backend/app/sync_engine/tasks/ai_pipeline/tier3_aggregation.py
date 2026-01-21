@@ -24,6 +24,8 @@ from app.tasks.celery_app import celery_app
 from app.models.extracted_fact import ExtractedFact, AggregationRun
 from app.models.feature import Feature
 from app.models.theme import Theme
+from app.models.message import Message
+from app.models.normalized_event import NormalizedEvent
 from app.services.tiered_ai_service import get_tiered_ai_service
 from app.sync_engine.tasks.base import (
     engine,
@@ -449,6 +451,12 @@ def _merge_fact_into_feature(
 
     feature.updated_at = datetime.now(timezone.utc)
 
+    # Link the source message to the feature via feature_messages table
+    source_message = _get_source_message(db, fact)
+    if source_message:
+        if _link_message_to_feature(db, feature, source_message):
+            logger.debug(f"Linked message {source_message.id} to merged feature {feature.id}")
+
 
 def _create_feature_from_fact(
     db: Session,
@@ -485,6 +493,12 @@ def _create_feature_from_fact(
     db.add(feature)
     db.flush()  # Get the ID
 
+    # Link the source message to the feature via feature_messages table
+    source_message = _get_source_message(db, fact)
+    if source_message:
+        _link_message_to_feature(db, feature, source_message)
+        logger.debug(f"Linked message {source_message.id} to new feature {feature.id}")
+
     return feature
 
 
@@ -510,6 +524,61 @@ def _map_urgency_hint(hint: Optional[str]) -> str:
     elif hint_lower in ("low", "whenever", "no-rush"):
         return "low"
     return "medium"
+
+
+def _get_source_message(
+    db: Session,
+    fact: ExtractedFact,
+) -> Optional[Message]:
+    """
+    Get the source Message from an ExtractedFact by tracing back through NormalizedEvent.
+
+    Trace path: ExtractedFact → NormalizedEvent → Message
+    Only returns a Message if the source_table is "messages".
+    """
+    if not fact.normalized_event_id:
+        return None
+
+    # Get the normalized event
+    normalized_event = db.query(NormalizedEvent).filter(
+        NormalizedEvent.id == fact.normalized_event_id
+    ).first()
+
+    if not normalized_event:
+        return None
+
+    # Only link if the source is the messages table
+    if normalized_event.source_table != "messages":
+        return None
+
+    # Get the source message
+    message = db.query(Message).filter(
+        Message.id == normalized_event.source_record_id
+    ).first()
+
+    return message
+
+
+def _link_message_to_feature(
+    db: Session,
+    feature: Feature,
+    message: Message,
+) -> bool:
+    """
+    Link a message to a feature via the feature_messages association table.
+
+    Returns True if link was created, False if already exists or failed.
+    """
+    if not message or not feature:
+        return False
+
+    # Check if link already exists
+    if message in feature.messages:
+        return False
+
+    # Add the message to the feature's messages
+    feature.messages.append(message)
+    return True
 
 
 @celery_app.task(
