@@ -38,14 +38,37 @@ export function CompanyDetailsStep({
   const handleGenerateDescription = async () => {
     if (!workspaceId || !companyData.website) return;
 
+    // Validate website URL format
+    const websiteUrl = companyData.website.trim();
+    if (!websiteUrl) {
+      setError('Please enter a website URL first.');
+      return;
+    }
+
     setIsGeneratingDescription(true);
     setError(null);
     try {
-      const description = await companyService.generateDescription(workspaceId, companyData.website);
-      setCompanyData((prev) => ({ ...prev, description }));
-    } catch (err) {
+      const description = await companyService.generateDescription(workspaceId, websiteUrl);
+      if (description) {
+        setCompanyData((prev) => ({ ...prev, description }));
+      } else {
+        setError('Could not generate description. Please enter manually.');
+      }
+    } catch (err: unknown) {
       console.error('Failed to generate description:', err);
-      setError('Failed to generate description. Please try again or enter manually.');
+      // Extract error message from API response if available
+      const errorMessage = err instanceof Error
+        ? err.message
+        : 'Failed to generate description';
+
+      // Check for specific error conditions
+      if (errorMessage.includes('fetch') || errorMessage.includes('Could not fetch')) {
+        setError('Could not access the website. Please check the URL and try again.');
+      } else if (errorMessage.includes('API key') || errorMessage.includes('OpenAI')) {
+        setError('AI service is temporarily unavailable. Please enter description manually.');
+      } else {
+        setError('Failed to generate description. Please try again or enter manually.');
+      }
     } finally {
       setIsGeneratingDescription(false);
     }
