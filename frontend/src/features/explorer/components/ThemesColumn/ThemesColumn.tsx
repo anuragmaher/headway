@@ -79,17 +79,19 @@ export const ThemesColumn: React.FC<ThemesColumnProps> = ({
       <Box
         sx={{
           px: 2,
-          py: 1.5,
+          height: 48,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           borderBottom: '1px solid',
           borderColor: 'divider',
+          bgcolor: 'background.default',
+          flexShrink: 0,
         }}
       >
         <Typography
           sx={{
-            fontSize: '0.6875rem',
+            fontSize: '0.75rem',
             fontWeight: 600,
             letterSpacing: '0.5px',
             color: 'text.secondary',
@@ -116,15 +118,15 @@ export const ThemesColumn: React.FC<ThemesColumnProps> = ({
       </Box>
 
       {/* Content */}
-      <Box sx={{ flex: 1, overflow: 'auto', py: 0.5 }}>
+      <Box sx={{ flex: 1, overflow: 'auto' }}>
         {isLoading ? (
-          <Box sx={{ px: 1.5 }}>
+          <Box>
             {[1, 2, 3, 4].map((i) => (
               <Skeleton
                 key={i}
-                variant="rounded"
-                height={48}
-                sx={{ my: 0.5, borderRadius: 1 }}
+                variant="rectangular"
+                height={52}
+                sx={{ borderBottom: '1px solid', borderColor: 'divider' }}
               />
             ))}
           </Box>
@@ -157,7 +159,6 @@ export const ThemesColumn: React.FC<ThemesColumnProps> = ({
                 gap: 0.5,
                 px: 2,
                 py: 0.75,
-                borderRadius: 1,
                 bgcolor: 'primary.main',
                 color: 'white',
                 fontSize: '0.8125rem',

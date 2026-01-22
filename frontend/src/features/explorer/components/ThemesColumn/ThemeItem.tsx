@@ -19,6 +19,7 @@ import {
   Delete as DeleteIcon,
   Lock as LockIcon,
   LockOpen as LockOpenIcon,
+  Layers as ThemeIcon,
 } from '@mui/icons-material';
 import type { ExplorerTheme } from '../../types';
 
@@ -83,15 +84,14 @@ export const ThemeItem: React.FC<ThemeItemProps> = ({
         alignItems: 'center',
         gap: 1.5,
         px: 1.5,
-        py: 1,
-        mx: 0.75,
-        my: 0.25,
-        borderRadius: 1,
+        py: 1.25,
         cursor: 'pointer',
         transition: 'all 0.12s ease',
         bgcolor: isSelected ? 'rgba(59, 130, 246, 0.08)' : 'transparent',
-        borderLeft: '2px solid',
-        borderColor: isSelected ? theme.color || '#3B82F6' : 'transparent',
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+        borderLeft: '3px solid',
+        borderLeftColor: isSelected ? 'primary.main' : 'transparent',
         '&:hover': {
           bgcolor: isSelected
             ? 'rgba(59, 130, 246, 0.12)'
@@ -99,13 +99,11 @@ export const ThemeItem: React.FC<ThemeItemProps> = ({
         },
       }}
     >
-      {/* Color dot */}
-      <Box
+      {/* Theme icon */}
+      <ThemeIcon
         sx={{
-          width: 8,
-          height: 8,
-          borderRadius: '50%',
-          bgcolor: theme.color || '#3B82F6',
+          fontSize: 18,
+          color: isSelected ? 'primary.main' : 'text.secondary',
           flexShrink: 0,
         }}
       />
@@ -130,15 +128,27 @@ export const ThemeItem: React.FC<ThemeItemProps> = ({
             <LockIcon sx={{ fontSize: 11, color: 'text.disabled', flexShrink: 0 }} />
           )}
         </Box>
-        <Typography
-          sx={{
-            fontSize: '0.6875rem',
-            color: 'text.disabled',
-            mt: 0.25,
-          }}
-        >
-          {theme.subThemeCount} features · {theme.feedbackCount} mentions
-        </Typography>
+        {/* Stats row - Sub-theme count and mention count */}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 0.25 }}>
+          <Typography
+            sx={{
+              fontSize: '0.6875rem',
+              color: 'text.disabled',
+            }}
+          >
+            {theme.subThemeCount} sub-theme{theme.subThemeCount !== 1 ? 's' : ''}
+          </Typography>
+          {/* Mention count - right side */}
+          <Typography
+            sx={{
+              fontSize: '0.6875rem',
+              fontWeight: 600,
+              color: 'text.secondary',
+            }}
+          >
+            {theme.feedbackCount}
+          </Typography>
+        </Box>
       </Box>
 
       {/* Menu button */}

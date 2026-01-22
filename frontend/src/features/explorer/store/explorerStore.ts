@@ -8,10 +8,12 @@ import {
   createThemeSlice,
   createSubThemeSlice,
   createFeedbackSlice,
+  createCustomerAskSlice,
   createUISlice,
   type ThemeSlice,
   type SubThemeSlice,
   type FeedbackSlice,
+  type CustomerAskSlice,
   type UISlice,
 } from './slices';
 import { useAuthStore } from '../../../features/auth/store/auth-store';
@@ -20,7 +22,7 @@ import { useAuthStore } from '../../../features/auth/store/auth-store';
 // Store Type Definition
 // ============================================================================
 
-export interface ExplorerStore extends ThemeSlice, SubThemeSlice, FeedbackSlice, UISlice {
+export interface ExplorerStore extends ThemeSlice, SubThemeSlice, FeedbackSlice, CustomerAskSlice, UISlice {
   // Utility methods
   getWorkspaceId: () => string | null;
   getAuthToken: () => string | null;
@@ -45,6 +47,7 @@ export const useExplorerStore = create<ExplorerStore>()(
       ...createThemeSlice(set, get, api),
       ...createSubThemeSlice(set, get, api),
       ...createFeedbackSlice(set, get, api),
+      ...createCustomerAskSlice(set, get, api),
       ...createUISlice(set, get, api),
 
       // Global state
@@ -103,10 +106,27 @@ export const useExplorerStore = create<ExplorerStore>()(
             sources: [],
             tags: [],
             urgency: [],
+            status: [],
             dateRange: null,
             searchQuery: '',
           },
           sortBy: 'recent',
+
+          // CustomerAsk state
+          customerAsks: [],
+          totalCustomerAsks: 0,
+          isLoadingCustomerAsks: false,
+          customerAsksError: null,
+          mentions: [],
+          totalMentions: 0,
+          hasMoreMentions: false,
+          mentionsNextCursor: null,
+          isLoadingMentions: false,
+          isLoadingMoreMentions: false,
+          mentionsError: null,
+          selectedCustomerAskId: null,
+          isMentionsPanelOpen: false,
+          expandedMentionId: null,
 
           // UI state
           selectedThemeId: null,
@@ -180,6 +200,29 @@ export const useFeedbackError = () => useExplorerStore((state) => state.feedback
 export const useFilters = () => useExplorerStore((state) => state.filters);
 export const useSortBy = () => useExplorerStore((state) => state.sortBy);
 
+// CustomerAsk selectors
+export const useCustomerAsks = () => useExplorerStore((state) => state.customerAsks);
+export const useSelectedCustomerAsk = () => {
+  const customerAsks = useExplorerStore((state) => state.customerAsks);
+  const selectedCustomerAskId = useExplorerStore((state) => state.selectedCustomerAskId);
+  return customerAsks.find((ca) => ca.id === selectedCustomerAskId) || null;
+};
+export const useIsLoadingCustomerAsks = () => useExplorerStore((state) => state.isLoadingCustomerAsks);
+export const useCustomerAsksError = () => useExplorerStore((state) => state.customerAsksError);
+export const useSelectedCustomerAskId = () => useExplorerStore((state) => state.selectedCustomerAskId);
+
+// Mentions selectors
+export const useMentions = () => useExplorerStore((state) => state.mentions);
+export const useIsLoadingMentions = () => useExplorerStore((state) => state.isLoadingMentions);
+export const useMentionsError = () => useExplorerStore((state) => state.mentionsError);
+export const useIsMentionsPanelOpen = () => useExplorerStore((state) => state.isMentionsPanelOpen);
+export const useExpandedMentionId = () => useExplorerStore((state) => state.expandedMentionId);
+export const useExpandedMention = () => {
+  const mentions = useExplorerStore((state) => state.mentions);
+  const expandedMentionId = useExplorerStore((state) => state.expandedMentionId);
+  return mentions.find((m) => m.id === expandedMentionId) || null;
+};
+
 // UI selectors
 export const useSelectedThemeId = () => useExplorerStore((state) => state.selectedThemeId);
 export const useSelectedSubThemeId = () => useExplorerStore((state) => state.selectedSubThemeId);
@@ -225,6 +268,20 @@ export const useExplorerActions = () => {
     setSortBy: store.setSortBy,
     setSearchQuery: store.setSearchQuery,
     clearFilters: store.clearFilters,
+
+    // CustomerAsk actions
+    fetchCustomerAsks: store.fetchCustomerAsks,
+    selectCustomerAsk: store.selectCustomerAsk,
+    updateCustomerAskStatus: store.updateCustomerAskStatus,
+    clearCustomerAsks: store.clearCustomerAsks,
+
+    // Mentions actions
+    fetchMentions: store.fetchMentions,
+    fetchMoreMentions: store.fetchMoreMentions,
+    clearMentions: store.clearMentions,
+    openMentionsPanel: store.openMentionsPanel,
+    closeMentionsPanel: store.closeMentionsPanel,
+    toggleMentionExpand: store.toggleMentionExpand,
 
     // Selection actions
     selectTheme: store.selectTheme,

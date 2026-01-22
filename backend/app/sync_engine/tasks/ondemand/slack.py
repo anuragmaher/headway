@@ -13,7 +13,7 @@ from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 from app.tasks.celery_app import celery_app
-from app.models.integration import Integration
+from app.models.workspace_connector import WorkspaceConnector
 from app.services.slack_batch_ingestion_service import slack_batch_ingestion_service
 from app.sync_engine.tasks.base import engine, run_async_task, update_sync_record
 
@@ -40,32 +40,32 @@ def sync_workspace_slack(self, workspace_id: str, sync_id: str, hours_back: int 
             # Update sync record to in_progress
             update_sync_record(db, sync_id, "in_progress")
 
-            # Get Slack integrations for this workspace
-            integrations = db.query(Integration).filter(
+            # Get Slack connectors for this workspace
+            connectors = db.query(WorkspaceConnector).filter(
                 and_(
-                    Integration.workspace_id == workspace_id,
-                    Integration.provider == "slack",
-                    Integration.is_active == True
+                    WorkspaceConnector.workspace_id == workspace_id,
+                    WorkspaceConnector.connector_type == "slack",
+                    WorkspaceConnector.is_active == True
                 )
             ).all()
 
-            if not integrations:
-                logger.info(f"No Slack integrations for workspace {workspace_id}")
+            if not connectors:
+                logger.info(f"No Slack connectors for workspace {workspace_id}")
                 update_sync_record(db, sync_id, "success", 0, 0)
-                return {"status": "skipped", "reason": "no_integrations"}
+                return {"status": "skipped", "reason": "no_connectors"}
 
             total_checked = 0
             total_new = 0
             all_inserted_ids = []
 
-            for integration in integrations:
+            for connector in connectors:
                 try:
-                    logger.info(f"Syncing Slack integration: {integration.external_team_name}")
+                    logger.info(f"Syncing Slack connector: {connector.external_name or connector.name}")
 
                     # Use batch ingestion (data storage only, no AI)
                     result = run_async_task(
                         slack_batch_ingestion_service.ingest_messages(
-                            integration_id=str(integration.id),
+                            connector_id=str(connector.id),
                             db=db,
                             hours_back=hours_back
                         )
@@ -75,13 +75,13 @@ def sync_workspace_slack(self, workspace_id: str, sync_id: str, hours_back: int 
                     total_new += result.get("new_added", 0)
                     all_inserted_ids.extend(result.get("inserted_ids", []))
 
-                    # Update integration last sync time
-                    integration.last_synced_at = datetime.now(timezone.utc)
-                    integration.sync_status = "success"
+                    # Update connector last sync time
+                    connector.last_synced_at = datetime.now(timezone.utc)
+                    connector.sync_status = "success"
                     db.commit()
 
                 except Exception as e:
-                    logger.error(f"Error syncing Slack integration {integration.id}: {e}")
+                    logger.error(f"Error syncing Slack connector {connector.id}: {e}")
                     continue
 
             update_sync_record(db, sync_id, "success", total_checked, total_new, synced_item_ids=all_inserted_ids)

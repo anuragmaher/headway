@@ -33,14 +33,14 @@ class AuthService:
     def __init__(self, db: Session):
         self.db = db
 
-    def _ensure_workspace_exists(self, company: Company, owner_id: str) -> Optional[Workspace]:
+    def _ensure_workspace_exists(self, company: Company, user: User) -> Optional[Workspace]:
         """
-        Ensure a workspace exists for the given company.
+        Ensure a workspace exists for the given company and assign user to it.
         Creates one if it doesn't exist.
 
         Args:
             company: Company to create workspace for
-            owner_id: User ID to set as workspace owner
+            user: User to assign to the workspace
 
         Returns:
             Workspace if created/found, None if creation failed
@@ -51,20 +51,25 @@ class AuthService:
             ).first()
 
             if existing_workspace:
+                # Assign user to existing workspace if not already assigned
+                if user.workspace_id != existing_workspace.id:
+                    user.workspace_id = existing_workspace.id
+                    self.db.commit()
                 return existing_workspace
 
-            # Generate slug from company name
-            workspace_slug = company.name.lower().replace(" ", "-").replace(".", "-")
-
+            # Create new workspace for the company
             workspace = Workspace(
                 name=company.name,
-                slug=workspace_slug,
                 company_id=company.id,
-                owner_id=owner_id,
                 is_active=True
             )
             self.db.add(workspace)
+            self.db.flush()  # Get the workspace ID
+
+            # Assign user to the workspace
+            user.workspace_id = workspace.id
             self.db.commit()
+
             logger.info(f"Workspace '{company.name}' created for company {company.id}")
             return workspace
 
@@ -124,9 +129,7 @@ class AuthService:
             company = Company(
                 name=user_data.company_name,
                 size=user_data.company_size,
-                domain=email_domain,
-                is_active=True,
-                subscription_plan="free"
+                domain=email_domain
             )
             user_role = "owner"  # First user in company becomes owner
             
@@ -152,7 +155,6 @@ class AuthService:
             company_id=company.id,
             role=user_role,
             hashed_password=hashed_password,
-            theme_preference=user_data.theme_preference,
             is_active=True,
             onboarding_completed=False
         )
@@ -162,8 +164,9 @@ class AuthService:
             self.db.commit()
             self.db.refresh(user)
 
-            # Ensure workspace exists for the company
-            self._ensure_workspace_exists(company, user.id)
+            # Ensure workspace exists for the company and assign user to it
+            self._ensure_workspace_exists(company, user)
+            self.db.refresh(user)  # Refresh to get updated workspace_id
 
             return user
 
@@ -177,7 +180,7 @@ class AuthService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=error_detail
             )
-    
+
     def authenticate_user(self, login_data: LoginRequest) -> Optional[User]:
         """
         Authenticate a user with email and password.
@@ -275,9 +278,7 @@ class AuthService:
                 company = Company(
                     name=company_name,
                     size="1-10",  # Default size for new workspaces
-                    domain=email_domain,
-                    is_active=True,
-                    subscription_plan="free"
+                    domain=email_domain
                 )
                 user_role = "owner"
                 logger.info(f"Creating new workspace '{company_name}' for domain '{email_domain}' from Google login")
@@ -307,9 +308,7 @@ class AuthService:
                             company = Company(
                                 name=fallback_name,
                                 size="1-10",  # Default size for new workspaces
-                                domain=email_domain,
-                                is_active=True,
-                                subscription_plan="free"
+                                domain=email_domain
                             )
                             self.db.add(company)
                             self.db.flush()
@@ -343,8 +342,9 @@ class AuthService:
 
                 logger.info(f"New user created via Google OAuth: {email}")
 
-                # Ensure workspace exists for the company
-                self._ensure_workspace_exists(company, user.id)
+                # Ensure workspace exists for the company and assign user to it
+                self._ensure_workspace_exists(company, user)
+                self.db.refresh(user)  # Refresh to get updated workspace_id
 
                 return user
 
@@ -530,13 +530,19 @@ class AuthService:
             "expires_in": settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
         }
 
-        # Get user's workspace by company
-        workspace = self.db.query(Workspace).filter(
-            Workspace.company_id == user.company_id
-        ).first()
-
-        if workspace:
-            tokens['workspace_id'] = workspace.id
+        # Use user's workspace_id directly (new schema)
+        if user.workspace_id:
+            tokens['workspace_id'] = user.workspace_id
+        else:
+            # Fallback: get workspace by company for users created before migration
+            workspace = self.db.query(Workspace).filter(
+                Workspace.company_id == user.company_id
+            ).first()
+            if workspace:
+                tokens['workspace_id'] = workspace.id
+                # Also update user's workspace_id for future logins
+                user.workspace_id = workspace.id
+                self.db.commit()
 
         return tokens
     

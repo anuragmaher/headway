@@ -81,15 +81,16 @@ def get_current_user(
         "email": user.email,
         "first_name": user.first_name,
         "last_name": user.last_name,
-        "company_id": str(user.company_id),
+        "company_id": str(user.company_id) if user.company_id else None,
+        "workspace_id": str(user.workspace_id) if user.workspace_id else None,
         "role": user.role,
+        "subscription_plan": user.subscription_plan,
         "is_active": user.is_active,
         "onboarding_completed": user.onboarding_completed,
         "created_at": user.created_at.isoformat() if user.created_at else None,
         "updated_at": user.updated_at.isoformat() if user.updated_at else None,
         "last_login_at": user.last_login_at.isoformat() if user.last_login_at else None,
         "job_title": user.job_title,
-        "theme_preference": user.theme_preference,
     }
 
 
@@ -148,10 +149,11 @@ def get_current_user_optional(
             "first_name": user.first_name,
             "last_name": user.last_name,
             "job_title": user.job_title,
-            "company_id": str(user.company_id),
+            "company_id": str(user.company_id) if user.company_id else None,
+            "workspace_id": str(user.workspace_id) if user.workspace_id else None,
             "role": user.role,
+            "subscription_plan": user.subscription_plan,
             "is_active": user.is_active,
-            "theme_preference": user.theme_preference,
             "onboarding_completed": user.onboarding_completed,
             "created_at": user.created_at,
             "updated_at": user.updated_at,
@@ -193,40 +195,48 @@ def get_current_user_with_workspace(
     """
     Get current user with workspace information.
     Creates a default workspace if the user doesn't have one.
-    
+
     Args:
         current_user: Current authenticated user
         db: Database session
-        
+
     Returns:
         Current User dict with workspace_id added
     """
     import uuid
-    
-    # Check if user has a workspace
+
+    # Check if user already has a workspace_id
+    if current_user.get('workspace_id'):
+        return current_user
+
+    # Check if user's company has a workspace
     workspace = db.query(Workspace).filter(
-        Workspace.owner_id == current_user['id']
+        Workspace.company_id == current_user.get('company_id')
     ).first()
-    
+
     if not workspace:
-        # Create a default workspace for the user
+        # Create a default workspace for the company
         workspace = Workspace(
             id=uuid.uuid4(),
             name=f"{current_user['first_name']}'s Workspace",
-            slug=f"{current_user['first_name'].lower()}-workspace-{str(uuid.uuid4())[:8]}",
-            company_id=current_user['company_id'],
-            owner_id=current_user['id'],
+            company_id=current_user.get('company_id'),
             is_active=True
         )
-        
+
         db.add(workspace)
         db.commit()
         db.refresh(workspace)
-    
+
+        # Update user's workspace_id
+        user = db.query(User).filter(User.id == current_user['id']).first()
+        if user:
+            user.workspace_id = workspace.id
+            db.commit()
+
     # Add workspace_id to user dict
     current_user_with_workspace = current_user.copy()
     current_user_with_workspace['workspace_id'] = str(workspace.id)
-    
+
     return current_user_with_workspace
 
 

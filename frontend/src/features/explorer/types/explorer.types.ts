@@ -1,6 +1,8 @@
 /**
  * Theme Explorer Type Definitions
  * Enterprise-grade type system for the three-column explorer interface
+ *
+ * Hierarchy: Theme → SubTheme → CustomerAsk → Mentions (Messages)
  */
 
 // ============================================================================
@@ -14,6 +16,7 @@ export interface ExplorerTheme {
   color: string;
   feedbackCount: number;
   subThemeCount: number;
+  customerAskCount: number;
   isAIGenerated: boolean;
   isLocked: boolean;
   createdAt: string;
@@ -25,6 +28,7 @@ export interface ExplorerSubTheme {
   themeId: string;
   name: string;
   description: string;
+  customerAskCount: number;
   feedbackCount: number;
   isAIGenerated: boolean;
   isLocked: boolean;
@@ -33,6 +37,72 @@ export interface ExplorerSubTheme {
   updatedAt: string;
   urgency?: string;
   status?: string;
+  sources?: FeedbackSource[];  // Sources of customer asks (slack, gmail, gong, fathom, etc.)
+}
+
+/**
+ * CustomerAsk - Represents a feature request/ask from customers
+ * These are grouped under SubThemes and link to multiple Mentions
+ */
+export interface CustomerAskItem {
+  id: string;
+  subThemeId: string;
+  workspaceId: string;
+  name: string;
+  description: string;
+  urgency: UrgencyLevel;
+  status: CustomerAskStatus;
+  matchConfidence: number;
+  mentionCount: number;
+  firstMentionedAt: string | null;
+  lastMentionedAt: string | null;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export type CustomerAskStatus = 'new' | 'under_review' | 'planned' | 'shipped';
+
+/**
+ * Mention - A message that mentions/relates to a CustomerAsk
+ * Contains the original message content and AI insights
+ */
+export interface MentionItem {
+  id: string;
+  customerAskId: string | null;
+  workspaceId: string;
+  source: FeedbackSource;
+  externalId: string;
+  threadId: string | null;
+  content: string;
+  title: string | null;
+  channelName: string | null;
+  labelName: string | null;
+  authorName: string | null;
+  authorEmail: string | null;
+  fromEmail: string | null;
+  toEmails: string | null;
+  messageCount: number;
+  sentAt: string | null;
+  isProcessed: boolean;
+  aiInsights: MentionAIInsights | null;
+}
+
+/**
+ * AI Insights for a mention/message
+ */
+export interface MentionAIInsights {
+  id: string;
+  messageId: string;
+  modelVersion: string | null;
+  summary: string | null;
+  painPoint: string | null;
+  painPointQuote: string | null;
+  featureRequest: string | null;
+  customerUsecase: string | null;
+  sentiment: 'positive' | 'neutral' | 'negative' | null;
+  keywords: string[];
+  tokensUsed: number | null;
+  createdAt: string;
 }
 
 export type FeedbackSource = 'slack' | 'gmail' | 'gong' | 'fathom' | 'intercom' | 'zendesk' | 'manual';
@@ -93,6 +163,7 @@ export interface ExplorerFilters {
   sources: FeedbackSource[];
   tags: FeedbackTag[];
   urgency: UrgencyLevel[];
+  status: CustomerAskStatus[];
   dateRange: DateRange | null;
   searchQuery: string;
 }
@@ -107,9 +178,12 @@ export type SortOption = 'recent' | 'oldest' | 'mentions' | 'urgency' | 'confide
 export interface ExplorerViewState {
   selectedThemeId: string | null;
   selectedSubThemeId: string | null;
+  selectedCustomerAskId: string | null;
   selectedFeedbackId: string | null;
   expandedFeedbackId: string | null;
-  activeColumn: 'themes' | 'subThemes' | 'feedback';
+  expandedMentionId: string | null;
+  activeColumn: 'themes' | 'subThemes' | 'customerAsks';
+  isMentionsPanelOpen: boolean;
 }
 
 export interface ExplorerUIState {
@@ -130,6 +204,8 @@ export interface ExplorerUIState {
 export interface ExplorerLoadingState {
   themes: boolean;
   subThemes: boolean;
+  customerAsks: boolean;
+  mentions: boolean;
   feedback: boolean;
   feedbackDetail: boolean;
   action: boolean;
@@ -194,6 +270,18 @@ export interface SubThemesResponse {
   total: number;
 }
 
+export interface CustomerAsksResponse {
+  customerAsks: CustomerAskItem[];
+  total: number;
+}
+
+export interface MentionsResponse {
+  mentions: MentionItem[];
+  total: number;
+  hasMore: boolean;
+  nextCursor?: string;
+}
+
 export interface FeedbackResponse {
   items: FeedbackItem[];
   total: number;
@@ -230,11 +318,24 @@ export interface FeedbackCardProps {
   onExpand: (feedbackId: string) => void;
 }
 
+export interface CustomerAskCardProps {
+  customerAsk: CustomerAskItem;
+  isSelected: boolean;
+  onSelect: (customerAskId: string) => void;
+  onStatusChange?: (customerAskId: string, status: CustomerAskStatus) => void;
+}
+
+export interface MentionCardProps {
+  mention: MentionItem;
+  isExpanded: boolean;
+  onToggleExpand: (mentionId: string) => void;
+}
+
 // ============================================================================
 // Utility Types
 // ============================================================================
 
-export type ColumnType = 'themes' | 'subThemes' | 'feedback';
+export type ColumnType = 'themes' | 'subThemes' | 'customerAsks' | 'mentions';
 
 export interface ColumnConfig {
   type: ColumnType;
@@ -259,11 +360,18 @@ export const DEFAULT_COLUMN_CONFIGS: Record<ColumnType, ColumnConfig> = {
     maxWidth: 320,
     resizable: true,
   },
-  feedback: {
-    type: 'feedback',
+  customerAsks: {
+    type: 'customerAsks',
     width: 'flex',
     minWidth: 400,
     resizable: false,
+  },
+  mentions: {
+    type: 'mentions',
+    width: 420,
+    minWidth: 350,
+    maxWidth: 500,
+    resizable: true,
   },
 };
 
@@ -303,6 +411,21 @@ export const DEFAULT_FILTERS: ExplorerFilters = {
   sources: [],
   tags: [],
   urgency: [],
+  status: [],
   dateRange: null,
   searchQuery: '',
+};
+
+export const CUSTOMER_ASK_STATUS_LABELS: Record<CustomerAskStatus, string> = {
+  new: 'New',
+  under_review: 'Under Review',
+  planned: 'Planned',
+  shipped: 'Shipped',
+};
+
+export const CUSTOMER_ASK_STATUS_COLORS: Record<CustomerAskStatus, string> = {
+  new: '#2196F3',
+  under_review: '#FF9800',
+  planned: '#9C27B0',
+  shipped: '#4CAF50',
 };

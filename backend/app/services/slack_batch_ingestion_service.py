@@ -13,7 +13,7 @@ Usage:
     from app.services.slack_batch_ingestion_service import slack_batch_ingestion_service
 
     result = await slack_batch_ingestion_service.ingest_messages(
-        integration_id="...",
+        connector_id="...",
         db=db,
         hours_back=24
     )
@@ -27,14 +27,14 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 
-from app.models.integration import Integration
+from app.models.workspace_connector import WorkspaceConnector
 from app.models.message import Message
 from app.services.slack_service import slack_service
 from app.services.batch_db_service import batch_db_service
 
 logger = logging.getLogger(__name__)
 
-# Maximum number of users to cache per integration
+# Maximum number of users to cache per connector
 MAX_USER_CACHE_SIZE = 500
 
 
@@ -78,7 +78,7 @@ class SlackBatchIngestionService:
 
     async def ingest_messages(
         self,
-        integration_id: str,
+        connector_id: str,
         db: Session,
         hours_back: int = 24
     ) -> Dict[str, int]:
@@ -94,7 +94,7 @@ class SlackBatchIngestionService:
         AI extraction is NOT performed here - it happens in a separate task.
 
         Args:
-            integration_id: Integration UUID string
+            connector_id: WorkspaceConnector UUID string
             db: Database session
             hours_back: How many hours back to fetch messages
 
@@ -102,27 +102,27 @@ class SlackBatchIngestionService:
             Dict with 'total_checked', 'new_added', 'duplicates_skipped'
         """
         try:
-            # Get the integration
-            integration = db.query(Integration).filter(
+            # Get the connector
+            connector = db.query(WorkspaceConnector).filter(
                 and_(
-                    Integration.id == integration_id,
-                    Integration.provider == "slack",
-                    Integration.is_active == True
+                    WorkspaceConnector.id == connector_id,
+                    WorkspaceConnector.connector_type == "slack",
+                    WorkspaceConnector.is_active == True
                 )
             ).first()
 
-            if not integration:
-                logger.error(f"Integration {integration_id} not found or not active")
+            if not connector:
+                logger.error(f"Connector {connector_id} not found or not active")
                 return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
-            if not integration.access_token:
-                logger.error(f"No access token for integration {integration_id}")
+            if not connector.access_token:
+                logger.error(f"No access token for connector {connector_id}")
                 return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
-            # Get selected channels
-            selected_channels = integration.provider_metadata.get("selected_channels", [])
+            # Get selected channels from config
+            selected_channels = (connector.config or {}).get("selected_channels", [])
             if not selected_channels:
-                logger.warning(f"No channels selected for integration {integration_id}")
+                logger.warning(f"No channels selected for connector {connector_id}")
                 return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
             total_checked = 0
@@ -139,7 +139,7 @@ class SlackBatchIngestionService:
 
                 try:
                     result = await self._batch_process_channel(
-                        integration=integration,
+                        connector=connector,
                         channel_id=channel_id,
                         channel_name=channel_name,
                         db=db
@@ -159,10 +159,10 @@ class SlackBatchIngestionService:
                     logger.error(f"Error ingesting messages from #{channel_name}: {e}")
                     continue
 
-            # Update integration sync status
-            integration.last_synced_at = datetime.now(timezone.utc)
-            integration.sync_status = "success"
-            integration.sync_error = None
+            # Update connector sync status
+            connector.last_synced_at = datetime.now(timezone.utc)
+            connector.sync_status = "success"
+            connector.sync_error = None
             db.commit()
 
             logger.info(
@@ -178,16 +178,16 @@ class SlackBatchIngestionService:
             }
 
         except Exception as e:
-            logger.error(f"Error in Slack ingestion for integration {integration_id}: {e}")
-            if 'integration' in locals() and integration:
-                integration.sync_status = "error"
-                integration.sync_error = str(e)
+            logger.error(f"Error in Slack ingestion for connector {connector_id}: {e}")
+            if 'connector' in locals() and connector:
+                connector.sync_status = "error"
+                connector.sync_error = str(e)
                 db.commit()
             return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
     async def _batch_process_channel(
         self,
-        integration: Integration,
+        connector: WorkspaceConnector,
         channel_id: str,
         channel_name: str,
         db: Session
@@ -196,7 +196,7 @@ class SlackBatchIngestionService:
         Batch process messages from a single channel.
 
         Args:
-            integration: Integration instance
+            connector: WorkspaceConnector instance
             channel_id: Slack channel ID
             channel_name: Slack channel name
             db: Database session
@@ -207,7 +207,7 @@ class SlackBatchIngestionService:
         try:
             # Step 1: Fetch messages from Slack
             messages = await slack_service.get_channel_messages(
-                token=integration.access_token,
+                token=connector.access_token,
                 channel_id=channel_id,
                 limit=100
             )
@@ -225,7 +225,7 @@ class SlackBatchIngestionService:
             existing_ids = self._get_existing_message_ids(
                 db=db,
                 external_ids=external_ids,
-                integration_id=str(integration.id),
+                connector_id=str(connector.id),
                 channel_id=channel_id
             )
 
@@ -251,7 +251,7 @@ class SlackBatchIngestionService:
             # Fetch all unknown users
             for user_id in user_ids:
                 try:
-                    user_info = await slack_service.get_user_info(integration.access_token, user_id)
+                    user_info = await slack_service.get_user_info(connector.access_token, user_id)
                     profile = user_info.get("profile", {})
                     author_info = {
                         "name": profile.get("display_name") or profile.get("real_name") or user_info.get("name", "Unknown User"),
@@ -267,7 +267,7 @@ class SlackBatchIngestionService:
             for msg in new_messages:
                 message_dict = self._prepare_message(
                     message_data=msg,
-                    integration=integration,
+                    connector=connector,
                     channel_id=channel_id,
                     channel_name=channel_name
                 )
@@ -279,8 +279,8 @@ class SlackBatchIngestionService:
                 result = batch_db_service.batch_insert_messages(
                     db=db,
                     messages=message_dicts,
-                    workspace_id=str(integration.workspace_id),
-                    integration_id=str(integration.id),
+                    workspace_id=str(connector.workspace_id),
+                    connector_id=str(connector.id),
                     source="slack"
                 )
                 return {
@@ -305,7 +305,7 @@ class SlackBatchIngestionService:
         self,
         db: Session,
         external_ids: List[str],
-        integration_id: str,
+        connector_id: str,
         channel_id: str
     ) -> Set[str]:
         """Get set of external IDs that already exist."""
@@ -315,7 +315,7 @@ class SlackBatchIngestionService:
         try:
             existing = db.query(Message.external_id).filter(
                 and_(
-                    Message.integration_id == UUID(integration_id),
+                    Message.connector_id == UUID(connector_id),
                     Message.channel_id == channel_id,
                     Message.external_id.in_(external_ids)
                 )
@@ -350,7 +350,7 @@ class SlackBatchIngestionService:
     def _prepare_message(
         self,
         message_data: Dict[str, Any],
-        integration: Integration,
+        connector: WorkspaceConnector,
         channel_id: str,
         channel_name: str
     ) -> Optional[Dict[str, Any]]:
@@ -382,10 +382,6 @@ class SlackBatchIngestionService:
             "author_id": user_id,
             "author_email": author_info.get("email"),
             "thread_id": message_data.get("thread_ts"),
-            "is_thread_reply": bool(
-                message_data.get("thread_ts") and
-                message_data.get("thread_ts") != external_id
-            ),
             "metadata": {
                 "reactions": message_data.get("reactions", []),
                 "thread_ts": message_data.get("thread_ts"),

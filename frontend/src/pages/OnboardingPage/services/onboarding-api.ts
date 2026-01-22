@@ -1,19 +1,31 @@
 /**
  * Onboarding API service
+ *
+ * Data is stored in proper tables:
+ * - Company data → companies table
+ * - Themes/sub-themes → themes & sub_themes tables
+ * - Connected sources → workspace_connectors table
+ * - Competitors → competitors table
+ * - Progress tracking → onboarding_progress table (only current_step)
  */
 
 import api from '@/services/api';
 import type { User } from '@/features/auth/types/auth.types';
 import type {
-  CompanySetupData,
   CompanyDataResponse,
   Competitor,
+  ConnectedSource,
   OnboardingProgressResponse,
   TaxonomyGenerateResponse,
   Theme,
+  BulkThemeResponse,
 } from '../types';
 
 const BASE_URL = '/api/v1/onboarding';
+
+// ============================================
+// Options
+// ============================================
 
 export async function getOnboardingOptions(): Promise<{
   industries: string[];
@@ -24,7 +36,10 @@ export async function getOnboardingOptions(): Promise<{
   return response.data;
 }
 
-// Company data endpoints (stored in companies table)
+// ============================================
+// Company Data (Step 0)
+// ============================================
+
 export async function getCompanyData(
   workspaceId: string
 ): Promise<CompanyDataResponse> {
@@ -50,7 +65,10 @@ export async function saveCompanyData(
   return response.data;
 }
 
-// Progress endpoints (stored in onboarding_progress table)
+// ============================================
+// Progress Tracking
+// ============================================
+
 export async function getOnboardingProgress(
   workspaceId: string
 ): Promise<OnboardingProgressResponse | null> {
@@ -64,26 +82,10 @@ export async function saveOnboardingProgress(
   workspaceId: string,
   data: {
     current_step: number;
-    taxonomy_url?: string;
-    taxonomy_data?: { themes: Theme[] };
-    selected_themes?: string[];
-    connected_sources?: string[];
-    selected_competitors?: Competitor[];
   }
 ): Promise<OnboardingProgressResponse> {
   const response = await api.post(`${BASE_URL}/progress`, data, {
     params: { workspace_id: workspaceId },
-  });
-  return response.data;
-}
-
-export async function generateTaxonomy(
-  workspaceId: string,
-  url: string
-): Promise<TaxonomyGenerateResponse> {
-  const response = await api.post(`${BASE_URL}/taxonomy/generate`, {
-    workspace_id: workspaceId,
-    url,
   });
   return response.data;
 }
@@ -96,10 +98,100 @@ export async function resetOnboardingProgress(
   });
 }
 
+// ============================================
+// Taxonomy (Step 1)
+// ============================================
+
+export async function generateTaxonomy(
+  workspaceId: string,
+  url: string
+): Promise<TaxonomyGenerateResponse> {
+  const response = await api.post(`${BASE_URL}/taxonomy/generate`, {
+    workspace_id: workspaceId,
+    url,
+  });
+  return response.data;
+}
+
+export async function saveThemesBulk(
+  workspaceId: string,
+  themes: Theme[]
+): Promise<BulkThemeResponse> {
+  const response = await api.post(
+    `${BASE_URL}/themes/bulk`,
+    { themes },
+    { params: { workspace_id: workspaceId } }
+  );
+  return response.data;
+}
+
+// ============================================
+// Connected Sources (Step 2)
+// ============================================
+
+export async function getConnectedSources(
+  workspaceId: string
+): Promise<ConnectedSource[]> {
+  const response = await api.get(`${BASE_URL}/connectors`, {
+    params: { workspace_id: workspaceId },
+  });
+  return response.data;
+}
+
+// ============================================
+// Competitors (Step 3)
+// ============================================
+
+export async function getCompetitors(
+  workspaceId: string
+): Promise<Competitor[]> {
+  const response = await api.get(`${BASE_URL}/competitors`, {
+    params: { workspace_id: workspaceId },
+  });
+  return response.data;
+}
+
+export async function saveCompetitors(
+  workspaceId: string,
+  competitors: Competitor[]
+): Promise<Competitor[]> {
+  const response = await api.post(`${BASE_URL}/competitors`, competitors, {
+    params: { workspace_id: workspaceId },
+  });
+  return response.data;
+}
+
+export async function addCompetitor(
+  workspaceId: string,
+  competitor: Competitor
+): Promise<Competitor> {
+  const response = await api.post(`${BASE_URL}/competitors/add`, competitor, {
+    params: { workspace_id: workspaceId },
+  });
+  return response.data;
+}
+
+export async function removeCompetitor(
+  workspaceId: string,
+  competitorName: string
+): Promise<void> {
+  await api.delete(`${BASE_URL}/competitors/${encodeURIComponent(competitorName)}`, {
+    params: { workspace_id: workspaceId },
+  });
+}
+
+// ============================================
+// Complete Onboarding
+// ============================================
+
 export async function completeOnboarding(): Promise<User> {
   const response = await api.post('/api/v1/auth/complete-onboarding');
   return response.data;
 }
+
+// ============================================
+// Export all functions
+// ============================================
 
 export const onboardingApi = {
   getOnboardingOptions,
@@ -107,7 +199,13 @@ export const onboardingApi = {
   saveCompanyData,
   getOnboardingProgress,
   saveOnboardingProgress,
-  generateTaxonomy,
   resetOnboardingProgress,
+  generateTaxonomy,
+  saveThemesBulk,
+  getConnectedSources,
+  getCompetitors,
+  saveCompetitors,
+  addCompetitor,
+  removeCompetitor,
   completeOnboarding,
 };

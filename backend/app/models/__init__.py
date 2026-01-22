@@ -5,53 +5,62 @@ All SQLAlchemy models are imported here to ensure they are registered
 with the Base metadata for Alembic migrations.
 """
 
-from app.models.user import User
+# Core models
 from app.models.company import Company
+from app.models.user import User
 from app.models.workspace import Workspace
-from app.models.workspace_connector import WorkspaceConnector
+
+# Theme hierarchy
 from app.models.theme import Theme
-from app.models.feature import Feature
-from app.models.integration import Integration
-from app.models.message import Message, feature_messages
+from app.models.sub_theme import SubTheme
+from app.models.customer_ask import CustomerAsk
+
+# Data sources
+from app.models.workspace_connector import WorkspaceConnector
+from app.models.connector_label import ConnectorLabel
+from app.models.message import Message
+
+# AI insights
+from app.models.ai_insight import AIInsight
+
+# CRM
 from app.models.customer import Customer
-from app.models.clustering import ClusteringRun, DiscoveredCluster, ClassificationSignal
-from app.models.workspace_data_point import WorkspaceDataPoint
-from app.models.data_extraction_field import DataExtractionField
-from app.models.gmail import GmailAccounts, GmailLabels, GmailThread
 from app.models.competitor import Competitor
+
+# Progress tracking
+from app.models.onboarding_progress import OnboardingProgress
 from app.models.sync_history import SyncHistory
+
+# AI pipeline (kept)
 from app.models.normalized_event import NormalizedEvent, EventChunk
 from app.models.extracted_fact import ExtractedFact, AggregationRun
-from app.models.ai_message_insight import AIMessageInsight, AIInsightsProgress, AIInsightsConfig
-from app.models.onboarding_progress import OnboardingProgress
+from app.models.clustering import ClusteringRun
 
 __all__ = [
-    "User",
+    # Core
     "Company",
+    "User",
     "Workspace",
-    "WorkspaceConnector",
+    # Theme hierarchy
     "Theme",
-    "Feature",
-    "Integration",
+    "SubTheme",
+    "CustomerAsk",
+    # Data sources
+    "WorkspaceConnector",
+    "ConnectorLabel",
     "Message",
-    "feature_messages",
+    # AI insights
+    "AIInsight",
+    # CRM
     "Customer",
-    "ClusteringRun",
-    "DiscoveredCluster",
-    "ClassificationSignal",
-    "WorkspaceDataPoint",
-    "DataExtractionField",
-    "GmailAccounts",
-    "GmailLabels",
-    "GmailThread",
     "Competitor",
+    # Progress tracking
+    "OnboardingProgress",
     "SyncHistory",
+    # AI pipeline
     "NormalizedEvent",
     "EventChunk",
     "ExtractedFact",
     "AggregationRun",
-    "AIMessageInsight",
-    "AIInsightsProgress",
-    "AIInsightsConfig",
-    "OnboardingProgress",
+    "ClusteringRun",
 ]

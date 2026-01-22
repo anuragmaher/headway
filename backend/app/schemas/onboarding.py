@@ -25,6 +25,7 @@ class CompanyDataResponse(BaseModel):
     website: Optional[str] = None
     industry: Optional[str] = None
     team_size: Optional[str] = None
+    role: Optional[str] = None
 
 
 # ============================================
@@ -72,30 +73,50 @@ class CompetitorSchema(BaseModel):
 # ============================================
 
 class OnboardingProgressRequest(BaseModel):
-    """Request to save onboarding progress (company data saved separately)"""
+    """Request to save onboarding progress (only step tracking)
+
+    Note: Actual data is stored in proper tables:
+    - Company data → companies table (via POST /onboarding/company)
+    - Themes → themes table (via POST /themes)
+    - Sub-themes → sub_themes table (via POST /themes/sub-themes)
+    - Connected sources → workspace_connectors table
+    - Competitors → competitors table (via POST /onboarding/competitors)
+    """
     current_step: int = Field(..., ge=0, le=3)
-    taxonomy_url: Optional[str] = None
-    taxonomy_data: Optional[dict] = None
-    selected_themes: Optional[List[str]] = None
-    connected_sources: Optional[List[str]] = None
-    selected_competitors: Optional[List[CompetitorSchema]] = None
 
 
 class OnboardingProgressResponse(BaseModel):
-    """Response with saved onboarding progress (company data fetched separately)"""
+    """Response with saved onboarding progress (only step tracking)
+
+    Note: Fetch actual data from proper tables:
+    - Company data → GET /onboarding/company
+    - Themes → GET /themes
+    - Connected sources → GET /workspace-connectors (by workspace)
+    - Competitors → GET /onboarding/competitors
+    """
     id: UUID
     workspace_id: UUID
     current_step: int
-    taxonomy_url: Optional[str] = None
-    taxonomy_data: Optional[dict] = None
-    selected_themes: Optional[List[str]] = None
-    connected_sources: Optional[List[str]] = None
-    selected_competitors: Optional[List[dict]] = None
     created_at: datetime
     updated_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True
+
+
+# ============================================
+# Bulk Theme Creation (for taxonomy generation)
+# ============================================
+
+class BulkThemeCreate(BaseModel):
+    """Create multiple themes with sub-themes at once"""
+    themes: List[ThemeSchema]
+
+
+class BulkThemeResponse(BaseModel):
+    """Response after bulk theme creation"""
+    created_count: int
+    themes: List[dict]  # Simplified response
 
 
 # ============================================

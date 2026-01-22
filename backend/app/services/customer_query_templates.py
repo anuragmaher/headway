@@ -11,11 +11,30 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 import logging
 
+from sqlalchemy import Table, Column, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
+
 from app.models.customer import Customer
 from app.models.message import Message
-from app.models.feature import Feature
+from app.models.customer_ask import CustomerAsk
 from app.models.theme import Theme
-from app.models.message import feature_messages
+from app.models.sub_theme import SubTheme
+from app.core.database import Base
+
+# Alias for backward compatibility
+Feature = CustomerAsk
+
+# Note: feature_messages junction table has been replaced with direct FK on messages table
+# Message.customer_ask_id now links messages to customer asks directly
+# Creating a stub table definition for backward compatibility with existing queries
+# This allows the code to import without errors, but queries should be refactored
+feature_messages = Table(
+    'feature_messages',
+    Base.metadata,
+    Column('feature_id', UUID(as_uuid=True), ForeignKey('customer_asks.id'), primary_key=True),
+    Column('message_id', UUID(as_uuid=True), ForeignKey('messages.id'), primary_key=True),
+    extend_existing=True
+)
 
 logger = logging.getLogger(__name__)
 

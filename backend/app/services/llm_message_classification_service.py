@@ -8,8 +8,11 @@ from openai import OpenAI
 from app.core.database import get_db
 from app.core.config import settings
 from app.models.message import Message
-from app.models.feature import Feature
+from app.models.customer_ask import CustomerAsk
 from app.models.theme import Theme
+
+# Alias for backward compatibility
+Feature = CustomerAsk
 
 logger = logging.getLogger(__name__)
 

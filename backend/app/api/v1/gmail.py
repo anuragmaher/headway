@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Request, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import desc
 from datetime import datetime, timezone
 from fastapi.concurrency import run_in_threadpool
 import logging
@@ -14,7 +15,9 @@ from app.services.gmail_client import get_gmail_client
 from app.services.gmail_ingestion_service import gmail_ingestion_service
 from app.models.user import User
 from app.models.workspace import Workspace
-from app.models.gmail import GmailAccounts, GmailLabels, GmailThread
+from app.models.workspace_connector import WorkspaceConnector
+from app.models.connector_label import ConnectorLabel
+from app.models.message import Message
 from googleapiclient.discovery import build 
 
 logger = logging.getLogger(__name__)
@@ -81,8 +84,9 @@ async def gmail_callback(request: Request, db: Session = Depends(get_db)):
         workspace = db.query(Workspace).filter(Workspace.owner_id == user_id).first()
         workspace_id = workspace.id if workspace else None
 
-        existing = db.query(GmailAccounts).filter(
-            GmailAccounts.gmail_email == gmail_email
+        existing = db.query(WorkspaceConnector).filter(
+            WorkspaceConnector.connector_type == 'gmail',
+            WorkspaceConnector.external_id == gmail_email
         ).first()
 
         if existing:
@@ -92,17 +96,22 @@ async def gmail_callback(request: Request, db: Session = Depends(get_db)):
             )
             return RedirectResponse(url=already_connected_redirect, status_code=302)
 
-        gmail_account = GmailAccounts(
+        gmail_connector = WorkspaceConnector(
             user_id=user.id,
             workspace_id=workspace_id,
-            gmail_email=gmail_email,
+            connector_type='gmail',
+            name=gmail_email,
+            external_id=gmail_email,
+            external_name=gmail_email,
             access_token=credentials.token,
             refresh_token=credentials.refresh_token,
-            token_expiry=credentials.expiry,
+            token_expires_at=credentials.expiry,
+            is_active=True,
+            sync_status='pending',
             created_at=datetime.now(timezone.utc),
         )
 
-        db.add(gmail_account)
+        db.add(gmail_connector)
         db.commit()
 
         # Redirect to frontend callback page
@@ -128,15 +137,16 @@ async def fetch_labels(
     db: Session = Depends(get_db)
 ):
     try:
-        gmail_account = db.query(GmailAccounts).filter(
-            GmailAccounts.user_id == current_user["id"]
+        gmail_connector = db.query(WorkspaceConnector).filter(
+            WorkspaceConnector.user_id == current_user["id"],
+            WorkspaceConnector.connector_type == 'gmail'
         ).first()
 
-        if not gmail_account:
+        if not gmail_connector:
             raise HTTPException(status_code=404, detail="Gmail account not found")
 
         def fetch():
-            gmail = get_gmail_client(gmail_account, db)
+            gmail = get_gmail_client(gmail_connector, db)
             return gmail.users().labels().list(userId="me").execute()
 
         res = await run_in_threadpool(fetch)
@@ -161,13 +171,13 @@ async def fetch_labels(
 
 
 # Background task function for Gmail ingestion
-def run_gmail_ingestion_background(gmail_account_id: str):
+def run_gmail_ingestion_background(connector_id: str):
     """Run Gmail ingestion in background with its own database session"""
     db = SessionLocal()
     try:
-        logger.info(f"Starting background Gmail ingestion for account {gmail_account_id}")
-        result = gmail_ingestion_service.ingest_threads_for_account(
-            gmail_account_id=gmail_account_id,
+        logger.info(f"Starting background Gmail ingestion for connector {connector_id}")
+        result = gmail_ingestion_service.ingest_threads_for_connector(
+            connector_id=connector_id,
             db=db,
             max_threads=5
         )
@@ -190,31 +200,32 @@ async def save_selected_labels(
     db: Session = Depends(get_db)
 ):
     try:
-        gmail_account = db.query(GmailAccounts).filter(
-            GmailAccounts.user_id == current_user["id"]
+        gmail_connector = db.query(WorkspaceConnector).filter(
+            WorkspaceConnector.user_id == current_user["id"],
+            WorkspaceConnector.connector_type == 'gmail'
         ).first()
 
-        if not gmail_account:
+        if not gmail_connector:
             raise HTTPException(status_code=404, detail="Gmail account not found")
-        
-        # Ensure workspace_id is set (in case account was created before this update)
-        if not gmail_account.workspace_id:
+
+        # Ensure workspace_id is set (in case connector was created before this update)
+        if not gmail_connector.workspace_id:
             workspace = db.query(Workspace).filter(
                 Workspace.owner_id == current_user["id"]
             ).first()
             if workspace:
-                gmail_account.workspace_id = workspace.id
+                gmail_connector.workspace_id = workspace.id
 
-        db.query(GmailLabels).filter(
-            GmailLabels.gmail_account_id == gmail_account.id
+        db.query(ConnectorLabel).filter(
+            ConnectorLabel.connector_id == gmail_connector.id
         ).delete()
 
         labels_to_insert = [
-            GmailLabels(
-                gmail_account_id=gmail_account.id,
+            ConnectorLabel(
+                connector_id=gmail_connector.id,
                 label_id=label.id,  # Gmail label ID (e.g., "Label_123")
                 label_name=label.name,  # Gmail label name
-                watch_enabled=True,
+                is_enabled=True,
                 created_at=datetime.now(timezone.utc)
             )
             for label in payload.selected
@@ -222,13 +233,13 @@ async def save_selected_labels(
 
         db.bulk_save_objects(labels_to_insert)
         db.commit()
-        
-        gmail_account_id = str(gmail_account.id)
-        
+
+        connector_id = str(gmail_connector.id)
+
         # Trigger background ingestion if labels are selected
-        if payload.selected and gmail_account.workspace_id:
-            logger.info(f"Scheduling background Gmail ingestion for account {gmail_account_id}")
-            background_tasks.add_task(run_gmail_ingestion_background, gmail_account_id)
+        if payload.selected and gmail_connector.workspace_id:
+            logger.info(f"Scheduling background Gmail ingestion for connector {connector_id}")
+            background_tasks.add_task(run_gmail_ingestion_background, connector_id)
 
         return {
             "labels": [
@@ -238,7 +249,7 @@ async def save_selected_labels(
                 }
                 for label in labels_to_insert
             ],
-            "ingestion_triggered": bool(payload.selected and gmail_account.workspace_id)
+            "ingestion_triggered": bool(payload.selected and gmail_connector.workspace_id)
         }
 
     except HTTPException:
@@ -259,18 +270,19 @@ async def get_selected_labels(
     db: Session = Depends(get_db)
 ):
     """
-    Get selected labels for the current user's Gmail account
+    Get selected labels for the current user's Gmail connector
     """
     try:
-        gmail_account = db.query(GmailAccounts).filter(
-            GmailAccounts.user_id == current_user["id"]
+        gmail_connector = db.query(WorkspaceConnector).filter(
+            WorkspaceConnector.user_id == current_user["id"],
+            WorkspaceConnector.connector_type == 'gmail'
         ).first()
 
-        if not gmail_account:
+        if not gmail_connector:
             raise HTTPException(status_code=404, detail="Gmail account not found")
 
-        selected_labels = db.query(GmailLabels).filter(
-            GmailLabels.gmail_account_id == gmail_account.id
+        selected_labels = db.query(ConnectorLabel).filter(
+            ConnectorLabel.connector_id == gmail_connector.id
         ).all()
 
         return {
@@ -301,24 +313,25 @@ async def get_gmail_accounts(
     db: Session = Depends(get_db)
 ):
     """
-    Get all Gmail accounts for the current user
+    Get all Gmail connectors for the current user
     """
     try:
-        accounts = db.query(GmailAccounts).options(
-            joinedload(GmailAccounts.user)
+        connectors = db.query(WorkspaceConnector).options(
+            joinedload(WorkspaceConnector.user)
         ).filter(
-            GmailAccounts.user_id == current_user["id"]
+            WorkspaceConnector.user_id == current_user["id"],
+            WorkspaceConnector.connector_type == 'gmail'
         ).all()
 
         return {
             "accounts": [
                 {
-                    "id": str(account.id),
-                    "gmail_email": account.gmail_email,
-                    "created_at": account.created_at.isoformat() if account.created_at else None,
-                    "first_name": account.user.first_name if account.user else None,
+                    "id": str(connector.id),
+                    "gmail_email": connector.external_id,
+                    "created_at": connector.created_at.isoformat() if connector.created_at else None,
+                    "first_name": connector.user.first_name if connector.user else None,
                 }
-                for account in accounts
+                for connector in connectors
             ]
         }
     except Exception as e:
@@ -337,27 +350,28 @@ async def disconnect_gmail_account(
     db: Session = Depends(get_db)
 ):
     """
-    Disconnect a Gmail account
+    Disconnect a Gmail connector
     """
     try:
-        account = db.query(GmailAccounts).filter(
-            GmailAccounts.id == UUID(account_id),
-            GmailAccounts.user_id == current_user["id"]
+        connector = db.query(WorkspaceConnector).filter(
+            WorkspaceConnector.id == UUID(account_id),
+            WorkspaceConnector.user_id == current_user["id"],
+            WorkspaceConnector.connector_type == 'gmail'
         ).first()
 
-        if not account:
+        if not connector:
             raise HTTPException(status_code=404, detail="Gmail account not found")
 
         # Delete associated labels first (cascade should handle this, but being explicit)
-        db.query(GmailLabels).filter(
-            GmailLabels.gmail_account_id == account.id
+        db.query(ConnectorLabel).filter(
+            ConnectorLabel.connector_id == connector.id
         ).delete()
 
-        # Delete the account
-        db.delete(account)
+        # Delete the connector
+        db.delete(connector)
         db.commit()
 
-        logger.info(f"Disconnected Gmail account {account_id} for user {current_user['id']}")
+        logger.info(f"Disconnected Gmail connector {account_id} for user {current_user['id']}")
 
         return {"message": "Gmail account disconnected successfully"}
 
@@ -380,46 +394,47 @@ async def sync_gmail_threads(
     db: Session = Depends(get_db)
 ):
     """
-    Manually trigger Gmail thread ingestion for the current user's account
+    Manually trigger Gmail message ingestion for the current user's connector
     """
     try:
-        gmail_account = db.query(GmailAccounts).filter(
-            GmailAccounts.user_id == current_user["id"]
+        gmail_connector = db.query(WorkspaceConnector).filter(
+            WorkspaceConnector.user_id == current_user["id"],
+            WorkspaceConnector.connector_type == 'gmail'
         ).first()
 
-        if not gmail_account:
+        if not gmail_connector:
             raise HTTPException(status_code=404, detail="Gmail account not found")
-        
+
         # Ensure workspace_id is set
-        if not gmail_account.workspace_id:
+        if not gmail_connector.workspace_id:
             workspace = db.query(Workspace).filter(
                 Workspace.owner_id == current_user["id"]
             ).first()
             if workspace:
-                gmail_account.workspace_id = workspace.id
+                gmail_connector.workspace_id = workspace.id
                 db.commit()
-        
-        if not gmail_account.workspace_id:
+
+        if not gmail_connector.workspace_id:
             raise HTTPException(status_code=400, detail="No workspace associated with Gmail account")
-        
+
         # Check if there are selected labels
-        labels_count = db.query(GmailLabels).filter(
-            GmailLabels.gmail_account_id == gmail_account.id,
-            GmailLabels.watch_enabled == True
+        labels_count = db.query(ConnectorLabel).filter(
+            ConnectorLabel.connector_id == gmail_connector.id,
+            ConnectorLabel.is_enabled == True
         ).count()
-        
+
         if labels_count == 0:
             raise HTTPException(status_code=400, detail="No labels selected for syncing")
-        
-        gmail_account_id = str(gmail_account.id)
-        
+
+        connector_id = str(gmail_connector.id)
+
         # Trigger background ingestion
-        logger.info(f"Manual sync triggered for Gmail account {gmail_account_id}")
-        background_tasks.add_task(run_gmail_ingestion_background, gmail_account_id)
+        logger.info(f"Manual sync triggered for Gmail connector {connector_id}")
+        background_tasks.add_task(run_gmail_ingestion_background, connector_id)
 
         return {
             "message": "Gmail sync started",
-            "account_id": gmail_account_id,
+            "account_id": connector_id,
             "labels_count": labels_count
         }
 
@@ -442,51 +457,54 @@ async def get_gmail_threads(
     offset: int = 0
 ):
     """
-    Get fetched Gmail threads for the current user's account
+    Get fetched Gmail messages for the current user's connector
     """
     try:
-        gmail_account = db.query(GmailAccounts).filter(
-            GmailAccounts.user_id == current_user["id"]
+        gmail_connector = db.query(WorkspaceConnector).filter(
+            WorkspaceConnector.user_id == current_user["id"],
+            WorkspaceConnector.connector_type == 'gmail'
         ).first()
 
-        if not gmail_account:
+        if not gmail_connector:
             raise HTTPException(status_code=404, detail="Gmail account not found")
 
-        # Get threads with pagination
-        threads = db.query(GmailThread).filter(
-            GmailThread.gmail_account_id == gmail_account.id
+        # Get messages with pagination
+        messages = db.query(Message).filter(
+            Message.connector_id == gmail_connector.id,
+            Message.source == 'gmail'
         ).order_by(
-            GmailThread.thread_date.desc()
+            desc(Message.sent_at)
         ).offset(offset).limit(limit).all()
-        
-        total_count = db.query(GmailThread).filter(
-            GmailThread.gmail_account_id == gmail_account.id
+
+        total_count = db.query(Message).filter(
+            Message.connector_id == gmail_connector.id,
+            Message.source == 'gmail'
         ).count()
 
         return {
             "threads": [
                 {
-                    "id": str(thread.id),
-                    "thread_id": thread.thread_id,
-                    "subject": thread.subject,
-                    "snippet": thread.snippet,
-                    "from_email": thread.from_email,
-                    "from_name": thread.from_name,
-                    "to_emails": thread.to_emails,
-                    "label_name": thread.label_name,
-                    "message_count": thread.message_count,
-                    "thread_date": thread.thread_date.isoformat() if thread.thread_date else None,
-                    "is_processed": thread.is_processed,
-                    "content_preview": thread.content[:500] if thread.content else None,
-                    "created_at": thread.created_at.isoformat() if thread.created_at else None
+                    "id": str(msg.id),
+                    "thread_id": msg.thread_id,
+                    "subject": msg.title,
+                    "snippet": msg.content[:200] if msg.content else None,
+                    "from_email": msg.from_email,
+                    "from_name": msg.author_name,
+                    "to_emails": msg.to_emails,
+                    "label_name": msg.label_name,
+                    "message_count": msg.message_count or 1,
+                    "thread_date": msg.sent_at.isoformat() if msg.sent_at else None,
+                    "is_processed": msg.is_processed,
+                    "content_preview": msg.content[:500] if msg.content else None,
+                    "created_at": msg.created_at.isoformat() if msg.created_at else None
                 }
-                for thread in threads
+                for msg in messages
             ],
             "total_count": total_count,
             "limit": limit,
             "offset": offset,
-            "sync_status": gmail_account.sync_status,
-            "last_synced_at": gmail_account.last_synced_at.isoformat() if gmail_account.last_synced_at else None
+            "sync_status": gmail_connector.sync_status,
+            "last_synced_at": gmail_connector.last_synced_at.isoformat() if gmail_connector.last_synced_at else None
         }
 
     except HTTPException:

@@ -24,8 +24,11 @@ from app.schemas.customer import (
     CustomerChatResponse
 )
 from app.core.deps import get_current_user
-from app.models.feature import Feature
+from app.models.customer_ask import CustomerAsk
 from app.services.ai_extraction_service import get_ai_extraction_service
+
+# Alias for backward compatibility
+Feature = CustomerAsk
 from app.services.customer_chat_service import get_customer_chat_service
 
 router = APIRouter()

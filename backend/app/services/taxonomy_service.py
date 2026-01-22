@@ -8,16 +8,34 @@ Uses Firecrawl for crawling and OpenAI for taxonomy inference.
 import json
 import logging
 import hashlib
-from typing import List
+from typing import List, Optional, Any
 from dataclasses import dataclass
 
 import openai
-from firecrawl import Firecrawl
-from firecrawl.types import ScrapeOptions
 
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
+
+# Try to import Firecrawl SDK - handle different versions
+FirecrawlClient: Optional[Any] = None
+FIRECRAWL_AVAILABLE = False
+
+try:
+    # Try the newer SDK pattern (firecrawl-py v1.x+)
+    from firecrawl import FirecrawlApp
+    FirecrawlClient = FirecrawlApp
+    FIRECRAWL_AVAILABLE = True
+    logger.info("Using FirecrawlApp from firecrawl-py")
+except ImportError:
+    try:
+        # Try alternate import pattern
+        from firecrawl import Firecrawl
+        FirecrawlClient = Firecrawl
+        FIRECRAWL_AVAILABLE = True
+        logger.info("Using Firecrawl from firecrawl-py")
+    except ImportError:
+        logger.warning("Firecrawl SDK not installed. Install with: pip install firecrawl-py")
 
 
 # -------------------------------------------------------------------
@@ -133,61 +151,101 @@ def _is_relevant_url(url: str) -> bool:
 # Crawling
 # -------------------------------------------------------------------
 
-def crawl_website(url: str, max_pages: int = 10) -> List[CrawledPage]:
+def crawl_website(url: str, max_pages: int = 5) -> List[CrawledPage]:
+    """
+    Crawl a website using Firecrawl and return processed pages.
+    Falls back to single page scrape if crawl fails.
+    """
     if not url.startswith(("http://", "https://")):
         url = "https://" + url
 
     pages: List[CrawledPage] = []
     seen_hashes = set()
 
+    # Check if Firecrawl is available
+    if not FIRECRAWL_AVAILABLE or FirecrawlClient is None:
+        logger.error("Firecrawl SDK not available. Cannot crawl website.")
+        return pages
+
+    # Check if API key is configured
+    if not settings.FIRECRAWL_API_KEY:
+        logger.error("FIRECRAWL_API_KEY not configured. Cannot crawl website.")
+        return pages
+
     try:
-        firecrawl = Firecrawl(api_key=settings.FIRECRAWL_API_KEY)
+        # Initialize Firecrawl client
+        firecrawl = FirecrawlClient(api_key=settings.FIRECRAWL_API_KEY)
         logger.info(f"Crawling website with Firecrawl: {url}")
 
-        # Use crawl with scrape_options
-        result = firecrawl.crawl(
-            url=url,
-            limit=max_pages,
-            scrape_options=ScrapeOptions(formats=["markdown"]),
-            poll_interval=2,
-            timeout=120
-        )
+        # Use crawl_url method (newer SDK) or crawl method
+        # Pass params as dict for maximum compatibility
+        crawl_params = {
+            "limit": max_pages,
+            "scrapeOptions": {
+                "formats": ["markdown"]
+            }
+        }
+
+        # Try different method names for SDK compatibility
+        result = None
+        if hasattr(firecrawl, 'crawl_url'):
+            logger.info("Using crawl_url method")
+            result = firecrawl.crawl_url(url, params=crawl_params, poll_interval=2)
+        elif hasattr(firecrawl, 'crawl'):
+            logger.info("Using crawl method")
+            # Try newer API style first
+            try:
+                result = firecrawl.crawl(url, limit=max_pages, poll_interval=2)
+            except TypeError:
+                # Fall back to params dict style
+                result = firecrawl.crawl(url, params=crawl_params)
+        else:
+            logger.error("Firecrawl client has no crawl method available")
+            raise AttributeError("No crawl method found on Firecrawl client")
 
         logger.info(f"Firecrawl response type: {type(result)}")
-        logger.info(f"Firecrawl response keys: {result.keys() if isinstance(result, dict) else 'not a dict'}")
 
-        # Handle response - data might be in different formats
+        # Handle response - could be dict, object, or list
         data_items = []
-        if isinstance(result, dict):
+
+        if result is None:
+            logger.warning("Firecrawl returned None")
+        elif isinstance(result, dict):
+            logger.info(f"Firecrawl response keys: {result.keys()}")
             data_items = result.get("data", [])
             if not data_items:
-                # Try other possible keys
                 data_items = result.get("results", [])
-                if not data_items and "markdown" in result:
-                    # Single page result
-                    data_items = [result]
+            if not data_items and "markdown" in result:
+                data_items = [result]
         elif isinstance(result, list):
             data_items = result
+        elif hasattr(result, 'data'):
+            # Object with data attribute
+            data_items = result.data if result.data else []
+            logger.info(f"Got {len(data_items)} items from result.data")
+        elif hasattr(result, '__iter__'):
+            data_items = list(result)
 
         logger.info(f"Found {len(data_items)} items in crawl result")
 
+        # Process each crawled page
         for item in data_items:
-            if not isinstance(item, dict):
+            page_data = _extract_page_data(item, url)
+            if not page_data:
                 continue
 
-            metadata = item.get("metadata", {})
-            page_url = metadata.get("sourceURL") or metadata.get("url") or url
+            page_url, title, meta_desc, raw_content = page_data
 
             if not _is_relevant_url(page_url):
+                logger.debug(f"Skipping irrelevant URL: {page_url}")
                 continue
 
-            raw_content = item.get("markdown") or item.get("content") or item.get("html") or ""
             cleaned = _clean_page_content(raw_content)
-
             if not cleaned:
                 logger.debug(f"No usable content from {page_url}")
                 continue
 
+            # Deduplicate by content hash
             content_hash = hashlib.sha256(cleaned[:1000].encode()).hexdigest()
             if content_hash in seen_hashes:
                 continue
@@ -195,39 +253,109 @@ def crawl_website(url: str, max_pages: int = 10) -> List[CrawledPage]:
 
             pages.append(CrawledPage(
                 url=page_url,
-                title=metadata.get("title", page_url),
-                meta_description=metadata.get("description", ""),
+                title=title,
+                meta_description=meta_desc,
                 content=cleaned[:3000]
             ))
             logger.info(f"Added page: {page_url} ({len(cleaned)} chars)")
 
-        logger.info(f"Crawled {len(pages)} usable pages")
+        logger.info(f"Crawled {len(pages)} usable pages from crawl")
 
     except Exception as e:
         logger.error(f"Firecrawl crawl failed: {e}", exc_info=True)
-        # Try single page scrape as fallback
-        try:
-            logger.info(f"Trying single page scrape for: {url}")
-            firecrawl = Firecrawl(api_key=settings.FIRECRAWL_API_KEY)
-            scrape_result = firecrawl.scrape(url, formats=["markdown"])
 
-            logger.info(f"Scrape result type: {type(scrape_result)}")
+    # If crawl didn't work, try single page scrape as fallback
+    if not pages:
+        pages = _try_single_page_scrape(url)
 
-            if scrape_result:
+    return pages
+
+
+def _extract_page_data(item: Any, default_url: str) -> Optional[tuple]:
+    """Extract page data from a crawl result item."""
+    if item is None:
+        return None
+
+    # Handle dict items
+    if isinstance(item, dict):
+        metadata = item.get("metadata", {})
+        page_url = metadata.get("sourceURL") or metadata.get("url") or item.get("url") or default_url
+        title = metadata.get("title") or item.get("title") or page_url
+        meta_desc = metadata.get("description") or item.get("description") or ""
+        raw_content = item.get("markdown") or item.get("content") or item.get("html") or ""
+        return (page_url, title, meta_desc, raw_content)
+
+    # Handle object items (newer SDK returns objects)
+    if hasattr(item, 'markdown') or hasattr(item, 'metadata'):
+        metadata = getattr(item, 'metadata', {}) or {}
+        if isinstance(metadata, dict):
+            page_url = metadata.get("sourceURL") or metadata.get("url") or default_url
+            title = metadata.get("title") or default_url
+            meta_desc = metadata.get("description") or ""
+        else:
+            page_url = getattr(metadata, 'sourceURL', None) or getattr(metadata, 'url', None) or default_url
+            title = getattr(metadata, 'title', None) or default_url
+            meta_desc = getattr(metadata, 'description', None) or ""
+
+        raw_content = getattr(item, 'markdown', None) or getattr(item, 'content', None) or getattr(item, 'html', None) or ""
+        return (page_url, title, meta_desc, raw_content)
+
+    return None
+
+
+def _try_single_page_scrape(url: str) -> List[CrawledPage]:
+    """Fallback: try to scrape just the single URL."""
+    pages = []
+
+    if not FIRECRAWL_AVAILABLE or FirecrawlClient is None:
+        return pages
+
+    try:
+        logger.info(f"Trying single page scrape for: {url}")
+        firecrawl = FirecrawlClient(api_key=settings.FIRECRAWL_API_KEY)
+
+        # Try different scrape methods
+        scrape_result = None
+        if hasattr(firecrawl, 'scrape_url'):
+            scrape_result = firecrawl.scrape_url(url, params={"formats": ["markdown"]})
+        elif hasattr(firecrawl, 'scrape'):
+            try:
+                scrape_result = firecrawl.scrape(url, formats=["markdown"])
+            except TypeError:
+                scrape_result = firecrawl.scrape(url, params={"formats": ["markdown"]})
+
+        logger.info(f"Scrape result type: {type(scrape_result)}")
+
+        if scrape_result:
+            # Extract content from result
+            if isinstance(scrape_result, dict):
                 content = scrape_result.get("markdown") or scrape_result.get("content") or ""
                 metadata = scrape_result.get("metadata", {})
-                cleaned = _clean_page_content(content)
+            elif hasattr(scrape_result, 'markdown'):
+                content = scrape_result.markdown or ""
+                metadata = getattr(scrape_result, 'metadata', {}) or {}
+            else:
+                content = ""
+                metadata = {}
 
-                if cleaned:
-                    pages.append(CrawledPage(
-                        url=url,
-                        title=metadata.get("title", url),
-                        meta_description=metadata.get("description", ""),
-                        content=cleaned[:3000]
-                    ))
-                    logger.info(f"Single page scrape successful: {len(cleaned)} chars")
-        except Exception as scrape_error:
-            logger.error(f"Single page scrape also failed: {scrape_error}", exc_info=True)
+            cleaned = _clean_page_content(content)
+
+            if cleaned:
+                title = metadata.get("title", url) if isinstance(metadata, dict) else getattr(metadata, 'title', url)
+                desc = metadata.get("description", "") if isinstance(metadata, dict) else getattr(metadata, 'description', "")
+
+                pages.append(CrawledPage(
+                    url=url,
+                    title=title or url,
+                    meta_description=desc or "",
+                    content=cleaned[:3000]
+                ))
+                logger.info(f"Single page scrape successful: {len(cleaned)} chars")
+            else:
+                logger.warning(f"Single page scrape returned no usable content")
+
+    except Exception as scrape_error:
+        logger.error(f"Single page scrape also failed: {scrape_error}", exc_info=True)
 
     return pages
 

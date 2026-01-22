@@ -14,15 +14,12 @@ class Company(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     name = Column(String, unique=True, nullable=False, index=True)
+    website = Column(String, nullable=True)  # Company website URL from onboarding
     size = Column(String, nullable=True)  # Team size from onboarding (e.g., "1-10", "11-50")
     domain = Column(String, nullable=True, index=True)  # company.com - extracted from email
     industry = Column(String, nullable=True)  # Industry from onboarding
-    website = Column(String, nullable=True)  # Company website from onboarding
+    role = Column(String, nullable=True)  # User's role from onboarding (e.g., "Product Manager")
 
-    # Company settings
-    is_active = Column(Boolean, default=True, nullable=False)
-    subscription_plan = Column(String, default="free", nullable=False)  # "free", "pro", "enterprise"
-    
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)

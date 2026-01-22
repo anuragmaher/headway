@@ -1,9 +1,10 @@
 """
 OnboardingProgress model for storing wizard progress per workspace.
+Simplified to only track current step - data is stored in proper tables.
 """
 
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy import Column, Integer, DateTime, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import uuid
@@ -13,8 +14,13 @@ from app.core.database import Base
 
 class OnboardingProgress(Base):
     """
-    Stores onboarding wizard progress per workspace.
-    Allows users to resume onboarding if interrupted.
+    Stores onboarding wizard step progress per workspace.
+
+    Note: Simplified model - data is now stored in proper tables:
+    - Company data → companies table
+    - Selected themes/sub_themes → themes & sub_themes tables
+    - Connected sources → workspace_connectors table
+    - Selected competitors → competitors table
     """
 
     __tablename__ = "onboarding_progress"
@@ -28,21 +34,8 @@ class OnboardingProgress(Base):
         index=True
     )
 
-    # Current step (0-3)
+    # Current step (0-4)
     current_step = Column(Integer, default=0, nullable=False)
-
-    # Note: Company data is stored directly in the companies table, not here
-
-    # Step 2: Taxonomy generation
-    taxonomy_url = Column(String(500), nullable=True)
-    taxonomy_data = Column(JSONB, nullable=True)
-    selected_themes = Column(JSONB, nullable=True)
-
-    # Step 3: Connected data sources
-    connected_sources = Column(JSONB, nullable=True)
-
-    # Step 4: Selected competitors
-    selected_competitors = Column(JSONB, nullable=True)
 
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)

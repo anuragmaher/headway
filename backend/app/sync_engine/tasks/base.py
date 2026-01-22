@@ -135,48 +135,6 @@ def test_db_connection(db: Session) -> bool:
         return False
 
 
-def get_active_integrations(db: Session, provider: str) -> List[Dict]:
-    """
-    Get all active integrations for a given provider.
-
-    This is a diagnostic function to help debug why integrations aren't found.
-
-    Args:
-        db: Database session
-        provider: Provider name (slack, gmail, etc.)
-
-    Returns:
-        List of integration dicts with id, workspace_id, is_active
-    """
-    from app.models.integration import Integration
-
-    # First, let's see ALL integrations for this provider
-    all_integrations = db.query(Integration).filter(
-        Integration.provider == provider
-    ).all()
-
-    logger.info(f"📊 All {provider} integrations in database: {len(all_integrations)}")
-    for i in all_integrations:
-        logger.info(f"   - ID: {i.id}, workspace_id: {i.workspace_id}, is_active: {i.is_active}, team: {i.external_team_name}")
-
-    # Now get only active ones
-    active_integrations = db.query(Integration).filter(
-        and_(
-            Integration.provider == provider,
-            Integration.is_active == True
-        )
-    ).all()
-
-    logger.info(f"📊 Active {provider} integrations: {len(active_integrations)}")
-
-    return [{
-        'id': str(i.id),
-        'workspace_id': str(i.workspace_id),
-        'is_active': i.is_active,
-        'external_team_name': i.external_team_name,
-    } for i in active_integrations]
-
-
 def get_active_connectors(db: Session, connector_type: str) -> List[Dict]:
     """
     Get all active connectors for a given type.
@@ -185,7 +143,7 @@ def get_active_connectors(db: Session, connector_type: str) -> List[Dict]:
 
     Args:
         db: Database session
-        connector_type: Connector type (gong, fathom, etc.)
+        connector_type: Connector type (slack, gmail, gong, fathom, etc.)
 
     Returns:
         List of connector dicts with id, workspace_id, is_active
@@ -199,7 +157,7 @@ def get_active_connectors(db: Session, connector_type: str) -> List[Dict]:
 
     logger.info(f"📊 All {connector_type} connectors in database: {len(all_connectors)}")
     for c in all_connectors:
-        logger.info(f"   - ID: {c.id}, workspace_id: {c.workspace_id}, is_active: {c.is_active}")
+        logger.info(f"   - ID: {c.id}, workspace_id: {c.workspace_id}, is_active: {c.is_active}, name: {c.name}")
 
     # Now get only active ones
     active_connectors = db.query(WorkspaceConnector).filter(
@@ -215,47 +173,10 @@ def get_active_connectors(db: Session, connector_type: str) -> List[Dict]:
         'id': str(c.id),
         'workspace_id': str(c.workspace_id),
         'is_active': c.is_active,
+        'name': c.name,
+        'external_id': c.external_id,
+        'external_name': c.external_name,
     } for c in active_connectors]
-
-
-def get_active_gmail_accounts(db: Session) -> List[Dict]:
-    """
-    Get all active Gmail accounts.
-
-    This is a diagnostic function to help debug why accounts aren't found.
-
-    Args:
-        db: Database session
-
-    Returns:
-        List of account dicts with id, workspace_id, email
-    """
-    from app.models.gmail import GmailAccounts
-
-    # First, let's see ALL Gmail accounts
-    all_accounts = db.query(GmailAccounts).all()
-
-    logger.info(f"📊 All Gmail accounts in database: {len(all_accounts)}")
-    for a in all_accounts:
-        has_tokens = bool(a.access_token and a.refresh_token)
-        logger.info(f"   - ID: {a.id}, workspace_id: {a.workspace_id}, email: {a.gmail_email}, has_tokens: {has_tokens}")
-
-    # Now get only ones with workspace_id and tokens
-    active_accounts = db.query(GmailAccounts).filter(
-        and_(
-            GmailAccounts.workspace_id.isnot(None),
-            GmailAccounts.access_token.isnot(None),
-            GmailAccounts.refresh_token.isnot(None)
-        )
-    ).all()
-
-    logger.info(f"📊 Active Gmail accounts (with workspace and tokens): {len(active_accounts)}")
-
-    return [{
-        'id': str(a.id),
-        'workspace_id': str(a.workspace_id) if a.workspace_id else None,
-        'gmail_email': a.gmail_email,
-    } for a in active_accounts]
 
 
 def create_sync_record(
@@ -263,8 +184,6 @@ def create_sync_record(
     workspace_id: str,
     source_type: str,
     source_name: str,
-    integration_id: Optional[str] = None,
-    gmail_account_id: Optional[str] = None,
     connector_id: Optional[str] = None,
     initial_status: str = "in_progress",
     trigger_type: str = "manual",
@@ -280,8 +199,6 @@ def create_sync_record(
         workspace_id: Workspace UUID
         source_type: Source type (gmail, slack, gong, fathom)
         source_name: Display name for the source
-        integration_id: Optional integration UUID
-        gmail_account_id: Optional Gmail account UUID
         connector_id: Optional connector UUID
         initial_status: Initial status (default: in_progress)
         trigger_type: How sync was triggered - 'manual' (user) or 'periodic' (celery)
@@ -304,11 +221,7 @@ def create_sync_record(
             items_new=0,
         )
 
-        # Set optional foreign keys
-        if integration_id:
-            sync_record.integration_id = UUID(integration_id)
-        if gmail_account_id:
-            sync_record.gmail_account_id = UUID(gmail_account_id)
+        # Set optional foreign key
         if connector_id:
             sync_record.connector_id = UUID(connector_id)
 

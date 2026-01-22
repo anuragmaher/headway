@@ -1,10 +1,10 @@
 /**
- * SubThemesColumn - Middle column displaying features for selected theme
- * Clean, minimal design with back navigation
+ * SubThemesColumn - Middle column displaying sub-themes for selected theme
+ * Clean, minimal design
  */
 import React from 'react';
 import { Box, Typography, IconButton, Tooltip, Skeleton, useTheme } from '@mui/material';
-import { Add as AddIcon, ArrowBack as BackIcon } from '@mui/icons-material';
+import { Add as AddIcon } from '@mui/icons-material';
 import { SubThemeItem } from './SubThemeItem';
 import {
   useSubThemes,
@@ -27,7 +27,6 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
   const selectedSubThemeId = useSelectedSubThemeId();
   const isLoading = useIsLoadingSubThemes();
   const {
-    selectTheme,
     selectSubTheme,
     openAddSubThemeDialog,
     openEditSubThemeDialog,
@@ -36,10 +35,6 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
     lockSubTheme,
     unlockSubTheme,
   } = useExplorerActions();
-
-  const handleBack = () => {
-    selectTheme(null);
-  };
 
   const handleSubThemeSelect = (subThemeId: string) => {
     selectSubTheme(subThemeId);
@@ -61,7 +56,7 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
     try {
       await lockSubTheme(subThemeId);
     } catch (error) {
-      console.error('Failed to lock feature:', error);
+      console.error('Failed to lock sub theme:', error);
     }
   };
 
@@ -69,7 +64,7 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
     try {
       await unlockSubTheme(subThemeId);
     } catch (error) {
-      console.error('Failed to unlock feature:', error);
+      console.error('Failed to unlock sub theme:', error);
     }
   };
 
@@ -92,21 +87,26 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
         <Box
           sx={{
             px: 2,
-            py: 1.5,
+            height: 48,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
             borderBottom: '1px solid',
             borderColor: 'divider',
+            bgcolor: 'background.default',
+            flexShrink: 0,
           }}
         >
           <Typography
             sx={{
-              fontSize: '0.6875rem',
+              fontSize: '0.75rem',
               fontWeight: 600,
               letterSpacing: '0.5px',
               color: 'text.disabled',
               textTransform: 'uppercase',
             }}
           >
-            Features
+            Sub Themes
           </Typography>
         </Box>
         <Box
@@ -119,7 +119,7 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
           }}
         >
           <Typography sx={{ fontSize: '0.8125rem', color: 'text.disabled' }}>
-            Select a theme to view features
+            Select a theme to view sub themes
           </Typography>
         </Box>
       </Box>
@@ -140,85 +140,62 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
         bgcolor: 'background.paper',
       }}
     >
-      {/* Header */}
+      {/* Header - Shows selected theme name */}
       <Box
         sx={{
           px: 2,
-          py: 1.5,
+          height: 48,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           borderBottom: '1px solid',
           borderColor: 'divider',
+          bgcolor: 'background.default',
+          flexShrink: 0,
         }}
       >
-        {/* Back link */}
-        <Box
-          onClick={handleBack}
+        <Typography
           sx={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 0.5,
-            cursor: 'pointer',
+            fontSize: '0.75rem',
+            fontWeight: 600,
+            letterSpacing: '0.5px',
             color: 'text.secondary',
-            mb: 1,
-            '&:hover': { color: 'primary.main' },
+            textTransform: 'uppercase',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            maxWidth: 180,
           }}
         >
-          <BackIcon sx={{ fontSize: 14 }} />
-          <Typography sx={{ fontSize: '0.6875rem', fontWeight: 500 }}>
-            Back to themes
-          </Typography>
-        </Box>
-
-        {/* Theme name and stats */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Box>
-            <Typography
-              sx={{
-                fontSize: '0.875rem',
-                fontWeight: 600,
-                color: selectedTheme.color || 'primary.main',
-                lineHeight: 1.3,
-              }}
-            >
-              {selectedTheme.name}
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: '0.75rem',
-                color: 'text.disabled',
-                mt: 0.25,
-              }}
-            >
-              {subThemes.length} features
-            </Typography>
-          </Box>
-          <Tooltip title="Add Feature">
-            <IconButton
-              size="small"
-              onClick={openAddSubThemeDialog}
-              sx={{
-                width: 26,
-                height: 26,
-                bgcolor: 'rgba(59, 130, 246, 0.08)',
-                color: 'primary.main',
-                '&:hover': { bgcolor: 'rgba(59, 130, 246, 0.16)' },
-              }}
-            >
-              <AddIcon sx={{ fontSize: 16 }} />
-            </IconButton>
-          </Tooltip>
-        </Box>
+          {selectedTheme.name}
+        </Typography>
+        <Tooltip title="Add Sub Theme">
+          <IconButton
+            size="small"
+            onClick={openAddSubThemeDialog}
+            sx={{
+              width: 26,
+              height: 26,
+              bgcolor: 'rgba(59, 130, 246, 0.08)',
+              color: 'primary.main',
+              '&:hover': { bgcolor: 'rgba(59, 130, 246, 0.16)' },
+            }}
+          >
+            <AddIcon sx={{ fontSize: 16 }} />
+          </IconButton>
+        </Tooltip>
       </Box>
 
       {/* Content */}
-      <Box sx={{ flex: 1, overflow: 'auto', py: 0.5 }}>
+      <Box sx={{ flex: 1, overflow: 'auto' }}>
         {isLoading ? (
-          <Box sx={{ px: 1.5 }}>
+          <Box>
             {[1, 2, 3, 4, 5].map((i) => (
               <Skeleton
                 key={i}
-                variant="rounded"
+                variant="rectangular"
                 height={52}
-                sx={{ my: 0.5, borderRadius: 1 }}
+                sx={{ borderBottom: '1px solid', borderColor: 'divider' }}
               />
             ))}
           </Box>
@@ -241,7 +218,7 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
                 mb: 2,
               }}
             >
-              No features yet
+              No sub themes yet
             </Typography>
             <Box
               onClick={openAddSubThemeDialog}
@@ -251,7 +228,6 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
                 gap: 0.5,
                 px: 2,
                 py: 0.75,
-                borderRadius: 1,
                 bgcolor: 'primary.main',
                 color: 'white',
                 fontSize: '0.8125rem',
@@ -261,12 +237,12 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
               }}
             >
               <AddIcon sx={{ fontSize: 16 }} />
-              Add Feature
+              Add Sub Theme
             </Box>
           </Box>
         ) : (
           <>
-            {/* Feature items */}
+            {/* Sub theme items */}
             {subThemes.map((subTheme) => (
               <SubThemeItem
                 key={subTheme.id}

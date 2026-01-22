@@ -1,6 +1,12 @@
 /**
  * Zustand store for onboarding state management
- * State is persisted both locally via zustand/persist and server-side via API
+ *
+ * Data is stored in proper tables:
+ * - Company data → companies table
+ * - Themes/sub-themes → themes & sub_themes tables
+ * - Connected sources → workspace_connectors table
+ * - Competitors → competitors table
+ * - Progress tracking → onboarding_progress table (only current_step)
  */
 
 import { create } from 'zustand';
@@ -9,42 +15,56 @@ import type {
   OnboardingWizardState,
   CompanySetupData,
   Competitor,
+  ConnectedSource,
   TaxonomyStatus,
   TaxonomySubStep,
   Theme,
-  OnboardingProgressResponse,
 } from '../types';
 import { INITIAL_WIZARD_STATE } from '../types';
 import { onboardingApi } from '../services/onboarding-api';
 
 interface OnboardingActions {
+  // Step navigation
   setCurrentStep: (step: number) => void;
   completeStep: (step: number) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
+
+  // Company data (Step 0)
   updateCompanyData: (data: Partial<CompanySetupData>) => void;
   setCompanyData: (data: CompanySetupData) => void;
+
+  // Taxonomy (Step 1)
   setTaxonomyUrl: (url: string) => void;
   setTaxonomyThemes: (themes: Theme[]) => void;
   toggleThemeSelection: (themeName: string) => void;
   setTaxonomyStatus: (status: TaxonomyStatus) => void;
   setTaxonomyError: (error: string | null) => void;
   setTaxonomySubStep: (subStep: TaxonomySubStep) => void;
-  addConnectedSource: (sourceId: string) => void;
-  removeConnectedSource: (sourceId: string) => void;
-  setConnectedSources: (sources: string[]) => void;
+
+  // Connected sources (Step 2)
+  setConnectedSources: (sources: ConnectedSource[]) => void;
+
+  // Competitors (Step 3)
   addCompetitor: (competitor: Competitor) => void;
   removeCompetitor: (competitorName: string) => void;
   setCompetitors: (competitors: Competitor[]) => void;
+
+  // State management
   setLoading: (loading: boolean) => void;
   setSaving: (saving: boolean) => void;
   setError: (error: string | null) => void;
   resetWizard: () => void;
+
   // Server-side persistence
   loadProgress: (workspaceId: string) => Promise<void>;
   saveProgress: (workspaceId: string) => Promise<void>;
   loadCompanyData: (workspaceId: string) => Promise<void>;
   saveCompanyData: (workspaceId: string) => Promise<void>;
+  loadConnectedSources: (workspaceId: string) => Promise<void>;
+  loadCompetitors: (workspaceId: string) => Promise<void>;
+  saveSelectedThemes: (workspaceId: string) => Promise<void>;
+  saveCompetitorsToServer: (workspaceId: string) => Promise<void>;
 }
 
 type OnboardingStore = OnboardingWizardState & OnboardingActions;
@@ -53,6 +73,10 @@ export const useOnboardingStore = create<OnboardingStore>()(
   persist(
     (set, get) => ({
       ...INITIAL_WIZARD_STATE,
+
+      // ============================================
+      // Step Navigation
+      // ============================================
 
       setCurrentStep: (step) => set({ currentStep: step }),
 
@@ -75,12 +99,20 @@ export const useOnboardingStore = create<OnboardingStore>()(
           currentStep: Math.max(state.currentStep - 1, 0),
         })),
 
+      // ============================================
+      // Company Data (Step 0)
+      // ============================================
+
       updateCompanyData: (data) =>
         set((state) => ({
           companyData: { ...state.companyData, ...data },
         })),
 
       setCompanyData: (data) => set({ companyData: data }),
+
+      // ============================================
+      // Taxonomy (Step 1)
+      // ============================================
 
       setTaxonomyUrl: (url) =>
         set((state) => ({
@@ -115,17 +147,15 @@ export const useOnboardingStore = create<OnboardingStore>()(
 
       setTaxonomySubStep: (subStep) => set({ taxonomySubStep: subStep }),
 
-      addConnectedSource: (sourceId) =>
-        set((state) => ({
-          connectedSources: [...new Set([...state.connectedSources, sourceId])],
-        })),
-
-      removeConnectedSource: (sourceId) =>
-        set((state) => ({
-          connectedSources: state.connectedSources.filter((s) => s !== sourceId),
-        })),
+      // ============================================
+      // Connected Sources (Step 2)
+      // ============================================
 
       setConnectedSources: (sources) => set({ connectedSources: sources }),
+
+      // ============================================
+      // Competitors (Step 3)
+      // ============================================
 
       addCompetitor: (competitor) =>
         set((state) => {
@@ -146,10 +176,18 @@ export const useOnboardingStore = create<OnboardingStore>()(
 
       setCompetitors: (competitors) => set({ selectedCompetitors: competitors }),
 
+      // ============================================
+      // State Management
+      // ============================================
+
       setLoading: (loading) => set({ isLoading: loading }),
       setSaving: (saving) => set({ isSaving: saving }),
       setError: (error) => set({ error }),
       resetWizard: () => set(INITIAL_WIZARD_STATE),
+
+      // ============================================
+      // Server-Side Persistence
+      // ============================================
 
       // Load company data from companies table
       loadCompanyData: async (workspaceId: string) => {
@@ -161,7 +199,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
               website: companyData.website || '',
               industry: companyData.industry || '',
               teamSize: companyData.team_size || '',
-              role: '', // role is not stored in companies table
+              role: companyData.role || '',
             },
           });
         } catch (error) {
@@ -180,6 +218,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
             website: state.companyData.website || undefined,
             industry: state.companyData.industry,
             team_size: state.companyData.teamSize || undefined,
+            role: state.companyData.role || undefined,
           });
           set({ isSaving: false });
         } catch (error) {
@@ -189,28 +228,76 @@ export const useOnboardingStore = create<OnboardingStore>()(
         }
       },
 
-      // Load progress from server (excludes company data)
+      // Load connected sources from workspace_connectors table
+      loadConnectedSources: async (workspaceId: string) => {
+        try {
+          const sources = await onboardingApi.getConnectedSources(workspaceId);
+          set({ connectedSources: sources });
+        } catch (error) {
+          console.error('Failed to load connected sources:', error);
+        }
+      },
+
+      // Load competitors from competitors table
+      loadCompetitors: async (workspaceId: string) => {
+        try {
+          const competitors = await onboardingApi.getCompetitors(workspaceId);
+          set({ selectedCompetitors: competitors });
+        } catch (error) {
+          console.error('Failed to load competitors:', error);
+        }
+      },
+
+      // Save selected themes to themes table
+      saveSelectedThemes: async (workspaceId: string) => {
+        const state = get();
+        set({ isSaving: true, error: null });
+        try {
+          // Filter themes by selected names
+          const selectedThemes = state.taxonomyData.themes.filter((t) =>
+            state.taxonomyData.selectedThemes.includes(t.name)
+          );
+
+          if (selectedThemes.length > 0) {
+            await onboardingApi.saveThemesBulk(workspaceId, selectedThemes);
+          }
+          set({ isSaving: false });
+        } catch (error) {
+          console.error('Failed to save themes:', error);
+          set({ isSaving: false, error: 'Failed to save themes' });
+          throw error;
+        }
+      },
+
+      // Save competitors to competitors table
+      saveCompetitorsToServer: async (workspaceId: string) => {
+        const state = get();
+        set({ isSaving: true, error: null });
+        try {
+          await onboardingApi.saveCompetitors(workspaceId, state.selectedCompetitors);
+          set({ isSaving: false });
+        } catch (error) {
+          console.error('Failed to save competitors:', error);
+          set({ isSaving: false, error: 'Failed to save competitors' });
+          throw error;
+        }
+      },
+
+      // Load progress from server (only current_step, actual data loaded separately)
       loadProgress: async (workspaceId: string) => {
         set({ isLoading: true, error: null });
         try {
-          // Load progress and company data in parallel
+          // Load all data in parallel
           const [progress] = await Promise.all([
             onboardingApi.getOnboardingProgress(workspaceId),
             get().loadCompanyData(workspaceId),
+            get().loadConnectedSources(workspaceId),
+            get().loadCompetitors(workspaceId),
           ]);
 
           if (progress) {
             set({
               currentStep: progress.current_step,
-              taxonomyData: progress.taxonomy_data
-                ? {
-                    url: progress.taxonomy_url || '',
-                    themes: progress.taxonomy_data.themes || [],
-                    selectedThemes: progress.selected_themes || [],
-                  }
-                : get().taxonomyData,
-              connectedSources: progress.connected_sources || [],
-              selectedCompetitors: progress.selected_competitors || [],
               isLoading: false,
             });
           } else {
@@ -222,26 +309,13 @@ export const useOnboardingStore = create<OnboardingStore>()(
         }
       },
 
-      // Save progress to server (excludes company data)
+      // Save progress to server (only current_step)
       saveProgress: async (workspaceId: string) => {
         const state = get();
         set({ isSaving: true, error: null });
         try {
           await onboardingApi.saveOnboardingProgress(workspaceId, {
             current_step: state.currentStep,
-            taxonomy_url: state.taxonomyData.url || undefined,
-            taxonomy_data: state.taxonomyData.themes.length > 0
-              ? { themes: state.taxonomyData.themes }
-              : undefined,
-            selected_themes: state.taxonomyData.selectedThemes.length > 0
-              ? state.taxonomyData.selectedThemes
-              : undefined,
-            connected_sources: state.connectedSources.length > 0
-              ? state.connectedSources
-              : undefined,
-            selected_competitors: state.selectedCompetitors.length > 0
-              ? state.selectedCompetitors
-              : undefined,
           });
           set({ isSaving: false });
         } catch (error) {
@@ -257,14 +331,17 @@ export const useOnboardingStore = create<OnboardingStore>()(
         completedSteps: state.completedSteps,
         companyData: state.companyData,
         taxonomyData: state.taxonomyData,
-        connectedSources: state.connectedSources,
+        taxonomySubStep: state.taxonomySubStep,
         selectedCompetitors: state.selectedCompetitors,
       }),
     }
   )
 );
 
-// Selector hooks
+// ============================================
+// Selector Hooks
+// ============================================
+
 export const useCurrentStep = () =>
   useOnboardingStore((state) => state.currentStep);
 

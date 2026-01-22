@@ -1,5 +1,6 @@
 /**
  * SubTheme Slice - Manages sub-theme data and actions
+ * Uses the themes API for sub-theme CRUD operations
  */
 import { StateCreator } from 'zustand';
 import type {
@@ -9,7 +10,7 @@ import type {
   MergeSubThemesInput,
 } from '../../types';
 import type { ExplorerStore } from '../explorerStore';
-import api from '../../../../services/api';
+import { themesApi } from '../../../../services/themes.api';
 
 export interface SubThemeState {
   subThemes: ExplorerSubTheme[];
@@ -47,69 +48,57 @@ export const createSubThemeSlice: StateCreator<
   ...initialSubThemeState,
 
   fetchSubThemes: async (themeId: string) => {
-    const workspaceId = get().getWorkspaceId();
-    if (!workspaceId) return;
-
     set({ isLoadingSubThemes: true, subThemesError: null });
 
     try {
-      // Fetch features that belong to this theme (they act as sub-themes)
-      const response = await api.get(`/api/v1/features/features`, {
-        params: {
-          workspace_id: workspaceId,
-          theme_id: themeId,
-        },
-      });
+      console.log('[Explorer] Fetching sub-themes for theme:', themeId);
+      const response = await themesApi.listSubThemes(themeId);
 
       // Transform API response to ExplorerSubTheme format
-      // Features under a theme act as sub-themes (feature requests grouped under a theme)
-      const subThemes: ExplorerSubTheme[] = (response.data || []).map((feature: Record<string, unknown>) => ({
-        id: feature.id as string,
-        themeId: (feature.theme_id as string) || themeId,
-        name: feature.name as string,
-        description: (feature.description as string) || '',
-        feedbackCount: (feature.mention_count as number) || 0,
-        isAIGenerated: (feature.is_ai_generated as boolean) || false,
-        isLocked: (feature.is_locked as boolean) || false,
-        topFeedbackPreview: (feature.description as string)?.slice(0, 100),
-        createdAt: feature.created_at as string,
-        updatedAt: feature.updated_at as string,
-        urgency: (feature.urgency as string) || 'medium',
-        status: (feature.status as string) || 'new',
+      const subThemes: ExplorerSubTheme[] = response.sub_themes.map((st) => ({
+        id: st.id,
+        themeId: st.theme_id,
+        name: st.name,
+        description: st.description || '',
+        feedbackCount: st.customer_ask_count || 0,
+        customerAskCount: st.customer_ask_count || 0,
+        isAIGenerated: false,
+        isLocked: false,
+        topFeedbackPreview: st.description?.slice(0, 100),
+        createdAt: st.created_at,
+        updatedAt: st.updated_at || st.created_at,
       }));
 
+      console.log('[Explorer] Received sub-themes:', subThemes.length, 'items');
       set({ subThemes, isLoadingSubThemes: false });
     } catch (error) {
+      console.error('[Explorer] Failed to fetch sub-themes:', error);
       const message = error instanceof Error ? error.message : 'Failed to fetch sub-themes';
       set({ subThemesError: message, isLoadingSubThemes: false });
     }
   },
 
   createSubTheme: async (input: CreateSubThemeInput) => {
-    const workspaceId = get().getWorkspaceId();
-    if (!workspaceId) throw new Error('No workspace selected');
-
     set({ isLoadingSubThemes: true });
 
     try {
-      const response = await api.post(`/api/v1/features/features`, {
+      const subTheme = await themesApi.createSubTheme({
         name: input.name,
         description: input.description,
         theme_id: input.themeId,
-      }, {
-        params: { workspace_id: workspaceId },
       });
 
       const newSubTheme: ExplorerSubTheme = {
-        id: response.data.id,
-        themeId: input.themeId,
-        name: response.data.name,
-        description: response.data.description || '',
+        id: subTheme.id,
+        themeId: subTheme.theme_id,
+        name: subTheme.name,
+        description: subTheme.description || '',
         feedbackCount: 0,
+        customerAskCount: 0,
         isAIGenerated: false,
         isLocked: false,
-        createdAt: response.data.created_at,
-        updatedAt: response.data.updated_at,
+        createdAt: subTheme.created_at,
+        updatedAt: subTheme.updated_at || subTheme.created_at,
       };
 
       set((state) => ({
@@ -125,12 +114,10 @@ export const createSubThemeSlice: StateCreator<
   },
 
   updateSubTheme: async (subThemeId: string, input: UpdateSubThemeInput) => {
-    const workspaceId = get().getWorkspaceId();
-    if (!workspaceId) throw new Error('No workspace selected');
-
     try {
-      await api.put(`/api/v1/features/features/${subThemeId}`, input, {
-        params: { workspace_id: workspaceId },
+      await themesApi.updateSubTheme(subThemeId, {
+        name: input.name,
+        description: input.description,
       });
 
       set((state) => ({
@@ -148,13 +135,8 @@ export const createSubThemeSlice: StateCreator<
   },
 
   deleteSubTheme: async (subThemeId: string) => {
-    const workspaceId = get().getWorkspaceId();
-    if (!workspaceId) throw new Error('No workspace selected');
-
     try {
-      await api.delete(`/api/v1/features/features/${subThemeId}`, {
-        params: { workspace_id: workspaceId },
-      });
+      await themesApi.deleteSubTheme(subThemeId);
 
       set((state) => ({
         subThemes: state.subThemes.filter((subTheme) => subTheme.id !== subThemeId),
@@ -168,16 +150,9 @@ export const createSubThemeSlice: StateCreator<
   },
 
   mergeSubThemes: async (input: MergeSubThemesInput) => {
-    const workspaceId = get().getWorkspaceId();
-    if (!workspaceId) throw new Error('No workspace selected');
-
     try {
-      // Call merge API endpoint
-      await api.post(`/api/v1/features/features/${input.targetId}/merge`, {
-        source_feature_id: input.sourceId,
-      }, {
-        params: { workspace_id: workspaceId },
-      });
+      // Merge functionality - move sub-theme to another theme
+      await themesApi.moveSubTheme(input.sourceId, input.targetId);
 
       // Remove source sub-theme and update target's feedback count
       set((state) => {

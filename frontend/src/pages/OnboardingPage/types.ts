@@ -1,5 +1,12 @@
 /**
  * Types for OnboardingPage
+ *
+ * Data is stored in proper tables:
+ * - Company data → companies table
+ * - Themes/sub-themes → themes & sub_themes tables
+ * - Connected sources → workspace_connectors table
+ * - Competitors → competitors table
+ * - Progress tracking → onboarding_progress table (only current_step)
  */
 
 // ============================================
@@ -46,7 +53,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
 ];
 
 // ============================================
-// Company Setup (Step 1)
+// Company Setup (Step 0)
 // ============================================
 
 export interface CompanySetupData {
@@ -99,7 +106,7 @@ export const ROLES = [
 ];
 
 // ============================================
-// Product Taxonomy (Step 2)
+// Product Taxonomy (Step 1)
 // ============================================
 
 export interface SubTheme {
@@ -132,7 +139,7 @@ export type TaxonomyStatus = 'idle' | 'processing' | 'completed' | 'failed';
 export type TaxonomySubStep = 'website-url' | 'review-themes';
 
 // ============================================
-// Data Sources (Step 3)
+// Data Sources (Step 2)
 // ============================================
 
 export interface DataSource {
@@ -180,13 +187,25 @@ export const DATA_SOURCES: DataSource[] = [
 ];
 
 // ============================================
-// Competitors (Step 4)
+// Connected Source (from workspace_connectors)
+// ============================================
+
+export interface ConnectedSource {
+  id: string;
+  connector_type: string;
+  name: string | null;
+  external_id: string | null;
+  sync_status: string;
+  last_synced_at: string | null;
+}
+
+// ============================================
+// Competitors (Step 3)
 // ============================================
 
 export interface Competitor {
   name: string;
   website?: string;
-  description?: string;
 }
 
 // ============================================
@@ -201,7 +220,7 @@ export interface OnboardingWizardState {
   taxonomyStatus: TaxonomyStatus;
   taxonomyError: string | null;
   taxonomySubStep: TaxonomySubStep;
-  connectedSources: string[];
+  connectedSources: ConnectedSource[];
   selectedCompetitors: Competitor[];
   isSaving: boolean;
   isLoading: boolean;
@@ -229,11 +248,6 @@ export const INITIAL_WIZARD_STATE: OnboardingWizardState = {
 
 export interface TaxonomyGenerateResponse {
   themes: Theme[];
-  crawl_stats: {
-    pages_crawled: number;
-    content_sections: number;
-    errors: number;
-  };
 }
 
 export interface CompanyDataResponse {
@@ -241,17 +255,22 @@ export interface CompanyDataResponse {
   website: string | null;
   industry: string | null;
   team_size: string | null;
+  role: string | null;
 }
 
 export interface OnboardingProgressResponse {
   id: string;
   workspace_id: string;
   current_step: number;
-  taxonomy_url: string | null;
-  taxonomy_data: { themes: Theme[] } | null;
-  selected_themes: string[] | null;
-  connected_sources: string[] | null;
-  selected_competitors: Competitor[] | null;
   created_at: string;
   updated_at: string | null;
+}
+
+export interface BulkThemeResponse {
+  created_count: number;
+  themes: Array<{
+    id: string;
+    name: string;
+    sub_theme_count: number;
+  }>;
 }

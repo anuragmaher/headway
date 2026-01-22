@@ -187,25 +187,33 @@ from app.api.v1.auth import router as auth_router
 from app.api.v1.slack import router as slack_router
 from app.api.v1.clustering import router as clustering_router
 from app.api.v1.classification import router as classification_router
-from app.api.v1.features import router as features_router
-from app.api.v1.way import router as way_router
 from app.api.v1.workspaces import router as workspaces_router
 from app.api.v1.endpoints.customers import router as customers_router
 from app.api.v1.gmail import router as gmail
-from app.api.v1.sources import router as sources_router
 from app.api.v1.onboarding import router as onboarding_router
+
+# New modular routers
+from app.api.v1.connectors import router as connectors_router
+from app.api.v1.themes import router as themes_router
+from app.api.v1.messages import router as messages_router
+from app.api.v1.features_v2 import router as features_router
+from app.api.v1.sources import router as sources_router
 
 app.include_router(auth_router, prefix="/api/v1/auth", tags=["authentication"])
 app.include_router(slack_router, prefix="/api/v1/slack", tags=["slack"])
 app.include_router(clustering_router, prefix="/api/v1/clustering", tags=["clustering"])
 app.include_router(classification_router, prefix="/api/v1/classification", tags=["classification"])
-app.include_router(features_router, prefix="/api/v1/features", tags=["features"])
-app.include_router(way_router, prefix="/api/v1/way", tags=["way"])
 app.include_router(workspaces_router, prefix="/api/v1/workspaces", tags=["workspaces"])
 app.include_router(customers_router, prefix="/api/v1/customers", tags=["customers"])
 app.include_router(gmail, prefix="/api/v1", tags=["gmail"])
-app.include_router(sources_router, prefix="/api/v1/sources", tags=["sources"])
 app.include_router(onboarding_router, prefix="/api/v1", tags=["onboarding"])
+
+# New modular routes
+app.include_router(connectors_router, prefix="/api/v1/connectors", tags=["connectors"])
+app.include_router(themes_router, prefix="/api/v1/themes", tags=["themes"])
+app.include_router(messages_router, prefix="/api/v1/messages", tags=["messages"])
+app.include_router(features_router, prefix="/api/v1/features", tags=["features"])
+app.include_router(sources_router, prefix="/api/v1/sources", tags=["sources"])
 
 if __name__ == "__main__":
     import uvicorn

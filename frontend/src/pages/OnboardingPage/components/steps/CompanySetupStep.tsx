@@ -1,7 +1,14 @@
 /**
  * CompanySetupStep Component
- * Step 1: Collect company information
+ * Step 0: Collect company information
  * Clean form design for split-layout onboarding
+ *
+ * Fields stored in companies table:
+ * - name (required)
+ * - website (optional)
+ * - industry (required)
+ * - teamSize (optional) -> maps to 'size' column
+ * - role (optional) -> user's role in the company
  */
 
 import {
@@ -11,16 +18,16 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Typography,
   Grid,
   InputAdornment,
+  Typography,
 } from '@mui/material';
 import {
   Business as BusinessIcon,
   Language as LanguageIcon,
   People as PeopleIcon,
-  Person as PersonIcon,
   Category as CategoryIcon,
+  Person as PersonIcon,
 } from '@mui/icons-material';
 import {
   useCompanyData,
@@ -77,7 +84,8 @@ export function CompanySetupStep(): JSX.Element {
   return (
     <Box>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+        {/* Company Name */}
+        <Grid item xs={12}>
           <TextField
             fullWidth
             required
@@ -97,13 +105,14 @@ export function CompanySetupStep(): JSX.Element {
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        {/* Website */}
+        <Grid item xs={12}>
           <TextField
             fullWidth
             label="Website"
             value={companyData.website}
             onChange={(e) => updateCompanyData({ website: e.target.value })}
-            placeholder="https://yourcompany.com"
+            placeholder="https://example.com"
             size="small"
             sx={inputSx}
             InputProps={{
@@ -116,6 +125,7 @@ export function CompanySetupStep(): JSX.Element {
           />
         </Grid>
 
+        {/* Industry */}
         <Grid item xs={12}>
           <FormControl fullWidth required size="small" sx={selectSx}>
             <InputLabel>Industry</InputLabel>
@@ -137,24 +147,26 @@ export function CompanySetupStep(): JSX.Element {
             </Select>
           </FormControl>
         </Grid>
+      </Grid>
 
-        <Grid item xs={12}>
-          <Typography
-            variant="subtitle2"
-            sx={{
-              color: '#64748b',
-              fontWeight: 600,
-              mt: 1,
-              textTransform: 'uppercase',
-              fontSize: '0.7rem',
-              letterSpacing: '0.05em',
-            }}
-          >
-            About You
-          </Typography>
-        </Grid>
+      {/* About You Section */}
+      <Typography
+        sx={{
+          fontSize: '0.75rem',
+          fontWeight: 600,
+          color: '#64748b',
+          textTransform: 'uppercase',
+          letterSpacing: '0.05em',
+          mt: 4,
+          mb: 2,
+        }}
+      >
+        About you
+      </Typography>
 
-        <Grid item xs={6}>
+      <Grid container spacing={2}>
+        {/* Team Size */}
+        <Grid item xs={12} sm={6}>
           <FormControl fullWidth size="small" sx={selectSx}>
             <InputLabel>Team Size</InputLabel>
             <Select
@@ -179,7 +191,8 @@ export function CompanySetupStep(): JSX.Element {
           </FormControl>
         </Grid>
 
-        <Grid item xs={6}>
+        {/* Your Role */}
+        <Grid item xs={12} sm={6}>
           <FormControl fullWidth size="small" sx={selectSx}>
             <InputLabel>Your Role</InputLabel>
             <Select

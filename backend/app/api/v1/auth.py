@@ -107,14 +107,20 @@ async def login(
 
     tokens = auth_service.create_tokens(user)
 
-    # Get user's workspace by company (not by owner)
-    from app.models.workspace import Workspace
-    workspace = db.query(Workspace).filter(
-        Workspace.company_id == user.company_id
-    ).first()
-
-    if workspace:
-        tokens['workspace_id'] = workspace.id
+    # Use user's workspace_id directly (new schema)
+    if user.workspace_id:
+        tokens['workspace_id'] = user.workspace_id
+    else:
+        # Fallback: get workspace by company for users created before migration
+        from app.models.workspace import Workspace
+        workspace = db.query(Workspace).filter(
+            Workspace.company_id == user.company_id
+        ).first()
+        if workspace:
+            tokens['workspace_id'] = workspace.id
+            # Update user's workspace_id for future logins
+            user.workspace_id = workspace.id
+            db.commit()
 
     return Token(**tokens)
 
@@ -149,14 +155,20 @@ async def login_json(
 
     tokens = auth_service.create_tokens(user)
 
-    # Get user's workspace by company (not by owner)
-    from app.models.workspace import Workspace
-    workspace = db.query(Workspace).filter(
-        Workspace.company_id == user.company_id
-    ).first()
-
-    if workspace:
-        tokens['workspace_id'] = workspace.id
+    # Use user's workspace_id directly (new schema)
+    if user.workspace_id:
+        tokens['workspace_id'] = user.workspace_id
+    else:
+        # Fallback: get workspace by company for users created before migration
+        from app.models.workspace import Workspace
+        workspace = db.query(Workspace).filter(
+            Workspace.company_id == user.company_id
+        ).first()
+        if workspace:
+            tokens['workspace_id'] = workspace.id
+            # Update user's workspace_id for future logins
+            user.workspace_id = workspace.id
+            db.commit()
 
     return Token(**tokens)
 
@@ -199,14 +211,20 @@ async def login_google(
 
         tokens = auth_service.create_tokens(user)
 
-        # Get user's workspace by company (all users in same company share workspace)
-        from app.models.workspace import Workspace
-        workspace = db.query(Workspace).filter(
-            Workspace.company_id == user.company_id
-        ).first()
-
-        if workspace:
-            tokens['workspace_id'] = workspace.id
+        # Use user's workspace_id directly (new schema)
+        if user.workspace_id:
+            tokens['workspace_id'] = user.workspace_id
+        else:
+            # Fallback: get workspace by company for users created before migration
+            from app.models.workspace import Workspace
+            workspace = db.query(Workspace).filter(
+                Workspace.company_id == user.company_id
+            ).first()
+            if workspace:
+                tokens['workspace_id'] = workspace.id
+                # Update user's workspace_id for future logins
+                user.workspace_id = workspace.id
+                db.commit()
 
         return Token(**tokens)
 

@@ -1,19 +1,19 @@
 import asyncio
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 from typing import List, Dict, Any, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 
 from app.core.database import get_db
-from app.models.integration import Integration
+from app.models.workspace_connector import WorkspaceConnector
 from app.models.message import Message
 from app.services.slack_service import slack_service
 
 logger = logging.getLogger(__name__)
 
-# Maximum number of users to cache per integration to prevent memory leaks
+# Maximum number of users to cache per connector to prevent memory leaks
 MAX_USER_CACHE_SIZE = 500
 
 # Batch commit size for memory efficiency
@@ -21,7 +21,7 @@ BATCH_COMMIT_SIZE = 50
 
 
 class MessageIngestionService:
-    """Service for ingesting messages from various integrations"""
+    """Service for ingesting messages from various connectors"""
 
     def __init__(self):
         # LRU-style user cache with max size to prevent memory leaks
@@ -52,13 +52,13 @@ class MessageIngestionService:
         """Clear the user cache (call periodically to free memory)"""
         self._user_cache.clear()
         self._user_cache_order.clear()
-    
-    async def ingest_slack_messages(self, integration_id: str, db: Session, hours_back: int = 24) -> Dict[str, int]:
+
+    async def ingest_slack_messages(self, connector_id: str, db: Session, hours_back: int = 24) -> Dict[str, int]:
         """
-        Ingest messages from a Slack integration
+        Ingest messages from a Slack connector
 
         Args:
-            integration_id: Integration ID to ingest messages for
+            connector_id: WorkspaceConnector ID to ingest messages for
             db: Database session
             hours_back: How many hours back to fetch messages (default: 24)
 
@@ -66,31 +66,31 @@ class MessageIngestionService:
             Dictionary with 'total_checked' and 'new_added' counts
         """
         try:
-            # Get the integration
-            integration = db.query(Integration).filter(
+            # Get the connector
+            connector = db.query(WorkspaceConnector).filter(
                 and_(
-                    Integration.id == integration_id,
-                    Integration.provider == "slack",
-                    Integration.is_active == True
+                    WorkspaceConnector.id == connector_id,
+                    WorkspaceConnector.connector_type == "slack",
+                    WorkspaceConnector.is_active == True
                 )
             ).first()
-            
-            if not integration:
-                logger.error(f"Integration {integration_id} not found or not active")
+
+            if not connector:
+                logger.error(f"Connector {connector_id} not found or not active")
                 return {"total_checked": 0, "new_added": 0}
 
-            if not integration.access_token:
-                logger.error(f"No access token for integration {integration_id}")
+            if not connector.access_token:
+                logger.error(f"No access token for connector {connector_id}")
                 return {"total_checked": 0, "new_added": 0}
 
-            # Get selected channels from metadata
-            selected_channels = integration.provider_metadata.get("selected_channels", [])
+            # Get selected channels from config
+            selected_channels = (connector.config or {}).get("selected_channels", [])
             if not selected_channels:
-                logger.warning(f"No channels selected for integration {integration_id}")
+                logger.warning(f"No channels selected for connector {connector_id}")
                 return {"total_checked": 0, "new_added": 0}
 
             # Calculate oldest timestamp (24 hours ago by default)
-            oldest_time = datetime.utcnow() - timedelta(hours=hours_back)
+            oldest_time = datetime.now(timezone.utc) - timedelta(hours=hours_back)
             oldest_timestamp = str(oldest_time.timestamp())
 
             total_checked = 0
@@ -106,7 +106,7 @@ class MessageIngestionService:
                 try:
                     # Fetch messages from Slack (without timestamp filter for now)
                     messages = await slack_service.get_channel_messages(
-                        token=integration.access_token,
+                        token=connector.access_token,
                         channel_id=channel_id,
                         limit=100  # Start with recent 100 messages
                         # oldest=oldest_timestamp  # Commented out due to system clock issue
@@ -118,7 +118,7 @@ class MessageIngestionService:
                     # Process and store messages
                     channel_new = await self._process_slack_messages(
                         messages=messages,
-                        integration=integration,
+                        connector=connector,
                         channel_id=channel_id,
                         channel_name=channel_name,
                         db=db
@@ -131,42 +131,42 @@ class MessageIngestionService:
                     logger.error(f"Error ingesting messages from channel #{channel_name}: {e}")
                     continue
 
-            # Update integration sync status
-            integration.last_synced_at = datetime.utcnow()
-            integration.sync_status = "success"
-            integration.sync_error = None
+            # Update connector sync status
+            connector.last_synced_at = datetime.now(timezone.utc)
+            connector.sync_status = "success"
+            connector.sync_error = None
             db.commit()
 
-            logger.info(f"Total for integration {integration_id}: checked {total_checked}, added {total_new}")
+            logger.info(f"Total for connector {connector_id}: checked {total_checked}, added {total_new}")
             return {"total_checked": total_checked, "new_added": total_new}
 
         except Exception as e:
-            logger.error(f"Error in ingest_slack_messages for integration {integration_id}: {e}")
-            # Update integration with error status
-            if 'integration' in locals():
-                integration.sync_status = "error"
-                integration.sync_error = str(e)
+            logger.error(f"Error in ingest_slack_messages for connector {connector_id}: {e}")
+            # Update connector with error status
+            if 'connector' in locals():
+                connector.sync_status = "error"
+                connector.sync_error = str(e)
                 db.commit()
             return {"total_checked": 0, "new_added": 0}
-    
+
     async def _process_slack_messages(
-        self, 
-        messages: List[Dict[str, Any]], 
-        integration: Integration,
+        self,
+        messages: List[Dict[str, Any]],
+        connector: WorkspaceConnector,
         channel_id: str,
         channel_name: str,
         db: Session
     ) -> int:
         """
         Process and store Slack messages in database
-        
+
         Args:
             messages: List of Slack message objects
-            integration: Integration instance
+            connector: WorkspaceConnector instance
             channel_id: Slack channel ID
             channel_name: Slack channel name
             db: Database session
-            
+
         Returns:
             Number of messages processed
         """
@@ -187,7 +187,7 @@ class MessageIngestionService:
                 existing_message = db.query(Message).filter(
                     and_(
                         Message.external_id == external_id,
-                        Message.integration_id == integration.id,
+                        Message.connector_id == connector.id,
                         Message.channel_id == channel_id
                     )
                 ).first()
@@ -198,7 +198,7 @@ class MessageIngestionService:
                 # Get author information
                 author_info = await self._get_author_info(
                     user_id=message_data.get("user"),
-                    token=integration.access_token
+                    token=connector.access_token
                 )
 
                 # Extract title from Slack message
@@ -206,6 +206,12 @@ class MessageIngestionService:
                     message_data=message_data,
                     channel_name=channel_name
                 )
+
+                # Parse timestamp
+                try:
+                    sent_at = datetime.fromtimestamp(float(external_id), tz=timezone.utc)
+                except (ValueError, TypeError):
+                    sent_at = datetime.now(timezone.utc)
 
                 # Create message object
                 message = Message(
@@ -222,13 +228,11 @@ class MessageIngestionService:
                         "reactions": message_data.get("reactions", []),
                         "thread_ts": message_data.get("thread_ts"),
                         "reply_count": message_data.get("reply_count", 0),
-                        # Note: raw_message removed to save memory/storage - all needed fields extracted above
                     },
                     thread_id=message_data.get("thread_ts"),
-                    is_thread_reply=bool(message_data.get("thread_ts") and message_data.get("thread_ts") != external_id),
-                    workspace_id=integration.workspace_id,
-                    integration_id=integration.id,
-                    sent_at=datetime.fromtimestamp(float(external_id))
+                    workspace_id=connector.workspace_id,
+                    connector_id=connector.id,
+                    sent_at=sent_at
                 )
 
                 db.add(message)
@@ -262,14 +266,14 @@ class MessageIngestionService:
 
         logger.info(f"Total {processed_count} new messages processed from #{channel_name}")
         return processed_count
-    
+
     def _should_skip_message(self, message_data: Dict[str, Any]) -> bool:
         """
         Determine if a message should be skipped during ingestion
-        
+
         Args:
             message_data: Slack message object
-            
+
         Returns:
             True if message should be skipped
         """
@@ -280,11 +284,11 @@ class MessageIngestionService:
             "channel_name", "channel_topic", "channel_purpose", "group_join", "group_leave"
         ]:
             return True
-        
+
         # Skip empty messages (no text content)
         if not message_data.get("text", "").strip():
             return True
-        
+
         # Skip obvious spam/noise apps (be very selective here)
         app_id = message_data.get("app_id")
         if app_id:
@@ -292,12 +296,12 @@ class MessageIngestionService:
             noise_apps = ["A0F7XDUAZ"]  # Giphy
             if app_id in noise_apps:
                 return True
-        
+
         # NOTE: We now include bot messages! They could contain feature requests
         # NOTE: We include app messages! They could be feature request forms/tools
-        
+
         return False
-    
+
     def _get_skip_reason(self, message_data: Dict[str, Any]) -> str:
         """Get reason why message was skipped (for debugging)"""
         subtype = message_data.get("subtype")
@@ -306,18 +310,18 @@ class MessageIngestionService:
             "channel_name", "channel_topic", "channel_purpose", "group_join", "group_leave"
         ]:
             return f"system message: {subtype}"
-        
+
         if not message_data.get("text", "").strip():
             return "empty text"
-        
+
         app_id = message_data.get("app_id")
         if app_id:
             noise_apps = ["A0F7XDUAZ"]  # Giphy
             if app_id in noise_apps:
                 return f"noise app: {app_id}"
-        
+
         return "unknown reason"
-    
+
     def _extract_slack_title(self, message_data: Dict[str, Any], channel_name: str) -> Optional[str]:
         """
         Extract a title from a Slack message.
@@ -362,11 +366,11 @@ class MessageIngestionService:
     async def _get_author_info(self, user_id: Optional[str], token: str) -> Dict[str, Any]:
         """
         Get author information from Slack API with caching
-        
+
         Args:
             user_id: Slack user ID
             token: Slack access token
-            
+
         Returns:
             User information dict
         """
