@@ -44,37 +44,28 @@ export const createThemeSlice: StateCreator<
   ...initialThemeState,
 
   fetchThemes: async () => {
-    const workspaceId = get().getWorkspaceId();
-    if (!workspaceId) {
-      console.warn('[Explorer] No workspace ID available, cannot fetch themes');
-      set({ themesError: 'No workspace selected', isLoadingThemes: false });
-      return;
-    }
-
-    console.log('[Explorer] Fetching themes for workspace:', workspaceId);
+    console.log('[Explorer] Fetching themes...');
     set({ isLoadingThemes: true, themesError: null });
 
     try {
-      const response = await api.get(`/api/v1/features/themes`, {
-        params: { workspace_id: workspaceId },
-      });
+      // Use /api/v1/themes endpoint which gets workspace from auth context
+      const response = await api.get(`/api/v1/themes`);
 
       // Transform API response to ExplorerTheme format
-      // Filter to only show root themes (parent_theme_id is null)
-      const themes: ExplorerTheme[] = (response.data || [])
-        .filter((theme: Record<string, unknown>) => !theme.parent_theme_id)
-        .map((theme: Record<string, unknown>) => ({
-          id: theme.id as string,
-          name: theme.name as string,
-          description: (theme.description as string) || '',
-          color: (theme.color as string) || '#1976D2',
-          feedbackCount: (theme.mention_count as number) || 0,
-          subThemeCount: (theme.feature_count as number) || 0,
-          isAIGenerated: (theme.is_ai_generated as boolean) || false,
-          isLocked: (theme.is_locked as boolean) || false,
-          createdAt: theme.created_at as string,
-          updatedAt: theme.updated_at as string,
-        }));
+      // Response is { themes: [...], total: N }
+      const themesData = response.data?.themes || response.data || [];
+      const themes: ExplorerTheme[] = themesData.map((theme: Record<string, unknown>) => ({
+        id: theme.id as string,
+        name: theme.name as string,
+        description: (theme.description as string) || '',
+        color: (theme.color as string) || '#1976D2',
+        feedbackCount: (theme.customer_ask_count as number) || 0,
+        subThemeCount: (theme.sub_theme_count as number) || 0,
+        isAIGenerated: false,
+        isLocked: false,
+        createdAt: theme.created_at as string,
+        updatedAt: theme.updated_at as string,
+      }));
 
       console.log('[Explorer] Fetched themes:', themes.length, 'items');
       set({ themes, isLoadingThemes: false });
@@ -86,25 +77,20 @@ export const createThemeSlice: StateCreator<
   },
 
   createTheme: async (input: CreateThemeInput) => {
-    const workspaceId = get().getWorkspaceId();
-    if (!workspaceId) throw new Error('No workspace selected');
-
     set({ isLoadingThemes: true });
 
     try {
-      const response = await api.post(`/api/v1/features/themes`, {
+      // Use /api/v1/themes endpoint
+      const response = await api.post(`/api/v1/themes`, {
         name: input.name,
         description: input.description,
-        color: input.color,
-      }, {
-        params: { workspace_id: workspaceId },
       });
 
       const newTheme: ExplorerTheme = {
         id: response.data.id,
         name: response.data.name,
         description: response.data.description || '',
-        color: response.data.color || '#1976D2',
+        color: input.color || '#1976D2',
         feedbackCount: 0,
         subThemeCount: 0,
         isAIGenerated: false,
@@ -126,12 +112,11 @@ export const createThemeSlice: StateCreator<
   },
 
   updateTheme: async (themeId: string, input: UpdateThemeInput) => {
-    const workspaceId = get().getWorkspaceId();
-    if (!workspaceId) throw new Error('No workspace selected');
-
     try {
-      await api.put(`/api/v1/features/themes/${themeId}`, input, {
-        params: { workspace_id: workspaceId },
+      // Use /api/v1/themes endpoint with PATCH
+      await api.patch(`/api/v1/themes/${themeId}`, {
+        name: input.name,
+        description: input.description,
       });
 
       set((state) => ({
@@ -149,13 +134,9 @@ export const createThemeSlice: StateCreator<
   },
 
   deleteTheme: async (themeId: string) => {
-    const workspaceId = get().getWorkspaceId();
-    if (!workspaceId) throw new Error('No workspace selected');
-
     try {
-      await api.delete(`/api/v1/features/themes/${themeId}`, {
-        params: { workspace_id: workspaceId },
-      });
+      // Use /api/v1/themes endpoint
+      await api.delete(`/api/v1/themes/${themeId}`);
 
       set((state) => ({
         themes: state.themes.filter((theme) => theme.id !== themeId),

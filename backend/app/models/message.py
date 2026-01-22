@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Text, Table, Index, Integer
+from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Text, Index, Integer, Float, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -6,82 +6,81 @@ import uuid
 
 from app.core.database import Base
 
-# Association table for many-to-many relationship between features and messages
-feature_messages = Table(
-    'feature_messages',
-    Base.metadata,
-    Column('feature_id', UUID(as_uuid=True), ForeignKey('features.id'), primary_key=True),
-    Column('message_id', UUID(as_uuid=True), ForeignKey('messages.id'), primary_key=True),
-    Column('created_at', DateTime(timezone=True), server_default=func.now(), nullable=False)
-)
-
 
 class Message(Base):
-    """Message model for storing messages from external sources (Slack, email, etc.)"""
-    
+    """Unified message model for storing content from all sources (Slack, Gmail, Gong, etc.)"""
+
     __tablename__ = "messages"
-    
+
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    external_id = Column(String, nullable=False, index=True)  # Slack message ID, email ID, etc.
+
+    # Workspace relationship
+    workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id", ondelete="CASCADE"), nullable=False)
+
+    # Connector relationship (which data source this came from)
+    connector_id = Column(UUID(as_uuid=True), ForeignKey("workspace_connectors.id", ondelete="CASCADE"), nullable=False)
+
+    # Customer ask relationship (which feature request this relates to)
+    customer_ask_id = Column(UUID(as_uuid=True), ForeignKey("customer_asks.id", ondelete="SET NULL"), nullable=True)
+
+    # Customer relationship (who sent this message)
+    customer_id = Column(UUID(as_uuid=True), ForeignKey("customers.id", ondelete="SET NULL"), nullable=True)
+
+    # Source identification
+    source = Column(String(50), nullable=False)  # 'slack', 'gmail', 'gong', 'fathom', 'intercom'
+    external_id = Column(String(255), nullable=False)  # Slack message ID, Gmail thread ID, etc.
+    thread_id = Column(String(255), nullable=True)
+
+    # Content
     content = Column(Text, nullable=False)
-    source = Column(String, nullable=False)  # "slack", "email", etc.
-    channel_name = Column(String, nullable=True)  # Slack channel, email folder, etc.
-    channel_id = Column(String, nullable=True)
-    
-    # Author information
-    author_name = Column(String, nullable=True)
-    author_id = Column(String, nullable=True)
-    author_email = Column(String, nullable=True)
+    title = Column(String(500), nullable=True)  # Email subject, call title, etc.
 
-    # Message title (extracted from source: call title, email subject, thread subject, etc.)
-    title = Column(String, nullable=True, index=True)
+    # Channel/Label info
+    channel_name = Column(String(255), nullable=True)  # Slack channel name, Gmail label name
+    channel_id = Column(String(255), nullable=True)
+    label_name = Column(String(255), nullable=True)  # Gmail label
 
-    # Message metadata
-    message_metadata = Column(JSONB, nullable=True)  # Reactions, thread info, attachments, etc.
-    ai_insights = Column(JSONB, nullable=True)  # AI-extracted features, bugs, sentiment, etc.
-    thread_id = Column(String, nullable=True)
-    is_thread_reply = Column(Boolean, default=False, nullable=False)
-    
+    # Author info
+    author_name = Column(String(255), nullable=True)
+    author_email = Column(String(255), nullable=True)
+    author_id = Column(String(255), nullable=True)
+
+    # Email-specific fields (merged from gmail_threads)
+    from_email = Column(String(255), nullable=True)
+    to_emails = Column(Text, nullable=True)  # Comma-separated
+    message_count = Column(Integer, default=1, nullable=False)  # For email threads
+
+    # Metadata
+    message_metadata = Column(JSONB, nullable=True)  # Reactions, attachments, thread info, etc.
+
     # Processing status
     is_processed = Column(Boolean, default=False, nullable=False)
     processed_at = Column(DateTime(timezone=True), nullable=True)
-
-    # AI Processing state management
-    ai_processed_at = Column(DateTime(timezone=True), nullable=True)
-    ai_processing_error = Column(Text, nullable=True)
-    ai_processing_retry_count = Column(Integer, default=0, nullable=False)
-    processing_lock_token = Column(String(36), nullable=True)
-    processing_locked_at = Column(DateTime(timezone=True), nullable=True)
-    
-    # Relationships
-    workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), nullable=False)
-    integration_id = Column(UUID(as_uuid=True), ForeignKey("integrations.id"), nullable=False)
-    customer_id = Column(UUID(as_uuid=True), ForeignKey("customers.id"), nullable=True)  # Link to customer
+    feature_score = Column(Float, nullable=True)  # AI relevance score
 
     # Timestamps
+    sent_at = Column(DateTime(timezone=True), nullable=True)  # Original message time
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
-    sent_at = Column(DateTime(timezone=True), nullable=False)  # Original message timestamp
 
     # Relationships
     workspace = relationship("Workspace", back_populates="messages")
-    integration = relationship("Integration", back_populates="messages")
+    connector = relationship("WorkspaceConnector", back_populates="messages")
+    customer_ask = relationship("CustomerAsk", back_populates="messages")
     customer = relationship("Customer", back_populates="messages")
-    features = relationship(
-        "Feature",
-        secondary=feature_messages,
-        back_populates="messages"
-    )
+    ai_insights = relationship("AIInsight", back_populates="message", cascade="all, delete-orphan")
 
-    # Indexes for performance
+    # Indexes and constraints
     __table_args__ = (
+        UniqueConstraint('workspace_id', 'connector_id', 'external_id', name='uq_message_external'),
         Index('idx_messages_workspace', 'workspace_id'),
+        Index('idx_messages_connector', 'connector_id'),
+        Index('idx_messages_customer_ask', 'customer_ask_id'),
+        Index('idx_messages_customer', 'customer_id'),
         Index('idx_messages_workspace_sent', 'workspace_id', 'sent_at'),
         Index('idx_messages_workspace_processed', 'workspace_id', 'is_processed'),
-        Index('idx_messages_customer', 'customer_id'),
-        Index('idx_messages_workspace_customer', 'workspace_id', 'customer_id'),
-        Index('idx_messages_ai_insights_gin', 'ai_insights', postgresql_using='gin'),  # GIN index for JSONB queries
+        Index('idx_messages_source', 'source'),
     )
 
     def __repr__(self) -> str:
-        return f"<Message(id={self.id}, source='{self.source}', channel='{self.channel_name}')>"
+        return f"<Message(id={self.id}, source='{self.source}', connector_id={self.connector_id})>"

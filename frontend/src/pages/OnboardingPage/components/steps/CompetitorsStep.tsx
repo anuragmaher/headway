@@ -11,13 +11,14 @@ import {
   Chip,
   TextField,
   InputAdornment,
-  Skeleton,
   IconButton,
+  CircularProgress,
 } from '@mui/material';
 import {
   Add as AddIcon,
   Check as CheckIcon,
   Refresh as RefreshIcon,
+  AutoAwesome as AutoAwesomeIcon,
 } from '@mui/icons-material';
 import { useAuthStore } from '@/features/auth/store/auth-store';
 import { API_BASE_URL } from '@/config/api.config';
@@ -208,16 +209,60 @@ export function CompetitorsStep(): JSX.Element {
       </Box>
 
       {isLoading ? (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          {[0, 1, 2, 3, 4].map((i) => (
-            <Skeleton
-              key={i}
-              variant="rounded"
-              width={100}
-              height={32}
-              sx={{ borderRadius: 1, bgcolor: '#f1f5f9' }}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            py: 4,
+            px: 3,
+            borderRadius: 2,
+            bgcolor: 'white',
+            border: '1px solid #e2e8f0',
+          }}
+        >
+          <Box
+            sx={{
+              position: 'relative',
+              mb: 2,
+            }}
+          >
+            <CircularProgress
+              size={40}
+              thickness={3}
+              sx={{ color: '#2563eb' }}
             />
-          ))}
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+            >
+              <AutoAwesomeIcon sx={{ color: '#2563eb', fontSize: 16 }} />
+            </Box>
+          </Box>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              fontSize: '0.875rem',
+              color: '#1e293b',
+              mb: 0.5,
+            }}
+          >
+            Finding competitors
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: '0.75rem',
+              color: '#64748b',
+              textAlign: 'center',
+            }}
+          >
+            AI is analyzing your industry to suggest relevant competitors...
+          </Typography>
         </Box>
       ) : suggestions.length > 0 ? (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>

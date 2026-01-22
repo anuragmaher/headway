@@ -6,11 +6,14 @@ from sqlalchemy.orm import Session
 
 from app.models.message import Message
 from app.models.theme import Theme
-from app.models.feature import Feature
-from app.models.data_extraction_field import DataExtractionField
+from app.models.customer_ask import CustomerAsk
 from app.core.database import get_db
 from app.core.config import settings
 from sqlalchemy import func
+
+# Alias for backward compatibility
+Feature = CustomerAsk
+# Note: DataExtractionField has been removed in the new schema
 
 logger = logging.getLogger(__name__)
 
@@ -56,20 +59,9 @@ class AIProcessingService:
                     theme_data["parent"] = parent.name
             theme_list.append(theme_data)
 
-        # Fetch data extraction fields
-        data_fields = db.query(DataExtractionField).filter(
-            DataExtractionField.workspace_id == workspace_id,
-            DataExtractionField.is_active == True
-        ).all()
-
+        # Data extraction fields have been removed in the new schema
+        # Return empty list for backward compatibility
         field_list = []
-        for field in data_fields:
-            field_list.append({
-                "field_name": field.field_name,
-                "field_type": field.field_type,
-                "data_type": field.data_type,
-                "description": field.description
-            })
 
         return {
             "themes": theme_list,

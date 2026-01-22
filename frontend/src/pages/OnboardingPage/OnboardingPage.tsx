@@ -24,6 +24,9 @@ import {
   useCompletedSteps,
   useCompanyData,
   useTaxonomySubStep,
+  useTaxonomyData,
+  useConnectedSources,
+  useSelectedCompetitors,
 } from './store/onboardingStore';
 import { onboardingApi } from './services/onboarding-api';
 
@@ -63,6 +66,9 @@ export function OnboardingPage(): JSX.Element {
   const completedSteps = useCompletedSteps();
   const companyData = useCompanyData();
   const taxonomySubStep = useTaxonomySubStep();
+  const taxonomyData = useTaxonomyData();
+  const connectedSources = useConnectedSources();
+  const selectedCompetitors = useSelectedCompetitors();
 
   const {
     goToNextStep,
@@ -71,6 +77,8 @@ export function OnboardingPage(): JSX.Element {
     loadProgress,
     saveProgress,
     saveCompanyData,
+    saveSelectedThemes,
+    saveCompetitorsToServer,
     isLoading,
     isSaving,
   } = useOnboardingStore();
@@ -102,25 +110,42 @@ export function OnboardingPage(): JSX.Element {
   const isStepValid = useCallback((): boolean => {
     switch (currentStep) {
       case 0:
-        return !!(companyData.name.trim() && companyData.industry);
+        // Company Setup: require name, industry (website, teamSize, role are optional)
+        return !!(
+          companyData.name.trim() &&
+          companyData.industry
+        );
       case 1:
+        // Product Taxonomy: require at least 1 theme selected
+        return taxonomyData.selectedThemes.length > 0;
       case 2:
+        // Data Sources: require at least 1 connected source
+        return connectedSources.length > 0;
       case 3:
-        return true;
+        // Competitors: require at least 1 competitor
+        return selectedCompetitors.length > 0;
       default:
         return false;
     }
-  }, [currentStep, companyData]);
+  }, [currentStep, companyData, taxonomyData.selectedThemes, connectedSources, selectedCompetitors]);
 
   // Handle continue click
   const handleContinue = useCallback(async () => {
     if (currentStep < TOTAL_STEPS - 1) {
-      // Save company data to companies table when leaving step 0
-      if (currentStep === 0 && workspaceId) {
+      // Save step-specific data to proper tables
+      if (workspaceId) {
         try {
-          await saveCompanyData(workspaceId);
+          if (currentStep === 0) {
+            // Save company data to companies table
+            await saveCompanyData(workspaceId);
+          } else if (currentStep === 1) {
+            // Save selected themes to themes table
+            await saveSelectedThemes(workspaceId);
+          }
+          // Step 2 (data sources) - connectors are saved immediately when connected
+          // Step 3 (competitors) - saved when completing onboarding
         } catch (err) {
-          console.error('Failed to save company data:', err);
+          console.error('Failed to save step data:', err);
           return; // Don't proceed if save fails
         }
       }
@@ -135,11 +160,13 @@ export function OnboardingPage(): JSX.Element {
         }, 100);
       }
     } else {
-      // Complete onboarding
+      // Complete onboarding (last step - competitors)
       setIsCompleting(true);
       try {
-        // Save final progress before completing
         if (workspaceId) {
+          // Save competitors to competitors table
+          await saveCompetitorsToServer(workspaceId);
+          // Save final progress
           await saveProgress(workspaceId);
         }
         // Complete onboarding and get updated user with onboarding_completed = true
@@ -153,7 +180,7 @@ export function OnboardingPage(): JSX.Element {
         setIsCompleting(false);
       }
     }
-  }, [workspaceId, currentStep, goToNextStep, saveCompanyData, saveProgress, resetWizard, setUser, navigate]);
+  }, [workspaceId, currentStep, goToNextStep, saveCompanyData, saveSelectedThemes, saveCompetitorsToServer, saveProgress, resetWizard, setUser, navigate]);
 
   // Handle back click
   const handleBack = useCallback(() => {

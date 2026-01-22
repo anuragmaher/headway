@@ -1,6 +1,7 @@
 /**
  * Company Details Form Component
- * Allows users to manage company information including name, website, size, and description
+ * Displays company information collected during onboarding
+ * Fields: Company Name, Website, Industry, Team Size, Role
  */
 
 import { useState } from 'react';
@@ -23,43 +24,75 @@ import {
   Typography,
   Alert,
   Snackbar,
+  InputAdornment,
   alpha,
   useTheme,
 } from '@mui/material';
 import {
   Business as BusinessIcon,
   Edit as EditIcon,
-  Refresh as RefreshIcon,
-  AutoAwesome as AutoAwesomeIcon,
+  Language as LanguageIcon,
+  Category as CategoryIcon,
+  People as PeopleIcon,
+  Person as PersonIcon,
 } from '@mui/icons-material';
 
 interface CompanyDetails {
   id?: string;
   name: string;
-  website: string;
-  size: string;
-  description: string;
+  website?: string;
+  industry?: string;
+  teamSize?: string;
+  role?: string;
 }
 
 interface CompanyDetailsFormProps {
   companyData: CompanyDetails;
   onSave: (data: CompanyDetails) => Promise<void>;
-  onGenerateDescription: (websiteUrl: string) => Promise<string>;
   isLoading?: boolean;
 }
 
-const COMPANY_SIZES = ['Startup', 'Small', 'Medium', 'Enterprise'];
+const INDUSTRIES = [
+  'SaaS / Software',
+  'E-commerce',
+  'FinTech',
+  'HealthTech',
+  'EdTech',
+  'Marketing',
+  'HR / Recruiting',
+  'Developer Tools',
+  'Security',
+  'Analytics',
+  'Other',
+];
+
+const TEAM_SIZES = [
+  '1-10',
+  '11-50',
+  '51-200',
+  '201-500',
+  '500+',
+];
+
+const ROLES = [
+  'Product Manager',
+  'Engineering',
+  'Design',
+  'Customer Success',
+  'Sales',
+  'Marketing',
+  'Founder / Executive',
+  'Other',
+];
 
 export function CompanyDetailsForm({
   companyData,
   onSave,
-  onGenerateDescription,
   isLoading = false,
 }: CompanyDetailsFormProps): JSX.Element {
   const theme = useTheme();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [formData, setFormData] = useState<CompanyDetails>(companyData);
-  const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -85,45 +118,15 @@ export function CompanyDetailsForm({
     }));
   };
 
-  const handleSizeChange = (e: any) => {
+  const handleSelectChange = (field: keyof CompanyDetails) => (e: any) => {
     setFormData(prev => ({
       ...prev,
-      size: e.target.value,
+      [field]: e.target.value,
     }));
   };
 
-  const handleGenerateDescription = async () => {
-    if (!formData.website) {
-      setErrorMessage('Please enter a website URL first');
-      setSnackbarOpen(true);
-      return;
-    }
-
-    setIsGenerating(true);
-    setErrorMessage(''); // Clear any previous errors
-    try {
-      const description = await onGenerateDescription(formData.website);
-      setFormData(prev => ({
-        ...prev,
-        description,
-      }));
-      setSuccessMessage('Description generated successfully!');
-      setSnackbarOpen(true);
-      // Keep dialog open so user can review and edit the generated description
-      setDialogOpen(true);
-    } catch (error: any) {
-      console.error('Description generation error:', error);
-      setErrorMessage(error.message || 'Failed to generate description');
-      setSnackbarOpen(true);
-      // Keep dialog open on error so user can retry
-      setDialogOpen(true);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
   const handleSaveDetails = async () => {
-    if (!formData.name || !formData.website || !formData.size) {
+    if (!formData.name || !formData.industry) {
       setErrorMessage('Please fill in all required fields');
       setSnackbarOpen(true);
       return;
@@ -143,7 +146,7 @@ export function CompanyDetailsForm({
     }
   };
 
-  const isFormValid = formData.name && formData.website && formData.size;
+  const isFormValid = formData.name && formData.industry;
   const isEdited = JSON.stringify(formData) !== JSON.stringify(companyData);
 
   return (
@@ -176,10 +179,10 @@ export function CompanyDetailsForm({
             <BusinessIcon sx={{ color: 'white', fontSize: 20 }} />
           </Box>
           <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                fontWeight: 600, 
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 600,
                 mb: 0.25,
                 fontSize: '1.1rem',
                 letterSpacing: '-0.01em',
@@ -188,8 +191,8 @@ export function CompanyDetailsForm({
             >
               Company Details
             </Typography>
-            <Typography 
-              variant="body2" 
+            <Typography
+              variant="body2"
               color="text.secondary"
               sx={{
                 fontSize: '0.875rem',
@@ -223,10 +226,10 @@ export function CompanyDetailsForm({
         <Grid container spacing={2.5}>
           <Grid item xs={12} sm={6}>
             <Box>
-              <Typography 
-                variant="caption" 
-                color="text.secondary" 
-                sx={{ 
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
                   fontWeight: 500,
                   fontSize: '0.75rem',
                   textTransform: 'uppercase',
@@ -237,9 +240,9 @@ export function CompanyDetailsForm({
               >
                 Company Name
               </Typography>
-              <Typography 
-                variant="body1" 
-                sx={{ 
+              <Typography
+                variant="body1"
+                sx={{
                   fontWeight: 500,
                   fontSize: '0.9375rem',
                   lineHeight: 1.5,
@@ -252,39 +255,10 @@ export function CompanyDetailsForm({
           </Grid>
           <Grid item xs={12} sm={6}>
             <Box>
-              <Typography 
-                variant="caption" 
-                color="text.secondary" 
-                sx={{ 
-                  fontWeight: 500,
-                  fontSize: '0.75rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  display: 'block',
-                  mb: 0.75,
-                }}
-              >
-                Company Size
-              </Typography>
-              <Typography 
-                variant="body1" 
-                sx={{ 
-                  fontWeight: 500,
-                  fontSize: '0.9375rem',
-                  lineHeight: 1.5,
-                  color: 'text.primary',
-                }}
-              >
-                {companyData.size || 'Not set'}
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Box>
-              <Typography 
-                variant="caption" 
-                color="text.secondary" 
-                sx={{ 
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
                   fontWeight: 500,
                   fontSize: '0.75rem',
                   textTransform: 'uppercase',
@@ -302,7 +276,6 @@ export function CompanyDetailsForm({
                   fontSize: '0.9375rem',
                   lineHeight: 1.5,
                   color: companyData.website ? theme.palette.info.main : 'text.secondary',
-                  textDecoration: companyData.website ? 'none' : 'none',
                   cursor: companyData.website ? 'pointer' : 'default',
                   '&:hover': companyData.website ? {
                     textDecoration: 'underline',
@@ -324,10 +297,10 @@ export function CompanyDetailsForm({
           </Grid>
           <Grid item xs={12} sm={6}>
             <Box>
-              <Typography 
-                variant="caption" 
-                color="text.secondary" 
-                sx={{ 
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
                   fontWeight: 500,
                   fontSize: '0.75rem',
                   textTransform: 'uppercase',
@@ -336,23 +309,76 @@ export function CompanyDetailsForm({
                   mb: 0.75,
                 }}
               >
-                Description
+                Industry
               </Typography>
               <Typography
                 variant="body1"
                 sx={{
-                  fontWeight: 400,
+                  fontWeight: 500,
                   fontSize: '0.9375rem',
                   lineHeight: 1.5,
                   color: 'text.primary',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical',
                 }}
               >
-                {companyData.description || 'Not set'}
+                {companyData.industry || 'Not set'}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Box>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
+                  fontWeight: 500,
+                  fontSize: '0.75rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  display: 'block',
+                  mb: 0.75,
+                }}
+              >
+                Team Size
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontWeight: 500,
+                  fontSize: '0.9375rem',
+                  lineHeight: 1.5,
+                  color: 'text.primary',
+                }}
+              >
+                {companyData.teamSize ? `${companyData.teamSize} employees` : 'Not set'}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Box>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
+                  fontWeight: 500,
+                  fontSize: '0.75rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  display: 'block',
+                  mb: 0.75,
+                }}
+              >
+                Your Role
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontWeight: 500,
+                  fontSize: '0.9375rem',
+                  lineHeight: 1.5,
+                  color: 'text.primary',
+                }}
+              >
+                {companyData.role || 'Not set'}
               </Typography>
             </Box>
           </Grid>
@@ -391,6 +417,13 @@ export function CompanyDetailsForm({
                 onChange={handleInputChange}
                 disabled={isLoading}
                 variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <BusinessIcon sx={{ color: 'text.secondary', fontSize: 20 }} />
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Grid>
 
@@ -398,71 +431,105 @@ export function CompanyDetailsForm({
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Website URL *"
+                label="Website"
                 name="website"
-                value={formData.website}
+                value={formData.website || ''}
                 onChange={handleInputChange}
-                disabled={isLoading || isGenerating}
+                disabled={isLoading}
                 variant="outlined"
                 placeholder="https://example.com"
-                helperText="Include https://"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LanguageIcon sx={{ color: 'text.secondary', fontSize: 20 }} />
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Grid>
 
-            {/* Company Size */}
+            {/* Industry */}
             <Grid item xs={12}>
               <FormControl fullWidth>
-                <InputLabel>Company Size *</InputLabel>
+                <InputLabel>Industry *</InputLabel>
                 <Select
-                  name="size"
-                  value={formData.size || ''}
-                  onChange={handleSizeChange}
-                  label="Company Size *"
+                  name="industry"
+                  value={formData.industry || ''}
+                  onChange={handleSelectChange('industry')}
+                  label="Industry *"
                   disabled={isLoading}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <CategoryIcon sx={{ color: 'text.secondary', fontSize: 20, ml: 0.5 }} />
+                    </InputAdornment>
+                  }
                 >
                   <MenuItem value="">
-                    <em>Select a size</em>
+                    <em>Select an industry</em>
                   </MenuItem>
-                  {COMPANY_SIZES.map(size => (
-                    <MenuItem key={size} value={size}>
-                      {size}
+                  {INDUSTRIES.map(industry => (
+                    <MenuItem key={industry} value={industry}>
+                      {industry}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
 
-            {/* Description with Generate Button */}
-            <Grid item xs={12}>
-              <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
-                <TextField
-                  fullWidth
-                  label="Company Description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  disabled={isLoading || isGenerating}
-                  variant="outlined"
-                  multiline
-                  rows={4}
-                  placeholder="Tell us about your company..."
-                />
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={handleGenerateDescription}
-                  disabled={!formData.website || isGenerating || isLoading}
-                  startIcon={isGenerating ? <CircularProgress size={16} /> : <AutoAwesomeIcon />}
-                  sx={{
-                    whiteSpace: 'nowrap',
-                    minWidth: 140,
-                    height: 'fit-content',
-                    mt: 1
-                  }}
+            {/* Team Size */}
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Team Size</InputLabel>
+                <Select
+                  name="teamSize"
+                  value={formData.teamSize || ''}
+                  onChange={handleSelectChange('teamSize')}
+                  label="Team Size"
+                  disabled={isLoading}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <PeopleIcon sx={{ color: 'text.secondary', fontSize: 20, ml: 0.5 }} />
+                    </InputAdornment>
+                  }
                 >
-                  {isGenerating ? 'Generating...' : 'Generate'}
-                </Button>
-              </Box>
+                  <MenuItem value="">
+                    <em>Select</em>
+                  </MenuItem>
+                  {TEAM_SIZES.map(size => (
+                    <MenuItem key={size} value={size}>
+                      {size} employees
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* Role */}
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Your Role</InputLabel>
+                <Select
+                  name="role"
+                  value={formData.role || ''}
+                  onChange={handleSelectChange('role')}
+                  label="Your Role"
+                  disabled={isLoading}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <PersonIcon sx={{ color: 'text.secondary', fontSize: 20, ml: 0.5 }} />
+                    </InputAdornment>
+                  }
+                >
+                  <MenuItem value="">
+                    <em>Select</em>
+                  </MenuItem>
+                  {ROLES.map(role => (
+                    <MenuItem key={role} value={role}>
+                      {role}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
         </DialogContent>

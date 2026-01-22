@@ -11,7 +11,7 @@ import os
 import httpx
 
 from app.core.database import get_db
-from app.models.integration import Integration
+from app.models.workspace_connector import WorkspaceConnector
 from app.models.workspace import Workspace
 from app.schemas.slack import (
     SlackTokensRequest,
@@ -102,18 +102,18 @@ async def connect_slack_workspace(
         if not workspace:
             raise HTTPException(status_code=404, detail="Workspace not found")
         
-        # Check if Slack integration already exists for this workspace
-        existing_integration = db.query(Integration).filter(
-            Integration.workspace_id == workspace.id,
-            Integration.provider == "slack",
-            Integration.external_team_id == user_auth["team_id"]
+        # Check if Slack connector already exists for this workspace
+        existing_connector = db.query(WorkspaceConnector).filter(
+            WorkspaceConnector.workspace_id == workspace.id,
+            WorkspaceConnector.connector_type == "slack",
+            WorkspaceConnector.external_id == user_auth["team_id"]
         ).first()
-        
-        if existing_integration:
-            # Update existing integration
-            existing_integration.is_active = True
-            existing_integration.access_token = request.user_token
-            existing_integration.provider_metadata = {
+
+        if existing_connector:
+            # Update existing connector
+            existing_connector.is_active = True
+            existing_connector.access_token = request.user_token
+            existing_connector.config = {
                 "selected_channels": [
                     {
                         "id": ch.id,
@@ -124,23 +124,22 @@ async def connect_slack_workspace(
                 ],
                 "user_id": user_auth["user_id"]
             }
-            existing_integration.external_user_id = user_auth["user_id"]
-            existing_integration.external_team_name = user_auth["team"]
-            existing_integration.sync_status = "pending"
-            existing_integration.updated_at = datetime.utcnow()
-            
-            integration = existing_integration
-            logger.info(f"Updated existing Slack integration {integration.id}")
-            
+            existing_connector.external_name = user_auth["team"]
+            existing_connector.sync_status = "pending"
+            existing_connector.updated_at = datetime.utcnow()
+
+            connector = existing_connector
+            logger.info(f"Updated existing Slack connector {connector.id}")
+
         else:
-            # Create new integration
-            integration = Integration(
+            # Create new connector
+            connector = WorkspaceConnector(
                 id=uuid.uuid4(),
                 name=f"Slack - {user_auth['team']}",
-                provider="slack",
+                connector_type="slack",
                 workspace_id=workspace.id,
                 access_token=request.user_token,
-                provider_metadata={
+                config={
                     "selected_channels": [
                         {
                             "id": ch.id,
@@ -151,24 +150,23 @@ async def connect_slack_workspace(
                     ],
                     "user_id": user_auth["user_id"]
                 },
-                external_user_id=user_auth["user_id"],
-                external_team_id=user_auth["team_id"],
-                external_team_name=user_auth["team"],
+                external_id=user_auth["team_id"],
+                external_name=user_auth["team"],
                 sync_status="pending",
                 is_active=True
             )
-            
-            db.add(integration)
-            logger.info(f"Created new Slack integration {integration.id}")
+
+            db.add(connector)
+            logger.info(f"Created new Slack connector {connector.id}")
         
         db.commit()
-        db.refresh(integration)
-        
+        db.refresh(connector)
+
         # TODO: Trigger background sync job here
         logger.info(f"Slack workspace connected for user {current_user['id']}: {user_auth['team']}")
-        
+
         return SlackConnectionResponse(
-            integration_id=str(integration.id),
+            integration_id=str(connector.id),
             team_name=user_auth["team"],
             channels=selected_channel_details,
             status="connected"
@@ -201,26 +199,27 @@ async def get_slack_integrations(
         if not workspace:
             raise HTTPException(status_code=404, detail="Workspace not found")
         
-        integrations = db.query(Integration).filter(
-            Integration.workspace_id == workspace.id,
-            Integration.provider == "slack",
-            Integration.is_active == True
+        connectors = db.query(WorkspaceConnector).filter(
+            WorkspaceConnector.workspace_id == workspace.id,
+            WorkspaceConnector.connector_type == "slack",
+            WorkspaceConnector.is_active == True
         ).all()
-        
+
         result = []
-        for integration in integrations:
-            channels = integration.provider_metadata.get("selected_channels", [])
+        for connector in connectors:
+            config = connector.config or {}
+            channels = config.get("selected_channels", [])
             result.append({
-                "id": str(integration.id),
-                "name": integration.name,
-                "team_name": integration.external_team_name,
-                "team_id": integration.external_team_id,
-                "status": "connected" if integration.is_active else "disconnected",
-                "last_synced": integration.last_synced_at.isoformat() if integration.last_synced_at else None,
+                "id": str(connector.id),
+                "name": connector.name,
+                "team_name": connector.external_name,
+                "team_id": connector.external_id,
+                "status": "connected" if connector.is_active else "disconnected",
+                "last_synced": connector.last_synced_at.isoformat() if connector.last_synced_at else None,
                 "channels": channels,
-                "created_at": integration.created_at.isoformat()
+                "created_at": connector.created_at.isoformat()
             })
-        
+
         return result
         
     except HTTPException:
@@ -250,35 +249,22 @@ async def disconnect_slack_integration(
         if not workspace:
             raise HTTPException(status_code=404, detail="Workspace not found")
         
-        integration = db.query(Integration).filter(
-            Integration.id == integration_id,
-            Integration.workspace_id == workspace.id,
-            Integration.provider == "slack"
+        connector = db.query(WorkspaceConnector).filter(
+            WorkspaceConnector.id == integration_id,
+            WorkspaceConnector.workspace_id == workspace.id,
+            WorkspaceConnector.connector_type == "slack"
         ).first()
-        
-        if not integration:
+
+        if not connector:
             raise HTTPException(status_code=404, detail="Integration not found")
-        
-        # Disconnect all themes that use this integration
-        from app.models.theme import Theme
-        themes_using_integration = db.query(Theme).filter(
-            Theme.slack_integration_id == integration.id
-        ).all()
-        
-        for theme in themes_using_integration:
-            theme.slack_integration_id = None
-            theme.slack_channel_id = None
-            theme.slack_channel_name = None
-            theme.updated_at = datetime.utcnow()
-            logger.info(f"Disconnected theme {theme.name} from Slack integration {integration_id}")
-        
+
         # Soft delete - mark as inactive
-        integration.is_active = False
-        integration.updated_at = datetime.utcnow()
-        
+        connector.is_active = False
+        connector.updated_at = datetime.utcnow()
+
         db.commit()
-        
-        logger.info(f"Disconnected Slack integration {integration_id} and {len(themes_using_integration)} associated themes for user {current_user['id']}")
+
+        logger.info(f"Disconnected Slack connector {integration_id} for user {current_user['id']}")
         
         return {"message": "Slack integration disconnected successfully"}
         

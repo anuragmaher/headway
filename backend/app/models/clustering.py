@@ -1,5 +1,5 @@
-from sqlalchemy import Column, String, Integer, Boolean, DateTime, ForeignKey, Text, Float
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Text, Float
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import uuid
@@ -31,91 +31,59 @@ class ClusteringRun(Base):
 
     # Relationships
     workspace = relationship("Workspace", back_populates="clustering_runs")
-    discovered_clusters = relationship("DiscoveredCluster", back_populates="clustering_run", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         return f"<ClusteringRun(id={self.id}, name='{self.run_name}', status='{self.status}')>"
 
 
 class DiscoveredCluster(Base):
-    """Clusters discovered by LLM analysis with customer approval status"""
+    """Stores discovered feature clusters from AI analysis (stub for backward compatibility)"""
 
     __tablename__ = "discovered_clusters"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    clustering_run_id = Column(UUID(as_uuid=True), ForeignKey("clustering_runs.id"), nullable=False)
+    workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), nullable=False)
+    clustering_run_id = Column(UUID(as_uuid=True), ForeignKey("clustering_runs.id"), nullable=True)
 
-    # Cluster details
-    cluster_name = Column(String, nullable=False)  # e.g., "Email Security Features"
-    description = Column(Text, nullable=False)
-    category = Column(String, nullable=False)  # Core Features, Integrations, UI/UX, etc.
-    theme = Column(String, nullable=False)  # Security, Productivity, etc.
+    # Cluster metadata
+    name = Column(String, nullable=False)
+    description = Column(Text, nullable=True)
+    representative_text = Column(Text, nullable=True)
+    keywords = Column(Text, nullable=True)  # JSON array stored as text
 
-    # Analysis results
-    confidence_score = Column(Float, nullable=False)  # 0.0 to 1.0
-    message_count = Column(Integer, nullable=False)  # Number of messages in this cluster
-    business_impact = Column(Text, nullable=True)
-    example_messages = Column(JSONB, nullable=True)  # Sample message IDs and snippets
+    # Analysis data
+    message_count = Column(Integer, nullable=False, default=0)
+    confidence_score = Column(Float, nullable=False, default=0.0)
+    status = Column(String, nullable=False, default="pending")  # pending, approved, rejected
 
-    # Customer approval workflow
-    approval_status = Column(String, nullable=False, default="pending")  # pending, approved, rejected, modified
-    approved_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
-    approved_at = Column(DateTime(timezone=True), nullable=True)
-    customer_feedback = Column(Text, nullable=True)  # Notes from customer during approval
+    # Theme assignment
+    theme_id = Column(UUID(as_uuid=True), ForeignKey("themes.id"), nullable=True)
 
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
-
-    # Relationships
-    clustering_run = relationship("ClusteringRun", back_populates="discovered_clusters")
-    approved_by_user = relationship("User", foreign_keys=[approved_by])
-    classification_signals = relationship("ClassificationSignal", back_populates="source_cluster", cascade="all, delete-orphan")
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     def __repr__(self) -> str:
-        return f"<DiscoveredCluster(id={self.id}, name='{self.cluster_name}', status='{self.approval_status}')>"
+        return f"<DiscoveredCluster(id={self.id}, name='{self.name}')>"
 
 
 class ClassificationSignal(Base):
-    """Learned signals for fast classification, derived from approved clusters"""
+    """Stores classification signals from messages (stub for backward compatibility)"""
 
     __tablename__ = "classification_signals"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    source_cluster_id = Column(UUID(as_uuid=True), ForeignKey("discovered_clusters.id"), nullable=False)
     workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id"), nullable=False)
+    message_id = Column(UUID(as_uuid=True), ForeignKey("messages.id"), nullable=False)
+    cluster_id = Column(UUID(as_uuid=True), ForeignKey("discovered_clusters.id"), nullable=True)
 
-    # Signal details
-    signal_type = Column(String, nullable=False)  # keyword, pattern, semantic, business_rule
-    signal_name = Column(String, nullable=False)  # Human readable name
-
-    # Signal configuration
-    keywords = Column(JSONB, nullable=True)  # List of keywords for keyword-based signals
-    patterns = Column(JSONB, nullable=True)  # Regex patterns for pattern-based signals
-    semantic_threshold = Column(Float, nullable=True)  # For semantic similarity signals
-    business_rules = Column(JSONB, nullable=True)  # Complex business logic rules
-
-    # Classification output
-    target_category = Column(String, nullable=False)  # What this signal classifies to
-    target_theme = Column(String, nullable=False)
-    priority_weight = Column(Float, nullable=False, default=1.0)  # Weight in classification decision
-
-    # Performance tracking
-    precision = Column(Float, nullable=True)  # Tracking performance over time
-    recall = Column(Float, nullable=True)
-    usage_count = Column(Integer, nullable=False, default=0)  # How often this signal fires
-
-    # Status
-    is_active = Column(Boolean, default=True, nullable=False)
+    # Classification data
+    signal_type = Column(String, nullable=False)  # feature_request, bug_report, etc.
+    signal_text = Column(Text, nullable=True)
+    confidence = Column(Float, nullable=False, default=0.0)
 
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
-    last_used_at = Column(DateTime(timezone=True), nullable=True)
-
-    # Relationships
-    source_cluster = relationship("DiscoveredCluster", back_populates="classification_signals")
-    workspace = relationship("Workspace", back_populates="classification_signals")
 
     def __repr__(self) -> str:
-        return f"<ClassificationSignal(id={self.id}, name='{self.signal_name}', type='{self.signal_type}')>"
+        return f"<ClassificationSignal(id={self.id}, type='{self.signal_type}')>"

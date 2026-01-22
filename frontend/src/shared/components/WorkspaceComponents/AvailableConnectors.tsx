@@ -119,9 +119,12 @@ export function AvailableConnectors(): JSX.Element {
           boxShadow: `0 4px 16px ${alpha(theme.palette.common.black, 0.08)}`,
         },
         height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      <CardContent sx={{ p: 3 }}>
+      <CardContent sx={{ p: 3, display: "flex", flexDirection: "column", flex: 1 }}>
         {/* Header */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2 }}>
           <Box

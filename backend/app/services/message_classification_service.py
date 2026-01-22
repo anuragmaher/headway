@@ -7,10 +7,14 @@ from collections import defaultdict
 
 from app.core.database import get_db
 from app.models.message import Message
-from app.models.feature import Feature
+from app.models.customer_ask import CustomerAsk
 from app.models.theme import Theme
+from app.models.sub_theme import SubTheme
 from app.models.clustering import DiscoveredCluster, ClassificationSignal
 from app.services.llm_clustering_service import llm_clustering_service
+
+# Alias for backward compatibility
+Feature = CustomerAsk
 
 logger = logging.getLogger(__name__)
 

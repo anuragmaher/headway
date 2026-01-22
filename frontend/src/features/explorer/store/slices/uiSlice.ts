@@ -121,10 +121,10 @@ export const createUISlice: StateCreator<
     // Fetch sub-themes when theme is selected
     if (themeId) {
       get().fetchSubThemes(themeId);
-      get().clearFeedback();
+      get().clearCustomerAsks();
     } else {
       get().clearSubThemes();
-      get().clearFeedback();
+      get().clearCustomerAsks();
     }
   },
 
@@ -133,14 +133,14 @@ export const createUISlice: StateCreator<
       selectedSubThemeId: subThemeId,
       selectedFeedbackId: null,
       expandedFeedbackId: null,
-      activeColumn: subThemeId ? 'feedback' : 'subThemes',
+      activeColumn: subThemeId ? 'customerAsks' : 'subThemes',
     });
 
-    // Fetch feedback when sub-theme is selected
+    // Fetch customer asks when sub-theme is selected
     if (subThemeId) {
-      get().fetchFeedback(subThemeId);
+      get().fetchCustomerAsks(subThemeId);
     } else {
-      get().clearFeedback();
+      get().clearCustomerAsks();
     }
   },
 

@@ -51,8 +51,6 @@ class SyncHistory(Base):
     # Source information (for source syncs)
     source_type = Column(String, nullable=True)  # 'gmail', 'slack', 'gong', 'fathom'
     source_name = Column(String, nullable=True)  # Display name
-    integration_id = Column(UUID(as_uuid=True), ForeignKey("integrations.id"), nullable=True)
-    gmail_account_id = Column(UUID(as_uuid=True), ForeignKey("gmail_accounts.id"), nullable=True)
     connector_id = Column(UUID(as_uuid=True), ForeignKey("workspace_connectors.id"), nullable=True)
     
     # Theme information (for theme syncs)
@@ -83,8 +81,6 @@ class SyncHistory(Base):
     
     # Relationships
     workspace = relationship("Workspace", back_populates="sync_history", lazy='select')
-    integration = relationship("Integration", foreign_keys=[integration_id], lazy='select')
-    gmail_account = relationship("GmailAccounts", foreign_keys=[gmail_account_id], lazy='select')
     connector = relationship("WorkspaceConnector", foreign_keys=[connector_id], lazy='select')
     theme = relationship("Theme", foreign_keys=[theme_id], lazy='select')
     

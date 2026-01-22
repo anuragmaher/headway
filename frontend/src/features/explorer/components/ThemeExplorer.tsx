@@ -1,13 +1,15 @@
 /**
  * ThemeExplorer - Main container for the three-column explorer interface
  * Enterprise-grade exploration and triage workspace for product managers
+ *
+ * Structure: Themes -> SubThemes -> CustomerAsks -> Mentions (slide-in panel)
  */
 import React, { useEffect } from 'react';
 import { Box, CircularProgress, Alert, AlertTitle, useTheme } from '@mui/material';
 import { ThemesColumn } from './ThemesColumn';
 import { SubThemesColumn } from './SubThemesColumn';
-import { FeedbackColumn } from './FeedbackColumn';
-import { FeedbackDetail } from './FeedbackColumn/FeedbackDetail';
+import { CustomerAsksColumn } from './CustomerAsksColumn';
+import { MentionsPanel } from './MentionsPanel';
 import { AddThemeDialog } from './dialogs/AddThemeDialog';
 import { AddSubThemeDialog } from './dialogs/AddSubThemeDialog';
 import { EditThemeDialog } from './dialogs/EditThemeDialog';
@@ -37,22 +39,16 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
   // Initialize keyboard navigation
   useExplorerKeyboard();
 
-  // Initialize on mount - always fetch themes if we have a workspace
-  // This handles the case where the component mounts after workspace_id is recovered
+  // Initialize on mount - fetch themes if we have a workspace and haven't initialized yet
+  // Only runs once per mount cycle to prevent infinite loops on API errors
   useEffect(() => {
     const workspaceId = getWorkspaceId();
 
-    // If we have a workspace but no themes and not currently loading, initialize
-    if (workspaceId && !isInitializing) {
-      if (!isInitialized || themes.length === 0) {
-        // Reset first to clear stale state, then initialize
-        if (isInitialized && themes.length === 0) {
-          reset();
-        }
-        initialize();
-      }
+    // If we have a workspace and not currently loading/initialized, initialize
+    if (workspaceId && !isInitializing && !isInitialized) {
+      initialize();
     }
-  }, [isInitialized, isInitializing, themes.length, initialize, reset, getWorkspaceId]);
+  }, [isInitialized, isInitializing, initialize, getWorkspaceId]);
 
   // Loading state
   if (isInitializing) {
@@ -105,19 +101,20 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
         width: '100%',
         overflow: 'hidden',
         bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
+        position: 'relative',
       }}
     >
       {/* Left Column - Themes */}
       <ThemesColumn width={220} />
 
-      {/* Middle Column - Features */}
+      {/* Middle Column - SubThemes */}
       <SubThemesColumn width={280} />
 
-      {/* Right Column - Messages */}
-      <FeedbackColumn minWidth={400} />
+      {/* Right Column - CustomerAsks */}
+      <CustomerAsksColumn minWidth={400} />
 
-      {/* Detail Drawer */}
-      <FeedbackDetail width={480} />
+      {/* Slide-in Panel - Mentions */}
+      <MentionsPanel width={420} />
 
       {/* Dialogs */}
       <AddThemeDialog />

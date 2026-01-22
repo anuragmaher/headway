@@ -24,7 +24,7 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy import and_
 
 from app.models.message import Message
-from app.models.feature import Feature
+from app.models.customer_ask import CustomerAsk
 from app.models.customer import Customer
 
 logger = logging.getLogger(__name__)
@@ -49,7 +49,7 @@ class BatchDatabaseService:
         db: Session,
         messages: List[Dict[str, Any]],
         workspace_id: str,
-        integration_id: Optional[str] = None,
+        connector_id: Optional[str] = None,
         source: str = "unknown",
         batch_size: int = DEFAULT_BATCH_SIZE,
     ) -> Dict[str, Any]:
@@ -63,7 +63,7 @@ class BatchDatabaseService:
                 - content: Message text content
                 - Optional: channel_id, channel_name, author_name, author_email, etc.
             workspace_id: Workspace UUID string
-            integration_id: Optional integration UUID string
+            connector_id: Optional WorkspaceConnector UUID string
             source: Source type (slack, gong, fathom, gmail)
             batch_size: Number of records per batch
 
@@ -90,7 +90,7 @@ class BatchDatabaseService:
                 db=db,
                 external_ids=external_ids,
                 workspace_id=workspace_id,
-                integration_id=integration_id,
+                connector_id=connector_id,
                 source=source
             )
 
@@ -120,7 +120,7 @@ class BatchDatabaseService:
                     mapping = self._prepare_message_mapping(
                         msg=msg,
                         workspace_id=workspace_id,
-                        integration_id=integration_id,
+                        connector_id=connector_id,
                         source=source
                     )
                     if mapping:
@@ -157,7 +157,7 @@ class BatchDatabaseService:
         db: Session,
         external_ids: List[str],
         workspace_id: str,
-        integration_id: Optional[str],
+        connector_id: Optional[str],
         source: str
     ) -> Set[str]:
         """
@@ -177,8 +177,8 @@ class BatchDatabaseService:
                 )
             )
 
-            if integration_id:
-                query = query.filter(Message.integration_id == UUID(integration_id))
+            if connector_id:
+                query = query.filter(Message.connector_id == UUID(connector_id))
 
             existing = query.all()
             return {row[0] for row in existing}
@@ -191,7 +191,7 @@ class BatchDatabaseService:
         self,
         msg: Dict[str, Any],
         workspace_id: str,
-        integration_id: Optional[str],
+        connector_id: Optional[str],
         source: str
     ) -> Optional[Dict[str, Any]]:
         """
@@ -232,7 +232,6 @@ class BatchDatabaseService:
             "author_email": msg.get("author_email"),
             "title": msg.get("title"),
             "thread_id": msg.get("thread_id"),
-            "is_thread_reply": msg.get("is_thread_reply", False),
             "message_metadata": msg.get("metadata", {}),
             "sent_at": sent_at,
             "created_at": now,
@@ -240,115 +239,119 @@ class BatchDatabaseService:
             "is_processed": False,  # Mark for later AI processing
         }
 
-        if integration_id:
-            mapping["integration_id"] = UUID(integration_id)
+        if connector_id:
+            mapping["connector_id"] = UUID(connector_id)
 
         # Optional customer_id
         if msg.get("customer_id"):
             mapping["customer_id"] = UUID(msg["customer_id"])
 
+        # Optional customer_ask_id
+        if msg.get("customer_ask_id"):
+            mapping["customer_ask_id"] = UUID(msg["customer_ask_id"])
+
         return mapping
 
-    def batch_insert_features(
+    def batch_insert_customer_asks(
         self,
         db: Session,
-        features: List[Dict[str, Any]],
+        customer_asks: List[Dict[str, Any]],
         workspace_id: str,
         batch_size: int = DEFAULT_BATCH_SIZE,
     ) -> Dict[str, int]:
         """
-        Batch insert features with duplicate detection by name + theme.
+        Batch insert customer_asks with duplicate detection by name + sub_theme.
 
         Args:
             db: Database session
-            features: List of feature dictionaries
+            customer_asks: List of customer_ask dictionaries
             workspace_id: Workspace UUID string
             batch_size: Number of records per batch
 
         Returns:
             Dict with counts
         """
-        if not features:
+        if not customer_asks:
             return {"total": 0, "new_added": 0, "duplicates": 0}
 
-        total = len(features)
+        total = len(customer_asks)
         new_added = 0
 
         try:
-            # Get existing features by name for duplicate detection
-            existing_names = self._get_existing_feature_names(db, workspace_id)
+            # Get existing customer_asks by name for duplicate detection
+            existing_names = self._get_existing_customer_ask_names(db, workspace_id)
 
-            # Filter and prepare new features
-            feature_mappings = []
-            for feat in features:
-                name = feat.get("name", "").strip().lower()
-                theme_id = feat.get("theme_id")
+            # Filter and prepare new customer_asks
+            customer_ask_mappings = []
+            for ask in customer_asks:
+                name = ask.get("name", "").strip().lower()
+                sub_theme_id = ask.get("sub_theme_id")
 
                 # Simple duplicate check by name (case-insensitive)
                 if name and name not in existing_names:
-                    mapping = self._prepare_feature_mapping(feat, workspace_id)
+                    mapping = self._prepare_customer_ask_mapping(ask, workspace_id)
                     if mapping:
-                        feature_mappings.append(mapping)
+                        customer_ask_mappings.append(mapping)
                         existing_names.add(name)  # Track for same-batch dedup
 
-            if feature_mappings:
+            if customer_ask_mappings:
                 # Process in batches
-                for i in range(0, len(feature_mappings), batch_size):
-                    batch = feature_mappings[i:i + batch_size]
-                    db.bulk_insert_mappings(Feature, batch)
+                for i in range(0, len(customer_ask_mappings), batch_size):
+                    batch = customer_ask_mappings[i:i + batch_size]
+                    db.bulk_insert_mappings(CustomerAsk, batch)
                     new_added += len(batch)
 
                 db.commit()
 
             duplicates = total - new_added
-            logger.info(f"Batch feature insert: {new_added} new, {duplicates} duplicates")
+            logger.info(f"Batch customer_ask insert: {new_added} new, {duplicates} duplicates")
 
         except Exception as e:
-            logger.error(f"Error in batch feature insert: {e}")
+            logger.error(f"Error in batch customer_ask insert: {e}")
             db.rollback()
             raise
 
         return {"total": total, "new_added": new_added, "duplicates": total - new_added}
 
-    def _get_existing_feature_names(self, db: Session, workspace_id: str) -> Set[str]:
-        """Get set of existing feature names (lowercase) for workspace."""
+    def _get_existing_customer_ask_names(self, db: Session, workspace_id: str) -> Set[str]:
+        """Get set of existing customer_ask names (lowercase) for workspace."""
         try:
-            features = db.query(Feature.name).filter(
-                Feature.workspace_id == UUID(workspace_id)
+            customer_asks = db.query(CustomerAsk.name).filter(
+                CustomerAsk.workspace_id == UUID(workspace_id)
             ).all()
-            return {f[0].strip().lower() for f in features if f[0]}
+            return {ca[0].strip().lower() for ca in customer_asks if ca[0]}
         except Exception as e:
-            logger.error(f"Error getting existing features: {e}")
+            logger.error(f"Error getting existing customer_asks: {e}")
             return set()
 
-    def _prepare_feature_mapping(
+    def _prepare_customer_ask_mapping(
         self,
-        feat: Dict[str, Any],
+        ask: Dict[str, Any],
         workspace_id: str
     ) -> Optional[Dict[str, Any]]:
-        """Prepare feature dict for bulk insert."""
-        name = feat.get("name")
-        if not name:
+        """Prepare customer_ask dict for bulk insert."""
+        name = ask.get("name")
+        sub_theme_id = ask.get("sub_theme_id")
+
+        if not name or not sub_theme_id:
             return None
 
         now = datetime.now(timezone.utc)
 
         mapping = {
             "name": name,
-            "description": feat.get("description", ""),
+            "description": ask.get("description", ""),
             "workspace_id": UUID(workspace_id),
-            "status": feat.get("status", "new"),
-            "urgency": feat.get("urgency", "medium"),
-            "mention_count": feat.get("mention_count", 1),
-            "first_mentioned": feat.get("first_mentioned", now),
-            "last_mentioned": feat.get("last_mentioned", now),
+            "sub_theme_id": UUID(sub_theme_id),
+            "status": ask.get("status", "new"),
+            "urgency": ask.get("urgency", "medium"),
+            "mention_count": ask.get("mention_count", 1),
+            "first_mentioned_at": ask.get("first_mentioned_at", now),
+            "last_mentioned_at": ask.get("last_mentioned_at", now),
             "created_at": now,
             "updated_at": now,
-            "ai_metadata": feat.get("ai_metadata", {}),
+            "ai_metadata": ask.get("ai_metadata", {}),
         }
-
-        if feat.get("theme_id"):
-            mapping["theme_id"] = UUID(feat["theme_id"])
 
         return mapping
 

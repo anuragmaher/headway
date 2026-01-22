@@ -2,7 +2,7 @@
 ExtractedFact model for intermediate AI extraction results.
 
 This is the "facts table" that stores AI extraction results before
-they are aggregated into the final Features table. This provides:
+they are aggregated into the final CustomerAsks table. This provides:
 - Replayability: Can re-aggregate without re-running AI
 - Auditing: Full trace of what was extracted and from where
 - Confidence tracking: Per-fact confidence scores
@@ -24,7 +24,7 @@ class ExtractedFact(Base):
 
     Each fact represents a single feature request extracted from a chunk
     or normalized event. Multiple facts may later be aggregated into a
-    single Feature if they represent the same underlying request.
+    single CustomerAsk if they represent the same underlying request.
     """
 
     __tablename__ = "extracted_facts"
@@ -74,8 +74,8 @@ class ExtractedFact(Base):
     # Statuses: pending -> processing -> aggregated -> skipped
     aggregation_run_id = Column(UUID(as_uuid=True), ForeignKey("aggregation_runs.id"), nullable=True, index=True)
 
-    # Link to final Feature (set during aggregation)
-    feature_id = Column(UUID(as_uuid=True), ForeignKey("features.id"), nullable=True, index=True)
+    # Link to final CustomerAsk (set during aggregation)
+    customer_ask_id = Column(UUID(as_uuid=True), ForeignKey("customer_asks.id"), nullable=True, index=True)
     aggregation_confidence = Column(Float, nullable=True)  # Confidence that this fact matches the feature
     aggregation_reasoning = Column(Text, nullable=True)
 
@@ -98,7 +98,7 @@ class ExtractedFact(Base):
     workspace = relationship("Workspace", back_populates="extracted_facts")
     normalized_event = relationship("NormalizedEvent", back_populates="extracted_facts")
     chunk = relationship("EventChunk", back_populates="extracted_facts")
-    feature = relationship("Feature", back_populates="extracted_facts")
+    customer_ask = relationship("CustomerAsk", back_populates="extracted_facts")
     theme = relationship("Theme")
     duplicate_of = relationship("ExtractedFact", remote_side=[id], foreign_keys=[duplicate_of_id])
 
@@ -107,7 +107,7 @@ class ExtractedFact(Base):
         Index('idx_extracted_facts_workspace_status', 'workspace_id', 'aggregation_status'),
         Index('idx_extracted_facts_workspace_theme', 'workspace_id', 'theme_id'),
         Index('idx_extracted_facts_pending', 'workspace_id', 'aggregation_status', 'is_valid'),
-        Index('idx_extracted_facts_feature', 'feature_id'),
+        Index('idx_extracted_facts_customer_ask', 'customer_ask_id'),
         Index('idx_extracted_facts_confidence', 'extraction_confidence'),
         Index('idx_extracted_facts_hash', 'workspace_id', 'content_hash'),
     )

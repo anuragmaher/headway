@@ -6,9 +6,9 @@ Only processes content that passed Tier-1 classification (score >= 6).
 
 New Flow (v2.0):
 - Extracts feature details from text
-- ALWAYS assigns to a theme (required)
-- Matches against existing features or creates new ones
-- Features are created/updated directly in Tier-2 (no Tier-3 aggregation needed)
+- ALWAYS assigns to a theme/sub_theme (required)
+- Matches against existing customer_asks or creates new ones
+- CustomerAsks are created/updated directly in Tier-2 (no Tier-3 aggregation needed)
 - ExtractedFacts serve as audit trail
 
 State-Driven Model:
@@ -30,8 +30,9 @@ from app.tasks.celery_app import celery_app
 from app.models.normalized_event import NormalizedEvent, EventChunk
 from app.models.extracted_fact import ExtractedFact
 from app.models.theme import Theme
-from app.models.feature import Feature
-from app.models.message import Message, feature_messages
+from app.models.sub_theme import SubTheme
+from app.models.customer_ask import CustomerAsk
+from app.models.message import Message
 from app.services.tiered_ai_service import get_tiered_ai_service
 from app.sync_engine.tasks.base import (
     engine,
@@ -107,25 +108,25 @@ def extract_features(
             total_skipped = 0
             total_errors = 0
 
-            # Get workspace themes and existing features for AI matching
+            # Get workspace themes and existing customer_asks for AI matching
             themes = _get_workspace_themes(db, workspace_id)
-            existing_features = _get_workspace_features(db, workspace_id)
+            existing_customer_asks = _get_workspace_customer_asks(db, workspace_id)
 
             # Process non-chunked classified events
             event_stats = _extract_from_events(
-                db, ai_service, workspace_id, batch_size // 2, min_confidence, themes, existing_features, lock_token
+                db, ai_service, workspace_id, batch_size // 2, min_confidence, themes, existing_customer_asks, lock_token
             )
             total_extracted += event_stats["extracted"]
             total_facts_created += event_stats["facts_created"]
             total_skipped += event_stats["skipped"]
             total_errors += event_stats["errors"]
 
-            # Refresh features list after processing events (new features may have been created)
-            existing_features = _get_workspace_features(db, workspace_id)
+            # Refresh customer_asks list after processing events (new ones may have been created)
+            existing_customer_asks = _get_workspace_customer_asks(db, workspace_id)
 
             # Process classified chunks
             chunk_stats = _extract_from_chunks(
-                db, ai_service, workspace_id, batch_size // 2, min_confidence, themes, existing_features, lock_token
+                db, ai_service, workspace_id, batch_size // 2, min_confidence, themes, existing_customer_asks, lock_token
             )
             total_extracted += chunk_stats["extracted"]
             total_facts_created += chunk_stats["facts_created"]
@@ -138,9 +139,6 @@ def extract_features(
                 f"✅ Tier-2 extraction complete: {total_extracted} processed, "
                 f"{total_facts_created} facts created, {total_skipped} skipped, {total_errors} errors"
             )
-
-            # Note: Feature creation/matching now happens directly in Tier-2
-            # No need to trigger Tier-3 aggregation - facts are already linked to features
 
             return {
                 "status": "success",
@@ -160,7 +158,7 @@ def extract_features(
 
 
 def _get_workspace_themes(db: Session, workspace_id: Optional[str]) -> List[Dict[str, Any]]:
-    """Get themes for a workspace for AI classification."""
+    """Get themes with their sub_themes for a workspace for AI classification."""
     if not workspace_id:
         logger.warning("_get_workspace_themes called with workspace_id=None, returning empty list")
         return []
@@ -171,14 +169,25 @@ def _get_workspace_themes(db: Session, workspace_id: Optional[str]) -> List[Dict
 
     logger.info(f"Found {len(themes)} themes for workspace {workspace_id}")
 
-    return [
-        {
+    result = []
+    for theme in themes:
+        theme_data = {
             "id": str(theme.id),
             "name": theme.name,
             "description": theme.description or "",
+            "sub_themes": []
         }
-        for theme in themes
-    ]
+        # Get sub_themes for this theme
+        sub_themes = db.query(SubTheme).filter(SubTheme.theme_id == theme.id).all()
+        for st in sub_themes:
+            theme_data["sub_themes"].append({
+                "id": str(st.id),
+                "name": st.name,
+                "description": st.description or "",
+            })
+        result.append(theme_data)
+
+    return result
 
 
 def _get_themes_for_workspace_uuid(db: Session, workspace_id: UUID) -> List[Dict[str, Any]]:
@@ -187,87 +196,113 @@ def _get_themes_for_workspace_uuid(db: Session, workspace_id: UUID) -> List[Dict
 
     logger.info(f"Found {len(themes)} themes for workspace UUID {workspace_id}")
 
-    return [
-        {
+    result = []
+    for theme in themes:
+        theme_data = {
             "id": str(theme.id),
             "name": theme.name,
             "description": theme.description or "",
+            "sub_themes": []
         }
-        for theme in themes
-    ]
+        sub_themes = db.query(SubTheme).filter(SubTheme.theme_id == theme.id).all()
+        for st in sub_themes:
+            theme_data["sub_themes"].append({
+                "id": str(st.id),
+                "name": st.name,
+                "description": st.description or "",
+            })
+        result.append(theme_data)
+
+    return result
 
 
-def _get_default_theme_id(db: Session, workspace_id: UUID) -> Optional[UUID]:
+def _get_default_sub_theme_id(db: Session, workspace_id: UUID) -> tuple[Optional[UUID], Optional[UUID]]:
     """
-    Get the first available theme for a workspace as a fallback.
+    Get the first available sub_theme for a workspace as a fallback.
 
-    This ensures features ALWAYS have a theme even if AI-assigned theme name doesn't match.
+    Returns (theme_id, sub_theme_id) tuple.
     """
-    theme = db.query(Theme).filter(Theme.workspace_id == workspace_id).first()
-    if theme:
-        logger.info(f"Using default theme '{theme.name}' (ID: {theme.id}) as fallback")
-        return theme.id
-    return None
+    sub_theme = db.query(SubTheme).filter(SubTheme.workspace_id == workspace_id).first()
+    if sub_theme:
+        logger.info(f"Using default sub_theme '{sub_theme.name}' (ID: {sub_theme.id}) as fallback")
+        return sub_theme.theme_id, sub_theme.id
+    return None, None
 
 
-def _get_workspace_features(db: Session, workspace_id: Optional[str]) -> List[Dict[str, Any]]:
-    """Get existing features for a workspace for AI matching."""
+def _get_workspace_customer_asks(db: Session, workspace_id: Optional[str]) -> List[Dict[str, Any]]:
+    """Get existing customer_asks for a workspace for AI matching."""
     if not workspace_id:
         return []
 
-    # Get features with their theme names
-    features = db.query(Feature, Theme.name.label("theme_name")).outerjoin(
-        Theme, Feature.theme_id == Theme.id
+    # Get customer_asks with their sub_theme and theme names
+    customer_asks = db.query(CustomerAsk, SubTheme.name.label("sub_theme_name"), Theme.name.label("theme_name")).outerjoin(
+        SubTheme, CustomerAsk.sub_theme_id == SubTheme.id
+    ).outerjoin(
+        Theme, SubTheme.theme_id == Theme.id
     ).filter(
-        Feature.workspace_id == UUID(workspace_id)
-    ).order_by(Feature.mention_count.desc()).limit(50).all()
+        CustomerAsk.workspace_id == UUID(workspace_id)
+    ).order_by(CustomerAsk.mention_count.desc()).limit(50).all()
 
     return [
         {
-            "id": str(f.Feature.id),
-            "name": f.Feature.name,
-            "description": f.Feature.description[:200] if f.Feature.description else "",
-            "theme_name": f.theme_name or "Uncategorized",
-            "mention_count": f.Feature.mention_count or 1,
+            "id": str(ca.CustomerAsk.id),
+            "name": ca.CustomerAsk.name,
+            "description": ca.CustomerAsk.description[:200] if ca.CustomerAsk.description else "",
+            "sub_theme_name": ca.sub_theme_name or "Uncategorized",
+            "theme_name": ca.theme_name or "Uncategorized",
+            "mention_count": ca.CustomerAsk.mention_count or 1,
         }
-        for f in features
+        for ca in customer_asks
     ]
 
 
-def _get_theme_id_by_name(themes: List[Dict[str, Any]], theme_name: str) -> Optional[UUID]:
+def _get_sub_theme_id_by_name(themes: List[Dict[str, Any]], theme_name: str, sub_theme_name: Optional[str] = None) -> tuple[Optional[UUID], Optional[UUID]]:
     """
-    Find theme ID by name (case-insensitive, with fuzzy matching).
+    Find theme_id and sub_theme_id by names (case-insensitive, with fuzzy matching).
 
-    Tries exact match first, then partial/fuzzy match for robustness.
+    Returns (theme_id, sub_theme_id) tuple.
     """
     if not theme_name:
         logger.warning("No theme_name provided for theme matching")
-        return None
+        return None, None
 
     if not themes:
         logger.warning("No themes available for matching")
-        return None
+        return None, None
 
     theme_name_lower = theme_name.lower().strip()
 
-    # Try exact match first (case-insensitive)
+    # Find matching theme first
+    matched_theme = None
     for theme in themes:
         if theme["name"].lower().strip() == theme_name_lower:
-            logger.debug(f"Exact theme match: '{theme_name}' -> '{theme['name']}' (ID: {theme['id']})")
-            return UUID(theme["id"])
+            matched_theme = theme
+            break
+        # Partial match
+        if theme_name_lower in theme["name"].lower().strip() or theme["name"].lower().strip() in theme_name_lower:
+            matched_theme = theme
 
-    # Try partial match (AI might return slightly different name)
-    for theme in themes:
-        theme_name_db = theme["name"].lower().strip()
-        # Check if one contains the other
-        if theme_name_lower in theme_name_db or theme_name_db in theme_name_lower:
-            logger.info(f"Partial theme match: '{theme_name}' -> '{theme['name']}' (ID: {theme['id']})")
-            return UUID(theme["id"])
+    if not matched_theme:
+        available_themes = [t["name"] for t in themes]
+        logger.warning(f"No theme match found for '{theme_name}'. Available themes: {available_themes}")
+        return None, None
 
-    # Log warning if no match found
-    available_themes = [t["name"] for t in themes]
-    logger.warning(f"No theme match found for '{theme_name}'. Available themes: {available_themes}")
-    return None
+    theme_id = UUID(matched_theme["id"])
+
+    # If sub_theme_name is provided, try to find matching sub_theme
+    if sub_theme_name and matched_theme.get("sub_themes"):
+        sub_theme_name_lower = sub_theme_name.lower().strip()
+        for st in matched_theme["sub_themes"]:
+            if st["name"].lower().strip() == sub_theme_name_lower:
+                return theme_id, UUID(st["id"])
+            if sub_theme_name_lower in st["name"].lower().strip() or st["name"].lower().strip() in sub_theme_name_lower:
+                return theme_id, UUID(st["id"])
+
+    # Return first sub_theme if available
+    if matched_theme.get("sub_themes") and len(matched_theme["sub_themes"]) > 0:
+        return theme_id, UUID(matched_theme["sub_themes"][0]["id"])
+
+    return theme_id, None
 
 
 def _compute_content_hash(text: str, title: str) -> str:
@@ -276,21 +311,20 @@ def _compute_content_hash(text: str, title: str) -> str:
     return hashlib.sha256(content.encode()).hexdigest()[:16]
 
 
-def _link_message_to_feature(
+def _link_message_to_customer_ask(
     db: Session,
     event: NormalizedEvent,
-    feature_id: UUID,
+    customer_ask_id: UUID,
 ) -> bool:
     """
-    Link a message to a feature via the feature_messages association table.
+    Link a message to a customer_ask via the message's customer_ask_id field.
 
-    This enables querying messages by feature for the mentions/messages section.
-    Also queues the message for AI insights processing (since it passed Tier-2).
+    Also queues the message for AI insights processing.
 
     Args:
         db: Database session
         event: The NormalizedEvent containing source_table and source_record_id
-        feature_id: The feature ID to link to
+        customer_ask_id: The customer_ask ID to link to
 
     Returns:
         True if link was created, False if not applicable or already exists
@@ -304,37 +338,24 @@ def _link_message_to_feature(
         logger.debug(f"Skipping message link - no source_record_id")
         return False
 
-    message_id = event.source_record_id
-
-    # Check if link already exists
-    existing = db.execute(
-        feature_messages.select().where(
-            feature_messages.c.feature_id == feature_id,
-            feature_messages.c.message_id == message_id,
-        )
-    ).first()
-
-    if existing:
-        logger.debug(f"Message-feature link already exists: message={message_id}, feature={feature_id}")
+    message = db.query(Message).filter(Message.id == event.source_record_id).first()
+    if not message:
+        logger.debug(f"Message not found: {event.source_record_id}")
         return False
 
-    # Insert the link
-    try:
-        db.execute(
-            feature_messages.insert().values(
-                feature_id=feature_id,
-                message_id=message_id,
-            )
-        )
-        logger.info(f"Linked message {message_id} to feature {feature_id}")
-
-        # Queue message for AI insights since it passed Tier-2
-        _queue_message_for_ai_insights(str(message_id), str(event.workspace_id))
-
-        return True
-    except Exception as e:
-        logger.warning(f"Failed to link message {message_id} to feature {feature_id}: {e}")
+    # Check if already linked
+    if message.customer_ask_id == customer_ask_id:
+        logger.debug(f"Message already linked to customer_ask: {customer_ask_id}")
         return False
+
+    # Link the message
+    message.customer_ask_id = customer_ask_id
+    logger.info(f"Linked message {message.id} to customer_ask {customer_ask_id}")
+
+    # Queue message for AI insights since it passed Tier-2
+    _queue_message_for_ai_insights(str(message.id), str(event.workspace_id))
+
+    return True
 
 
 def _queue_message_for_ai_insights(message_id: str, workspace_id: str) -> None:
@@ -342,7 +363,7 @@ def _queue_message_for_ai_insights(message_id: str, workspace_id: str) -> None:
     Queue a message for AI insights processing after it passes Tier-2.
 
     This is the ONLY entry point for AI insights - messages must pass Tier-2
-    (be linked to a feature) before they can be processed for AI insights.
+    (be linked to a customer_ask) before they can be processed for AI insights.
     """
     try:
         from app.sync_engine.tasks.ai_insights.worker import queue_message_for_insights
@@ -363,14 +384,14 @@ def _extract_from_events(
     batch_size: int,
     min_confidence: float,
     themes: List[Dict[str, Any]],
-    existing_features: List[Dict[str, Any]],
+    existing_customer_asks: List[Dict[str, Any]],
     lock_token,
 ) -> Dict[str, int]:
     """
     Extract features from non-chunked events.
 
-    Now includes theme assignment and feature matching in Tier-2.
-    Either matches an existing feature (increments mention count) or creates a new one.
+    Now includes theme assignment and customer_ask matching in Tier-2.
+    Either matches an existing customer_ask (increments mention count) or creates a new one.
 
     State-Driven filter:
     - processing_stage='classified' (ready for extraction)
@@ -438,7 +459,7 @@ def _extract_from_events(
             else:
                 logger.warning(f"NO THEMES available for workspace {event_workspace_id}! Check if themes exist in DB.")
 
-            # Call Tier-2 AI extraction with themes and existing features
+            # Call Tier-2 AI extraction with themes and existing customer_asks
             result = ai_service.tier2_extract(
                 text=event.clean_text,
                 source_type=event.source_type,
@@ -446,7 +467,7 @@ def _extract_from_events(
                 actor_role=event.actor_role,
                 title=event.title,
                 themes=event_themes,
-                existing_features=existing_features,
+                existing_features=existing_customer_asks,  # Using same interface for customer_asks
             )
 
             # Check extraction confidence
@@ -462,61 +483,56 @@ def _extract_from_events(
                 stats["extracted"] += 1
                 continue
 
-            # Get theme ID from the AI-assigned theme name
-            theme_id = _get_theme_id_by_name(event_themes, result.theme_name)
+            # Get theme_id and sub_theme_id from the AI-assigned theme name
+            theme_id, sub_theme_id = _get_sub_theme_id_by_name(event_themes, result.theme_name)
 
-            # IMPORTANT: Features MUST have a theme - use fallback if no match
-            if theme_id:
-                logger.info(f"[Event] Tier-2: Assigned to theme '{result.theme_name}' (ID: {theme_id})")
+            # IMPORTANT: CustomerAsks MUST have a sub_theme - use fallback if no match
+            if sub_theme_id:
+                logger.info(f"[Event] Tier-2: Assigned to theme '{result.theme_name}' (sub_theme_id: {sub_theme_id})")
             else:
-                logger.warning(f"[Event] Tier-2: Could not find theme for '{result.theme_name}' - using fallback theme")
-                theme_id = _get_default_theme_id(db, event_workspace_id)
-                if theme_id:
-                    logger.info(f"[Event] Tier-2: Using fallback theme (ID: {theme_id})")
+                logger.warning(f"[Event] Tier-2: Could not find sub_theme for '{result.theme_name}' - using fallback")
+                theme_id, sub_theme_id = _get_default_sub_theme_id(db, event_workspace_id)
+                if sub_theme_id:
+                    logger.info(f"[Event] Tier-2: Using fallback sub_theme (ID: {sub_theme_id})")
                 else:
-                    logger.error(f"[Event] Tier-2: No themes exist for workspace {event_workspace_id}! Cannot assign feature to theme.")
+                    logger.error(f"[Event] Tier-2: No sub_themes exist for workspace {event_workspace_id}! Cannot assign customer_ask.")
 
-            # Handle feature matching or creation
-            feature_id = None
+            # Handle customer_ask matching or creation
+            customer_ask_id = None
             if result.matched_feature_id and not result.is_new_feature:
-                # AI matched an existing feature - increment mention count
+                # AI matched an existing customer_ask - increment mention count
                 try:
-                    feature_id = UUID(result.matched_feature_id)
-                    feature = db.query(Feature).filter(Feature.id == feature_id).first()
-                    if feature:
+                    customer_ask_id = UUID(result.matched_feature_id)
+                    customer_ask = db.query(CustomerAsk).filter(CustomerAsk.id == customer_ask_id).first()
+                    if customer_ask:
                         event_time = event.event_timestamp or datetime.now(timezone.utc)
-                        feature.mention_count = (feature.mention_count or 1) + 1
-                        # Update both old and new timestamp columns for compatibility
-                        feature.last_mentioned_at = event_time
-                        feature.last_mentioned = event_time  # Legacy column used by API
-                        feature.updated_at = datetime.now(timezone.utc)
-                        logger.info(f"Matched existing feature '{feature.name}' (mentions: {feature.mention_count})")
+                        customer_ask.mention_count = (customer_ask.mention_count or 1) + 1
+                        customer_ask.last_mentioned_at = event_time
+                        customer_ask.updated_at = datetime.now(timezone.utc)
+                        logger.info(f"Matched existing customer_ask '{customer_ask.name}' (mentions: {customer_ask.mention_count})")
                     else:
-                        # Feature not found, will create new
-                        feature_id = None
+                        # CustomerAsk not found, will create new
+                        customer_ask_id = None
                         result.is_new_feature = True
                 except (ValueError, TypeError):
-                    feature_id = None
+                    customer_ask_id = None
                     result.is_new_feature = True
 
-            if result.is_new_feature:
-                # Create new feature
+            if result.is_new_feature and sub_theme_id:
+                # Create new customer_ask
                 event_time = event.event_timestamp or datetime.now(timezone.utc)
-                new_feature = Feature(
+                new_customer_ask = CustomerAsk(
                     workspace_id=event.workspace_id,
-                    theme_id=theme_id,
+                    sub_theme_id=sub_theme_id,
                     name=result.feature_title[:255],
                     description=result.feature_description,
-                    priority=_map_priority_hint(result.priority_hint),
                     urgency=_map_urgency_hint(result.urgency_hint),
+                    status="new",
                     mention_count=1,
-                    # Set both old and new timestamp columns for compatibility
                     first_mentioned_at=event_time,
                     last_mentioned_at=event_time,
-                    first_mentioned=event_time,  # Legacy column used by API
-                    last_mentioned=event_time,   # Legacy column used by API
                     match_confidence=result.confidence,
-                    feature_metadata={
+                    ai_metadata={
                         "problem_statement": result.problem_statement,
                         "desired_outcome": result.desired_outcome,
                         "user_persona": result.user_persona,
@@ -525,22 +541,23 @@ def _extract_from_events(
                         "sentiment": result.sentiment,
                     },
                 )
-                db.add(new_feature)
+                db.add(new_customer_ask)
                 db.flush()
-                feature_id = new_feature.id
-                # Add to existing features list for subsequent matches in this batch
-                existing_features.append({
-                    "id": str(feature_id),
+                customer_ask_id = new_customer_ask.id
+                # Add to existing customer_asks list for subsequent matches in this batch
+                existing_customer_asks.append({
+                    "id": str(customer_ask_id),
                     "name": result.feature_title,
                     "description": result.feature_description[:200] if result.feature_description else "",
+                    "sub_theme_name": result.theme_name or "Uncategorized",
                     "theme_name": result.theme_name or "Uncategorized",
                     "mention_count": 1,
                 })
-                logger.info(f"Created new feature '{result.feature_title}'")
+                logger.info(f"Created new customer_ask '{result.feature_title}'")
 
-            # Link the source message to the feature (for mentions display)
-            if feature_id:
-                _link_message_to_feature(db, event, feature_id)
+            # Link the source message to the customer_ask
+            if customer_ask_id:
+                _link_message_to_customer_ask(db, event, customer_ask_id)
 
             # Create ExtractedFact (for audit trail)
             content_hash = _compute_content_hash(event.clean_text, result.feature_title)
@@ -548,7 +565,7 @@ def _extract_from_events(
                 workspace_id=event.workspace_id,
                 normalized_event_id=event.id,
                 chunk_id=None,
-                feature_id=feature_id,
+                customer_ask_id=customer_ask_id,
                 feature_title=result.feature_title,
                 feature_description=result.feature_description,
                 problem_statement=result.problem_statement,
@@ -568,7 +585,7 @@ def _extract_from_events(
                 actor_email=event.actor_email,
                 event_timestamp=event.event_timestamp,
                 content_hash=content_hash,
-                aggregation_status="aggregated" if feature_id else "pending",
+                aggregation_status="aggregated" if customer_ask_id else "pending",
             )
             db.add(fact)
 
@@ -599,25 +616,13 @@ def _extract_from_events(
     return stats
 
 
-def _map_priority_hint(hint: Optional[str]) -> str:
-    """Map AI priority hint to feature priority."""
-    if not hint:
-        return "medium"
-    hint_lower = hint.lower()
-    if hint_lower in ("high", "critical", "urgent"):
-        return "high"
-    elif hint_lower in ("low", "minor", "nice-to-have"):
-        return "low"
-    return "medium"
-
-
 def _map_urgency_hint(hint: Optional[str]) -> str:
-    """Map AI urgency hint to feature urgency."""
+    """Map AI urgency hint to customer_ask urgency."""
     if not hint:
         return "medium"
     hint_lower = hint.lower()
     if hint_lower in ("high", "critical", "immediate", "asap"):
-        return "high"
+        return "critical"
     elif hint_lower in ("low", "whenever", "no-rush"):
         return "low"
     return "medium"
@@ -630,14 +635,14 @@ def _extract_from_chunks(
     batch_size: int,
     min_confidence: float,
     themes: List[Dict[str, Any]],
-    existing_features: List[Dict[str, Any]],
+    existing_customer_asks: List[Dict[str, Any]],
     lock_token,
 ) -> Dict[str, int]:
     """
     Extract features from classified chunks.
 
-    Now includes theme assignment and feature matching in Tier-2.
-    Either matches an existing feature (increments mention count) or creates a new one.
+    Now includes theme assignment and customer_ask matching in Tier-2.
+    Either matches an existing customer_ask (increments mention count) or creates a new one.
 
     State-Driven filter:
     - processing_stage='classified' (ready for extraction)
@@ -716,7 +721,7 @@ def _extract_from_chunks(
             else:
                 logger.warning(f"NO THEMES available for chunk workspace {chunk_workspace_id}! Check if themes exist in DB.")
 
-            # Call Tier-2 AI extraction with themes and existing features
+            # Call Tier-2 AI extraction with themes and existing customer_asks
             result = ai_service.tier2_extract(
                 text=chunk.chunk_text,
                 source_type=parent_event.source_type,
@@ -724,7 +729,7 @@ def _extract_from_chunks(
                 actor_role=chunk.speaker_role or parent_event.actor_role,
                 title=parent_event.title,
                 themes=chunk_themes,
-                existing_features=existing_features,
+                existing_features=existing_customer_asks,
             )
 
             # Check extraction confidence
@@ -740,60 +745,55 @@ def _extract_from_chunks(
                 stats["extracted"] += 1
                 continue
 
-            # Get theme ID from the AI-assigned theme name
-            theme_id = _get_theme_id_by_name(chunk_themes, result.theme_name)
+            # Get theme_id and sub_theme_id from the AI-assigned theme name
+            theme_id, sub_theme_id = _get_sub_theme_id_by_name(chunk_themes, result.theme_name)
 
-            # IMPORTANT: Features MUST have a theme - use fallback if no match
-            if theme_id:
-                logger.info(f"[Chunk] Tier-2: Assigned to theme '{result.theme_name}' (ID: {theme_id})")
+            # IMPORTANT: CustomerAsks MUST have a sub_theme - use fallback if no match
+            if sub_theme_id:
+                logger.info(f"[Chunk] Tier-2: Assigned to theme '{result.theme_name}' (sub_theme_id: {sub_theme_id})")
             else:
-                logger.warning(f"[Chunk] Tier-2: Could not find theme for '{result.theme_name}' - using fallback theme")
-                theme_id = _get_default_theme_id(db, chunk_workspace_id)
-                if theme_id:
-                    logger.info(f"[Chunk] Tier-2: Using fallback theme (ID: {theme_id})")
+                logger.warning(f"[Chunk] Tier-2: Could not find sub_theme for '{result.theme_name}' - using fallback")
+                theme_id, sub_theme_id = _get_default_sub_theme_id(db, chunk_workspace_id)
+                if sub_theme_id:
+                    logger.info(f"[Chunk] Tier-2: Using fallback sub_theme (ID: {sub_theme_id})")
                 else:
-                    logger.error(f"[Chunk] Tier-2: No themes exist for workspace {chunk_workspace_id}! Cannot assign feature to theme.")
+                    logger.error(f"[Chunk] Tier-2: No sub_themes exist for workspace {chunk_workspace_id}! Cannot assign customer_ask.")
 
-            # Handle feature matching or creation
-            feature_id = None
+            # Handle customer_ask matching or creation
+            customer_ask_id = None
             if result.matched_feature_id and not result.is_new_feature:
-                # AI matched an existing feature - increment mention count
+                # AI matched an existing customer_ask - increment mention count
                 try:
-                    feature_id = UUID(result.matched_feature_id)
-                    feature = db.query(Feature).filter(Feature.id == feature_id).first()
-                    if feature:
+                    customer_ask_id = UUID(result.matched_feature_id)
+                    customer_ask = db.query(CustomerAsk).filter(CustomerAsk.id == customer_ask_id).first()
+                    if customer_ask:
                         event_time = parent_event.event_timestamp or datetime.now(timezone.utc)
-                        feature.mention_count = (feature.mention_count or 1) + 1
-                        # Update both old and new timestamp columns for compatibility
-                        feature.last_mentioned_at = event_time
-                        feature.last_mentioned = event_time  # Legacy column used by API
-                        feature.updated_at = datetime.now(timezone.utc)
-                        logger.info(f"Matched existing feature '{feature.name}' (mentions: {feature.mention_count})")
+                        customer_ask.mention_count = (customer_ask.mention_count or 1) + 1
+                        customer_ask.last_mentioned_at = event_time
+                        customer_ask.updated_at = datetime.now(timezone.utc)
+                        logger.info(f"Matched existing customer_ask '{customer_ask.name}' (mentions: {customer_ask.mention_count})")
                     else:
-                        feature_id = None
+                        customer_ask_id = None
                         result.is_new_feature = True
                 except (ValueError, TypeError):
-                    feature_id = None
+                    customer_ask_id = None
                     result.is_new_feature = True
 
-            if result.is_new_feature:
-                # Create new feature
+            if result.is_new_feature and sub_theme_id:
+                # Create new customer_ask
                 event_time = parent_event.event_timestamp or datetime.now(timezone.utc)
-                new_feature = Feature(
+                new_customer_ask = CustomerAsk(
                     workspace_id=chunk.workspace_id,
-                    theme_id=theme_id,
+                    sub_theme_id=sub_theme_id,
                     name=result.feature_title[:255],
                     description=result.feature_description,
-                    priority=_map_priority_hint(result.priority_hint),
                     urgency=_map_urgency_hint(result.urgency_hint),
+                    status="new",
                     mention_count=1,
-                    # Set both old and new timestamp columns for compatibility
                     first_mentioned_at=event_time,
                     last_mentioned_at=event_time,
-                    first_mentioned=event_time,  # Legacy column used by API
-                    last_mentioned=event_time,   # Legacy column used by API
                     match_confidence=result.confidence,
-                    feature_metadata={
+                    ai_metadata={
                         "problem_statement": result.problem_statement,
                         "desired_outcome": result.desired_outcome,
                         "user_persona": result.user_persona,
@@ -802,23 +802,23 @@ def _extract_from_chunks(
                         "sentiment": result.sentiment,
                     },
                 )
-                db.add(new_feature)
+                db.add(new_customer_ask)
                 db.flush()
-                feature_id = new_feature.id
-                # Add to existing features list for subsequent matches
-                existing_features.append({
-                    "id": str(feature_id),
+                customer_ask_id = new_customer_ask.id
+                # Add to existing customer_asks list for subsequent matches
+                existing_customer_asks.append({
+                    "id": str(customer_ask_id),
                     "name": result.feature_title,
                     "description": result.feature_description[:200] if result.feature_description else "",
+                    "sub_theme_name": result.theme_name or "Uncategorized",
                     "theme_name": result.theme_name or "Uncategorized",
                     "mention_count": 1,
                 })
-                logger.info(f"Created new feature '{result.feature_title}'")
+                logger.info(f"Created new customer_ask '{result.feature_title}'")
 
-            # Link the source message to the feature (for mentions display)
-            # Use parent_event since it has the source_table and source_record_id
-            if feature_id:
-                _link_message_to_feature(db, parent_event, feature_id)
+            # Link the source message to the customer_ask (use parent_event for source info)
+            if customer_ask_id:
+                _link_message_to_customer_ask(db, parent_event, customer_ask_id)
 
             # Create ExtractedFact (for audit trail)
             content_hash = _compute_content_hash(chunk.chunk_text, result.feature_title)
@@ -826,7 +826,7 @@ def _extract_from_chunks(
                 workspace_id=chunk.workspace_id,
                 normalized_event_id=parent_event.id,
                 chunk_id=chunk.id,
-                feature_id=feature_id,
+                customer_ask_id=customer_ask_id,
                 feature_title=result.feature_title,
                 feature_description=result.feature_description,
                 problem_statement=result.problem_statement,
@@ -846,7 +846,7 @@ def _extract_from_chunks(
                 actor_email=parent_event.actor_email,
                 event_timestamp=parent_event.event_timestamp,
                 content_hash=content_hash,
-                aggregation_status="aggregated" if feature_id else "pending",
+                aggregation_status="aggregated" if customer_ask_id else "pending",
             )
             db.add(fact)
 

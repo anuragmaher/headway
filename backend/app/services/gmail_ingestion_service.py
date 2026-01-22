@@ -7,10 +7,13 @@ import base64
 import re
 from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
+from uuid import UUID
 from sqlalchemy.orm import Session
 from email.utils import parsedate_to_datetime
 
-from app.models.gmail import GmailAccounts, GmailLabels, GmailThread
+from app.models.workspace_connector import WorkspaceConnector
+from app.models.connector_label import ConnectorLabel
+from app.models.message import Message
 from app.services.gmail_client import get_gmail_client
 
 logger = logging.getLogger(__name__)
@@ -25,53 +28,54 @@ class GmailIngestionService:
 
     def __init__(self):
         self.max_threads_per_label = 5  # Fetch last 5 threads per label
-    
-    def ingest_threads_for_account(
-        self, 
-        gmail_account_id: str, 
+
+    def ingest_threads_for_connector(
+        self,
+        connector_id: str,
         db: Session,
         max_threads: int = 5
     ) -> Dict[str, Any]:
         """
-        Ingest threads from all selected labels for a Gmail account
-        
+        Ingest threads from all selected labels for a Gmail connector
+
         Args:
-            gmail_account_id: The Gmail account ID
+            connector_id: The connector ID
             db: Database session
             max_threads: Maximum threads to fetch per label (default: 5)
-            
+
         Returns:
             Dict with status and count of ingested threads
         """
         try:
-            # Get the Gmail account
-            gmail_account = db.query(GmailAccounts).filter(
-                GmailAccounts.id == gmail_account_id
+            # Get the Gmail connector
+            connector = db.query(WorkspaceConnector).filter(
+                WorkspaceConnector.id == UUID(connector_id) if isinstance(connector_id, str) else connector_id,
+                WorkspaceConnector.connector_type == 'gmail'
             ).first()
-            
-            if not gmail_account:
-                logger.error(f"Gmail account {gmail_account_id} not found")
-                return {"status": "error", "error": "Gmail account not found", "count": 0, "total_checked": 0, "new_added": 0}
-            
+
+            if not connector:
+                logger.error(f"Gmail connector {connector_id} not found")
+                return {"status": "error", "error": "Gmail connector not found", "count": 0, "total_checked": 0, "new_added": 0}
+
             # Update sync status
-            gmail_account.sync_status = "syncing"
+            connector.sync_status = "syncing"
             db.commit()
-            
-            # Get selected labels for this account
-            labels = db.query(GmailLabels).filter(
-                GmailLabels.gmail_account_id == gmail_account.id,
-                GmailLabels.watch_enabled == True
+
+            # Get selected labels for this connector
+            labels = db.query(ConnectorLabel).filter(
+                ConnectorLabel.connector_id == connector.id,
+                ConnectorLabel.is_enabled == True
             ).all()
-            
+
             if not labels:
-                logger.warning(f"No labels selected for Gmail account {gmail_account_id}")
-                gmail_account.sync_status = "success"
-                gmail_account.last_synced_at = datetime.now(timezone.utc)
+                logger.warning(f"No labels selected for Gmail connector {connector_id}")
+                connector.sync_status = "success"
+                connector.last_synced_at = datetime.now(timezone.utc)
                 db.commit()
                 return {"status": "success", "count": 0, "total_checked": 0, "new_added": 0, "message": "No labels selected"}
-            
+
             # Get Gmail client
-            gmail_client = get_gmail_client(gmail_account, db)
+            gmail_client = get_gmail_client(connector, db)
 
             total_checked = 0
             total_new = 0
@@ -84,7 +88,7 @@ class GmailIngestionService:
 
                     result = self._fetch_threads_from_label(
                         gmail_client=gmail_client,
-                        gmail_account=gmail_account,
+                        connector=connector,
                         label=label,
                         db=db,
                         max_threads=max_threads
@@ -101,9 +105,9 @@ class GmailIngestionService:
                     continue
 
             # Update sync status
-            gmail_account.sync_status = "success" if not errors else "partial"
-            gmail_account.sync_error = "; ".join(errors) if errors else None
-            gmail_account.last_synced_at = datetime.now(timezone.utc)
+            connector.sync_status = "success" if not errors else "partial"
+            connector.sync_error = "; ".join(errors) if errors else None
+            connector.last_synced_at = datetime.now(timezone.utc)
             db.commit()
 
             logger.info(f"Gmail ingestion complete. Checked {total_checked}, added {total_new} new threads")
@@ -115,23 +119,33 @@ class GmailIngestionService:
                 "count": total_new,  # Keep for backward compatibility
                 "errors": errors if errors else None
             }
-            
+
         except Exception as e:
             logger.error(f"Fatal error in Gmail ingestion: {str(e)}")
-            
+
             # Update sync status
-            if 'gmail_account' in locals() and gmail_account:
-                gmail_account.sync_status = "error"
-                gmail_account.sync_error = str(e)
+            if 'connector' in locals() and connector:
+                connector.sync_status = "error"
+                connector.sync_error = str(e)
                 db.commit()
-            
+
             return {"status": "error", "error": str(e), "count": 0, "total_checked": 0, "new_added": 0}
+
+    # Keep old method name for backward compatibility
+    def ingest_threads_for_account(
+        self,
+        gmail_account_id: str,
+        db: Session,
+        max_threads: int = 5
+    ) -> Dict[str, Any]:
+        """Backward compatible method - calls ingest_threads_for_connector"""
+        return self.ingest_threads_for_connector(gmail_account_id, db, max_threads)
     
     def _fetch_threads_from_label(
         self,
         gmail_client,
-        gmail_account: GmailAccounts,
-        label: GmailLabels,
+        connector: WorkspaceConnector,
+        label: ConnectorLabel,
         db: Session,
         max_threads: int = 5
     ) -> Dict[str, int]:
@@ -140,8 +154,8 @@ class GmailIngestionService:
 
         Args:
             gmail_client: Gmail API client
-            gmail_account: Gmail account model
-            label: Gmail label model
+            connector: WorkspaceConnector model
+            label: ConnectorLabel model
             db: Database session
             max_threads: Maximum threads to fetch
 
@@ -172,10 +186,11 @@ class GmailIngestionService:
                 try:
                     thread_id = thread_info["id"]
 
-                    # Check if thread already exists
-                    existing = db.query(GmailThread).filter(
-                        GmailThread.gmail_account_id == gmail_account.id,
-                        GmailThread.thread_id == thread_id
+                    # Check if thread already exists (using Message table)
+                    existing = db.query(Message).filter(
+                        Message.connector_id == connector.id,
+                        Message.thread_id == thread_id,
+                        Message.source == 'gmail'
                     ).first()
 
                     if existing:
@@ -189,22 +204,22 @@ class GmailIngestionService:
                         format="full"
                     ).execute()
 
-                    # Parse thread and create record
-                    thread_record = self._parse_thread(
+                    # Parse thread and create message record
+                    message_record = self._parse_thread(
                         thread_data=thread_data,
-                        gmail_account=gmail_account,
+                        connector=connector,
                         label=label
                     )
 
-                    if thread_record:
-                        db.add(thread_record)
+                    if message_record:
+                        db.add(message_record)
                         new_added += 1
 
                 except Exception as e:
                     logger.error(f"Error processing thread {thread_info.get('id', 'unknown')}: {str(e)}")
                     continue
 
-            # Commit all threads for this label
+            # Commit all messages for this label
             db.commit()
 
         except Exception as e:
@@ -217,50 +232,50 @@ class GmailIngestionService:
     def _parse_thread(
         self,
         thread_data: Dict[str, Any],
-        gmail_account: GmailAccounts,
-        label: GmailLabels
-    ) -> Optional[GmailThread]:
+        connector: WorkspaceConnector,
+        label: ConnectorLabel
+    ) -> Optional[Message]:
         """
-        Parse Gmail thread data into a GmailThread model
-        
+        Parse Gmail thread data into a Message model
+
         Args:
             thread_data: Raw thread data from Gmail API
-            gmail_account: Gmail account model
-            label: Gmail label model
-            
+            connector: WorkspaceConnector model
+            label: ConnectorLabel model
+
         Returns:
-            GmailThread model or None if parsing fails
+            Message model or None if parsing fails
         """
         try:
             messages = thread_data.get("messages", [])
-            
+
             if not messages:
                 return None
-            
+
             # Get the first message for thread metadata
             first_message = messages[0]
             latest_message = messages[-1]
-            
+
             # Extract headers
             headers = {
-                h["name"].lower(): h["value"] 
+                h["name"].lower(): h["value"]
                 for h in first_message.get("payload", {}).get("headers", [])
             }
-            
+
             # Parse From field
             from_header = headers.get("from", "")
             from_name, from_email = self._parse_email_address(from_header)
-            
+
             # Parse To field
             to_header = headers.get("to", "")
-            
+
             # Get subject
             subject = headers.get("subject", "(No Subject)")
-            
+
             # Get thread date from latest message
             thread_date = None
             latest_headers = {
-                h["name"].lower(): h["value"] 
+                h["name"].lower(): h["value"]
                 for h in latest_message.get("payload", {}).get("headers", [])
             }
             date_str = latest_headers.get("date")
@@ -269,7 +284,7 @@ class GmailIngestionService:
                     thread_date = parsedate_to_datetime(date_str)
                 except Exception:
                     thread_date = datetime.now(timezone.utc)
-            
+
             # Extract and concatenate all message bodies
             content_parts = []
             for msg in messages:
@@ -277,41 +292,40 @@ class GmailIngestionService:
                 if body:
                     # Add message metadata
                     msg_headers = {
-                        h["name"].lower(): h["value"] 
+                        h["name"].lower(): h["value"]
                         for h in msg.get("payload", {}).get("headers", [])
                     }
                     msg_from = msg_headers.get("from", "Unknown")
                     msg_date = msg_headers.get("date", "")
-                    
+
                     content_parts.append(f"--- From: {msg_from} | Date: {msg_date} ---\n{body}")
-            
+
             full_content = "\n\n".join(content_parts)
 
             # Truncate full content to prevent memory issues with very long threads
             if len(full_content) > self.MAX_CONTENT_LENGTH:
                 full_content = full_content[:self.MAX_CONTENT_LENGTH] + "\n\n... [content truncated for storage efficiency]"
 
-            # Get snippet from thread
-            snippet = thread_data.get("snippet", "")
-            
-            # Create GmailThread record
-            return GmailThread(
-                gmail_account_id=gmail_account.id,
-                workspace_id=gmail_account.workspace_id,
+            # Create Message record (replaces GmailThread)
+            return Message(
+                workspace_id=connector.workspace_id,
+                connector_id=connector.id,
+                source='gmail',
+                external_id=thread_data["id"],
                 thread_id=thread_data["id"],
-                label_id=label.label_id,
+                content=full_content,
+                title=subject[:500] if subject else None,
                 label_name=label.label_name,
-                subject=subject[:500] if subject else None,  # Truncate long subjects
-                snippet=snippet[:500] if snippet else None,
+                author_name=from_name[:255] if from_name else None,
+                author_email=from_email[:255] if from_email else None,
                 from_email=from_email[:255] if from_email else None,
-                from_name=from_name[:255] if from_name else None,
                 to_emails=to_header,
-                content=full_content,  # Text field can handle large content
-                message_count=len(messages),  # Integer
-                thread_date=thread_date,
-                is_processed=False
+                message_count=len(messages),
+                sent_at=thread_date,
+                is_processed=False,
+                created_at=datetime.now(timezone.utc)
             )
-            
+
         except Exception as e:
             logger.error(f"Error parsing thread: {str(e)}")
             return None

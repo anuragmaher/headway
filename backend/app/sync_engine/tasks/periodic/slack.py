@@ -1,7 +1,7 @@
 """
 Periodic Slack sync task.
 
-Syncs Slack messages from all active integrations every 15 minutes.
+Syncs Slack messages from all active workspace connectors every 15 minutes.
 Uses optimized batch ingestion - data storage only, no AI extraction.
 AI extraction happens in a separate batch processing task.
 """
@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 
 from app.tasks.celery_app import celery_app
 from app.models.workspace import Workspace
-from app.models.integration import Integration
+from app.models.workspace_connector import WorkspaceConnector
 from app.services.slack_batch_ingestion_service import slack_batch_ingestion_service
 from app.sync_engine.tasks.base import (
     engine,
@@ -21,7 +21,7 @@ from app.sync_engine.tasks.base import (
     create_sync_record,
     finalize_sync_record,
     test_db_connection,
-    get_active_integrations,
+    get_active_connectors,
     cleanup_after_task,
 )
 
@@ -42,7 +42,7 @@ def sync_slack_periodic(self):
 
     This task:
     - Runs every 15 minutes
-    - Only syncs active Slack integrations
+    - Only syncs active Slack connectors
     - Fetches messages from selected channels
     - Stores messages in Message table with is_processed=False
     - Creates SyncHistory records for tracking
@@ -60,44 +60,44 @@ def sync_slack_periodic(self):
 
             logger.info("✅ Database connection verified")
 
-            # Use diagnostic function to log all integrations
-            get_active_integrations(db, "slack")
+            # Use diagnostic function to log all connectors
+            get_active_connectors(db, "slack")
 
-            # Get all active Slack integrations
-            integrations = db.query(Integration).filter(
+            # Get all active Slack connectors
+            connectors = db.query(WorkspaceConnector).filter(
                 and_(
-                    Integration.provider == "slack",
-                    Integration.is_active == True
+                    WorkspaceConnector.connector_type == "slack",
+                    WorkspaceConnector.is_active == True
                 )
             ).all()
 
-            logger.info(f"Found {len(integrations)} active Slack integrations to sync")
+            logger.info(f"Found {len(connectors)} active Slack connectors to sync")
 
-            if not integrations:
-                logger.info("No active Slack integrations found. Skipping Slack sync.")
-                return {"status": "skipped", "reason": "no_active_integrations", "count": 0}
+            if not connectors:
+                logger.info("No active Slack connectors found. Skipping Slack sync.")
+                return {"status": "skipped", "reason": "no_active_connectors", "count": 0}
 
             total_synced = 0
             successful_workspaces = 0
             failed_workspaces = 0
 
-            for integration in integrations:
+            for connector in connectors:
                 sync_record = None
                 try:
                     workspace = db.query(Workspace).filter(
-                        Workspace.id == integration.workspace_id
+                        Workspace.id == connector.workspace_id
                     ).first()
 
                     if not workspace:
-                        logger.warning(f"Workspace not found for integration {integration.id}")
+                        logger.warning(f"Workspace not found for connector {connector.id}")
                         continue
 
-                    logger.info(f"Syncing Slack for workspace: {workspace.name} (Integration: {integration.external_team_name})")
+                    logger.info(f"Syncing Slack for workspace: {workspace.name} (Connector: {connector.external_name or connector.name})")
 
                     # Use optimized batch ingestion (data storage only, no AI)
                     result = run_async_task(
                         slack_batch_ingestion_service.ingest_messages(
-                            integration_id=str(integration.id),
+                            connector_id=str(connector.id),
                             db=db,
                             hours_back=24
                         )
@@ -115,8 +115,8 @@ def sync_slack_periodic(self):
                             db=db,
                             workspace_id=str(workspace.id),
                             source_type="slack",
-                            source_name=integration.external_team_name or "Slack",
-                            integration_id=str(integration.id),
+                            source_name=connector.external_name or connector.name or "Slack",
+                            connector_id=str(connector.id),
                             trigger_type="periodic",  # This is a scheduled periodic sync
                         )
                         finalize_sync_record(
@@ -136,7 +136,7 @@ def sync_slack_periodic(self):
 
                 except Exception as e:
                     failed_workspaces += 1
-                    logger.error(f"❌ Error syncing Slack for integration {integration.id}: {e}")
+                    logger.error(f"❌ Error syncing Slack for connector {connector.id}: {e}")
                     import traceback
                     traceback.print_exc()
                     # Create a failed sync record for errors
@@ -145,8 +145,8 @@ def sync_slack_periodic(self):
                             db=db,
                             workspace_id=str(workspace.id),
                             source_type="slack",
-                            source_name=integration.external_team_name or "Slack",
-                            integration_id=str(integration.id),
+                            source_name=connector.external_name or connector.name or "Slack",
+                            connector_id=str(connector.id),
                             trigger_type="periodic",  # This is a scheduled periodic sync
                         )
                         finalize_sync_record(

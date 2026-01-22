@@ -878,7 +878,7 @@ Return ONLY valid JSON array in this format, no markdown or extra text:
 Company Name: {company.name}
 Industry: {company.industry or 'Not specified'}
 Website: {company.website or 'Not specified'}
-Description: {company.description or 'Not specified'}
+Team Size: {company.size or 'Not specified'}
 """
 
             logger.info(f"Using company context for competitor suggestions: {company_context}")

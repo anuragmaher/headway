@@ -172,8 +172,9 @@ export const useWorkspaceSettingsStore = create<WorkspaceSettingsState>((set, ge
   companyData: {
     name: "",
     website: "",
-    size: "",
-    description: "",
+    industry: "",
+    teamSize: "",
+    role: "",
   },
   isLoadingCompany: false,
 

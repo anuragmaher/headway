@@ -1,5 +1,10 @@
 """
 Sources Service - Business logic for data sources and sync operations
+
+Uses the new unified schema:
+- WorkspaceConnector: All data sources (Slack, Gmail, Gong, Fathom)
+- Message: All messages from all sources (including Gmail)
+- CustomerAsk: Feature requests (replaces Feature)
 """
 
 import logging
@@ -10,11 +15,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import desc, asc, and_, or_, func
 
 from app.models.message import Message
-from app.models.integration import Integration
-from app.models.gmail import GmailAccounts, GmailThread
 from app.models.workspace_connector import WorkspaceConnector
 from app.models.theme import Theme
-from app.models.feature import Feature
+from app.models.customer_ask import CustomerAsk
 from app.models.sync_history import SyncHistory
 from app.schemas.sources import (
     MessageResponse,
@@ -31,12 +34,12 @@ logger = logging.getLogger(__name__)
 
 class SourcesService:
     """Service for managing data sources and sync operations"""
-    
+
     def __init__(self, db: Session):
         self.db = db
-    
+
     # ============ Message Operations ============
-    
+
     def get_messages_paginated(
         self,
         workspace_id: UUID,
@@ -47,11 +50,9 @@ class SourcesService:
         sort_order: Optional[str] = "desc",
     ) -> MessageListResponse:
         """
-        Get paginated list of messages from all sources with proper cross-table sorting.
+        Get paginated list of messages from all sources.
 
-        This includes:
-        - Messages from the Message table (Slack, processed Gmail, Gong, Fathom)
-        - Gmail threads from the GmailThread table (raw Gmail data)
+        All sources (Slack, Gmail, Gong, Fathom) are stored in the unified Message table.
 
         Args:
             workspace_id: Workspace UUID
@@ -64,150 +65,11 @@ class SourcesService:
         Returns:
             Paginated message list response
         """
-        # If filtering for gmail only, use optimized gmail-only query
-        if source_filter == 'gmail':
-            return self._get_gmail_threads_paginated(workspace_id, page, page_size)
+        query = self.db.query(Message).filter(Message.workspace_id == workspace_id)
 
-        # If filtering for a specific non-gmail source, use optimized single-table query
-        if source_filter and source_filter not in ('all', 'gmail'):
-            return self._get_messages_single_source_paginated(
-                workspace_id, source_filter, page, page_size, sort_by, sort_order
-            )
-
-        # For 'all' or no filter: fetch from both tables and merge with proper sorting
-        # Get counts for pagination
-        message_count = self.db.query(func.count(Message.id)).filter(
-            Message.workspace_id == workspace_id,
-            Message.source != 'gmail'
-        ).scalar() or 0
-
-        gmail_count = self.db.query(func.count(GmailThread.id)).filter(
-            GmailThread.workspace_id == workspace_id
-        ).scalar() or 0
-
-        total = message_count + gmail_count
-        total_pages = (total + page_size - 1) // page_size if total > 0 else 1
-
-        # For proper cross-table sorting, we need to fetch enough records
-        # and sort them together. Fetch (page * page_size) from each table
-        # to ensure we have enough for proper pagination after sorting.
-        fetch_limit = page * page_size
-
-        # Get messages from Message table (non-gmail)
-        messages_query = self.db.query(Message).filter(
-            Message.workspace_id == workspace_id,
-            Message.source != 'gmail'
-        ).order_by(desc(Message.sent_at)).limit(fetch_limit).all()
-
-        # Get Gmail threads
-        gmail_query = self.db.query(GmailThread).filter(
-            GmailThread.workspace_id == workspace_id
-        ).order_by(desc(GmailThread.thread_date)).limit(fetch_limit).all()
-
-        # Combine into a unified list with normalized structure
-        combined_items = []
-
-        for msg in messages_query:
-            combined_items.append({
-                'id': str(msg.id),
-                'title': msg.title or self._generate_title(msg),
-                'author_name': msg.author_name,
-                'author_email': msg.author_email,
-                'source': msg.source,
-                'content': msg.content,
-                'timestamp': msg.sent_at,
-                'channel_name': msg.channel_name,
-                'is_processed': msg.is_processed,
-            })
-
-        for thread in gmail_query:
-            combined_items.append({
-                'id': str(thread.id),
-                'title': thread.subject or "Email Thread",
-                'author_name': thread.from_name,
-                'author_email': thread.from_email,
-                'source': 'gmail',
-                'content': thread.content,
-                'timestamp': thread.thread_date,
-                'channel_name': thread.label_name,
-                'is_processed': thread.is_processed,
-            })
-
-        # Sort combined items by the specified field
-        reverse_order = sort_order != "asc"
-
-        if sort_by == "sender":
-            combined_items.sort(
-                key=lambda x: (x['author_name'] or x['author_email'] or '').lower(),
-                reverse=reverse_order
-            )
-        elif sort_by == "source":
-            combined_items.sort(
-                key=lambda x: (x['source'] or '').lower(),
-                reverse=reverse_order
-            )
-        else:
-            # Sort by timestamp - handle None values properly
-            # Use a very old date for None so they appear at the end for DESC
-            from datetime import datetime as dt
-            min_date = dt.min.replace(tzinfo=timezone.utc)
-            combined_items.sort(
-                key=lambda x: x['timestamp'] if x['timestamp'] else min_date,
-                reverse=reverse_order
-            )
-
-        # Apply pagination
-        offset = (page - 1) * page_size
-        paginated_items = combined_items[offset:offset + page_size]
-
-        # Convert to response objects
-        message_responses = []
-        for item in paginated_items:
-            source_type = self._get_message_type(item['source'])
-            sender = item['author_name'] or item['author_email'] or "Unknown"
-            preview = self._get_preview(item['content'])
-
-            message_responses.append(MessageResponse(
-                id=item['id'],
-                title=item['title'],
-                sender=sender,
-                sender_email=item['author_email'],
-                source_type=source_type,
-                source=item['source'],
-                preview=preview,
-                content=item['content'],
-                timestamp=item['timestamp'],
-                channel_name=item['channel_name'],
-                is_processed=item['is_processed'],
-            ))
-
-        return MessageListResponse(
-            messages=message_responses,
-            total=total,
-            page=page,
-            page_size=page_size,
-            total_pages=total_pages,
-            has_next=page < total_pages,
-            has_prev=page > 1,
-        )
-
-    def _get_messages_single_source_paginated(
-        self,
-        workspace_id: UUID,
-        source_filter: str,
-        page: int,
-        page_size: int,
-        sort_by: str,
-        sort_order: str,
-    ) -> MessageListResponse:
-        """
-        Optimized pagination for a single source type (non-gmail).
-        Uses database-level LIMIT/OFFSET.
-        """
-        query = self.db.query(Message).filter(
-            Message.workspace_id == workspace_id,
-            Message.source == source_filter
-        )
+        # Apply source filter
+        if source_filter and source_filter != 'all':
+            query = query.filter(Message.source == source_filter)
 
         # Get total count
         total = query.count()
@@ -236,19 +98,19 @@ class SourcesService:
         for msg in messages:
             source_type = self._get_message_type(msg.source)
             preview = self._get_preview(msg.content)
-            sender = msg.author_name or msg.author_email or "Unknown"
+            sender = msg.author_name or msg.author_email or msg.from_email or "Unknown"
 
             message_responses.append(MessageResponse(
                 id=str(msg.id),
                 title=msg.title or self._generate_title(msg),
                 sender=sender,
-                sender_email=msg.author_email,
+                sender_email=msg.author_email or msg.from_email,
                 source_type=source_type,
                 source=msg.source,
                 preview=preview,
                 content=msg.content,
                 timestamp=msg.sent_at,
-                channel_name=msg.channel_name,
+                channel_name=msg.channel_name or msg.label_name,
                 is_processed=msg.is_processed,
             ))
 
@@ -272,52 +134,6 @@ class SourcesService:
         }
         return titles.get(source, 'Message')
 
-    def _get_gmail_threads_paginated(
-        self,
-        workspace_id: UUID,
-        page: int = 1,
-        page_size: int = 5,
-    ) -> MessageListResponse:
-        """Get paginated Gmail threads only."""
-        query = self.db.query(GmailThread).filter(
-            GmailThread.workspace_id == workspace_id
-        )
-
-        total = query.count()
-        total_pages = (total + page_size - 1) // page_size if total > 0 else 1
-        offset = (page - 1) * page_size
-
-        threads = query.order_by(desc(GmailThread.thread_date)).offset(offset).limit(page_size).all()
-
-        message_responses = []
-        for thread in threads:
-            preview = self._get_preview(thread.content or thread.snippet)
-            sender = thread.from_name or thread.from_email or "Unknown"
-
-            message_responses.append(MessageResponse(
-                id=str(thread.id),
-                title=thread.subject or "Email Thread",
-                sender=sender,
-                sender_email=thread.from_email,
-                source_type='email',
-                source='gmail',
-                preview=preview,
-                content=thread.content,
-                timestamp=thread.thread_date,
-                channel_name=thread.label_name,
-                is_processed=thread.is_processed,
-            ))
-
-        return MessageListResponse(
-            messages=message_responses,
-            total=total,
-            page=page,
-            page_size=page_size,
-            total_pages=total_pages,
-            has_next=page < total_pages,
-            has_prev=page > 1,
-        )
-    
     def _get_message_type(self, source: str) -> str:
         """Map source to message type"""
         mapping = {
@@ -328,7 +144,7 @@ class SourcesService:
             'fathom': 'meeting',
         }
         return mapping.get(source, 'email')
-    
+
     def _get_preview(self, content: Optional[str], max_length: int = 150) -> str:
         """Generate preview from content"""
         if not content:
@@ -338,13 +154,15 @@ class SourcesService:
         if len(preview) > max_length:
             return preview[:max_length] + "..."
         return preview
-    
+
     def _generate_title(self, msg: Message) -> str:
         """Generate title from message if not present"""
         if msg.title:
             return msg.title
         if msg.channel_name:
             return f"Message from {msg.channel_name}"
+        if msg.label_name:
+            return f"Email from {msg.label_name}"
         if msg.source == 'gmail':
             return "Email Thread"
         if msg.source == 'slack':
@@ -363,9 +181,6 @@ class SourcesService:
         """
         Get full details of a specific message.
 
-        Checks both Message table and GmailThread table since messages
-        can come from either source.
-
         Args:
             workspace_id: Workspace UUID
             message_id: Message UUID
@@ -378,28 +193,18 @@ class SourcesService:
         """
         from fastapi import HTTPException, status
 
-        # First try to find in Message table
         message = self.db.query(Message).filter(
             Message.id == message_id,
             Message.workspace_id == workspace_id,
         ).first()
 
-        if message:
-            return self._format_message_details(message)
+        if not message:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Message not found"
+            )
 
-        # If not found, try GmailThread table
-        gmail_thread = self.db.query(GmailThread).filter(
-            GmailThread.id == message_id,
-            GmailThread.workspace_id == workspace_id,
-        ).first()
-
-        if gmail_thread:
-            return self._format_gmail_thread_details(gmail_thread)
-
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Message not found"
-        )
+        return self._format_message_details(message)
 
     def _format_message_details(self, msg: Message) -> Dict[str, Any]:
         """Format Message model to detailed response"""
@@ -420,64 +225,49 @@ class SourcesService:
             except (ValueError, TypeError):
                 duration_secs = None
 
-        # Safely get related features with enhanced theme information
-        related_features = []
+        # Get related customer_ask if linked
+        related_customer_asks = []
         classified_themes = []
-        try:
-            if msg.features:
-                theme_map: Dict[str, Dict[str, Any]] = {}
-                for f in msg.features:
-                    feature_data = {
-                        'id': str(f.id),
-                        'title': f.title,
-                        'theme_id': str(f.theme_id) if f.theme_id else None,
-                        'confidence': f.match_confidence,
-                    }
-                    related_features.append(feature_data)
+        if msg.customer_ask_id:
+            customer_ask = self.db.query(CustomerAsk).filter(
+                CustomerAsk.id == msg.customer_ask_id
+            ).first()
+            if customer_ask:
+                related_customer_asks.append({
+                    'id': str(customer_ask.id),
+                    'name': customer_ask.name,
+                    'sub_theme_id': str(customer_ask.sub_theme_id) if customer_ask.sub_theme_id else None,
+                    'confidence': customer_ask.match_confidence,
+                })
 
-                    # Group by theme for classified_themes
-                    if f.theme_id and f.theme:
-                        theme_key = str(f.theme_id)
-                        if theme_key not in theme_map:
-                            theme_map[theme_key] = {
-                                'name': f.theme.name if f.theme else 'Unknown',
-                                'confidence': f.match_confidence or 0.7,
-                                'theme_id': theme_key,
-                                'feature_count': 0,
-                            }
-                        theme_map[theme_key]['feature_count'] += 1
-                        # Use highest confidence among features
-                        if f.match_confidence and f.match_confidence > theme_map[theme_key]['confidence']:
-                            theme_map[theme_key]['confidence'] = f.match_confidence
-
-                classified_themes = list(theme_map.values())
-        except Exception:
-            # If there's any issue with the relationship, skip it
-            pass
-
-        # Enrich ai_insights with classified_themes if not already present
-        ai_insights = msg.ai_insights or {}
+        # AI insights
+        ai_insights = {}
         if isinstance(ai_insights, dict) and 'classified_themes' not in ai_insights and classified_themes:
             ai_insights = {**ai_insights, 'classified_themes': classified_themes}
+
+        # Parse to_emails for Gmail messages
+        to_emails_list = []
+        if msg.to_emails:
+            raw_emails = msg.to_emails.replace('\n', ',').replace(';', ',')
+            to_emails_list = [e.strip() for e in raw_emails.split(',') if e.strip()]
 
         return {
             'id': str(msg.id),
             'type': self._get_message_type(msg.source),
             'source': msg.source,
             'title': msg.title or self._generate_title(msg),
-            'content': msg.content,  # Full content, not truncated
-            'sender': msg.author_name or msg.author_email or 'Unknown',
-            'sender_email': msg.author_email,
-            'channel_name': msg.channel_name,
+            'content': msg.content,
+            'sender': msg.author_name or msg.author_email or msg.from_email or 'Unknown',
+            'sender_email': msg.author_email or msg.from_email,
+            'channel_name': msg.channel_name or msg.label_name,
             'sent_at': msg.sent_at.isoformat() if msg.sent_at else None,
             'created_at': msg.created_at.isoformat() if msg.created_at else None,
             'is_processed': msg.is_processed,
             'processed_at': msg.processed_at.isoformat() if msg.processed_at else None,
             # Metadata fields
             'metadata': metadata,
-            'ai_insights': ai_insights,  # Enhanced with classified_themes
+            'ai_insights': ai_insights,
             'thread_id': msg.thread_id,
-            'is_thread_reply': msg.is_thread_reply,
             # Gong/Fathom specific fields
             'duration': duration_secs,
             'duration_formatted': duration_formatted,
@@ -491,77 +281,28 @@ class SourcesService:
             'has_transcript': metadata.get('has_transcript', False),
             'call_id': metadata.get('call_id') or msg.external_id,
             'session_id': metadata.get('session_id') or msg.external_id,
-            # Gmail fields (will be None/empty for non-Gmail)
-            'subject': None,
-            'from_name': None,
-            'from_email': None,
-            'to_emails': [],
-            'snippet': None,
-            'message_count': None,
-            'thread_date': None,
-            'label_name': None,
-            # Related features
-            'related_features': related_features,
-        }
-
-    def _format_gmail_thread_details(self, thread: GmailThread) -> Dict[str, Any]:
-        """Format GmailThread model to detailed response"""
-        # Parse to_emails - it's stored as text, could be comma-separated or newline-separated
-        to_emails_list = []
-        if thread.to_emails:
-            # Handle both comma and newline separated formats
-            raw_emails = thread.to_emails.replace('\n', ',').replace(';', ',')
-            to_emails_list = [e.strip() for e in raw_emails.split(',') if e.strip()]
-
-        return {
-            'id': str(thread.id),
-            'type': 'email',
-            'source': 'gmail',
-            'title': thread.subject or 'Email Thread',
-            'content': thread.content,  # Full content
-            'sender': thread.from_name or thread.from_email or 'Unknown',
-            'sender_email': thread.from_email,
-            'channel_name': thread.label_name,
-            'sent_at': thread.thread_date.isoformat() if thread.thread_date else None,
-            'created_at': thread.created_at.isoformat() if thread.created_at else None,
-            'is_processed': thread.is_processed,
-            'processed_at': thread.processed_at.isoformat() if thread.processed_at else None,
             # Gmail specific fields
-            'subject': thread.subject,
-            'from_name': thread.from_name,
-            'from_email': thread.from_email,
-            'to_emails': to_emails_list,
-            'snippet': thread.snippet,
-            'message_count': thread.message_count,
-            'thread_date': thread.thread_date.isoformat() if thread.thread_date else None,
-            'label_name': thread.label_name,
-            # No metadata for Gmail threads
-            'metadata': {},
-            'ai_insights': thread.ai_insights,
-            'thread_id': thread.thread_id,  # Gmail's thread ID
-            'is_thread_reply': False,
-            'related_features': [],
-            # Fields that don't apply to Gmail
-            'duration': None,
-            'duration_formatted': None,
-            'parties': [],
-            'participants': [],
-            'customer_info': None,
-            'recording_url': None,
-            'has_transcript': False,
-            'call_id': None,
-            'session_id': None,
+            'subject': msg.title if msg.source == 'gmail' else None,
+            'from_name': msg.author_name if msg.source == 'gmail' else None,
+            'from_email': msg.from_email,
+            'to_emails': to_emails_list if msg.source == 'gmail' else [],
+            'snippet': metadata.get('snippet'),
+            'message_count': msg.message_count,
+            'thread_date': msg.sent_at.isoformat() if msg.sent_at and msg.source == 'gmail' else None,
+            'label_name': msg.label_name,
+            # Related customer asks
+            'related_customer_asks': related_customer_asks,
         }
 
     # ============ Sync History Operations ============
-    
+
     def get_sync_history_paginated(
         self,
         workspace_id: UUID,
         page: int = 1,
         page_size: int = 10,
         source_filter: Optional[str] = None,
-        type_filter: Optional[str] = None,  # 'source' or 'theme'
+        type_filter: Optional[str] = None,
         sort_by: Optional[str] = "started_at",
         sort_order: Optional[str] = "desc",
     ) -> SyncHistoryListResponse:
@@ -580,7 +321,6 @@ class SourcesService:
         Returns:
             Paginated sync history response
         """
-        # Build base query - select only columns we need to avoid relationship loading
         query = self.db.query(
             SyncHistory.id,
             SyncHistory.sync_type,
@@ -604,7 +344,7 @@ class SourcesService:
         if type_filter and type_filter != 'all':
             query = query.filter(SyncHistory.sync_type == type_filter)
 
-        # Get total count (need separate query for count)
+        # Get total count
         count_query = self.db.query(func.count(SyncHistory.id)).filter(
             SyncHistory.workspace_id == workspace_id
         )
@@ -632,14 +372,10 @@ class SourcesService:
         else:
             order_clause = desc(sort_column)
 
-        # Get paginated results with dynamic sorting
+        # Get paginated results
         items = query.order_by(order_clause).offset(offset).limit(page_size).all()
 
-        # Convert to response format (items are tuples now, not ORM objects)
-        # Index mapping for query columns:
-        # 0=id, 1=sync_type, 2=source_type, 3=source_name, 4=theme_name,
-        # 5=theme_sources, 6=status, 7=trigger_type, 8=started_at, 9=completed_at,
-        # 10=items_processed, 11=items_new, 12=error_message
+        # Convert to response format
         history_responses = [
             SyncHistoryResponse(
                 id=str(item[0]),
@@ -649,7 +385,7 @@ class SourcesService:
                 theme_name=item[4],
                 theme_sources=item[5],
                 status=item[6],
-                trigger_type=item[7] or "manual",  # Default to manual for backwards compatibility
+                trigger_type=item[7] or "manual",
                 started_at=item[8],
                 completed_at=item[9],
                 items_processed=item[10],
@@ -668,14 +404,14 @@ class SourcesService:
             has_next=page < total_pages,
             has_prev=page > 1,
         )
-    
+
     # ============ Data Source Status ============
 
     def get_data_sources_status(self, workspace_id: UUID) -> DataSourcesStatusResponse:
         """
         Get status of all connected data sources for a workspace.
 
-        Optimized to use batch queries instead of N+1 pattern.
+        Uses the unified WorkspaceConnector model for all sources.
 
         Args:
             workspace_id: Workspace UUID
@@ -695,121 +431,42 @@ class SourcesService:
             WHERE workspace_id = :workspace_id
             GROUP BY source
         """)
-        message_counts_result = self.db.execute(
-            message_counts_query, {"workspace_id": workspace_str}
-        )
-        message_counts = {row[0]: row[1] for row in message_counts_result}
+        self.db.execute(message_counts_query, {"workspace_id": workspace_str})
 
-        # Batch query: Get gmail thread counts by account in a single query
-        gmail_counts_query = text("""
-            SELECT gmail_account_id::text, COUNT(*) as count
-            FROM gmail_threads
-            WHERE workspace_id = :workspace_id
-            GROUP BY gmail_account_id
-        """)
-        gmail_counts_result = self.db.execute(
-            gmail_counts_query, {"workspace_id": workspace_str}
-        )
-        gmail_thread_counts = {row[0]: row[1] for row in gmail_counts_result}
-
-        # Batch query: Get message counts by integration_id for Slack
-        slack_counts_query = text("""
-            SELECT integration_id::text, COUNT(*) as count
+        # Batch query: Get message counts by connector_id
+        connector_counts_query = text("""
+            SELECT connector_id::text, COUNT(*) as count
             FROM messages
-            WHERE workspace_id = :workspace_id AND source = 'slack'
-            GROUP BY integration_id
+            WHERE workspace_id = :workspace_id AND connector_id IS NOT NULL
+            GROUP BY connector_id
         """)
-        slack_counts_result = self.db.execute(
-            slack_counts_query, {"workspace_id": workspace_str}
+        connector_counts_result = self.db.execute(
+            connector_counts_query, {"workspace_id": workspace_str}
         )
-        slack_message_counts = {row[0]: row[1] for row in slack_counts_result}
+        connector_message_counts = {row[0]: row[1] for row in connector_counts_result}
 
-        # Get Slack integrations (single query)
-        slack_integrations = self.db.query(Integration).filter(
+        # Get all connectors for the workspace
+        connectors = self.db.query(WorkspaceConnector).filter(
             and_(
-                Integration.workspace_id == workspace_id,
-                Integration.provider == "slack",
-                Integration.is_active == True
+                WorkspaceConnector.workspace_id == workspace_id,
+                WorkspaceConnector.is_active == True
             )
         ).all()
 
-        for integration in slack_integrations:
-            integration_id_str = str(integration.id)
-            message_count = slack_message_counts.get(integration_id_str, 0)
+        for connector in connectors:
+            connector_id_str = str(connector.id)
+            message_count = connector_message_counts.get(connector_id_str, 0)
+
+            # Use external_name or name as display name
+            display_name = connector.external_name or connector.name or connector.connector_type.capitalize()
 
             sources.append(DataSourceStatus(
-                source_type="slack",
-                source_name=integration.external_team_name or "Slack",
-                is_active=integration.is_active,
-                last_synced_at=integration.last_synced_at,
-                sync_status=integration.sync_status,
+                source_type=connector.connector_type,
+                source_name=display_name,
+                is_active=connector.is_active,
+                last_synced_at=connector.last_synced_at,
+                sync_status=connector.sync_status,
                 message_count=message_count,
-            ))
-
-        # Get Gmail accounts (single query)
-        gmail_accounts = self.db.query(GmailAccounts).filter(
-            and_(
-                GmailAccounts.workspace_id == workspace_id,
-                GmailAccounts.access_token.isnot(None)
-            )
-        ).all()
-
-        # Get gmail message count from batch result (not per-account N+1)
-        gmail_message_count = message_counts.get('gmail', 0)
-
-        for account in gmail_accounts:
-            account_id_str = str(account.id)
-            thread_count = gmail_thread_counts.get(account_id_str, 0)
-
-            sources.append(DataSourceStatus(
-                source_type="gmail",
-                source_name=account.gmail_email or "Gmail",
-                is_active=True,
-                last_synced_at=account.last_synced_at,
-                sync_status=account.sync_status,
-                message_count=gmail_message_count + thread_count,
-            ))
-
-        # Get Gong connectors (single query)
-        gong_connectors = self.db.query(WorkspaceConnector).filter(
-            and_(
-                WorkspaceConnector.workspace_id == workspace_id,
-                WorkspaceConnector.connector_type == "gong",
-                WorkspaceConnector.is_active == True
-            )
-        ).all()
-
-        gong_message_count = message_counts.get('gong', 0)
-
-        for connector in gong_connectors:
-            sources.append(DataSourceStatus(
-                source_type="gong",
-                source_name="Gong",
-                is_active=connector.is_active,
-                last_synced_at=None,
-                sync_status="active",
-                message_count=gong_message_count,
-            ))
-
-        # Get Fathom connectors (single query)
-        fathom_connectors = self.db.query(WorkspaceConnector).filter(
-            and_(
-                WorkspaceConnector.workspace_id == workspace_id,
-                WorkspaceConnector.connector_type == "fathom",
-                WorkspaceConnector.is_active == True
-            )
-        ).all()
-
-        fathom_message_count = message_counts.get('fathom', 0)
-
-        for connector in fathom_connectors:
-            sources.append(DataSourceStatus(
-                source_type="fathom",
-                source_name="Fathom",
-                is_active=connector.is_active,
-                last_synced_at=None,
-                sync_status="active",
-                message_count=fathom_message_count,
             ))
 
         # Calculate totals
@@ -825,9 +482,9 @@ class SourcesService:
             total_messages=total_messages,
             last_sync_at=last_sync,
         )
-    
+
     # ============ Sync Operations ============
-    
+
     def create_sync_record(
         self,
         workspace_id: UUID,
@@ -837,13 +494,11 @@ class SourcesService:
         theme_id: Optional[UUID] = None,
         theme_name: Optional[str] = None,
         theme_sources: Optional[List[str]] = None,
-        integration_id: Optional[UUID] = None,
-        gmail_account_id: Optional[UUID] = None,
         connector_id: Optional[UUID] = None,
     ) -> SyncHistory:
         """
         Create a new sync history record.
-        
+
         Args:
             workspace_id: Workspace UUID
             sync_type: 'source' or 'theme'
@@ -852,10 +507,8 @@ class SourcesService:
             theme_id: Theme UUID (for theme syncs)
             theme_name: Theme name (for theme syncs)
             theme_sources: List of sources contributing to theme
-            integration_id: Integration UUID
-            gmail_account_id: Gmail account UUID
-            connector_id: Connector UUID
-            
+            connector_id: WorkspaceConnector UUID
+
         Returns:
             Created SyncHistory record
         """
@@ -867,18 +520,16 @@ class SourcesService:
             theme_id=theme_id,
             theme_name=theme_name,
             theme_sources=theme_sources,
-            integration_id=integration_id,
-            gmail_account_id=gmail_account_id,
             connector_id=connector_id,
             status="pending",
         )
-        
+
         self.db.add(sync_record)
         self.db.commit()
         self.db.refresh(sync_record)
-        
+
         return sync_record
-    
+
     def update_sync_record(
         self,
         sync_id: UUID,
@@ -890,7 +541,7 @@ class SourcesService:
     ) -> Optional[SyncHistory]:
         """
         Update a sync history record.
-        
+
         Args:
             sync_id: Sync record UUID
             status: New status
@@ -898,101 +549,54 @@ class SourcesService:
             items_new: Number of new items
             items_updated: Number of updated items
             error_message: Error message if failed
-            
+
         Returns:
             Updated SyncHistory record
         """
         sync_record = self.db.query(SyncHistory).filter(SyncHistory.id == sync_id).first()
         if not sync_record:
             return None
-        
+
         sync_record.status = status
         sync_record.items_processed = items_processed
         sync_record.items_new = items_new
         sync_record.items_updated = items_updated
         sync_record.error_message = error_message
-        
+
         if status in ['success', 'failed']:
             sync_record.completed_at = datetime.now(timezone.utc)
-        
+
         self.db.commit()
         self.db.refresh(sync_record)
-        
+
         return sync_record
-    
+
     def get_connected_sources(self, workspace_id: UUID) -> List[Dict[str, Any]]:
         """
         Get list of connected data sources with their details.
-        
+
         Returns list of dicts with source info for syncing.
         """
         sources = []
-        
-        # Slack integrations
-        slack_integrations = self.db.query(Integration).filter(
-            and_(
-                Integration.workspace_id == workspace_id,
-                Integration.provider == "slack",
-                Integration.is_active == True
-            )
-        ).all()
-        
-        for integration in slack_integrations:
-            sources.append({
-                'type': 'slack',
-                'name': integration.external_team_name or 'Slack',
-                'integration_id': integration.id,
-            })
-        
-        # Gmail accounts
-        gmail_accounts = self.db.query(GmailAccounts).filter(
-            and_(
-                GmailAccounts.workspace_id == workspace_id,
-                GmailAccounts.access_token.isnot(None)
-            )
-        ).all()
-        
-        for account in gmail_accounts:
-            sources.append({
-                'type': 'gmail',
-                'name': account.gmail_email or 'Gmail',
-                'gmail_account_id': account.id,
-            })
-        
-        # Gong connectors
-        gong_connectors = self.db.query(WorkspaceConnector).filter(
+
+        # Get all active connectors
+        connectors = self.db.query(WorkspaceConnector).filter(
             and_(
                 WorkspaceConnector.workspace_id == workspace_id,
-                WorkspaceConnector.connector_type == "gong",
                 WorkspaceConnector.is_active == True
             )
         ).all()
-        
-        for connector in gong_connectors:
+
+        for connector in connectors:
+            display_name = connector.external_name or connector.name or connector.connector_type.capitalize()
             sources.append({
-                'type': 'gong',
-                'name': 'Gong',
+                'type': connector.connector_type,
+                'name': display_name,
                 'connector_id': connector.id,
             })
-        
-        # Fathom connectors
-        fathom_connectors = self.db.query(WorkspaceConnector).filter(
-            and_(
-                WorkspaceConnector.workspace_id == workspace_id,
-                WorkspaceConnector.connector_type == "fathom",
-                WorkspaceConnector.is_active == True
-            )
-        ).all()
-        
-        for connector in fathom_connectors:
-            sources.append({
-                'type': 'fathom',
-                'name': 'Fathom',
-                'connector_id': connector.id,
-            })
-        
+
         return sources
-    
+
     def get_workspace_themes(self, workspace_id: UUID) -> List[Theme]:
         """Get all themes for a workspace"""
         return self.db.query(Theme).filter(Theme.workspace_id == workspace_id).all()

@@ -1,7 +1,7 @@
 """
 Periodic Gmail sync task.
 
-Syncs Gmail threads from all active accounts every 15 minutes.
+Syncs Gmail messages from all active workspace connectors every 15 minutes.
 Uses optimized batch ingestion - data storage only, no AI extraction.
 AI extraction happens in a separate batch processing task.
 """
@@ -13,14 +13,14 @@ from sqlalchemy.orm import Session
 
 from app.tasks.celery_app import celery_app
 from app.models.workspace import Workspace
-from app.models.gmail import GmailAccounts
+from app.models.workspace_connector import WorkspaceConnector
 from app.services.gmail_batch_ingestion_service import gmail_batch_ingestion_service
 from app.sync_engine.tasks.base import (
     engine,
     create_sync_record,
     finalize_sync_record,
     test_db_connection,
-    get_active_gmail_accounts,
+    get_active_connectors,
     cleanup_after_task,
 )
 
@@ -37,13 +37,13 @@ logger = logging.getLogger(__name__)
 )
 def sync_gmail_periodic(self):
     """
-    Periodic task to sync Gmail threads every 15 minutes.
+    Periodic task to sync Gmail messages every 15 minutes.
 
     This task:
     - Runs periodically (e.g., every 15 minutes)
-    - Only syncs active Gmail accounts with selected labels
-    - Fetches latest Gmail threads from selected labels
-    - Stores threads in GmailThread table with is_processed=False
+    - Only syncs active Gmail connectors with selected labels
+    - Fetches latest Gmail messages from selected labels
+    - Stores messages in Message table with is_processed=False
     - Creates SyncHistory records for tracking
 
     AI extraction is NOT performed here - it happens in a separate batch task.
@@ -59,59 +59,62 @@ def sync_gmail_periodic(self):
 
             logger.info("✅ Database connection verified")
 
-            # Use diagnostic function to log all Gmail accounts
-            get_active_gmail_accounts(db)
+            # Use diagnostic function to log all connectors
+            get_active_connectors(db, "gmail")
 
-            # Get all Gmail accounts with workspace_id (active accounts)
-            gmail_accounts = db.query(GmailAccounts).filter(
+            # Get all Gmail connectors with workspace_id and tokens (active connectors)
+            connectors = db.query(WorkspaceConnector).filter(
                 and_(
-                    GmailAccounts.workspace_id.isnot(None),
-                    GmailAccounts.access_token.isnot(None),
-                    GmailAccounts.refresh_token.isnot(None)
+                    WorkspaceConnector.connector_type == "gmail",
+                    WorkspaceConnector.workspace_id.isnot(None),
+                    WorkspaceConnector.is_active == True,
+                    WorkspaceConnector.access_token.isnot(None),
+                    WorkspaceConnector.refresh_token.isnot(None)
                 )
             ).all()
 
-            logger.info(f"Found {len(gmail_accounts)} active Gmail accounts to sync")
+            logger.info(f"Found {len(connectors)} active Gmail connectors to sync")
 
-            if not gmail_accounts:
-                logger.info("No active Gmail accounts found. Skipping Gmail sync.")
-                return {"status": "skipped", "reason": "no_accounts", "count": 0}
+            if not connectors:
+                logger.info("No active Gmail connectors found. Skipping Gmail sync.")
+                return {"status": "skipped", "reason": "no_connectors", "count": 0}
 
             total_ingested = 0
             total_skipped = 0
-            successful_accounts = 0
-            failed_accounts = 0
+            successful_connectors = 0
+            failed_connectors = 0
 
-            for account in gmail_accounts:
+            for connector in connectors:
                 try:
                     workspace = db.query(Workspace).filter(
-                        Workspace.id == account.workspace_id
+                        Workspace.id == connector.workspace_id
                     ).first()
 
                     if not workspace:
-                        logger.warning(f"Workspace not found for Gmail account {account.id}")
+                        logger.warning(f"Workspace not found for Gmail connector {connector.id}")
                         continue
 
-                    logger.info(f"Syncing Gmail threads for account: {account.gmail_email} (Workspace: {workspace.name})")
+                    connector_name = connector.external_id or connector.name or "Gmail"
+                    logger.info(f"Syncing Gmail messages for connector: {connector_name} (Workspace: {workspace.name})")
 
                     # Use optimized batch ingestion (data storage only, no AI)
-                    result = gmail_batch_ingestion_service.ingest_threads_for_account(
-                        gmail_account_id=str(account.id),
+                    result = gmail_batch_ingestion_service.ingest_messages_for_connector(
+                        connector_id=str(connector.id),
                         db=db,
-                        max_threads=10
+                        max_messages=10
                     )
 
                     if result.get("status") == "error":
-                        failed_accounts += 1
-                        logger.error(f"❌ Gmail sync failed for {account.gmail_email}: {result.get('error')}")
+                        failed_connectors += 1
+                        logger.error(f"❌ Gmail sync failed for {connector_name}: {result.get('error')}")
                         # Create a failed sync record for errors
                         try:
                             error_record = create_sync_record(
                                 db=db,
                                 workspace_id=str(workspace.id),
                                 source_type="gmail",
-                                source_name=account.gmail_email or "Gmail",
-                                gmail_account_id=str(account.id),
+                                source_name=connector_name,
+                                connector_id=str(connector.id),
                                 trigger_type="periodic",  # This is a scheduled periodic sync
                             )
                             finalize_sync_record(
@@ -139,8 +142,8 @@ def sync_gmail_periodic(self):
                             db=db,
                             workspace_id=str(workspace.id),
                             source_type="gmail",
-                            source_name=account.gmail_email or "Gmail",
-                            gmail_account_id=str(account.id),
+                            source_name=connector_name,
+                            connector_id=str(connector.id),
                             trigger_type="periodic",  # This is a scheduled periodic sync
                         )
                         finalize_sync_record(
@@ -151,15 +154,15 @@ def sync_gmail_periodic(self):
                             items_new=new_added,
                             synced_item_ids=inserted_ids,
                         )
-                        logger.info(f"✅ Checked {total_checked} Gmail threads, added {new_added} new for {account.gmail_email}")
+                        logger.info(f"✅ Checked {total_checked} Gmail messages, added {new_added} new for {connector_name}")
                     else:
-                        logger.info(f"ℹ️ Checked {total_checked} Gmail threads, no new data for {account.gmail_email}")
+                        logger.info(f"ℹ️ Checked {total_checked} Gmail messages, no new data for {connector_name}")
 
-                    successful_accounts += 1
+                    successful_connectors += 1
 
                 except Exception as e:
-                    failed_accounts += 1
-                    logger.error(f"❌ Error syncing Gmail threads for {account.gmail_email}: {e}")
+                    failed_connectors += 1
+                    logger.error(f"❌ Error syncing Gmail messages for connector {connector.id}: {e}")
                     import traceback
                     traceback.print_exc()
                     # Create a failed sync record for errors
@@ -168,8 +171,8 @@ def sync_gmail_periodic(self):
                             db=db,
                             workspace_id=str(workspace.id),
                             source_type="gmail",
-                            source_name=account.gmail_email or "Gmail",
-                            gmail_account_id=str(account.id),
+                            source_name=connector.external_id or connector.name or "Gmail",
+                            connector_id=str(connector.id),
                             trigger_type="periodic",  # This is a scheduled periodic sync
                         )
                         finalize_sync_record(
@@ -184,15 +187,15 @@ def sync_gmail_periodic(self):
 
             logger.info(
                 f"✅ Gmail periodic sync complete. "
-                f"Total threads: {total_ingested} new, {total_skipped} skipped, "
-                f"Accounts: {successful_accounts} successful, {failed_accounts} failed"
+                f"Total messages: {total_ingested} new, {total_skipped} skipped, "
+                f"Connectors: {successful_connectors} successful, {failed_connectors} failed"
             )
             return {
                 "status": "success",
                 "total_ingested": total_ingested,
                 "total_skipped": total_skipped,
-                "successful_accounts": successful_accounts,
-                "failed_accounts": failed_accounts
+                "successful_connectors": successful_connectors,
+                "failed_connectors": failed_connectors
             }
 
     except Exception as e:

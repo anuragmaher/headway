@@ -11,10 +11,7 @@ import { CompanyDetailsForm } from "@/shared/components/CompanyDetailsForm";
 import GmailConnectModal from "@/shared/components/gmailConnect";
 import { useWorkspaceSettingsStore } from "@/shared/store/WorkspaceStore/workspaceSettingsStore";
 import {
-  CompanyDomainsSection,
   ConnectedDataSources,
-  PreferencesSection,
-  WorkspaceInfoSection,
   CompetitorsSection,
   AvailableConnectors,
   SlackConnectionDialog,
@@ -33,10 +30,8 @@ export function WorkspaceSettingsPage(): JSX.Element {
     loadConnectors,
     loadGmailAccounts,
     loadCompanyDetails,
-    loadCompanyDomains,
     loadCompetitors,
     saveCompanyDetails,
-    generateDescription,
   } = useWorkspaceSettingsStore((state) => ({
     companyData: state.companyData,
     isLoadingCompany: state.isLoadingCompany,
@@ -44,10 +39,8 @@ export function WorkspaceSettingsPage(): JSX.Element {
     loadConnectors: state.loadConnectors,
     loadGmailAccounts: state.loadGmailAccounts,
     loadCompanyDetails: state.loadCompanyDetails,
-    loadCompanyDomains: state.loadCompanyDomains,
     loadCompetitors: state.loadCompetitors,
     saveCompanyDetails: state.saveCompanyDetails,
-    generateDescription: state.generateDescription,
   }));
 
   const workspaceId = auth.tokens?.workspace_id;
@@ -73,11 +66,10 @@ export function WorkspaceSettingsPage(): JSX.Element {
     }
   }, []);
 
-  // Load company details and domains when workspace_id is available
+  // Load company details and competitors when workspace_id is available
   useEffect(() => {
     if (workspaceId && accessToken) {
       loadCompanyDetails(workspaceId);
-      loadCompanyDomains(workspaceId, accessToken);
       loadCompetitors(workspaceId, accessToken);
     }
   }, [workspaceId, accessToken]);
@@ -89,51 +81,30 @@ export function WorkspaceSettingsPage(): JSX.Element {
     await saveCompanyDetails(workspaceId, data);
   };
 
-  const handleGenerateDescription = async (websiteUrl: string): Promise<string> => {
-    if (!workspaceId) {
-      throw new Error("No workspace selected");
-    }
-    return await generateDescription(workspaceId, websiteUrl);
-  };
-
   return (
     <AdminLayout>
       <Box sx={{ p: { xs: 2, sm: 3, md: 4 }, pt: { xs: 2, sm: 3 } }}>
-        {/* Company Details and Domains - Side by Side */}
+        {/* Company Details and Competitors - Side by Side */}
         <Grid container spacing={3} sx={{ mb: 3, alignItems: 'stretch' }}>
           <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
             <CompanyDetailsForm
               companyData={companyData}
               onSave={handleSaveCompanyDetails}
-              onGenerateDescription={handleGenerateDescription}
               isLoading={isLoadingCompany}
             />
           </Grid>
           <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
-            <CompanyDomainsSection />
+            <CompetitorsSection />
           </Grid>
         </Grid>
 
         {/* Connected Data Sources and Available Connectors - Side by Side */}
-        <Grid container spacing={2} sx={{ mb: 3 }}>
-          <Grid item xs={12} lg={6}>
+        <Grid container spacing={3} sx={{ mb: 3, alignItems: 'stretch' }}>
+          <Grid item xs={12} lg={6} sx={{ display: 'flex' }}>
             <ConnectedDataSources />
           </Grid>
-          <Grid item xs={12} lg={6}>
+          <Grid item xs={12} lg={6} sx={{ display: 'flex' }}>
             <AvailableConnectors />
-          </Grid>
-        </Grid>
-
-        {/* Preferences, Workspace Info, and Competitors - Three columns */}
-        <Grid container spacing={3} sx={{ mb: 3, alignItems: "stretch" }}>
-          <Grid item xs={12} md={4} sx={{ display: "flex" }}>
-            <PreferencesSection />
-          </Grid>
-          <Grid item xs={12} md={4} sx={{ display: "flex" }}>
-            <WorkspaceInfoSection />
-          </Grid>
-          <Grid item xs={12} md={4} sx={{ display: "flex" }}>
-            <CompetitorsSection />
           </Grid>
         </Grid>
 

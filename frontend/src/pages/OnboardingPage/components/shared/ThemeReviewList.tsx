@@ -233,7 +233,10 @@ export function ThemeReviewList({
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
-        maxHeight: 'calc(100vh - 300px)',
+        maxHeight: 'calc(100vh - 260px)',
+        minHeight: 350,
+        width: '100%',
+        maxWidth: 520,
       }}
     >
       {/* Header - Fixed */}

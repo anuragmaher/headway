@@ -233,11 +233,12 @@ async function checkCompanyDetails(workspaceId: string): Promise<boolean> {
     console.log('[Onboarding] Checking company details...');
     const details: CompanyDetails = await companyService.getCompanyDetails(workspaceId);
     console.log('[Onboarding] Company details:', details);
-    
-    // Company details are considered complete if name and description are filled
+
+    // Company details are considered complete if name and industry are filled
+    // (industry is required during onboarding, description is not a column in companies table)
     const isComplete = Boolean(
-      details.name && details.name.trim() !== '' && 
-      details.description && details.description.trim() !== ''
+      details.name && details.name.trim() !== '' &&
+      details.industry && details.industry.trim() !== ''
     );
     console.log('[Onboarding] Company details complete:', isComplete);
     return isComplete;
@@ -307,10 +308,11 @@ async function checkDataSources(workspaceId: string): Promise<boolean> {
 }
 
 // Helper function to check if any themes exist
-async function checkThemes(workspaceId: string, accessToken: string): Promise<boolean> {
+async function checkThemes(_workspaceId: string, accessToken: string): Promise<boolean> {
   try {
     console.log('[Onboarding] Checking themes...');
-    const url = `${API_BASE_URL}/api/v1/features/themes?workspace_id=${workspaceId}`;
+    // Use the themes endpoint which returns themes for current user's workspace
+    const url = `${API_BASE_URL}/api/v1/themes`;
     console.log('[Onboarding] Themes URL:', url);
 
     const response = await fetch(url, {
@@ -325,10 +327,12 @@ async function checkThemes(workspaceId: string, accessToken: string): Promise<bo
       throw new Error(`Failed to fetch themes: ${response.status}`);
     }
 
-    const themes = await response.json();
-    console.log('[Onboarding] Themes count:', Array.isArray(themes) ? themes.length : 'not an array');
+    const data = await response.json();
+    // Response is { themes: [...], total: number }
+    const themes = data.themes || [];
+    console.log('[Onboarding] Themes count:', themes.length);
 
-    const hasThemes = Array.isArray(themes) && themes.length > 0;
+    const hasThemes = themes.length > 0;
     console.log('[Onboarding] Has themes:', hasThemes);
     return hasThemes;
   } catch (error) {
@@ -341,7 +345,8 @@ async function checkThemes(workspaceId: string, accessToken: string): Promise<bo
 async function checkCompetitors(workspaceId: string, accessToken: string): Promise<boolean> {
   try {
     console.log('[Onboarding] Checking competitors...');
-    const url = `${API_BASE_URL}/api/v1/workspaces/${workspaceId}/competitors`;
+    // Use the onboarding competitors endpoint
+    const url = `${API_BASE_URL}/api/v1/onboarding/competitors?workspace_id=${workspaceId}`;
 
     const response = await fetch(url, {
       headers: {
@@ -356,11 +361,11 @@ async function checkCompetitors(workspaceId: string, accessToken: string): Promi
       return false;
     }
 
-    const data = await response.json();
-    const competitors = data.competitors || [];
-    console.log('[Onboarding] Competitors count:', competitors.length);
+    // Response is an array of competitors
+    const competitors = await response.json();
+    console.log('[Onboarding] Competitors count:', Array.isArray(competitors) ? competitors.length : 0);
 
-    const hasCompetitors = competitors.length > 0;
+    const hasCompetitors = Array.isArray(competitors) && competitors.length > 0;
     console.log('[Onboarding] Has competitors:', hasCompetitors);
     return hasCompetitors;
   } catch (error) {

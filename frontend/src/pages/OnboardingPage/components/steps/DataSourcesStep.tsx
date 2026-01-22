@@ -70,7 +70,7 @@ export function DataSourcesStep(): JSX.Element {
   const workspaceId = tokens?.workspace_id;
 
   const connectedSources = useConnectedSources();
-  const { addConnectedSource, setConnectedSources } = useOnboardingStore();
+  const { setConnectedSources, loadConnectedSources } = useOnboardingStore();
 
   const [gongDialogOpen, setGongDialogOpen] = useState(false);
   const [fathomDialogOpen, setFathomDialogOpen] = useState(false);
@@ -80,31 +80,16 @@ export function DataSourcesStep(): JSX.Element {
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectError, setConnectError] = useState<string | null>(null);
 
+  // Helper to check if a source type is connected
+  const isSourceConnected = (sourceType: string): boolean => {
+    return connectedSources.some((c) => c.connector_type === sourceType);
+  };
+
   useEffect(() => {
-    const checkConnections = async () => {
-      if (!workspaceId) return;
-      const connected: string[] = [];
-
-      try {
-        const accounts = await getGmailAccounts();
-        if (accounts.length > 0) connected.push('gmail');
-
-        const connectors = await connectorService.getConnectors(workspaceId);
-        if (connectors.some((c: { connector_type: string; is_active: boolean }) => c.connector_type === 'gong' && c.is_active)) {
-          connected.push('gong');
-        }
-        if (connectors.some((c: { connector_type: string; is_active: boolean }) => c.connector_type === 'fathom' && c.is_active)) {
-          connected.push('fathom');
-        }
-
-        setConnectedSources(connected);
-      } catch (err) {
-        console.error('Failed to check connections:', err);
-      }
-    };
-
-    checkConnections();
-  }, [workspaceId, setConnectedSources]);
+    if (workspaceId) {
+      loadConnectedSources(workspaceId);
+    }
+  }, [workspaceId, loadConnectedSources]);
 
   const handleConnect = async (sourceId: string) => {
     setConnectError(null);
@@ -124,10 +109,10 @@ export function DataSourcesStep(): JSX.Element {
           if (oauthWindow?.closed) {
             clearInterval(checkInterval);
             localStorage.removeItem('onboarding-gmail-connect');
-            try {
-              const accounts = await getGmailAccounts();
-              if (accounts.length > 0) addConnectedSource('gmail');
-            } catch { /* ignore */ }
+            // Reload connected sources after OAuth completes
+            if (workspaceId) {
+              loadConnectedSources(workspaceId);
+            }
           }
         }, 1000);
       } catch {
@@ -154,7 +139,8 @@ export function DataSourcesStep(): JSX.Element {
         gong_access_key: gongAccessKey.trim(),
         gong_secret_key: gongSecretKey.trim(),
       });
-      addConnectedSource('gong');
+      // Reload connected sources from server
+      await loadConnectedSources(workspaceId);
       setGongDialogOpen(false);
       setGongAccessKey('');
       setGongSecretKey('');
@@ -176,7 +162,8 @@ export function DataSourcesStep(): JSX.Element {
         connector_type: 'fathom',
         fathom_api_token: fathomApiToken.trim(),
       });
-      addConnectedSource('fathom');
+      // Reload connected sources from server
+      await loadConnectedSources(workspaceId);
       setFathomDialogOpen(false);
       setFathomApiToken('');
     } catch (err: unknown) {
@@ -191,7 +178,7 @@ export function DataSourcesStep(): JSX.Element {
   const messagingSources = SOURCES.filter((s) => s.category === 'messaging');
 
   const renderSource = (source: SourceConfig) => {
-    const isConnected = connectedSources.includes(source.id);
+    const isConnected = isSourceConnected(source.id);
 
     return (
       <Box

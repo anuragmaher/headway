@@ -18,9 +18,8 @@ from sqlalchemy import desc
 from sqlalchemy.orm import Session
 
 from app.models.message import Message
-from app.models.feature import Feature
+from app.models.customer_ask import CustomerAsk
 from app.models.sync_history import SyncHistory
-from app.models.gmail import GmailThread
 from app.services.cache_service import (
     cache_sync_items,
     get_cached_sync_items,
@@ -217,91 +216,51 @@ class SyncItemsService:
         page: int,
         page_size: int
     ) -> Dict[str, Any]:
-        """Get Gmail threads synced during this operation."""
+        """Get Gmail messages synced during this operation."""
         # Use stored IDs if available (primary method)
         if self._has_stored_ids(sync_record):
-            return self._get_gmail_items_by_ids(sync_record, workspace_id, page, page_size)
+            return self._get_messages_by_ids(sync_record, workspace_id, page, page_size, 'gmail')
 
         # Fallback to time-window matching for backward compatibility
         logger.debug(f"Using time-window fallback for Gmail sync {sync_record.id}")
         start_time, end_time = self._get_time_window(sync_record)
 
-        query = self.db.query(GmailThread).filter(
-            GmailThread.workspace_id == workspace_id,
-            GmailThread.created_at >= start_time,
-            GmailThread.created_at <= end_time
+        query = self.db.query(Message).filter(
+            Message.workspace_id == workspace_id,
+            Message.source == 'gmail',
+            Message.created_at >= start_time,
+            Message.created_at <= end_time
         )
 
         total = query.count()
         offset = (page - 1) * page_size
-        threads = query.order_by(desc(GmailThread.thread_date)).offset(offset).limit(page_size).all()
+        messages = query.order_by(desc(Message.sent_at)).offset(offset).limit(page_size).all()
 
-        return self._format_gmail_threads(threads, total, page, page_size)
+        return self._format_gmail_messages(messages, total, page, page_size)
 
-    def _get_gmail_items_by_ids(
+    def _format_gmail_messages(
         self,
-        sync_record: SyncHistory,
-        workspace_id: UUID,
-        page: int,
-        page_size: int
-    ) -> Dict[str, Any]:
-        """Get Gmail threads by stored IDs."""
-        item_ids = sync_record.synced_item_ids
-        total = len(item_ids)
-
-        logger.info(f"Getting Gmail items by IDs: total={total}, page={page}, page_size={page_size}")
-
-        if total == 0:
-            logger.info("No stored IDs found, returning empty response")
-            return self._empty_response('source', 'gmail')
-
-        # Paginate the IDs
-        offset = (page - 1) * page_size
-        page_ids = item_ids[offset:offset + page_size]
-
-        logger.info(f"Paginated IDs: offset={offset}, page_ids count={len(page_ids)}")
-
-        if not page_ids:
-            logger.info("No IDs in current page, returning empty response")
-            return self._empty_response('source', 'gmail')
-
-        # Convert string UUIDs to UUID objects for query
-        uuid_ids = [UUID(id_str) for id_str in page_ids]
-
-        logger.info(f"Querying GmailThread with {len(uuid_ids)} UUIDs for workspace {workspace_id}")
-
-        threads = self.db.query(GmailThread).filter(
-            GmailThread.id.in_(uuid_ids),
-            GmailThread.workspace_id == workspace_id
-        ).order_by(desc(GmailThread.thread_date)).all()
-
-        logger.info(f"Found {len(threads)} Gmail threads in database")
-
-        return self._format_gmail_threads(threads, total, page, page_size)
-
-    def _format_gmail_threads(
-        self,
-        threads: List[GmailThread],
+        messages: List[Message],
         total: int,
         page: int,
         page_size: int
     ) -> Dict[str, Any]:
-        """Format Gmail threads into response items."""
+        """Format Gmail messages into response items."""
         items = [{
-            'id': str(thread.id),
-            'type': 'gmail_thread',
-            'title': thread.subject,
-            'subject': thread.subject,
-            'from_name': thread.from_name,
-            'from_email': thread.from_email,
-            'to_emails': thread.to_emails,
-            'snippet': thread.snippet,
-            'content': thread.content[:500] if thread.content else None,
-            'message_count': thread.message_count,
-            'thread_date': thread.thread_date.isoformat() if thread.thread_date else None,
-            'label_name': thread.label_name,
-            'created_at': thread.created_at.isoformat() if thread.created_at else None,
-        } for thread in threads]
+            'id': str(msg.id),
+            'type': 'gmail_message',
+            'title': msg.title,
+            'subject': msg.title,
+            'from_name': msg.author_name,
+            'from_email': msg.from_email,
+            'to_emails': msg.to_emails,
+            'snippet': msg.content[:200] if msg.content else None,
+            'content': msg.content[:500] if msg.content else None,
+            'message_count': msg.message_count or 1,
+            'thread_date': msg.sent_at.isoformat() if msg.sent_at else None,
+            'label_name': msg.label_name,
+            'created_at': msg.created_at.isoformat() if msg.created_at else None,
+        } for msg in messages]
 
         return self._paginate_response(items, total, page, page_size, 'source', 'gmail')
 
@@ -533,7 +492,9 @@ class SyncItemsService:
         logger.info(f"Found {len(messages)} {source_type} messages in database")
 
         # Format based on source type
-        if source_type == 'slack':
+        if source_type == 'gmail':
+            return self._format_gmail_messages(messages, total, page, page_size)
+        elif source_type == 'slack':
             return self._format_slack_messages(messages, total, page, page_size)
         elif source_type == 'gong':
             return self._format_gong_calls(messages, total, page, page_size)
@@ -549,35 +510,35 @@ class SyncItemsService:
         page: int,
         page_size: int
     ) -> Dict[str, Any]:
-        """Get features updated during theme sync."""
+        """Get customer asks updated during theme sync."""
         # Use stored IDs if available (primary method)
         if self._has_stored_ids(sync_record):
-            return self._get_features_by_ids(sync_record, workspace_id, page, page_size)
+            return self._get_customer_asks_by_ids(sync_record, workspace_id, page, page_size)
 
         # Fallback to time-window matching
         logger.debug(f"Using time-window fallback for theme sync {sync_record.id}")
         start_time, end_time = self._get_time_window(sync_record)
 
-        query = self.db.query(Feature).filter(
-            Feature.workspace_id == workspace_id,
-            Feature.updated_at >= start_time,
-            Feature.updated_at <= end_time
+        query = self.db.query(CustomerAsk).filter(
+            CustomerAsk.workspace_id == workspace_id,
+            CustomerAsk.updated_at >= start_time,
+            CustomerAsk.updated_at <= end_time
         )
 
         total = query.count()
         offset = (page - 1) * page_size
-        features = query.order_by(desc(Feature.updated_at)).offset(offset).limit(page_size).all()
+        customer_asks = query.order_by(desc(CustomerAsk.updated_at)).offset(offset).limit(page_size).all()
 
-        return self._format_features(features, total, page, page_size)
+        return self._format_customer_asks(customer_asks, total, page, page_size)
 
-    def _get_features_by_ids(
+    def _get_customer_asks_by_ids(
         self,
         sync_record: SyncHistory,
         workspace_id: UUID,
         page: int,
         page_size: int
     ) -> Dict[str, Any]:
-        """Get features by stored IDs."""
+        """Get customer asks by stored IDs."""
         item_ids = sync_record.synced_item_ids
         total = len(item_ids)
 
@@ -594,31 +555,34 @@ class SyncItemsService:
         # Convert string UUIDs to UUID objects for query
         uuid_ids = [UUID(id_str) for id_str in page_ids]
 
-        features = self.db.query(Feature).filter(
-            Feature.id.in_(uuid_ids),
-            Feature.workspace_id == workspace_id
-        ).order_by(desc(Feature.updated_at)).all()
+        customer_asks = self.db.query(CustomerAsk).filter(
+            CustomerAsk.id.in_(uuid_ids),
+            CustomerAsk.workspace_id == workspace_id
+        ).order_by(desc(CustomerAsk.updated_at)).all()
 
-        return self._format_features(features, total, page, page_size)
+        return self._format_customer_asks(customer_asks, total, page, page_size)
 
-    def _format_features(
+    def _format_customer_asks(
         self,
-        features: List[Feature],
+        customer_asks: List[CustomerAsk],
         total: int,
         page: int,
         page_size: int
     ) -> Dict[str, Any]:
-        """Format features into response items."""
+        """Format customer asks into response items."""
         items = [{
-            'id': str(feature.id),
-            'type': 'feature',
-            'title': feature.title,
-            'description': feature.description,
-            'theme_id': str(feature.theme_id) if feature.theme_id else None,
-            'theme_name': feature.theme.name if feature.theme else None,
-            'message_count': feature.message_count,
-            'updated_at': feature.updated_at.isoformat() if feature.updated_at else None,
-        } for feature in features]
+            'id': str(ask.id),
+            'type': 'customer_ask',
+            'title': ask.name,
+            'name': ask.name,
+            'description': ask.description,
+            'sub_theme_id': str(ask.sub_theme_id) if ask.sub_theme_id else None,
+            'sub_theme_name': ask.sub_theme.name if ask.sub_theme else None,
+            'urgency': ask.urgency,
+            'status': ask.status,
+            'mention_count': ask.mention_count,
+            'updated_at': ask.updated_at.isoformat() if ask.updated_at else None,
+        } for ask in customer_asks]
 
         return self._paginate_response(items, total, page, page_size, 'theme', None)
 
