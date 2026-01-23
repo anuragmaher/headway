@@ -50,6 +50,9 @@ const inputSx = {
       borderWidth: 2,
     },
   },
+  '& .MuiInputBase-input': {
+    color: '#1e293b',
+  },
   '& .MuiInputLabel-root': {
     color: '#64748b',
   },
@@ -69,6 +72,9 @@ const selectSx = {
       borderColor: '#2563eb',
       borderWidth: 2,
     },
+  },
+  '& .MuiSelect-select': {
+    color: '#1e293b',
   },
   '& .MuiInputLabel-root': {
     color: '#64748b',
