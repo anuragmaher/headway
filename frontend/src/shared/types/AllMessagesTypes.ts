@@ -13,6 +13,20 @@ export type SyncStatus = 'pending' | 'in_progress' | 'success' | 'failed';
 /** How the sync was triggered */
 export type TriggerType = 'manual' | 'periodic';
 
+export interface MessageAIInsight {
+  id: string;
+  summary: string | null;
+  pain_point: string | null;
+  pain_point_quote: string | null;
+  feature_request: string | null;
+  customer_usecase: string | null;
+  sentiment: 'positive' | 'neutral' | 'negative' | null;
+  keywords: string[];
+  model_version: string | null;
+  tokens_used: number | null;
+  created_at: string | null;
+}
+
 export interface Message {
   id: string;
   title: string;
@@ -21,6 +35,7 @@ export interface Message {
   preview: string;
   timestamp: string;
   source: SourceType;
+  ai_insights?: MessageAIInsight | null;  // Included when fetching with insights
 }
 
 export interface SyncHistoryItem {

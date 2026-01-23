@@ -23,7 +23,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from app.services.cache_service import get_cache_service, DEFAULT_TTL
-from app.schemas.sources import MessageResponse, MessageListResponse
+from app.schemas.sources import MessageResponse, MessageListResponse, MessageAIInsight
 
 logger = logging.getLogger(__name__)
 
@@ -316,6 +316,7 @@ class OptimizedMessagesService:
 
         This joins messages with ai_insights table
         to return only messages with completed insights.
+        Now includes full AI insight data in the response.
         """
         workspace_str = str(workspace_id)
         offset = (page - 1) * page_size
@@ -340,7 +341,7 @@ class OptimizedMessagesService:
             source_condition = "AND m.source = :source_filter"
             params["source_filter"] = source_filter
 
-        # Query messages that have AI insights
+        # Query messages with FULL AI insights data
         query = text(f"""
             SELECT
                 m.id::text,
@@ -366,7 +367,19 @@ class OptimizedMessagesService:
                 COALESCE(SUBSTRING(m.content FROM 1 FOR 150), '') as preview,
                 m.sent_at as sort_timestamp,
                 m.channel_name,
-                m.is_processed
+                m.is_processed,
+                -- AI Insight fields (full data)
+                ai.id::text as ai_id,
+                ai.summary,
+                ai.pain_point,
+                ai.pain_point_quote,
+                ai.feature_request,
+                ai.customer_usecase,
+                ai.sentiment,
+                ai.keywords,
+                ai.model_version,
+                ai.tokens_used,
+                ai.created_at as ai_created_at
             FROM messages m
             INNER JOIN ai_insights ai ON ai.message_id = m.id
             WHERE m.workspace_id = :workspace_id
@@ -395,9 +408,26 @@ class OptimizedMessagesService:
         result = self.db.execute(query, params)
         rows = result.fetchall()
 
-        # Convert to response objects
+        # Convert to response objects with AI insights
         messages = []
         for row in rows:
+            # Build AI insight object if data exists
+            ai_insights = None
+            if row[10]:  # ai_id exists
+                ai_insights = MessageAIInsight(
+                    id=row[10],
+                    summary=row[11],
+                    pain_point=row[12],
+                    pain_point_quote=row[13],
+                    feature_request=row[14],
+                    customer_usecase=row[15],
+                    sentiment=row[16],
+                    keywords=row[17] or [],
+                    model_version=row[18],
+                    tokens_used=row[19],
+                    created_at=row[20],
+                )
+
             messages.append(MessageResponse(
                 id=row[0],
                 title=row[1],
@@ -410,6 +440,7 @@ class OptimizedMessagesService:
                 timestamp=row[7],
                 channel_name=row[8],
                 is_processed=row[9],
+                ai_insights=ai_insights,
             ))
 
         total_pages = (total + page_size - 1) // page_size

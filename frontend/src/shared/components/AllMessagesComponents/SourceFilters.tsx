@@ -9,7 +9,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { FilterList as FilterIcon } from '@mui/icons-material';
-import { SourceType, SyncType } from '../types';
+import { SourceType, SyncType } from '@/shared/types/AllMessagesTypes';
 
 interface SourceFiltersProps {
   selectedSource: SourceType;
