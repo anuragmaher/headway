@@ -16,6 +16,8 @@ Classification Rules:
 
 import logging
 import hashlib
+import re
+from difflib import SequenceMatcher
 from datetime import datetime, timezone
 from typing import Dict, Any, Optional, List
 from uuid import UUID
@@ -37,7 +39,27 @@ logger = logging.getLogger(__name__)
 
 EXTRACTION_BATCH_SIZE = 15
 CUSTOMER_ASK_MATCH_THRESHOLD = 0.75  # 75% confidence to match existing CustomerAsk
+TITLE_SIMILARITY_THRESHOLD = 0.90  # 90% title similarity = definite match (pre-AI check)
 MAX_RETRIES = 3
+
+
+def _normalize_title(title: str) -> str:
+    """Normalize title for comparison - lowercase, remove punctuation, collapse whitespace."""
+    if not title:
+        return ""
+    title = title.lower().strip()
+    title = re.sub(r'[^\w\s]', '', title)
+    title = re.sub(r'\s+', ' ', title)
+    return title
+
+
+def _title_similarity(title1: str, title2: str) -> float:
+    """Calculate similarity ratio between two titles (0-1)."""
+    norm1 = _normalize_title(title1)
+    norm2 = _normalize_title(title2)
+    if not norm1 or not norm2:
+        return 0.0
+    return SequenceMatcher(None, norm1, norm2).ratio()
 
 # Invalid feature titles that should NOT create CustomerAsks
 # These indicate the AI couldn't extract a valid feature request
@@ -581,7 +603,28 @@ def _match_or_create_customer_ask(
     if existing_customer_asks:
         logger.info(f"Found {len(existing_customer_asks)} existing CustomerAsks in sub_theme, attempting match...")
 
-        # Use AI to find best matching CustomerAsk
+        # STEP 1: Pre-AI check - match by title similarity (catches obvious duplicates)
+        # This prevents duplicate CustomerAsks when AI matching returns low confidence
+        # for essentially identical feature titles extracted from different chunks
+        for ca in existing_customer_asks:
+            similarity = _title_similarity(result.feature_title, ca["name"])
+            if similarity >= TITLE_SIMILARITY_THRESHOLD:
+                # Found highly similar title - match without AI confirmation
+                try:
+                    ca_id = UUID(ca["id"])
+                    ca_obj = db.query(CustomerAsk).filter(CustomerAsk.id == ca_id).first()
+                    if ca_obj:
+                        ca_obj.mention_count = (ca_obj.mention_count or 1) + 1
+                        ca_obj.last_mentioned_at = event_time
+                        logger.info(
+                            f"✓ Matched by title similarity ({similarity:.0%}): '{ca_obj.name}' "
+                            f"(mentions: {ca_obj.mention_count})"
+                        )
+                        return ca_id, True
+                except (ValueError, TypeError) as e:
+                    logger.warning(f"Invalid CustomerAsk ID in title similarity check: {ca['id']}, error: {e}")
+
+        # STEP 2: Use AI to find best matching CustomerAsk (for non-obvious matches)
         match_result = ai_service.match_customer_ask(
             text=text,
             feature_title=result.feature_title,

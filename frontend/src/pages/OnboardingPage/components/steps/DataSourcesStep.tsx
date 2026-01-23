@@ -63,6 +63,12 @@ const inputSx = {
       borderWidth: 2,
     },
   },
+  '& .MuiInputBase-input': {
+    color: '#1e293b',
+  },
+  '& .MuiInputLabel-root': {
+    color: '#64748b',
+  },
 };
 
 export function DataSourcesStep(): JSX.Element {

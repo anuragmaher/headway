@@ -75,6 +75,18 @@ export const useExplorerStore = create<ExplorerStore>()(
         try {
           await get().fetchThemes();
           set({ isInitialized: true, isInitializing: false });
+
+          // OPTIMIZATION: Prefetch first theme's sub-themes in background
+          // This makes the first theme click instant
+          // Use prefetchSubThemes to only update cache, not visible state
+          const themes = get().themes;
+          if (themes.length > 0) {
+            console.log('[Explorer] Prefetching sub-themes for first theme:', themes[0].id);
+            // Fire and forget - don't await to avoid blocking
+            get().prefetchSubThemes(themes[0].id).catch((err) => {
+              console.warn('[Explorer] Failed to prefetch sub-themes:', err);
+            });
+          }
         } catch (error) {
           set({ isInitializing: false });
           throw error;
@@ -93,6 +105,8 @@ export const useExplorerStore = create<ExplorerStore>()(
           subThemes: [],
           isLoadingSubThemes: false,
           subThemesError: null,
+          subThemesCache: {},
+          currentThemeIdForSubThemes: null,
 
           // Feedback state
           feedbackItems: [],
@@ -117,6 +131,8 @@ export const useExplorerStore = create<ExplorerStore>()(
           totalCustomerAsks: 0,
           isLoadingCustomerAsks: false,
           customerAsksError: null,
+          customerAsksCache: {},
+          currentSubThemeIdForAsks: null,
           mentions: [],
           totalMentions: 0,
           hasMoreMentions: false,
@@ -124,6 +140,7 @@ export const useExplorerStore = create<ExplorerStore>()(
           isLoadingMentions: false,
           isLoadingMoreMentions: false,
           mentionsError: null,
+          mentionsCache: {},
           selectedCustomerAskId: null,
           isMentionsPanelOpen: false,
           expandedMentionId: null,
@@ -254,6 +271,7 @@ export const useExplorerActions = () => {
 
     // SubTheme actions
     fetchSubThemes: store.fetchSubThemes,
+    prefetchSubThemes: store.prefetchSubThemes,
     createSubTheme: store.createSubTheme,
     updateSubTheme: store.updateSubTheme,
     deleteSubTheme: store.deleteSubTheme,
@@ -271,12 +289,14 @@ export const useExplorerActions = () => {
 
     // CustomerAsk actions
     fetchCustomerAsks: store.fetchCustomerAsks,
+    prefetchCustomerAsks: store.prefetchCustomerAsks,
     selectCustomerAsk: store.selectCustomerAsk,
     updateCustomerAskStatus: store.updateCustomerAskStatus,
     clearCustomerAsks: store.clearCustomerAsks,
 
     // Mentions actions
     fetchMentions: store.fetchMentions,
+    prefetchMentions: store.prefetchMentions,
     fetchMoreMentions: store.fetchMoreMentions,
     clearMentions: store.clearMentions,
     openMentionsPanel: store.openMentionsPanel,

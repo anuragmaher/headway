@@ -67,6 +67,9 @@ class MessageCustomerAsk(Base):
         Index('idx_mca_customer_ask', 'customer_ask_id'),
         # Index for finding primary links
         Index('idx_mca_primary', 'message_id', 'is_primary'),
+        # CRITICAL: Index for mentions query - filter by customer_ask_id + sort by created_at
+        # This eliminates slow sorts for the mentions panel pagination
+        Index('idx_mca_customer_ask_created', 'customer_ask_id', 'created_at'),
     )
 
     def __repr__(self) -> str:

@@ -58,26 +58,52 @@ class ThemeService:
         ).order_by(Theme.sort_order).all()
 
     def list_themes_with_counts(self, workspace_id: UUID) -> List[Dict[str, Any]]:
-        """List themes with sub-theme and customer ask counts"""
-        themes = self.list_themes(workspace_id)
-        result = []
+        """List themes with sub-theme and customer ask counts (optimized single query)"""
+        from sqlalchemy.orm import aliased
+        from sqlalchemy import outerjoin, select, literal_column
 
-        for theme in themes:
-            sub_theme_count = self.db.query(func.count(SubTheme.id)).filter(
-                SubTheme.theme_id == theme.id
-            ).scalar() or 0
+        # Single query with LEFT JOINs and aggregation - eliminates N+1 problem
+        # This replaces 2N+1 queries with just 1 query
+        sub_theme_count_subq = (
+            self.db.query(
+                SubTheme.theme_id,
+                func.count(SubTheme.id).label('sub_theme_count')
+            )
+            .group_by(SubTheme.theme_id)
+            .subquery()
+        )
 
-            customer_ask_count = self.db.query(func.count(CustomerAsk.id)).join(
-                SubTheme, CustomerAsk.sub_theme_id == SubTheme.id
-            ).filter(SubTheme.theme_id == theme.id).scalar() or 0
+        customer_ask_count_subq = (
+            self.db.query(
+                SubTheme.theme_id,
+                func.count(CustomerAsk.id).label('customer_ask_count')
+            )
+            .join(CustomerAsk, CustomerAsk.sub_theme_id == SubTheme.id)
+            .group_by(SubTheme.theme_id)
+            .subquery()
+        )
 
-            result.append({
+        results = (
+            self.db.query(
+                Theme,
+                func.coalesce(sub_theme_count_subq.c.sub_theme_count, 0).label('sub_theme_count'),
+                func.coalesce(customer_ask_count_subq.c.customer_ask_count, 0).label('customer_ask_count')
+            )
+            .outerjoin(sub_theme_count_subq, Theme.id == sub_theme_count_subq.c.theme_id)
+            .outerjoin(customer_ask_count_subq, Theme.id == customer_ask_count_subq.c.theme_id)
+            .filter(Theme.workspace_id == workspace_id)
+            .order_by(Theme.sort_order)
+            .all()
+        )
+
+        return [
+            {
                 **theme.__dict__,
                 "sub_theme_count": sub_theme_count,
                 "customer_ask_count": customer_ask_count
-            })
-
-        return result
+            }
+            for theme, sub_theme_count, customer_ask_count in results
+        ]
 
     def get_theme_hierarchy(self, workspace_id: UUID) -> List[Dict[str, Any]]:
         """Get full theme hierarchy with sub-themes and customer asks"""
@@ -172,21 +198,35 @@ class SubThemeService:
         ).order_by(SubTheme.sort_order).all()
 
     def list_sub_themes_with_counts(self, theme_id: UUID) -> List[Dict[str, Any]]:
-        """List sub-themes with customer ask counts"""
-        sub_themes = self.list_sub_themes(theme_id)
-        result = []
+        """List sub-themes with customer ask counts (optimized single query)"""
+        # Single query with LEFT JOIN and aggregation - eliminates N+1 problem
+        customer_ask_count_subq = (
+            self.db.query(
+                CustomerAsk.sub_theme_id,
+                func.count(CustomerAsk.id).label('customer_ask_count')
+            )
+            .group_by(CustomerAsk.sub_theme_id)
+            .subquery()
+        )
 
-        for sub_theme in sub_themes:
-            customer_ask_count = self.db.query(func.count(CustomerAsk.id)).filter(
-                CustomerAsk.sub_theme_id == sub_theme.id
-            ).scalar() or 0
+        results = (
+            self.db.query(
+                SubTheme,
+                func.coalesce(customer_ask_count_subq.c.customer_ask_count, 0).label('customer_ask_count')
+            )
+            .outerjoin(customer_ask_count_subq, SubTheme.id == customer_ask_count_subq.c.sub_theme_id)
+            .filter(SubTheme.theme_id == theme_id)
+            .order_by(SubTheme.sort_order)
+            .all()
+        )
 
-            result.append({
+        return [
+            {
                 **sub_theme.__dict__,
                 "customer_ask_count": customer_ask_count
-            })
-
-        return result
+            }
+            for sub_theme, customer_ask_count in results
+        ]
 
     def update_sub_theme(self, sub_theme_id: UUID, data: SubThemeUpdate) -> Optional[SubTheme]:
         """Update a sub-theme"""
@@ -279,22 +319,38 @@ class CustomerAskService:
         workspace_id: UUID,
         sub_theme_id: Optional[UUID] = None
     ) -> List[Dict[str, Any]]:
-        """List customer asks with message counts (via junction table for many-to-many)"""
-        customer_asks = self.list_customer_asks(workspace_id, sub_theme_id)
-        result = []
+        """List customer asks with message counts (optimized single query via junction table)"""
+        # Single query with LEFT JOIN and aggregation - eliminates N+1 problem
+        message_count_subq = (
+            self.db.query(
+                MessageCustomerAsk.customer_ask_id,
+                func.count(MessageCustomerAsk.id).label('message_count')
+            )
+            .group_by(MessageCustomerAsk.customer_ask_id)
+            .subquery()
+        )
 
-        for ca in customer_asks:
-            # Count via junction table (many-to-many)
-            message_count = self.db.query(func.count(MessageCustomerAsk.id)).filter(
-                MessageCustomerAsk.customer_ask_id == ca.id
-            ).scalar() or 0
+        query = (
+            self.db.query(
+                CustomerAsk,
+                func.coalesce(message_count_subq.c.message_count, 0).label('message_count')
+            )
+            .outerjoin(message_count_subq, CustomerAsk.id == message_count_subq.c.customer_ask_id)
+            .filter(CustomerAsk.workspace_id == workspace_id)
+        )
 
-            result.append({
+        if sub_theme_id:
+            query = query.filter(CustomerAsk.sub_theme_id == sub_theme_id)
+
+        results = query.order_by(CustomerAsk.last_mentioned_at.desc().nullsfirst()).all()
+
+        return [
+            {
                 **ca.__dict__,
                 "message_count": message_count
-            })
-
-        return result
+            }
+            for ca, message_count in results
+        ]
 
     def update_customer_ask(
         self,
@@ -390,7 +446,8 @@ class CustomerAskService:
         self,
         customer_ask_id: UUID,
         limit: int = 50,
-        offset: int = 0
+        offset: int = 0,
+        include_linked_asks: bool = True
     ) -> Dict[str, Any]:
         """
         Get mentions (messages) for a customer ask with AI insights.
@@ -398,34 +455,45 @@ class CustomerAskService:
         Returns messages linked to the customer ask along with their AI insights.
         Uses junction table (message_customer_asks) for many-to-many support.
 
+        OPTIMIZED v2: Uses window function for count, eliminates unnecessary queries.
+        - 1 query: Junction entries + count (using window function)
+        - 1 query: Messages with AI insights
+        - 1 query (optional): Other linked CustomerAsks (if include_linked_asks=True)
+
         Each mention includes:
         - customer_ask_id: The current context CustomerAsk (the one we're viewing)
         - customer_ask_ids: ALL CustomerAsk IDs this message is linked to
         - linked_customer_asks: Full info for UI display (names, sub_theme names)
         """
-        # Get total count via junction table
-        total_count = self.db.query(func.count(MessageCustomerAsk.id)).filter(
-            MessageCustomerAsk.customer_ask_id == customer_ask_id
-        ).scalar() or 0
+        from sqlalchemy import over
 
-        # Get message IDs linked to this CustomerAsk via junction table
-        junction_entries = self.db.query(MessageCustomerAsk).filter(
+        # OPTIMIZED: Single query with window function for total count
+        # Eliminates separate COUNT query
+        count_window = func.count(MessageCustomerAsk.id).over().label('total_count')
+
+        junction_query = self.db.query(
+            MessageCustomerAsk,
+            count_window
+        ).filter(
             MessageCustomerAsk.customer_ask_id == customer_ask_id
         ).order_by(
             MessageCustomerAsk.created_at.desc()
         ).offset(offset).limit(limit).all()
 
-        message_ids = [entry.message_id for entry in junction_entries]
-
-        if not message_ids:
+        if not junction_query:
             return {
                 "mentions": [],
-                "total": total_count,
+                "total": 0,
                 "has_more": False,
                 "next_cursor": None
             }
 
-        # Get messages with eager loading of AI insights
+        # Extract junction entries and total count from first row
+        junction_entries = [row[0] for row in junction_query]
+        total_count = junction_query[0][1] if junction_query else 0
+        message_ids = [entry.message_id for entry in junction_entries]
+
+        # Get messages with eager loading of AI insights (single query)
         messages = self.db.query(Message).options(
             joinedload(Message.ai_insights)
         ).filter(
@@ -434,6 +502,37 @@ class CustomerAskService:
 
         # Create a map for quick lookup
         message_map = {msg.id: msg for msg in messages}
+
+        # Initialize maps for linked CustomerAsks
+        message_to_ca_ids: Dict[UUID, List[UUID]] = {msg_id: [customer_ask_id] for msg_id in message_ids}
+        other_ca_map: Dict[UUID, CustomerAsk] = {}
+
+        # Only fetch linked CustomerAsks if needed (skip for faster initial load)
+        if include_linked_asks:
+            # OPTIMIZATION: Batch fetch ALL links for ALL messages in one query
+            all_links = self.db.query(MessageCustomerAsk).filter(
+                MessageCustomerAsk.message_id.in_(message_ids)
+            ).all()
+
+            # Build map: message_id -> list of customer_ask_ids
+            all_other_ca_ids = set()
+            for link in all_links:
+                if link.message_id not in message_to_ca_ids:
+                    message_to_ca_ids[link.message_id] = []
+                if link.customer_ask_id not in message_to_ca_ids[link.message_id]:
+                    message_to_ca_ids[link.message_id].append(link.customer_ask_id)
+                # Track other CustomerAsk IDs (not the current one) for batch loading
+                if link.customer_ask_id != customer_ask_id:
+                    all_other_ca_ids.add(link.customer_ask_id)
+
+            # OPTIMIZATION: Batch fetch ALL other CustomerAsks in one query
+            if all_other_ca_ids:
+                other_cas = self.db.query(CustomerAsk).options(
+                    joinedload(CustomerAsk.sub_theme)
+                ).filter(
+                    CustomerAsk.id.in_(list(all_other_ca_ids))
+                ).all()
+                other_ca_map = {ca.id: ca for ca in other_cas}
 
         # Transform to response format (maintaining junction entry order)
         mentions = []
@@ -461,35 +560,24 @@ class CustomerAskService:
                     created_at=latest_insight.created_at
                 )
 
-            # Get ALL CustomerAsk IDs this message is linked to
-            all_links = self.db.query(MessageCustomerAsk).filter(
-                MessageCustomerAsk.message_id == msg.id
-            ).all()
-            customer_ask_ids = [link.customer_ask_id for link in all_links]
+            # Get ALL CustomerAsk IDs this message is linked to (from pre-fetched map)
+            ca_ids_for_msg = message_to_ca_ids.get(msg.id, [customer_ask_id])
 
-            # Get full info for linked CustomerAsks (for UI display)
+            # Get full info for linked CustomerAsks (from pre-fetched map)
             linked_customer_asks = []
-            if len(customer_ask_ids) > 1:
-                # Only fetch other CustomerAsks if there's more than one link
-                other_ca_ids = [ca_id for ca_id in customer_ask_ids if ca_id != customer_ask_id]
-                if other_ca_ids:
-                    other_cas = self.db.query(CustomerAsk).options(
-                        joinedload(CustomerAsk.sub_theme)
-                    ).filter(
-                        CustomerAsk.id.in_(other_ca_ids)
-                    ).all()
-
-                    for ca in other_cas:
-                        linked_customer_asks.append(LinkedCustomerAsk(
-                            id=ca.id,
-                            name=ca.name,
-                            sub_theme_name=ca.sub_theme.name if ca.sub_theme else None
-                        ))
+            for ca_id in ca_ids_for_msg:
+                if ca_id != customer_ask_id and ca_id in other_ca_map:
+                    ca = other_ca_map[ca_id]
+                    linked_customer_asks.append(LinkedCustomerAsk(
+                        id=ca.id,
+                        name=ca.name,
+                        sub_theme_name=ca.sub_theme.name if ca.sub_theme else None
+                    ))
 
             mentions.append(MentionResponse(
                 id=msg.id,
                 customer_ask_id=customer_ask_id,  # Current context
-                customer_ask_ids=customer_ask_ids,  # All linked IDs
+                customer_ask_ids=ca_ids_for_msg,  # All linked IDs
                 linked_customer_asks=linked_customer_asks,  # Other CustomerAsks for UI
                 workspace_id=msg.workspace_id,
                 source=msg.source,

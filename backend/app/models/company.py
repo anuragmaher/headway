@@ -13,7 +13,7 @@ class Company(Base):
     __tablename__ = "companies"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    name = Column(String, unique=True, nullable=False, index=True)
+    name = Column(String, nullable=False, index=True)
     website = Column(String, nullable=True)  # Company website URL from onboarding
     size = Column(String, nullable=True)  # Team size from onboarding (e.g., "1-10", "11-50")
     domain = Column(String, nullable=True, index=True)  # company.com - extracted from email

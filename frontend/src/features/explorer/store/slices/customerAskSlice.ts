@@ -25,6 +25,9 @@ export interface CustomerAskState {
   totalCustomerAsks: number;
   isLoadingCustomerAsks: boolean;
   customerAsksError: string | null;
+  // Cache: subThemeId -> customer asks (prevents duplicate fetches)
+  customerAsksCache: Record<string, { items: CustomerAskItem[]; total: number }>;
+  currentSubThemeIdForAsks: string | null;
 
   // Mentions state
   mentions: MentionItem[];
@@ -34,6 +37,8 @@ export interface CustomerAskState {
   isLoadingMentions: boolean;
   isLoadingMoreMentions: boolean;
   mentionsError: string | null;
+  // Cache: customerAskId -> mentions (prevents duplicate fetches)
+  mentionsCache: Record<string, { items: MentionItem[]; total: number; hasMore: boolean; nextCursor: string | null }>;
 
   // Selected CustomerAsk
   selectedCustomerAskId: string | null;
@@ -46,6 +51,7 @@ export interface CustomerAskState {
 export interface CustomerAskActions {
   // CustomerAsk actions
   fetchCustomerAsks: (subThemeId: string) => Promise<void>;
+  prefetchCustomerAsks: (subThemeId: string) => Promise<void>;  // Cache-only, no visible state update
   selectCustomerAsk: (customerAskId: string | null) => void;
   updateCustomerAskStatus: (customerAskId: string, status: CustomerAskStatus) => Promise<void>;
   clearCustomerAsks: () => void;
@@ -53,6 +59,7 @@ export interface CustomerAskActions {
 
   // Mentions actions
   fetchMentions: (customerAskId: string) => Promise<void>;
+  prefetchMentions: (customerAskId: string) => Promise<void>;  // Cache-only, no visible state update
   fetchMoreMentions: () => Promise<void>;
   clearMentions: () => void;
   clearMentionsError: () => void;
@@ -70,6 +77,8 @@ const initialCustomerAskState: CustomerAskState = {
   totalCustomerAsks: 0,
   isLoadingCustomerAsks: false,
   customerAsksError: null,
+  customerAsksCache: {},
+  currentSubThemeIdForAsks: null,
 
   mentions: [],
   totalMentions: 0,
@@ -78,6 +87,7 @@ const initialCustomerAskState: CustomerAskState = {
   isLoadingMentions: false,
   isLoadingMoreMentions: false,
   mentionsError: null,
+  mentionsCache: {},
 
   selectedCustomerAskId: null,
   isMentionsPanelOpen: false,
@@ -93,7 +103,22 @@ export const createCustomerAskSlice: StateCreator<
   ...initialCustomerAskState,
 
   fetchCustomerAsks: async (subThemeId: string) => {
-    set({ isLoadingCustomerAsks: true, customerAsksError: null });
+    const { customerAsksCache } = get();
+
+    // OPTIMIZATION: Use cache if available (instant load for previously visited sub-themes)
+    if (customerAsksCache[subThemeId]) {
+      console.log('[Explorer] Using cached customer asks for sub-theme:', subThemeId);
+      const cached = customerAsksCache[subThemeId];
+      set({
+        customerAsks: cached.items,
+        totalCustomerAsks: cached.total,
+        currentSubThemeIdForAsks: subThemeId,
+        isLoadingCustomerAsks: false,
+      });
+      return;
+    }
+
+    set({ isLoadingCustomerAsks: true, customerAsksError: null, currentSubThemeIdForAsks: subThemeId });
 
     try {
       console.log('[Explorer] Fetching customer asks for sub-theme:', subThemeId);
@@ -117,15 +142,81 @@ export const createCustomerAskSlice: StateCreator<
 
       console.log('[Explorer] Received customer asks:', customerAsks.length, 'items');
 
-      set({
+      // Update state and cache
+      set((state) => ({
         customerAsks,
         totalCustomerAsks: response.total,
         isLoadingCustomerAsks: false,
-      });
+        customerAsksCache: {
+          ...state.customerAsksCache,
+          [subThemeId]: { items: customerAsks, total: response.total },
+        },
+      }));
+
+      // OPTIMIZATION: Prefetch first customer ask's mentions in background
+      // This makes the first customer ask click instant
+      if (customerAsks.length > 0) {
+        console.log('[Explorer] Prefetching mentions for first customer ask:', customerAsks[0].id);
+        // Fire and forget - don't await to avoid blocking
+        // Use prefetchMentions to only update cache, not visible state
+        get().prefetchMentions(customerAsks[0].id).catch((err) => {
+          console.warn('[Explorer] Failed to prefetch mentions:', err);
+        });
+      }
     } catch (error) {
       console.error('[Explorer] Failed to fetch customer asks:', error);
       const message = error instanceof Error ? error.message : 'Failed to fetch customer asks';
       set({ customerAsksError: message, isLoadingCustomerAsks: false });
+    }
+  },
+
+  // Prefetch customer asks - only updates cache, doesn't change visible state
+  prefetchCustomerAsks: async (subThemeId: string) => {
+    const { customerAsksCache } = get();
+
+    // Skip if already cached
+    if (customerAsksCache[subThemeId]) {
+      console.log('[Explorer] Customer asks already cached for sub-theme:', subThemeId);
+      return;
+    }
+
+    try {
+      console.log('[Explorer] Prefetching customer asks for sub-theme:', subThemeId);
+      const response = await themesApi.listCustomerAsks(subThemeId);
+
+      const customerAsks: CustomerAskItem[] = response.customer_asks.map((ca) => ({
+        id: ca.id,
+        subThemeId: ca.sub_theme_id,
+        workspaceId: ca.workspace_id,
+        name: ca.name,
+        description: ca.description || '',
+        urgency: ca.urgency,
+        status: ca.status,
+        matchConfidence: ca.match_confidence || 0,
+        mentionCount: ca.message_count || ca.mention_count || 0,
+        firstMentionedAt: ca.first_mentioned_at,
+        lastMentionedAt: ca.last_mentioned_at,
+        createdAt: ca.created_at,
+        updatedAt: ca.updated_at,
+      }));
+
+      console.log('[Explorer] Prefetch complete - cached', customerAsks.length, 'customer asks');
+
+      // Only update cache, NOT visible state
+      set((state) => ({
+        customerAsksCache: {
+          ...state.customerAsksCache,
+          [subThemeId]: { items: customerAsks, total: response.total },
+        },
+      }));
+
+      // Chain prefetch: also prefetch mentions for first customer ask
+      if (customerAsks.length > 0) {
+        get().prefetchMentions(customerAsks[0].id).catch(() => {});
+      }
+    } catch (error) {
+      console.warn('[Explorer] Prefetch customer asks failed:', error);
+      // Don't set error state for prefetch failures
     }
   },
 
@@ -186,6 +277,22 @@ export const createCustomerAskSlice: StateCreator<
   },
 
   fetchMentions: async (customerAskId: string) => {
+    const { mentionsCache } = get();
+
+    // OPTIMIZATION: Use cache if available (instant load for previously viewed customer asks)
+    if (mentionsCache[customerAskId]) {
+      console.log('[Explorer] Using cached mentions for customer ask:', customerAskId);
+      const cached = mentionsCache[customerAskId];
+      set({
+        mentions: cached.items,
+        totalMentions: cached.total,
+        hasMoreMentions: cached.hasMore,
+        mentionsNextCursor: cached.nextCursor,
+        isLoadingMentions: false,
+      });
+      return;
+    }
+
     set({ isLoadingMentions: true, mentionsError: null });
 
     try {
@@ -198,17 +305,65 @@ export const createCustomerAskSlice: StateCreator<
 
       console.log('[Explorer] Received mentions:', mentions.length, 'items');
 
-      set({
+      // Update state and cache
+      set((state) => ({
         mentions,
         totalMentions: response.total,
         hasMoreMentions: response.has_more,
         mentionsNextCursor: response.next_cursor,
         isLoadingMentions: false,
-      });
+        mentionsCache: {
+          ...state.mentionsCache,
+          [customerAskId]: {
+            items: mentions,
+            total: response.total,
+            hasMore: response.has_more,
+            nextCursor: response.next_cursor,
+          },
+        },
+      }));
     } catch (error) {
       console.error('[Explorer] Failed to fetch mentions:', error);
       const message = error instanceof Error ? error.message : 'Failed to fetch mentions';
       set({ mentionsError: message, isLoadingMentions: false });
+    }
+  },
+
+  // Prefetch mentions - only updates cache, doesn't change visible state
+  prefetchMentions: async (customerAskId: string) => {
+    const { mentionsCache } = get();
+
+    // Skip if already cached
+    if (mentionsCache[customerAskId]) {
+      console.log('[Explorer] Mentions already cached for customer ask:', customerAskId);
+      return;
+    }
+
+    try {
+      console.log('[Explorer] Prefetching mentions for customer ask:', customerAskId);
+      const response = await themesApi.getMentionsForCustomerAsk(customerAskId);
+
+      const mentions: MentionItem[] = response.mentions.map((m: Mention) =>
+        transformMention(m)
+      );
+
+      console.log('[Explorer] Prefetch complete - cached', mentions.length, 'mentions');
+
+      // Only update cache, NOT visible state
+      set((state) => ({
+        mentionsCache: {
+          ...state.mentionsCache,
+          [customerAskId]: {
+            items: mentions,
+            total: response.total,
+            hasMore: response.has_more,
+            nextCursor: response.next_cursor,
+          },
+        },
+      }));
+    } catch (error) {
+      console.warn('[Explorer] Prefetch mentions failed:', error);
+      // Don't set error state for prefetch failures
     }
   },
 
