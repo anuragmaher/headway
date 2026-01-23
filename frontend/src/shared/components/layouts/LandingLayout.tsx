@@ -6,7 +6,7 @@
 import { Box, Container, AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
-import { ROUTES } from '@/lib/constants/routes';
+import { ROUTES, EXTERNAL_LINKS } from '@/lib/constants/routes';
 
 interface LandingLayoutProps {
   children: React.ReactNode;
@@ -50,12 +50,13 @@ export function LandingLayout({
                   Sign In
                 </Button>
                 <Button
-                  component={RouterLink}
-                  to={ROUTES.REGISTER}
+                  href={EXTERNAL_LINKS.EARLY_ACCESS}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   variant="contained"
                   sx={{ ml: 1 }}
                 >
-                  Get Started
+                  Early Access
                 </Button>
               </>
             )}
