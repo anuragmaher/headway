@@ -199,12 +199,15 @@ class SubThemeService:
 
     def list_sub_themes_with_counts(self, theme_id: UUID) -> List[Dict[str, Any]]:
         """List sub-themes with customer ask counts (optimized single query)"""
-        # Single query with LEFT JOIN and aggregation - eliminates N+1 problem
+        # OPTIMIZATION: Filter subquery by theme_id first to reduce aggregation scope
+        # This avoids counting ALL customer_asks across ALL themes
         customer_ask_count_subq = (
             self.db.query(
                 CustomerAsk.sub_theme_id,
                 func.count(CustomerAsk.id).label('customer_ask_count')
             )
+            .join(SubTheme, CustomerAsk.sub_theme_id == SubTheme.id)
+            .filter(SubTheme.theme_id == theme_id)  # Filter early!
             .group_by(CustomerAsk.sub_theme_id)
             .subquery()
         )
@@ -320,15 +323,31 @@ class CustomerAskService:
         sub_theme_id: Optional[UUID] = None
     ) -> List[Dict[str, Any]]:
         """List customer asks with message counts (optimized single query via junction table)"""
-        # Single query with LEFT JOIN and aggregation - eliminates N+1 problem
-        message_count_subq = (
-            self.db.query(
-                MessageCustomerAsk.customer_ask_id,
-                func.count(MessageCustomerAsk.id).label('message_count')
+        # OPTIMIZATION: Build subquery with filtering to reduce aggregation scope
+        if sub_theme_id:
+            # When sub_theme_id is provided, only count messages for customer_asks in that sub_theme
+            message_count_subq = (
+                self.db.query(
+                    MessageCustomerAsk.customer_ask_id,
+                    func.count(MessageCustomerAsk.id).label('message_count')
+                )
+                .join(CustomerAsk, MessageCustomerAsk.customer_ask_id == CustomerAsk.id)
+                .filter(CustomerAsk.sub_theme_id == sub_theme_id)  # Filter early!
+                .group_by(MessageCustomerAsk.customer_ask_id)
+                .subquery()
             )
-            .group_by(MessageCustomerAsk.customer_ask_id)
-            .subquery()
-        )
+        else:
+            # Without sub_theme_id, count all for workspace
+            message_count_subq = (
+                self.db.query(
+                    MessageCustomerAsk.customer_ask_id,
+                    func.count(MessageCustomerAsk.id).label('message_count')
+                )
+                .join(CustomerAsk, MessageCustomerAsk.customer_ask_id == CustomerAsk.id)
+                .filter(CustomerAsk.workspace_id == workspace_id)
+                .group_by(MessageCustomerAsk.customer_ask_id)
+                .subquery()
+            )
 
         query = (
             self.db.query(

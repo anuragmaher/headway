@@ -18,7 +18,7 @@ import {
   Headphones as HeadphonesIcon,
   Tag as SlackIcon,
 } from '@mui/icons-material';
-import { Message, MessageType } from '../types';
+import { Message, MessageType } from '@/shared/types/AllMessagesTypes';
 
 /**
  * Format date/time according to user's locale and timezone

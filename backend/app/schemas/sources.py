@@ -47,6 +47,24 @@ class TriggerType(str, Enum):
 
 # ============ Message Schemas ============
 
+class MessageAIInsight(BaseModel):
+    """Embedded AI insight data for message list view"""
+    id: str
+    summary: Optional[str] = None
+    pain_point: Optional[str] = None
+    pain_point_quote: Optional[str] = None
+    feature_request: Optional[str] = None
+    customer_usecase: Optional[str] = None
+    sentiment: Optional[str] = None
+    keywords: List[str] = []
+    model_version: Optional[str] = None
+    tokens_used: Optional[int] = None
+    created_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
 class MessageResponse(BaseModel):
     """Response schema for a single message"""
     id: str
@@ -60,6 +78,7 @@ class MessageResponse(BaseModel):
     timestamp: datetime
     channel_name: Optional[str] = None
     is_processed: bool = False
+    ai_insights: Optional[MessageAIInsight] = None  # Included when fetching with insights
 
     class Config:
         from_attributes = True
@@ -186,7 +205,9 @@ class AIInsightsResponse(BaseModel):
     themes: Optional[List[AIInsightsTheme]] = None
     summary: Optional[str] = None
     pain_point: Optional[str] = None
+    pain_point_quote: Optional[str] = None  # Direct quote from message
     feature_request: Optional[str] = None
+    customer_usecase: Optional[str] = None  # Use case extracted by AI
     explanation: Optional[str] = None
     sentiment: Optional[str] = None
     urgency: Optional[str] = None

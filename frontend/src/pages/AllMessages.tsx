@@ -89,6 +89,7 @@ export function SourcesPage(): JSX.Element {
     preview: msg.preview || '',
     timestamp: msg.timestamp,
     source: msg.source as SourceType,
+    ai_insights: msg.ai_insights || null,
   }));
 
   // Data state for sync history

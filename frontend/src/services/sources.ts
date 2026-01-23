@@ -7,6 +7,20 @@ import api from './api';
 
 // ============ Types ============
 
+export interface MessageAIInsight {
+  id: string;
+  summary: string | null;
+  pain_point: string | null;
+  pain_point_quote: string | null;
+  feature_request: string | null;
+  customer_usecase: string | null;
+  sentiment: string | null;
+  keywords: string[];
+  model_version: string | null;
+  tokens_used: number | null;
+  created_at: string | null;
+}
+
 export interface Message {
   id: string;
   title: string | null;
@@ -19,6 +33,7 @@ export interface Message {
   timestamp: string;
   channel_name: string | null;
   is_processed: boolean;
+  ai_insights: MessageAIInsight | null;  // Included when fetching with insights
 }
 
 export interface MessageListResponse {
@@ -187,7 +202,9 @@ export interface AIInsightsResponse {
   themes: AIInsightsTheme[] | null;
   summary: string | null;
   pain_point: string | null;
+  pain_point_quote: string | null;  // Direct quote from message
   feature_request: string | null;
+  customer_usecase: string | null;  // Use case extracted by AI
   explanation: string | null;
   sentiment: string | null;
   urgency: string | null;

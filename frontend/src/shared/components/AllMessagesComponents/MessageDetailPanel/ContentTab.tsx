@@ -7,7 +7,7 @@
  * - Slack: Channel, message content
  */
 
-import { Box, Typography, alpha, useTheme, Chip, Divider, Link, CircularProgress } from '@mui/material';
+import { Box, Typography, alpha, useTheme, Chip, Divider, Link, CircularProgress, Theme } from '@mui/material';
 import {
   Email as EmailIcon,
   Person as PersonIcon,
@@ -23,6 +23,11 @@ import {
   AutoAwesome as InsightsIcon,
   Lightbulb as FeatureIcon,
   ReportProblem as PainPointIcon,
+  SentimentSatisfied as PositiveIcon,
+  SentimentNeutral as NeutralIcon,
+  SentimentDissatisfied as NegativeIcon,
+  FormatQuote as QuoteIcon,
+  WorkOutline as UseCaseIcon,
 } from '@mui/icons-material';
 import { MessageDetailsResponse, PartyInfo } from '@/services/sources';
 import { useMessageDetailsStore } from '@/shared/store/AllMessagesStore';
@@ -561,8 +566,36 @@ function SlackContent({ message }: { message: MessageDetailsResponse }): JSX.Ele
 }
 
 /**
+ * Get sentiment icon based on sentiment value
+ */
+const getSentimentIcon = (sentiment: string | null) => {
+  switch (sentiment?.toLowerCase()) {
+    case 'positive':
+      return <PositiveIcon sx={{ fontSize: 14 }} />;
+    case 'negative':
+      return <NegativeIcon sx={{ fontSize: 14 }} />;
+    default:
+      return <NeutralIcon sx={{ fontSize: 14 }} />;
+  }
+};
+
+/**
+ * Get sentiment color based on sentiment value
+ */
+const getSentimentColor = (sentiment: string | null, theme: Theme): string => {
+  switch (sentiment?.toLowerCase()) {
+    case 'positive':
+      return theme.palette.success.main;
+    case 'negative':
+      return theme.palette.error.main;
+    default:
+      return theme.palette.text.secondary;
+  }
+};
+
+/**
  * AIInsightsTab - Dedicated tab for AI-generated insights
- * Shows Classified Themes, Why This Classification, Feature Request, and Pain Point
+ * Shows Summary, Pain Point with Quote, Feature Request, Use Case, and Keywords
  */
 export function AIInsightsTab(): JSX.Element {
   const theme = useTheme();
@@ -592,74 +625,57 @@ export function AIInsightsTab(): JSX.Element {
     );
   }
 
-  const { summary, pain_point, feature_request, themes, keywords } = aiInsights;
+  const { summary, pain_point, pain_point_quote, feature_request, customer_usecase, sentiment, keywords } = aiInsights;
+  const sentimentColor = getSentimentColor(sentiment, theme);
 
   return (
     <Box>
-      {/* Classified Themes Section */}
-      {themes && themes.length > 0 && (
-        <Box sx={{ mb: 3 }}>
+      {/* Header with AI Insights label and Sentiment Badge */}
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+          <InsightsIcon sx={{ fontSize: 18, color: theme.palette.primary.main }} />
           <Typography
             sx={{
-              fontSize: '0.7rem',
-              color: theme.palette.text.disabled,
+              fontSize: '0.85rem',
               fontWeight: 600,
-              letterSpacing: '0.5px',
-              mb: 1,
+              color: theme.palette.primary.main,
             }}
           >
-            CLASSIFIED THEMES
+            AI INSIGHTS
           </Typography>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {themes.map((t, idx) => (
-              <Chip
-                key={idx}
-                label={
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-                    <span>{t.theme_name}</span>
-                    {t.confidence && (
-                      <Typography
-                        component="span"
-                        sx={{
-                          fontSize: '0.65rem',
-                          color: theme.palette.primary.main,
-                          fontWeight: 600,
-                        }}
-                      >
-                        {Math.round(t.confidence * 100)}%
-                      </Typography>
-                    )}
-                  </Box>
-                }
-                size="small"
-                sx={{
-                  height: 28,
-                  fontSize: '0.8rem',
-                  fontWeight: 500,
-                  bgcolor: alpha(theme.palette.primary.main, 0.08),
-                  color: theme.palette.primary.main,
-                  borderRadius: 1,
-                  '& .MuiChip-label': { px: 1.25 },
-                }}
-              />
-            ))}
-          </Box>
         </Box>
-      )}
+        {sentiment && (
+          <Chip
+            icon={getSentimentIcon(sentiment)}
+            label={sentiment.charAt(0).toUpperCase() + sentiment.slice(1)}
+            size="small"
+            sx={{
+              height: 24,
+              fontSize: '0.75rem',
+              fontWeight: 500,
+              bgcolor: alpha(sentimentColor, 0.1),
+              color: sentimentColor,
+              borderRadius: 1,
+              '& .MuiChip-icon': { color: sentimentColor, ml: 0.5 },
+              '& .MuiChip-label': { px: 0.75 },
+            }}
+          />
+        )}
+      </Box>
 
-      {/* Why This Classification (Summary) */}
+      {/* Summary */}
       {summary && (
-        <Box sx={{ mb: 3 }}>
+        <Box sx={{ mb: 2.5 }}>
           <Typography
             sx={{
               fontSize: '0.7rem',
               color: theme.palette.text.disabled,
               fontWeight: 600,
               letterSpacing: '0.5px',
-              mb: 1,
+              mb: 0.75,
             }}
           >
-            WHY THIS CLASSIFICATION
+            Summary
           </Typography>
           <Typography
             sx={{
@@ -673,19 +689,60 @@ export function AIInsightsTab(): JSX.Element {
         </Box>
       )}
 
+      {/* Pain Point */}
+      {pain_point && (
+        <Box sx={{ mb: 2.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.75 }}>
+            <PainPointIcon sx={{ fontSize: 14, color: theme.palette.warning.main }} />
+            <Typography
+              sx={{
+                fontSize: '0.7rem',
+                color: theme.palette.warning.main,
+                fontWeight: 600,
+                letterSpacing: '0.5px',
+              }}
+            >
+              Pain Point
+            </Typography>
+          </Box>
+          <Typography
+            sx={{
+              fontSize: '0.85rem',
+              lineHeight: 1.6,
+              color: theme.palette.text.primary,
+            }}
+          >
+            {pain_point}
+          </Typography>
+          {/* Pain Point Quote */}
+          {pain_point_quote && (
+            <Box
+              sx={{
+                mt: 1,
+                pl: 1.5,
+                borderLeft: `2px solid ${alpha(theme.palette.text.secondary, 0.3)}`,
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: '0.8rem',
+                  lineHeight: 1.5,
+                  color: theme.palette.text.secondary,
+                  fontStyle: 'italic',
+                }}
+              >
+                "{pain_point_quote}"
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      )}
+
       {/* Feature Request */}
       {feature_request && (
-        <Box
-          sx={{
-            mb: 2,
-            p: 1.5,
-            borderRadius: 1.5,
-            bgcolor: alpha(theme.palette.info.main, 0.06),
-            borderLeft: `3px solid ${theme.palette.info.main}`,
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 0.75 }}>
-            <FeatureIcon sx={{ fontSize: 16, color: theme.palette.info.main }} />
+        <Box sx={{ mb: 2.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.75 }}>
+            <FeatureIcon sx={{ fontSize: 14, color: theme.palette.info.main }} />
             <Typography
               sx={{
                 fontSize: '0.7rem',
@@ -694,7 +751,7 @@ export function AIInsightsTab(): JSX.Element {
                 letterSpacing: '0.5px',
               }}
             >
-              FEATURE REQUEST
+              Feature Request
             </Typography>
           </Box>
           <Typography
@@ -709,28 +766,20 @@ export function AIInsightsTab(): JSX.Element {
         </Box>
       )}
 
-      {/* Pain Point */}
-      {pain_point && (
-        <Box
-          sx={{
-            mb: 2,
-            p: 1.5,
-            borderRadius: 1.5,
-            bgcolor: alpha(theme.palette.warning.main, 0.06),
-            borderLeft: `3px solid ${theme.palette.warning.main}`,
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 0.75 }}>
-            <PainPointIcon sx={{ fontSize: 16, color: theme.palette.warning.main }} />
+      {/* Use Case */}
+      {customer_usecase && (
+        <Box sx={{ mb: 2.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.75 }}>
+            <UseCaseIcon sx={{ fontSize: 14, color: theme.palette.secondary.main }} />
             <Typography
               sx={{
                 fontSize: '0.7rem',
-                color: theme.palette.warning.main,
+                color: theme.palette.secondary.main,
                 fontWeight: 600,
                 letterSpacing: '0.5px',
               }}
             >
-              PAIN POINT
+              Use Case
             </Typography>
           </Box>
           <Typography
@@ -740,24 +789,24 @@ export function AIInsightsTab(): JSX.Element {
               color: theme.palette.text.primary,
             }}
           >
-            {pain_point}
+            {customer_usecase}
           </Typography>
         </Box>
       )}
 
       {/* Keywords */}
       {keywords && keywords.length > 0 && (
-        <Box sx={{ mt: 3 }}>
+        <Box sx={{ mt: 2.5 }}>
           <Typography
             sx={{
               fontSize: '0.7rem',
               color: theme.palette.text.disabled,
               fontWeight: 600,
               letterSpacing: '0.5px',
-              mb: 1,
+              mb: 0.75,
             }}
           >
-            KEYWORDS
+            Keywords
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
             {keywords.map((keyword, idx) => (

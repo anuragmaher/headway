@@ -4,7 +4,7 @@
  *
  * Structure: Themes -> SubThemes -> CustomerAsks -> Mentions (slide-in panel)
  */
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Box, CircularProgress, Alert, AlertTitle, useTheme } from '@mui/material';
 import { ThemesColumn } from './ThemesColumn';
 import { SubThemesColumn } from './SubThemesColumn';
@@ -29,26 +29,35 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
   const {
     isInitializing,
     isInitialized,
-    themes,
     themesError,
     initialize,
-    reset,
     clearThemesError,
     getWorkspaceId,
   } = useExplorerStore();
 
+  // Ref to prevent duplicate initialization calls
+  const initCalledRef = useRef(false);
+
   // Initialize keyboard navigation
   useExplorerKeyboard();
 
-  // Initialize on mount - fetch themes if we have a workspace and haven't initialized yet
-  // Only runs once per mount cycle to prevent infinite loops on API errors
+  // Initialize on mount - fetch themes if we have a workspace
+  // Uses ref to ensure we only call initialize() ONCE per mount
   useEffect(() => {
-    const workspaceId = getWorkspaceId();
-
-    // If we have a workspace and not currently loading/initialized, initialize
-    if (workspaceId && !isInitializing && !isInitialized) {
-      initialize();
+    // Skip if already called or already initialized/initializing
+    if (initCalledRef.current || isInitialized || isInitializing) {
+      return;
     }
+
+    const workspaceId = getWorkspaceId();
+    if (!workspaceId) {
+      return;
+    }
+
+    // Mark as called immediately to prevent race conditions
+    initCalledRef.current = true;
+    console.log('[ThemeExplorer] Initializing (one-time call)');
+    initialize();
   }, [isInitialized, isInitializing, initialize, getWorkspaceId]);
 
   // Loading state
