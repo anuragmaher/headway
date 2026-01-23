@@ -1,3 +1,5 @@
+from typing import List, TYPE_CHECKING
+
 from sqlalchemy import Column, String, Integer, Float, DateTime, ForeignKey, Index
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
@@ -5,6 +7,9 @@ from sqlalchemy.sql import func
 import uuid
 
 from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.models.message import Message
 
 
 class CustomerAsk(Base):
@@ -43,9 +48,28 @@ class CustomerAsk(Base):
     # Relationships
     sub_theme = relationship("SubTheme", back_populates="customer_asks")
     workspace = relationship("Workspace", back_populates="customer_asks")
-    messages = relationship("Message", back_populates="customer_ask")
+    messages = relationship("Message", back_populates="customer_ask")  # DEPRECATED - use message_links
     ai_insights = relationship("AIInsight", back_populates="customer_ask")
     extracted_facts = relationship("ExtractedFact", back_populates="customer_ask")
+
+    # NEW: Many-to-many relationship via junction table
+    # One CustomerAsk can have multiple messages linked (mentions)
+    message_links = relationship(
+        "MessageCustomerAsk",
+        back_populates="customer_ask",
+        cascade="all, delete-orphan",
+        lazy="dynamic"  # Use dynamic for efficient querying
+    )
+
+    @property
+    def linked_messages(self) -> List["Message"]:
+        """Get all linked Messages via junction table."""
+        return [link.message for link in self.message_links]
+
+    @property
+    def linked_message_count(self) -> int:
+        """Get count of linked messages via junction table."""
+        return self.message_links.count()
 
     # Indexes for performance
     __table_args__ = (

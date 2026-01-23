@@ -1,14 +1,14 @@
 """
-Tier-1 AI Classification Task - State-Driven Execution
+Tier-1 AI Classification Task - THE ONLY FILTER POINT
 
 Low-cost AI classification to determine if content contains feature requests.
 This is a binary classification with confidence score - no extraction yet.
 
-State-Driven Model:
-- For NormalizedEvents: processing_stage='chunked' AND classified_at IS NULL AND is_chunked=False
-- For EventChunks: processing_stage='pending' AND classified_at IS NULL
-- Uses row-level locking to prevent duplicate processing
-- Sets classified_at timestamp on completion for idempotent execution
+This is the ONLY place messages are filtered out:
+- Score >= 6.0 proceeds to Tier-2 extraction (ALL further processing)
+- Score < 6.0 stops processing (marked as completed)
+
+No locking needed since we run a single worker.
 """
 
 import logging
@@ -25,11 +25,6 @@ from app.sync_engine.tasks.base import (
     engine,
     cleanup_after_task,
     test_db_connection,
-)
-from app.sync_engine.tasks.ai_pipeline.locking import (
-    acquire_rows_for_processing,
-    mark_row_processed,
-    mark_row_error,
 )
 
 logger = logging.getLogger(__name__)
@@ -64,16 +59,9 @@ def classify_events(
     """
     Classify chunked events using Tier-1 AI.
 
-    State-Driven Execution:
-    - For non-chunked events: processing_stage='chunked' AND classified_at IS NULL AND is_chunked=False
-    - For chunks: processing_stage='pending' AND classified_at IS NULL
-    - Acquires row-level locks to prevent race conditions
-    - Sets classified_at timestamp on completion (idempotent marker)
-
-    Scoring:
-    - Uses single score metric (0-10)
-    - Score >= 6 proceeds to extraction
-    - Score < 6 is skipped
+    THIS IS THE ONLY FILTER POINT:
+    - Score >= 6 proceeds to Tier-2 extraction (all further processing happens)
+    - Score < 6 stops here (marked completed)
 
     Args:
         workspace_id: Optional workspace to limit processing
@@ -83,11 +71,8 @@ def classify_events(
     Returns:
         Dict with processing stats
     """
-    import uuid as uuid_module
-    lock_token = uuid_module.uuid4()
-
     try:
-        logger.info(f"🔍 Starting Tier-1 classification task (workspace={workspace_id}, lock={lock_token})")
+        logger.info(f"🔍 Starting Tier-1 classification task (workspace={workspace_id})")
 
         with Session(engine) as db:
             if not test_db_connection(db):
@@ -103,7 +88,7 @@ def classify_events(
 
             # Process non-chunked events first
             non_chunked_stats = _classify_non_chunked_events(
-                db, ai_service, workspace_id, batch_size // 2, min_score, lock_token
+                db, ai_service, workspace_id, batch_size // 2, min_score
             )
             total_classified += non_chunked_stats["classified"]
             total_relevant += non_chunked_stats["relevant"]
@@ -112,7 +97,7 @@ def classify_events(
 
             # Process chunks
             chunk_stats = _classify_chunks(
-                db, ai_service, workspace_id, batch_size // 2, min_score, lock_token
+                db, ai_service, workspace_id, batch_size // 2, min_score
             )
             total_classified += chunk_stats["classified"]
             total_relevant += chunk_stats["relevant"]
@@ -166,52 +151,34 @@ def _classify_non_chunked_events(
     workspace_id: Optional[str],
     batch_size: int,
     min_score: float,
-    lock_token,
 ) -> Dict[str, int]:
     """
     Classify events that weren't chunked (small enough to process directly).
 
-    State-Driven filter:
-    - processing_stage='chunked' (ready for classification)
-    - classified_at IS NULL (not yet classified - idempotent)
-    - is_chunked=False (doesn't have chunks)
-
-    Scoring:
+    THIS IS THE ONLY FILTER:
     - Score >= min_score (default 6) proceeds to extraction
-    - Score < min_score is skipped
+    - Score < min_score stops here
     """
-    import uuid as uuid_module
     stats = {"classified": 0, "relevant": 0, "skipped": 0, "errors": 0}
 
-    # Build state-driven filter conditions
-    # Removed skip_ai_processing filter - only use score-based filtering
-    filter_conditions = [
+    # Build query
+    query = db.query(NormalizedEvent).filter(
         NormalizedEvent.processing_stage == "chunked",
         NormalizedEvent.classified_at.is_(None),
         NormalizedEvent.is_chunked == False,
         NormalizedEvent.retry_count < MAX_RETRIES,
-    ]
+    )
 
     if workspace_id:
-        filter_conditions.append(
-            NormalizedEvent.workspace_id == UUID(workspace_id)
-        )
+        query = query.filter(NormalizedEvent.workspace_id == UUID(workspace_id))
 
-    # Acquire rows with row-level locking
-    events = acquire_rows_for_processing(
-        db=db,
-        model=NormalizedEvent,
-        filter_conditions=filter_conditions,
-        order_by=NormalizedEvent.created_at.asc(),
-        batch_size=batch_size,
-        lock_token=lock_token,
-    )
+    events = query.order_by(NormalizedEvent.created_at.asc()).limit(batch_size).all()
 
     if not events:
         logger.info("No non-chunked events to classify")
         return stats
 
-    logger.info(f"Acquired {len(events)} non-chunked events for classification")
+    logger.info(f"Processing {len(events)} non-chunked events for classification")
 
     for event in events:
         try:
@@ -222,41 +189,28 @@ def _classify_non_chunked_events(
                 actor_role=event.actor_role,
             )
 
+            now = datetime.now(timezone.utc)
+
             # Update event with score results
-            # Store score in classification_confidence field (normalized to 0-1)
             event.classification_confidence = result.confidence  # score/10
-            event.classification_timestamp = datetime.now(timezone.utc)
+            event.classified_at = now
 
             # Single decision: score >= min_score proceeds to extraction
             if result.score >= min_score:
                 event.is_feature_relevant = True
-                mark_row_processed(
-                    row=event,
-                    stage="classified",
-                    timestamp_field="classified_at",
-                    lock_token=lock_token,
-                )
+                event.processing_stage = "classified"
                 stats["relevant"] += 1
             else:
                 event.is_feature_relevant = False
-                mark_row_processed(
-                    row=event,
-                    stage="completed",
-                    timestamp_field="classified_at",
-                    lock_token=lock_token,
-                )
+                event.processing_stage = "completed"
                 stats["skipped"] += 1
 
             stats["classified"] += 1
 
         except Exception as e:
             logger.error(f"Error classifying event {event.id}: {e}")
-            mark_row_error(
-                row=event,
-                error_message=f"Classification error: {str(e)[:400]}",
-                lock_token=lock_token,
-                increment_retry=True,
-            )
+            event.retry_count = (event.retry_count or 0) + 1
+            event.processing_error = f"Classification error: {str(e)[:400]}"
             stats["errors"] += 1
 
     return stats
@@ -268,50 +222,33 @@ def _classify_chunks(
     workspace_id: Optional[str],
     batch_size: int,
     min_score: float,
-    lock_token,
 ) -> Dict[str, int]:
     """
     Classify event chunks.
 
-    State-Driven filter:
-    - processing_stage='pending' (ready for classification)
-    - classified_at IS NULL (not yet classified - idempotent)
-
-    Scoring:
+    THIS IS THE ONLY FILTER:
     - Score >= min_score (default 6) proceeds to extraction
-    - Score < min_score is skipped
+    - Score < min_score stops here
     """
-    import uuid as uuid_module
     stats = {"classified": 0, "relevant": 0, "skipped": 0, "errors": 0}
 
-    # Build state-driven filter conditions
-    # Removed skip_extraction filter - only use score-based filtering
-    filter_conditions = [
+    # Build query
+    query = db.query(EventChunk).filter(
         EventChunk.processing_stage == "pending",
         EventChunk.classified_at.is_(None),
         EventChunk.retry_count < MAX_RETRIES,
-    ]
+    )
 
     if workspace_id:
-        filter_conditions.append(
-            EventChunk.workspace_id == UUID(workspace_id)
-        )
+        query = query.filter(EventChunk.workspace_id == UUID(workspace_id))
 
-    # Acquire rows with row-level locking
-    chunks = acquire_rows_for_processing(
-        db=db,
-        model=EventChunk,
-        filter_conditions=filter_conditions,
-        order_by=EventChunk.created_at.asc(),
-        batch_size=batch_size,
-        lock_token=lock_token,
-    )
+    chunks = query.order_by(EventChunk.created_at.asc()).limit(batch_size).all()
 
     if not chunks:
         logger.info("No chunks to classify")
         return stats
 
-    logger.info(f"Acquired {len(chunks)} chunks for classification")
+    logger.info(f"Processing {len(chunks)} chunks for classification")
 
     for chunk in chunks:
         try:
@@ -325,40 +262,28 @@ def _classify_chunks(
                 actor_role=parent_event.actor_role if parent_event else None,
             )
 
+            now = datetime.now(timezone.utc)
+
             # Update chunk with score results
             chunk.classification_confidence = result.confidence  # score/10
-            chunk.classification_timestamp = datetime.now(timezone.utc)
+            chunk.classified_at = now
 
             # Single decision: score >= min_score proceeds to extraction
             if result.score >= min_score:
                 chunk.is_feature_relevant = True
-                mark_row_processed(
-                    row=chunk,
-                    stage="classified",
-                    timestamp_field="classified_at",
-                    lock_token=lock_token,
-                )
+                chunk.processing_stage = "classified"
                 stats["relevant"] += 1
             else:
                 chunk.is_feature_relevant = False
-                mark_row_processed(
-                    row=chunk,
-                    stage="completed",
-                    timestamp_field="classified_at",
-                    lock_token=lock_token,
-                )
+                chunk.processing_stage = "completed"
                 stats["skipped"] += 1
 
             stats["classified"] += 1
 
         except Exception as e:
             logger.error(f"Error classifying chunk {chunk.id}: {e}")
-            mark_row_error(
-                row=chunk,
-                error_message=f"Classification error: {str(e)[:400]}",
-                lock_token=lock_token,
-                increment_retry=True,
-            )
+            chunk.retry_count = (chunk.retry_count or 0) + 1
+            chunk.processing_error = f"Classification error: {str(e)[:400]}"
             stats["errors"] += 1
 
     # Update parent events that have all chunks classified
@@ -418,6 +343,4 @@ def _update_parent_events_after_classification(
             if max_confidence:
                 event.classification_confidence = max_confidence[0]
 
-            event.classification_timestamp = now
             event.classified_at = now
-            event.updated_at = now

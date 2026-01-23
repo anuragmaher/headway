@@ -10,6 +10,7 @@ import { StateCreator } from 'zustand';
 import type {
   CustomerAskItem,
   MentionItem,
+  LinkedCustomerAsk,
   ExplorerFilters,
   SortOption,
   CustomerAskStatus,
@@ -278,11 +279,24 @@ export const createCustomerAskSlice: StateCreator<
 
 /**
  * Transform API mention to MentionItem format
+ *
+ * Handles many-to-many: one message can link to multiple CustomerAsks
  */
 function transformMention(mention: Mention): MentionItem {
+  // Transform linked customer asks from API (snake_case) to frontend (camelCase)
+  const linkedCustomerAsks: LinkedCustomerAsk[] = (mention.linked_customer_asks || []).map(
+    (lca) => ({
+      id: lca.id,
+      name: lca.name,
+      subThemeName: lca.sub_theme_name,
+    })
+  );
+
   return {
     id: mention.id,
     customerAskId: mention.customer_ask_id,
+    customerAskIds: mention.customer_ask_ids || [],  // NEW: All linked CustomerAsk IDs
+    linkedCustomerAsks,  // NEW: Other CustomerAsks for UI navigation
     workspaceId: mention.workspace_id,
     source: mention.source,
     externalId: mention.external_id,

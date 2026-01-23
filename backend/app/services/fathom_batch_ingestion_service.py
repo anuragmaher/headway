@@ -14,7 +14,7 @@ Usage:
     result = await fathom_batch_ingestion_service.ingest_sessions(
         db=db,
         workspace_id="...",
-        limit=50,
+        limit=100,
         days_back=1
     )
 """
@@ -31,7 +31,6 @@ from sqlalchemy import and_
 
 from app.models.workspace import Workspace
 from app.models.workspace_connector import WorkspaceConnector
-from app.models.integration import Integration
 from app.models.customer import Customer
 from app.services.batch_db_service import batch_db_service
 
@@ -56,7 +55,7 @@ class FathomBatchIngestionService:
         self,
         db: Session,
         workspace_id: str,
-        limit: int = 50,
+        limit: int = 100,
         days_back: int = 1,
         min_duration_seconds: int = 0
     ) -> Dict[str, int]:
@@ -93,8 +92,18 @@ class FathomBatchIngestionService:
                 logger.error(f"Fathom credentials not found for workspace {workspace_id}")
                 return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
-            # Get or create integration record
-            integration = self._get_or_create_integration(db, workspace_id)
+            # Get connector record
+            connector = db.query(WorkspaceConnector).filter(
+                and_(
+                    WorkspaceConnector.workspace_id == UUID(workspace_id),
+                    WorkspaceConnector.connector_type == "fathom",
+                    WorkspaceConnector.is_active == True
+                )
+            ).first()
+
+            if not connector:
+                logger.error(f"Fathom connector not found for workspace {workspace_id}")
+                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
             # Calculate date range
             to_date = datetime.now(timezone.utc)
@@ -134,13 +143,13 @@ class FathomBatchIngestionService:
                 db=db,
                 messages=messages,
                 workspace_id=workspace_id,
-                integration_id=str(integration.id),
+                connector_id=str(connector.id),
                 source="fathom"
             )
 
-            # Update integration sync status
-            integration.last_synced_at = datetime.now(timezone.utc)
-            integration.sync_status = "success"
+            # Update connector sync status
+            connector.last_synced_at = datetime.now(timezone.utc)
+            connector.sync_status = "success"
             db.commit()
 
             logger.info(
@@ -178,29 +187,6 @@ class FathomBatchIngestionService:
         return {
             "api_token": api_token
         }
-
-    def _get_or_create_integration(self, db: Session, workspace_id: str) -> Integration:
-        """Get or create Fathom integration record."""
-        integration = db.query(Integration).filter(
-            and_(
-                Integration.workspace_id == UUID(workspace_id),
-                Integration.provider == "fathom"
-            )
-        ).first()
-
-        if not integration:
-            integration = Integration(
-                name="Fathom",
-                provider="fathom",
-                is_active=True,
-                workspace_id=UUID(workspace_id),
-                provider_metadata={"ingestion_method": "api"},
-                sync_status="pending"
-            )
-            db.add(integration)
-            db.flush()
-
-        return integration
 
     def _fetch_sessions(
         self,

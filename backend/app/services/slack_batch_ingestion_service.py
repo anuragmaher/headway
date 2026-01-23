@@ -209,7 +209,7 @@ class SlackBatchIngestionService:
             messages = await slack_service.get_channel_messages(
                 token=connector.access_token,
                 channel_id=channel_id,
-                limit=100
+                limit=200
             )
 
             if not messages:

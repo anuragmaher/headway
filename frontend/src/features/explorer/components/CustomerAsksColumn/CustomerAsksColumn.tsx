@@ -15,11 +15,11 @@ import {
 } from '../../store';
 
 interface CustomerAsksColumnProps {
-  minWidth?: number;
+  isPanelOpen?: boolean;
 }
 
 export const CustomerAsksColumn: React.FC<CustomerAsksColumnProps> = ({
-  minWidth = 400,
+  isPanelOpen = false,
 }) => {
   const theme = useTheme();
   const customerAsks = useCustomerAsks();
@@ -41,19 +41,22 @@ export const CustomerAsksColumn: React.FC<CustomerAsksColumnProps> = ({
     }
   };
 
+  // Common width styling with transition
+  const columnSx = {
+    width: isPanelOpen ? '50%' : '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
+    transition: 'width 0.25s ease-out',
+    overflow: 'hidden',
+    minWidth: 0,
+  };
+
   // Placeholder when nothing selected
   if (!selectedTheme) {
     return (
-      <Box
-        sx={{
-          flex: 1,
-          minWidth,
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
-        }}
-      >
+      <Box sx={columnSx}>
         <Box
           sx={{
             px: 2,
@@ -99,16 +102,7 @@ export const CustomerAsksColumn: React.FC<CustomerAsksColumnProps> = ({
   // Placeholder when theme selected but no sub-theme
   if (!selectedSubTheme) {
     return (
-      <Box
-        sx={{
-          flex: 1,
-          minWidth,
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
-        }}
-      >
+      <Box sx={columnSx}>
         <Box
           sx={{
             px: 2,
@@ -152,16 +146,7 @@ export const CustomerAsksColumn: React.FC<CustomerAsksColumnProps> = ({
   }
 
   return (
-    <Box
-      sx={{
-        flex: 1,
-        minWidth,
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
-      }}
-    >
+    <Box sx={columnSx}>
       {/* Header - Shows selected sub-theme name */}
       <Box
         sx={{

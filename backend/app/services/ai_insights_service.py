@@ -36,7 +36,7 @@ from app.core.config import settings
 logger = logging.getLogger(__name__)
 
 # Prompt version for tracking - bump when prompts change
-AI_INSIGHTS_PROMPT_VERSION = "v1.2.0"  # Added customer_usecase and improved pain_point extraction
+AI_INSIGHTS_PROMPT_VERSION = "v1.4.0"  # Made all core fields REQUIRED (not optional)
 
 
 @dataclass
@@ -44,8 +44,9 @@ class AIInsightsResult:
     """Result from AI insights generation."""
     themes: List[Dict[str, Any]] = field(default_factory=list)  # [{theme_id, theme_name, confidence, explanation}]
     summary: Optional[str] = None
-    pain_point: Optional[str] = None  # Customer's exact words describing their problem
-    feature_request: Optional[str] = None
+    pain_point: Optional[str] = None  # Description of the pain point
+    pain_point_quote: Optional[str] = None  # EXACT verbatim quote from customer
+    feature_request: Optional[str] = None  # The specific feature being requested
     customer_usecase: Optional[str] = None  # What the customer is trying to accomplish
     explanation: Optional[str] = None
     sentiment: Optional[str] = None  # positive, negative, neutral
@@ -82,28 +83,48 @@ THEME MATCHING CRITERIA - BE STRICT:
 - If someone discusses a general topic (like "AI" or "integrations") WITHOUT requesting/suggesting anything specific about YOUR PRODUCT's capabilities in that area, do NOT classify under that theme
 - Example: A call transcript discussing "AI in the industry" is NOT about "AI Features" theme unless they specifically request AI features for YOUR product
 
-PAIN POINT EXTRACTION RULES - INCLUDE EXACT QUOTES:
-- Extract the EXACT words and phrases the customer used to describe their problem
-- Use quotation marks around the customer's actual language
-- Include the specific frustration, difficulty, or challenge they mentioned
-- Format: "Customer said: '[exact quote]'" followed by brief context if needed
-- If multiple pain points exist, combine them with the most important quotes
-- Example: "Customer said: 'I spend hours every week manually exporting data' - frustrated with lack of automation"
+=== REQUIRED FIELDS - YOU MUST ALWAYS PROVIDE THESE (NEVER null) ===
 
-CUSTOMER USE CASE EXTRACTION RULES:
-- Identify what the customer is trying to ACCOMPLISH or ACHIEVE
-- Focus on their business goal, workflow, or task they're working on
-- Be specific about the context and scenario
-- Examples: "Generating weekly sales reports for management", "Onboarding new team members", "Tracking customer support tickets across channels"
-- If no clear use case is mentioned, return null
+FEATURE REQUEST (REQUIRED):
+- You MUST always extract a feature_request from the message
+- Even if indirect, identify what the customer is asking for or would benefit from
+- If truly nothing, use "General feedback - no specific feature request"
 
-KEYWORD EXTRACTION RULES:
-- Extract 3-8 specific, relevant keywords that capture the message's core topics
+SUMMARY (REQUIRED):
+- You MUST always provide a 1-2 sentence summary
+- Focus on the customer's main point, request, or feedback
+
+PAIN POINT (REQUIRED):
+- You MUST always describe what the customer is struggling with
+- If no explicit pain point, infer from context what problem they're trying to solve
+- Be specific: "Manual data export is time-consuming" not "Has some issues"
+
+PAIN POINT QUOTE (REQUIRED):
+- You MUST always provide a VERBATIM quote from the customer's actual words
+- Copy the EXACT phrase that best captures their pain point or request
+- Include enough context (a full sentence or two)
+- Do NOT paraphrase - use their actual language word-for-word
+
+CUSTOMER USE CASE (REQUIRED):
+- You MUST always identify what the customer is trying to accomplish
+- Focus on their business goal, workflow, or task
+- Examples: "Generating weekly sales reports", "Onboarding new team members", "Tracking support tickets"
+
+SENTIMENT (REQUIRED):
+- You MUST classify as one of: positive, negative, or neutral
+- Consider tone, word choice, and overall impression
+
+KEYWORDS (REQUIRED):
+- You MUST extract 3-8 specific, relevant keywords
 - Focus on PRODUCT-RELATED terms: features, capabilities, pain points, use cases
-- Avoid generic words like "want", "need", "please", "would", "could", "like", "think"
-- Prioritize nouns and noun phrases over verbs
-- Include any specific product/feature names mentioned
-- Keywords should be useful for searching and categorizing feedback
+- Avoid generic words like "want", "need", "please", "would", "could"
+- Include product/feature names mentioned
+- Keywords should be useful for searching and categorizing
+
+=== OPTIONAL FIELDS ===
+
+"explanation": Brief explanation of the overall analysis reasoning (optional)
+"urgency": low|medium|high|critical (optional, default to medium if unclear)
 
 Output STRICT JSON with this exact structure:
 {
@@ -115,15 +136,18 @@ Output STRICT JSON with this exact structure:
             "explanation": "Specific quote or evidence from the message that directly relates to this theme"
         }
     ],
-    "summary": "1-2 sentence summary focusing on the customer's main request or feedback point",
-    "pain_point": "Customer said: '[exact quote from message]' - brief context. Use their EXACT words. Null if no pain point.",
-    "feature_request": "The specific feature or capability being requested (null if none)",
-    "customer_usecase": "What the customer is trying to accomplish (e.g., 'Generating monthly compliance reports'). Null if not clear.",
-    "explanation": "Brief explanation of the overall analysis and classification reasoning",
-    "sentiment": "positive|negative|neutral",
+    "summary": "REQUIRED: 1-2 sentence summary focusing on the customer's main request or feedback point",
+    "pain_point": "REQUIRED: Brief description of what the customer is struggling with (1-2 sentences)",
+    "pain_point_quote": "REQUIRED: EXACT verbatim quote from customer - copy their ACTUAL words word-for-word",
+    "feature_request": "REQUIRED: The specific feature or capability being requested or would benefit from",
+    "customer_usecase": "REQUIRED: What the customer is trying to accomplish (their business goal/workflow)",
+    "explanation": "Optional: Brief explanation of the overall analysis and classification reasoning",
+    "sentiment": "REQUIRED: positive|negative|neutral",
     "urgency": "low|medium|high|critical",
-    "keywords": ["keyword1", "keyword2", "keyword3"]
-}"""
+    "keywords": ["REQUIRED: keyword1", "keyword2", "keyword3", "...3-8 keywords"]
+}
+
+IMPORTANT: All fields marked REQUIRED must have actual values - NEVER return null for these fields."""
 
 
 def build_ai_insights_prompt(
@@ -300,16 +324,29 @@ class AIInsightsService:
                 locked_theme
             )
 
+            # Ensure required fields have values (fallback if AI returns null)
+            summary = result.get("summary") or "Customer feedback message"
+            pain_point = result.get("pain_point") or "Not explicitly stated"
+            pain_point_quote = result.get("pain_point_quote") or message_content[:200] if message_content else "No quote available"
+            feature_request = result.get("feature_request") or "General feedback - no specific feature request"
+            customer_usecase = result.get("customer_usecase") or "General product usage"
+            sentiment = result.get("sentiment") or "neutral"
+            keywords = result.get("keywords") or []
+            if not keywords:
+                # Extract basic keywords from title/content as fallback
+                keywords = [word.strip().lower() for word in (message_title or "").split()[:5] if len(word) > 3]
+
             return AIInsightsResult(
                 themes=validated_themes,
-                summary=result.get("summary"),
-                pain_point=result.get("pain_point"),
-                feature_request=result.get("feature_request"),
-                customer_usecase=result.get("customer_usecase"),
+                summary=summary,
+                pain_point=pain_point,
+                pain_point_quote=pain_point_quote,
+                feature_request=feature_request,
+                customer_usecase=customer_usecase,
                 explanation=result.get("explanation"),
-                sentiment=result.get("sentiment"),
+                sentiment=sentiment,
                 urgency=result.get("urgency"),
-                keywords=result.get("keywords", []),
+                keywords=keywords,
                 tokens_used=response.usage.total_tokens,
                 latency_ms=latency_ms,
                 model=self.DEFAULT_MODEL,

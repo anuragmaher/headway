@@ -134,7 +134,6 @@ def print_status(status: dict):
 def run_pipeline_stage(stage: str):
     """Run a specific pipeline stage manually."""
     from app.sync_engine.tasks.ai_pipeline.normalization import normalize_source_data
-    from app.sync_engine.tasks.ai_pipeline.signal_scoring import score_normalized_events
     from app.sync_engine.tasks.ai_pipeline.chunking import chunk_normalized_events
     from app.sync_engine.tasks.ai_pipeline.tier1_classification import classify_events
     from app.sync_engine.tasks.ai_pipeline.tier2_extraction import extract_features
@@ -142,7 +141,6 @@ def run_pipeline_stage(stage: str):
 
     stages = {
         "normalization": normalize_source_data,
-        "scoring": score_normalized_events,
         "chunking": chunk_normalized_events,
         "classification": classify_events,
         "extraction": extract_features,
@@ -167,7 +165,6 @@ def run_all_stages():
     """Run all pipeline stages in sequence."""
     stages = [
         "normalization",
-        "scoring",
         "chunking",
         "classification",
         "extraction",
@@ -272,7 +269,7 @@ def main():
     )
     parser.add_argument(
         "--stage",
-        choices=["normalization", "scoring", "chunking", "classification", "extraction", "aggregation"],
+        choices=["normalization", "chunking", "classification", "extraction", "aggregation"],
         help="Pipeline stage to run (for run-stage action)"
     )
     parser.add_argument(

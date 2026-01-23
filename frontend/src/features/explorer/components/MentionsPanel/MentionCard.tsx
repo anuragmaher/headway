@@ -1,6 +1,9 @@
 /**
  * MentionCard - Expandable card showing a mention with AI insights
  * When expanded, shows the full message content and AI-extracted insights
+ *
+ * Supports many-to-many: shows linked CustomerAsks when a message
+ * is connected to multiple customer asks (e.g., call transcript with multiple features)
  */
 import React from 'react';
 import {
@@ -11,6 +14,7 @@ import {
   Chip,
   useTheme,
   Divider,
+  Tooltip,
 } from '@mui/material';
 import {
   ExpandMore as ExpandMoreIcon,
@@ -21,6 +25,7 @@ import {
   FormatQuote as QuoteIcon,
   Lightbulb as InsightIcon,
   Person as PersonIcon,
+  Link as LinkIcon,
 } from '@mui/icons-material';
 import type { MentionItem } from '../../types';
 import { SOURCE_COLORS } from '../../types';
@@ -29,18 +34,23 @@ interface MentionCardProps {
   mention: MentionItem;
   isExpanded: boolean;
   onToggleExpand: (mentionId: string) => void;
+  onNavigateToCustomerAsk?: (customerAskId: string) => void;  // NEW: Navigate to another CustomerAsk
 }
 
 export const MentionCard: React.FC<MentionCardProps> = ({
   mention,
   isExpanded,
   onToggleExpand,
+  onNavigateToCustomerAsk,
 }) => {
   const theme = useTheme();
 
   const handleToggle = () => {
     onToggleExpand(mention.id);
   };
+
+  // Check if this message is linked to multiple CustomerAsks
+  const hasMultipleLinks = mention.linkedCustomerAsks && mention.linkedCustomerAsks.length > 0;
 
   // Get source icon
   const getSourceIcon = () => {
@@ -185,6 +195,30 @@ export const MentionCard: React.FC<MentionCardProps> = ({
             <Typography sx={{ fontSize: '0.6875rem', color: 'text.disabled' }}>
               {formatDate(mention.sentAt)}
             </Typography>
+
+            {/* Multi-link indicator */}
+            {hasMultipleLinks && !isExpanded && (
+              <Tooltip title={`Linked to ${mention.linkedCustomerAsks.length + 1} features`} arrow>
+                <Chip
+                  icon={<LinkIcon sx={{ fontSize: '12px !important' }} />}
+                  label={`+${mention.linkedCustomerAsks.length}`}
+                  size="small"
+                  sx={{
+                    height: 18,
+                    fontSize: '0.625rem',
+                    fontWeight: 600,
+                    bgcolor: theme.palette.mode === 'dark'
+                      ? 'rgba(33, 150, 243, 0.15)'
+                      : 'rgba(33, 150, 243, 0.1)',
+                    color: 'info.main',
+                    '& .MuiChip-icon': {
+                      color: 'info.main',
+                      marginLeft: '4px',
+                    },
+                  }}
+                />
+              </Tooltip>
+            )}
           </Box>
         </Box>
 
@@ -406,6 +440,76 @@ export const MentionCard: React.FC<MentionCardProps> = ({
                   </Box>
                 </Box>
               )}
+            </Box>
+          )}
+
+          {/* Linked CustomerAsks - Shows when message links to multiple features */}
+          {hasMultipleLinks && (
+            <Box
+              sx={{
+                mb: 2,
+                p: 1.5,
+                borderRadius: 1,
+                bgcolor: theme.palette.mode === 'dark'
+                  ? 'rgba(33, 150, 243, 0.08)'
+                  : 'rgba(33, 150, 243, 0.04)',
+                border: '1px dashed',
+                borderColor: theme.palette.mode === 'dark'
+                  ? 'rgba(33, 150, 243, 0.3)'
+                  : 'rgba(33, 150, 243, 0.2)',
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                <LinkIcon sx={{ fontSize: 14, color: 'info.main' }} />
+                <Typography
+                  sx={{
+                    fontSize: '0.6875rem',
+                    fontWeight: 600,
+                    color: 'info.main',
+                  }}
+                >
+                  Also linked to {mention.linkedCustomerAsks.length} other feature{mention.linkedCustomerAsks.length > 1 ? 's' : ''}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                {mention.linkedCustomerAsks.map((linkedAsk) => (
+                  <Tooltip
+                    key={linkedAsk.id}
+                    title={linkedAsk.subThemeName ? `${linkedAsk.subThemeName}` : 'Click to view'}
+                    arrow
+                  >
+                    <Chip
+                      label={linkedAsk.name}
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onNavigateToCustomerAsk?.(linkedAsk.id);
+                      }}
+                      sx={{
+                        height: 22,
+                        fontSize: '0.6875rem',
+                        fontWeight: 500,
+                        bgcolor: theme.palette.mode === 'dark'
+                          ? 'rgba(33, 150, 243, 0.15)'
+                          : 'rgba(33, 150, 243, 0.1)',
+                        color: 'info.main',
+                        cursor: onNavigateToCustomerAsk ? 'pointer' : 'default',
+                        '&:hover': onNavigateToCustomerAsk ? {
+                          bgcolor: theme.palette.mode === 'dark'
+                            ? 'rgba(33, 150, 243, 0.25)'
+                            : 'rgba(33, 150, 243, 0.2)',
+                        } : {},
+                        maxWidth: 200,
+                        '& .MuiChip-label': {
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        },
+                      }}
+                    />
+                  </Tooltip>
+                ))}
+              </Box>
             </Box>
           )}
 

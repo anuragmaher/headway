@@ -16,7 +16,7 @@ import { EditThemeDialog } from './dialogs/EditThemeDialog';
 import { EditSubThemeDialog } from './dialogs/EditSubThemeDialog';
 import { DeleteConfirmDialog } from './dialogs/DeleteConfirmDialog';
 import { MergeSubThemeDialog } from './dialogs/MergeSubThemeDialog';
-import { useExplorerStore } from '../store';
+import { useExplorerStore, useIsMentionsPanelOpen } from '../store';
 import { useExplorerKeyboard } from '../hooks/useExplorerKeyboard';
 
 interface ThemeExplorerProps {
@@ -25,6 +25,7 @@ interface ThemeExplorerProps {
 
 export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
   const theme = useTheme();
+  const isPanelOpen = useIsMentionsPanelOpen();
   const {
     isInitializing,
     isInitialized,
@@ -110,11 +111,22 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
       {/* Middle Column - SubThemes */}
       <SubThemesColumn width={280} />
 
-      {/* Right Column - CustomerAsks */}
-      <CustomerAsksColumn minWidth={400} />
+      {/* Right Section - CustomerAsks + Mentions Panel (split-screen) */}
+      <Box
+        sx={{
+          flex: 1,
+          display: 'flex',
+          position: 'relative',
+          overflow: 'hidden',
+          minWidth: 0,
+        }}
+      >
+        {/* CustomerAsks Column - shrinks when panel is open */}
+        <CustomerAsksColumn isPanelOpen={isPanelOpen} />
 
-      {/* Slide-in Panel - Mentions */}
-      <MentionsPanel width={420} />
+        {/* Slide-in Panel - Mentions */}
+        <MentionsPanel />
+      </Box>
 
       {/* Dialogs */}
       <AddThemeDialog />

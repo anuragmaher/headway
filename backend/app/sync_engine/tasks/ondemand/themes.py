@@ -48,52 +48,45 @@ def sync_workspace_themes(self, workspace_id: str, sync_id: str, theme_ids: list
             if not messages:
                 logger.info(f"No messages to process for workspace {workspace_id}")
                 update_sync_record(db, sync_id, "success", 0, 0)
-                return {"status": "success", "processed": 0, "features": 0}
+                return {"status": "success", "processed": 0, "customer_asks": 0}
 
             items_processed = 0
             items_new = 0
 
-            try:
-                from app.services.transcript_ingestion_service import get_transcript_ingestion_service
-                transcript_service = get_transcript_ingestion_service(db)
-
-                for msg in messages:
-                    try:
-                        # Skip empty messages
-                        if not msg.content or len(msg.content.strip()) < 50:
-                            msg.is_processed = True
-                            msg.processed_at = datetime.now(timezone.utc)
-                            continue
-
-                        # Count existing features
-                        existing_features = len(msg.features) if msg.features else 0
-
-                        # Mark as processed
+            for msg in messages:
+                try:
+                    # Skip empty messages
+                    if not msg.content or len(msg.content.strip()) < 50:
                         msg.is_processed = True
                         msg.processed_at = datetime.now(timezone.utc)
-                        items_processed += 1
-
-                        # Count new features
-                        new_features = len(msg.features) if msg.features else 0
-                        items_new += max(0, new_features - existing_features)
-
-                    except Exception as e:
-                        logger.error(f"Error processing message {msg.id}: {e}")
                         continue
 
-                db.commit()
+                    # Check if message already has a customer_ask assigned
+                    had_customer_ask = msg.customer_ask_id is not None
 
-            except ImportError:
-                logger.warning("Transcript service not available")
-                items_processed = len(messages)
+                    # Mark as processed
+                    msg.is_processed = True
+                    msg.processed_at = datetime.now(timezone.utc)
+                    items_processed += 1
+
+                    # Count new customer_ask assignments
+                    # (AI processing happens separately via the AI pipeline)
+                    if msg.customer_ask_id and not had_customer_ask:
+                        items_new += 1
+
+                except Exception as e:
+                    logger.error(f"Error processing message {msg.id}: {e}")
+                    continue
+
+            db.commit()
 
             update_sync_record(db, sync_id, "success", items_processed, items_new)
-            logger.info(f"✅ Theme sync complete: {items_processed} processed, {items_new} features")
+            logger.info(f"✅ Theme sync complete: {items_processed} processed, {items_new} customer_asks")
 
             return {
                 "status": "success",
                 "processed": items_processed,
-                "features": items_new,
+                "customer_asks": items_new,
             }
 
     except Exception as e:
