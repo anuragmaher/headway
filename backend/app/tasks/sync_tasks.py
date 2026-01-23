@@ -156,35 +156,3 @@ def periodic_sync_all_connectors():
         db.close()
 
 
-@shared_task(name="tasks.process_unprocessed_messages")
-def process_unprocessed_messages(workspace_id: str, batch_size: int = 100):
-    """
-    Process unprocessed messages through AI pipeline.
-    """
-    db = SessionLocal()
-    try:
-        from app.services.message_service import MessageService
-        from app.services.ai_processing_service import AIProcessingService
-
-        message_service = MessageService(db)
-        ai_service = AIProcessingService(db)
-
-        messages = message_service.list_unprocessed_messages(
-            UUID(workspace_id),
-            limit=batch_size
-        )
-
-        processed = 0
-        for message in messages:
-            try:
-                ai_service.process_message(message)
-                message_service.mark_processed(message.id)
-                processed += 1
-            except Exception as e:
-                logger.error(f"Failed to process message {message.id}: {e}")
-
-        db.commit()
-        return {"processed": processed, "total": len(messages)}
-
-    finally:
-        db.close()

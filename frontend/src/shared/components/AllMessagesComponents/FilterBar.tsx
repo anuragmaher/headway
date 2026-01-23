@@ -72,7 +72,6 @@ export function FilterBar({
 
         {activeTab === 0 && (
           <>
-            <AIProgressBadge progress={aiProgress} isProcessing={aiIsProcessing} />
             <SortMenu
               sortBy={sortBy}
               sortOrder={sortOrder}
@@ -82,6 +81,7 @@ export function FilterBar({
               onSortChange={onSortChange}
               onOrderToggle={onSortOrderToggle}
             />
+            <AIProgressBadge progress={aiProgress} isProcessing={aiIsProcessing} />
           </>
         )}
       </Box>

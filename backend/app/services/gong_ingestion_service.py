@@ -14,7 +14,7 @@ Usage:
     result = await gong_ingestion_service.ingest_calls(
         db=db,
         workspace_id="...",
-        limit=50,
+        limit=100,
         days_back=1
     )
 """
@@ -31,7 +31,6 @@ from sqlalchemy import and_
 
 from app.models.workspace import Workspace
 from app.models.workspace_connector import WorkspaceConnector
-from app.models.integration import Integration
 from app.models.customer import Customer
 from app.services.batch_db_service import batch_db_service
 
@@ -56,7 +55,7 @@ class GongIngestionService:
         self,
         db: Session,
         workspace_id: str,
-        limit: int = 50,
+        limit: int = 100,
         days_back: int = 1,
         fetch_transcripts: bool = True
     ) -> Dict[str, int]:
@@ -94,8 +93,18 @@ class GongIngestionService:
                 logger.error(f"Gong credentials not found for workspace {workspace_id}")
                 return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
-            # Get or create integration record
-            integration = self._get_or_create_integration(db, workspace_id)
+            # Get connector record
+            connector = db.query(WorkspaceConnector).filter(
+                and_(
+                    WorkspaceConnector.workspace_id == UUID(workspace_id),
+                    WorkspaceConnector.connector_type == "gong",
+                    WorkspaceConnector.is_active == True
+                )
+            ).first()
+
+            if not connector:
+                logger.error(f"Gong connector not found for workspace {workspace_id}")
+                return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
             # Calculate date range
             to_date = datetime.now(timezone.utc)
@@ -131,13 +140,13 @@ class GongIngestionService:
                 db=db,
                 messages=messages,
                 workspace_id=workspace_id,
-                integration_id=str(integration.id),
+                connector_id=str(connector.id),
                 source="gong"
             )
 
-            # Update integration sync status
-            integration.last_synced_at = datetime.now(timezone.utc)
-            integration.sync_status = "success"
+            # Update connector sync status
+            connector.last_synced_at = datetime.now(timezone.utc)
+            connector.sync_status = "success"
             db.commit()
 
             logger.info(
@@ -177,29 +186,6 @@ class GongIngestionService:
             "access_key": access_key,
             "secret_key": secret_key
         }
-
-    def _get_or_create_integration(self, db: Session, workspace_id: str) -> Integration:
-        """Get or create Gong integration record."""
-        integration = db.query(Integration).filter(
-            and_(
-                Integration.workspace_id == UUID(workspace_id),
-                Integration.provider == "gong"
-            )
-        ).first()
-
-        if not integration:
-            integration = Integration(
-                name="Gong",
-                provider="gong",
-                is_active=True,
-                workspace_id=UUID(workspace_id),
-                provider_metadata={"ingestion_method": "api"},
-                sync_status="pending"
-            )
-            db.add(integration)
-            db.flush()
-
-        return integration
 
     def _fetch_calls(
         self,

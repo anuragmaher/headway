@@ -47,6 +47,7 @@ def normalize_message(message: Message, text_normalizer) -> Dict[str, Any]:
     Convert a Message to NormalizedEvent data.
 
     Works for all source types: slack, gmail, gong, fathom, etc.
+    Extra fields (actor info, title, channel) stored in event_metadata JSONB.
 
     Args:
         message: Message model instance
@@ -62,19 +63,23 @@ def normalize_message(message: Message, text_normalizer) -> Dict[str, Any]:
     )
 
     # Determine actor role
-    actor_role = "unknown"
-    if message.author_email or message.from_email:
-        # Simple heuristic: if email matches company domain, it's internal
-        # This would need to be enhanced with actual workspace domain checking
-        actor_role = "external"  # Default to external, safer for feature extraction
+    actor_role = "external"  # Default to external, safer for feature extraction
 
-    # Build metadata
+    # Build metadata - stores all extra fields
     metadata = {
-        "original_metadata": message.message_metadata,
+        # Actor info
+        "actor_name": message.author_name,
+        "actor_email": message.author_email or message.from_email,
+        "actor_role": actor_role,
+        # Content context
+        "title": message.title,
+        "channel_or_label": message.channel_name or message.label_name,
         "channel_id": message.channel_id,
         "thread_id": message.thread_id,
         "label_name": message.label_name,
-        "normalization_stats": normalized.removed_elements,
+        # Original metadata
+        "original_metadata": message.message_metadata,
+        "text_length": normalized.clean_length,
     }
 
     # Add email-specific fields if present (for Gmail messages)
@@ -92,15 +97,9 @@ def normalize_message(message: Message, text_normalizer) -> Dict[str, Any]:
         "source_table": "messages",
         "source_record_id": message.id,
         "clean_text": normalized.clean_text,
-        "text_length": normalized.clean_length,
-        "actor_name": message.author_name,
-        "actor_email": message.author_email or message.from_email,  # Use from_email for Gmail
-        "actor_role": actor_role,
-        "title": message.title,
         "event_timestamp": message.sent_at,
-        "channel_or_label": message.channel_name or message.label_name,
         "event_metadata": metadata,
-        "processing_stage": "pending",
+        "processing_stage": "normalized",  # Ready for chunking
     }
 
 
@@ -167,10 +166,11 @@ def normalize_source_data(
             )
 
             # Trigger next stage if we normalized any events
+            # Signal scoring is deprecated - go directly to chunking
             if total_normalized > 0:
-                from app.sync_engine.tasks.ai_pipeline.signal_scoring import score_normalized_events
-                score_normalized_events.delay(workspace_id=workspace_id)
-                logger.info("🔗 Triggered signal scoring stage")
+                from app.sync_engine.tasks.ai_pipeline.chunking import chunk_normalized_events
+                chunk_normalized_events.delay(workspace_id=workspace_id)
+                logger.info("🔗 Triggered chunking stage")
 
             return {
                 "status": "success",

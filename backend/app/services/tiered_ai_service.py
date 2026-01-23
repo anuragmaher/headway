@@ -102,11 +102,33 @@ class ThemeResult:
 
 
 @dataclass
+class ThemeClassificationResult:
+    """Result from score-based theme and sub_theme classification."""
+    theme_id: Optional[str] = None
+    theme_name: Optional[str] = None
+    theme_confidence: float = 0.0
+    sub_theme_id: Optional[str] = None
+    sub_theme_name: Optional[str] = None
+    sub_theme_confidence: float = 0.0
+    reasoning: str = ""
+    tokens_used: int = 0
+
+
+@dataclass
 class AggregationResult:
     """Result from aggregation check."""
     should_merge: bool = False
     existing_feature_id: Optional[str] = None
     similarity_score: float = 0.0
+    reasoning: str = ""
+
+
+@dataclass
+class CustomerAskMatchResult:
+    """Result from CustomerAsk matching."""
+    matched_id: Optional[str] = None
+    matched_name: Optional[str] = None
+    confidence: float = 0.0
     reasoning: str = ""
 
 
@@ -789,6 +811,238 @@ class TieredAIService:
                 should_merge=False,
                 existing_feature_id=None,
                 similarity_score=0.0,
+                reasoning=f"Error: {str(e)}"
+            )
+
+    # =========================================================================
+    # Score-Based Theme Classification
+    # =========================================================================
+
+    @with_retry
+    def classify_theme_by_score(
+        self,
+        text: str,
+        feature_title: str,
+        feature_description: Optional[str],
+        themes: List[Dict[str, Any]],
+    ) -> ThemeClassificationResult:
+        """
+        Classify a message into the most similar theme and sub_theme using AI scoring.
+
+        The AI evaluates ALL themes and sub_themes and returns the best match
+        based on similarity scores.
+
+        Args:
+            text: Original message text
+            feature_title: Extracted feature title
+            feature_description: Extracted feature description
+            themes: List of themes with their sub_themes
+                Each theme: {id, name, description, sub_themes: [{id, name, description}]}
+
+        Returns:
+            ThemeClassificationResult with best matching theme and sub_theme
+        """
+        try:
+            if not themes:
+                return ThemeClassificationResult(
+                    reasoning="No themes available for classification"
+                )
+
+            # Build themes description for AI
+            themes_text = ""
+            for theme in themes:
+                themes_text += f"\nTHEME: {theme['name']} (ID: {theme['id']})\n"
+                themes_text += f"  Description: {theme.get('description', 'N/A')}\n"
+                themes_text += "  Sub-themes:\n"
+                for st in theme.get("sub_themes", []):
+                    themes_text += f"    - {st['name']} (ID: {st['id']}): {st.get('description', 'N/A')}\n"
+
+            system_prompt = """You are an AI that classifies feature requests into themes and sub-themes.
+Your task is to find the BEST matching theme and sub-theme for a given feature request.
+
+IMPORTANT: You must evaluate ALL themes and sub-themes and pick the one with highest similarity.
+
+Scoring criteria:
+- Consider semantic similarity, not just keyword matching
+- A feature about "dashboard" should match "Analytics" or "Reporting" themes
+- A feature about "login" should match "Security" or "Authentication" themes
+- Pick the theme that would logically contain this feature
+
+Return JSON with:
+{
+    "theme_id": "id of best matching theme",
+    "theme_name": "name of best matching theme",
+    "theme_confidence": 0.0-1.0,
+    "sub_theme_id": "id of best matching sub-theme within that theme",
+    "sub_theme_name": "name of best matching sub-theme",
+    "sub_theme_confidence": 0.0-1.0,
+    "reasoning": "brief explanation of why this theme/sub-theme is the best match"
+}
+
+RULES:
+1. theme_confidence should reflect how well the feature fits the theme (0.5+ means good fit)
+2. sub_theme_confidence should reflect how well the feature fits the specific sub-theme
+3. You MUST return a valid theme_id and sub_theme_id from the provided list
+4. If unsure, pick the most general/applicable theme with lower confidence"""
+
+            user_prompt = f"""FEATURE REQUEST:
+Title: {feature_title}
+Description: {feature_description or 'N/A'}
+Original Text: {text[:600]}
+
+AVAILABLE THEMES AND SUB-THEMES:
+{themes_text}
+
+Which theme and sub-theme best matches this feature request? Provide confidence scores."""
+
+            response = self.client.chat.completions.create(
+                model=self.DEFAULT_MODEL,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.1,
+                response_format={"type": "json_object"},
+                max_tokens=500
+            )
+
+            result = json.loads(response.choices[0].message.content)
+
+            return ThemeClassificationResult(
+                theme_id=result.get("theme_id"),
+                theme_name=result.get("theme_name"),
+                theme_confidence=float(result.get("theme_confidence", 0.0)),
+                sub_theme_id=result.get("sub_theme_id"),
+                sub_theme_name=result.get("sub_theme_name"),
+                sub_theme_confidence=float(result.get("sub_theme_confidence", 0.0)),
+                reasoning=result.get("reasoning", ""),
+                tokens_used=response.usage.total_tokens
+            )
+
+        except json.JSONDecodeError as e:
+            logger.error(f"Theme classification JSON decode error: {e}")
+            return ThemeClassificationResult(
+                reasoning=f"JSON decode error: {str(e)}"
+            )
+
+        except Exception as e:
+            logger.error(f"Theme classification error: {e}")
+            return ThemeClassificationResult(
+                reasoning=f"Error: {str(e)}"
+            )
+
+    # =========================================================================
+    # CustomerAsk Matching
+    # =========================================================================
+
+    @with_retry
+    def match_customer_ask(
+        self,
+        text: str,
+        feature_title: str,
+        feature_description: Optional[str],
+        existing_customer_asks: List[Dict[str, Any]],
+    ) -> CustomerAskMatchResult:
+        """
+        Match a new feature against existing CustomerAsks in the same sub_theme.
+
+        Uses AI to compare the extracted feature with existing CustomerAsks
+        and returns the best match with a confidence score.
+
+        Args:
+            text: Original message text
+            feature_title: Extracted feature title
+            feature_description: Extracted feature description
+            existing_customer_asks: List of existing CustomerAsks to match against
+                Each should have: id, name, description, mention_count
+
+        Returns:
+            CustomerAskMatchResult with matched_id and confidence
+        """
+        try:
+            if not existing_customer_asks:
+                return CustomerAskMatchResult(
+                    matched_id=None,
+                    matched_name=None,
+                    confidence=0.0,
+                    reasoning="No existing CustomerAsks to match against"
+                )
+
+            # Build prompt for matching
+            customer_asks_text = "\n".join([
+                f"- ID: {ca['id']}\n  Name: {ca['name']}\n  Description: {ca.get('description', 'N/A')[:200]}\n  Mentions: {ca.get('mention_count', 1)}"
+                for ca in existing_customer_asks
+            ])
+
+            system_prompt = """You are an AI that matches feature requests to existing customer asks.
+Your task is to determine if a new feature request is essentially the same as an existing CustomerAsk.
+
+Consider requests as matching if they:
+- Describe the same core functionality or need
+- Are phrased differently but mean the same thing
+- Would be satisfied by the same solution
+
+Do NOT match requests that:
+- Are only tangentially related
+- Share keywords but have different core needs
+- Would require different solutions
+
+Return JSON with:
+{
+    "matched": true/false,
+    "matched_id": "id of best match or null",
+    "matched_name": "name of best match or null",
+    "confidence": 0.0-1.0,
+    "reasoning": "brief explanation"
+}"""
+
+            user_prompt = f"""NEW FEATURE REQUEST:
+Title: {feature_title}
+Description: {feature_description or 'N/A'}
+Original Text: {text[:500]}
+
+EXISTING CUSTOMER ASKS:
+{customer_asks_text}
+
+Does this new request match any existing CustomerAsk? If so, which one and with what confidence?"""
+
+            response = self.client.chat.completions.create(
+                model=self.DEFAULT_MODEL,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.1,
+                response_format={"type": "json_object"},
+                max_tokens=400
+            )
+
+            result = json.loads(response.choices[0].message.content)
+
+            matched = result.get("matched", False)
+            confidence = float(result.get("confidence", 0.0))
+
+            if matched and confidence > 0:
+                return CustomerAskMatchResult(
+                    matched_id=result.get("matched_id"),
+                    matched_name=result.get("matched_name"),
+                    confidence=confidence,
+                    reasoning=result.get("reasoning", "")
+                )
+            else:
+                return CustomerAskMatchResult(
+                    matched_id=None,
+                    matched_name=None,
+                    confidence=confidence,
+                    reasoning=result.get("reasoning", "No match found")
+                )
+
+        except Exception as e:
+            logger.error(f"CustomerAsk matching error: {e}")
+            return CustomerAskMatchResult(
+                matched_id=None,
+                matched_name=None,
+                confidence=0.0,
                 reasoning=f"Error: {str(e)}"
             )
 

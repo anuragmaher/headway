@@ -12,12 +12,13 @@ from app.models.sub_theme import SubTheme
 from app.models.customer_ask import CustomerAsk
 from app.models.message import Message
 from app.models.ai_insight import AIInsight
+from app.models.message_customer_ask import MessageCustomerAsk
 from app.schemas.theme import (
     ThemeCreate, ThemeUpdate, ThemeResponse, ThemeWithSubThemes, ThemeHierarchy,
     SubThemeCreate, SubThemeUpdate, SubThemeResponse, SubThemeWithCustomerAsks,
     CustomerAskCreate, CustomerAskUpdate, CustomerAskResponse
 )
-from app.schemas.mention import MentionResponse, AIInsightResponse
+from app.schemas.mention import MentionResponse, AIInsightResponse, LinkedCustomerAsk
 
 
 class ThemeService:
@@ -278,13 +279,14 @@ class CustomerAskService:
         workspace_id: UUID,
         sub_theme_id: Optional[UUID] = None
     ) -> List[Dict[str, Any]]:
-        """List customer asks with message counts"""
+        """List customer asks with message counts (via junction table for many-to-many)"""
         customer_asks = self.list_customer_asks(workspace_id, sub_theme_id)
         result = []
 
         for ca in customer_asks:
-            message_count = self.db.query(func.count(Message.id)).filter(
-                Message.customer_ask_id == ca.id
+            # Count via junction table (many-to-many)
+            message_count = self.db.query(func.count(MessageCustomerAsk.id)).filter(
+                MessageCustomerAsk.customer_ask_id == ca.id
             ).scalar() or 0
 
             result.append({
@@ -394,24 +396,52 @@ class CustomerAskService:
         Get mentions (messages) for a customer ask with AI insights.
 
         Returns messages linked to the customer ask along with their AI insights.
+        Uses junction table (message_customer_asks) for many-to-many support.
+
+        Each mention includes:
+        - customer_ask_id: The current context CustomerAsk (the one we're viewing)
+        - customer_ask_ids: ALL CustomerAsk IDs this message is linked to
+        - linked_customer_asks: Full info for UI display (names, sub_theme names)
         """
-        # Get total count
-        total_count = self.db.query(func.count(Message.id)).filter(
-            Message.customer_ask_id == customer_ask_id
+        # Get total count via junction table
+        total_count = self.db.query(func.count(MessageCustomerAsk.id)).filter(
+            MessageCustomerAsk.customer_ask_id == customer_ask_id
         ).scalar() or 0
+
+        # Get message IDs linked to this CustomerAsk via junction table
+        junction_entries = self.db.query(MessageCustomerAsk).filter(
+            MessageCustomerAsk.customer_ask_id == customer_ask_id
+        ).order_by(
+            MessageCustomerAsk.created_at.desc()
+        ).offset(offset).limit(limit).all()
+
+        message_ids = [entry.message_id for entry in junction_entries]
+
+        if not message_ids:
+            return {
+                "mentions": [],
+                "total": total_count,
+                "has_more": False,
+                "next_cursor": None
+            }
 
         # Get messages with eager loading of AI insights
         messages = self.db.query(Message).options(
             joinedload(Message.ai_insights)
         ).filter(
-            Message.customer_ask_id == customer_ask_id
-        ).order_by(
-            Message.sent_at.desc().nullsfirst()
-        ).offset(offset).limit(limit).all()
+            Message.id.in_(message_ids)
+        ).all()
 
-        # Transform to response format
+        # Create a map for quick lookup
+        message_map = {msg.id: msg for msg in messages}
+
+        # Transform to response format (maintaining junction entry order)
         mentions = []
-        for msg in messages:
+        for entry in junction_entries:
+            msg = message_map.get(entry.message_id)
+            if not msg:
+                continue
+
             # Get the first AI insight (most recent by model version)
             ai_insight = None
             if msg.ai_insights:
@@ -431,9 +461,36 @@ class CustomerAskService:
                     created_at=latest_insight.created_at
                 )
 
+            # Get ALL CustomerAsk IDs this message is linked to
+            all_links = self.db.query(MessageCustomerAsk).filter(
+                MessageCustomerAsk.message_id == msg.id
+            ).all()
+            customer_ask_ids = [link.customer_ask_id for link in all_links]
+
+            # Get full info for linked CustomerAsks (for UI display)
+            linked_customer_asks = []
+            if len(customer_ask_ids) > 1:
+                # Only fetch other CustomerAsks if there's more than one link
+                other_ca_ids = [ca_id for ca_id in customer_ask_ids if ca_id != customer_ask_id]
+                if other_ca_ids:
+                    other_cas = self.db.query(CustomerAsk).options(
+                        joinedload(CustomerAsk.sub_theme)
+                    ).filter(
+                        CustomerAsk.id.in_(other_ca_ids)
+                    ).all()
+
+                    for ca in other_cas:
+                        linked_customer_asks.append(LinkedCustomerAsk(
+                            id=ca.id,
+                            name=ca.name,
+                            sub_theme_name=ca.sub_theme.name if ca.sub_theme else None
+                        ))
+
             mentions.append(MentionResponse(
                 id=msg.id,
-                customer_ask_id=msg.customer_ask_id,
+                customer_ask_id=customer_ask_id,  # Current context
+                customer_ask_ids=customer_ask_ids,  # All linked IDs
+                linked_customer_asks=linked_customer_asks,  # Other CustomerAsks for UI
                 workspace_id=msg.workspace_id,
                 source=msg.source,
                 external_id=msg.external_id,

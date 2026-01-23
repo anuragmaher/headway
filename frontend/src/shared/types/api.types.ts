@@ -388,9 +388,29 @@ export interface MentionAIInsight {
   created_at: string;
 }
 
+/**
+ * Minimal CustomerAsk info for UI display in mentions
+ * Used when a message is linked to multiple CustomerAsks
+ */
+export interface LinkedCustomerAskAPI {
+  id: UUID;
+  name: string;
+  sub_theme_name: string | null;
+}
+
+/**
+ * Mention - A message linked to CustomerAsk(s) with AI insights
+ *
+ * Supports many-to-many: one message can link to multiple CustomerAsks
+ * - customer_ask_id: The current/context CustomerAsk (the one whose mentions we're viewing)
+ * - customer_ask_ids: ALL CustomerAsk IDs this message is linked to
+ * - linked_customer_asks: Other CustomerAsks for UI navigation
+ */
 export interface Mention {
   id: UUID;
-  customer_ask_id: UUID | null;
+  customer_ask_id: UUID | null;  // Current context
+  customer_ask_ids: UUID[];  // NEW: All linked CustomerAsk IDs
+  linked_customer_asks: LinkedCustomerAskAPI[];  // NEW: Other CustomerAsks for UI
   workspace_id: UUID;
   source: SourceType;
   external_id: string;

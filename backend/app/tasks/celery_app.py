@@ -38,7 +38,6 @@ celery_app = Celery(
         "app.sync_engine.tasks.ondemand.themes",
         # === AI PIPELINE (state-driven tiered processing) ===
         "app.sync_engine.tasks.ai_pipeline.normalization",
-        "app.sync_engine.tasks.ai_pipeline.signal_scoring",
         "app.sync_engine.tasks.ai_pipeline.chunking",
         "app.sync_engine.tasks.ai_pipeline.tier1_classification",
         "app.sync_engine.tasks.ai_pipeline.tier2_extraction",
@@ -135,127 +134,40 @@ celery_app.conf.beat_schedule = {
         "task": "app.sync_engine.sync_tasks.health_check",
         "schedule": schedule(run_every=300),  # 300 seconds = 5 minutes
     },
-    # Slack sync every 1 minute for testing, then increase to 15 minutes
+    # Slack sync every 30 minutes
     "sync-slack-messages": {
         "task": "app.sync_engine.sync_tasks.sync_slack_periodic",
-        "schedule": schedule(run_every=900),  # 900 seconds = 15 minutes
+        "schedule": schedule(run_every=1800),  # 1800 seconds = 30 minutes
     },
-    # Gong sync every 15 minutes (staggered by 5 minutes)
+    # Gong sync every 30 minutes (staggered by 20 seconds)
     "sync-gong-calls": {
         "task": "app.sync_engine.sync_tasks.sync_gong_periodic",
-        "schedule": schedule(run_every=920),  # 920 seconds = 15m 20s (staggered)
+        "schedule": schedule(run_every=1820),  # 1820 seconds = 30m 20s (staggered)
     },
-    # Fathom sync every 15 minutes (staggered by 10 minutes)
+    # Fathom sync every 30 minutes (staggered by 40 seconds)
     "sync-fathom-sessions": {
         "task": "app.sync_engine.sync_tasks.sync_fathom_periodic",
-        "schedule": schedule(run_every=940),  # 940 seconds = 15m 40s (staggered)
+        "schedule": schedule(run_every=1840),  # 1840 seconds = 30m 40s (staggered)
     },
-    # Gmail sync every 15 minutes (staggered by 15 minutes)
+    # Gmail sync every 30 minutes (staggered by 60 seconds)
     "sync-gmail-threads": {
         "task": "app.sync_engine.sync_tasks.sync_gmail_periodic",
-        "schedule": schedule(run_every=960),  # 960 seconds = 16 minutes (staggered)
+        "schedule": schedule(run_every=1860),  # 1860 seconds = 31 minutes (staggered)
     },
 
-    # === AI PIPELINE (Tiered Processing) ===
-    # State-driven pipeline with automatic chaining:
-    # normalization -> signal_scoring -> chunking -> classification -> extraction -> aggregation
+    # === AI PIPELINE ===
+    # FULLY STATE-DRIVEN ARCHITECTURE - No scheduled AI tasks!
     #
-    # Each task triggers the next stage automatically when it completes processing.
-    # These scheduled tasks serve as "catch-up" mechanisms to process any missed items.
-
-    # Step 1: Normalize raw data into NormalizedEvents (entry point)
-    # Triggers signal_scoring automatically when items are normalized
-    "ai-pipeline-normalize": {
-        "task": "app.sync_engine.tasks.ai_pipeline.normalize_source_data",
-        "schedule": schedule(run_every=300),  # Every 5 minutes (catch-up)
-    },
-
-    # Step 2-6: Catch-up tasks for each pipeline stage
-    # These run infrequently since chaining handles the normal flow
-    # They only serve as backup to catch any missed items
-    "ai-pipeline-signal-score": {
-        "task": "app.sync_engine.tasks.ai_pipeline.score_normalized_events",
-        "schedule": schedule(run_every=900),  # Every 15 minutes (catch-up only)
-    },
-
-    "ai-pipeline-chunk": {
-        "task": "app.sync_engine.tasks.ai_pipeline.chunk_normalized_events",
-        "schedule": schedule(run_every=900),  # Every 15 minutes (catch-up only)
-    },
-
-    "ai-pipeline-classify": {
-        "task": "app.sync_engine.tasks.ai_pipeline.classify_events",
-        "schedule": schedule(run_every=900),  # Every 15 minutes (catch-up only)
-    },
-
-    "ai-pipeline-extract": {
-        "task": "app.sync_engine.tasks.ai_pipeline.extract_features",
-        "schedule": schedule(run_every=900),  # Every 15 minutes (catch-up only)
-    },
-
-    "ai-pipeline-aggregate": {
-        "task": "app.sync_engine.tasks.ai_pipeline.aggregate_facts",
-        "schedule": schedule(run_every=1800),  # Every 30 minutes (catch-up only)
-    },
-
-    # Cleanup old aggregated facts (daily)
-    "ai-pipeline-cleanup": {
-        "task": "app.sync_engine.tasks.ai_pipeline.cleanup_old_facts",
-        "schedule": schedule(run_every=86400),  # Every 24 hours
-    },
-
-    # Cleanup stale processing states (every 15 minutes)
-    # Resets facts/events stuck in processing state back to pending
-    "ai-pipeline-cleanup-stale": {
-        "task": "app.sync_engine.tasks.ai_pipeline.cleanup_stale_processing",
-        "schedule": schedule(run_every=900),  # Every 15 minutes
-    },
-
-    # === AI INSIGHTS (Per-Message Insights) ===
-    # Runs on default celery queue alongside other tasks
-
-    # Process fresh messages (Mode A): Shortly after normalization
-    # Queues recently created messages for AI insights
-    "ai-insights-fresh-messages": {
-        "task": "app.sync_engine.tasks.ai_insights.process_fresh_messages",
-        "schedule": schedule(run_every=1800),  # Every 30 minutes
-    },
-
-    # Backfill older messages (Mode B): Process older messages frequently
-    # Small batches, oldest or highest-signal first
-    "ai-insights-backfill": {
-        "task": "app.sync_engine.tasks.ai_insights.backfill_insights",
-        "schedule": schedule(run_every=120),  # Every 2 minutes
-    },
-
-    # Update progress stats for UI progress bar
-    "ai-insights-progress-update": {
-        "task": "app.sync_engine.tasks.ai_insights.update_progress",
-        "schedule": schedule(run_every=60),  # Every minute
-    },
-
-    # Cleanup stale AI insights processing states
-    "ai-insights-cleanup-stale": {
-        "task": "app.sync_engine.tasks.ai_insights.cleanup_stale",
-        "schedule": schedule(run_every=900),  # Every 15 minutes
-    },
+    # Pipeline is triggered automatically when new messages are ingested:
+    # ingestion → normalize → chunk → classify → extract → AI insights
+    #
+    # Each stage triggers the next immediately upon completion.
+    # No time-based scheduling - purely event-driven.
 }
 
 logger.info(f"Celery app initialized with broker: {settings.REDIS_URL}")
-logger.info("Sync Engine - Data ingestion tasks:")
-logger.info("  - Health check: every 5 minutes")
-logger.info("  - Slack sync: every 15 minutes")
-logger.info("  - Gong sync: every 15 minutes")
-logger.info("  - Fathom sync: every 15 minutes")
-logger.info("  - Gmail sync: every 16 minutes")
-logger.info("AI Pipeline - State-driven with automatic chaining:")
-logger.info("  Flow: normalize -> score -> chunk -> classify -> extract -> aggregate")
-logger.info("  Each stage triggers the next automatically when items are processed.")
-logger.info("  Scheduled tasks (every 5 min) serve as catch-up for missed items.")
-logger.info("  - Stale cleanup: every 15 minutes")
-logger.info("  - Old facts cleanup: every 24 hours")
-logger.info("AI Insights - Per-message insights (on default queue):")
-logger.info("  - Fresh messages: every 30 minutes")
-logger.info("  - Backfill (older messages): every 2 minutes")
-logger.info("  - Progress update: every minute")
-logger.info("  - Stale cleanup: every 15 minutes")
+logger.info("Data Ingestion (periodic):")
+logger.info("  - Slack: every 30 min | Gong: every 30m 20s | Fathom: every 30m 40s | Gmail: every 31 min")
+logger.info("AI Pipeline (STATE-DRIVEN - triggered on ingestion):")
+logger.info("  ingestion → normalize → chunk → classify → extract → AI insights")
+logger.info("  Each stage triggers the next immediately - no scheduled tasks")

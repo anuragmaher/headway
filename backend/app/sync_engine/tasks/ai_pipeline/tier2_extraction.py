@@ -1,21 +1,17 @@
 """
-Tier-2 AI Structured Extraction Task - State-Driven Execution
+Tier-2 AI Structured Extraction Task
 
-Extract structured feature request data from classified content.
+Extracts structured feature request data from classified content.
 Only processes content that passed Tier-1 classification (score >= 6).
 
-New Flow (v2.0):
-- Extracts feature details from text
-- ALWAYS assigns to a theme/sub_theme (required)
-- Matches against existing customer_asks or creates new ones
-- CustomerAsks are created/updated directly in Tier-2 (no Tier-3 aggregation needed)
-- ExtractedFacts serve as audit trail
-
-State-Driven Model:
-- For NormalizedEvents: processing_stage='classified' AND extracted_at IS NULL AND is_chunked=False
-- For EventChunks: processing_stage='classified' AND extracted_at IS NULL
-- Uses row-level locking to prevent duplicate processing
-- Sets extracted_at timestamp on completion for idempotent execution
+Classification Rules:
+1. Every message MUST belong to a Theme
+2. Every message MUST belong to a SubTheme (child of the assigned Theme)
+3. Messages are matched against existing CustomerAsks in the SAME SubTheme:
+   - If confidence >= 75%: Link to existing CustomerAsk
+   - If confidence < 75% OR no CustomerAsks exist in SubTheme: Create new CustomerAsk
+4. Messages are linked to their CustomerAsk via message.customer_ask_id
+5. After linking, messages are queued for AI insights processing
 """
 
 import logging
@@ -33,28 +29,97 @@ from app.models.theme import Theme
 from app.models.sub_theme import SubTheme
 from app.models.customer_ask import CustomerAsk
 from app.models.message import Message
+from app.models.message_customer_ask import MessageCustomerAsk
 from app.services.tiered_ai_service import get_tiered_ai_service
-from app.sync_engine.tasks.base import (
-    engine,
-    cleanup_after_task,
-    test_db_connection,
-)
-from app.sync_engine.tasks.ai_pipeline.locking import (
-    acquire_rows_for_processing,
-    mark_row_processed,
-    mark_row_error,
-)
+from app.sync_engine.tasks.base import engine, cleanup_after_task, test_db_connection
 
 logger = logging.getLogger(__name__)
 
-# Batch size for extraction
 EXTRACTION_BATCH_SIZE = 15
-
-# Minimum extraction confidence to store
-MIN_EXTRACTION_CONFIDENCE = 0.5
-
-# Max retries before giving up on a row
+CUSTOMER_ASK_MATCH_THRESHOLD = 0.75  # 75% confidence to match existing CustomerAsk
 MAX_RETRIES = 3
+
+# Invalid feature titles that should NOT create CustomerAsks
+# These indicate the AI couldn't extract a valid feature request
+INVALID_FEATURE_TITLES = {
+    "no feature found",
+    "no feature request",
+    "extraction failed",
+    "extraction error",
+    "untitled feature",
+    "untitled",
+    "n/a",
+    "none",
+    "not applicable",
+    "no request",
+    "general feedback",
+    "general comment",
+    "no specific feature",
+}
+
+
+def _is_valid_feature_title(title: str) -> bool:
+    """
+    Check if the extracted feature title is valid and should create a CustomerAsk.
+
+    Returns False for:
+    - Empty/whitespace-only titles
+    - Known invalid titles from AI (e.g., "No Feature Found")
+    - Very short titles (< 5 chars)
+    - Titles that are just generic placeholders
+    """
+    if not title:
+        return False
+
+    title_clean = title.strip().lower()
+
+    # Check against known invalid titles
+    if title_clean in INVALID_FEATURE_TITLES:
+        return False
+
+    # Check for partial matches (e.g., "No feature found in this text")
+    for invalid in INVALID_FEATURE_TITLES:
+        if title_clean.startswith(invalid):
+            return False
+
+    # Title too short to be meaningful
+    if len(title_clean) < 5:
+        return False
+
+    return True
+
+
+@celery_app.task(
+    name="app.sync_engine.tasks.ai_pipeline.resync_message_links",
+    bind=True,
+    time_limit=300,
+    soft_time_limit=270,
+)
+def resync_message_links_task(
+    self,
+    workspace_id: Optional[str] = None,
+) -> Dict[str, Any]:
+    """
+    Celery task to re-sync message <-> CustomerAsk links.
+
+    Call this to fix any messages that weren't properly linked during tier2 extraction.
+    This uses ExtractedFacts to trace back to original messages.
+
+    Usage:
+        from app.sync_engine.tasks.ai_pipeline.tier2_extraction import resync_message_links_task
+        resync_message_links_task.delay(workspace_id="your-workspace-uuid")
+    """
+    try:
+        logger.info(f"🔄 Starting message link resync (workspace={workspace_id})")
+        result = resync_message_customer_ask_links(workspace_id)
+        return {"status": "success", **result}
+    except Exception as e:
+        logger.error(f"❌ Message link resync failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return {"status": "error", "error": str(e)}
+    finally:
+        cleanup_after_task()
 
 
 @celery_app.task(
@@ -64,852 +129,840 @@ MAX_RETRIES = 3
     default_retry_delay=90,
     autoretry_for=(Exception,),
     retry_backoff=True,
-    time_limit=900,  # 15 minute limit (complex AI calls)
+    time_limit=900,
     soft_time_limit=840,
 )
 def extract_features(
     self,
     workspace_id: Optional[str] = None,
     batch_size: int = EXTRACTION_BATCH_SIZE,
-    min_confidence: float = MIN_EXTRACTION_CONFIDENCE,
 ) -> Dict[str, Any]:
+    """Extract structured feature data using Tier-2 AI.
+
+    NOTE: No confidence filtering here - all messages that passed Tier-1
+    classification (score >= 6) will be processed. This ensures we don't
+    miss potential customer asks.
     """
-    Extract structured feature data using Tier-2 AI.
-
-    State-Driven Execution:
-    - For non-chunked events: processing_stage='classified' AND extracted_at IS NULL AND is_chunked=False
-    - For chunks: processing_stage='classified' AND extracted_at IS NULL
-    - Acquires row-level locks to prevent race conditions
-    - Sets extracted_at timestamp on completion (idempotent marker)
-
-    Args:
-        workspace_id: Optional workspace to limit processing
-        batch_size: Number of records to process per batch
-        min_confidence: Minimum confidence to store extracted fact
-
-    Returns:
-        Dict with processing stats
-    """
-    import uuid as uuid_module
-    lock_token = uuid_module.uuid4()
-
     try:
-        logger.info(f"📝 Starting Tier-2 extraction task (workspace={workspace_id}, lock={lock_token})")
+        logger.info(f"Starting Tier-2 extraction (workspace={workspace_id})")
 
         with Session(engine) as db:
             if not test_db_connection(db):
-                logger.error("❌ Database connection failed!")
                 return {"status": "error", "reason": "database_connection_failed"}
 
             ai_service = get_tiered_ai_service()
 
-            total_extracted = 0
-            total_facts_created = 0
-            total_skipped = 0
-            total_errors = 0
+            # If no workspace specified, find workspaces with items to process
+            if not workspace_id:
+                workspace_ids = _get_workspaces_with_pending_items(db)
+                if not workspace_ids:
+                    logger.info("No items to extract across any workspace")
+                    return {"status": "success", "extracted": 0, "facts_created": 0, "matched": 0, "created": 0, "skipped": 0, "errors": 0}
+            else:
+                workspace_ids = [workspace_id]
 
-            # Get workspace themes and existing customer_asks for AI matching
-            themes = _get_workspace_themes(db, workspace_id)
-            existing_customer_asks = _get_workspace_customer_asks(db, workspace_id)
+            total = {"extracted": 0, "facts_created": 0, "matched": 0, "created": 0, "skipped": 0, "errors": 0}
 
-            # Process non-chunked classified events
-            event_stats = _extract_from_events(
-                db, ai_service, workspace_id, batch_size // 2, min_confidence, themes, existing_customer_asks, lock_token
-            )
-            total_extracted += event_stats["extracted"]
-            total_facts_created += event_stats["facts_created"]
-            total_skipped += event_stats["skipped"]
-            total_errors += event_stats["errors"]
+            for ws_id in workspace_ids:
+                themes = _get_workspace_themes(db, ws_id)
 
-            # Refresh customer_asks list after processing events (new ones may have been created)
-            existing_customer_asks = _get_workspace_customer_asks(db, workspace_id)
+                if not themes:
+                    logger.warning(f"No themes found for workspace {ws_id} - skipping")
+                    continue
 
-            # Process classified chunks
-            chunk_stats = _extract_from_chunks(
-                db, ai_service, workspace_id, batch_size // 2, min_confidence, themes, existing_customer_asks, lock_token
-            )
-            total_extracted += chunk_stats["extracted"]
-            total_facts_created += chunk_stats["facts_created"]
-            total_skipped += chunk_stats["skipped"]
-            total_errors += chunk_stats["errors"]
+                # Track messages linked to CustomerAsks to avoid redundant DB queries
+                linked_messages = set()
+
+                # Process events and chunks for this workspace
+                event_stats = _process_items(
+                    db, ai_service, ws_id, batch_size // 2,
+                    themes, item_type="event",
+                    linked_messages=linked_messages,
+                )
+
+                chunk_stats = _process_items(
+                    db, ai_service, ws_id, batch_size // 2,
+                    themes, item_type="chunk",
+                    linked_messages=linked_messages,
+                )
+
+                # Accumulate stats
+                for key in total:
+                    total[key] += event_stats.get(key, 0) + chunk_stats.get(key, 0)
 
             db.commit()
 
             logger.info(
-                f"✅ Tier-2 extraction complete: {total_extracted} processed, "
-                f"{total_facts_created} facts created, {total_skipped} skipped, {total_errors} errors"
+                f"Tier-2 complete: {total['extracted']} processed, "
+                f"{total['matched']} matched to existing, {total['created']} new CustomerAsks, "
+                f"{total['skipped']} skipped (no valid feature), {total['errors']} errors"
             )
 
-            return {
-                "status": "success",
-                "total_extracted": total_extracted,
-                "total_facts_created": total_facts_created,
-                "total_skipped": total_skipped,
-                "total_errors": total_errors,
-            }
+            # Trigger AI insights batch processing for linked messages
+            if total['extracted'] > 0:
+                from app.sync_engine.tasks.ai_insights.worker import process_pending_insights
+                process_pending_insights.delay(workspace_id=workspace_id)
+                logger.info("🔗 Triggered AI insights batch processing")
+
+            return {"status": "success", **total}
 
     except Exception as e:
-        logger.error(f"❌ Tier-2 extraction task failed: {e}")
-        import traceback
-        traceback.print_exc()
+        logger.error(f"Tier-2 extraction failed: {e}")
         raise self.retry(exc=e, countdown=180)
     finally:
         cleanup_after_task()
 
 
-def _get_workspace_themes(db: Session, workspace_id: Optional[str]) -> List[Dict[str, Any]]:
-    """Get themes with their sub_themes for a workspace for AI classification."""
-    if not workspace_id:
-        logger.warning("_get_workspace_themes called with workspace_id=None, returning empty list")
-        return []
+def _get_workspaces_with_pending_items(db: Session) -> List[str]:
+    """Find workspaces that have items ready for tier-2 extraction."""
+    from sqlalchemy import distinct, union_all
 
-    themes = db.query(Theme).filter(
-        Theme.workspace_id == UUID(workspace_id) if isinstance(workspace_id, str) else Theme.workspace_id == workspace_id
-    ).all()
-
-    logger.info(f"Found {len(themes)} themes for workspace {workspace_id}")
-
-    result = []
-    for theme in themes:
-        theme_data = {
-            "id": str(theme.id),
-            "name": theme.name,
-            "description": theme.description or "",
-            "sub_themes": []
-        }
-        # Get sub_themes for this theme
-        sub_themes = db.query(SubTheme).filter(SubTheme.theme_id == theme.id).all()
-        for st in sub_themes:
-            theme_data["sub_themes"].append({
-                "id": str(st.id),
-                "name": st.name,
-                "description": st.description or "",
-            })
-        result.append(theme_data)
-
-    return result
-
-
-def _get_themes_for_workspace_uuid(db: Session, workspace_id: UUID) -> List[Dict[str, Any]]:
-    """Get themes for a workspace using UUID directly (for per-event fetching)."""
-    themes = db.query(Theme).filter(Theme.workspace_id == workspace_id).all()
-
-    logger.info(f"Found {len(themes)} themes for workspace UUID {workspace_id}")
-
-    result = []
-    for theme in themes:
-        theme_data = {
-            "id": str(theme.id),
-            "name": theme.name,
-            "description": theme.description or "",
-            "sub_themes": []
-        }
-        sub_themes = db.query(SubTheme).filter(SubTheme.theme_id == theme.id).all()
-        for st in sub_themes:
-            theme_data["sub_themes"].append({
-                "id": str(st.id),
-                "name": st.name,
-                "description": st.description or "",
-            })
-        result.append(theme_data)
-
-    return result
-
-
-def _get_default_sub_theme_id(db: Session, workspace_id: UUID) -> tuple[Optional[UUID], Optional[UUID]]:
-    """
-    Get the first available sub_theme for a workspace as a fallback.
-
-    Returns (theme_id, sub_theme_id) tuple.
-    """
-    sub_theme = db.query(SubTheme).filter(SubTheme.workspace_id == workspace_id).first()
-    if sub_theme:
-        logger.info(f"Using default sub_theme '{sub_theme.name}' (ID: {sub_theme.id}) as fallback")
-        return sub_theme.theme_id, sub_theme.id
-    return None, None
-
-
-def _get_workspace_customer_asks(db: Session, workspace_id: Optional[str]) -> List[Dict[str, Any]]:
-    """Get existing customer_asks for a workspace for AI matching."""
-    if not workspace_id:
-        return []
-
-    # Get customer_asks with their sub_theme and theme names
-    customer_asks = db.query(CustomerAsk, SubTheme.name.label("sub_theme_name"), Theme.name.label("theme_name")).outerjoin(
-        SubTheme, CustomerAsk.sub_theme_id == SubTheme.id
-    ).outerjoin(
-        Theme, SubTheme.theme_id == Theme.id
-    ).filter(
-        CustomerAsk.workspace_id == UUID(workspace_id)
-    ).order_by(CustomerAsk.mention_count.desc()).limit(50).all()
-
-    return [
-        {
-            "id": str(ca.CustomerAsk.id),
-            "name": ca.CustomerAsk.name,
-            "description": ca.CustomerAsk.description[:200] if ca.CustomerAsk.description else "",
-            "sub_theme_name": ca.sub_theme_name or "Uncategorized",
-            "theme_name": ca.theme_name or "Uncategorized",
-            "mention_count": ca.CustomerAsk.mention_count or 1,
-        }
-        for ca in customer_asks
-    ]
-
-
-def _get_sub_theme_id_by_name(themes: List[Dict[str, Any]], theme_name: str, sub_theme_name: Optional[str] = None) -> tuple[Optional[UUID], Optional[UUID]]:
-    """
-    Find theme_id and sub_theme_id by names (case-insensitive, with fuzzy matching).
-
-    Returns (theme_id, sub_theme_id) tuple.
-    """
-    if not theme_name:
-        logger.warning("No theme_name provided for theme matching")
-        return None, None
-
-    if not themes:
-        logger.warning("No themes available for matching")
-        return None, None
-
-    theme_name_lower = theme_name.lower().strip()
-
-    # Find matching theme first
-    matched_theme = None
-    for theme in themes:
-        if theme["name"].lower().strip() == theme_name_lower:
-            matched_theme = theme
-            break
-        # Partial match
-        if theme_name_lower in theme["name"].lower().strip() or theme["name"].lower().strip() in theme_name_lower:
-            matched_theme = theme
-
-    if not matched_theme:
-        available_themes = [t["name"] for t in themes]
-        logger.warning(f"No theme match found for '{theme_name}'. Available themes: {available_themes}")
-        return None, None
-
-    theme_id = UUID(matched_theme["id"])
-
-    # If sub_theme_name is provided, try to find matching sub_theme
-    if sub_theme_name and matched_theme.get("sub_themes"):
-        sub_theme_name_lower = sub_theme_name.lower().strip()
-        for st in matched_theme["sub_themes"]:
-            if st["name"].lower().strip() == sub_theme_name_lower:
-                return theme_id, UUID(st["id"])
-            if sub_theme_name_lower in st["name"].lower().strip() or st["name"].lower().strip() in sub_theme_name_lower:
-                return theme_id, UUID(st["id"])
-
-    # Return first sub_theme if available
-    if matched_theme.get("sub_themes") and len(matched_theme["sub_themes"]) > 0:
-        return theme_id, UUID(matched_theme["sub_themes"][0]["id"])
-
-    return theme_id, None
-
-
-def _compute_content_hash(text: str, title: str) -> str:
-    """Compute a hash for deduplication purposes."""
-    content = f"{title.lower().strip()}:{text[:500].lower().strip()}"
-    return hashlib.sha256(content.encode()).hexdigest()[:16]
-
-
-def _link_message_to_customer_ask(
-    db: Session,
-    event: NormalizedEvent,
-    customer_ask_id: UUID,
-) -> bool:
-    """
-    Link a message to a customer_ask via the message's customer_ask_id field.
-
-    Also queues the message for AI insights processing.
-
-    Args:
-        db: Database session
-        event: The NormalizedEvent containing source_table and source_record_id
-        customer_ask_id: The customer_ask ID to link to
-
-    Returns:
-        True if link was created, False if not applicable or already exists
-    """
-    # Only link if the source is a message
-    if event.source_table != "messages":
-        logger.debug(f"Skipping message link - source_table is '{event.source_table}', not 'messages'")
-        return False
-
-    if not event.source_record_id:
-        logger.debug(f"Skipping message link - no source_record_id")
-        return False
-
-    message = db.query(Message).filter(Message.id == event.source_record_id).first()
-    if not message:
-        logger.debug(f"Message not found: {event.source_record_id}")
-        return False
-
-    # Check if already linked
-    if message.customer_ask_id == customer_ask_id:
-        logger.debug(f"Message already linked to customer_ask: {customer_ask_id}")
-        return False
-
-    # Link the message
-    message.customer_ask_id = customer_ask_id
-    logger.info(f"Linked message {message.id} to customer_ask {customer_ask_id}")
-
-    # Queue message for AI insights since it passed Tier-2
-    _queue_message_for_ai_insights(str(message.id), str(event.workspace_id))
-
-    return True
-
-
-def _queue_message_for_ai_insights(message_id: str, workspace_id: str) -> None:
-    """
-    Queue a message for AI insights processing after it passes Tier-2.
-
-    This is the ONLY entry point for AI insights - messages must pass Tier-2
-    (be linked to a customer_ask) before they can be processed for AI insights.
-    """
-    try:
-        from app.sync_engine.tasks.ai_insights.worker import queue_message_for_insights
-        queue_message_for_insights.apply_async(
-            args=[message_id, workspace_id],
-            priority=4,  # Medium-high priority for fresh Tier-2 passed messages
-            countdown=2,  # Small delay to allow DB commit
-        )
-        logger.info(f"Queued message {message_id} for AI insights (passed Tier-2)")
-    except Exception as e:
-        logger.warning(f"Failed to queue message {message_id} for AI insights: {e}")
-
-
-def _extract_from_events(
-    db: Session,
-    ai_service,
-    workspace_id: Optional[str],
-    batch_size: int,
-    min_confidence: float,
-    themes: List[Dict[str, Any]],
-    existing_customer_asks: List[Dict[str, Any]],
-    lock_token,
-) -> Dict[str, int]:
-    """
-    Extract features from non-chunked events.
-
-    Now includes theme assignment and customer_ask matching in Tier-2.
-    Either matches an existing customer_ask (increments mention count) or creates a new one.
-
-    State-Driven filter:
-    - processing_stage='classified' (ready for extraction)
-    - extracted_at IS NULL (not yet extracted - idempotent)
-    - is_chunked=False (doesn't have chunks)
-    - is_feature_relevant=True (passed classification with score >= 6)
-    """
-    stats = {"extracted": 0, "facts_created": 0, "skipped": 0, "errors": 0}
-
-    # Build state-driven filter conditions
-    filter_conditions = [
+    # Find workspace IDs from events ready for extraction
+    event_ws = db.query(distinct(NormalizedEvent.workspace_id)).filter(
         NormalizedEvent.processing_stage == "classified",
         NormalizedEvent.extracted_at.is_(None),
         NormalizedEvent.is_chunked == False,
         NormalizedEvent.is_feature_relevant == True,
         NormalizedEvent.retry_count < MAX_RETRIES,
-    ]
-
-    if workspace_id:
-        filter_conditions.append(
-            NormalizedEvent.workspace_id == UUID(workspace_id)
-        )
-
-    # Acquire rows with row-level locking
-    events = acquire_rows_for_processing(
-        db=db,
-        model=NormalizedEvent,
-        filter_conditions=filter_conditions,
-        order_by=NormalizedEvent.created_at.asc(),
-        batch_size=batch_size,
-        lock_token=lock_token,
     )
 
-    if not events:
-        logger.info("No events for extraction")
+    # Find workspace IDs from chunks ready for extraction
+    chunk_ws = db.query(distinct(EventChunk.workspace_id)).filter(
+        EventChunk.processing_stage == "classified",
+        EventChunk.extracted_at.is_(None),
+        EventChunk.is_feature_relevant == True,
+        EventChunk.retry_count < MAX_RETRIES,
+    )
+
+    # Combine and get unique workspace IDs
+    all_ws = event_ws.union(chunk_ws).all()
+    return [str(ws[0]) for ws in all_ws if ws[0]]
+
+
+def _get_workspace_themes(db: Session, workspace_id: Optional[str]) -> List[Dict[str, Any]]:
+    """Get themes with sub_themes for AI classification."""
+    if not workspace_id:
+        return []
+
+    workspace_uuid = UUID(workspace_id) if isinstance(workspace_id, str) else workspace_id
+    themes = db.query(Theme).filter(Theme.workspace_id == workspace_uuid).all()
+
+    result = []
+    for t in themes:
+        sub_themes = db.query(SubTheme).filter(SubTheme.theme_id == t.id).all()
+        # Only include themes that have at least one sub_theme
+        if sub_themes:
+            result.append({
+                "id": str(t.id),
+                "name": t.name,
+                "description": t.description or "",
+                "sub_themes": [
+                    {"id": str(st.id), "name": st.name, "description": st.description or ""}
+                    for st in sub_themes
+                ]
+            })
+
+    return result
+
+
+def _get_customer_asks_for_sub_theme(db: Session, sub_theme_id: UUID) -> List[Dict[str, Any]]:
+    """Get existing CustomerAsks for a specific SubTheme for matching."""
+    customer_asks = db.query(CustomerAsk).filter(
+        CustomerAsk.sub_theme_id == sub_theme_id
+    ).order_by(CustomerAsk.mention_count.desc()).limit(30).all()
+
+    return [
+        {
+            "id": str(ca.id),
+            "name": ca.name,
+            "description": (ca.description or "")[:300],
+            "mention_count": ca.mention_count or 1,
+        }
+        for ca in customer_asks
+    ]
+
+
+def _validate_theme_classification(
+    themes: List[Dict], classification
+) -> tuple[Optional[UUID], Optional[UUID], str, str]:
+    """
+    Validate and extract UUIDs from AI theme classification result.
+
+    Returns: (theme_id, sub_theme_id, theme_name, sub_theme_name)
+
+    The AI returns IDs directly, but we validate they exist in our themes list.
+    If validation fails, falls back to first available theme/sub_theme.
+    """
+    if not themes:
+        return None, None, "", ""
+
+    # Try to use AI-provided IDs
+    ai_theme_id = classification.theme_id
+    ai_sub_theme_id = classification.sub_theme_id
+    ai_theme_name = classification.theme_name or ""
+    ai_sub_theme_name = classification.sub_theme_name or ""
+
+    # Validate theme_id exists
+    matched_theme = None
+    for theme in themes:
+        if theme["id"] == ai_theme_id:
+            matched_theme = theme
+            break
+
+    # Fallback: match by name if ID not found
+    if not matched_theme and ai_theme_name:
+        theme_name_lower = ai_theme_name.lower().strip()
+        for theme in themes:
+            if theme["name"].lower().strip() == theme_name_lower:
+                matched_theme = theme
+                break
+
+    # Final fallback: use first theme
+    if not matched_theme:
+        matched_theme = themes[0]
+        logger.warning(f"Theme ID '{ai_theme_id}' not found, using fallback: '{matched_theme['name']}'")
+
+    theme_id = UUID(matched_theme["id"])
+    theme_name = matched_theme["name"]
+
+    # Validate sub_theme_id exists within matched theme
+    sub_themes = matched_theme.get("sub_themes", [])
+    if not sub_themes:
+        logger.error(f"Theme '{theme_name}' has no sub_themes!")
+        return None, None, "", ""
+
+    matched_sub_theme = None
+    for st in sub_themes:
+        if st["id"] == ai_sub_theme_id:
+            matched_sub_theme = st
+            break
+
+    # Fallback: match by name if ID not found
+    if not matched_sub_theme and ai_sub_theme_name:
+        sub_name_lower = ai_sub_theme_name.lower().strip()
+        for st in sub_themes:
+            if st["name"].lower().strip() == sub_name_lower:
+                matched_sub_theme = st
+                break
+
+    # Final fallback: use first sub_theme
+    if not matched_sub_theme:
+        matched_sub_theme = sub_themes[0]
+        if ai_sub_theme_id:
+            logger.warning(f"SubTheme ID '{ai_sub_theme_id}' not found, using fallback: '{matched_sub_theme['name']}'")
+
+    sub_theme_id = UUID(matched_sub_theme["id"])
+    sub_theme_name = matched_sub_theme["name"]
+
+    return theme_id, sub_theme_id, theme_name, sub_theme_name
+
+
+def _process_items(
+    db: Session,
+    ai_service,
+    workspace_id: Optional[str],
+    batch_size: int,
+    themes: List[Dict],
+    item_type: str,
+    linked_messages: Optional[set] = None,
+) -> Dict[str, int]:
+    """Process events or chunks for extraction.
+
+    NOTE: No confidence filtering - all items that passed Tier-1 will be processed.
+    No locking needed since we run a single worker.
+    """
+    stats = {"extracted": 0, "facts_created": 0, "matched": 0, "created": 0, "skipped": 0, "errors": 0}
+
+    # Track messages already linked to avoid redundant DB queries
+    if linked_messages is None:
+        linked_messages = set()
+
+    # Build query
+    if item_type == "event":
+        model = NormalizedEvent
+        query = db.query(model).filter(
+            model.processing_stage == "classified",
+            model.extracted_at.is_(None),
+            model.is_chunked == False,
+            model.is_feature_relevant == True,
+            model.retry_count < MAX_RETRIES,
+        )
+    else:
+        model = EventChunk
+        query = db.query(model).filter(
+            model.processing_stage == "classified",
+            model.extracted_at.is_(None),
+            model.is_feature_relevant == True,
+            model.retry_count < MAX_RETRIES,
+        )
+
+    if workspace_id:
+        query = query.filter(model.workspace_id == UUID(workspace_id))
+
+    items = query.order_by(model.created_at.asc()).limit(batch_size).all()
+
+    if not items:
         return stats
 
-    logger.info(f"Acquired {len(events)} events for extraction")
+    logger.info(f"Processing {len(items)} {item_type}s")
 
-    # Cache themes per workspace for efficiency
-    themes_cache: Dict[UUID, List[Dict[str, Any]]] = {}
-
-    for event in events:
+    for item in items:
         try:
-            # Get themes for this event's workspace (use cache or fetch)
-            event_workspace_id = event.workspace_id
-            logger.debug(f"Processing event {event.id} for workspace {event_workspace_id}")
+            ws_id = item.workspace_id
 
-            if event_workspace_id not in themes_cache:
-                if themes:  # Use pre-fetched themes if available (when workspace_id was provided)
-                    themes_cache[event_workspace_id] = themes
-                    logger.info(f"Using {len(themes)} pre-fetched themes for workspace {event_workspace_id}")
-                else:
-                    # Fetch themes for this specific workspace
-                    fetched_themes = _get_themes_for_workspace_uuid(db, event_workspace_id)
-                    themes_cache[event_workspace_id] = fetched_themes
-                    logger.info(f"Fetched {len(fetched_themes)} themes for workspace {event_workspace_id}")
-
-            event_themes = themes_cache[event_workspace_id]
-
-            # Log themes being passed to AI
-            if event_themes:
-                theme_names = [t.get("name", "?") for t in event_themes]
-                logger.info(f"Passing {len(event_themes)} themes to Tier-2 AI: {theme_names}")
+            # Get text and context based on item type
+            if item_type == "event":
+                text = item.clean_text
+                source_type = item.source_type
+                actor_name = item.actor_name
+                actor_role = item.actor_role
+                title = item.title
+                event = item
             else:
-                logger.warning(f"NO THEMES available for workspace {event_workspace_id}! Check if themes exist in DB.")
+                parent = item.normalized_event
+                if not parent:
+                    _mark_extracted(item)
+                    continue
+                text = item.chunk_text
+                source_type = parent.source_type
+                actor_name = item.speaker_name or parent.actor_name
+                actor_role = item.speaker_role or parent.actor_role
+                title = parent.title
+                event = parent
 
-            # Call Tier-2 AI extraction with themes and existing customer_asks
+            # Step 1: Call AI to extract feature details
             result = ai_service.tier2_extract(
-                text=event.clean_text,
-                source_type=event.source_type,
-                actor_name=event.actor_name,
-                actor_role=event.actor_role,
-                title=event.title,
-                themes=event_themes,
-                existing_features=existing_customer_asks,  # Using same interface for customer_asks
+                text=text,
+                source_type=source_type,
+                actor_name=actor_name,
+                actor_role=actor_role,
+                title=title,
+                themes=themes,
+                existing_features=[],
             )
 
-            # Check extraction confidence
-            if result.confidence < min_confidence:
-                event.processed_at = datetime.now(timezone.utc)
-                mark_row_processed(
-                    row=event,
-                    stage="extracted",
-                    timestamp_field="extracted_at",
-                    lock_token=lock_token,
+            # VALIDATION: Check if extracted feature is valid
+            # This filters out items that passed Tier-1 but don't have a real feature request
+            if not _is_valid_feature_title(result.feature_title):
+                logger.info(
+                    f"⏭️ Skipping {item_type} {item.id}: Invalid feature title '{result.feature_title}' "
+                    f"(confidence: {result.confidence:.0%}) - no CustomerAsk created"
                 )
-                stats["skipped"] += 1
+                # Mark as processed so we don't retry, but don't create CustomerAsk
+                _mark_extracted(item)
                 stats["extracted"] += 1
+                stats["skipped"] += 1
                 continue
 
-            # Get theme_id and sub_theme_id from the AI-assigned theme name
-            theme_id, sub_theme_id = _get_sub_theme_id_by_name(event_themes, result.theme_name)
-
-            # IMPORTANT: CustomerAsks MUST have a sub_theme - use fallback if no match
-            if sub_theme_id:
-                logger.info(f"[Event] Tier-2: Assigned to theme '{result.theme_name}' (sub_theme_id: {sub_theme_id})")
-            else:
-                logger.warning(f"[Event] Tier-2: Could not find sub_theme for '{result.theme_name}' - using fallback")
-                theme_id, sub_theme_id = _get_default_sub_theme_id(db, event_workspace_id)
-                if sub_theme_id:
-                    logger.info(f"[Event] Tier-2: Using fallback sub_theme (ID: {sub_theme_id})")
-                else:
-                    logger.error(f"[Event] Tier-2: No sub_themes exist for workspace {event_workspace_id}! Cannot assign customer_ask.")
-
-            # Handle customer_ask matching or creation
-            customer_ask_id = None
-            if result.matched_feature_id and not result.is_new_feature:
-                # AI matched an existing customer_ask - increment mention count
-                try:
-                    customer_ask_id = UUID(result.matched_feature_id)
-                    customer_ask = db.query(CustomerAsk).filter(CustomerAsk.id == customer_ask_id).first()
-                    if customer_ask:
-                        event_time = event.event_timestamp or datetime.now(timezone.utc)
-                        customer_ask.mention_count = (customer_ask.mention_count or 1) + 1
-                        customer_ask.last_mentioned_at = event_time
-                        customer_ask.updated_at = datetime.now(timezone.utc)
-                        logger.info(f"Matched existing customer_ask '{customer_ask.name}' (mentions: {customer_ask.mention_count})")
-                    else:
-                        # CustomerAsk not found, will create new
-                        customer_ask_id = None
-                        result.is_new_feature = True
-                except (ValueError, TypeError):
-                    customer_ask_id = None
-                    result.is_new_feature = True
-
-            if result.is_new_feature and sub_theme_id:
-                # Create new customer_ask
-                event_time = event.event_timestamp or datetime.now(timezone.utc)
-                new_customer_ask = CustomerAsk(
-                    workspace_id=event.workspace_id,
-                    sub_theme_id=sub_theme_id,
-                    name=result.feature_title[:255],
-                    description=result.feature_description,
-                    urgency=_map_urgency_hint(result.urgency_hint),
-                    status="new",
-                    mention_count=1,
-                    first_mentioned_at=event_time,
-                    last_mentioned_at=event_time,
-                    match_confidence=result.confidence,
-                    ai_metadata={
-                        "problem_statement": result.problem_statement,
-                        "desired_outcome": result.desired_outcome,
-                        "user_persona": result.user_persona,
-                        "use_case": result.use_case,
-                        "keywords": result.keywords,
-                        "sentiment": result.sentiment,
-                    },
-                )
-                db.add(new_customer_ask)
-                db.flush()
-                customer_ask_id = new_customer_ask.id
-                # Add to existing customer_asks list for subsequent matches in this batch
-                existing_customer_asks.append({
-                    "id": str(customer_ask_id),
-                    "name": result.feature_title,
-                    "description": result.feature_description[:200] if result.feature_description else "",
-                    "sub_theme_name": result.theme_name or "Uncategorized",
-                    "theme_name": result.theme_name or "Uncategorized",
-                    "mention_count": 1,
-                })
-                logger.info(f"Created new customer_ask '{result.feature_title}'")
-
-            # Link the source message to the customer_ask
-            if customer_ask_id:
-                _link_message_to_customer_ask(db, event, customer_ask_id)
-
-            # Create ExtractedFact (for audit trail)
-            content_hash = _compute_content_hash(event.clean_text, result.feature_title)
-            fact = ExtractedFact(
-                workspace_id=event.workspace_id,
-                normalized_event_id=event.id,
-                chunk_id=None,
-                customer_ask_id=customer_ask_id,
+            # Step 2: Score-based theme and sub_theme classification
+            theme_classification = ai_service.classify_theme_by_score(
+                text=text,
                 feature_title=result.feature_title,
                 feature_description=result.feature_description,
-                problem_statement=result.problem_statement,
-                desired_outcome=result.desired_outcome,
-                user_persona=result.user_persona,
-                use_case=result.use_case,
-                priority_hint=result.priority_hint,
-                urgency_hint=result.urgency_hint,
-                sentiment=result.sentiment,
-                keywords=result.keywords,
+                themes=themes,
+            )
+
+            # Validate and get UUIDs from classification result
+            theme_id, sub_theme_id, theme_name, sub_theme_name = _validate_theme_classification(
+                themes, theme_classification
+            )
+
+            if not theme_id or not sub_theme_id:
+                logger.error(f"Could not assign theme/sub_theme for {item_type} {item.id}")
+                item.retry_count = (item.retry_count or 0) + 1
+                item.processing_error = "Failed to assign theme/sub_theme - check theme configuration"
+                stats["errors"] += 1
+                continue
+
+            logger.info(
+                f"Classified into Theme: '{theme_name}' (score: {theme_classification.theme_confidence:.0%}) > "
+                f"SubTheme: '{sub_theme_name}' (score: {theme_classification.sub_theme_confidence:.0%})"
+            )
+
+            # Step 3: Get existing CustomerAsks in this sub_theme and match/create
+            # NOTE: With many-to-many, each chunk can link to its own CustomerAsk.
+            # We no longer skip extraction just because another chunk from same message was processed.
+            existing_customer_asks = _get_customer_asks_for_sub_theme(db, sub_theme_id)
+
+            # Match against existing CustomerAsks or create new
+            customer_ask_id, was_matched = _match_or_create_customer_ask(
+                db=db,
+                ai_service=ai_service,
+                result=result,
+                text=text,
+                existing_customer_asks=existing_customer_asks,
+                workspace_id=ws_id,
+                sub_theme_id=sub_theme_id,
+                event_time=event.event_timestamp,
+            )
+
+            # Handle case where CustomerAsk creation was skipped (invalid feature)
+            if customer_ask_id is None:
+                logger.info(f"⏭️ No CustomerAsk created for {item_type} {item.id} (invalid feature)")
+                _mark_extracted(item)
+                stats["extracted"] += 1
+                stats["skipped"] += 1
+                continue
+
+            if was_matched:
+                stats["matched"] += 1
+            else:
+                stats["created"] += 1
+
+            # Step 4: Link message to CustomerAsk via junction table (CRITICAL for mentions panel)
+            # With many-to-many, each chunk can create its own link to a different CustomerAsk.
+            # The junction table tracks which message is linked to which CustomerAsk.
+            chunk_id = item.id if item_type == "chunk" else None
+            _link_message_to_customer_ask_m2m(
+                db=db,
+                event=event,
+                customer_ask_id=customer_ask_id,
+                linked_pairs=linked_messages,  # Now tracks (message_id, customer_ask_id) pairs
+                was_matched=was_matched,
                 extraction_confidence=result.confidence,
-                theme_id=theme_id,
-                theme_confidence=result.theme_confidence,
-                source_type=event.source_type,
-                source_id=event.source_id,
-                actor_name=event.actor_name,
-                actor_email=event.actor_email,
-                event_timestamp=event.event_timestamp,
-                content_hash=content_hash,
-                aggregation_status="aggregated" if customer_ask_id else "pending",
-            )
-            db.add(fact)
-
-            # Update event
-            event.processed_at = datetime.now(timezone.utc)
-            mark_row_processed(
-                row=event,
-                stage="extracted",
-                timestamp_field="extracted_at",
-                lock_token=lock_token,
+                chunk_id=chunk_id,
             )
 
+            # Create audit fact
+            _create_extracted_fact(
+                db, item, event, result, theme_id, customer_ask_id, item_type
+            )
+
+            # Mark processed
+            _mark_extracted(item)
             stats["extracted"] += 1
             stats["facts_created"] += 1
 
         except Exception as e:
-            logger.error(f"Error extracting from event {event.id}: {e}")
+            logger.error(f"Error extracting {item_type} {item.id}: {e}")
             import traceback
             traceback.print_exc()
-            mark_row_error(
-                row=event,
-                error_message=f"Extraction error: {str(e)[:400]}",
-                lock_token=lock_token,
-                increment_retry=True,
-            )
+            item.retry_count = (item.retry_count or 0) + 1
+            item.processing_error = str(e)[:400]
             stats["errors"] += 1
+
+    # Update parent events for chunks
+    if item_type == "chunk":
+        _update_parent_events(db, workspace_id)
 
     return stats
 
 
-def _map_urgency_hint(hint: Optional[str]) -> str:
+def _match_or_create_customer_ask(
+    db: Session,
+    ai_service,
+    result,
+    text: str,
+    existing_customer_asks: List[Dict],
+    workspace_id: UUID,
+    sub_theme_id: UUID,
+    event_time: Optional[datetime],
+) -> tuple[Optional[UUID], bool]:
+    """
+    Match against existing CustomerAsks or create new one.
+
+    Rules:
+    - If existing CustomerAsks exist in this sub_theme:
+      - Use AI to find best match with confidence score
+      - If confidence >= 75%: Link to existing (increment mention_count)
+      - If confidence < 75%: Create new CustomerAsk
+    - If NO existing CustomerAsks in sub_theme: Create new CustomerAsk
+
+    Returns: (customer_ask_id, was_matched) - customer_ask_id is None if feature is invalid
+    """
+    # Defensive check: validate feature title before creating CustomerAsk
+    if not _is_valid_feature_title(result.feature_title):
+        logger.warning(f"⚠️ Invalid feature title in _match_or_create_customer_ask: '{result.feature_title}'")
+        return None, False
+
+    event_time = event_time or datetime.now(timezone.utc)
+
+    # If there are existing CustomerAsks in this sub_theme, try to match
+    if existing_customer_asks:
+        logger.info(f"Found {len(existing_customer_asks)} existing CustomerAsks in sub_theme, attempting match...")
+
+        # Use AI to find best matching CustomerAsk
+        match_result = ai_service.match_customer_ask(
+            text=text,
+            feature_title=result.feature_title,
+            feature_description=result.feature_description,
+            existing_customer_asks=existing_customer_asks,
+        )
+
+        if match_result and match_result.matched_id and match_result.confidence >= CUSTOMER_ASK_MATCH_THRESHOLD:
+            # Found a match with >= 75% confidence
+            try:
+                ca_id = UUID(match_result.matched_id)
+                ca = db.query(CustomerAsk).filter(CustomerAsk.id == ca_id).first()
+                if ca:
+                    ca.mention_count = (ca.mention_count or 1) + 1
+                    ca.last_mentioned_at = event_time
+                    logger.info(
+                        f"✓ Matched existing CustomerAsk '{ca.name}' "
+                        f"(confidence: {match_result.confidence:.0%}, mentions: {ca.mention_count})"
+                    )
+                    return ca_id, True
+            except (ValueError, TypeError) as e:
+                logger.warning(f"Invalid matched_id: {match_result.matched_id}, error: {e}")
+        else:
+            confidence = match_result.confidence if match_result else 0
+            logger.info(
+                f"✗ No match above threshold (best: {confidence:.0%}, required: {CUSTOMER_ASK_MATCH_THRESHOLD:.0%}). "
+                f"Creating new CustomerAsk."
+            )
+    else:
+        logger.info("No existing CustomerAsks in sub_theme. Creating new CustomerAsk.")
+
+    # Create new CustomerAsk
+    new_ca = CustomerAsk(
+        workspace_id=workspace_id,
+        sub_theme_id=sub_theme_id,
+        name=result.feature_title[:255],
+        description=result.feature_description,
+        urgency=_map_urgency(result.urgency_hint),
+        status="new",
+        mention_count=1,
+        first_mentioned_at=event_time,
+        last_mentioned_at=event_time,
+        match_confidence=result.confidence,
+        ai_metadata={
+            "problem_statement": result.problem_statement,
+            "desired_outcome": result.desired_outcome,
+            "user_persona": result.user_persona,
+            "use_case": result.use_case,
+            "keywords": result.keywords,
+            "sentiment": result.sentiment,
+        },
+    )
+    db.add(new_ca)
+    db.flush()
+
+    logger.info(f"✓ Created new CustomerAsk: '{result.feature_title}'")
+    return new_ca.id, False
+
+
+def _mark_extracted(item) -> None:
+    """Mark item as extracted."""
+    now = datetime.now(timezone.utc)
+    item.processing_stage = "extracted"
+    item.extracted_at = now
+
+
+def _map_urgency(hint: Optional[str]) -> str:
     """Map AI urgency hint to customer_ask urgency."""
     if not hint:
         return "medium"
     hint_lower = hint.lower()
     if hint_lower in ("high", "critical", "immediate", "asap"):
         return "critical"
-    elif hint_lower in ("low", "whenever", "no-rush"):
+    if hint_lower in ("low", "whenever", "no-rush"):
         return "low"
     return "medium"
 
 
-def _extract_from_chunks(
+def _link_message_to_customer_ask_m2m(
     db: Session,
-    ai_service,
-    workspace_id: Optional[str],
-    batch_size: int,
-    min_confidence: float,
-    themes: List[Dict[str, Any]],
-    existing_customer_asks: List[Dict[str, Any]],
-    lock_token,
-) -> Dict[str, int]:
+    event: NormalizedEvent,
+    customer_ask_id: UUID,
+    linked_pairs: Optional[set] = None,
+    was_matched: bool = False,
+    extraction_confidence: Optional[float] = None,
+    chunk_id: Optional[UUID] = None,
+) -> bool:
     """
-    Extract features from classified chunks.
+    Link message to CustomerAsk via junction table (many-to-many).
 
-    Now includes theme assignment and customer_ask matching in Tier-2.
-    Either matches an existing customer_ask (increments mention count) or creates a new one.
+    This creates an entry in the message_customer_asks junction table, allowing
+    a single message to be linked to multiple CustomerAsks (e.g., a call transcript
+    with multiple feature requests).
 
-    State-Driven filter:
-    - processing_stage='classified' (ready for extraction)
-    - extracted_at IS NULL (not yet extracted - idempotent)
-    - is_feature_relevant=True (passed classification with score >= 6)
+    Also stores the tier1 classification score (feature_score) on the message for analytics.
+    Also updates the deprecated customer_ask_id FK for backward compatibility.
+
+    CRITICAL: This is the link that connects messages to CustomerAsks for the mentions panel.
+
+    Args:
+        db: Database session
+        event: NormalizedEvent containing source_record_id (message_id)
+        customer_ask_id: The CustomerAsk to link to
+        linked_pairs: Set of (message_id, customer_ask_id) tuples already linked in this batch
+        was_matched: Whether this was matched to existing CustomerAsk (vs created new)
+        extraction_confidence: AI confidence score for this extraction
+        chunk_id: Optional chunk ID if this came from a chunked message
     """
-    stats = {"extracted": 0, "facts_created": 0, "skipped": 0, "errors": 0}
-
-    # Build state-driven filter conditions
-    filter_conditions = [
-        EventChunk.processing_stage == "classified",
-        EventChunk.extracted_at.is_(None),
-        EventChunk.is_feature_relevant == True,
-        EventChunk.retry_count < MAX_RETRIES,
-    ]
-
-    if workspace_id:
-        filter_conditions.append(
-            EventChunk.workspace_id == UUID(workspace_id)
-        )
-
-    # Acquire rows with row-level locking
-    chunks = acquire_rows_for_processing(
-        db=db,
-        model=EventChunk,
-        filter_conditions=filter_conditions,
-        order_by=EventChunk.created_at.asc(),
-        batch_size=batch_size,
-        lock_token=lock_token,
+    # Log at INFO level to track linking
+    logger.info(
+        f"🔗 Linking message (M2M): event.id={event.id}, "
+        f"source_table='{event.source_table}', source_record_id={event.source_record_id}, "
+        f"customer_ask_id={customer_ask_id}"
     )
 
-    if not chunks:
-        logger.info("No chunks for extraction")
-        return stats
+    # Validate source_table
+    if not event.source_table:
+        logger.error(f"❌ Event {event.id} has NULL source_table - cannot link message")
+        return False
 
-    logger.info(f"Acquired {len(chunks)} chunks for extraction")
+    if event.source_table != "messages":
+        logger.warning(f"⚠️ Event {event.id} has source_table='{event.source_table}', expected 'messages'")
+        return False
 
-    # Cache themes per workspace for efficiency
-    themes_cache: Dict[UUID, List[Dict[str, Any]]] = {}
+    # Validate source_record_id
+    if not event.source_record_id:
+        logger.error(f"❌ Event {event.id} has NULL source_record_id - cannot link message")
+        return False
 
-    for chunk in chunks:
-        try:
-            # Get parent event for context
-            parent_event = chunk.normalized_event
-            if not parent_event:
-                chunk.processed_at = datetime.now(timezone.utc)
-                mark_row_processed(
-                    row=chunk,
-                    stage="extracted",
-                    timestamp_field="extracted_at",
-                    lock_token=lock_token,
-                )
-                stats["skipped"] += 1
-                continue
+    message_id = event.source_record_id
 
-            # Get themes for this chunk's workspace (use cache or fetch)
-            chunk_workspace_id = chunk.workspace_id
-            logger.debug(f"Processing chunk {chunk.id} for workspace {chunk_workspace_id}")
+    # Check if this exact (message_id, customer_ask_id) pair was already linked in this batch
+    # This prevents duplicate junction table entries for the same pair
+    link_pair = (message_id, customer_ask_id)
+    if linked_pairs is not None and link_pair in linked_pairs:
+        logger.debug(
+            f"ℹ️ Message {message_id} already linked to CustomerAsk {customer_ask_id} in this batch - skipping"
+        )
+        return True  # Already linked, not a failure
 
-            if chunk_workspace_id not in themes_cache:
-                if themes:  # Use pre-fetched themes if available (when workspace_id was provided)
-                    themes_cache[chunk_workspace_id] = themes
-                    logger.info(f"Using {len(themes)} pre-fetched themes for chunk workspace {chunk_workspace_id}")
-                else:
-                    # Fetch themes for this specific workspace
-                    fetched_themes = _get_themes_for_workspace_uuid(db, chunk_workspace_id)
-                    themes_cache[chunk_workspace_id] = fetched_themes
-                    logger.info(f"Fetched {len(fetched_themes)} themes for chunk workspace {chunk_workspace_id}")
+    # Find the message in the database
+    message = db.query(Message).filter(Message.id == message_id).first()
+    if not message:
+        logger.error(f"❌ Message not found in database: {message_id}")
+        return False
 
-            chunk_themes = themes_cache[chunk_workspace_id]
+    # Check if junction table entry already exists
+    existing_link = db.query(MessageCustomerAsk).filter(
+        MessageCustomerAsk.message_id == message_id,
+        MessageCustomerAsk.customer_ask_id == customer_ask_id,
+    ).first()
 
-            # Log themes being passed to AI
-            if chunk_themes:
-                theme_names = [t.get("name", "?") for t in chunk_themes]
-                logger.info(f"Passing {len(chunk_themes)} themes to Tier-2 AI for chunk: {theme_names}")
-            else:
-                logger.warning(f"NO THEMES available for chunk workspace {chunk_workspace_id}! Check if themes exist in DB.")
+    if existing_link:
+        logger.info(
+            f"ℹ️ Junction entry already exists: Message {message_id} → CustomerAsk {customer_ask_id}"
+        )
+    else:
+        # Determine if this is the first/primary link for this message
+        existing_links_count = db.query(MessageCustomerAsk).filter(
+            MessageCustomerAsk.message_id == message_id
+        ).count()
+        is_primary = existing_links_count == 0
 
-            # Call Tier-2 AI extraction with themes and existing customer_asks
-            result = ai_service.tier2_extract(
-                text=chunk.chunk_text,
-                source_type=parent_event.source_type,
-                actor_name=chunk.speaker_name or parent_event.actor_name,
-                actor_role=chunk.speaker_role or parent_event.actor_role,
-                title=parent_event.title,
-                themes=chunk_themes,
-                existing_features=existing_customer_asks,
+        # Create junction table entry
+        junction_entry = MessageCustomerAsk(
+            message_id=message_id,
+            customer_ask_id=customer_ask_id,
+            extraction_confidence=extraction_confidence,
+            match_reason="matched_existing" if was_matched else "created_new",
+            is_primary=is_primary,
+            chunk_id=chunk_id,
+        )
+        db.add(junction_entry)
+
+        if is_primary:
+            logger.info(
+                f"✓ Created PRIMARY junction: Message {message_id} → CustomerAsk {customer_ask_id}"
+            )
+        else:
+            logger.info(
+                f"✓ Created junction: Message {message_id} → CustomerAsk {customer_ask_id} "
+                f"(link #{existing_links_count + 1})"
             )
 
-            # Check extraction confidence
-            if result.confidence < min_confidence:
-                chunk.processed_at = datetime.now(timezone.utc)
-                mark_row_processed(
-                    row=chunk,
-                    stage="extracted",
-                    timestamp_field="extracted_at",
-                    lock_token=lock_token,
-                )
-                stats["skipped"] += 1
-                stats["extracted"] += 1
-                continue
+    # BACKWARD COMPAT: Also update deprecated customer_ask_id FK on message
+    # Only set if not already set (preserve first/primary link)
+    if message.customer_ask_id is None:
+        message.customer_ask_id = customer_ask_id
+        logger.info(f"✓ Set deprecated FK: message.customer_ask_id = {customer_ask_id}")
 
-            # Get theme_id and sub_theme_id from the AI-assigned theme name
-            theme_id, sub_theme_id = _get_sub_theme_id_by_name(chunk_themes, result.theme_name)
+    # Store tier1 feature score on the message (classification_confidence is 0-1 range from tier1)
+    # Convert back to 0-10 scale for consistency with tier1 scoring
+    if event.classification_confidence is not None:
+        tier1_score = event.classification_confidence * 10.0  # Convert 0-1 to 0-10 scale
+        if message.feature_score != tier1_score:
+            message.feature_score = tier1_score
+            logger.info(f"✓ Stored tier1 feature_score={tier1_score:.1f} on message {message.id}")
 
-            # IMPORTANT: CustomerAsks MUST have a sub_theme - use fallback if no match
-            if sub_theme_id:
-                logger.info(f"[Chunk] Tier-2: Assigned to theme '{result.theme_name}' (sub_theme_id: {sub_theme_id})")
-            else:
-                logger.warning(f"[Chunk] Tier-2: Could not find sub_theme for '{result.theme_name}' - using fallback")
-                theme_id, sub_theme_id = _get_default_sub_theme_id(db, chunk_workspace_id)
-                if sub_theme_id:
-                    logger.info(f"[Chunk] Tier-2: Using fallback sub_theme (ID: {sub_theme_id})")
-                else:
-                    logger.error(f"[Chunk] Tier-2: No sub_themes exist for workspace {chunk_workspace_id}! Cannot assign customer_ask.")
+    # Track linked pairs to avoid duplicate processing in this batch
+    if linked_pairs is not None:
+        linked_pairs.add(link_pair)
 
-            # Handle customer_ask matching or creation
-            customer_ask_id = None
-            if result.matched_feature_id and not result.is_new_feature:
-                # AI matched an existing customer_ask - increment mention count
-                try:
-                    customer_ask_id = UUID(result.matched_feature_id)
-                    customer_ask = db.query(CustomerAsk).filter(CustomerAsk.id == customer_ask_id).first()
-                    if customer_ask:
-                        event_time = parent_event.event_timestamp or datetime.now(timezone.utc)
-                        customer_ask.mention_count = (customer_ask.mention_count or 1) + 1
-                        customer_ask.last_mentioned_at = event_time
-                        customer_ask.updated_at = datetime.now(timezone.utc)
-                        logger.info(f"Matched existing customer_ask '{customer_ask.name}' (mentions: {customer_ask.mention_count})")
-                    else:
-                        customer_ask_id = None
-                        result.is_new_feature = True
-                except (ValueError, TypeError):
-                    customer_ask_id = None
-                    result.is_new_feature = True
-
-            if result.is_new_feature and sub_theme_id:
-                # Create new customer_ask
-                event_time = parent_event.event_timestamp or datetime.now(timezone.utc)
-                new_customer_ask = CustomerAsk(
-                    workspace_id=chunk.workspace_id,
-                    sub_theme_id=sub_theme_id,
-                    name=result.feature_title[:255],
-                    description=result.feature_description,
-                    urgency=_map_urgency_hint(result.urgency_hint),
-                    status="new",
-                    mention_count=1,
-                    first_mentioned_at=event_time,
-                    last_mentioned_at=event_time,
-                    match_confidence=result.confidence,
-                    ai_metadata={
-                        "problem_statement": result.problem_statement,
-                        "desired_outcome": result.desired_outcome,
-                        "user_persona": result.user_persona,
-                        "use_case": result.use_case,
-                        "keywords": result.keywords,
-                        "sentiment": result.sentiment,
-                    },
-                )
-                db.add(new_customer_ask)
-                db.flush()
-                customer_ask_id = new_customer_ask.id
-                # Add to existing customer_asks list for subsequent matches
-                existing_customer_asks.append({
-                    "id": str(customer_ask_id),
-                    "name": result.feature_title,
-                    "description": result.feature_description[:200] if result.feature_description else "",
-                    "sub_theme_name": result.theme_name or "Uncategorized",
-                    "theme_name": result.theme_name or "Uncategorized",
-                    "mention_count": 1,
-                })
-                logger.info(f"Created new customer_ask '{result.feature_title}'")
-
-            # Link the source message to the customer_ask (use parent_event for source info)
-            if customer_ask_id:
-                _link_message_to_customer_ask(db, parent_event, customer_ask_id)
-
-            # Create ExtractedFact (for audit trail)
-            content_hash = _compute_content_hash(chunk.chunk_text, result.feature_title)
-            fact = ExtractedFact(
-                workspace_id=chunk.workspace_id,
-                normalized_event_id=parent_event.id,
-                chunk_id=chunk.id,
-                customer_ask_id=customer_ask_id,
-                feature_title=result.feature_title,
-                feature_description=result.feature_description,
-                problem_statement=result.problem_statement,
-                desired_outcome=result.desired_outcome,
-                user_persona=result.user_persona,
-                use_case=result.use_case,
-                priority_hint=result.priority_hint,
-                urgency_hint=result.urgency_hint,
-                sentiment=result.sentiment,
-                keywords=result.keywords,
-                extraction_confidence=result.confidence,
-                theme_id=theme_id,
-                theme_confidence=result.theme_confidence,
-                source_type=parent_event.source_type,
-                source_id=parent_event.source_id,
-                actor_name=chunk.speaker_name or parent_event.actor_name,
-                actor_email=parent_event.actor_email,
-                event_timestamp=parent_event.event_timestamp,
-                content_hash=content_hash,
-                aggregation_status="aggregated" if customer_ask_id else "pending",
-            )
-            db.add(fact)
-
-            # Update chunk
-            chunk.processed_at = datetime.now(timezone.utc)
-            mark_row_processed(
-                row=chunk,
-                stage="extracted",
-                timestamp_field="extracted_at",
-                lock_token=lock_token,
-            )
-
-            stats["extracted"] += 1
-            stats["facts_created"] += 1
-
-        except Exception as e:
-            logger.error(f"Error extracting from chunk {chunk.id}: {e}")
-            import traceback
-            traceback.print_exc()
-            mark_row_error(
-                row=chunk,
-                error_message=f"Extraction error: {str(e)[:400]}",
-                lock_token=lock_token,
-                increment_retry=True,
-            )
-            stats["errors"] += 1
-
-    # Update parent events after extraction
-    _update_parent_events_after_extraction(db, workspace_id)
-
-    return stats
+    return True
 
 
-def _update_parent_events_after_extraction(
-    db: Session,
-    workspace_id: Optional[str],
+def _create_extracted_fact(
+    db: Session, item, event: NormalizedEvent, result,
+    theme_id: UUID, customer_ask_id: Optional[UUID], item_type: str
 ) -> None:
-    """
-    Update parent events when all their chunks are extracted.
+    """Create ExtractedFact audit record."""
+    text = item.clean_text if item_type == "event" else item.chunk_text
+    content_hash = hashlib.sha256(f"{result.feature_title}:{text[:500]}".lower().encode()).hexdigest()[:16]
 
-    This marks the parent event as extracted when all chunks are done.
-    """
-    # Find chunked events that are still in 'classified' stage
+    fact = ExtractedFact(
+        workspace_id=item.workspace_id,
+        normalized_event_id=event.id,
+        chunk_id=item.id if item_type == "chunk" else None,
+        customer_ask_id=customer_ask_id,
+        feature_title=result.feature_title,
+        feature_description=result.feature_description,
+        problem_statement=result.problem_statement,
+        desired_outcome=result.desired_outcome,
+        user_persona=result.user_persona,
+        use_case=result.use_case,
+        priority_hint=result.priority_hint,
+        urgency_hint=result.urgency_hint,
+        sentiment=result.sentiment,
+        keywords=result.keywords,
+        extraction_confidence=result.confidence,
+        theme_id=theme_id,
+        theme_confidence=result.theme_confidence,
+        source_type=event.source_type,
+        source_id=event.source_id,
+        actor_name=item.speaker_name if item_type == "chunk" and hasattr(item, 'speaker_name') else event.actor_name,
+        actor_email=event.actor_email,
+        event_timestamp=event.event_timestamp,
+        content_hash=content_hash,
+        aggregation_status="aggregated" if customer_ask_id else "pending",
+    )
+    db.add(fact)
+
+
+def _update_parent_events(db: Session, workspace_id: Optional[str]) -> None:
+    """Mark parent events as extracted when all chunks are done."""
     query = db.query(NormalizedEvent).filter(
         NormalizedEvent.processing_stage == "classified",
         NormalizedEvent.is_chunked == True,
     )
-
     if workspace_id:
         query = query.filter(NormalizedEvent.workspace_id == UUID(workspace_id))
 
-    events = query.all()
-
-    for event in events:
-        # Check if all classified chunks are extracted
-        pending_chunks = db.query(EventChunk).filter(
+    for event in query.all():
+        pending = db.query(EventChunk).filter(
             EventChunk.normalized_event_id == event.id,
             EventChunk.processing_stage == "classified",
         ).count()
 
-        if pending_chunks == 0:
+        if pending == 0:
             now = datetime.now(timezone.utc)
             event.processing_stage = "extracted"
             event.extracted_at = now
-            event.processed_at = now
-            event.updated_at = now
+
+
+def resync_message_customer_ask_links(workspace_id: Optional[str] = None) -> Dict[str, int]:
+    """
+    Re-sync message <-> CustomerAsk links based on ExtractedFacts.
+
+    This is a recovery function that can be called to fix messages that
+    weren't properly linked during tier2 extraction. It uses ExtractedFacts
+    (which have customer_ask_id) to trace back to the original messages
+    through NormalizedEvents.
+
+    Creates junction table entries (message_customer_asks) for many-to-many support.
+    Also updates the deprecated customer_ask_id FK for backward compatibility.
+
+    Usage:
+        from app.sync_engine.tasks.ai_pipeline.tier2_extraction import resync_message_customer_ask_links
+        result = resync_message_customer_ask_links("workspace-uuid")
+
+    Returns: {"checked": N, "linked": M, "already_linked": K, "errors": E}
+    """
+    from sqlalchemy.orm import Session
+    from app.sync_engine.tasks.base import engine
+
+    stats = {"checked": 0, "linked": 0, "already_linked": 0, "not_found": 0, "errors": 0}
+
+    with Session(engine) as db:
+        # Find all ExtractedFacts that have a customer_ask_id
+        query = db.query(ExtractedFact).filter(
+            ExtractedFact.customer_ask_id.isnot(None)
+        )
+        if workspace_id:
+            query = query.filter(ExtractedFact.workspace_id == UUID(workspace_id))
+
+        facts = query.all()
+        logger.info(f"🔄 Re-syncing message links (M2M): found {len(facts)} ExtractedFacts with customer_ask_id")
+
+        for fact in facts:
+            stats["checked"] += 1
+            try:
+                # Get the NormalizedEvent
+                event = db.query(NormalizedEvent).filter(
+                    NormalizedEvent.id == fact.normalized_event_id
+                ).first()
+
+                if not event:
+                    logger.warning(f"NormalizedEvent not found: {fact.normalized_event_id}")
+                    stats["errors"] += 1
+                    continue
+
+                if event.source_table != "messages" or not event.source_record_id:
+                    logger.warning(
+                        f"NormalizedEvent {event.id} has invalid source info: "
+                        f"source_table='{event.source_table}', source_record_id={event.source_record_id}"
+                    )
+                    stats["errors"] += 1
+                    continue
+
+                message_id = event.source_record_id
+                customer_ask_id = fact.customer_ask_id
+
+                # Find the message
+                message = db.query(Message).filter(Message.id == message_id).first()
+
+                if not message:
+                    logger.warning(f"Message not found: {message_id}")
+                    stats["not_found"] += 1
+                    continue
+
+                # Check if junction table entry already exists
+                existing_link = db.query(MessageCustomerAsk).filter(
+                    MessageCustomerAsk.message_id == message_id,
+                    MessageCustomerAsk.customer_ask_id == customer_ask_id,
+                ).first()
+
+                if existing_link:
+                    stats["already_linked"] += 1
+                else:
+                    # Determine if this is the first/primary link for this message
+                    existing_links_count = db.query(MessageCustomerAsk).filter(
+                        MessageCustomerAsk.message_id == message_id
+                    ).count()
+                    is_primary = existing_links_count == 0
+
+                    # Create junction table entry
+                    junction_entry = MessageCustomerAsk(
+                        message_id=message_id,
+                        customer_ask_id=customer_ask_id,
+                        extraction_confidence=fact.extraction_confidence,
+                        match_reason="resync",
+                        is_primary=is_primary,
+                        chunk_id=fact.chunk_id,
+                    )
+                    db.add(junction_entry)
+
+                    logger.info(
+                        f"✓ Created junction: Message {message_id} → CustomerAsk {customer_ask_id} "
+                        f"(primary={is_primary})"
+                    )
+                    stats["linked"] += 1
+
+                # BACKWARD COMPAT: Also update deprecated customer_ask_id FK on message
+                # Only set if not already set (preserve first/primary link)
+                if message.customer_ask_id is None:
+                    message.customer_ask_id = customer_ask_id
+                    logger.info(f"✓ Set deprecated FK: message.customer_ask_id = {customer_ask_id}")
+
+                # Also store tier1 score from NormalizedEvent if available
+                if event.classification_confidence is not None and message.feature_score is None:
+                    tier1_score = event.classification_confidence * 10.0  # Convert 0-1 to 0-10 scale
+                    message.feature_score = tier1_score
+                    logger.info(f"✓ Stored tier1 feature_score={tier1_score:.1f} on message {message.id}")
+
+            except Exception as e:
+                logger.error(f"Error processing ExtractedFact {fact.id}: {e}")
+                stats["errors"] += 1
+
+        db.commit()
+        logger.info(
+            f"🔄 Re-sync complete (M2M): {stats['checked']} checked, {stats['linked']} linked, "
+            f"{stats['already_linked']} already linked, {stats['not_found']} not found, {stats['errors']} errors"
+        )
+
+    return stats

@@ -71,7 +71,7 @@ export function PageHeader({
           iconPosition="start"
           label={
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-              <span>All Messages</span>
+              <span>All Mentions</span>
               <Chip
                 label={messagesTotal}
                 size="small"

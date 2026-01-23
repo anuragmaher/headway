@@ -1,28 +1,18 @@
 """
 AI Insights Celery Tasks
 
-Tasks for AI insights processing (runs on default celery queue).
+Tasks for AI insights processing.
 
-Features:
-- Rate-limited processing
-- Processes one message at a time
-- Idempotent with progress tracking
+AI insights are processed on-demand when messages are linked to CustomerAsks
+during the tier2_extraction pipeline.
 """
 
 from app.sync_engine.tasks.ai_insights.worker import (
     process_single_message_insights,
     queue_message_for_insights,
-    process_fresh_messages,
-    backfill_insights,
-    update_progress_stats,
-    cleanup_stale_insights,
 )
 
 __all__ = [
     "process_single_message_insights",
     "queue_message_for_insights",
-    "process_fresh_messages",
-    "backfill_insights",
-    "update_progress_stats",
-    "cleanup_stale_insights",
 ]

@@ -63,12 +63,29 @@ export interface CustomerAskItem {
 export type CustomerAskStatus = 'new' | 'under_review' | 'planned' | 'shipped';
 
 /**
+ * LinkedCustomerAsk - Minimal CustomerAsk info for UI display
+ * Used in MentionItem to show other CustomerAsks this message is linked to
+ */
+export interface LinkedCustomerAsk {
+  id: string;
+  name: string;
+  subThemeName: string | null;
+}
+
+/**
  * Mention - A message that mentions/relates to a CustomerAsk
  * Contains the original message content and AI insights
+ *
+ * Supports many-to-many: one message can link to multiple CustomerAsks
+ * - customerAskId: The current/context CustomerAsk (the one whose mentions we're viewing)
+ * - customerAskIds: ALL CustomerAsk IDs this message is linked to
+ * - linkedCustomerAsks: Full info for UI display (names, sub_theme names)
  */
 export interface MentionItem {
   id: string;
-  customerAskId: string | null;
+  customerAskId: string | null;  // Current context CustomerAsk
+  customerAskIds: string[];  // ALL linked CustomerAsk IDs
+  linkedCustomerAsks: LinkedCustomerAsk[];  // Other CustomerAsks for UI navigation
   workspaceId: string;
   source: FeedbackSource;
   externalId: string;

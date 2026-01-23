@@ -1,8 +1,8 @@
 /**
  * MentionsPanel - Slide-in panel showing mentions for a selected customer ask
- * Slides in from the right, covering 1/3 of the CustomerAsksColumn
+ * Uses split-screen layout: slides in from right taking 50% width
  */
-import React from 'react';
+import React, { forwardRef } from 'react';
 import {
   Box,
   Typography,
@@ -11,6 +11,8 @@ import {
   Slide,
   useTheme,
   Divider,
+  Paper,
+  alpha,
 } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { MentionCard } from './MentionCard';
@@ -23,20 +25,192 @@ import {
   useExplorerActions,
 } from '../../store';
 
-interface MentionsPanelProps {
-  width?: number;
+/**
+ * Inner Panel Content - forwardRef needed for Slide transition
+ */
+interface PanelContentProps {
+  mentions: ReturnType<typeof useMentions>;
+  selectedCustomerAsk: ReturnType<typeof useSelectedCustomerAsk>;
+  isLoading: boolean;
+  expandedMentionId: string | null;
+  onClose: () => void;
+  onToggleMention: (mentionId: string) => void;
+  onNavigateToCustomerAsk: (customerAskId: string) => void;
 }
 
-export const MentionsPanel: React.FC<MentionsPanelProps> = ({
-  width = 420,
-}) => {
-  const theme = useTheme();
+const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
+  ({ mentions, selectedCustomerAsk, isLoading, expandedMentionId, onClose, onToggleMention, onNavigateToCustomerAsk }, ref) => {
+    const theme = useTheme();
+
+    return (
+      <Box
+        ref={ref}
+        sx={{
+          width: '50%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          pl: 1.5,
+          pr: 0,
+          py: 0,
+          position: 'absolute',
+          right: 0,
+          top: 0,
+        }}
+      >
+        <Paper
+          elevation={0}
+          sx={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            borderRadius: 0,
+            border: 'none',
+            borderLeft: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+            bgcolor: theme.palette.background.paper,
+            overflow: 'hidden',
+          }}
+        >
+          {/* Header */}
+          <Box
+            sx={{
+              px: 2,
+              height: 48,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              borderBottom: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
+              bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#fff',
+              flexShrink: 0,
+            }}
+          >
+            <Box sx={{ flex: 1, minWidth: 0, pr: 1 }}>
+              <Typography
+                sx={{
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.5px',
+                  color: 'text.secondary',
+                  textTransform: 'uppercase',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {selectedCustomerAsk ? selectedCustomerAsk.name : 'Mentions'}
+              </Typography>
+            </Box>
+
+            <IconButton
+              size="small"
+              onClick={onClose}
+              sx={{
+                color: theme.palette.text.disabled,
+                p: 0.5,
+                '&:hover': {
+                  color: theme.palette.text.secondary,
+                  bgcolor: alpha(theme.palette.action.hover, 0.04),
+                },
+              }}
+            >
+              <CloseIcon sx={{ fontSize: 16 }} />
+            </IconButton>
+          </Box>
+
+          {/* Subheader with count */}
+          {selectedCustomerAsk && (
+            <Box
+              sx={{
+                px: 2,
+                py: 1,
+                borderBottom: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: '0.75rem',
+                  color: 'text.disabled',
+                }}
+              >
+                {mentions.length} mention{mentions.length !== 1 ? 's' : ''} from customers
+              </Typography>
+            </Box>
+          )}
+
+          {/* Mentions List */}
+          <Box
+            sx={{
+              flex: 1,
+              overflow: 'auto',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              '&::-webkit-scrollbar': { display: 'none' },
+            }}
+          >
+            {isLoading ? (
+              <Box sx={{ p: 2 }}>
+                {[1, 2, 3].map((i) => (
+                  <Box key={i} sx={{ mb: 2 }}>
+                    <Skeleton variant="rounded" height={24} sx={{ mb: 1 }} />
+                    <Skeleton variant="rounded" height={60} />
+                  </Box>
+                ))}
+              </Box>
+            ) : mentions.length === 0 ? (
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flex: 1,
+                  height: '100%',
+                  p: 4,
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: '0.875rem',
+                    color: 'text.disabled',
+                    textAlign: 'center',
+                  }}
+                >
+                  No mentions found for this customer ask
+                </Typography>
+              </Box>
+            ) : (
+              <Box sx={{ p: 1.5 }}>
+                {mentions.map((mention, index) => (
+                  <React.Fragment key={mention.id}>
+                    <MentionCard
+                      mention={mention}
+                      isExpanded={mention.id === expandedMentionId}
+                      onToggleExpand={onToggleMention}
+                      onNavigateToCustomerAsk={onNavigateToCustomerAsk}
+                    />
+                    {index < mentions.length - 1 && (
+                      <Divider sx={{ my: 1.5 }} />
+                    )}
+                  </React.Fragment>
+                ))}
+              </Box>
+            )}
+          </Box>
+        </Paper>
+      </Box>
+    );
+  }
+);
+
+PanelContent.displayName = 'PanelContent';
+
+export const MentionsPanel: React.FC = () => {
   const mentions = useMentions();
   const selectedCustomerAsk = useSelectedCustomerAsk();
   const isLoading = useIsLoadingMentions();
   const isPanelOpen = useIsMentionsPanelOpen();
   const expandedMentionId = useExpandedMentionId();
-  const { closeMentionsPanel, toggleMentionExpand } = useExplorerActions();
+  const { closeMentionsPanel, toggleMentionExpand, selectCustomerAsk } = useExplorerActions();
 
   const handleClose = () => {
     closeMentionsPanel();
@@ -46,151 +220,23 @@ export const MentionsPanel: React.FC<MentionsPanelProps> = ({
     toggleMentionExpand(mentionId);
   };
 
+  // Navigate to another CustomerAsk (for multi-linked messages)
+  const handleNavigateToCustomerAsk = (customerAskId: string) => {
+    // Select the new CustomerAsk - this will trigger fetching its mentions
+    selectCustomerAsk(customerAskId);
+  };
+
   return (
-    <Slide direction="left" in={isPanelOpen} mountOnEnter unmountOnExit>
-      <Box
-        sx={{
-          position: 'absolute',
-          right: 0,
-          top: 0,
-          bottom: 0,
-          width,
-          bgcolor: 'background.paper',
-          borderLeft: '1px solid',
-          borderColor: 'divider',
-          display: 'flex',
-          flexDirection: 'column',
-          zIndex: 10,
-          boxShadow: theme.palette.mode === 'dark'
-            ? '-4px 0 20px rgba(0, 0, 0, 0.4)'
-            : '-4px 0 20px rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        {/* Header */}
-        <Box
-          sx={{
-            px: 2,
-            py: 1.5,
-            borderBottom: '1px solid',
-            borderColor: 'divider',
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#fff',
-          }}
-        >
-          <Box sx={{ flex: 1, minWidth: 0, pr: 1 }}>
-            <Typography
-              sx={{
-                fontSize: '0.6875rem',
-                fontWeight: 600,
-                letterSpacing: '0.5px',
-                color: 'text.secondary',
-                textTransform: 'uppercase',
-              }}
-            >
-              Mentions
-            </Typography>
-            {selectedCustomerAsk && (
-              <>
-                <Typography
-                  sx={{
-                    fontSize: '0.875rem',
-                    fontWeight: 600,
-                    color: 'text.primary',
-                    mt: 0.5,
-                    lineHeight: 1.4,
-                  }}
-                >
-                  {selectedCustomerAsk.name}
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: '0.75rem',
-                    color: 'text.disabled',
-                    mt: 0.25,
-                  }}
-                >
-                  {mentions.length} mention{mentions.length !== 1 ? 's' : ''} from customers
-                </Typography>
-              </>
-            )}
-          </Box>
-
-          <IconButton
-            size="small"
-            onClick={handleClose}
-            sx={{ mt: -0.5, mr: -0.5 }}
-          >
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        </Box>
-
-        {/* Mentions List */}
-        <Box
-          sx={{
-            flex: 1,
-            overflow: 'auto',
-            '&::-webkit-scrollbar': {
-              width: 6,
-            },
-            '&::-webkit-scrollbar-track': {
-              bgcolor: 'transparent',
-            },
-            '&::-webkit-scrollbar-thumb': {
-              bgcolor: 'rgba(0,0,0,0.1)',
-              borderRadius: 3,
-            },
-          }}
-        >
-          {isLoading ? (
-            <Box sx={{ p: 2 }}>
-              {[1, 2, 3].map((i) => (
-                <Box key={i} sx={{ mb: 2 }}>
-                  <Skeleton variant="rounded" height={24} sx={{ mb: 1 }} />
-                  <Skeleton variant="rounded" height={60} />
-                </Box>
-              ))}
-            </Box>
-          ) : mentions.length === 0 ? (
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flex: 1,
-                height: '100%',
-                p: 4,
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: '0.875rem',
-                  color: 'text.disabled',
-                  textAlign: 'center',
-                }}
-              >
-                No mentions found for this customer ask
-              </Typography>
-            </Box>
-          ) : (
-            <Box sx={{ p: 1.5 }}>
-              {mentions.map((mention, index) => (
-                <React.Fragment key={mention.id}>
-                  <MentionCard
-                    mention={mention}
-                    isExpanded={mention.id === expandedMentionId}
-                    onToggleExpand={handleToggleMention}
-                  />
-                  {index < mentions.length - 1 && (
-                    <Divider sx={{ my: 1.5 }} />
-                  )}
-                </React.Fragment>
-              ))}
-            </Box>
-          )}
-        </Box>
-      </Box>
+    <Slide direction="left" in={isPanelOpen} mountOnEnter unmountOnExit timeout={250}>
+      <PanelContent
+        mentions={mentions}
+        selectedCustomerAsk={selectedCustomerAsk}
+        isLoading={isLoading}
+        expandedMentionId={expandedMentionId}
+        onClose={handleClose}
+        onToggleMention={handleToggleMention}
+        onNavigateToCustomerAsk={handleNavigateToCustomerAsk}
+      />
     </Slide>
   );
 };

@@ -140,6 +140,10 @@ class BatchDatabaseService:
                 f"{duplicates_skipped} duplicates skipped out of {total_checked} total"
             )
 
+            # TRIGGER AI PIPELINE: Immediately start normalization for new messages
+            if new_added > 0:
+                self._trigger_ai_pipeline(workspace_id)
+
         except Exception as e:
             logger.error(f"Error in batch insert: {e}")
             db.rollback()
@@ -151,6 +155,23 @@ class BatchDatabaseService:
             "duplicates_skipped": duplicates_skipped,
             "inserted_ids": inserted_ids
         }
+
+    def _trigger_ai_pipeline(self, workspace_id: str) -> None:
+        """
+        Trigger the AI pipeline to process newly inserted messages.
+
+        State-driven architecture: Ingestion triggers normalization,
+        which then chains through the entire pipeline automatically.
+        """
+        try:
+            from app.sync_engine.tasks.ai_pipeline.normalization import normalize_source_data
+
+            # Trigger normalization asynchronously - it will chain to subsequent stages
+            normalize_source_data.delay(workspace_id=workspace_id)
+            logger.info(f"🚀 Triggered AI pipeline for workspace {workspace_id}")
+        except Exception as e:
+            # Don't fail the insert if pipeline trigger fails
+            logger.warning(f"Failed to trigger AI pipeline: {e}")
 
     def _get_existing_external_ids(
         self,

@@ -19,6 +19,7 @@ from app.models.customer_ask import CustomerAsk
 from app.models.workspace_connector import WorkspaceConnector
 from app.models.connector_label import ConnectorLabel
 from app.models.message import Message
+from app.models.message_customer_ask import MessageCustomerAsk
 
 # AI insights
 from app.models.ai_insight import AIInsight
@@ -49,6 +50,7 @@ __all__ = [
     "WorkspaceConnector",
     "ConnectorLabel",
     "Message",
+    "MessageCustomerAsk",
     # AI insights
     "AIInsight",
     # CRM

@@ -1,10 +1,22 @@
 """
 Schemas for Mentions (Messages linked to CustomerAsks with AI insights)
+
+Supports many-to-many relationship where one message can link to multiple CustomerAsks.
 """
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
 from uuid import UUID
+
+
+class LinkedCustomerAsk(BaseModel):
+    """Minimal CustomerAsk info for displaying in mention UI"""
+    id: UUID
+    name: str
+    sub_theme_name: Optional[str] = None
+
+    class Config:
+        from_attributes = True
 
 
 class AIInsightResponse(BaseModel):
@@ -27,9 +39,17 @@ class AIInsightResponse(BaseModel):
 
 
 class MentionResponse(BaseModel):
-    """Response schema for a mention (message with AI insights)"""
+    """Response schema for a mention (message with AI insights)
+
+    Supports many-to-many: one message can link to multiple CustomerAsks.
+    - customer_ask_id: The current/context CustomerAsk (the one whose mentions we're viewing)
+    - customer_ask_ids: ALL CustomerAsk IDs this message is linked to
+    - linked_customer_asks: Full info for UI display (names, sub_theme names)
+    """
     id: UUID
-    customer_ask_id: Optional[UUID] = None
+    customer_ask_id: Optional[UUID] = None  # Current context (which CustomerAsk we're viewing)
+    customer_ask_ids: List[UUID] = []  # ALL linked CustomerAsk IDs (for filtering/navigation)
+    linked_customer_asks: List[LinkedCustomerAsk] = []  # Full info for UI display
     workspace_id: UUID
     source: str
     external_id: str

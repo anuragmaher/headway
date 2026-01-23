@@ -1,3 +1,5 @@
+from typing import List, TYPE_CHECKING
+
 from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Text, Index, Integer, Float, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
@@ -5,6 +7,9 @@ from sqlalchemy.sql import func
 import uuid
 
 from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.models.customer_ask import CustomerAsk
 
 
 class Message(Base):
@@ -20,7 +25,8 @@ class Message(Base):
     # Connector relationship (which data source this came from)
     connector_id = Column(UUID(as_uuid=True), ForeignKey("workspace_connectors.id", ondelete="CASCADE"), nullable=False)
 
-    # Customer ask relationship (which feature request this relates to)
+    # Customer ask relationship (DEPRECATED - use customer_ask_links for many-to-many)
+    # Kept for backward compatibility during migration
     customer_ask_id = Column(UUID(as_uuid=True), ForeignKey("customer_asks.id", ondelete="SET NULL"), nullable=True)
 
     # Customer relationship (who sent this message)
@@ -66,9 +72,29 @@ class Message(Base):
     # Relationships
     workspace = relationship("Workspace", back_populates="messages")
     connector = relationship("WorkspaceConnector", back_populates="messages")
-    customer_ask = relationship("CustomerAsk", back_populates="messages")
+    customer_ask = relationship("CustomerAsk", back_populates="messages")  # DEPRECATED - use customer_ask_links
     customer = relationship("Customer", back_populates="messages")
     ai_insights = relationship("AIInsight", back_populates="message", cascade="all, delete-orphan")
+
+    # NEW: Many-to-many relationship via junction table
+    # One message can link to multiple CustomerAsks (e.g., call transcript with multiple features)
+    customer_ask_links = relationship(
+        "MessageCustomerAsk",
+        back_populates="message",
+        cascade="all, delete-orphan",
+        lazy="dynamic"  # Use dynamic for efficient querying
+    )
+
+    @property
+    def customer_asks(self) -> List["CustomerAsk"]:
+        """Get all linked CustomerAsks via junction table."""
+        return [link.customer_ask for link in self.customer_ask_links]
+
+    @property
+    def primary_customer_ask(self) -> "CustomerAsk | None":
+        """Get the primary (first) CustomerAsk link for this message."""
+        primary_link = self.customer_ask_links.filter_by(is_primary=True).first()
+        return primary_link.customer_ask if primary_link else None
 
     # Indexes and constraints
     __table_args__ = (

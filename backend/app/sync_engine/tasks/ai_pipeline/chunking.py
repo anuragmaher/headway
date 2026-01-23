@@ -1,16 +1,13 @@
 """
-Semantic Chunking Task - State-Driven Execution
+Semantic Chunking Task - For Long Texts Only
 
-Splits large NormalizedEvents into semantic chunks for efficient AI processing.
-Runs AFTER signal scoring, processes ALL scored events (no pre-filtering).
+Splits large NormalizedEvents (>2000 chars) into semantic chunks for efficient AI processing.
+Runs AFTER normalization, processes normalized events.
 
-State-Driven Model:
-- Queries rows where: processing_stage='scored' AND chunked_at IS NULL AND lock_token IS NULL
-- Uses row-level locking to prevent duplicate processing
-- Sets chunked_at timestamp on completion for idempotent execution
+Short texts (<= 2000 chars) skip chunking and go directly to Tier-1 classification.
+Long texts (> 2000 chars) are split into semantic chunks for processing.
 
-NOTE: All events proceed to Tier-1 classification. The ONLY filter that prevents
-      messages from reaching Tier-2 extraction is the Tier-1 score (0-10, >= 6 passes).
+No locking needed since we run a single worker.
 """
 
 import logging
@@ -28,11 +25,6 @@ from app.sync_engine.tasks.base import (
     cleanup_after_task,
     test_db_connection,
 )
-from app.sync_engine.tasks.ai_pipeline.locking import (
-    acquire_rows_for_processing,
-    mark_row_processed,
-    mark_row_error,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +33,10 @@ CHUNKING_BATCH_SIZE = 50
 
 # Max retries before giving up on a row
 MAX_RETRIES = 3
+
+# Minimum text length to require chunking (chars)
+# Texts <= this length are processed as-is without chunking
+MIN_CHUNK_LENGTH = 2000
 
 
 @celery_app.task(
@@ -59,16 +55,10 @@ def chunk_normalized_events(
     batch_size: int = CHUNKING_BATCH_SIZE,
 ) -> Dict[str, Any]:
     """
-    Split scored normalized events into semantic chunks.
+    Split large normalized events (>2000 chars) into semantic chunks.
 
-    State-Driven Execution:
-    - Finds rows: processing_stage='scored' AND chunked_at IS NULL
-    - Acquires row-level locks to prevent race conditions
-    - Creates EventChunk records for large texts
-    - Sets chunked_at timestamp on completion (idempotent marker)
-
-    NOTE: All events proceed to Tier-1. Only the Tier-1 score >= 6 determines
-          whether content reaches Tier-2 extraction.
+    - Short texts (<= 2000 chars): Skip chunking, go directly to classification
+    - Long texts (> 2000 chars): Split into semantic chunks for processing
 
     Args:
         workspace_id: Optional workspace to limit processing
@@ -77,11 +67,8 @@ def chunk_normalized_events(
     Returns:
         Dict with processing stats
     """
-    import uuid as uuid_module
-    lock_token = uuid_module.uuid4()
-
     try:
-        logger.info(f"✂️ Starting semantic chunking task (workspace={workspace_id}, lock={lock_token})")
+        logger.info(f"✂️ Starting semantic chunking task (workspace={workspace_id})")
 
         with Session(engine) as db:
             if not test_db_connection(db):
@@ -90,33 +77,17 @@ def chunk_normalized_events(
 
             chunking_service = get_semantic_chunking_service()
 
-            # Build state-driven filter conditions:
-            # 1. processing_stage = 'scored' (eligible for chunking)
-            # 2. chunked_at IS NULL (not yet chunked - idempotent check)
-            # 3. lock_token IS NULL (not locked - added by acquire_rows)
-            # 4. retry_count < MAX_RETRIES (not exhausted retries)
-            # NOTE: Removed skip_ai_processing filter - all events go to Tier-1
-            #       The only filter should be the Tier-1 score (0-10, >= 6 passes)
-            filter_conditions = [
-                NormalizedEvent.processing_stage == "scored",
+            # Query events ready for chunking (after normalization)
+            query = db.query(NormalizedEvent).filter(
+                NormalizedEvent.processing_stage == "normalized",
                 NormalizedEvent.chunked_at.is_(None),
                 NormalizedEvent.retry_count < MAX_RETRIES,
-            ]
+            )
 
             if workspace_id:
-                filter_conditions.append(
-                    NormalizedEvent.workspace_id == UUID(workspace_id)
-                )
+                query = query.filter(NormalizedEvent.workspace_id == UUID(workspace_id))
 
-            # Acquire rows with row-level locking
-            events = acquire_rows_for_processing(
-                db=db,
-                model=NormalizedEvent,
-                filter_conditions=filter_conditions,
-                order_by=NormalizedEvent.created_at.asc(),
-                batch_size=batch_size,
-                lock_token=lock_token,
-            )
+            events = query.order_by(NormalizedEvent.created_at.asc()).limit(batch_size).all()
 
             if not events:
                 logger.info("No events to chunk")
@@ -127,7 +98,7 @@ def chunk_normalized_events(
                     "total_not_chunked": 0,
                 }
 
-            logger.info(f"Acquired {len(events)} events for chunking")
+            logger.info(f"Processing {len(events)} events for chunking")
 
             total_processed = 0
             total_chunks_created = 0
@@ -136,25 +107,21 @@ def chunk_normalized_events(
 
             for event in events:
                 try:
-                    # Check if text needs chunking
-                    if not chunking_service.should_chunk(event.clean_text):
-                        # Text is small enough, no chunking needed
+                    now = datetime.now(timezone.utc)
+                    text_length = len(event.clean_text) if event.clean_text else 0
+
+                    # Only chunk long texts (> 2000 chars)
+                    if text_length <= MIN_CHUNK_LENGTH:
+                        # Short text - no chunking needed
                         event.is_chunked = False
                         event.chunk_count = 0
-
-                        # Mark as processed with state-driven timestamp
-                        mark_row_processed(
-                            row=event,
-                            stage="chunked",
-                            timestamp_field="chunked_at",
-                            lock_token=lock_token,
-                        )
-
+                        event.processing_stage = "chunked"
+                        event.chunked_at = now
                         total_not_chunked += 1
                         total_processed += 1
                         continue
 
-                    # Build metadata for chunking hints
+                    # Long text - needs chunking
                     metadata = event.event_metadata or {}
 
                     # Perform semantic chunking
@@ -166,22 +133,23 @@ def chunk_normalized_events(
 
                     # Store chunks in database
                     for chunk in chunks:
-                        # Truncate string fields to fit column constraints
-                        speaker_name = chunk.speaker[:255] if chunk.speaker else None
-                        speaker_role = chunk.speaker_role[:100] if chunk.speaker_role else None
+                        # Store extra fields in chunk_metadata JSONB
+                        chunk_metadata = {
+                            "speaker_name": chunk.speaker[:255] if chunk.speaker else None,
+                            "speaker_role": chunk.speaker_role[:100] if chunk.speaker_role else None,
+                            "token_estimate": chunk.token_estimate,
+                            "start_offset": chunk.start_offset,
+                            "end_offset": chunk.end_offset,
+                            "start_timestamp_seconds": chunk.start_time_seconds,
+                            "end_timestamp_seconds": chunk.end_time_seconds,
+                        }
 
                         event_chunk = EventChunk(
                             workspace_id=event.workspace_id,
                             normalized_event_id=event.id,
                             chunk_text=chunk.text,
                             chunk_index=chunk.chunk_index,
-                            token_estimate=chunk.token_estimate,
-                            start_offset=chunk.start_offset,
-                            end_offset=chunk.end_offset,
-                            start_timestamp_seconds=chunk.start_time_seconds,
-                            end_timestamp_seconds=chunk.end_time_seconds,
-                            speaker_name=speaker_name,
-                            speaker_role=speaker_role,
+                            chunk_metadata=chunk_metadata,
                             processing_stage="pending",
                         )
                         db.add(event_chunk)
@@ -189,29 +157,18 @@ def chunk_normalized_events(
                     # Update event with chunk info
                     event.is_chunked = True
                     event.chunk_count = len(chunks)
-
-                    # Mark as processed with state-driven timestamp
-                    mark_row_processed(
-                        row=event,
-                        stage="chunked",
-                        timestamp_field="chunked_at",
-                        lock_token=lock_token,
-                    )
+                    event.processing_stage = "chunked"
+                    event.chunked_at = now
 
                     total_chunks_created += len(chunks)
                     total_processed += 1
 
-                    logger.debug(f"Created {len(chunks)} chunks for event {event.id}")
+                    logger.debug(f"Created {len(chunks)} chunks for event {event.id} (text: {text_length} chars)")
 
                 except Exception as e:
                     logger.error(f"Error chunking event {event.id}: {e}")
-                    # Mark error but keep stage for retry
-                    mark_row_error(
-                        row=event,
-                        error_message=f"Chunking error: {str(e)[:400]}",
-                        lock_token=lock_token,
-                        increment_retry=True,
-                    )
+                    event.retry_count = (event.retry_count or 0) + 1
+                    event.processing_error = f"Chunking error: {str(e)[:400]}"
                     total_errors += 1
                     continue
 

@@ -14,7 +14,7 @@ Usage:
     result = gmail_batch_ingestion_service.ingest_messages_for_connector(
         connector_id="...",
         db=db,
-        max_messages=10
+        max_messages=50
     )
 """
 
@@ -58,7 +58,7 @@ class GmailBatchIngestionService:
         self,
         connector_id: str,
         db: Session,
-        max_messages: int = 10
+        max_messages: int = 50
     ) -> Dict[str, Any]:
         """
         Ingest messages from all enabled labels for a Gmail connector.
