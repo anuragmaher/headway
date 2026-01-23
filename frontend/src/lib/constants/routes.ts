@@ -41,6 +41,11 @@ export const ROUTES = {
   NOT_FOUND: '*',
 } as const;
 
+// External links
+export const EXTERNAL_LINKS = {
+  EARLY_ACCESS: 'https://discreet-squirrel-727.notion.site/c17c497b9a8842d0b0bc6e1a35a4bcce?pvs=105', // Configure your Notion URL here
+} as const;
+
 // Helper functions for dynamic routes
 export const getThemeDetailRoute = (id: string): string => 
   ROUTES.THEME_DETAIL.replace(':id', id);

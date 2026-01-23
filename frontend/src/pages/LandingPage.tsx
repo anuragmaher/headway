@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { LandingLayout } from '@/shared/components/layouts';
-import { ROUTES } from '@/lib/constants/routes';
+import { ROUTES, EXTERNAL_LINKS } from '@/lib/constants/routes';
 
 export function LandingPage(): JSX.Element {
   const theme = useTheme();
@@ -92,19 +92,15 @@ export function LandingPage(): JSX.Element {
               in minutes, not hours.
             </Typography>
             
-            <Stack 
-              direction={{ xs: 'column', sm: 'row' }} 
-              spacing={2} 
-              justifyContent="center"
-              sx={{ mb: 6 }}
-            >
-              <Button 
-                variant="contained" 
+            <Box sx={{ mb: 6, display: 'flex', justifyContent: 'center' }}>
+              <Button
+                variant="contained"
                 size="large"
-                component={RouterLink}
-                to={ROUTES.REGISTER}
-                sx={{ 
-                  px: 4, 
+                href={EXTERNAL_LINKS.EARLY_ACCESS}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  px: 4,
                   py: 2,
                   fontSize: '1.1rem',
                   fontWeight: 600,
@@ -117,30 +113,9 @@ export function LandingPage(): JSX.Element {
                   transition: 'all 0.3s ease'
                 }}
               >
-                Start Free Trial
+                Get Early Access
               </Button>
-              <Button 
-                variant="outlined" 
-                size="large"
-                component={RouterLink}
-                to={ROUTES.LOGIN}
-                sx={{ 
-                  px: 4, 
-                  py: 2,
-                  fontSize: '1.1rem',
-                  fontWeight: 600,
-                  borderRadius: '12px',
-                  borderWidth: 2,
-                  '&:hover': {
-                    borderWidth: 2,
-                    transform: 'translateY(-2px)',
-                  },
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                View Demo
-              </Button>
-            </Stack>
+            </Box>
 
             <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
               ✨ No credit card required • Set up in under 2 minutes
