@@ -16,10 +16,14 @@ export interface SubThemeState {
   subThemes: ExplorerSubTheme[];
   isLoadingSubThemes: boolean;
   subThemesError: string | null;
+  // Cache: themeId -> sub-themes (prevents duplicate fetches)
+  subThemesCache: Record<string, ExplorerSubTheme[]>;
+  currentThemeIdForSubThemes: string | null;
 }
 
 export interface SubThemeActions {
   fetchSubThemes: (themeId: string) => Promise<void>;
+  prefetchSubThemes: (themeId: string) => Promise<void>;  // Cache-only, no visible state update
   createSubTheme: (input: CreateSubThemeInput) => Promise<ExplorerSubTheme>;
   updateSubTheme: (subThemeId: string, input: UpdateSubThemeInput) => Promise<void>;
   deleteSubTheme: (subThemeId: string) => Promise<void>;
@@ -37,6 +41,8 @@ const initialSubThemeState: SubThemeState = {
   subThemes: [],
   isLoadingSubThemes: false,
   subThemesError: null,
+  subThemesCache: {},
+  currentThemeIdForSubThemes: null,
 };
 
 export const createSubThemeSlice: StateCreator<
@@ -48,7 +54,20 @@ export const createSubThemeSlice: StateCreator<
   ...initialSubThemeState,
 
   fetchSubThemes: async (themeId: string) => {
-    set({ isLoadingSubThemes: true, subThemesError: null });
+    const { subThemesCache, currentThemeIdForSubThemes } = get();
+
+    // OPTIMIZATION: Use cache if available (instant load for previously visited themes)
+    if (subThemesCache[themeId]) {
+      console.log('[Explorer] Using cached sub-themes for theme:', themeId);
+      set({
+        subThemes: subThemesCache[themeId],
+        currentThemeIdForSubThemes: themeId,
+        isLoadingSubThemes: false,
+      });
+      return;
+    }
+
+    set({ isLoadingSubThemes: true, subThemesError: null, currentThemeIdForSubThemes: themeId });
 
     try {
       console.log('[Explorer] Fetching sub-themes for theme:', themeId);
@@ -70,11 +89,74 @@ export const createSubThemeSlice: StateCreator<
       }));
 
       console.log('[Explorer] Received sub-themes:', subThemes.length, 'items');
-      set({ subThemes, isLoadingSubThemes: false });
+
+      // Update state and cache
+      set((state) => ({
+        subThemes,
+        isLoadingSubThemes: false,
+        subThemesCache: { ...state.subThemesCache, [themeId]: subThemes },
+      }));
+
+      // OPTIMIZATION: Prefetch first sub-theme's customer asks in background
+      // This makes the first sub-theme click instant
+      // Use prefetchCustomerAsks to only update cache, not visible state
+      if (subThemes.length > 0) {
+        console.log('[Explorer] Prefetching customer asks for first sub-theme:', subThemes[0].id);
+        // Fire and forget - don't await to avoid blocking
+        get().prefetchCustomerAsks(subThemes[0].id).catch((err) => {
+          console.warn('[Explorer] Failed to prefetch customer asks:', err);
+        });
+      }
     } catch (error) {
       console.error('[Explorer] Failed to fetch sub-themes:', error);
       const message = error instanceof Error ? error.message : 'Failed to fetch sub-themes';
       set({ subThemesError: message, isLoadingSubThemes: false });
+    }
+  },
+
+  // Prefetch sub-themes - only updates cache, doesn't change visible state
+  prefetchSubThemes: async (themeId: string) => {
+    const { subThemesCache } = get();
+
+    // Skip if already cached
+    if (subThemesCache[themeId]) {
+      console.log('[Explorer] Sub-themes already cached for theme:', themeId);
+      return;
+    }
+
+    try {
+      console.log('[Explorer] Prefetching sub-themes for theme:', themeId);
+      const response = await themesApi.listSubThemes(themeId);
+
+      // Transform API response to ExplorerSubTheme format
+      const subThemes: ExplorerSubTheme[] = response.sub_themes.map((st) => ({
+        id: st.id,
+        themeId: st.theme_id,
+        name: st.name,
+        description: st.description || '',
+        feedbackCount: st.customer_ask_count || 0,
+        customerAskCount: st.customer_ask_count || 0,
+        isAIGenerated: false,
+        isLocked: false,
+        topFeedbackPreview: st.description?.slice(0, 100),
+        createdAt: st.created_at,
+        updatedAt: st.updated_at || st.created_at,
+      }));
+
+      console.log('[Explorer] Prefetch complete - cached', subThemes.length, 'sub-themes');
+
+      // Only update cache, NOT visible state
+      set((state) => ({
+        subThemesCache: { ...state.subThemesCache, [themeId]: subThemes },
+      }));
+
+      // Chain prefetch: also prefetch customer asks for first sub-theme
+      if (subThemes.length > 0) {
+        get().prefetchCustomerAsks(subThemes[0].id).catch(() => {});
+      }
+    } catch (error) {
+      console.warn('[Explorer] Prefetch sub-themes failed:', error);
+      // Don't set error state for prefetch failures
     }
   },
 

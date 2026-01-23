@@ -177,11 +177,12 @@ export const themesApi = {
   async getMentionsForCustomerAsk(
     customerAskId: string,
     limit = 50,
-    offset = 0
+    offset = 0,
+    includeLinkedAsks = false  // Skip linked asks by default for faster load
   ): Promise<MentionListResponse> {
     const response = await api.get<MentionListResponse>(
       `${BASE_URL}/customer-asks/${customerAskId}/mentions`,
-      { params: { limit, offset } }
+      { params: { limit, offset, include_linked_asks: includeLinkedAsks } }
     );
     return response.data;
   },

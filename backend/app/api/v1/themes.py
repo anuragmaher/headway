@@ -444,6 +444,7 @@ async def get_mentions_for_customer_ask(
     customer_ask_id: UUID,
     limit: int = 50,
     offset: int = 0,
+    include_linked_asks: bool = True,
     current_user: dict = Depends(get_current_user),
     db = Depends(get_db)
 ):
@@ -452,6 +453,11 @@ async def get_mentions_for_customer_ask(
 
     Returns messages linked to the customer ask along with their AI insights.
     This endpoint powers the mentions panel in the Theme Explorer.
+
+    Query params:
+    - limit: Max mentions to return (default 50)
+    - offset: Pagination offset
+    - include_linked_asks: If false, skips loading other linked CustomerAsks for faster response
     """
     service = CustomerAskService(db)
     customer_ask = service.get_customer_ask(customer_ask_id)
@@ -471,7 +477,8 @@ async def get_mentions_for_customer_ask(
     result = service.get_mentions_for_customer_ask(
         customer_ask_id=customer_ask_id,
         limit=limit,
-        offset=offset
+        offset=offset,
+        include_linked_asks=include_linked_asks
     )
 
     return MentionListResponse(**result)

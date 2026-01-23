@@ -43,6 +43,7 @@ import { ConnectDataSourcesBanner } from '@/shared/components/ConnectDataSources
 import { useAuthActions, useUser, useAuthStore } from '@/features/auth/store/auth-store';
 import { useLayoutStore } from '@/shared/store/layoutStore';
 import { useWorkspaceSettingsStore } from '@/shared/store/WorkspaceStore/workspaceSettingsStore';
+import { useExplorerStore } from '@/features/explorer/store/explorerStore';
 import { ROUTES } from '@/lib/constants/routes';
 
 const DRAWER_WIDTH = 220;
@@ -52,7 +53,15 @@ interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
-const navigationItems = [
+interface NavigationItem {
+  text: string;
+  icon: React.ReactNode;
+  path: string;
+  onPrefetch?: () => void;  // Called on click to start eager data fetching
+}
+
+// Navigation items defined inside component to access hooks
+const getNavigationItems = (explorerInitialize: () => Promise<void>): NavigationItem[] => [
   {
     text: 'Dashboard',
     icon: <DashboardIcon sx={{ fontSize: 20 }} />,
@@ -67,6 +76,14 @@ const navigationItems = [
     text: 'Themes',
     icon: <ThemesIcon sx={{ fontSize: 20 }} />,
     path: ROUTES.THEMES,
+    // OPTIMIZATION: Start fetching data immediately when user clicks nav link
+    // This way data may already be loaded by the time ThemeExplorer mounts
+    onPrefetch: () => {
+      console.log('[AdminLayout] Eager prefetch: Starting explorer data fetch on nav click');
+      explorerInitialize().catch((err) => {
+        console.warn('[AdminLayout] Prefetch explorer failed:', err);
+      });
+    },
   },
   {
     text: 'Customers',
@@ -89,6 +106,10 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
   const { logout } = useAuthActions();
   const user = useUser();
   const tokens = useAuthStore((state) => state.tokens);
+
+  // Explorer store for eager prefetching on nav click
+  const explorerInitialize = useExplorerStore((state) => state.initialize);
+  const navigationItems = getNavigationItems(explorerInitialize);
 
   // Sidebar collapsed state from global store (persisted)
   const { sidebarCollapsed: collapsed, toggleSidebar } = useLayoutStore();
@@ -228,6 +249,18 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
                 component={RouterLink}
                 to={item.path}
                 selected={isActive}
+                onClick={() => {
+                  // Trigger eager prefetching before navigation completes
+                  if (item.onPrefetch) {
+                    item.onPrefetch();
+                  }
+                }}
+                onMouseEnter={() => {
+                  // Trigger eager prefetching on hover for even faster perceived loading
+                  if (item.onPrefetch && !isActive) {
+                    item.onPrefetch();
+                  }
+                }}
                 sx={{
                   borderRadius: 1.5,
                   py: 0.875,
