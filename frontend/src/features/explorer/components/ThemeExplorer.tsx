@@ -5,11 +5,14 @@
  * Structure: Themes -> SubThemes -> CustomerAsks -> Mentions (slide-in panel)
  */
 import React, { useEffect, useRef } from 'react';
-import { Box, CircularProgress, Alert, AlertTitle, useTheme } from '@mui/material';
+import { Box, CircularProgress, Alert, AlertTitle, useTheme, useMediaQuery, Slide, Typography, Fade } from '@mui/material';
 import { ThemesColumn } from './ThemesColumn';
 import { SubThemesColumn } from './SubThemesColumn';
 import { CustomerAsksColumn } from './CustomerAsksColumn';
 import { MentionsPanel } from './MentionsPanel';
+import { MobileNavigationHeader } from './MobileNavigationHeader';
+import { MobileMentionsDrawer } from './MobileMentionsDrawer';
+import { MentionsBottomPanel } from './MentionsBottomPanel';
 import { AddThemeDialog } from './dialogs/AddThemeDialog';
 import { AddSubThemeDialog } from './dialogs/AddSubThemeDialog';
 import { EditThemeDialog } from './dialogs/EditThemeDialog';
@@ -25,6 +28,7 @@ interface ThemeExplorerProps {
 
 export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isPanelOpen = useIsMentionsPanelOpen();
   const {
     isInitializing,
@@ -33,6 +37,19 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
     initialize,
     clearThemesError,
     getWorkspaceId,
+    // Additional loading states
+    isLoadingThemes,
+    themes,
+    // Mobile-specific state
+    setIsMobile,
+    mobileActiveView,
+    mobileNavigationStack,
+    selectedFeedbackId,
+    selectedCustomerAskId,
+    // Actions
+    selectFeedback,
+    selectCustomerAsk,
+    closeMentionsPanel,
   } = useExplorerStore();
 
   // Ref to prevent duplicate initialization calls
@@ -40,6 +57,11 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
 
   // Initialize keyboard navigation
   useExplorerKeyboard();
+
+  // Handle mobile breakpoint changes
+  useEffect(() => {
+    setIsMobile(isMobile);
+  }, [isMobile, setIsMobile]);
 
   // Initialize on mount - fetch themes if we have a workspace
   // Uses ref to ensure we only call initialize() ONCE per mount
@@ -60,19 +82,71 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
     initialize();
   }, [isInitialized, isInitializing, initialize, getWorkspaceId]);
 
-  // Loading state
-  if (isInitializing) {
+  // Loading state - show loading for both desktop and mobile during initialization
+  const isLoading = isInitializing || (isInitialized && isLoadingThemes && themes.length === 0);
+  
+  if (isLoading) {
     return (
       <Box
         sx={{
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           height: '100%',
+          gap: 3,
           bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
+          px: 2,
         }}
       >
-        <CircularProgress size={28} />
+        {isMobile && (
+          // Mobile Navigation Header placeholder during loading
+          <Box sx={{ 
+            position: 'absolute', 
+            top: 0, 
+            left: 0, 
+            right: 0, 
+            p: 2, 
+            borderBottom: `1px solid ${theme.palette.divider}`,
+            bgcolor: theme.palette.background.paper,
+          }}>
+            <Typography variant="h6" sx={{ textAlign: 'center' }}>
+              Themes
+            </Typography>
+            <Typography variant="caption" color="textSecondary" sx={{ textAlign: 'center', display: 'block' }}>
+              Step 1 of 3: Select Theme
+            </Typography>
+          </Box>
+        )}
+        
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          gap: 2,
+          mt: isMobile ? 8 : 0,
+        }}>
+          <CircularProgress 
+            size={isMobile ? 48 : 32} 
+            thickness={4}
+            sx={{
+              color: theme.palette.primary.main,
+            }}
+          />
+          
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography 
+              variant={isMobile ? "h6" : "body1"} 
+              color="textPrimary"
+              sx={{ fontWeight: 500 }}
+            >
+              {isInitializing ? 'Setting up your workspace...' : 'Loading themes...'}
+            </Typography>
+            <Typography variant="caption" color="textSecondary">
+              {isInitializing ? 'Please wait a moment' : 'Fetching your product themes'}
+            </Typography>
+          </Box>
+        </Box>
       </Box>
     );
   }
@@ -102,49 +176,146 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
     );
   }
 
-  return (
-    <Box
-      className={className}
-      sx={{
-        display: 'flex',
-        height: '100%',
-        width: '100%',
-        overflow: 'hidden',
-        bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
-        position: 'relative',
-      }}
-    >
-      {/* Left Column - Themes */}
-      <ThemesColumn width={220} />
-
-      {/* Middle Column - SubThemes */}
-      <SubThemesColumn width={280} />
-
-      {/* Right Section - CustomerAsks + Mentions Panel (split-screen) */}
-      <Box
+  if (isMobile) {
+    // Mobile Progressive Flow
+    return (
+      <Fade in timeout={300}>
+        <Box
+        className={className}
         sx={{
-          flex: 1,
           display: 'flex',
-          position: 'relative',
+          flexDirection: 'column',
+          height: '100%',
+          width: '100%',
           overflow: 'hidden',
-          minWidth: 0,
+          bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
         }}
       >
-        {/* CustomerAsks Column - shrinks when panel is open */}
-        <CustomerAsksColumn isPanelOpen={isPanelOpen} />
+        {/* Mobile Navigation Header */}
+        <MobileNavigationHeader />
 
-        {/* Slide-in Panel - Mentions */}
-        <MentionsPanel />
+        {/* Mobile Content - Only show current step */}
+        <Box sx={{ flex: 1, overflow: 'hidden' }}>
+          {/* Step 1: Themes */}
+          <Slide direction="right" in={mobileActiveView === 'themes'} mountOnEnter unmountOnExit>
+            <Box sx={{ height: '100%', width: '100%', position: 'absolute' }}>
+              <ThemesColumn width="100%" />
+            </Box>
+          </Slide>
+
+          {/* Step 2: Sub-Themes */}
+          <Slide direction="left" in={mobileActiveView === 'subThemes'} mountOnEnter unmountOnExit>
+            <Box sx={{ height: '100%', width: '100%', position: 'absolute' }}>
+              <SubThemesColumn width="100%" />
+            </Box>
+          </Slide>
+
+          {/* Step 3: Customer Asks */}
+          <Slide direction="left" in={mobileActiveView === 'customerAsks'} mountOnEnter unmountOnExit>
+            <Box sx={{ height: '100%', width: '100%', position: 'absolute' }}>
+              <CustomerAsksColumn isPanelOpen={false} />
+            </Box>
+          </Slide>
+
+          {/* Step 4: Mentions (Full Screen) - Disabled in favor of drawer approach */}
+          {/* 
+          <Slide direction="left" in={mobileActiveView === 'mentions'} mountOnEnter unmountOnExit>
+            <Box sx={{ height: '100%', width: '100%', position: 'absolute' }}>
+              <MentionsPanel isMobileFullScreen />
+            </Box>
+          </Slide>
+          */}
+        </Box>
+
+        {/* Mobile Mentions Drawer - Alternative approach */}
+        <MobileMentionsDrawer
+          open={!!selectedCustomerAskId}
+          onClose={() => closeMentionsPanel()}
+        />
+
+        {/* Dialogs */}
+        <AddThemeDialog />
+        <AddSubThemeDialog />
+        <EditThemeDialog />
+        <EditSubThemeDialog />
+        <DeleteConfirmDialog />
+        <MergeSubThemeDialog />
+        </Box>
+      </Fade>
+    );
+  }
+
+  // Desktop Three-Column Layout with Bottom Panel
+  return (
+    <Fade in timeout={300}>
+      <Box
+        className={className}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          width: '100%',
+          overflow: 'hidden',
+          bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
+          position: 'relative',
+        }}
+      >
+        {/* Main Content Area - Three Columns */}
+        <Box 
+          sx={{ 
+            display: 'flex',
+            flex: 1,
+            overflow: 'hidden',
+            minHeight: 0,
+          }}
+        >
+          {/* Left Column - Themes */}
+          <ThemesColumn width={220} />
+
+          {/* Middle Column - SubThemes */}
+          <SubThemesColumn width={280} />
+
+          {/* Right Column - Customer Asks with Bottom Panel Container */}
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              position: 'relative',
+              overflow: 'hidden',
+              minWidth: 0,
+            }}
+          >
+            {/* Customer Asks Column */}
+            <Box
+              sx={{
+                flex: 1,
+                height: isPanelOpen ? '50%' : '100%',
+                transition: 'height 0.3s ease-in-out',
+                overflow: 'hidden',
+              }}
+            >
+              <CustomerAsksColumn isPanelOpen={false} />
+            </Box>
+
+            {/* Bottom Panel for Mentions - Only in this column */}
+            <MentionsBottomPanel
+              open={isPanelOpen}
+              onClose={() => closeMentionsPanel()}
+              height="50%"
+            />
+          </Box>
+        </Box>
+
+        {/* Dialogs */}
+        <AddThemeDialog />
+        <AddSubThemeDialog />
+        <EditThemeDialog />
+        <EditSubThemeDialog />
+        <DeleteConfirmDialog />
+        <MergeSubThemeDialog />
       </Box>
-
-      {/* Dialogs */}
-      <AddThemeDialog />
-      <AddSubThemeDialog />
-      <EditThemeDialog />
-      <EditSubThemeDialog />
-      <DeleteConfirmDialog />
-      <MergeSubThemeDialog />
-    </Box>
+    </Fade>
   );
 };
 

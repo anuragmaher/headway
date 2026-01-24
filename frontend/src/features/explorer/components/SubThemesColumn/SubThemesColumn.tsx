@@ -15,7 +15,7 @@ import {
 } from '../../store';
 
 interface SubThemesColumnProps {
-  width?: number;
+  width?: number | string;
 }
 
 export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
@@ -68,18 +68,20 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
     }
   };
 
+  const isMobileFullWidth = typeof width === 'string' && width === '100%';
+
   // Empty state when no theme is selected
   if (!selectedTheme) {
     return (
       <Box
         sx={{
           width,
-          minWidth: 200,
-          maxWidth: 320,
+          minWidth: isMobileFullWidth ? 'auto' : 200,
+          maxWidth: isMobileFullWidth ? 'auto' : 320,
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          borderRight: '1px solid',
+          borderRight: isMobileFullWidth ? 'none' : '1px solid',
           borderColor: 'divider',
           bgcolor: 'background.default',
         }}
@@ -130,12 +132,12 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
     <Box
       sx={{
         width,
-        minWidth: 200,
-        maxWidth: 320,
+        minWidth: isMobileFullWidth ? 'auto' : 200,
+        maxWidth: isMobileFullWidth ? 'auto' : 320,
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        borderRight: '1px solid',
+        borderRight: isMobileFullWidth ? 'none' : '1px solid',
         borderColor: 'divider',
         bgcolor: 'background.paper',
       }}
