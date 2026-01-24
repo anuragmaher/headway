@@ -29,6 +29,7 @@ redis>=4.0.0
 anthropic>=0.3.0
 openai>=1.0.0
 tenacity>=8.0.0  # Retry logic with exponential backoff
+langfuse>=2.0.0  # Prompt management and observability
 
 # HTTP Client
 httpx>=0.24.0
