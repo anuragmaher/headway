@@ -5,6 +5,12 @@ import { StateCreator } from 'zustand';
 import type { ColumnType } from '../../types';
 import type { ExplorerStore } from '../explorerStore';
 
+export interface MobileNavigationItem {
+  view: 'themes' | 'subThemes' | 'customerAsks' | 'mentions';
+  title: string;
+  selectedId?: string | null;
+}
+
 export interface UIState {
   // Selection state
   selectedThemeId: string | null;
@@ -12,6 +18,11 @@ export interface UIState {
   selectedFeedbackId: string | null;
   expandedFeedbackId: string | null;
   activeColumn: ColumnType;
+
+  // Mobile navigation state
+  isMobile: boolean;
+  mobileActiveView: 'themes' | 'subThemes' | 'customerAsks' | 'mentions';
+  mobileNavigationStack: MobileNavigationItem[];
 
   // Panel state
   isSearchOpen: boolean;
@@ -47,6 +58,13 @@ export interface UIActions {
   navigateToSubTheme: (subThemeId: string) => void;
   navigateToFeedback: (feedbackId: string) => void;
   navigateBack: () => void;
+
+  // Mobile-specific actions
+  setIsMobile: (isMobile: boolean) => void;
+  setMobileActiveView: (view: 'themes' | 'subThemes' | 'customerAsks' | 'mentions') => void;
+  pushMobileNavigation: (item: MobileNavigationItem) => void;
+  popMobileNavigation: () => void;
+  clearMobileNavigationStack: () => void;
 
   // Panel actions
   openSearch: () => void;
@@ -84,6 +102,9 @@ const initialUIState: UIState = {
   selectedFeedbackId: null,
   expandedFeedbackId: null,
   activeColumn: 'themes',
+  isMobile: false,
+  mobileActiveView: 'themes',
+  mobileNavigationStack: [{ view: 'themes', title: 'Themes' }],
   isSearchOpen: false,
   isFilterPanelOpen: false,
   isDetailPanelOpen: false,
@@ -110,6 +131,8 @@ export const createUISlice: StateCreator<
 
   // Selection actions
   selectTheme: (themeId: string | null) => {
+    const { isMobile } = get();
+    
     set({
       selectedThemeId: themeId,
       selectedSubThemeId: null,
@@ -117,6 +140,16 @@ export const createUISlice: StateCreator<
       expandedFeedbackId: null,
       activeColumn: themeId ? 'subThemes' : 'themes',
     });
+
+    // Mobile navigation
+    if (isMobile && themeId) {
+      const theme = get().themes.find(t => t.id === themeId);
+      get().pushMobileNavigation({
+        view: 'subThemes',
+        title: theme?.name || 'Sub-Themes',
+        selectedId: themeId
+      });
+    }
 
     // Fetch sub-themes when theme is selected
     if (themeId) {
@@ -129,12 +162,24 @@ export const createUISlice: StateCreator<
   },
 
   selectSubTheme: (subThemeId: string | null) => {
+    const { isMobile } = get();
+    
     set({
       selectedSubThemeId: subThemeId,
       selectedFeedbackId: null,
       expandedFeedbackId: null,
       activeColumn: subThemeId ? 'customerAsks' : 'subThemes',
     });
+
+    // Mobile navigation
+    if (isMobile && subThemeId) {
+      const subTheme = get().subThemes.find(st => st.id === subThemeId);
+      get().pushMobileNavigation({
+        view: 'customerAsks',
+        title: subTheme?.name || 'Customer Asks',
+        selectedId: subThemeId
+      });
+    }
 
     // Fetch customer asks when sub-theme is selected
     if (subThemeId) {
@@ -145,10 +190,24 @@ export const createUISlice: StateCreator<
   },
 
   selectFeedback: (feedbackId: string | null) => {
+    const { isMobile } = get();
+    
     set({
       selectedFeedbackId: feedbackId,
       activeColumn: 'feedback',
     });
+
+    // Mobile navigation - mentions now handled by drawer, no need to push navigation
+    // if (isMobile && feedbackId) {
+    //   get().pushMobileNavigation({
+    //     view: 'mentions',
+    //     title: 'Mentions',
+    //     selectedId: feedbackId
+    //   });
+    //   
+    //   // Explicitly set the mobile active view to ensure transition
+    //   get().setMobileActiveView('mentions');
+    // }
   },
 
   expandFeedback: (feedbackId: string | null) => {
@@ -177,24 +236,72 @@ export const createUISlice: StateCreator<
   },
 
   navigateBack: () => {
-    const { activeColumn, selectedThemeId, selectedSubThemeId } = get();
+    const { 
+      isMobile, 
+      mobileNavigationStack, 
+      mobileActiveView,
+      activeColumn, 
+      selectedThemeId, 
+      selectedSubThemeId 
+    } = get();
 
-    switch (activeColumn) {
-      case 'feedback':
-        if (selectedSubThemeId) {
-          set({ activeColumn: 'subThemes', selectedFeedbackId: null, expandedFeedbackId: null });
+    if (isMobile) {
+      // Mobile navigation - guard against empty stack and fix state synchronization
+      if (mobileNavigationStack.length > 1) {
+        // Calculate the new stack BEFORE mutating state to avoid stale closure bug
+        const newStack = mobileNavigationStack.slice(0, -1);
+        const previousItem = newStack[newStack.length - 1];
+        
+        // Ensure we have a valid previousItem before proceeding
+        if (previousItem) {
+          // Update the navigation state atomically
+          get().popMobileNavigation();
+          get().setMobileActiveView(previousItem.view);
+
+          // Update selections based on navigation
+          switch (previousItem.view) {
+            case 'themes':
+              set({ 
+                selectedThemeId: null, 
+                selectedSubThemeId: null, 
+                selectedFeedbackId: null 
+              });
+              break;
+            case 'subThemes':
+              set({ 
+                selectedSubThemeId: null, 
+                selectedFeedbackId: null 
+              });
+              break;
+            case 'customerAsks':
+              set({ selectedFeedbackId: null });
+              break;
+            case 'mentions':
+              // Mentions handled by drawer, shouldn't reach here
+              set({ selectedFeedbackId: null });
+              break;
+          }
         }
-        break;
-      case 'subThemes':
-        if (selectedThemeId) {
-          set({ activeColumn: 'themes', selectedSubThemeId: null });
-          get().clearFeedback();
-        }
-        break;
-      case 'themes':
-      default:
-        // Already at root
-        break;
+      }
+    } else {
+      // Desktop navigation (existing logic)
+      switch (activeColumn) {
+        case 'feedback':
+          if (selectedSubThemeId) {
+            set({ activeColumn: 'subThemes', selectedFeedbackId: null, expandedFeedbackId: null });
+          }
+          break;
+        case 'subThemes':
+          if (selectedThemeId) {
+            set({ activeColumn: 'themes', selectedSubThemeId: null });
+            get().clearFeedback();
+          }
+          break;
+        case 'themes':
+        default:
+          // Already at root
+          break;
+      }
     }
   },
 
@@ -254,6 +361,44 @@ export const createUISlice: StateCreator<
     deletingItemId: null,
     deletingItemType: null,
   }),
+
+  // Mobile-specific actions
+  setIsMobile: (isMobile: boolean) => {
+    set({ isMobile });
+    if (!isMobile) {
+      // Reset mobile navigation when switching to desktop
+      set({ 
+        mobileActiveView: 'themes',
+        mobileNavigationStack: [{ view: 'themes', title: 'Themes' }]
+      });
+    }
+  },
+
+  setMobileActiveView: (view: 'themes' | 'subThemes' | 'customerAsks' | 'mentions') => {
+    set({ mobileActiveView: view });
+  },
+
+  pushMobileNavigation: (item: MobileNavigationItem) => {
+    set((state) => ({
+      mobileNavigationStack: [...state.mobileNavigationStack, item],
+      mobileActiveView: item.view,
+    }));
+  },
+
+  popMobileNavigation: () => {
+    set((state) => ({
+      mobileNavigationStack: state.mobileNavigationStack.length > 1 
+        ? state.mobileNavigationStack.slice(0, -1) 
+        : state.mobileNavigationStack,
+    }));
+  },
+
+  clearMobileNavigationStack: () => {
+    set({ 
+      mobileNavigationStack: [{ view: 'themes', title: 'Themes' }],
+      mobileActiveView: 'themes'
+    });
+  },
 
   // Reset
   resetUIState: () => set(initialUIState),

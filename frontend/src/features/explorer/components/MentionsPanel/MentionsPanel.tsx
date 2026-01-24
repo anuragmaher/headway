@@ -36,26 +36,27 @@ interface PanelContentProps {
   onClose: () => void;
   onToggleMention: (mentionId: string) => void;
   onNavigateToCustomerAsk: (customerAskId: string) => void;
+  isMobileFullScreen?: boolean;
 }
 
 const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
-  ({ mentions, selectedCustomerAsk, isLoading, expandedMentionId, onClose, onToggleMention, onNavigateToCustomerAsk }, ref) => {
+  ({ mentions, selectedCustomerAsk, isLoading, expandedMentionId, onClose, onToggleMention, onNavigateToCustomerAsk, isMobileFullScreen = false }, ref) => {
     const theme = useTheme();
 
     return (
       <Box
         ref={ref}
         sx={{
-          width: '50%',
+          width: isMobileFullScreen ? '100%' : '50%',
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          pl: 1.5,
+          pl: isMobileFullScreen ? 0 : 1.5,
           pr: 0,
           py: 0,
-          position: 'absolute',
-          right: 0,
+          position: isMobileFullScreen ? 'relative' : 'absolute',
+          right: isMobileFullScreen ? 'auto' : 0,
           top: 0,
         }}
       >
@@ -67,7 +68,7 @@ const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
             flexDirection: 'column',
             borderRadius: 0,
             border: 'none',
-            borderLeft: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+            borderLeft: isMobileFullScreen ? 'none' : `1px solid ${alpha(theme.palette.divider, 0.08)}`,
             bgcolor: theme.palette.background.paper,
             overflow: 'hidden',
           }}
@@ -204,7 +205,11 @@ const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
 
 PanelContent.displayName = 'PanelContent';
 
-export const MentionsPanel: React.FC = () => {
+interface MentionsPanelProps {
+  isMobileFullScreen?: boolean;
+}
+
+export const MentionsPanel: React.FC<MentionsPanelProps> = ({ isMobileFullScreen = false }) => {
   const mentions = useMentions();
   const selectedCustomerAsk = useSelectedCustomerAsk();
   const isLoading = useIsLoadingMentions();
@@ -226,6 +231,23 @@ export const MentionsPanel: React.FC = () => {
     selectCustomerAsk(customerAskId);
   };
 
+  if (isMobileFullScreen) {
+    // Mobile full-screen mode - no slide animation, always visible
+    return (
+      <PanelContent
+        mentions={mentions}
+        selectedCustomerAsk={selectedCustomerAsk}
+        isLoading={isLoading}
+        expandedMentionId={expandedMentionId}
+        onClose={handleClose}
+        onToggleMention={handleToggleMention}
+        onNavigateToCustomerAsk={handleNavigateToCustomerAsk}
+        isMobileFullScreen={isMobileFullScreen}
+      />
+    );
+  }
+
+  // Desktop slide-in panel
   return (
     <Slide direction="left" in={isPanelOpen} mountOnEnter unmountOnExit timeout={250}>
       <PanelContent
@@ -236,6 +258,7 @@ export const MentionsPanel: React.FC = () => {
         onClose={handleClose}
         onToggleMention={handleToggleMention}
         onNavigateToCustomerAsk={handleNavigateToCustomerAsk}
+        isMobileFullScreen={isMobileFullScreen}
       />
     </Slide>
   );

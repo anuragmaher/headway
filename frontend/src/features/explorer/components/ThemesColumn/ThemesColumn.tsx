@@ -3,7 +3,7 @@
  * Clean, minimal design for fast scanning
  */
 import React from 'react';
-import { Box, Typography, IconButton, Tooltip, Skeleton } from '@mui/material';
+import { Box, Typography, IconButton, Tooltip, Skeleton, Fade } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { ThemeItem } from './ThemeItem';
 import {
@@ -14,7 +14,7 @@ import {
 } from '../../store';
 
 interface ThemesColumnProps {
-  width?: number;
+  width?: number | string;
 }
 
 export const ThemesColumn: React.FC<ThemesColumnProps> = ({
@@ -61,16 +61,18 @@ export const ThemesColumn: React.FC<ThemesColumnProps> = ({
     }
   };
 
+  const isMobileFullWidth = typeof width === 'string' && width === '100%';
+
   return (
     <Box
       sx={{
         width,
-        minWidth: 180,
-        maxWidth: 280,
+        minWidth: isMobileFullWidth ? 'auto' : 180,
+        maxWidth: isMobileFullWidth ? 'auto' : 280,
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        borderRight: '1px solid',
+        borderRight: isMobileFullWidth ? 'none' : '1px solid',
         borderColor: 'divider',
         bgcolor: 'background.paper',
       }}
@@ -121,17 +123,24 @@ export const ThemesColumn: React.FC<ThemesColumnProps> = ({
       <Box sx={{ flex: 1, overflow: 'auto' }}>
         {isLoading ? (
           <Box>
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3, 4, 5, 6].map((i) => (
               <Skeleton
                 key={i}
                 variant="rectangular"
-                height={52}
-                sx={{ borderBottom: '1px solid', borderColor: 'divider' }}
+                height={isMobileFullWidth ? 60 : 52}
+                sx={{ 
+                  borderBottom: '1px solid', 
+                  borderColor: 'divider',
+                  mb: isMobileFullWidth ? 1 : 0,
+                  borderRadius: isMobileFullWidth ? 1 : 0,
+                  animation: `pulse 1.5s ease-in-out ${i * 0.1}s infinite alternate`,
+                }}
               />
             ))}
           </Box>
         ) : themes.length === 0 ? (
-          <Box
+          <Fade in timeout={500}>
+            <Box
             sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -170,9 +179,11 @@ export const ThemesColumn: React.FC<ThemesColumnProps> = ({
               <AddIcon sx={{ fontSize: 16 }} />
               Create Theme
             </Box>
-          </Box>
+            </Box>
+          </Fade>
         ) : (
-          <>
+          <Fade in timeout={500}>
+            <Box>
             {themes.map((theme) => (
               <ThemeItem
                 key={theme.id}
@@ -185,7 +196,8 @@ export const ThemesColumn: React.FC<ThemesColumnProps> = ({
                 onUnlock={handleUnlockTheme}
               />
             ))}
-          </>
+            </Box>
+          </Fade>
         )}
       </Box>
     </Box>

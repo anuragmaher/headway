@@ -238,8 +238,14 @@ export const createCustomerAskSlice: StateCreator<
       if (customerAskId) {
         set({ isMentionsPanelOpen: true });
         get().fetchMentions(customerAskId);
+        
+        // Also trigger feedback selection for mobile navigation
+        get().selectFeedback(customerAskId);
       } else {
         set({ isMentionsPanelOpen: false });
+        
+        // Clear feedback selection for mobile navigation
+        get().selectFeedback(null);
       }
     }
   },
