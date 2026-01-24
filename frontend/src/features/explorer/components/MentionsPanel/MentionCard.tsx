@@ -103,11 +103,18 @@ export const MentionCard: React.FC<MentionCardProps> = ({
     <Box
       sx={{
         borderRadius: 1.5,
-        bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.01)',
+        bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'background.paper',
         border: '1px solid',
-        borderColor: isExpanded ? 'primary.main' : 'transparent',
+        borderColor: isExpanded 
+          ? 'primary.main' 
+          : theme.palette.mode === 'dark' 
+            ? 'rgba(255,255,255,0.08)' 
+            : 'rgba(0,0,0,0.06)',
         overflow: 'hidden',
         transition: 'all 0.2s ease-in-out',
+        boxShadow: isExpanded 
+          ? theme.shadows[2] 
+          : theme.shadows[0],
       }}
     >
       {/* Header - Always visible */}
@@ -121,7 +128,7 @@ export const MentionCard: React.FC<MentionCardProps> = ({
           gap: 1,
           '&:hover': {
             bgcolor: theme.palette.mode === 'dark'
-              ? 'rgba(255,255,255,0.03)'
+              ? 'rgba(255,255,255,0.08)'
               : 'rgba(0,0,0,0.02)',
           },
         }}

@@ -5,14 +5,11 @@
 import React from 'react';
 import {
   Box,
-  IconButton,
-  Typography,
   useTheme,
   alpha,
   Paper,
   Tooltip,
 } from '@mui/material';
-import { Close as CloseIcon } from '@mui/icons-material';
 import { MentionsPanel } from './MentionsPanel';
 
 interface MentionsBottomPanelProps {
@@ -20,6 +17,7 @@ interface MentionsBottomPanelProps {
   onClose: () => void;
   height?: string;
   onHeightChange?: (newHeight: number) => void;
+  orientation?: 'vertical' | 'horizontal';
 }
 
 export const MentionsBottomPanel: React.FC<MentionsBottomPanelProps> = ({
@@ -27,10 +25,12 @@ export const MentionsBottomPanel: React.FC<MentionsBottomPanelProps> = ({
   onClose,
   height = '50vh',
   onHeightChange,
+  orientation = 'vertical',
 }) => {
   const theme = useTheme();
   const [isResizing, setIsResizing] = React.useState(false);
   const [currentHeight, setCurrentHeight] = React.useState<number>(50); // percentage
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   // Convert height prop to percentage if needed
   React.useEffect(() => {
@@ -50,18 +50,34 @@ export const MentionsBottomPanel: React.FC<MentionsBottomPanelProps> = ({
     if (!isResizing) return;
 
     // Add cursor style to body during resize
-    document.body.style.cursor = 'ns-resize';
+    const cursor = orientation === 'vertical' ? 'ns-resize' : 'ew-resize';
+    document.body.style.cursor = cursor;
     document.body.style.userSelect = 'none';
 
     const handleMouseMove = (e: MouseEvent) => {
       e.preventDefault();
-      const windowHeight = window.innerHeight;
-      const distanceFromBottom = windowHeight - e.clientY;
-      const newHeightPercent = Math.min(Math.max((distanceFromBottom / windowHeight) * 100, 20), 80);
       
-      setCurrentHeight(newHeightPercent);
-      if (onHeightChange) {
-        onHeightChange(newHeightPercent);
+      if (!containerRef.current) return;
+      
+      if (orientation === 'vertical') {
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const containerHeight = containerRect.height;
+        const distanceFromBottom = containerRect.bottom - e.clientY;
+        const newHeightPercent = Math.min(Math.max((distanceFromBottom / containerHeight) * 100, 20), 80);
+        setCurrentHeight(newHeightPercent);
+        if (onHeightChange) {
+          onHeightChange(newHeightPercent);
+        }
+      } else {
+        // Horizontal orientation - resize based on width
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const containerWidth = containerRect.width;
+        const distanceFromRight = containerRect.right - e.clientX;
+        const newWidthPercent = Math.min(Math.max((distanceFromRight / containerWidth) * 100, 20), 80);
+        setCurrentHeight(newWidthPercent);
+        if (onHeightChange) {
+          onHeightChange(newWidthPercent);
+        }
       }
     };
 
@@ -82,121 +98,128 @@ export const MentionsBottomPanel: React.FC<MentionsBottomPanelProps> = ({
       document.body.style.cursor = '';
       document.body.style.userSelect = '';
     };
-  }, [isResizing, onHeightChange]);
+  }, [isResizing, onHeightChange, orientation]);
+
+  const isHorizontal = orientation === 'horizontal';
 
   return (
     <Box
+      ref={containerRef}
       sx={{
         position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: open ? `${currentHeight}%` : 0,
-        transition: isResizing ? 'none' : 'height 0.3s ease-in-out',
+        [isHorizontal ? 'right' : 'bottom']: 0,
+        [isHorizontal ? 'top' : 'left']: 0,
+        [isHorizontal ? 'bottom' : 'right']: 0,
+        [isHorizontal ? 'width' : 'height']: open ? `${currentHeight}%` : 0,
+        [isHorizontal ? 'height' : 'width']: '100%',
+        transition: isResizing ? 'none' : `${isHorizontal ? 'width' : 'height'} 0.3s ease-in-out`,
         overflow: 'hidden',
         zIndex: 10,
       }}
     >
       <Paper
+        elevation={0}
         sx={{
           height: '100%',
           width: '100%',
-          borderRadius: '8px 8px 0 0',
+          borderRadius: 0,
           overflow: 'hidden',
-          boxShadow: isResizing 
-            ? '0 -8px 32px rgba(0,0,0,0.12), 0 -4px 12px rgba(0,0,0,0.08)'
-            : '0 -4px 20px rgba(0,0,0,0.08), 0 -2px 8px rgba(0,0,0,0.04)',
-          border: `1px solid ${alpha(isResizing ? theme.palette.primary.main : theme.palette.divider, 0.12)}`,
-          borderBottom: 'none',
+          borderTop: isHorizontal ? 'none' : `1px solid ${theme.palette.divider}`,
+          borderLeft: isHorizontal ? `1px solid ${theme.palette.divider}` : 'none',
           bgcolor: theme.palette.background.paper,
           transition: isResizing ? 'none' : 'all 0.2s ease',
         }}
       >
-        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-          {/* Draggable Resize Handle */}
-          <Tooltip title="Drag to resize" placement="top" arrow>
-            <Box
-            onMouseDown={handleMouseDown}
-            sx={{
-              height: 12,
-              backgroundColor: alpha(theme.palette.text.secondary, isResizing ? 0.15 : 0.05),
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              cursor: 'ns-resize',
-              userSelect: 'none',
-              transition: isResizing ? 'none' : 'background-color 0.2s ease',
-              position: 'relative',
-              '&:hover': {
-                backgroundColor: alpha(theme.palette.primary.main, 0.08),
-                '& > div': {
-                  backgroundColor: alpha(theme.palette.primary.main, 0.6),
-                  transform: 'scaleX(1.2)',
-                },
-              },
-              '&:active': {
-                backgroundColor: alpha(theme.palette.primary.main, 0.12),
-              },
-              // Add subtle hover hint
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 2,
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: 1,
-                height: 8,
-                backgroundColor: alpha(theme.palette.text.secondary, 0.2),
-                borderRadius: 0.5,
-              },
-            }}
-          >
-            <Box
-              sx={{
-                width: 40,
-                height: 4,
-                backgroundColor: alpha(theme.palette.text.secondary, isResizing ? 0.8 : 0.3),
-                borderRadius: 2,
-                transition: isResizing ? 'none' : 'all 0.2s ease',
-                transform: isResizing ? 'scaleX(1.2)' : 'scaleX(1)',
-              }}
-            />
-            </Box>
-          </Tooltip>
+        <Box sx={{ height: '100%', display: 'flex', flexDirection: isHorizontal ? 'row' : 'column' }}>
+          {/* Draggable Resize Handle - positioned at left for horizontal, top for vertical */}
+          {isHorizontal && (
+            <Tooltip title="Drag to resize" placement="left" arrow>
+              <Box
+                onMouseDown={handleMouseDown}
+                sx={{
+                  width: 8,
+                  height: '100%',
+                  backgroundColor: 'transparent',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  cursor: 'ew-resize',
+                  userSelect: 'none',
+                  position: 'relative',
+                  '&:hover': {
+                    '& > div': {
+                      backgroundColor: theme.palette.primary.main,
+                      transform: 'scaleY(1.3)',
+                    },
+                  },
+                  '&:active': {
+                    '& > div': {
+                      backgroundColor: theme.palette.primary.dark,
+                    },
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    height: 48,
+                    width: 4,
+                    backgroundColor: isResizing 
+                      ? theme.palette.primary.main 
+                      : alpha(theme.palette.text.secondary, 0.3),
+                    borderRadius: 2,
+                    transition: isResizing ? 'none' : 'all 0.2s ease',
+                    transform: isResizing ? 'scaleY(1.3)' : 'scale(1)',
+                  }}
+                />
+              </Box>
+            </Tooltip>
+          )}
+          
+          {!isHorizontal && (
+            <Tooltip title="Drag to resize" placement="top" arrow>
+              <Box
+                onMouseDown={handleMouseDown}
+                sx={{
+                  height: 8,
+                  width: '100%',
+                  backgroundColor: 'transparent',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  cursor: 'ns-resize',
+                  userSelect: 'none',
+                  position: 'relative',
+                  '&:hover': {
+                    '& > div': {
+                      backgroundColor: theme.palette.primary.main,
+                      transform: 'scaleX(1.3)',
+                    },
+                  },
+                  '&:active': {
+                    '& > div': {
+                      backgroundColor: theme.palette.primary.dark,
+                    },
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 48,
+                    height: 4,
+                    backgroundColor: isResizing 
+                      ? theme.palette.primary.main 
+                      : alpha(theme.palette.text.secondary, 0.3),
+                    borderRadius: 2,
+                    transition: isResizing ? 'none' : 'all 0.2s ease',
+                    transform: isResizing ? 'scaleX(1.3)' : 'scale(1)',
+                  }}
+                />
+              </Box>
+            </Tooltip>
+          )}
 
-          {/* Header */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              px: 2,
-              py: 1,
-              borderBottom: `1px solid ${theme.palette.divider}`,
-              backgroundColor: theme.palette.background.paper,
-              borderRadius: '8px 8px 0 0',
-              minHeight: 48,
-            }}
-          >
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: '1rem' }}>
-              Customer Feedback & Mentions
-            </Typography>
-            
-            <IconButton 
-              onClick={onClose}
-              sx={{
-                color: theme.palette.text.secondary,
-                '&:hover': {
-                  bgcolor: alpha(theme.palette.action.hover, 0.08),
-                },
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Box>
-
-          {/* Content */}
-          <Box sx={{ flex: 1, overflow: 'hidden' }}>
+          {/* Content - MentionsPanel has its own header */}
+          <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
             <MentionsPanel isMobileFullScreen />
           </Box>
         </Box>

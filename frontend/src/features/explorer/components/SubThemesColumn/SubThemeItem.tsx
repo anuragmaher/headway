@@ -13,6 +13,8 @@ import {
   ListItemText,
   Tooltip,
   useTheme,
+  alpha,
+  Chip,
 } from '@mui/material';
 import {
   MoreHoriz as DotsIcon,
@@ -140,40 +142,67 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       sx={{
-        px: 1.5,
-        py: 1.25,
+        mx: 1.5,
+        my: 1,
+        px: 2,
+        py: 1.5,
         cursor: 'pointer',
-        transition: 'all 0.12s ease',
-        bgcolor: isSelected ? 'rgba(16, 185, 129, 0.08)' : 'transparent',
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        borderLeft: '3px solid',
-        borderLeftColor: isSelected ? '#10B981' : 'transparent',
+        borderRadius: 2,
+        transition: 'all 0.2s ease',
+        bgcolor: isSelected 
+          ? alpha(muiTheme.palette.info.main, 0.1)
+          : 'background.paper',
+        border: `1px solid ${
+          isSelected 
+            ? muiTheme.palette.info.main 
+            : alpha(muiTheme.palette.divider, 0.3)
+        }`,
+        boxShadow: isSelected 
+          ? `0 2px 8px ${alpha(muiTheme.palette.info.main, 0.15)}`
+          : '0 1px 3px rgba(0,0,0,0.05)',
         '&:hover': {
+          transform: 'translateY(-1px)',
+          boxShadow: isSelected
+            ? `0 4px 12px ${alpha(muiTheme.palette.info.main, 0.2)}`
+            : '0 2px 8px rgba(0,0,0,0.1)',
+          borderColor: isSelected 
+            ? muiTheme.palette.info.main 
+            : muiTheme.palette.divider,
           bgcolor: isSelected
-            ? 'rgba(16, 185, 129, 0.12)'
-            : muiTheme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)',
+            ? alpha(muiTheme.palette.info.main, 0.12)
+            : alpha(muiTheme.palette.action.hover, 0.04),
         },
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-        {/* Sub-theme icon */}
-        <SubThemeIcon
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+        {/* Sub-theme icon with background */}
+        <Box
           sx={{
-            fontSize: 18,
-            color: isSelected ? '#10B981' : 'text.secondary',
+            width: 40,
+            height: 40,
+            borderRadius: 1.5,
+            bgcolor: isSelected
+              ? alpha(muiTheme.palette.info.main, 0.15)
+              : alpha(muiTheme.palette.info.main, 0.08),
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: isSelected ? muiTheme.palette.info.main : muiTheme.palette.info.main,
             flexShrink: 0,
+            transition: 'all 0.2s ease',
           }}
-        />
+        >
+          <SubThemeIcon sx={{ fontSize: 20 }} />
+        </Box>
 
         {/* Content */}
         <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
             <Typography
+              variant="subtitle2"
               sx={{
-                fontSize: '0.8125rem',
                 fontWeight: isSelected ? 600 : 500,
-                color: isSelected ? 'text.primary' : 'text.secondary',
+                color: 'text.primary',
                 lineHeight: 1.3,
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -183,14 +212,16 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
               {subTheme.name}
             </Typography>
             {subTheme.isLocked && (
-              <LockIcon sx={{ fontSize: 11, color: 'text.disabled', flexShrink: 0 }} />
+              <Tooltip title="Locked">
+                <LockIcon sx={{ fontSize: 14, color: 'text.disabled', flexShrink: 0 }} />
+              </Tooltip>
             )}
           </Box>
 
           {/* Stats row - Source icons and mention count */}
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 0.25 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
             {/* Source icons */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
               {subTheme.sources && subTheme.sources.length > 0 ? (
                 subTheme.sources.slice(0, 4).map((source) => {
                   const config = SOURCE_CONFIG[source];
@@ -200,24 +231,32 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
                     <Tooltip key={source} title={config.label} arrow>
                       <Box
                         sx={{
+                          width: 20,
+                          height: 20,
+                          borderRadius: 1,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
+                          bgcolor: alpha(config.color, 0.1),
                           color: config.color,
-                          opacity: 0.8,
-                          '&:hover': { opacity: 1 },
+                          transition: 'all 0.2s ease',
+                          '&:hover': { 
+                            bgcolor: alpha(config.color, 0.2),
+                            transform: 'scale(1.1)',
+                          },
                         }}
                       >
-                        <IconComponent size={13} />
+                        <IconComponent size={12} />
                       </Box>
                     </Tooltip>
                   );
                 })
               ) : (
                 <Typography
+                  variant="caption"
                   sx={{
-                    fontSize: '0.625rem',
                     color: 'text.disabled',
+                    fontSize: '0.7rem',
                   }}
                 >
                   No sources
@@ -225,16 +264,27 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
               )}
             </Box>
 
-            {/* Mention count - right bottom */}
-            <Typography
-              sx={{
-                fontSize: '0.6875rem',
-                fontWeight: 600,
-                color: 'text.secondary',
-              }}
-            >
-              {subTheme.feedbackCount}
-            </Typography>
+            {/* Mention count badge - only show if count > 0 */}
+            {(subTheme.feedbackCount || 0) > 0 && (
+              <Chip
+                label={subTheme.feedbackCount}
+                size="small"
+                sx={{
+                  height: 22,
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  bgcolor: isSelected
+                    ? alpha(muiTheme.palette.info.main, 0.2)
+                    : alpha(muiTheme.palette.info.main, 0.12),
+                  color: muiTheme.palette.info.main,
+                  border: `1px solid ${alpha(muiTheme.palette.info.main, 0.3)}`,
+                  '& .MuiChip-label': {
+                    px: 1.25,
+                    py: 0,
+                  },
+                }}
+              />
+            )}
           </Box>
         </Box>
 
@@ -244,16 +294,16 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
             size="small"
             onClick={handleMenuOpen}
             sx={{
-              p: 0.25,
-              mt: 0.25,
-              opacity: 0.6,
+              opacity: 0.7,
+              transition: 'all 0.2s ease',
               '&:hover': {
                 opacity: 1,
-                bgcolor: muiTheme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+                bgcolor: alpha(muiTheme.palette.action.hover, 0.1),
+                transform: 'scale(1.1)',
               },
             }}
           >
-            <DotsIcon sx={{ fontSize: 16 }} />
+            <DotsIcon sx={{ fontSize: 18 }} />
           </IconButton>
         )}
       </Box>

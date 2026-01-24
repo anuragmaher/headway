@@ -11,7 +11,6 @@ import {
   Slide,
   useTheme,
   Divider,
-  Paper,
   alpha,
 } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
@@ -49,75 +48,70 @@ const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
       <Box
         ref={ref}
         sx={{
-          width: isMobileFullScreen ? '100%' : '50%',
+          width: isMobileFullScreen ? '100%' : '100%',
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          pl: isMobileFullScreen ? 0 : 1.5,
-          pr: 0,
-          py: 0,
-          position: isMobileFullScreen ? 'relative' : 'absolute',
-          right: isMobileFullScreen ? 'auto' : 0,
-          top: 0,
+          position: 'relative',
         }}
       >
-        <Paper
-          elevation={0}
+        <Box
           sx={{
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            borderRadius: 0,
-            border: 'none',
-            borderLeft: isMobileFullScreen ? 'none' : `1px solid ${alpha(theme.palette.divider, 0.08)}`,
-            bgcolor: theme.palette.background.paper,
+            bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
             overflow: 'hidden',
           }}
         >
           {/* Header */}
           <Box
             sx={{
-              px: 2,
-              height: 48,
+              px: 3,
+              py: 2,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              borderBottom: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
-              bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#fff',
+              borderBottom: `1px solid ${theme.palette.divider}`,
+              bgcolor: 'background.paper',
               flexShrink: 0,
             }}
           >
             <Box sx={{ flex: 1, minWidth: 0, pr: 1 }}>
               <Typography
+                variant="h5"
                 sx={{
-                  fontSize: '0.75rem',
                   fontWeight: 600,
-                  letterSpacing: '0.5px',
-                  color: 'text.secondary',
-                  textTransform: 'uppercase',
+                  color: 'text.primary',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
+                  mb: 0.5,
                 }}
               >
-                {selectedCustomerAsk ? selectedCustomerAsk.name : 'Mentions'}
+                {selectedCustomerAsk ? selectedCustomerAsk.name : 'Customer Feedback & Mentions'}
               </Typography>
+              {selectedCustomerAsk && (
+                <Typography variant="body2" color="textSecondary">
+                  Customer feedback and mentions
+                </Typography>
+              )}
             </Box>
 
             <IconButton
               size="small"
               onClick={onClose}
               sx={{
-                color: theme.palette.text.disabled,
-                p: 0.5,
+                color: theme.palette.text.secondary,
+                ml: 1,
                 '&:hover': {
-                  color: theme.palette.text.secondary,
-                  bgcolor: alpha(theme.palette.action.hover, 0.04),
+                  color: theme.palette.text.primary,
+                  bgcolor: alpha(theme.palette.action.hover, 0.08),
                 },
               }}
             >
-              <CloseIcon sx={{ fontSize: 16 }} />
+              <CloseIcon />
             </IconButton>
           </Box>
 
@@ -125,17 +119,13 @@ const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
           {selectedCustomerAsk && (
             <Box
               sx={{
-                px: 2,
-                py: 1,
-                borderBottom: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
+                px: 3,
+                py: 1.5,
+                borderBottom: `1px solid ${theme.palette.divider}`,
+                bgcolor: 'background.paper',
               }}
             >
-              <Typography
-                sx={{
-                  fontSize: '0.75rem',
-                  color: 'text.disabled',
-                }}
-              >
+              <Typography variant="body2" color="textSecondary">
                 {mentions.length} mention{mentions.length !== 1 ? 's' : ''} from customers
               </Typography>
             </Box>
@@ -146,9 +136,19 @@ const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
             sx={{
               flex: 1,
               overflow: 'auto',
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none',
-              '&::-webkit-scrollbar': { display: 'none' },
+              bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
+              px: 2,
+              py: 2,
+              '&::-webkit-scrollbar': {
+                width: 6,
+              },
+              '&::-webkit-scrollbar-track': {
+                bgcolor: 'transparent',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                bgcolor: 'rgba(0,0,0,0.1)',
+                borderRadius: 3,
+              },
             }}
           >
             {isLoading ? (
@@ -182,7 +182,7 @@ const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
                 </Typography>
               </Box>
             ) : (
-              <Box sx={{ p: 1.5 }}>
+              <Box>
                 {mentions.map((mention, index) => (
                   <React.Fragment key={mention.id}>
                     <MentionCard
@@ -201,7 +201,7 @@ const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
               </Box>
             )}
           </Box>
-        </Paper>
+        </Box>
       </Box>
     );
   }
