@@ -101,7 +101,7 @@ def sync_gmail_periodic(self):
                     result = gmail_batch_ingestion_service.ingest_messages_for_connector(
                         connector_id=str(connector.id),
                         db=db,
-                        max_messages=10
+                        max_messages=60
                     )
 
                     if result.get("status") == "error":

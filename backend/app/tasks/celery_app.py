@@ -6,11 +6,15 @@ Memory optimization settings for production:
 - worker_prefetch_multiplier: Limit task prefetching to reduce memory
 - task_acks_late: Acknowledge tasks after completion for better reliability
 - worker_max_memory_per_child: Kill workers exceeding memory limit (Linux only)
+
+Langfuse OpenTelemetry tracing is initialized when workers start to trace
+all AI/LLM calls in background tasks.
 """
 
 import sys
 from celery import Celery
 from celery.schedules import schedule
+from celery.signals import worker_process_init, worker_process_shutdown
 from app.core.config import Settings
 import logging
 
@@ -171,3 +175,34 @@ logger.info("  - Slack: every 30 min | Gong: every 30m 20s | Fathom: every 30m 4
 logger.info("AI Pipeline (STATE-DRIVEN - triggered on ingestion):")
 logger.info("  ingestion → normalize → chunk → classify → extract → AI insights")
 logger.info("  Each stage triggers the next immediately - no scheduled tasks")
+
+
+# ============================================================================
+# LANGFUSE OPENTELEMETRY TRACING FOR CELERY WORKERS
+# ============================================================================
+# Initialize tracing when each worker process starts.
+# This ensures all AI/LLM calls in Celery tasks are traced to Langfuse.
+
+@worker_process_init.connect
+def init_worker_tracing(**kwargs):
+    """Initialize Langfuse tracing when a worker process starts."""
+    try:
+        from app.core.langfuse_tracing import init_langfuse_tracing
+        tracing_enabled = init_langfuse_tracing()
+        if tracing_enabled:
+            logger.info("📊 Langfuse tracing initialized for Celery worker")
+        else:
+            logger.warning("📊 Langfuse tracing not enabled (keys not configured)")
+    except Exception as e:
+        logger.error(f"Failed to initialize Langfuse tracing in worker: {e}")
+
+
+@worker_process_shutdown.connect
+def shutdown_worker_tracing(**kwargs):
+    """Shutdown tracing and flush pending spans when worker exits."""
+    try:
+        from app.core.langfuse_tracing import shutdown_tracing
+        shutdown_tracing()
+        logger.info("📊 Langfuse tracing shut down for Celery worker")
+    except Exception as e:
+        logger.error(f"Error shutting down Langfuse tracing in worker: {e}")

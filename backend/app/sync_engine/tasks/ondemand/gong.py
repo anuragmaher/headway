@@ -58,7 +58,7 @@ def sync_workspace_gong(self, workspace_id: str, sync_id: str):
                 gong_ingestion_service.ingest_calls(
                     db=db,
                     workspace_id=workspace_id,
-                    limit=100,
+                    limit=60,
                     days_back=7,
                     fetch_transcripts=True
                 )
