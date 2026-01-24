@@ -69,7 +69,10 @@ export type CustomerAskStatus = 'new' | 'under_review' | 'planned' | 'shipped';
 export interface LinkedCustomerAsk {
   id: string;
   name: string;
+  subThemeId: string | null;
   subThemeName: string | null;
+  themeId: string | null;
+  themeName: string | null;
 }
 
 /**

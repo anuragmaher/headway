@@ -75,45 +75,43 @@ def initialize_workspace(db: Session, workspace: Workspace) -> None:
 
 
 def get_or_create_workspace(
-    db: Session, 
-    owner_id: str, 
-    name: str, 
-    slug: str
+    db: Session,
+    name: str,
+    company_id: str = None
 ) -> Workspace:
     """
-    Get existing workspace or create a new one.
-    
+    Get existing workspace by name or create a new one.
+
     Args:
         db: Database session
-        owner_id: ID of the workspace owner
         name: Workspace name
-        slug: Workspace slug
-        
+        company_id: Optional company ID to associate with workspace
+
     Returns:
         Workspace object
     """
-    # Check if workspace exists
+    # Check if workspace exists by name
     workspace = db.query(Workspace).filter(
-        Workspace.slug == slug
+        Workspace.name == name
     ).first()
-    
+
     if workspace:
         logger.info(f"Found existing workspace: {workspace.name}")
         return workspace
-    
+
     # Create new workspace
     workspace = Workspace(
-        owner_id=owner_id,
         name=name,
-        slug=slug
+        company_id=company_id,
+        is_active=True
     )
-    
+
     db.add(workspace)
     db.commit()
     db.refresh(workspace)
-    
+
     # Initialize with default data
     initialize_workspace(db, workspace)
-    
+
     logger.info(f"Created new workspace: {workspace.name}")
     return workspace

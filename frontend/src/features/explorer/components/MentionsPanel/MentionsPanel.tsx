@@ -37,10 +37,12 @@ interface PanelContentProps {
   onToggleMention: (mentionId: string) => void;
   onNavigateToCustomerAsk: (customerAskId: string) => void;
   isMobileFullScreen?: boolean;
+  onNavigateToTheme: (themeId: string) => void;
+  onNavigateToSubTheme: (themeId: string, subThemeId: string) => void;
 }
 
 const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
-  ({ mentions, selectedCustomerAsk, isLoading, expandedMentionId, onClose, onToggleMention, onNavigateToCustomerAsk, isMobileFullScreen = false }, ref) => {
+  ({ mentions, selectedCustomerAsk, isLoading, expandedMentionId, onClose, onToggleMention, onNavigateToCustomerAsk, isMobileFullScreen = false, onNavigateToTheme, onNavigateToSubTheme }, ref) => {
     const theme = useTheme();
 
     return (
@@ -188,6 +190,8 @@ const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
                       isExpanded={mention.id === expandedMentionId}
                       onToggleExpand={onToggleMention}
                       onNavigateToCustomerAsk={onNavigateToCustomerAsk}
+                      onNavigateToTheme={onNavigateToTheme}
+                      onNavigateToSubTheme={onNavigateToSubTheme}
                     />
                     {index < mentions.length - 1 && (
                       <Divider sx={{ my: 1.5 }} />
@@ -215,7 +219,13 @@ export const MentionsPanel: React.FC<MentionsPanelProps> = ({ isMobileFullScreen
   const isLoading = useIsLoadingMentions();
   const isPanelOpen = useIsMentionsPanelOpen();
   const expandedMentionId = useExpandedMentionId();
-  const { closeMentionsPanel, toggleMentionExpand, selectCustomerAsk } = useExplorerActions();
+  const {
+    closeMentionsPanel,
+    toggleMentionExpand,
+    selectCustomerAsk,
+    selectTheme,
+    selectSubTheme,
+  } = useExplorerActions();
 
   const handleClose = () => {
     closeMentionsPanel();
@@ -231,6 +241,22 @@ export const MentionsPanel: React.FC<MentionsPanelProps> = ({ isMobileFullScreen
     selectCustomerAsk(customerAskId);
   };
 
+  // Navigate to a theme - closes mentions panel and shows that theme's subthemes
+  const handleNavigateToTheme = (themeId: string) => {
+    closeMentionsPanel();
+    selectTheme(themeId);
+  };
+
+  // Navigate to a subtheme - first select theme, then after subthemes load, select the subtheme
+  const handleNavigateToSubTheme = (themeId: string, subThemeId: string) => {
+    closeMentionsPanel();
+    selectTheme(themeId);
+    // Wait for subthemes to be fetched, then select the subtheme
+    setTimeout(() => {
+      selectSubTheme(subThemeId);
+    }, 100);
+  };
+
   if (isMobileFullScreen) {
     // Mobile full-screen mode - no slide animation, always visible
     return (
@@ -243,6 +269,8 @@ export const MentionsPanel: React.FC<MentionsPanelProps> = ({ isMobileFullScreen
         onToggleMention={handleToggleMention}
         onNavigateToCustomerAsk={handleNavigateToCustomerAsk}
         isMobileFullScreen={isMobileFullScreen}
+        onNavigateToTheme={handleNavigateToTheme}
+        onNavigateToSubTheme={handleNavigateToSubTheme}
       />
     );
   }
@@ -259,6 +287,8 @@ export const MentionsPanel: React.FC<MentionsPanelProps> = ({ isMobileFullScreen
         onToggleMention={handleToggleMention}
         onNavigateToCustomerAsk={handleNavigateToCustomerAsk}
         isMobileFullScreen={isMobileFullScreen}
+        onNavigateToTheme={handleNavigateToTheme}
+        onNavigateToSubTheme={handleNavigateToSubTheme}
       />
     </Slide>
   );

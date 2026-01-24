@@ -197,6 +197,16 @@ class AIInsightsTheme(BaseModel):
     explanation: Optional[str] = None
 
 
+class LinkedCustomerAskInfo(BaseModel):
+    """Customer ask linked to this message for displaying in UI"""
+    id: str
+    name: str
+    sub_theme_id: Optional[str] = None
+    sub_theme_name: Optional[str] = None
+    theme_id: Optional[str] = None
+    theme_name: Optional[str] = None
+
+
 class AIInsightsResponse(BaseModel):
     """AI insights for a single message"""
     id: str
@@ -214,6 +224,7 @@ class AIInsightsResponse(BaseModel):
     keywords: Optional[List[str]] = None
     locked_theme_id: Optional[str] = None
     locked_theme_name: Optional[str] = None
+    linked_customer_asks: List[LinkedCustomerAskInfo] = []  # Customer asks linked to this message
     model_version: str
     tokens_used: Optional[int] = None
     latency_ms: Optional[float] = None

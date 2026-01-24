@@ -28,8 +28,10 @@ import {
   SentimentDissatisfied as NegativeIcon,
   FormatQuote as QuoteIcon,
   WorkOutline as UseCaseIcon,
+  AccountTree as HierarchyIcon,
 } from '@mui/icons-material';
-import { MessageDetailsResponse, PartyInfo } from '@/services/sources';
+import { useNavigate } from 'react-router-dom';
+import { MessageDetailsResponse, PartyInfo, LinkedCustomerAskInfo } from '@/services/sources';
 import { useMessageDetailsStore } from '@/shared/store/AllMessagesStore';
 
 interface ContentTabProps {
@@ -599,7 +601,21 @@ const getSentimentColor = (sentiment: string | null, theme: Theme): string => {
  */
 export function AIInsightsTab(): JSX.Element {
   const theme = useTheme();
+  const navigate = useNavigate();
   const { aiInsights, isLoadingInsights } = useMessageDetailsStore();
+
+  // Navigate to theme explorer with selected hierarchy
+  const handleNavigateToTheme = (themeId: string) => {
+    navigate(`/themes?themeId=${themeId}`);
+  };
+
+  const handleNavigateToSubTheme = (themeId: string, subThemeId: string) => {
+    navigate(`/themes?themeId=${themeId}&subThemeId=${subThemeId}`);
+  };
+
+  const handleNavigateToCustomerAsk = (themeId: string, subThemeId: string, customerAskId: string) => {
+    navigate(`/themes?themeId=${themeId}&subThemeId=${subThemeId}&customerAskId=${customerAskId}`);
+  };
 
   // Loading state
   if (isLoadingInsights) {
@@ -625,11 +641,124 @@ export function AIInsightsTab(): JSX.Element {
     );
   }
 
-  const { summary, pain_point, pain_point_quote, feature_request, customer_usecase, sentiment, keywords } = aiInsights;
+  const { summary, pain_point, pain_point_quote, feature_request, customer_usecase, sentiment, keywords, linked_customer_asks } = aiInsights;
   const sentimentColor = getSentimentColor(sentiment, theme);
+  const hasLinkedCustomerAsks = linked_customer_asks && linked_customer_asks.length > 0;
 
   return (
     <Box>
+      {/* Linked Customer Asks - Shows which features this message is connected to */}
+      {hasLinkedCustomerAsks && (
+        <Box
+          sx={{
+            mb: 2.5,
+            p: 1.5,
+            borderRadius: 1,
+            bgcolor: theme.palette.mode === 'dark'
+              ? 'rgba(33, 150, 243, 0.08)'
+              : 'rgba(33, 150, 243, 0.04)',
+            border: '1px dashed',
+            borderColor: theme.palette.mode === 'dark'
+              ? 'rgba(33, 150, 243, 0.3)'
+              : 'rgba(33, 150, 243, 0.2)',
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+            <HierarchyIcon sx={{ fontSize: 14, color: 'info.main' }} />
+            <Typography
+              sx={{
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                color: 'info.main',
+                letterSpacing: '0.5px',
+              }}
+            >
+              LINKED TO {linked_customer_asks.length} CUSTOMER ASK{linked_customer_asks.length > 1 ? 'S' : ''}
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            {linked_customer_asks.map((linkedAsk: LinkedCustomerAskInfo) => (
+              <Box
+                key={linkedAsk.id}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.75,
+                  p: 1,
+                  borderRadius: 1,
+                  bgcolor: theme.palette.mode === 'dark'
+                    ? 'rgba(33, 150, 243, 0.1)'
+                    : 'rgba(33, 150, 243, 0.06)',
+                }}
+              >
+                {/* Theme - Clickable */}
+                <Typography
+                  onClick={() => {
+                    if (linkedAsk.theme_id) {
+                      handleNavigateToTheme(linkedAsk.theme_id);
+                    }
+                  }}
+                  sx={{
+                    fontSize: '0.75rem',
+                    color: linkedAsk.theme_id ? 'info.main' : 'text.secondary',
+                    whiteSpace: 'nowrap',
+                    cursor: linkedAsk.theme_id ? 'pointer' : 'default',
+                    '&:hover': linkedAsk.theme_id ? {
+                      textDecoration: 'underline',
+                    } : {},
+                  }}
+                >
+                  {linkedAsk.theme_name || 'Theme'}
+                </Typography>
+                <Typography sx={{ fontSize: '0.75rem', color: 'text.disabled' }}>→</Typography>
+                {/* SubTheme - Clickable */}
+                <Typography
+                  onClick={() => {
+                    if (linkedAsk.theme_id && linkedAsk.sub_theme_id) {
+                      handleNavigateToSubTheme(linkedAsk.theme_id, linkedAsk.sub_theme_id);
+                    }
+                  }}
+                  sx={{
+                    fontSize: '0.75rem',
+                    color: linkedAsk.sub_theme_id ? 'info.main' : 'text.secondary',
+                    whiteSpace: 'nowrap',
+                    cursor: linkedAsk.sub_theme_id ? 'pointer' : 'default',
+                    '&:hover': linkedAsk.sub_theme_id ? {
+                      textDecoration: 'underline',
+                    } : {},
+                  }}
+                >
+                  {linkedAsk.sub_theme_name || 'SubTheme'}
+                </Typography>
+                <Typography sx={{ fontSize: '0.75rem', color: 'text.disabled' }}>→</Typography>
+                {/* CustomerAsk - Clickable */}
+                <Typography
+                  onClick={() => {
+                    if (linkedAsk.theme_id && linkedAsk.sub_theme_id) {
+                      handleNavigateToCustomerAsk(linkedAsk.theme_id, linkedAsk.sub_theme_id, linkedAsk.id);
+                    }
+                  }}
+                  sx={{
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    color: 'info.main',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      textDecoration: 'underline',
+                    },
+                  }}
+                >
+                  {linkedAsk.name}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      )}
+
       {/* Header with AI Insights label and Sentiment Badge */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>

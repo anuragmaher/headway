@@ -395,7 +395,10 @@ export interface MentionAIInsight {
 export interface LinkedCustomerAskAPI {
   id: UUID;
   name: string;
+  sub_theme_id: UUID | null;
   sub_theme_name: string | null;
+  theme_id: UUID | null;
+  theme_name: string | null;
 }
 
 /**
