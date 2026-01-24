@@ -227,6 +227,12 @@ def extract_features(
 
                 logger.info(f"📊 Tier-2 batch: {batch_extracted} extracted, continuing loop...")
 
+            # CRITICAL: Commit all changes before returning
+            # Without this, all CustomerAsks, message links, and extracted facts are lost
+            # when the session context closes (SQLAlchemy defaults to autocommit=False)
+            db.commit()
+            logger.info("💾 Committed all Tier-2 extraction data to database")
+
             # Log final results
             if total['extracted'] == 0:
                 logger.info("✅ Tier-2 extraction: No items to extract (all already processed)")

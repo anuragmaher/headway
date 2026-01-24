@@ -414,49 +414,141 @@ class TieredAIService:
         actor_role: Optional[str],
         start_time: float,
     ) -> Tier1Result:
-        """Classify multiple chunks in parallel using asyncio."""
-        tasks = [
-            self._classify_single_chunk_async(chunk, source_type, actor_role, start_time)
-            for chunk in chunks
-        ]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
+        """Classify multiple chunks in parallel using asyncio.
 
-        # Find best result among successful classifications
-        best_result = None
-        total_tokens = 0
-        best_chunk_idx = 0
+        Creates a fresh AsyncOpenAI client for THIS event loop to avoid
+        connection errors when called via asyncio.run() in Celery workers.
+        The singleton's async_client is bound to a previous event loop,
+        so we must create a new one for each asyncio.run() call.
+        """
+        # Create a fresh async client for THIS event loop
+        # This avoids connection errors from reusing a client bound to a different loop
+        async_client = AsyncOpenAI(
+            api_key=self.api_key,
+            timeout=self.REQUEST_TIMEOUT,
+            max_retries=0,
+        )
+        # Create a fresh semaphore for THIS event loop
+        semaphore = asyncio.Semaphore(self.MAX_CONCURRENT_REQUESTS)
 
-        for i, result in enumerate(results):
-            if isinstance(result, Exception):
-                logger.warning(f"Chunk {i+1} classification failed: {result}")
-                continue
+        try:
+            tasks = [
+                self._classify_single_chunk_async_with_client(
+                    chunk, source_type, actor_role, start_time, async_client, semaphore
+                )
+                for chunk in chunks
+            ]
+            results = await asyncio.gather(*tasks, return_exceptions=True)
 
-            total_tokens += result.tokens_used
+            # Find best result among successful classifications
+            best_result = None
+            total_tokens = 0
+            best_chunk_idx = 0
 
-            if best_result is None or result.score > best_result.score:
-                best_result = result
-                best_chunk_idx = i + 1
+            for i, result in enumerate(results):
+                if isinstance(result, Exception):
+                    logger.warning(f"Chunk {i+1} classification failed: {result}")
+                    continue
 
-        if best_result is None:
-            # All chunks failed
+                total_tokens += result.tokens_used
+
+                if best_result is None or result.score > best_result.score:
+                    best_result = result
+                    best_chunk_idx = i + 1
+
+            if best_result is None:
+                # All chunks failed
+                return Tier1Result(
+                    score=6.0,  # Default to processing on error
+                    reasoning="All chunk classifications failed",
+                    tokens_used=0,
+                    model=self.DEFAULT_MODEL,
+                    prompt_version="langfuse",
+                    latency_ms=(time.time() - start_time) * 1000
+                )
+
+            # Return best result with aggregated info
             return Tier1Result(
-                score=6.0,  # Default to processing on error
-                reasoning="All chunk classifications failed",
-                tokens_used=0,
-                model=self.DEFAULT_MODEL,
-                prompt_version="langfuse",
+                score=best_result.score,
+                reasoning=f"[Chunk {best_chunk_idx}/{len(chunks)}] {best_result.reasoning}",
+                tokens_used=total_tokens,
+                model=best_result.model,
+                prompt_version=best_result.prompt_version,
                 latency_ms=(time.time() - start_time) * 1000
             )
+        finally:
+            # Clean up the client to prevent resource leaks
+            await async_client.close()
 
-        # Return best result with aggregated info
-        return Tier1Result(
-            score=best_result.score,
-            reasoning=f"[Chunk {best_chunk_idx}/{len(chunks)}] {best_result.reasoning}",
-            tokens_used=total_tokens,
-            model=best_result.model,
-            prompt_version=best_result.prompt_version,
-            latency_ms=(time.time() - start_time) * 1000
-        )
+    async def _classify_single_chunk_async_with_client(
+        self,
+        text: str,
+        source_type: str,
+        actor_role: Optional[str],
+        start_time: float,
+        client: AsyncOpenAI,
+        semaphore: asyncio.Semaphore,
+    ) -> Tier1Result:
+        """
+        Async classify a single text chunk with provided client and semaphore.
+
+        Used by _classify_chunks_parallel to process chunks in parallel with
+        a fresh async client that's bound to the current event loop.
+        """
+        async with semaphore:
+            try:
+                # Get chat prompt from Langfuse
+                messages = get_tier1_chat_prompt(
+                    text=text[:4000],  # Safety truncation
+                    source_type=source_type,
+                    actor_role=actor_role or "unknown",
+                )
+
+                response = await client.chat.completions.create(
+                    model=self.DEFAULT_MODEL,
+                    messages=messages,
+                    temperature=0.1,
+                    response_format={"type": "json_object"},
+                    max_tokens=200
+                )
+
+                latency_ms = (time.time() - start_time) * 1000
+                result = json.loads(response.choices[0].message.content)
+
+                # Parse score (0-10) from prompt format
+                score = float(result.get("score", 0))
+                score = max(0.0, min(10.0, score))
+
+                return Tier1Result(
+                    score=score,
+                    reasoning=result.get("reasoning", "No reasoning provided"),
+                    tokens_used=response.usage.total_tokens,
+                    model=self.DEFAULT_MODEL,
+                    prompt_version="langfuse",
+                    latency_ms=latency_ms
+                )
+
+            except json.JSONDecodeError as e:
+                logger.error(f"Tier-1 async (with client) JSON decode error: {e}")
+                return Tier1Result(
+                    score=0.0,
+                    reasoning=f"JSON decode error: {str(e)}",
+                    tokens_used=0,
+                    model=self.DEFAULT_MODEL,
+                    prompt_version="langfuse",
+                    latency_ms=(time.time() - start_time) * 1000
+                )
+
+            except Exception as e:
+                logger.error(f"Tier-1 async (with client) chunk classification error: {e}")
+                return Tier1Result(
+                    score=6.0,  # Default to processing on error
+                    reasoning=f"Error: {str(e)}",
+                    tokens_used=0,
+                    model=self.DEFAULT_MODEL,
+                    prompt_version="langfuse",
+                    latency_ms=(time.time() - start_time) * 1000
+                )
 
     # =========================================================================
     # Tier-1: Classification (Async)

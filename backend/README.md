@@ -113,3 +113,76 @@ Follow Python conventions:
 - **Constants**: UPPER_SNAKE_CASE (`DATABASE_URL`)
 - **Type hints**: Use everywhere
 - **Docstrings**: Document all public functions
+
+---
+
+## AI Pipeline & Observability
+
+### Langfuse OpenTelemetry Tracing
+
+All AI/LLM calls are traced to Langfuse for observability. Tracing is initialized automatically for both:
+- **FastAPI** (via `app/core/langfuse_tracing.py` at startup)
+- **Celery workers** (via worker signals in `app/tasks/celery_app.py`)
+
+**Required Environment Variables:**
+```bash
+LANGFUSE_SECRET_KEY=sk-lf-...
+LANGFUSE_PUBLIC_KEY=pk-lf-...
+LANGFUSE_BASE_URL=https://cloud.langfuse.com
+```
+
+**What's Traced:**
+- All OpenAI API calls (tier1 classification, tier2 extraction, AI insights)
+- Token usage and latency
+- Full prompt/completion content (for debugging)
+
+### Tier-1 Classification Improvements
+
+Located in `app/sync_engine/tasks/ai_pipeline/tier1_classification.py`:
+
+| Feature | Description |
+|---------|-------------|
+| **Tier-2 Trigger Inside Loop** | `extract_features.delay()` triggers after each batch with relevant items, ensuring progress even if task times out |
+| **Soft Timeout Handling** | Catches `SoftTimeLimitExceeded`, gracefully exits, and re-queues remaining work |
+| **Per-Run Item Limit** | `MAX_ITEMS_PER_RUN = 50` - task self-requeues after 50 items to prevent long-running tasks |
+| **Skip Oversized Messages** | `MAX_MESSAGE_LENGTH = 50000` (50KB) - skips and marks as completed with error |
+
+### Parallel Chunk Processing
+
+Located in `app/services/tiered_ai_service.py`:
+
+For long messages (>1500 chars) that get chunked:
+- **Before**: Chunks processed sequentially (5 chunks × 500ms = 2.5s)
+- **After**: Chunks processed in parallel via `asyncio.run()` (5 chunks = 500ms)
+- **Speedup**: ~5x for multi-chunk messages
+
+Falls back to sequential processing if already in an async context.
+
+### Message Fetching Limits
+
+All sources have a unified limit of **60 messages** per sync:
+
+| Source | Periodic | On-Demand |
+|--------|----------|-----------|
+| Slack | 60 | 60 |
+| Gmail | 60 | 60 |
+| Gong | 60 | 60 |
+| Fathom | 60 | 60 |
+
+### Deployment
+
+```bash
+# Install dependencies (includes OpenTelemetry packages)
+pip install -r requirements.txt
+
+# Restart Celery workers to pick up tracing initialization
+celery -A app.tasks.celery_app worker --loglevel=info
+```
+
+### Expected Behavior
+
+1. **Faster Processing** - Parallel chunk classification (5x speedup for long messages)
+2. **Graceful Timeouts** - Soft timeouts handled without SIGKILL
+3. **Progress Preserved** - Messages progress to Tier-2 even if task times out
+4. **No Blocking** - Oversized messages skipped instead of blocking pipeline
+5. **Full Observability** - All AI calls visible in Langfuse traces
