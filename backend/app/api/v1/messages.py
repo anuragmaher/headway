@@ -24,7 +24,8 @@ async def list_messages(
     source: Optional[str] = None,
     connector_id: Optional[UUID] = None,
     customer_ask_id: Optional[UUID] = None,
-    is_processed: Optional[bool] = None,
+    tier1_processed: Optional[bool] = None,
+    tier2_processed: Optional[bool] = None,
     page: int = Query(1, ge=1),
     page_size: int = Query(50, ge=1, le=200),
     current_user: dict = Depends(get_current_user),
@@ -44,7 +45,8 @@ async def list_messages(
         source=source,
         connector_id=connector_id,
         customer_ask_id=customer_ask_id,
-        is_processed=is_processed,
+        tier1_processed=tier1_processed,
+        tier2_processed=tier2_processed,
         page=page,
         page_size=page_size
     )

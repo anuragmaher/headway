@@ -4,9 +4,9 @@ Optimized Fathom Batch Ingestion Service - Fast batch data storage without AI ex
 This service focuses on:
 1. Fast fetching of Fathom sessions and transcripts
 2. Batch insertion into the database
-3. Deferred AI processing (marked as is_processed=False)
+3. Deferred AI processing (marked as tier1_processed=False, tier2_processed=False)
 
-AI extraction happens in a separate batch processing task.
+AI extraction happens in a separate batch processing task (Tier 1 -> Tier 2).
 
 Usage:
     from app.services.fathom_batch_ingestion_service import fathom_batch_ingestion_service
@@ -64,7 +64,7 @@ class FathomBatchIngestionService:
 
         This method:
         1. Fetches sessions from Fathom API
-        2. Batch inserts into Message table with is_processed=False
+        2. Batch inserts into Message table with tier1_processed=False
         3. Returns counts for sync tracking
 
         AI extraction is NOT performed here - it happens in a separate task.

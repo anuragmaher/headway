@@ -29,14 +29,9 @@ from tenacity import (
 )
 
 from app.core.config import settings
-from app.services.ai_pipeline_prompts import (
-    build_tier1_prompt,
-    build_tier2_prompt,
-    build_theme_prompt,
-    build_aggregation_prompt,
-    TIER1_PROMPT_VERSION,
-    TIER2_PROMPT_VERSION,
-    AGGREGATION_PROMPT_VERSION,
+from app.services.langfuse_prompt_service import (
+    get_tier1_chat_prompt,
+    get_tier2_chat_prompt,
 )
 
 logger = logging.getLogger(__name__)
@@ -234,22 +229,22 @@ class TieredAIService:
 
         This is a cheap, fast call to filter out irrelevant content
         before running expensive extraction.
+
+        Uses Langfuse chat prompts (tier1_ai_prompt).
         """
         start_time = time.time()
 
         try:
-            system_prompt, user_prompt = build_tier1_prompt(
-                text=text,
+            # Get chat prompt from Langfuse
+            messages = get_tier1_chat_prompt(
+                text=text[:4000],
                 source_type=source_type,
-                actor_role=actor_role,
+                actor_role=actor_role or "unknown",
             )
 
             response = self.client.chat.completions.create(
                 model=self.DEFAULT_MODEL,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
+                messages=messages,  # Directly use Langfuse messages
                 temperature=0.1,
                 response_format={"type": "json_object"},
                 max_tokens=200
@@ -258,7 +253,7 @@ class TieredAIService:
             latency_ms = (time.time() - start_time) * 1000
             result = json.loads(response.choices[0].message.content)
 
-            # Parse score (0-10) from new prompt format
+            # Parse score (0-10) from prompt format
             score = float(result.get("score", 0))
             # Clamp score to 0-10 range
             score = max(0.0, min(10.0, score))
@@ -268,7 +263,7 @@ class TieredAIService:
                 reasoning=result.get("reasoning", "No reasoning provided"),
                 tokens_used=response.usage.total_tokens,
                 model=self.DEFAULT_MODEL,
-                prompt_version=TIER1_PROMPT_VERSION,
+                prompt_version="langfuse",
                 latency_ms=latency_ms
             )
 
@@ -279,7 +274,7 @@ class TieredAIService:
                 reasoning=f"JSON decode error: {str(e)}",
                 tokens_used=0,
                 model=self.DEFAULT_MODEL,
-                prompt_version=TIER1_PROMPT_VERSION,
+                prompt_version="langfuse",
                 latency_ms=(time.time() - start_time) * 1000
             )
 
@@ -290,7 +285,7 @@ class TieredAIService:
                 reasoning=f"Error during classification: {str(e)}",
                 tokens_used=0,
                 model=self.DEFAULT_MODEL,
-                prompt_version=TIER1_PROMPT_VERSION,
+                prompt_version="langfuse",
                 latency_ms=(time.time() - start_time) * 1000
             )
 
@@ -309,18 +304,16 @@ class TieredAIService:
 
         async with self._get_semaphore():
             try:
-                system_prompt, user_prompt = build_tier1_prompt(
-                    text=text,
+                # Get chat prompt from Langfuse
+                messages = get_tier1_chat_prompt(
+                    text=text[:4000],
                     source_type=source_type,
-                    actor_role=actor_role,
+                    actor_role=actor_role or "unknown",
                 )
 
                 response = await self.async_client.chat.completions.create(
                     model=self.DEFAULT_MODEL,
-                    messages=[
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_prompt}
-                    ],
+                    messages=messages,  # Directly use Langfuse messages
                     temperature=0.1,
                     response_format={"type": "json_object"},
                     max_tokens=200
@@ -329,7 +322,7 @@ class TieredAIService:
                 latency_ms = (time.time() - start_time) * 1000
                 result = json.loads(response.choices[0].message.content)
 
-                # Parse score (0-10) from new prompt format
+                # Parse score (0-10) from prompt format
                 score = float(result.get("score", 0))
                 score = max(0.0, min(10.0, score))
 
@@ -338,7 +331,7 @@ class TieredAIService:
                     reasoning=result.get("reasoning", "No reasoning provided"),
                     tokens_used=response.usage.total_tokens,
                     model=self.DEFAULT_MODEL,
-                    prompt_version=TIER1_PROMPT_VERSION,
+                    prompt_version="langfuse",
                     latency_ms=latency_ms
                 )
 
@@ -349,7 +342,7 @@ class TieredAIService:
                     reasoning=f"Error: {str(e)}",
                     tokens_used=0,
                     model=self.DEFAULT_MODEL,
-                    prompt_version=TIER1_PROMPT_VERSION,
+                    prompt_version="langfuse",
                     latency_ms=(time.time() - start_time) * 1000
                 )
 
@@ -409,6 +402,24 @@ class TieredAIService:
     # Tier-2: Extraction (Sync)
     # =========================================================================
 
+    def _format_themes_list(self, themes: Optional[List[Dict]]) -> str:
+        """Format themes for prompt."""
+        if not themes:
+            return "No themes defined"
+        return "\n".join([
+            f"- {t['name']}: {t.get('description', 'No description')}"
+            for t in themes
+        ])
+
+    def _format_features_list(self, features: Optional[List[Dict]]) -> str:
+        """Format existing features for prompt."""
+        if not features:
+            return "No existing features"
+        return "\n".join([
+            f"- ID: {f['id']} | Name: {f['name']} | Theme: {f.get('theme_name', 'Uncategorized')}"
+            for f in features[:30]  # Limit to 30 features
+        ])
+
     @with_retry
     def tier2_extract(
         self,
@@ -425,26 +436,30 @@ class TieredAIService:
 
         Only called for content that passed Tier-1 classification.
         Now includes theme assignment and feature matching in a single call.
+
+        Uses Langfuse chat prompts (tier2_ai_prompt).
         """
         start_time = time.time()
 
         try:
-            system_prompt, user_prompt = build_tier2_prompt(
-                text=text,
+            # Format themes and features for prompt variables
+            themes_list = self._format_themes_list(themes)
+            features_list = self._format_features_list(existing_features)
+
+            # Get chat prompt from Langfuse
+            messages = get_tier2_chat_prompt(
+                text=text[:5000],
                 source_type=source_type,
                 actor_name=actor_name or "Unknown",
                 actor_role=actor_role or "unknown",
-                title=title,
-                themes=themes,
-                existing_features=existing_features,
+                title=title or "N/A",
+                themes_list=themes_list,
+                features_list=features_list,
             )
 
             response = self.client.chat.completions.create(
                 model=self.DEFAULT_MODEL,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
+                messages=messages,  # Directly use Langfuse messages
                 temperature=0.2,
                 response_format={"type": "json_object"},
                 max_tokens=2000
@@ -463,7 +478,7 @@ class TieredAIService:
                     is_new_feature=False,
                     tokens_used=response.usage.total_tokens,
                     model=self.DEFAULT_MODEL,
-                    prompt_version=TIER2_PROMPT_VERSION,
+                    prompt_version="langfuse",
                     latency_ms=latency_ms
                 )
 
@@ -502,7 +517,7 @@ class TieredAIService:
                 # Metadata
                 tokens_used=response.usage.total_tokens,
                 model=self.DEFAULT_MODEL,
-                prompt_version=TIER2_PROMPT_VERSION,
+                prompt_version="langfuse",
                 latency_ms=latency_ms
             )
 
@@ -514,7 +529,7 @@ class TieredAIService:
                 is_new_feature=False,
                 tokens_used=0,
                 model=self.DEFAULT_MODEL,
-                prompt_version=TIER2_PROMPT_VERSION,
+                prompt_version="langfuse",
                 latency_ms=(time.time() - start_time) * 1000
             )
 
@@ -526,7 +541,7 @@ class TieredAIService:
                 is_new_feature=False,
                 tokens_used=0,
                 model=self.DEFAULT_MODEL,
-                prompt_version=TIER2_PROMPT_VERSION,
+                prompt_version="langfuse",
                 latency_ms=(time.time() - start_time) * 1000
             )
 
@@ -549,22 +564,24 @@ class TieredAIService:
 
         async with self._get_semaphore():
             try:
-                system_prompt, user_prompt = build_tier2_prompt(
-                    text=text,
+                # Format themes and features for prompt variables
+                themes_list = self._format_themes_list(themes)
+                features_list = self._format_features_list(existing_features)
+
+                # Get chat prompt from Langfuse
+                messages = get_tier2_chat_prompt(
+                    text=text[:5000],
                     source_type=source_type,
                     actor_name=actor_name or "Unknown",
                     actor_role=actor_role or "unknown",
-                    title=title,
-                    themes=themes,
-                    existing_features=existing_features,
+                    title=title or "N/A",
+                    themes_list=themes_list,
+                    features_list=features_list,
                 )
 
                 response = await self.async_client.chat.completions.create(
                     model=self.DEFAULT_MODEL,
-                    messages=[
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_prompt}
-                    ],
+                    messages=messages,  # Directly use Langfuse messages
                     temperature=0.2,
                     response_format={"type": "json_object"},
                     max_tokens=2000
@@ -582,7 +599,7 @@ class TieredAIService:
                         is_new_feature=False,
                         tokens_used=response.usage.total_tokens,
                         model=self.DEFAULT_MODEL,
-                        prompt_version=TIER2_PROMPT_VERSION,
+                        prompt_version="langfuse",
                         latency_ms=latency_ms
                     )
 
@@ -618,7 +635,7 @@ class TieredAIService:
                     is_new_feature=not matched,
                     tokens_used=response.usage.total_tokens,
                     model=self.DEFAULT_MODEL,
-                    prompt_version=TIER2_PROMPT_VERSION,
+                    prompt_version="langfuse",
                     latency_ms=latency_ms
                 )
 
@@ -630,7 +647,7 @@ class TieredAIService:
                     is_new_feature=False,
                     tokens_used=0,
                     model=self.DEFAULT_MODEL,
-                    prompt_version=TIER2_PROMPT_VERSION,
+                    prompt_version="langfuse",
                     latency_ms=(time.time() - start_time) * 1000
                 )
 
@@ -711,12 +728,30 @@ class TieredAIService:
                     reasoning="No themes available"
                 )
 
-            system_prompt, user_prompt = build_theme_prompt(
-                feature_title=feature_title,
-                feature_description=feature_description,
-                problem_statement=problem_statement or "",
-                themes=themes
-            )
+            # Build inline theme classification prompt
+            themes_list = "\n".join([
+                f"- {t['name']}: {t.get('description', 'No description')}"
+                for t in themes
+            ])
+
+            system_prompt = "You are a theme classification AI. Match features to the most appropriate theme."
+
+            user_prompt = f"""Based on this feature request, suggest the most appropriate theme.
+
+FEATURE:
+Title: {feature_title}
+Description: {feature_description or 'No description'}
+Problem: {problem_statement or 'No problem statement'}
+
+AVAILABLE THEMES:
+{themes_list}
+
+Respond with this exact JSON structure:
+{{
+  "suggested_theme": "Theme name from the list above",
+  "confidence": 0.0 to 1.0,
+  "reasoning": "Specific reason why this theme matches the feature's CORE functionality"
+}}"""
 
             response = self.client.chat.completions.create(
                 model=self.DEFAULT_MODEL,
@@ -778,12 +813,42 @@ class TieredAIService:
                     reasoning="No existing features to merge with"
                 )
 
-            system_prompt, user_prompt = build_aggregation_prompt(
-                new_title=new_title,
-                new_description=new_description,
-                new_problem=new_problem or "",
-                existing_features=existing_features
-            )
+            # Build inline aggregation prompt
+            features_text = "\n".join([
+                f"- ID: {f['id']}\n  Title: {f['name']}\n  Description: {f.get('description', 'N/A')[:200]}"
+                for f in existing_features[:10]
+            ]) or "No existing features in this theme."
+
+            system_prompt = """You are a deduplication AI for a product intelligence platform.
+
+Your task is to determine if a newly extracted feature request should be merged with an existing feature or created as a new one.
+
+Consider:
+1. SEMANTIC SIMILARITY: Are they asking for the same thing in different words?
+2. CORE FUNCTIONALITY: Would building one satisfy the other?
+3. SCOPE: Is one a subset/superset of the other?
+
+BE CONSERVATIVE: Only merge if there is HIGH confidence (>80%) they are truly the same request. Different features should remain separate.
+
+Respond with ONLY a JSON object, nothing else."""
+
+            user_prompt = f"""Determine if this new feature request matches any existing features.
+
+NEW FEATURE REQUEST:
+Title: {new_title}
+Description: {new_description or 'No description'}
+Problem: {new_problem or 'No problem statement'}
+
+EXISTING FEATURES IN SAME THEME:
+{features_text}
+
+Respond with this exact JSON structure:
+{{
+  "should_merge": true or false,
+  "matching_feature_id": "UUID of matching feature or null",
+  "confidence": 0.0 to 1.0,
+  "reasoning": "Explanation of your decision"
+}}"""
 
             response = self.client.chat.completions.create(
                 model=self.DEFAULT_MODEL,

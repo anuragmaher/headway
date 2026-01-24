@@ -44,7 +44,7 @@ def sync_slack_periodic(self):
     - Runs every 15 minutes
     - Only syncs active Slack connectors
     - Fetches messages from selected channels
-    - Stores messages in Message table with is_processed=False
+    - Stores messages in Message table with tier1_processed=False
     - Creates SyncHistory records for tracking
 
     AI extraction is NOT performed here - it happens in a separate batch task.

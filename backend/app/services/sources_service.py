@@ -111,7 +111,8 @@ class SourcesService:
                 content=msg.content,
                 timestamp=msg.sent_at,
                 channel_name=msg.channel_name or msg.label_name,
-                is_processed=msg.is_processed,
+                tier1_processed=msg.tier1_processed,
+                tier2_processed=msg.tier2_processed,
             ))
 
         return MessageListResponse(
@@ -262,7 +263,8 @@ class SourcesService:
             'channel_name': msg.channel_name or msg.label_name,
             'sent_at': msg.sent_at.isoformat() if msg.sent_at else None,
             'created_at': msg.created_at.isoformat() if msg.created_at else None,
-            'is_processed': msg.is_processed,
+            'tier1_processed': msg.tier1_processed,
+            'tier2_processed': msg.tier2_processed,
             'processed_at': msg.processed_at.isoformat() if msg.processed_at else None,
             # Metadata fields
             'metadata': metadata,

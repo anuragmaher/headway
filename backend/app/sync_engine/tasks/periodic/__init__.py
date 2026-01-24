@@ -10,6 +10,10 @@ from app.sync_engine.tasks.periodic.slack import sync_slack_periodic
 from app.sync_engine.tasks.periodic.gmail import sync_gmail_periodic
 from app.sync_engine.tasks.periodic.gong import sync_gong_periodic
 from app.sync_engine.tasks.periodic.fathom import sync_fathom_periodic
+from app.sync_engine.tasks.periodic.customer_extraction import (
+    extract_customers_periodic,
+    extract_customers_for_workspace,
+)
 
 __all__ = [
     "health_check",
@@ -17,4 +21,6 @@ __all__ = [
     "sync_gmail_periodic",
     "sync_gong_periodic",
     "sync_fathom_periodic",
+    "extract_customers_periodic",
+    "extract_customers_for_workspace",
 ]

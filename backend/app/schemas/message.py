@@ -58,7 +58,8 @@ class MessageUpdate(BaseModel):
     """Schema for updating a message"""
     customer_ask_id: Optional[UUID] = None
     customer_id: Optional[UUID] = None
-    is_processed: Optional[bool] = None
+    tier1_processed: Optional[bool] = None
+    tier2_processed: Optional[bool] = None
     feature_score: Optional[float] = None
 
 
@@ -73,7 +74,8 @@ class MessageResponse(MessageBase):
     to_emails: Optional[str] = None
     message_count: int = 1
     message_metadata: Optional[Dict[str, Any]] = None
-    is_processed: bool = False
+    tier1_processed: bool = False
+    tier2_processed: bool = False
     processed_at: Optional[datetime] = None
     feature_score: Optional[float] = None
     created_at: datetime

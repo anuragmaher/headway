@@ -247,7 +247,8 @@ class OptimizedMessagesService:
                 COALESCE(SUBSTRING(content FROM 1 FOR 150), '') as preview,
                 sent_at as sort_timestamp,
                 channel_name,
-                is_processed
+                tier1_processed,
+                tier2_processed
             FROM messages
             WHERE workspace_id = :workspace_id
             {source_condition}
@@ -281,7 +282,8 @@ class OptimizedMessagesService:
                 content=None,  # Content loaded on-demand in detail view
                 timestamp=row[7],
                 channel_name=row[8],
-                is_processed=row[9],
+                tier1_processed=row[9],
+                tier2_processed=row[10],
             ))
 
         return messages
@@ -367,7 +369,8 @@ class OptimizedMessagesService:
                 COALESCE(SUBSTRING(m.content FROM 1 FOR 150), '') as preview,
                 m.sent_at as sort_timestamp,
                 m.channel_name,
-                m.is_processed,
+                m.tier1_processed,
+                m.tier2_processed,
                 -- AI Insight fields (full data)
                 ai.id::text as ai_id,
                 ai.summary,
@@ -413,19 +416,19 @@ class OptimizedMessagesService:
         for row in rows:
             # Build AI insight object if data exists
             ai_insights = None
-            if row[10]:  # ai_id exists
+            if row[11]:  # ai_id exists (shifted by 1 due to tier2_processed)
                 ai_insights = MessageAIInsight(
-                    id=row[10],
-                    summary=row[11],
-                    pain_point=row[12],
-                    pain_point_quote=row[13],
-                    feature_request=row[14],
-                    customer_usecase=row[15],
-                    sentiment=row[16],
-                    keywords=row[17] or [],
-                    model_version=row[18],
-                    tokens_used=row[19],
-                    created_at=row[20],
+                    id=row[11],
+                    summary=row[12],
+                    pain_point=row[13],
+                    pain_point_quote=row[14],
+                    feature_request=row[15],
+                    customer_usecase=row[16],
+                    sentiment=row[17],
+                    keywords=row[18] or [],
+                    model_version=row[19],
+                    tokens_used=row[20],
+                    created_at=row[21],
                 )
 
             messages.append(MessageResponse(
@@ -439,7 +442,8 @@ class OptimizedMessagesService:
                 content=None,
                 timestamp=row[7],
                 channel_name=row[8],
-                is_processed=row[9],
+                tier1_processed=row[9],
+                tier2_processed=row[10],
                 ai_insights=ai_insights,
             ))
 
@@ -489,7 +493,8 @@ class OptimizedMessagesService:
                 COALESCE(SUBSTRING(content FROM 1 FOR 150), '') as preview,
                 sent_at as sort_timestamp,
                 channel_name,
-                is_processed
+                tier1_processed,
+                tier2_processed
             FROM messages
             WHERE workspace_id = :workspace_id
             AND id::text IN ({id_list})
@@ -511,7 +516,8 @@ class OptimizedMessagesService:
                 content=None,
                 timestamp=row[7],
                 channel_name=row[8],
-                is_processed=row[9],
+                tier1_processed=row[9],
+                tier2_processed=row[10],
             )
 
         return messages_dict

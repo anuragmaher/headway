@@ -82,8 +82,16 @@ async def gmail_callback(request: Request, db: Session = Depends(get_db)):
 
         # Get user's workspace (user belongs to a workspace via workspace_id)
         workspace_id = user.workspace_id
+        if not workspace_id:
+            # User must be assigned to a workspace before connecting Gmail
+            error_redirect = (
+                f"{settings.FRONTEND_URL}/gmail/callback?error=no_workspace"
+            )
+            return RedirectResponse(url=error_redirect, status_code=302)
 
+        # Check for existing Gmail connector in the same workspace
         existing = db.query(WorkspaceConnector).filter(
+            WorkspaceConnector.workspace_id == workspace_id,
             WorkspaceConnector.connector_type == 'gmail',
             WorkspaceConnector.external_id == gmail_email
         ).first()
@@ -150,7 +158,6 @@ async def fetch_labels(
 
         res = await run_in_threadpool(fetch)
         labels = res.get("labels", [])
-        print(labels)
         return {
             "labels": [
                 {
@@ -171,18 +178,70 @@ async def fetch_labels(
 
 # Background task function for Gmail ingestion
 def run_gmail_ingestion_background(connector_id: str):
-    """Run Gmail ingestion in background with its own database session"""
+    """Run Gmail ingestion in background with its own database session and sync history tracking"""
+    from app.sync_engine.tasks.base import create_sync_record, finalize_sync_record
+
     db = SessionLocal()
+    sync_record = None
     try:
         logger.info(f"Starting background Gmail ingestion for connector {connector_id}")
+
+        # Get connector to access workspace info
+        connector = db.query(WorkspaceConnector).filter(
+            WorkspaceConnector.id == UUID(connector_id)
+        ).first()
+
+        if not connector or not connector.workspace_id:
+            logger.error(f"Connector {connector_id} not found or has no workspace")
+            return
+
+        # Create sync history record
+        sync_record = create_sync_record(
+            db=db,
+            workspace_id=str(connector.workspace_id),
+            source_type="gmail",
+            source_name=connector.external_id or connector.name or "Gmail",
+            connector_id=connector_id,
+            initial_status="in_progress",
+            trigger_type="manual",
+        )
+
         result = gmail_ingestion_service.ingest_threads_for_connector(
             connector_id=connector_id,
             db=db,
             max_threads=5
         )
+
+        # Finalize sync record with results
+        if sync_record:
+            status = "success" if result.get("status") == "success" else "partial"
+            if result.get("status") == "error":
+                status = "failed"
+
+            finalize_sync_record(
+                db=db,
+                sync_record=sync_record,
+                status=status,
+                items_processed=result.get("total_checked", 0),
+                items_new=result.get("new_added", 0),
+                error_message="; ".join(result.get("errors", [])) if result.get("errors") else None,
+                synced_item_ids=result.get("inserted_ids", []),
+            )
+
         logger.info(f"Background Gmail ingestion complete: {result}")
     except Exception as e:
         logger.error(f"Background Gmail ingestion failed: {e}")
+        # Update sync record if it was created
+        if sync_record:
+            try:
+                finalize_sync_record(
+                    db=db,
+                    sync_record=sync_record,
+                    status="failed",
+                    error_message=str(e),
+                )
+            except Exception:
+                pass
     finally:
         db.close()
 
@@ -489,7 +548,8 @@ async def get_gmail_threads(
                     "label_name": msg.label_name,
                     "message_count": msg.message_count or 1,
                     "thread_date": msg.sent_at.isoformat() if msg.sent_at else None,
-                    "is_processed": msg.is_processed,
+                    "tier1_processed": msg.tier1_processed,
+                    "tier2_processed": msg.tier2_processed,
                     "content_preview": msg.content[:500] if msg.content else None,
                     "created_at": msg.created_at.isoformat() if msg.created_at else None
                 }

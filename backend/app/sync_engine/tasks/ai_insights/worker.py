@@ -30,6 +30,7 @@ from app.sync_engine.tasks.base import (
     test_db_connection,
 )
 from app.models.message import Message
+from app.models.message_customer_ask import MessageCustomerAsk
 from app.models.theme import Theme
 from app.models.sub_theme import SubTheme
 from app.models.customer_ask import CustomerAsk
@@ -64,6 +65,43 @@ def get_available_themes(db: Session, workspace_id: uuid.UUID) -> List[Dict[str,
             })
         result.append(theme_data)
     return result
+
+
+def get_linked_customer_asks(db: Session, message: Message) -> List[Dict[str, Any]]:
+    """
+    Get all CustomerAsks linked to a message via the junction table.
+
+    Returns list of CustomerAsk data for use in AI insights prompt.
+    """
+    customer_asks_data = []
+
+    # Query via junction table for many-to-many links
+    links = db.query(MessageCustomerAsk).filter(
+        MessageCustomerAsk.message_id == message.id
+    ).all()
+
+    for link in links:
+        ca = db.query(CustomerAsk).filter(CustomerAsk.id == link.customer_ask_id).first()
+        if ca:
+            customer_asks_data.append({
+                "id": str(ca.id),
+                "name": ca.name,
+                "description": ca.description,
+                "urgency": ca.urgency,
+            })
+
+    # Fallback: Also check deprecated FK if no junction links found
+    if not customer_asks_data and message.customer_ask_id:
+        ca = db.query(CustomerAsk).filter(CustomerAsk.id == message.customer_ask_id).first()
+        if ca:
+            customer_asks_data.append({
+                "id": str(ca.id),
+                "name": ca.name,
+                "description": ca.description,
+                "urgency": ca.urgency,
+            })
+
+    return customer_asks_data
 
 
 def get_locked_theme_from_customer_ask(db: Session, message: Message) -> Optional[Dict[str, Any]]:
@@ -205,9 +243,10 @@ def process_pending_insights(
                         skipped += 1
                         continue
 
-                    # Get themes and locked theme from customer_ask
+                    # Get themes, locked theme, and linked customer asks
                     available_themes = get_available_themes(db, message.workspace_id)
                     locked_theme = get_locked_theme_from_customer_ask(db, message)
+                    linked_customer_asks = get_linked_customer_asks(db, message)
 
                     # Generate insights
                     result = ai_service.generate_insights(
@@ -218,6 +257,7 @@ def process_pending_insights(
                         author_name=message.author_name,
                         author_role=None,
                         locked_theme=locked_theme,
+                        linked_customer_asks=linked_customer_asks,
                     )
 
                     # Create insight record
@@ -385,9 +425,10 @@ def process_single_message_insights(
                     "reason": "Content too short",
                 }
 
-            # Get available themes and locked theme from customer_ask
+            # Get available themes, locked theme, and linked customer asks
             available_themes = get_available_themes(db, workspace_uuid)
             locked_theme = get_locked_theme_from_customer_ask(db, message)
+            linked_customer_asks = get_linked_customer_asks(db, message)
 
             # Generate insights
             ai_service = get_ai_insights_service()
@@ -399,6 +440,7 @@ def process_single_message_insights(
                 author_name=message.author_name,
                 author_role=None,
                 locked_theme=locked_theme,
+                linked_customer_asks=linked_customer_asks,
             )
 
             # Create insight record

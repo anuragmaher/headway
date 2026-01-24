@@ -77,7 +77,8 @@ class MessageResponse(BaseModel):
     content: Optional[str] = None
     timestamp: datetime
     channel_name: Optional[str] = None
-    is_processed: bool = False
+    tier1_processed: bool = False
+    tier2_processed: bool = False
     ai_insights: Optional[MessageAIInsight] = None  # Included when fetching with insights
 
     class Config:

@@ -5,9 +5,9 @@ This service focuses on:
 1. Fast fetching of Slack messages from selected channels
 2. Batch duplicate detection
 3. Batch insertion into the Message table
-4. Deferred AI processing (marked as is_processed=False)
+4. Deferred AI processing (marked as tier1_processed=False, tier2_processed=False)
 
-AI extraction happens in a separate batch processing task.
+AI extraction happens in a separate batch processing task (Tier 1 -> Tier 2).
 
 Usage:
     from app.services.slack_batch_ingestion_service import slack_batch_ingestion_service
@@ -88,7 +88,7 @@ class SlackBatchIngestionService:
         This method:
         1. Fetches messages from selected Slack channels
         2. Batch checks for duplicates
-        3. Batch inserts into Message table with is_processed=False
+        3. Batch inserts into Message table with tier1_processed=False
         4. Returns counts for sync tracking
 
         AI extraction is NOT performed here - it happens in a separate task.

@@ -36,11 +36,11 @@ def sync_workspace_themes(self, workspace_id: str, sync_id: str, theme_ids: list
 
             from app.models.message import Message
 
-            # Query unprocessed messages
+            # Query unprocessed messages (not yet through Tier 1)
             query = db.query(Message).filter(Message.workspace_id == workspace_id)
 
             if not reprocess_all:
-                query = query.filter(Message.is_processed == False)
+                query = query.filter(Message.tier1_processed == False)
 
             # Limit to avoid timeout
             messages = query.limit(200).all()
@@ -57,15 +57,15 @@ def sync_workspace_themes(self, workspace_id: str, sync_id: str, theme_ids: list
                 try:
                     # Skip empty messages
                     if not msg.content or len(msg.content.strip()) < 50:
-                        msg.is_processed = True
+                        msg.tier1_processed = True
                         msg.processed_at = datetime.now(timezone.utc)
                         continue
 
                     # Check if message already has a customer_ask assigned
                     had_customer_ask = msg.customer_ask_id is not None
 
-                    # Mark as processed
-                    msg.is_processed = True
+                    # Mark as tier1 processed
+                    msg.tier1_processed = True
                     msg.processed_at = datetime.now(timezone.utc)
                     items_processed += 1
 
