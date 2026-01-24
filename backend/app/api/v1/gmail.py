@@ -79,10 +79,9 @@ async def gmail_callback(request: Request, db: Session = Depends(get_db)):
         user = db.query(User).filter(User.id == user_id).first()
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
-        
-        # Get user's workspace
-        workspace = db.query(Workspace).filter(Workspace.owner_id == user_id).first()
-        workspace_id = workspace.id if workspace else None
+
+        # Get user's workspace (user belongs to a workspace via workspace_id)
+        workspace_id = user.workspace_id
 
         existing = db.query(WorkspaceConnector).filter(
             WorkspaceConnector.connector_type == 'gmail',
@@ -210,11 +209,9 @@ async def save_selected_labels(
 
         # Ensure workspace_id is set (in case connector was created before this update)
         if not gmail_connector.workspace_id:
-            workspace = db.query(Workspace).filter(
-                Workspace.owner_id == current_user["id"]
-            ).first()
-            if workspace:
-                gmail_connector.workspace_id = workspace.id
+            user = db.query(User).filter(User.id == current_user["id"]).first()
+            if user and user.workspace_id:
+                gmail_connector.workspace_id = user.workspace_id
 
         db.query(ConnectorLabel).filter(
             ConnectorLabel.connector_id == gmail_connector.id
@@ -407,11 +404,9 @@ async def sync_gmail_threads(
 
         # Ensure workspace_id is set
         if not gmail_connector.workspace_id:
-            workspace = db.query(Workspace).filter(
-                Workspace.owner_id == current_user["id"]
-            ).first()
-            if workspace:
-                gmail_connector.workspace_id = workspace.id
+            user = db.query(User).filter(User.id == current_user["id"]).first()
+            if user and user.workspace_id:
+                gmail_connector.workspace_id = user.workspace_id
                 db.commit()
 
         if not gmail_connector.workspace_id:

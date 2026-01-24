@@ -191,6 +191,16 @@ export interface AIInsightsTheme {
   explanation: string | null;
 }
 
+/** Customer ask linked to this message */
+export interface LinkedCustomerAskInfo {
+  id: string;
+  name: string;
+  sub_theme_id: string | null;
+  sub_theme_name: string | null;
+  theme_id: string | null;
+  theme_name: string | null;
+}
+
 /** AI insights status for a message */
 export type AIInsightsStatus = 'queued' | 'processing' | 'completed' | 'failed' | 'none';
 
@@ -211,6 +221,7 @@ export interface AIInsightsResponse {
   keywords: string[] | null;
   locked_theme_id: string | null;
   locked_theme_name: string | null;
+  linked_customer_asks: LinkedCustomerAskInfo[];  // Customer asks linked to this message
   model_version: string;
   tokens_used: number | null;
   latency_ms: number | null;

@@ -10,10 +10,13 @@ from uuid import UUID
 
 
 class LinkedCustomerAsk(BaseModel):
-    """Minimal CustomerAsk info for displaying in mention UI"""
+    """Minimal CustomerAsk info for displaying in mention UI with full hierarchy"""
     id: UUID
     name: str
+    sub_theme_id: Optional[UUID] = None
     sub_theme_name: Optional[str] = None
+    theme_id: Optional[UUID] = None
+    theme_name: Optional[str] = None
 
     class Config:
         from_attributes = True

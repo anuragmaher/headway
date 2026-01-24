@@ -823,6 +823,12 @@ def _link_message_to_customer_ask_m2m(
             message.feature_score = tier1_score
             logger.info(f"✓ Stored tier1 feature_score={tier1_score:.1f} on message {message.id}")
 
+    # CRITICAL: Mark message as processed to prevent re-processing by normalization stage
+    # This is the final step in the AI pipeline for this message
+    if not message.is_processed:
+        message.is_processed = True
+        logger.info(f"✓ Marked message {message.id} as processed")
+
     # Track linked pairs to avoid duplicate processing in this batch
     if linked_pairs is not None:
         linked_pairs.add(link_pair)

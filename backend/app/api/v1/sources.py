@@ -665,6 +665,11 @@ async def get_message_ai_insights(
     """
     try:
         from app.models.ai_insight import AIInsight
+        from app.models.message_customer_ask import MessageCustomerAsk
+        from app.models.customer_ask import CustomerAsk
+        from app.models.sub_theme import SubTheme
+        from app.schemas.sources import LinkedCustomerAskInfo
+        from sqlalchemy.orm import joinedload
 
         # Get insight for this message
         insight = db.query(AIInsight).filter(
@@ -677,6 +682,31 @@ async def get_message_ai_insights(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="AI insights not found for this message. It may still be processing."
             )
+
+        # Fetch linked customer asks for this message
+        linked_customer_asks = []
+        links = db.query(MessageCustomerAsk).filter(
+            MessageCustomerAsk.message_id == message_id
+        ).all()
+
+        if links:
+            ca_ids = [link.customer_ask_id for link in links]
+            customer_asks = db.query(CustomerAsk).options(
+                joinedload(CustomerAsk.sub_theme).joinedload(SubTheme.theme)
+            ).filter(
+                CustomerAsk.id.in_(ca_ids)
+            ).all()
+
+            for ca in customer_asks:
+                sub_theme = ca.sub_theme
+                linked_customer_asks.append(LinkedCustomerAskInfo(
+                    id=str(ca.id),
+                    name=ca.name,
+                    sub_theme_id=str(sub_theme.id) if sub_theme else None,
+                    sub_theme_name=sub_theme.name if sub_theme else None,
+                    theme_id=str(sub_theme.theme.id) if sub_theme and sub_theme.theme else None,
+                    theme_name=sub_theme.theme.name if sub_theme and sub_theme.theme else None,
+                ))
 
         return AIInsightsResponse(
             id=str(insight.id),
@@ -694,6 +724,7 @@ async def get_message_ai_insights(
             keywords=insight.keywords,
             locked_theme_id=str(insight.theme_id) if insight.theme_id else None,
             locked_theme_name=None,
+            linked_customer_asks=linked_customer_asks,
             model_version=insight.model_version,
             tokens_used=insight.tokens_used,
             latency_ms=None,

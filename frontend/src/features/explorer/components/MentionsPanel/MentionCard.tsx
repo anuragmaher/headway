@@ -34,7 +34,9 @@ interface MentionCardProps {
   mention: MentionItem;
   isExpanded: boolean;
   onToggleExpand: (mentionId: string) => void;
-  onNavigateToCustomerAsk?: (customerAskId: string) => void;  // NEW: Navigate to another CustomerAsk
+  onNavigateToCustomerAsk?: (customerAskId: string) => void;  // Navigate to another CustomerAsk
+  onNavigateToTheme?: (themeId: string) => void;  // Navigate to a theme
+  onNavigateToSubTheme?: (themeId: string, subThemeId: string) => void;  // Navigate to a subtheme
 }
 
 export const MentionCard: React.FC<MentionCardProps> = ({
@@ -42,6 +44,8 @@ export const MentionCard: React.FC<MentionCardProps> = ({
   isExpanded,
   onToggleExpand,
   onNavigateToCustomerAsk,
+  onNavigateToTheme,
+  onNavigateToSubTheme,
 }) => {
   const theme = useTheme();
 
@@ -236,6 +240,120 @@ export const MentionCard: React.FC<MentionCardProps> = ({
       <Collapse in={isExpanded}>
         <Divider />
         <Box sx={{ p: 1.5 }}>
+          {/* Linked CustomerAsks - Shows when message links to multiple features */}
+          {hasMultipleLinks && (
+            <Box
+              sx={{
+                mb: 2,
+                p: 1.5,
+                borderRadius: 1,
+                bgcolor: theme.palette.mode === 'dark'
+                  ? 'rgba(33, 150, 243, 0.08)'
+                  : 'rgba(33, 150, 243, 0.04)',
+                border: '1px dashed',
+                borderColor: theme.palette.mode === 'dark'
+                  ? 'rgba(33, 150, 243, 0.3)'
+                  : 'rgba(33, 150, 243, 0.2)',
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                <LinkIcon sx={{ fontSize: 14, color: 'info.main' }} />
+                <Typography
+                  sx={{
+                    fontSize: '0.6875rem',
+                    fontWeight: 600,
+                    color: 'info.main',
+                  }}
+                >
+                  Also linked to {mention.linkedCustomerAsks.length} other feature{mention.linkedCustomerAsks.length > 1 ? 's' : ''}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                {mention.linkedCustomerAsks.map((linkedAsk) => (
+                  <Box
+                    key={linkedAsk.id}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 0.75,
+                      p: 1,
+                      borderRadius: 1,
+                      bgcolor: theme.palette.mode === 'dark'
+                        ? 'rgba(33, 150, 243, 0.1)'
+                        : 'rgba(33, 150, 243, 0.06)',
+                    }}
+                  >
+                    {/* Theme - Clickable */}
+                    <Typography
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (linkedAsk.themeId && onNavigateToTheme) {
+                          onNavigateToTheme(linkedAsk.themeId);
+                        }
+                      }}
+                      sx={{
+                        fontSize: '0.75rem',
+                        color: linkedAsk.themeId && onNavigateToTheme ? 'info.main' : 'text.secondary',
+                        whiteSpace: 'nowrap',
+                        cursor: linkedAsk.themeId && onNavigateToTheme ? 'pointer' : 'default',
+                        '&:hover': linkedAsk.themeId && onNavigateToTheme ? {
+                          textDecoration: 'underline',
+                        } : {},
+                      }}
+                    >
+                      {linkedAsk.themeName || 'Theme'}
+                    </Typography>
+                    <Typography sx={{ fontSize: '0.75rem', color: 'text.disabled' }}>→</Typography>
+                    {/* SubTheme - Clickable */}
+                    <Typography
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (linkedAsk.themeId && linkedAsk.subThemeId && onNavigateToSubTheme) {
+                          onNavigateToSubTheme(linkedAsk.themeId, linkedAsk.subThemeId);
+                        }
+                      }}
+                      sx={{
+                        fontSize: '0.75rem',
+                        color: linkedAsk.subThemeId && onNavigateToSubTheme ? 'info.main' : 'text.secondary',
+                        whiteSpace: 'nowrap',
+                        cursor: linkedAsk.subThemeId && onNavigateToSubTheme ? 'pointer' : 'default',
+                        '&:hover': linkedAsk.subThemeId && onNavigateToSubTheme ? {
+                          textDecoration: 'underline',
+                        } : {},
+                      }}
+                    >
+                      {linkedAsk.subThemeName || 'SubTheme'}
+                    </Typography>
+                    <Typography sx={{ fontSize: '0.75rem', color: 'text.disabled' }}>→</Typography>
+                    {/* CustomerAsk - Clickable */}
+                    <Typography
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onNavigateToCustomerAsk) {
+                          onNavigateToCustomerAsk(linkedAsk.id);
+                        }
+                      }}
+                      sx={{
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        color: 'info.main',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        cursor: onNavigateToCustomerAsk ? 'pointer' : 'default',
+                        '&:hover': onNavigateToCustomerAsk ? {
+                          textDecoration: 'underline',
+                        } : {},
+                      }}
+                    >
+                      {linkedAsk.name}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          )}
+
           {/* AI Insights section */}
           {mention.aiInsights && (
             <Box
@@ -440,76 +558,6 @@ export const MentionCard: React.FC<MentionCardProps> = ({
                   </Box>
                 </Box>
               )}
-            </Box>
-          )}
-
-          {/* Linked CustomerAsks - Shows when message links to multiple features */}
-          {hasMultipleLinks && (
-            <Box
-              sx={{
-                mb: 2,
-                p: 1.5,
-                borderRadius: 1,
-                bgcolor: theme.palette.mode === 'dark'
-                  ? 'rgba(33, 150, 243, 0.08)'
-                  : 'rgba(33, 150, 243, 0.04)',
-                border: '1px dashed',
-                borderColor: theme.palette.mode === 'dark'
-                  ? 'rgba(33, 150, 243, 0.3)'
-                  : 'rgba(33, 150, 243, 0.2)',
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <LinkIcon sx={{ fontSize: 14, color: 'info.main' }} />
-                <Typography
-                  sx={{
-                    fontSize: '0.6875rem',
-                    fontWeight: 600,
-                    color: 'info.main',
-                  }}
-                >
-                  Also linked to {mention.linkedCustomerAsks.length} other feature{mention.linkedCustomerAsks.length > 1 ? 's' : ''}
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {mention.linkedCustomerAsks.map((linkedAsk) => (
-                  <Tooltip
-                    key={linkedAsk.id}
-                    title={linkedAsk.subThemeName ? `${linkedAsk.subThemeName}` : 'Click to view'}
-                    arrow
-                  >
-                    <Chip
-                      label={linkedAsk.name}
-                      size="small"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onNavigateToCustomerAsk?.(linkedAsk.id);
-                      }}
-                      sx={{
-                        height: 22,
-                        fontSize: '0.6875rem',
-                        fontWeight: 500,
-                        bgcolor: theme.palette.mode === 'dark'
-                          ? 'rgba(33, 150, 243, 0.15)'
-                          : 'rgba(33, 150, 243, 0.1)',
-                        color: 'info.main',
-                        cursor: onNavigateToCustomerAsk ? 'pointer' : 'default',
-                        '&:hover': onNavigateToCustomerAsk ? {
-                          bgcolor: theme.palette.mode === 'dark'
-                            ? 'rgba(33, 150, 243, 0.25)'
-                            : 'rgba(33, 150, 243, 0.2)',
-                        } : {},
-                        maxWidth: 200,
-                        '& .MuiChip-label': {
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                        },
-                      }}
-                    />
-                  </Tooltip>
-                ))}
-              </Box>
             </Box>
           )}
 
