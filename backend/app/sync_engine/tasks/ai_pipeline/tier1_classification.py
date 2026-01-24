@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 from uuid import UUID
 
+from celery.exceptions import SoftTimeLimitExceeded
 from sqlalchemy.orm import Session
 
 from app.tasks.celery_app import celery_app
@@ -39,6 +40,12 @@ MIN_CLASSIFICATION_SCORE = 6.0
 
 # Max retries before giving up on a row
 MAX_RETRIES = 3
+
+# Maximum items to process per task invocation (prevents long-running tasks)
+MAX_ITEMS_PER_RUN = 50
+
+# Maximum message length to classify (skip oversized messages)
+MAX_MESSAGE_LENGTH = 50000  # 50KB
 
 
 # ============================================================================
@@ -200,7 +207,8 @@ def classify_events(
     """
     Classify ALL chunked events using Tier-1 AI.
 
-    LOOPS until ALL events/chunks are classified, then triggers Tier 2.
+    Processes events in batches, triggering Tier-2 after each batch to ensure
+    progress even if task times out. Re-queues itself if MAX_ITEMS_PER_RUN reached.
 
     THIS IS THE ONLY FILTER POINT:
     - Score >= 6 proceeds to Tier-2 extraction (all further processing happens)
@@ -214,6 +222,13 @@ def classify_events(
     Returns:
         Dict with processing stats
     """
+    tier2_triggered = False
+    total_classified = 0
+    total_relevant = 0
+    total_skipped = 0
+    total_errors = 0
+    timed_out = False
+
     try:
         logger.info(f"🔍 Starting Tier-1 classification task (workspace={workspace_id})")
 
@@ -275,39 +290,63 @@ def classify_events(
 
             ai_service = get_tiered_ai_service()
 
-            total_classified = 0
-            total_relevant = 0
-            total_skipped = 0
-            total_errors = 0
-
-            # LOOP until ALL events and chunks are classified
+            # LOOP until ALL events and chunks are classified or limits reached
             while True:
-                # Process non-chunked events
-                non_chunked_stats = _classify_non_chunked_events(
-                    db, ai_service, workspace_id, batch_size, min_score
-                )
+                try:
+                    # Process non-chunked events
+                    non_chunked_stats = _classify_non_chunked_events(
+                        db, ai_service, workspace_id, batch_size, min_score
+                    )
 
-                # Process chunks
-                chunk_stats = _classify_chunks(
-                    db, ai_service, workspace_id, batch_size, min_score
-                )
+                    # Process chunks
+                    chunk_stats = _classify_chunks(
+                        db, ai_service, workspace_id, batch_size, min_score
+                    )
 
-                # Accumulate stats for this batch
-                batch_classified = non_chunked_stats["classified"] + chunk_stats["classified"]
-                total_classified += batch_classified
-                total_relevant += non_chunked_stats["relevant"] + chunk_stats["relevant"]
-                total_skipped += non_chunked_stats["skipped"] + chunk_stats["skipped"]
-                total_errors += non_chunked_stats["errors"] + chunk_stats["errors"]
+                    # Accumulate stats for this batch
+                    batch_classified = non_chunked_stats["classified"] + chunk_stats["classified"]
+                    batch_relevant = non_chunked_stats["relevant"] + chunk_stats["relevant"]
+                    total_classified += batch_classified
+                    total_relevant += batch_relevant
+                    total_skipped += non_chunked_stats["skipped"] + chunk_stats["skipped"]
+                    total_errors += non_chunked_stats["errors"] + chunk_stats["errors"]
 
-                # Exit loop when no more items to classify
-                if batch_classified == 0:
-                    logger.info("✅ Tier-1 loop complete: No more items to classify")
+                    # CRITICAL: Trigger Tier-2 after EACH batch that found relevant items
+                    # This ensures progress even if task times out later
+                    if batch_relevant > 0 and not tier2_triggered:
+                        from app.sync_engine.tasks.ai_pipeline.tier2_extraction import extract_features
+                        extract_features.delay(workspace_id=workspace_id)
+                        tier2_triggered = True
+                        logger.info("🔗 Triggered Tier-2 extraction (batch had relevant items)")
+
+                    # Exit loop when no more items to classify
+                    if batch_classified == 0:
+                        logger.info("✅ Tier-1 loop complete: No more items to classify")
+                        break
+
+                    logger.info(f"📊 Tier-1 batch: {batch_classified} classified, continuing loop...")
+
+                    # Safety valve: Re-queue if we've processed too many items
+                    if total_classified >= MAX_ITEMS_PER_RUN:
+                        logger.info(
+                            f"📊 Processed {total_classified} items (limit: {MAX_ITEMS_PER_RUN}), "
+                            "re-queuing for more"
+                        )
+                        classify_events.delay(workspace_id=workspace_id)
+                        break
+
+                except SoftTimeLimitExceeded:
+                    logger.warning(
+                        f"⏰ Soft timeout reached after {total_classified} items, "
+                        "saving progress and exiting"
+                    )
+                    timed_out = True
+                    # Re-queue to continue processing remaining items
+                    classify_events.delay(workspace_id=workspace_id)
                     break
 
-                logger.info(f"📊 Tier-1 batch: {batch_classified} classified, continuing loop...")
-
             # Log final results
-            if total_classified == 0:
+            if total_classified == 0 and not timed_out:
                 logger.info("✅ Tier-1 classification: No items to classify (all already processed)")
                 return {
                     "status": "success",
@@ -317,29 +356,47 @@ def classify_events(
                     "total_errors": 0,
                 }
 
+            status = "timeout" if timed_out else "success"
             logger.info(
                 f"✅ Tier-1 classification complete: {total_classified} classified, "
                 f"{total_relevant} feature-relevant, {total_skipped} skipped, {total_errors} errors"
             )
 
-            # ONLY trigger Tier 2 AFTER loop completes (all messages classified)
-            if total_relevant > 0:
-                from app.sync_engine.tasks.ai_pipeline.tier2_extraction import extract_features
-                extract_features.delay(workspace_id=workspace_id)
-                logger.info("🔗 Triggered Tier-2 extraction (all Tier-1 complete)")
-
             return {
-                "status": "success",
+                "status": status,
                 "total_classified": total_classified,
                 "total_relevant": total_relevant,
                 "total_skipped": total_skipped,
                 "total_errors": total_errors,
+                "tier2_triggered": tier2_triggered,
+                "timed_out": timed_out,
             }
+
+    except SoftTimeLimitExceeded:
+        logger.warning(f"⏰ Soft timeout at task level after {total_classified} items")
+        # Trigger Tier-2 if we found relevant items but haven't triggered yet
+        if total_relevant > 0 and not tier2_triggered:
+            from app.sync_engine.tasks.ai_pipeline.tier2_extraction import extract_features
+            extract_features.delay(workspace_id=workspace_id)
+            logger.info("🔗 Triggered Tier-2 extraction before timeout exit")
+        # Re-queue to continue processing
+        classify_events.delay(workspace_id=workspace_id)
+        return {
+            "status": "timeout",
+            "total_classified": total_classified,
+            "total_relevant": total_relevant,
+            "timed_out": True,
+        }
 
     except Exception as e:
         logger.error(f"❌ Tier-1 classification task failed: {e}")
         import traceback
         traceback.print_exc()
+        # Still trigger Tier-2 if we found relevant items
+        if total_relevant > 0 and not tier2_triggered:
+            from app.sync_engine.tasks.ai_pipeline.tier2_extraction import extract_features
+            extract_features.delay(workspace_id=workspace_id)
+            logger.info("🔗 Triggered Tier-2 extraction before retry")
         raise self.retry(exc=e, countdown=120)
     finally:
         cleanup_after_task()
@@ -382,6 +439,33 @@ def _classify_non_chunked_events(
 
     for event in events:
         try:
+            # Skip excessively long messages to prevent timeouts
+            text_length = len(event.clean_text or "")
+            if text_length > MAX_MESSAGE_LENGTH:
+                logger.warning(
+                    f"⚠️ Skipping oversized event {event.id} ({text_length} chars > {MAX_MESSAGE_LENGTH})"
+                )
+                now = datetime.now(timezone.utc)
+                event.processing_stage = "completed"
+                event.processing_error = f"Message too long ({text_length} chars)"
+                event.is_feature_relevant = False
+                event.classification_confidence = 0.0
+                event.classified_at = now
+
+                # Mark source message as processed
+                if event.source_table == "messages" and event.source_record_id:
+                    message = db.query(Message).filter(
+                        Message.id == event.source_record_id
+                    ).first()
+                    if message:
+                        message.tier1_processed = True
+                        message.feature_score = 0.0
+                        message.processed_at = now
+
+                db.commit()
+                stats["skipped"] += 1
+                continue
+
             # Call Tier-1 AI scoring
             result = ai_service.tier1_classify(
                 text=event.clean_text,

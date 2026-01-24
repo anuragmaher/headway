@@ -97,7 +97,7 @@ def sync_fathom_periodic(self):
                         fathom_batch_ingestion_service.ingest_sessions(
                             db=db,
                             workspace_id=str(workspace.id),
-                            limit=50,
+                            limit=60,
                             days_back=1,
                             min_duration_seconds=0
                         )

@@ -97,7 +97,7 @@ def sync_gong_periodic(self):
                         gong_ingestion_service.ingest_calls(
                             db=db,
                             workspace_id=str(workspace.id),
-                            limit=50,
+                            limit=60,
                             days_back=1,
                             fetch_transcripts=True
                         )

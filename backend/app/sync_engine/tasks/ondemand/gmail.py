@@ -69,7 +69,7 @@ def sync_workspace_gmail(self, workspace_id: str, sync_id: str):
                     result = gmail_batch_ingestion_service.ingest_messages_for_connector(
                         connector_id=str(connector.id),
                         db=db,
-                        max_messages=20,
+                        max_messages=60,
                     )
 
                     if result.get("status") != "error":

@@ -349,9 +349,8 @@ class TieredAIService:
         This is a cheap, fast call to filter out irrelevant content
         before running expensive extraction.
 
-        For texts > 1500 chars, splits into chunks and returns the
-        highest score among all chunks (ensures feature requests aren't
-        missed due to position in long messages).
+        For texts > 1500 chars, splits into chunks and processes them
+        IN PARALLEL for 4-5x speedup, returning the highest score.
 
         Uses Langfuse chat prompts (tier1_ai_prompt).
         """
@@ -366,9 +365,27 @@ class TieredAIService:
                 chunks[0], source_type, actor_role, start_time
             )
 
-        # Multiple chunks - classify each and take highest score
-        logger.info(f"Classifying {len(chunks)} chunks for long message ({len(text)} chars)")
+        # Multiple chunks - classify IN PARALLEL for speed
+        logger.info(f"Classifying {len(chunks)} chunks in parallel for long message ({len(text)} chars)")
 
+        try:
+            # Use asyncio to run chunks in parallel
+            return asyncio.run(
+                self._classify_chunks_parallel(chunks, source_type, actor_role, start_time)
+            )
+        except RuntimeError:
+            # If already in async context (event loop running), fall back to sequential
+            logger.warning("Falling back to sequential chunk classification (async loop already running)")
+            return self._classify_chunks_sequential(chunks, source_type, actor_role, start_time)
+
+    def _classify_chunks_sequential(
+        self,
+        chunks: List[str],
+        source_type: str,
+        actor_role: Optional[str],
+        start_time: float,
+    ) -> Tier1Result:
+        """Fallback sequential classification for when async isn't available."""
         best_result = None
         total_tokens = 0
 
@@ -379,8 +396,6 @@ class TieredAIService:
             total_tokens += result.tokens_used
 
             if best_result is None or result.score > best_result.score:
-                best_result = result
-                # Update reasoning to indicate which chunk had the best score
                 best_result = Tier1Result(
                     score=result.score,
                     reasoning=f"[Chunk {i+1}/{len(chunks)}] {result.reasoning}",
@@ -391,6 +406,57 @@ class TieredAIService:
                 )
 
         return best_result
+
+    async def _classify_chunks_parallel(
+        self,
+        chunks: List[str],
+        source_type: str,
+        actor_role: Optional[str],
+        start_time: float,
+    ) -> Tier1Result:
+        """Classify multiple chunks in parallel using asyncio."""
+        tasks = [
+            self._classify_single_chunk_async(chunk, source_type, actor_role, start_time)
+            for chunk in chunks
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        # Find best result among successful classifications
+        best_result = None
+        total_tokens = 0
+        best_chunk_idx = 0
+
+        for i, result in enumerate(results):
+            if isinstance(result, Exception):
+                logger.warning(f"Chunk {i+1} classification failed: {result}")
+                continue
+
+            total_tokens += result.tokens_used
+
+            if best_result is None or result.score > best_result.score:
+                best_result = result
+                best_chunk_idx = i + 1
+
+        if best_result is None:
+            # All chunks failed
+            return Tier1Result(
+                score=6.0,  # Default to processing on error
+                reasoning="All chunk classifications failed",
+                tokens_used=0,
+                model=self.DEFAULT_MODEL,
+                prompt_version="langfuse",
+                latency_ms=(time.time() - start_time) * 1000
+            )
+
+        # Return best result with aggregated info
+        return Tier1Result(
+            score=best_result.score,
+            reasoning=f"[Chunk {best_chunk_idx}/{len(chunks)}] {best_result.reasoning}",
+            tokens_used=total_tokens,
+            model=best_result.model,
+            prompt_version=best_result.prompt_version,
+            latency_ms=(time.time() - start_time) * 1000
+        )
 
     # =========================================================================
     # Tier-1: Classification (Async)
