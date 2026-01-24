@@ -30,6 +30,7 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isPanelOpen = useIsMentionsPanelOpen();
+  const [bottomPanelHeight, setBottomPanelHeight] = React.useState(50); // percentage
   const {
     isInitializing,
     isInitialized,
@@ -290,7 +291,7 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
             <Box
               sx={{
                 flex: 1,
-                height: isPanelOpen ? '50%' : '100%',
+                height: isPanelOpen ? `${100 - bottomPanelHeight}%` : '100%',
                 transition: 'height 0.3s ease-in-out',
                 overflow: 'hidden',
               }}
@@ -302,7 +303,8 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
             <MentionsBottomPanel
               open={isPanelOpen}
               onClose={() => closeMentionsPanel()}
-              height="50%"
+              height={`${bottomPanelHeight}%`}
+              onHeightChange={setBottomPanelHeight}
             />
           </Box>
         </Box>
