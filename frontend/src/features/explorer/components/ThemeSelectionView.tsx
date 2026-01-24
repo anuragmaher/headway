@@ -130,7 +130,9 @@ export const ThemeSelectionView: React.FC<ThemeSelectionViewProps> = ({
       </Typography>
 
       <Grid container spacing={3}>
-        {themes.map((theme, index) => (
+        {[...themes]
+          .sort((a, b) => (b.feedbackCount || 0) - (a.feedbackCount || 0))
+          .map((theme, index) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={theme.id}>
             <Card
               sx={{

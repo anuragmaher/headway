@@ -185,15 +185,22 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
       </Box>
 
       {/* Content */}
-      <Box sx={{ flex: 1, overflow: 'auto', bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA' }}>
+      <Box 
+        sx={{ 
+          flex: 1, 
+          overflow: 'auto', 
+          bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
+          py: 1,
+        }}
+      >
         {isLoading ? (
-          <Box>
+          <Box sx={{ px: 1.5 }}>
             {[1, 2, 3, 4, 5].map((i) => (
               <Skeleton
                 key={i}
-                variant="rectangular"
-                height={52}
-                sx={{ borderBottom: '1px solid', borderColor: 'divider' }}
+                variant="rounded"
+                height={80}
+                sx={{ mb: 1, borderRadius: 2 }}
               />
             ))}
           </Box>
@@ -230,8 +237,14 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
                 color: 'white',
                 fontSize: '0.8125rem',
                 fontWeight: 500,
+                borderRadius: 1.5,
                 cursor: 'pointer',
-                '&:hover': { bgcolor: 'primary.dark' },
+                transition: 'all 0.2s ease',
+                '&:hover': { 
+                  bgcolor: 'primary.dark',
+                  transform: 'translateY(-1px)',
+                  boxShadow: theme.shadows[2],
+                },
               }}
             >
               <AddIcon sx={{ fontSize: 16 }} />
@@ -241,7 +254,9 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
         ) : (
           <>
             {/* Sub theme items */}
-            {subThemes.map((subTheme) => (
+            {[...subThemes]
+              .sort((a, b) => (b.feedbackCount || 0) - (a.feedbackCount || 0))
+              .map((subTheme) => (
               <SubThemeItem
                 key={subTheme.id}
                 subTheme={subTheme}
