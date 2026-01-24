@@ -59,24 +59,21 @@ export const CustomerAsksColumn: React.FC<CustomerAsksColumnProps> = ({
       <Box sx={columnSx}>
         <Box
           sx={{
-            px: 2,
-            height: 48,
+            px: 3,
+            py: 2,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderBottom: '1px solid',
-            borderColor: 'divider',
-            bgcolor: 'background.default',
+            borderBottom: `1px solid ${theme.palette.divider}`,
+            bgcolor: 'background.paper',
             flexShrink: 0,
           }}
         >
           <Typography
+            variant="h5"
             sx={{
-              fontSize: '0.75rem',
               fontWeight: 600,
-              letterSpacing: '0.5px',
-              color: 'text.disabled',
-              textTransform: 'uppercase',
+              color: 'text.primary',
             }}
           >
             Customer Asks
@@ -105,24 +102,21 @@ export const CustomerAsksColumn: React.FC<CustomerAsksColumnProps> = ({
       <Box sx={columnSx}>
         <Box
           sx={{
-            px: 2,
-            height: 48,
+            px: 3,
+            py: 2,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderBottom: '1px solid',
-            borderColor: 'divider',
-            bgcolor: 'background.default',
+            borderBottom: `1px solid ${theme.palette.divider}`,
+            bgcolor: 'background.paper',
             flexShrink: 0,
           }}
         >
           <Typography
+            variant="h5"
             sx={{
-              fontSize: '0.75rem',
               fontWeight: 600,
-              letterSpacing: '0.5px',
-              color: 'text.disabled',
-              textTransform: 'uppercase',
+              color: 'text.primary',
             }}
           >
             Customer Asks
@@ -150,31 +144,34 @@ export const CustomerAsksColumn: React.FC<CustomerAsksColumnProps> = ({
       {/* Header - Shows selected sub-theme name */}
       <Box
         sx={{
-          px: 2,
-          height: 48,
+          px: 3,
+          py: 2,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderBottom: '1px solid',
-          borderColor: 'divider',
-          bgcolor: 'background.default',
+          borderBottom: `1px solid ${theme.palette.divider}`,
+          bgcolor: 'background.paper',
           flexShrink: 0,
         }}
       >
-        <Typography
-          sx={{
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            letterSpacing: '0.5px',
-            color: 'text.secondary',
-            textTransform: 'uppercase',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {selectedSubTheme.name}
-        </Typography>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: 600,
+              color: 'text.primary',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              mb: 0.5,
+            }}
+          >
+            {selectedSubTheme.name}
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            Customer asks and feature requests
+          </Typography>
+        </Box>
       </Box>
 
       {/* CustomerAsk List */}
@@ -182,6 +179,7 @@ export const CustomerAsksColumn: React.FC<CustomerAsksColumnProps> = ({
         sx={{
           flex: 1,
           overflow: 'auto',
+          bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
           '&::-webkit-scrollbar': {
             width: 6,
           },

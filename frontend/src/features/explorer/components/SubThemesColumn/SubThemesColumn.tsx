@@ -3,7 +3,7 @@
  * Clean, minimal design
  */
 import React from 'react';
-import { Box, Typography, IconButton, Tooltip, Skeleton, useTheme } from '@mui/material';
+import { Box, Typography, IconButton, Tooltip, Skeleton, useTheme, alpha } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { SubThemeItem } from './SubThemeItem';
 import {
@@ -81,31 +81,27 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          borderRight: isMobileFullWidth ? 'none' : '1px solid',
-          borderColor: 'divider',
-          bgcolor: 'background.default',
+          borderRight: isMobileFullWidth ? 'none' : `1px solid ${theme.palette.divider}`,
+          bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
         }}
       >
         <Box
           sx={{
-            px: 2,
-            height: 48,
+            px: 3,
+            py: 2,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderBottom: '1px solid',
-            borderColor: 'divider',
-            bgcolor: 'background.default',
+            borderBottom: `1px solid ${theme.palette.divider}`,
+            bgcolor: 'background.paper',
             flexShrink: 0,
           }}
         >
           <Typography
+            variant="h5"
             sx={{
-              fontSize: '0.75rem',
               fontWeight: 600,
-              letterSpacing: '0.5px',
-              color: 'text.disabled',
-              textTransform: 'uppercase',
+              color: 'text.primary',
             }}
           >
             Sub Themes
@@ -137,59 +133,59 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        borderRight: isMobileFullWidth ? 'none' : '1px solid',
-        borderColor: 'divider',
-        bgcolor: 'background.paper',
+        borderRight: isMobileFullWidth ? 'none' : `1px solid ${theme.palette.divider}`,
+        bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
       }}
     >
       {/* Header - Shows selected theme name */}
       <Box
         sx={{
-          px: 2,
-          height: 48,
+          px: 3,
+          py: 2,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderBottom: '1px solid',
-          borderColor: 'divider',
-          bgcolor: 'background.default',
+          borderBottom: `1px solid ${theme.palette.divider}`,
+          bgcolor: 'background.paper',
           flexShrink: 0,
         }}
       >
-        <Typography
-          sx={{
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            letterSpacing: '0.5px',
-            color: 'text.secondary',
-            textTransform: 'uppercase',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            maxWidth: 180,
-          }}
-        >
-          {selectedTheme.name}
-        </Typography>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: 600,
+              color: 'text.primary',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              mb: 0.5,
+            }}
+          >
+            {selectedTheme.name}
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            Select a sub-theme to view customer asks
+          </Typography>
+        </Box>
         <Tooltip title="Add Sub Theme">
           <IconButton
             size="small"
             onClick={openAddSubThemeDialog}
             sx={{
-              width: 26,
-              height: 26,
-              bgcolor: 'rgba(59, 130, 246, 0.08)',
+              ml: 2,
+              bgcolor: alpha(theme.palette.primary.main, 0.1),
               color: 'primary.main',
-              '&:hover': { bgcolor: 'rgba(59, 130, 246, 0.16)' },
+              '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.16) },
             }}
           >
-            <AddIcon sx={{ fontSize: 16 }} />
+            <AddIcon />
           </IconButton>
         </Tooltip>
       </Box>
 
       {/* Content */}
-      <Box sx={{ flex: 1, overflow: 'auto' }}>
+      <Box sx={{ flex: 1, overflow: 'auto', bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA' }}>
         {isLoading ? (
           <Box>
             {[1, 2, 3, 4, 5].map((i) => (

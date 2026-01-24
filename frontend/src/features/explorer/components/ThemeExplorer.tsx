@@ -351,12 +351,12 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
           {/* Left Column - SubThemes */}
           <SubThemesColumn width={280} />
 
-          {/* Right Column - Customer Asks with Bottom Panel Container */}
+          {/* Right Column - Customer Asks with Mentions Panel Container (Horizontal Split) */}
           <Box
             sx={{
               flex: 1,
               display: 'flex',
-              flexDirection: 'column',
+              flexDirection: 'row',
               position: 'relative',
               overflow: 'hidden',
               minWidth: 0,
@@ -366,20 +366,22 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
             <Box
               sx={{
                 flex: 1,
-                height: isPanelOpen ? `${100 - bottomPanelHeight}%` : '100%',
-                transition: 'height 0.3s ease-in-out',
+                width: isPanelOpen ? `${100 - bottomPanelHeight}%` : '100%',
+                transition: 'width 0.3s ease-in-out',
                 overflow: 'hidden',
+                borderRight: isPanelOpen ? `1px solid ${theme.palette.divider}` : 'none',
               }}
             >
-              <CustomerAsksColumn isPanelOpen={false} />
+              <CustomerAsksColumn isPanelOpen={isPanelOpen} />
             </Box>
 
-            {/* Bottom Panel for Mentions - Only in this column */}
+            {/* Right Panel for Mentions */}
             <MentionsBottomPanel
               open={isPanelOpen}
               onClose={() => closeMentionsPanel()}
               height={`${bottomPanelHeight}%`}
               onHeightChange={setBottomPanelHeight}
+              orientation="horizontal"
             />
           </Box>
         </Box>
