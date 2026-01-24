@@ -15,6 +15,7 @@ from app.models.workspace_connector import WorkspaceConnector
 from app.models.connector_label import ConnectorLabel
 from app.models.message import Message
 from app.services.gmail_client import get_gmail_client
+from app.services.customer_extraction_service import customer_extraction_service
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +80,7 @@ class GmailIngestionService:
 
             total_checked = 0
             total_new = 0
+            all_inserted_ids: List[str] = []
             errors = []
 
             # Process each label
@@ -96,6 +98,7 @@ class GmailIngestionService:
 
                     total_checked += result.get("total_checked", 0)
                     total_new += result.get("new_added", 0)
+                    all_inserted_ids.extend(result.get("inserted_ids", []))
                     logger.info(f"Checked {result.get('total_checked', 0)} threads, added {result.get('new_added', 0)} new from label {label.label_name}")
 
                 except Exception as e:
@@ -117,6 +120,7 @@ class GmailIngestionService:
                 "total_checked": total_checked,
                 "new_added": total_new,
                 "count": total_new,  # Keep for backward compatibility
+                "inserted_ids": all_inserted_ids,
                 "errors": errors if errors else None
             }
 
@@ -129,7 +133,7 @@ class GmailIngestionService:
                 connector.sync_error = str(e)
                 db.commit()
 
-            return {"status": "error", "error": str(e), "count": 0, "total_checked": 0, "new_added": 0}
+            return {"status": "error", "error": str(e), "count": 0, "total_checked": 0, "new_added": 0, "inserted_ids": []}
 
     # Keep old method name for backward compatibility
     def ingest_threads_for_account(
@@ -162,8 +166,11 @@ class GmailIngestionService:
         Returns:
             Dictionary with 'total_checked' and 'new_added' counts
         """
+        import uuid as uuid_module
+
         total_checked = 0
         new_added = 0
+        inserted_ids: List[str] = []
 
         try:
             # List threads with the specified label
@@ -177,7 +184,7 @@ class GmailIngestionService:
 
             if not threads:
                 logger.info(f"No threads found in label {label.label_name}")
-                return {"total_checked": 0, "new_added": 0}
+                return {"total_checked": 0, "new_added": 0, "inserted_ids": []}
 
             total_checked = len(threads)
 
@@ -212,7 +219,28 @@ class GmailIngestionService:
                     )
 
                     if message_record:
+                        # Pre-generate UUID for tracking
+                        message_record.id = uuid_module.uuid4()
+
+                        # Extract customer from email and link to message
+                        if message_record.from_email or message_record.author_name:
+                            email, name, domain = customer_extraction_service.extract_customer_info(
+                                from_email=message_record.from_email,
+                                from_name=message_record.author_name,
+                            )
+                            if email or name:
+                                customer_id = customer_extraction_service.find_or_create_customer(
+                                    db=db,
+                                    workspace_id=connector.workspace_id,
+                                    email=email,
+                                    name=name,
+                                    domain=domain,
+                                )
+                                if customer_id:
+                                    message_record.customer_id = customer_id
+
                         db.add(message_record)
+                        inserted_ids.append(str(message_record.id))
                         new_added += 1
 
                 except Exception as e:
@@ -227,7 +255,7 @@ class GmailIngestionService:
             db.rollback()
             raise
 
-        return {"total_checked": total_checked, "new_added": new_added}
+        return {"total_checked": total_checked, "new_added": new_added, "inserted_ids": inserted_ids}
     
     def _parse_thread(
         self,
@@ -306,6 +334,12 @@ class GmailIngestionService:
             if len(full_content) > self.MAX_CONTENT_LENGTH:
                 full_content = full_content[:self.MAX_CONTENT_LENGTH] + "\n\n... [content truncated for storage efficiency]"
 
+            # Get thread-level snippet as fallback
+            snippet = thread_data.get("snippet", "")
+
+            # Ensure we always have some content (fallback to snippet)
+            final_content = full_content or snippet or "(No content)"
+
             # Create Message record (replaces GmailThread)
             return Message(
                 workspace_id=connector.workspace_id,
@@ -313,16 +347,21 @@ class GmailIngestionService:
                 source='gmail',
                 external_id=thread_data["id"],
                 thread_id=thread_data["id"],
-                content=full_content,
-                title=subject[:500] if subject else None,
+                content=final_content,
+                title=subject[:500] if subject else "(No Subject)",
                 label_name=label.label_name,
                 author_name=from_name[:255] if from_name else None,
                 author_email=from_email[:255] if from_email else None,
                 from_email=from_email[:255] if from_email else None,
                 to_emails=to_header,
                 message_count=len(messages),
+                message_metadata={
+                    "snippet": snippet[:500] if snippet else None,
+                    "label_id": label.label_id,
+                },
                 sent_at=thread_date,
-                is_processed=False,
+                tier1_processed=False,
+                tier2_processed=False,
                 created_at=datetime.now(timezone.utc)
             )
 

@@ -4,9 +4,9 @@ Optimized Gmail Batch Ingestion Service - Fast batch data storage without AI ext
 This service focuses on:
 1. Fast fetching of Gmail threads from selected labels
 2. Batch insertion into the Messages table
-3. Deferred AI processing (marked as is_processed=False)
+3. Deferred AI processing (marked as tier1_processed=False, tier2_processed=False)
 
-AI extraction happens in a separate batch processing task.
+AI extraction happens in a separate batch processing task (Tier 1 -> Tier 2).
 
 Usage:
     from app.services.gmail_batch_ingestion_service import gmail_batch_ingestion_service
@@ -34,6 +34,7 @@ from app.models.workspace_connector import WorkspaceConnector
 from app.models.connector_label import ConnectorLabel
 from app.models.message import Message
 from app.services.gmail_client import get_gmail_client
+from app.services.customer_extraction_service import customer_extraction_service
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +68,7 @@ class GmailBatchIngestionService:
         1. Gets enabled labels for the connector
         2. Checks existing threads in batch
         3. Fetches only new threads from Gmail API
-        4. Batch inserts into Messages table with is_processed=False
+        4. Batch inserts into Messages table with tier1_processed=False
 
         AI extraction is NOT performed here - it happens in a separate task.
 
@@ -80,10 +81,13 @@ class GmailBatchIngestionService:
             Dict with status and counts
         """
         try:
+            # Convert connector_id to UUID if string
+            connector_uuid = UUID(connector_id) if isinstance(connector_id, str) else connector_id
+
             # Get the Gmail connector
             connector = db.query(WorkspaceConnector).filter(
                 and_(
-                    WorkspaceConnector.id == connector_id,
+                    WorkspaceConnector.id == connector_uuid,
                     WorkspaceConnector.connector_type == "gmail"
                 )
             ).first()
@@ -278,6 +282,24 @@ class GmailBatchIngestionService:
                     if record:
                         # Pre-generate UUID for tracking
                         record.id = uuid_module.uuid4()
+
+                        # Extract customer from email and link to message
+                        if record.from_email or record.author_name:
+                            email, name, domain = customer_extraction_service.extract_customer_info(
+                                from_email=record.from_email,
+                                from_name=record.author_name,
+                            )
+                            if email or name:
+                                customer_id = customer_extraction_service.find_or_create_customer(
+                                    db=db,
+                                    workspace_id=connector.workspace_id,
+                                    email=email,
+                                    name=name,
+                                    domain=domain,
+                                )
+                                if customer_id:
+                                    record.customer_id = customer_id
+
                         inserted_ids.append(str(record.id))
                         message_records.append(record)
 
@@ -393,14 +415,17 @@ class GmailBatchIngestionService:
 
             snippet = thread_data.get("snippet", "")
 
+            # Ensure we always have content with proper fallback
+            final_content = full_content or snippet or "(No content)"
+
             return Message(
                 workspace_id=connector.workspace_id,
                 connector_id=connector.id,
                 source="gmail",
                 external_id=thread_data["id"],  # Gmail thread ID
                 thread_id=thread_data["id"],  # Also store in thread_id for duplicate detection
-                title=subject[:500] if subject else None,
-                content=full_content or snippet,
+                title=subject[:500] if subject else "(No Subject)",
+                content=final_content,
                 label_name=label.label_name,
                 author_name=from_name[:255] if from_name else None,
                 author_email=from_email[:255] if from_email else None,
@@ -412,7 +437,8 @@ class GmailBatchIngestionService:
                     "label_id": label.label_id,
                 },
                 sent_at=thread_date,
-                is_processed=False
+                tier1_processed=False,
+                tier2_processed=False,
             )
 
         except Exception as e:

@@ -26,6 +26,7 @@ from sqlalchemy import and_
 from app.models.message import Message
 from app.models.customer_ask import CustomerAsk
 from app.models.customer import Customer
+from app.services.customer_extraction_service import customer_extraction_service
 
 logger = logging.getLogger(__name__)
 
@@ -121,7 +122,8 @@ class BatchDatabaseService:
                         msg=msg,
                         workspace_id=workspace_id,
                         connector_id=connector_id,
-                        source=source
+                        source=source,
+                        db=db  # Pass db for customer extraction
                     )
                     if mapping:
                         message_mappings.append(mapping)
@@ -213,7 +215,8 @@ class BatchDatabaseService:
         msg: Dict[str, Any],
         workspace_id: str,
         connector_id: Optional[str],
-        source: str
+        source: str,
+        db: Optional[Session] = None
     ) -> Optional[Dict[str, Any]]:
         """
         Prepare a message dictionary for bulk_insert_mappings.
@@ -257,15 +260,35 @@ class BatchDatabaseService:
             "sent_at": sent_at,
             "created_at": now,
             "updated_at": now,
-            "is_processed": False,  # Mark for later AI processing
+            "tier1_processed": False,  # Mark for Tier 1 AI processing
+            "tier2_processed": False,  # Mark for Tier 2 AI processing
         }
 
         if connector_id:
             mapping["connector_id"] = UUID(connector_id)
 
-        # Optional customer_id
+        # Customer extraction: either use provided customer_id or extract from author info
         if msg.get("customer_id"):
             mapping["customer_id"] = UUID(msg["customer_id"])
+        elif db and (msg.get("author_email") or msg.get("author_name")):
+            # Try to extract customer from author info
+            try:
+                email, name, domain = customer_extraction_service.extract_customer_info(
+                    from_email=msg.get("author_email"),
+                    from_name=msg.get("author_name"),
+                )
+                if email or name:
+                    customer_id = customer_extraction_service.find_or_create_customer(
+                        db=db,
+                        workspace_id=UUID(workspace_id),
+                        email=email,
+                        name=name,
+                        domain=domain,
+                    )
+                    if customer_id:
+                        mapping["customer_id"] = customer_id
+            except Exception as e:
+                logger.warning(f"Failed to extract customer for message: {e}")
 
         # Optional customer_ask_id
         if msg.get("customer_ask_id"):
@@ -376,19 +399,19 @@ class BatchDatabaseService:
 
         return mapping
 
-    def batch_update_processed_status(
+    def batch_update_tier1_status(
         self,
         db: Session,
         message_ids: List[str],
-        is_processed: bool = True
+        tier1_processed: bool = True
     ) -> int:
         """
-        Batch update is_processed status for messages.
+        Batch update tier1_processed status for messages.
 
         Args:
             db: Database session
             message_ids: List of message UUID strings
-            is_processed: New processed status
+            tier1_processed: New tier1 processed status
 
         Returns:
             Number of rows updated
@@ -402,17 +425,57 @@ class BatchDatabaseService:
                 Message.id.in_(uuids)
             ).update(
                 {
-                    "is_processed": is_processed,
+                    "tier1_processed": tier1_processed,
                     "updated_at": datetime.now(timezone.utc)
                 },
                 synchronize_session=False
             )
             db.commit()
-            logger.info(f"Updated {updated} messages to is_processed={is_processed}")
+            logger.info(f"Updated {updated} messages to tier1_processed={tier1_processed}")
             return updated
 
         except Exception as e:
-            logger.error(f"Error updating processed status: {e}")
+            logger.error(f"Error updating tier1 processed status: {e}")
+            db.rollback()
+            return 0
+
+    def batch_update_tier2_status(
+        self,
+        db: Session,
+        message_ids: List[str],
+        tier2_processed: bool = True
+    ) -> int:
+        """
+        Batch update tier2_processed status for messages.
+
+        Args:
+            db: Database session
+            message_ids: List of message UUID strings
+            tier2_processed: New tier2 processed status
+
+        Returns:
+            Number of rows updated
+        """
+        if not message_ids:
+            return 0
+
+        try:
+            uuids = [UUID(mid) for mid in message_ids]
+            updated = db.query(Message).filter(
+                Message.id.in_(uuids)
+            ).update(
+                {
+                    "tier2_processed": tier2_processed,
+                    "updated_at": datetime.now(timezone.utc)
+                },
+                synchronize_session=False
+            )
+            db.commit()
+            logger.info(f"Updated {updated} messages to tier2_processed={tier2_processed}")
+            return updated
+
+        except Exception as e:
+            logger.error(f"Error updating tier2 processed status: {e}")
             db.rollback()
             return 0
 
@@ -424,7 +487,7 @@ class BatchDatabaseService:
         limit: int = 100
     ) -> List[Message]:
         """
-        Get unprocessed messages for AI extraction.
+        Get messages pending Tier 1 processing.
 
         Args:
             db: Database session
@@ -439,7 +502,7 @@ class BatchDatabaseService:
             query = db.query(Message).filter(
                 and_(
                     Message.workspace_id == UUID(workspace_id),
-                    Message.is_processed == False
+                    Message.tier1_processed == False
                 )
             )
 

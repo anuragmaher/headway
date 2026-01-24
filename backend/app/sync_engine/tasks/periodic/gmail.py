@@ -43,7 +43,7 @@ def sync_gmail_periodic(self):
     - Runs periodically (e.g., every 15 minutes)
     - Only syncs active Gmail connectors with selected labels
     - Fetches latest Gmail messages from selected labels
-    - Stores messages in Message table with is_processed=False
+    - Stores messages in Message table with tier1_processed=False
     - Creates SyncHistory records for tracking
 
     AI extraction is NOT performed here - it happens in a separate batch task.

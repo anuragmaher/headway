@@ -2,13 +2,14 @@
 Normalization Task - State-Driven Execution
 
 Converts source data (Messages) into NormalizedEvents.
-This is the first stage of the AI processing pipeline.
+This is the first stage of the AI processing pipeline (Tier 1).
 
 State-Driven Model:
-- Queries source records where: is_processed=False AND no NormalizedEvent exists
+- Queries source records where: tier1_processed=False AND no NormalizedEvent exists
 - Uses LEFT OUTER JOIN for idempotent duplicate prevention (no row locking needed)
-- Creates new NormalizedEvents with processing_stage='pending'
+- Creates new NormalizedEvents with processing_stage='normalized'
 - Does NOT use row locking since it creates new records rather than updating existing ones
+- Loops until ALL messages have tier1_processed=True
 
 Idempotency:
 - The OUTER JOIN ensures we never create duplicate NormalizedEvents for the same source record
@@ -123,10 +124,11 @@ def normalize_source_data(
     Normalize unprocessed source data into NormalizedEvents.
 
     State-Driven Execution:
-    - Finds source records where: is_processed=False AND no NormalizedEvent exists
+    - Finds source records where: tier1_processed=False AND no NormalizedEvent exists
     - Uses LEFT OUTER JOIN for idempotent duplicate prevention
-    - Creates NormalizedEvents with processing_stage='pending'
+    - Creates NormalizedEvents with processing_stage='normalized'
     - Safe to run concurrently (duplicate prevention via JOIN, not locking)
+    - Loops until ALL messages are processed (tier1_processed=True)
 
     Args:
         workspace_id: Optional workspace to limit processing
@@ -197,85 +199,117 @@ def _normalize_messages(
     text_normalizer
 ) -> Dict[str, int]:
     """
-    Normalize Message records.
+    Normalize Message records in a loop until all are processed.
 
     Uses LEFT OUTER JOIN to find messages without NormalizedEvents (idempotent).
     Handles all source types: slack, gmail, gong, fathom.
+    Loops until ALL messages have tier1_processed=True.
 
     IMPORTANT: Also checks for duplicate messages based on thread_id and external_id
     to prevent re-processing of existing content (especially for Gmail threads).
     """
-    normalized_count = 0
-    skipped_count = 0
-    error_count = 0
-    duplicate_count = 0
+    total_normalized = 0
+    total_skipped = 0
+    total_errors = 0
+    total_duplicates = 0
+    batch_number = 0
 
-    # Build query for unprocessed messages that don't have normalized events yet
-    # This LEFT OUTER JOIN pattern provides idempotent duplicate prevention
-    query = db.query(Message).filter(
-        Message.is_processed == False
-    ).outerjoin(
-        NormalizedEvent,
-        and_(
-            NormalizedEvent.source_table == "messages",
-            NormalizedEvent.source_record_id == Message.id
+    # Loop until all messages are processed
+    while True:
+        batch_number += 1
+
+        # Build query for unprocessed messages that don't have normalized events yet
+        # This LEFT OUTER JOIN pattern provides idempotent duplicate prevention
+        query = db.query(Message).filter(
+            Message.tier1_processed == False
+        ).outerjoin(
+            NormalizedEvent,
+            and_(
+                NormalizedEvent.source_table == "messages",
+                NormalizedEvent.source_record_id == Message.id
+            )
+        ).filter(
+            NormalizedEvent.id == None  # Not yet normalized (idempotent check)
         )
-    ).filter(
-        NormalizedEvent.id == None  # Not yet normalized (idempotent check)
-    )
 
-    if workspace_id:
-        query = query.filter(Message.workspace_id == UUID(workspace_id))
+        if workspace_id:
+            query = query.filter(Message.workspace_id == UUID(workspace_id))
 
-    if source_type:
-        query = query.filter(Message.source == source_type)
+        if source_type:
+            query = query.filter(Message.source == source_type)
 
-    messages = query.order_by(Message.sent_at.asc()).limit(batch_size).all()
+        messages = query.order_by(Message.sent_at.asc()).limit(batch_size).all()
 
-    if not messages:
-        logger.info("No messages to normalize")
-        return {"normalized": 0, "skipped": 0, "errors": 0, "duplicates": 0}
+        if not messages:
+            if batch_number == 1:
+                logger.info("No messages to normalize")
+            else:
+                logger.info(f"✅ Normalization loop complete after {batch_number - 1} batches")
+            break
 
-    logger.info(f"Found {len(messages)} messages to normalize")
+        logger.info(f"📦 Batch {batch_number}: Found {len(messages)} messages to normalize")
 
-    for message in messages:
-        try:
-            # Skip if content is too short
-            if not message.content or len(message.content.strip()) < 20:
-                skipped_count += 1
+        batch_normalized = 0
+        batch_skipped = 0
+        batch_errors = 0
+        batch_duplicates = 0
+
+        for message in messages:
+            try:
+                # Skip if content is too short
+                if not message.content or len(message.content.strip()) < 20:
+                    batch_skipped += 1
+                    # Mark as tier1_processed so it doesn't block the loop
+                    message.tier1_processed = True
+                    continue
+
+                # DUPLICATE CHECK: Check if a message with the same thread_id or external_id
+                # has already been processed in the AI pipeline (has NormalizedEvent)
+                if _is_duplicate_message(db, message):
+                    logger.debug(
+                        f"Skipping duplicate message {message.id} "
+                        f"(thread_id={message.thread_id}, external_id={message.external_id})"
+                    )
+                    # Mark message as tier1 processed to avoid re-checking it
+                    message.tier1_processed = True
+                    batch_duplicates += 1
+                    continue
+
+                # Normalize
+                event_data = normalize_message(message, text_normalizer)
+
+                # Create NormalizedEvent
+                normalized_event = NormalizedEvent(**event_data)
+                db.add(normalized_event)
+                batch_normalized += 1
+
+            except Exception as e:
+                logger.error(f"Error normalizing message {message.id}: {e}")
+                batch_errors += 1
                 continue
 
-            # DUPLICATE CHECK: Check if a message with the same thread_id or external_id
-            # has already been processed in the AI pipeline (has NormalizedEvent)
-            if _is_duplicate_message(db, message):
-                logger.info(
-                    f"Skipping duplicate message {message.id} "
-                    f"(thread_id={message.thread_id}, external_id={message.external_id})"
-                )
-                # Mark message as processed to avoid re-checking it
-                message.is_processed = True
-                duplicate_count += 1
-                continue
+        db.commit()
 
-            # Normalize
-            event_data = normalize_message(message, text_normalizer)
+        # Accumulate totals
+        total_normalized += batch_normalized
+        total_skipped += batch_skipped
+        total_errors += batch_errors
+        total_duplicates += batch_duplicates
 
-            # Create NormalizedEvent
-            normalized_event = NormalizedEvent(**event_data)
-            db.add(normalized_event)
-            normalized_count += 1
+        logger.info(
+            f"📦 Batch {batch_number} complete: {batch_normalized} normalized, "
+            f"{batch_skipped} skipped, {batch_duplicates} duplicates, {batch_errors} errors"
+        )
 
-        except Exception as e:
-            logger.error(f"Error normalizing message {message.id}: {e}")
-            error_count += 1
-            continue
+    if total_duplicates > 0:
+        logger.info(f"Total: Skipped {total_duplicates} duplicate messages based on thread_id/external_id")
 
-    db.commit()
-
-    if duplicate_count > 0:
-        logger.info(f"Skipped {duplicate_count} duplicate messages based on thread_id/external_id")
-
-    return {"normalized": normalized_count, "skipped": skipped_count, "errors": error_count, "duplicates": duplicate_count}
+    return {
+        "normalized": total_normalized,
+        "skipped": total_skipped,
+        "errors": total_errors,
+        "duplicates": total_duplicates
+    }
 
 
 def _is_duplicate_message(db: Session, message: Message) -> bool:

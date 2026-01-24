@@ -48,7 +48,8 @@ class MessageService:
             message_count=data.message_count,
             message_metadata=data.message_metadata,
             sent_at=data.sent_at,
-            is_processed=False
+            tier1_processed=False,
+            tier2_processed=False,
         )
         self.db.add(message)
         self.db.commit()
@@ -95,7 +96,8 @@ class MessageService:
         source: Optional[str] = None,
         connector_id: Optional[UUID] = None,
         customer_ask_id: Optional[UUID] = None,
-        is_processed: Optional[bool] = None,
+        tier1_processed: Optional[bool] = None,
+        tier2_processed: Optional[bool] = None,
         page: int = 1,
         page_size: int = 50
     ) -> Tuple[List[Message], int]:
@@ -108,8 +110,10 @@ class MessageService:
             query = query.filter(Message.connector_id == connector_id)
         if customer_ask_id:
             query = query.filter(Message.customer_ask_id == customer_ask_id)
-        if is_processed is not None:
-            query = query.filter(Message.is_processed == is_processed)
+        if tier1_processed is not None:
+            query = query.filter(Message.tier1_processed == tier1_processed)
+        if tier2_processed is not None:
+            query = query.filter(Message.tier2_processed == tier2_processed)
 
         total = query.count()
         messages = query.order_by(desc(Message.sent_at)).offset(
@@ -123,11 +127,11 @@ class MessageService:
         workspace_id: UUID,
         limit: int = 100
     ) -> List[Message]:
-        """Get unprocessed messages for AI processing"""
+        """Get messages pending Tier 1 AI processing"""
         return self.db.query(Message).filter(
             and_(
                 Message.workspace_id == workspace_id,
-                Message.is_processed == False
+                Message.tier1_processed == False
             )
         ).order_by(Message.created_at).limit(limit).all()
 
@@ -146,21 +150,36 @@ class MessageService:
         self.db.refresh(message)
         return message
 
-    def mark_processed(
+    def mark_tier1_processed(
         self,
         message_id: UUID,
         feature_score: Optional[float] = None
     ) -> Optional[Message]:
-        """Mark a message as processed"""
+        """Mark a message as Tier 1 processed (classification complete)"""
         message = self.get_message(message_id)
         if not message:
             return None
 
-        message.is_processed = True
+        message.tier1_processed = True
         message.processed_at = datetime.now(timezone.utc)
         if feature_score is not None:
             message.feature_score = feature_score
 
+        message.updated_at = datetime.now(timezone.utc)
+        self.db.commit()
+        self.db.refresh(message)
+        return message
+
+    def mark_tier2_processed(
+        self,
+        message_id: UUID,
+    ) -> Optional[Message]:
+        """Mark a message as Tier 2 processed (extraction complete)"""
+        message = self.get_message(message_id)
+        if not message:
+            return None
+
+        message.tier2_processed = True
         message.updated_at = datetime.now(timezone.utc)
         self.db.commit()
         self.db.refresh(message)
@@ -221,7 +240,8 @@ class MessageService:
                 message_count=data.message_count,
                 message_metadata=data.message_metadata,
                 sent_at=data.sent_at,
-                is_processed=False
+                tier1_processed=False,
+                tier2_processed=False,
             )
             messages.append(message)
 
@@ -249,10 +269,17 @@ class MessageService:
             Message.workspace_id == workspace_id
         ).scalar() or 0
 
-        processed = self.db.query(func.count(Message.id)).filter(
+        tier1_processed = self.db.query(func.count(Message.id)).filter(
             and_(
                 Message.workspace_id == workspace_id,
-                Message.is_processed == True
+                Message.tier1_processed == True
+            )
+        ).scalar() or 0
+
+        tier2_processed = self.db.query(func.count(Message.id)).filter(
+            and_(
+                Message.workspace_id == workspace_id,
+                Message.tier2_processed == True
             )
         ).scalar() or 0
 
@@ -265,8 +292,10 @@ class MessageService:
 
         return {
             "total": total,
-            "processed": processed,
-            "unprocessed": total - processed,
+            "tier1_processed": tier1_processed,
+            "tier2_processed": tier2_processed,
+            "tier1_pending": total - tier1_processed,
+            "tier2_pending": tier1_processed - tier2_processed,  # Only tier1 complete can be tier2 pending
             "by_source": {source: count for source, count in by_source}
         }
 

@@ -25,6 +25,12 @@ class Settings(BaseSettings):
     ANTHROPIC_API_KEY: Optional[str] = None
     OPENAI_API_KEY: Optional[str] = None
 
+    # Langfuse (Prompt Management & Observability)
+    LANGFUSE_SECRET_KEY: Optional[str] = None
+    LANGFUSE_PUBLIC_KEY: Optional[str] = None
+    LANGFUSE_HOST: str = "https://cloud.langfuse.com"
+    LANGFUSE_BASE_URL: Optional[str] = None  # Alias for LANGFUSE_HOST
+
     # Web Scraping
     FIRECRAWL_API_KEY: Optional[str] = None
     

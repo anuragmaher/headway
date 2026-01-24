@@ -4,9 +4,9 @@ Optimized Gong Ingestion Service - Fast batch data storage without AI extraction
 This service focuses on:
 1. Fast fetching of Gong calls and transcripts
 2. Batch insertion into the database
-3. Deferred AI processing (marked as is_processed=False)
+3. Deferred AI processing (marked as tier1_processed=False, tier2_processed=False)
 
-AI extraction happens in a separate batch processing task.
+AI extraction happens in a separate batch processing task (Tier 1 -> Tier 2).
 
 Usage:
     from app.services.gong_ingestion_service import gong_ingestion_service
@@ -65,7 +65,7 @@ class GongIngestionService:
         This method:
         1. Fetches calls from Gong API
         2. Fetches transcripts (if enabled)
-        3. Batch inserts into Message table with is_processed=False
+        3. Batch inserts into Message table with tier1_processed=False
         4. Returns counts for sync tracking
 
         AI extraction is NOT performed here - it happens in a separate task.

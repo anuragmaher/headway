@@ -617,7 +617,8 @@ class CustomerAskService:
                 to_emails=msg.to_emails,
                 message_count=msg.message_count,
                 sent_at=msg.sent_at,
-                is_processed=msg.is_processed,
+                tier1_processed=msg.tier1_processed,
+                tier2_processed=msg.tier2_processed,
                 ai_insights=ai_insight
             ))
 

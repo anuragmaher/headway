@@ -248,9 +248,9 @@ class SyncItemsService:
         """Format Gmail messages into response items."""
         items = [{
             'id': str(msg.id),
-            'type': 'gmail_message',
+            'type': 'gmail_thread',  # Must match frontend SyncedItem type
             'title': msg.title,
-            'subject': msg.title,
+            'subject': msg.title,  # Frontend uses 'subject' for gmail_thread
             'from_name': msg.author_name,
             'from_email': msg.from_email,
             'to_emails': msg.to_emails,

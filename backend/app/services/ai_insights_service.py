@@ -14,6 +14,8 @@ Key constraints:
 - AI NEVER invents, renames, or redefines themes
 - AI only selects from themes provided in prompt
 - Locked themes from feature pipeline cannot be overridden
+
+Uses Langfuse for prompt management (ai_insights_prompt).
 """
 
 import json
@@ -32,11 +34,9 @@ from tenacity import (
 )
 
 from app.core.config import settings
+from app.services.langfuse_prompt_service import get_ai_insights_chat_prompt
 
 logger = logging.getLogger(__name__)
-
-# Prompt version for tracking - bump when prompts change
-AI_INSIGHTS_PROMPT_VERSION = "v1.4.0"  # Made all core fields REQUIRED (not optional)
 
 
 @dataclass
@@ -55,167 +55,8 @@ class AIInsightsResult:
     tokens_used: int = 0
     latency_ms: float = 0.0
     model: str = ""
-    prompt_version: str = AI_INSIGHTS_PROMPT_VERSION
+    prompt_version: str = "langfuse"
     error: Optional[str] = None
-
-
-# System prompt for AI insights generation
-AI_INSIGHTS_SYSTEM_PROMPT = """You are an AI assistant analyzing customer feedback messages for a product intelligence platform.
-
-Your task is to analyze a single message and extract structured insights.
-
-CRITICAL RULES FOR THEME CLASSIFICATION:
-1. You may ONLY select themes from the provided theme list - NEVER invent new themes
-2. You may ONLY use theme IDs and names exactly as provided
-3. A theme should ONLY be selected if the message contains:
-   - A DIRECT and EXPLICIT request, feedback, or discussion about that theme's subject matter
-   - SPECIFIC mentions of features, capabilities, or problems related to that theme
-   - NOT just casual mentions or tangential references to theme-related words
-4. If no theme fits DIRECTLY and CLEARLY, return an empty themes array - this is preferred over incorrect classification
-5. If a "locked_theme" is provided, you MUST include it in your response and explain why it applies
-6. Be CONSERVATIVE with theme assignment - only assign if confidence is 0.7 or higher
-7. Consider the MAIN PURPOSE and INTENT of the message, not just keyword matches
-
-THEME MATCHING CRITERIA - BE STRICT:
-- The message must contain ACTIONABLE feedback or requests DIRECTLY related to the theme
-- Casual conversation that merely mentions a topic is NOT enough for theme assignment
-- Look for explicit feature requests, bug reports, pain points, or product suggestions
-- If someone discusses a general topic (like "AI" or "integrations") WITHOUT requesting/suggesting anything specific about YOUR PRODUCT's capabilities in that area, do NOT classify under that theme
-- Example: A call transcript discussing "AI in the industry" is NOT about "AI Features" theme unless they specifically request AI features for YOUR product
-
-=== REQUIRED FIELDS - YOU MUST ALWAYS PROVIDE THESE (NEVER null) ===
-
-FEATURE REQUEST (REQUIRED):
-- You MUST always extract a feature_request from the message
-- Even if indirect, identify what the customer is asking for or would benefit from
-- If truly nothing, use "General feedback - no specific feature request"
-
-SUMMARY (REQUIRED):
-- You MUST always provide a 1-2 sentence summary
-- Focus on the customer's main point, request, or feedback
-
-PAIN POINT (REQUIRED):
-- You MUST always describe what the customer is struggling with
-- If no explicit pain point, infer from context what problem they're trying to solve
-- Be specific: "Manual data export is time-consuming" not "Has some issues"
-
-PAIN POINT QUOTE (REQUIRED):
-- You MUST always provide a VERBATIM quote from the customer's actual words
-- Copy the EXACT phrase that best captures their pain point or request
-- Include enough context (a full sentence or two)
-- Do NOT paraphrase - use their actual language word-for-word
-
-CUSTOMER USE CASE (REQUIRED):
-- You MUST always identify what the customer is trying to accomplish
-- Focus on their business goal, workflow, or task
-- Examples: "Generating weekly sales reports", "Onboarding new team members", "Tracking support tickets"
-
-SENTIMENT (REQUIRED):
-- You MUST classify as one of: positive, negative, or neutral
-- Consider tone, word choice, and overall impression
-
-KEYWORDS (REQUIRED):
-- You MUST extract 3-8 specific, relevant keywords
-- Focus on PRODUCT-RELATED terms: features, capabilities, pain points, use cases
-- Avoid generic words like "want", "need", "please", "would", "could"
-- Include product/feature names mentioned
-- Keywords should be useful for searching and categorizing
-
-=== OPTIONAL FIELDS ===
-
-"explanation": Brief explanation of the overall analysis reasoning (optional)
-"urgency": low|medium|high|critical (optional, default to medium if unclear)
-
-Output STRICT JSON with this exact structure:
-{
-    "themes": [
-        {
-            "theme_id": "uuid-string",
-            "theme_name": "Exact Theme Name",
-            "confidence": 0.0-1.0,
-            "explanation": "Specific quote or evidence from the message that directly relates to this theme"
-        }
-    ],
-    "summary": "REQUIRED: 1-2 sentence summary focusing on the customer's main request or feedback point",
-    "pain_point": "REQUIRED: Brief description of what the customer is struggling with (1-2 sentences)",
-    "pain_point_quote": "REQUIRED: EXACT verbatim quote from customer - copy their ACTUAL words word-for-word",
-    "feature_request": "REQUIRED: The specific feature or capability being requested or would benefit from",
-    "customer_usecase": "REQUIRED: What the customer is trying to accomplish (their business goal/workflow)",
-    "explanation": "Optional: Brief explanation of the overall analysis and classification reasoning",
-    "sentiment": "REQUIRED: positive|negative|neutral",
-    "urgency": "low|medium|high|critical",
-    "keywords": ["REQUIRED: keyword1", "keyword2", "keyword3", "...3-8 keywords"]
-}
-
-IMPORTANT: All fields marked REQUIRED must have actual values - NEVER return null for these fields."""
-
-
-def build_ai_insights_prompt(
-    message_content: str,
-    message_title: Optional[str],
-    source_type: str,
-    author_name: Optional[str],
-    author_role: Optional[str],
-    available_themes: List[Dict[str, Any]],
-    locked_theme: Optional[Dict[str, Any]] = None,
-) -> tuple[str, str]:
-    """
-    Build the prompt for AI insights generation.
-
-    Args:
-        message_content: The message text to analyze
-        message_title: Optional title/subject of the message
-        source_type: Source type (slack, gmail, gong, fathom)
-        author_name: Name of message author
-        author_role: Role of author (internal, external, customer)
-        available_themes: List of themes the AI can select from
-        locked_theme: Theme already assigned by feature pipeline (cannot be overridden)
-
-    Returns:
-        Tuple of (system_prompt, user_prompt)
-    """
-    # Format available themes for the prompt
-    themes_text = "AVAILABLE THEMES (you may ONLY select from these):\n"
-    for theme in available_themes:
-        themes_text += f"- ID: {theme['id']}, Name: \"{theme['name']}\""
-        if theme.get('description'):
-            themes_text += f", Description: {theme['description']}"
-        themes_text += "\n"
-
-    if not available_themes:
-        themes_text = "AVAILABLE THEMES: None (return empty themes array)\n"
-
-    # Format locked theme if present
-    locked_theme_text = ""
-    if locked_theme:
-        locked_theme_text = f"""
-LOCKED THEME (MUST be included in your response):
-- ID: {locked_theme['id']}
-- Name: "{locked_theme['name']}"
-This theme was assigned by the feature extraction pipeline and is canonical.
-You must include this theme and explain why it applies.
-"""
-
-    # Build user prompt
-    user_prompt = f"""Analyze this message and extract insights.
-
-{themes_text}
-{locked_theme_text}
-
-MESSAGE DETAILS:
-- Source: {source_type}
-- Author: {author_name or 'Unknown'}
-- Role: {author_role or 'Unknown'}
-- Title: {message_title or 'No title'}
-
-MESSAGE CONTENT:
-\"\"\"
-{message_content[:4000]}
-\"\"\"
-
-Provide your analysis in the specified JSON format."""
-
-    return AI_INSIGHTS_SYSTEM_PROMPT, user_prompt
 
 
 # Retry decorator for OpenAI API calls
@@ -242,6 +83,7 @@ class AIInsightsService:
     - Strict JSON output
     - Theme constraints enforced
     - Retry logic with exponential backoff
+    - Langfuse-managed prompts (ai_insights_prompt)
     """
 
     DEFAULT_MODEL = "gpt-4o-mini"
@@ -264,6 +106,51 @@ class AIInsightsService:
             max_retries=0,  # We handle retries ourselves
         )
 
+    def _format_themes_text(self, themes: List[Dict]) -> str:
+        """Format available themes for prompt."""
+        if not themes:
+            return "AVAILABLE THEMES: None (return empty themes array)"
+
+        text = "AVAILABLE THEMES (you may ONLY select from these):\n"
+        for theme in themes:
+            text += f"- ID: {theme['id']}, Name: \"{theme['name']}\""
+            if theme.get('description'):
+                text += f", Description: {theme['description']}"
+            text += "\n"
+        return text
+
+    def _format_locked_theme(self, locked_theme: Optional[Dict]) -> str:
+        """Format locked theme for prompt."""
+        if not locked_theme:
+            return ""
+        return f"""
+LOCKED THEME (MUST be included in your response):
+- ID: {locked_theme['id']}
+- Name: "{locked_theme['name']}"
+This theme was assigned by the feature extraction pipeline and is canonical.
+You must include this theme and explain why it applies.
+"""
+
+    def _format_customer_asks(self, customer_asks: Optional[List[Dict]]) -> str:
+        """Format linked customer asks for prompt."""
+        if not customer_asks:
+            return ""
+        text = """
+LINKED CUSTOMER ASKS (extracted feature requests from this message):
+"""
+        for i, ca in enumerate(customer_asks, 1):
+            desc = ca.get('description', 'No description') or 'No description'
+            text += f"""
+{i}. "{ca.get('name', 'Unnamed')}"
+   Description: {desc[:200]}
+   Urgency: {ca.get('urgency', 'medium')}
+"""
+        text += """
+IMPORTANT: Your feature_request field should summarize these customer asks.
+If multiple asks exist, combine them into a coherent summary.
+"""
+        return text
+
     @with_retry
     def generate_insights(
         self,
@@ -274,9 +161,10 @@ class AIInsightsService:
         author_name: Optional[str] = None,
         author_role: Optional[str] = None,
         locked_theme: Optional[Dict[str, Any]] = None,
+        linked_customer_asks: Optional[List[Dict[str, Any]]] = None,
     ) -> AIInsightsResult:
         """
-        Generate AI insights for a single message.
+        Generate AI insights for a single message using Langfuse prompts.
 
         Args:
             message_content: The message text to analyze
@@ -286,6 +174,7 @@ class AIInsightsService:
             author_name: Name of message author
             author_role: Role of author
             locked_theme: Theme already assigned by feature pipeline
+            linked_customer_asks: CustomerAsks linked to this message from Tier 2 extraction
 
         Returns:
             AIInsightsResult with all extracted insights
@@ -293,22 +182,26 @@ class AIInsightsService:
         start_time = time.time()
 
         try:
-            system_prompt, user_prompt = build_ai_insights_prompt(
-                message_content=message_content,
-                message_title=message_title,
+            # Format context for prompt variables
+            themes_text = self._format_themes_text(available_themes)
+            locked_theme_text = self._format_locked_theme(locked_theme)
+            customer_asks_text = self._format_customer_asks(linked_customer_asks)
+
+            # Get chat prompt from Langfuse
+            messages = get_ai_insights_chat_prompt(
+                message_content=message_content[:4000],
+                message_title=message_title or "No title",
                 source_type=source_type,
-                author_name=author_name,
-                author_role=author_role,
-                available_themes=available_themes,
-                locked_theme=locked_theme,
+                author_name=author_name or "Unknown",
+                author_role=author_role or "Unknown",
+                themes_text=themes_text,
+                locked_theme_text=locked_theme_text,
+                customer_asks_text=customer_asks_text,
             )
 
             response = self.client.chat.completions.create(
                 model=self.DEFAULT_MODEL,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
+                messages=messages,  # Directly use Langfuse messages
                 temperature=0,  # Deterministic output
                 response_format={"type": "json_object"},
                 max_tokens=1500
@@ -350,7 +243,7 @@ class AIInsightsService:
                 tokens_used=response.usage.total_tokens,
                 latency_ms=latency_ms,
                 model=self.DEFAULT_MODEL,
-                prompt_version=AI_INSIGHTS_PROMPT_VERSION,
+                prompt_version="langfuse",
             )
 
         except json.JSONDecodeError as e:
@@ -359,7 +252,7 @@ class AIInsightsService:
                 error=f"JSON decode error: {str(e)}",
                 latency_ms=(time.time() - start_time) * 1000,
                 model=self.DEFAULT_MODEL,
-                prompt_version=AI_INSIGHTS_PROMPT_VERSION,
+                prompt_version="langfuse",
             )
 
         except Exception as e:
@@ -368,7 +261,7 @@ class AIInsightsService:
                 error=f"Generation error: {str(e)}",
                 latency_ms=(time.time() - start_time) * 1000,
                 model=self.DEFAULT_MODEL,
-                prompt_version=AI_INSIGHTS_PROMPT_VERSION,
+                prompt_version="langfuse",
             )
 
     def _validate_themes(

@@ -67,7 +67,8 @@ class MentionResponse(BaseModel):
     to_emails: Optional[str] = None
     message_count: int = 1
     sent_at: Optional[datetime] = None
-    is_processed: bool = False
+    tier1_processed: bool = False
+    tier2_processed: bool = False
     ai_insights: Optional[AIInsightResponse] = None
 
     class Config:

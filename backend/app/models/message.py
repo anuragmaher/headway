@@ -59,10 +59,13 @@ class Message(Base):
     # Metadata
     message_metadata = Column(JSONB, nullable=True)  # Reactions, attachments, thread info, etc.
 
-    # Processing status
-    is_processed = Column(Boolean, default=False, nullable=False)
+    # Processing status - Tiered AI pipeline
+    # tier1_processed: True after Tier 1 classification completes (feature_score stored)
+    # tier2_processed: True after Tier 2 extraction completes (CustomerAsk linked)
+    tier1_processed = Column(Boolean, default=False, nullable=False)
+    tier2_processed = Column(Boolean, default=False, nullable=False)
     processed_at = Column(DateTime(timezone=True), nullable=True)
-    feature_score = Column(Float, nullable=True)  # AI relevance score
+    feature_score = Column(Float, nullable=True)  # AI relevance score (0-10 from Tier 1)
 
     # Timestamps
     sent_at = Column(DateTime(timezone=True), nullable=True)  # Original message time
@@ -97,6 +100,9 @@ class Message(Base):
         return primary_link.customer_ask if primary_link else None
 
     # Indexes and constraints
+    # Note: Partial indexes for tier processing are created in migration 0006
+    # - idx_messages_tier1_processed: Partial index for tier1_processed=False
+    # - idx_messages_tier2_pending: Partial index for tier2_processed=False AND feature_score >= 6
     __table_args__ = (
         UniqueConstraint('workspace_id', 'connector_id', 'external_id', name='uq_message_external'),
         Index('idx_messages_workspace', 'workspace_id'),
@@ -104,7 +110,6 @@ class Message(Base):
         Index('idx_messages_customer_ask', 'customer_ask_id'),
         Index('idx_messages_customer', 'customer_id'),
         Index('idx_messages_workspace_sent', 'workspace_id', 'sent_at'),
-        Index('idx_messages_workspace_processed', 'workspace_id', 'is_processed'),
         Index('idx_messages_source', 'source'),
     )
 
