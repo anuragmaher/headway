@@ -1,12 +1,11 @@
 /**
- * ThemeExplorer - Main container for the three-column explorer interface
+ * ThemeExplorer - Main container for the explorer interface
  * Enterprise-grade exploration and triage workspace for product managers
  *
- * Structure: Themes -> SubThemes -> CustomerAsks -> Mentions (slide-in panel)
+ * Structure: Theme Selection -> Split View (SubThemes + CustomerAsks) -> Mentions (slide-in panel)
  */
 import React, { useEffect, useRef } from 'react';
 import { Box, CircularProgress, Alert, AlertTitle, useTheme, useMediaQuery, Slide, Typography, Fade, Button, alpha } from '@mui/material';
-import { ThemesColumn } from './ThemesColumn';
 import { SubThemesColumn } from './SubThemesColumn';
 import { CustomerAsksColumn } from './CustomerAsksColumn';
 import { MentionsPanel } from './MentionsPanel';
@@ -14,7 +13,6 @@ import { MobileNavigationHeader } from './MobileNavigationHeader';
 import { MobileMentionsDrawer } from './MobileMentionsDrawer';
 import { MentionsBottomPanel } from './MentionsBottomPanel';
 import { ThemeSelectionView } from './ThemeSelectionView';
-import { SubThemeSelectionView } from './SubThemeSelectionView';
 import { AddThemeDialog } from './dialogs/AddThemeDialog';
 import { AddSubThemeDialog } from './dialogs/AddSubThemeDialog';
 import { EditThemeDialog } from './dialogs/EditThemeDialog';
@@ -212,36 +210,6 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
       );
     }
 
-    // Mobile Step 2: Theme selected but no sub-theme - Show sub-theme widgets
-    if (selectedThemeId && !selectedSubThemeId) {
-      return (
-        <Fade in timeout={300}>
-          <Box
-            className={className}
-            sx={{
-              height: '100%',
-              width: '100%',
-              overflow: 'hidden',
-              bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
-            }}
-          >
-            <SubThemeSelectionView 
-              onSubThemeSelect={selectSubTheme}
-              onBack={() => selectTheme(null)}
-            />
-
-            {/* Dialogs */}
-            <AddThemeDialog />
-            <AddSubThemeDialog />
-            <EditThemeDialog />
-            <EditSubThemeDialog />
-            <DeleteConfirmDialog />
-            <MergeSubThemeDialog />
-          </Box>
-        </Fade>
-      );
-    }
-
     // Mobile Progressive Flow (when theme is selected)
     return (
       <Fade in timeout={300}>
@@ -261,28 +229,19 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
 
         {/* Mobile Content - Only show current step */}
         <Box sx={{ flex: 1, overflow: 'hidden' }}>
-          {/* Step 1: Themes */}
-          <Slide direction="right" in={mobileActiveView === 'themes'} mountOnEnter unmountOnExit>
-            <Box sx={{ height: '100%', width: '100%', position: 'absolute' }}>
-              <ThemesColumn width="100%" />
-            </Box>
-          </Slide>
-
-          {/* Step 2: Sub-Themes */}
+          {/* Step 1: Sub-Themes (shown when theme is selected) */}
           <Slide direction="left" in={mobileActiveView === 'subThemes'} mountOnEnter unmountOnExit>
             <Box sx={{ height: '100%', width: '100%', position: 'absolute' }}>
               <SubThemesColumn width="100%" />
             </Box>
           </Slide>
 
-          {/* Step 3: Customer Asks */}
+          {/* Step 2: Customer Asks */}
           <Slide direction="left" in={mobileActiveView === 'customerAsks'} mountOnEnter unmountOnExit>
             <Box sx={{ height: '100%', width: '100%', position: 'absolute' }}>
               <CustomerAsksColumn isPanelOpen={false} />
             </Box>
           </Slide>
-
-          {/* Step 4: Mentions (Full Screen) - Disabled in favor of drawer approach */}
           {/* 
           <Slide direction="left" in={mobileActiveView === 'mentions'} mountOnEnter unmountOnExit>
             <Box sx={{ height: '100%', width: '100%', position: 'absolute' }}>
@@ -339,37 +298,7 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
     );
   }
 
-  // Step 2: Theme selected but no sub-theme - Show sub-theme widgets
-  if (selectedThemeId && !selectedSubThemeId) {
-    return (
-      <Fade in timeout={300}>
-        <Box
-          className={className}
-          sx={{
-            height: '100%',
-            width: '100%',
-            overflow: 'hidden',
-            bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
-          }}
-        >
-          <SubThemeSelectionView 
-            onSubThemeSelect={selectSubTheme}
-            onBack={() => selectTheme(null)}
-          />
-
-          {/* Dialogs */}
-          <AddThemeDialog />
-          <AddSubThemeDialog />
-          <EditThemeDialog />
-          <EditSubThemeDialog />
-          <DeleteConfirmDialog />
-          <MergeSubThemeDialog />
-        </Box>
-      </Fade>
-    );
-  }
-
-  // Step 3: Both theme and sub-theme selected - Show three-column split view with draggable bottom panel
+  // Step 2: Theme selected - Show two-column split view (SubThemes + CustomerAsks) with draggable bottom panel
   return (
     <Fade in timeout={300}>
       <Box
@@ -384,45 +313,33 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
           position: 'relative',
         }}
       >
-        {/* Breadcrumb Header */}
+        {/* Header with Back Button */}
         <Box 
           sx={{ 
             px: 3, 
             py: 1.5, 
             borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
             backgroundColor: theme.palette.background.paper,
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Button
-              variant="text"
-              size="small"
-              onClick={() => selectTheme(null)}
-              sx={{ 
-                textTransform: 'none',
-                color: 'primary.main',
-                '&:hover': { backgroundColor: alpha(theme.palette.primary.main, 0.08) }
-              }}
-            >
-              ← Themes
-            </Button>
-            <Typography variant="body2" color="textSecondary">/</Typography>
-            <Button
-              variant="text"
-              size="small"
-              onClick={() => selectSubTheme(null)}
-              sx={{ 
-                textTransform: 'none',
-                color: 'secondary.main',
-                '&:hover': { backgroundColor: alpha(theme.palette.secondary.main, 0.08) }
-              }}
-            >
-              ← Sub-Themes
-            </Button>
-          </Box>
+          <Button
+            variant="text"
+            size="small"
+            startIcon={<Box component="span" sx={{ fontSize: 18 }}>←</Box>}
+            onClick={() => selectTheme(null)}
+            sx={{ 
+              textTransform: 'none',
+              color: 'text.primary',
+              '&:hover': { backgroundColor: alpha(theme.palette.action.hover, 0.08) }
+            }}
+          >
+            Back to Themes
+          </Button>
         </Box>
 
-        {/* Main Content Area - Three Columns */}
+        {/* Main Content Area - Two Columns (SubThemes + CustomerAsks) */}
         <Box 
           sx={{ 
             display: 'flex',
@@ -431,10 +348,7 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
             minHeight: 0,
           }}
         >
-          {/* Left Column - Themes */}
-          <ThemesColumn width={220} />
-
-          {/* Middle Column - SubThemes */}
+          {/* Left Column - SubThemes */}
           <SubThemesColumn width={280} />
 
           {/* Right Column - Customer Asks with Bottom Panel Container */}
