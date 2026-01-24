@@ -162,12 +162,19 @@ class TieredAIService:
     - Automatic retries with exponential backoff
     - Batch processing for multiple items
     - Connection pooling for efficiency
+    - Chunking support for long messages (>1500 chars)
     """
 
     DEFAULT_MODEL = "gpt-4o-mini"
     MAX_RETRIES = 3
     MAX_CONCURRENT_REQUESTS = 5  # Limit concurrent API calls
     REQUEST_TIMEOUT = 30  # seconds
+
+    # Chunking configuration for long messages
+    CHUNK_THRESHOLD = 1500   # Start chunking at 1500 chars
+    CHUNK_SIZE = 1200        # Each chunk is ~1200 chars
+    CHUNK_OVERLAP = 200      # Overlap between chunks for context
+    MAX_CHUNKS = 5           # Maximum chunks per message
 
     def __init__(self, api_key: Optional[str] = None):
         """
@@ -213,38 +220,79 @@ class TieredAIService:
             self._semaphore = asyncio.Semaphore(self.MAX_CONCURRENT_REQUESTS)
         return self._semaphore
 
+    def _chunk_text(self, text: str) -> List[str]:
+        """
+        Split long text into overlapping chunks for classification.
+
+        For messages longer than CHUNK_THRESHOLD (1500 chars), splits into
+        smaller chunks with overlap to ensure context preservation.
+        Returns the highest-scoring chunk's result.
+
+        Args:
+            text: Full message content
+
+        Returns:
+            List of text chunks (1-5 chunks depending on length)
+        """
+        text = text.strip()
+
+        # Short text - no chunking needed
+        if len(text) <= self.CHUNK_THRESHOLD:
+            return [text]
+
+        chunks = []
+        start = 0
+
+        while start < len(text) and len(chunks) < self.MAX_CHUNKS:
+            end = start + self.CHUNK_SIZE
+
+            # Try to break at sentence boundary (. ! ? newline)
+            if end < len(text):
+                # Look for sentence end within last 100 chars of chunk
+                for i in range(min(100, end - start)):
+                    check_pos = end - i
+                    if check_pos < len(text) and text[check_pos] in '.!?\n':
+                        end = check_pos + 1
+                        break
+
+            chunk = text[start:end].strip()
+            if chunk:
+                chunks.append(chunk)
+
+            # Move start, accounting for overlap
+            start = end - self.CHUNK_OVERLAP
+            if start < 0 or start <= (end - self.CHUNK_SIZE):
+                start = end  # Prevent infinite loop
+
+        return chunks if chunks else [text[:self.CHUNK_SIZE]]
+
     # =========================================================================
     # Tier-1: Classification (Sync)
     # =========================================================================
 
-    @with_retry
-    def tier1_classify(
+    def _classify_single_chunk(
         self,
         text: str,
-        source_type: str = "unknown",
-        actor_role: Optional[str] = None,
+        source_type: str,
+        actor_role: Optional[str],
+        start_time: float,
     ) -> Tier1Result:
         """
-        Tier-1 Classification: Determine if text contains feature requests.
+        Classify a single text chunk.
 
-        This is a cheap, fast call to filter out irrelevant content
-        before running expensive extraction.
-
-        Uses Langfuse chat prompts (tier1_ai_prompt).
+        Internal helper method that makes the actual API call for one chunk.
         """
-        start_time = time.time()
-
         try:
             # Get chat prompt from Langfuse
             messages = get_tier1_chat_prompt(
-                text=text[:4000],
+                text=text[:4000],  # Safety truncation
                 source_type=source_type,
                 actor_role=actor_role or "unknown",
             )
 
             response = self.client.chat.completions.create(
                 model=self.DEFAULT_MODEL,
-                messages=messages,  # Directly use Langfuse messages
+                messages=messages,
                 temperature=0.1,
                 response_format={"type": "json_object"},
                 max_tokens=200
@@ -255,7 +303,6 @@ class TieredAIService:
 
             # Parse score (0-10) from prompt format
             score = float(result.get("score", 0))
-            # Clamp score to 0-10 range
             score = max(0.0, min(10.0, score))
 
             return Tier1Result(
@@ -279,41 +326,100 @@ class TieredAIService:
             )
 
         except Exception as e:
-            logger.error(f"Tier-1 classification error: {e}")
+            logger.error(f"Tier-1 chunk classification error: {e}")
             return Tier1Result(
-                score=6.0,  # Default to processing on error (threshold score)
-                reasoning=f"Error during classification: {str(e)}",
+                score=6.0,  # Default to processing on error
+                reasoning=f"Error: {str(e)}",
                 tokens_used=0,
                 model=self.DEFAULT_MODEL,
                 prompt_version="langfuse",
                 latency_ms=(time.time() - start_time) * 1000
             )
 
-    # =========================================================================
-    # Tier-1: Classification (Async)
-    # =========================================================================
-
-    async def tier1_classify_async(
+    @with_retry
+    def tier1_classify(
         self,
         text: str,
         source_type: str = "unknown",
         actor_role: Optional[str] = None,
     ) -> Tier1Result:
-        """Async version of tier1_classify for concurrent processing."""
+        """
+        Tier-1 Classification: Determine if text contains feature requests.
+
+        This is a cheap, fast call to filter out irrelevant content
+        before running expensive extraction.
+
+        For texts > 1500 chars, splits into chunks and returns the
+        highest score among all chunks (ensures feature requests aren't
+        missed due to position in long messages).
+
+        Uses Langfuse chat prompts (tier1_ai_prompt).
+        """
         start_time = time.time()
 
+        # Chunk long texts
+        chunks = self._chunk_text(text)
+
+        if len(chunks) == 1:
+            # Single chunk - process normally
+            return self._classify_single_chunk(
+                chunks[0], source_type, actor_role, start_time
+            )
+
+        # Multiple chunks - classify each and take highest score
+        logger.info(f"Classifying {len(chunks)} chunks for long message ({len(text)} chars)")
+
+        best_result = None
+        total_tokens = 0
+
+        for i, chunk in enumerate(chunks):
+            result = self._classify_single_chunk(
+                chunk, source_type, actor_role, start_time
+            )
+            total_tokens += result.tokens_used
+
+            if best_result is None or result.score > best_result.score:
+                best_result = result
+                # Update reasoning to indicate which chunk had the best score
+                best_result = Tier1Result(
+                    score=result.score,
+                    reasoning=f"[Chunk {i+1}/{len(chunks)}] {result.reasoning}",
+                    tokens_used=total_tokens,
+                    model=result.model,
+                    prompt_version=result.prompt_version,
+                    latency_ms=(time.time() - start_time) * 1000
+                )
+
+        return best_result
+
+    # =========================================================================
+    # Tier-1: Classification (Async)
+    # =========================================================================
+
+    async def _classify_single_chunk_async(
+        self,
+        text: str,
+        source_type: str,
+        actor_role: Optional[str],
+        start_time: float,
+    ) -> Tier1Result:
+        """
+        Async classify a single text chunk.
+
+        Internal helper method that makes the actual API call for one chunk.
+        """
         async with self._get_semaphore():
             try:
                 # Get chat prompt from Langfuse
                 messages = get_tier1_chat_prompt(
-                    text=text[:4000],
+                    text=text[:4000],  # Safety truncation
                     source_type=source_type,
                     actor_role=actor_role or "unknown",
                 )
 
                 response = await self.async_client.chat.completions.create(
                     model=self.DEFAULT_MODEL,
-                    messages=messages,  # Directly use Langfuse messages
+                    messages=messages,
                     temperature=0.1,
                     response_format={"type": "json_object"},
                     max_tokens=200
@@ -335,8 +441,19 @@ class TieredAIService:
                     latency_ms=latency_ms
                 )
 
+            except json.JSONDecodeError as e:
+                logger.error(f"Tier-1 async JSON decode error: {e}")
+                return Tier1Result(
+                    score=0.0,
+                    reasoning=f"JSON decode error: {str(e)}",
+                    tokens_used=0,
+                    model=self.DEFAULT_MODEL,
+                    prompt_version="langfuse",
+                    latency_ms=(time.time() - start_time) * 1000
+                )
+
             except Exception as e:
-                logger.error(f"Tier-1 async classification error: {e}")
+                logger.error(f"Tier-1 async chunk classification error: {e}")
                 return Tier1Result(
                     score=6.0,  # Default to processing on error
                     reasoning=f"Error: {str(e)}",
@@ -345,6 +462,72 @@ class TieredAIService:
                     prompt_version="langfuse",
                     latency_ms=(time.time() - start_time) * 1000
                 )
+
+    async def tier1_classify_async(
+        self,
+        text: str,
+        source_type: str = "unknown",
+        actor_role: Optional[str] = None,
+    ) -> Tier1Result:
+        """
+        Async version of tier1_classify for concurrent processing.
+
+        For texts > 1500 chars, splits into chunks and classifies them
+        concurrently, returning the highest score among all chunks.
+        """
+        start_time = time.time()
+
+        # Chunk long texts
+        chunks = self._chunk_text(text)
+
+        if len(chunks) == 1:
+            # Single chunk - process normally
+            return await self._classify_single_chunk_async(
+                chunks[0], source_type, actor_role, start_time
+            )
+
+        # Multiple chunks - classify concurrently and take highest score
+        logger.info(f"Async classifying {len(chunks)} chunks for long message ({len(text)} chars)")
+
+        # Create tasks for concurrent chunk classification
+        tasks = [
+            self._classify_single_chunk_async(chunk, source_type, actor_role, start_time)
+            for chunk in chunks
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        best_result = None
+        total_tokens = 0
+
+        for i, result in enumerate(results):
+            if isinstance(result, Exception):
+                logger.error(f"Chunk {i+1} classification failed: {result}")
+                continue
+
+            total_tokens += result.tokens_used
+
+            if best_result is None or result.score > best_result.score:
+                best_result = Tier1Result(
+                    score=result.score,
+                    reasoning=f"[Chunk {i+1}/{len(chunks)}] {result.reasoning}",
+                    tokens_used=total_tokens,
+                    model=result.model,
+                    prompt_version=result.prompt_version,
+                    latency_ms=(time.time() - start_time) * 1000
+                )
+
+        # If all chunks failed, return error result
+        if best_result is None:
+            return Tier1Result(
+                score=6.0,  # Default to processing on error
+                reasoning="All chunk classifications failed",
+                tokens_used=0,
+                model=self.DEFAULT_MODEL,
+                prompt_version="langfuse",
+                latency_ms=(time.time() - start_time) * 1000
+            )
+
+        return best_result
 
     # =========================================================================
     # Tier-1: Batch Classification
