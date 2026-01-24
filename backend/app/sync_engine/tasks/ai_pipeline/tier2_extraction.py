@@ -159,14 +159,16 @@ def extract_features(
     workspace_id: Optional[str] = None,
     batch_size: int = EXTRACTION_BATCH_SIZE,
 ) -> Dict[str, Any]:
-    """Extract structured feature data using Tier-2 AI.
+    """Extract structured feature data from ALL classified events using Tier-2 AI.
+
+    LOOPS until ALL classified events/chunks are extracted, then triggers AI Insights.
 
     NOTE: No confidence filtering here - all messages that passed Tier-1
     classification (score >= 6) will be processed. This ensures we don't
     miss potential customer asks.
     """
     try:
-        logger.info(f"Starting Tier-2 extraction (workspace={workspace_id})")
+        logger.info(f"🔬 Starting Tier-2 extraction (workspace={workspace_id})")
 
         with Session(engine) as db:
             if not test_db_connection(db):
@@ -174,62 +176,78 @@ def extract_features(
 
             ai_service = get_tiered_ai_service()
 
-            # If no workspace specified, find workspaces with items to process
-            if not workspace_id:
-                workspace_ids = _get_workspaces_with_pending_items(db)
-                if not workspace_ids:
-                    logger.info("No items to extract across any workspace")
-                    return {"status": "success", "extracted": 0, "facts_created": 0, "matched": 0, "created": 0, "skipped": 0, "errors": 0}
-            else:
-                workspace_ids = [workspace_id]
-
             total = {"extracted": 0, "facts_created": 0, "matched": 0, "created": 0, "skipped": 0, "errors": 0}
 
-            for ws_id in workspace_ids:
-                themes = _get_workspace_themes(db, ws_id)
+            # LOOP until ALL classified events are extracted
+            while True:
+                # Find workspaces with pending items
+                if not workspace_id:
+                    workspace_ids = _get_workspaces_with_pending_items(db)
+                    if not workspace_ids:
+                        logger.info("✅ Tier-2 loop complete: No more items to extract")
+                        break
+                else:
+                    workspace_ids = [workspace_id]
 
-                if not themes:
-                    logger.warning(f"No themes found for workspace {ws_id} - skipping")
-                    continue
+                batch_extracted = 0
 
-                # Track messages linked to CustomerAsks to avoid redundant DB queries
-                linked_messages = set()
+                for ws_id in workspace_ids:
+                    themes = _get_workspace_themes(db, ws_id)
 
-                # Process events and chunks for this workspace
-                event_stats = _process_items(
-                    db, ai_service, ws_id, batch_size // 2,
-                    themes, item_type="event",
-                    linked_messages=linked_messages,
-                )
+                    if not themes:
+                        logger.warning(f"No themes found for workspace {ws_id} - skipping")
+                        continue
 
-                chunk_stats = _process_items(
-                    db, ai_service, ws_id, batch_size // 2,
-                    themes, item_type="chunk",
-                    linked_messages=linked_messages,
-                )
+                    # Track messages linked to CustomerAsks to avoid redundant DB queries
+                    linked_messages = set()
 
-                # Accumulate stats
-                for key in total:
-                    total[key] += event_stats.get(key, 0) + chunk_stats.get(key, 0)
+                    # Process events and chunks for this workspace
+                    event_stats = _process_items(
+                        db, ai_service, ws_id, batch_size,
+                        themes, item_type="event",
+                        linked_messages=linked_messages,
+                    )
 
-            db.commit()
+                    chunk_stats = _process_items(
+                        db, ai_service, ws_id, batch_size,
+                        themes, item_type="chunk",
+                        linked_messages=linked_messages,
+                    )
+
+                    # Accumulate stats for this batch
+                    batch_extracted += event_stats.get("extracted", 0) + chunk_stats.get("extracted", 0)
+
+                    for key in total:
+                        total[key] += event_stats.get(key, 0) + chunk_stats.get(key, 0)
+
+                # Exit loop when no more items to extract
+                if batch_extracted == 0:
+                    logger.info("✅ Tier-2 loop complete: No more items to extract")
+                    break
+
+                logger.info(f"📊 Tier-2 batch: {batch_extracted} extracted, continuing loop...")
+
+            # Log final results
+            if total['extracted'] == 0:
+                logger.info("✅ Tier-2 extraction: No items to extract (all already processed)")
+                return {"status": "success", **total}
 
             logger.info(
-                f"Tier-2 complete: {total['extracted']} processed, "
+                f"✅ Tier-2 complete: {total['extracted']} processed, "
                 f"{total['matched']} matched to existing, {total['created']} new CustomerAsks, "
                 f"{total['skipped']} skipped (no valid feature), {total['errors']} errors"
             )
 
-            # Trigger AI insights batch processing for linked messages
+            # ONLY trigger AI Insights AFTER loop completes (all extraction done)
             if total['extracted'] > 0:
                 from app.sync_engine.tasks.ai_insights.worker import process_pending_insights
                 process_pending_insights.delay(workspace_id=workspace_id)
-                logger.info("🔗 Triggered AI insights batch processing")
+                logger.info("🔗 Triggered AI Insights (all Tier-2 complete)")
 
             return {"status": "success", **total}
 
     except Exception as e:
-        logger.error(f"Tier-2 extraction failed: {e}")
+        logger.error(f"❌ Tier-2 extraction failed: {e}")
         raise self.retry(exc=e, countdown=180)
     finally:
         cleanup_after_task()
@@ -559,8 +577,10 @@ def _process_items(
             logger.error(f"Error extracting {item_type} {item.id}: {e}")
             import traceback
             traceback.print_exc()
+            db.rollback()  # Rollback failed transaction
             item.retry_count = (item.retry_count or 0) + 1
             item.processing_error = str(e)[:400]
+            db.commit()  # CRITICAL: Commit retry count immediately to prevent infinite retries
             stats["errors"] += 1
 
     # Update parent events for chunks

@@ -41,6 +41,146 @@ MIN_CLASSIFICATION_SCORE = 6.0
 MAX_RETRIES = 3
 
 
+# ============================================================================
+# RECOVERY FUNCTIONS - Handle orphaned and exhausted items
+# ============================================================================
+
+def _process_orphaned_messages(db: Session, workspace_id: Optional[str]) -> int:
+    """
+    Find messages that have classified NormalizedEvents but still have tier1_processed=false.
+    This happens when classification completed but the message wasn't updated.
+
+    For each orphaned message, copy the score from its NormalizedEvent and mark tier1_processed=true.
+
+    Returns:
+        Count of orphaned messages fixed
+    """
+    # Find messages with tier1_processed=false that have CLASSIFIED NormalizedEvents
+    from sqlalchemy import and_
+
+    subquery = db.query(NormalizedEvent.source_record_id).filter(
+        NormalizedEvent.source_table == "messages",
+        NormalizedEvent.classified_at.isnot(None),  # Already classified
+    ).subquery()
+
+    query = db.query(Message).filter(
+        Message.tier1_processed == False,
+        Message.id.in_(subquery),
+    )
+
+    if workspace_id:
+        query = query.filter(Message.workspace_id == UUID(workspace_id))
+
+    messages = query.all()
+    count = 0
+
+    for message in messages:
+        # Get the NormalizedEvent for this message
+        event = db.query(NormalizedEvent).filter(
+            NormalizedEvent.source_table == "messages",
+            NormalizedEvent.source_record_id == message.id,
+        ).first()
+
+        if event and event.classified_at:
+            # Copy score from event to message
+            score = (event.classification_confidence or 0) * 10.0
+            message.tier1_processed = True
+            message.feature_score = score
+            message.processed_at = event.classified_at
+
+            logger.info(
+                f"✓ Fixed orphaned message {message.id}: "
+                f"tier1_processed=True, feature_score={score:.1f}"
+            )
+            db.commit()
+            count += 1
+
+    return count
+
+
+def _process_exhausted_events(db: Session, workspace_id: Optional[str]) -> int:
+    """
+    Mark events that exhausted retries as completed and update their source messages.
+    This prevents items with retry_count >= MAX_RETRIES from blocking the pipeline.
+
+    Returns:
+        Count of exhausted events processed
+    """
+    query = db.query(NormalizedEvent).filter(
+        NormalizedEvent.processing_stage == "chunked",
+        NormalizedEvent.classified_at.is_(None),
+        NormalizedEvent.retry_count >= MAX_RETRIES,
+    )
+
+    if workspace_id:
+        query = query.filter(NormalizedEvent.workspace_id == UUID(workspace_id))
+
+    events = query.all()
+    count = 0
+
+    for event in events:
+        now = datetime.now(timezone.utc)
+
+        event.is_feature_relevant = False
+        event.processing_stage = "completed"
+        event.classification_confidence = 0.0
+        event.classified_at = now
+
+        # CRITICAL: Mark source message as processed
+        if event.source_table == "messages" and event.source_record_id:
+            message = db.query(Message).filter(
+                Message.id == event.source_record_id
+            ).first()
+            if message and not message.tier1_processed:
+                message.tier1_processed = True
+                message.feature_score = 0.0
+                message.processed_at = now
+                logger.warning(
+                    f"⚠️ Event {event.id} exhausted retries, marking message {message.id} "
+                    f"tier1_processed=True, feature_score=0.0"
+                )
+
+        db.commit()
+        count += 1
+
+    return count
+
+
+def _process_exhausted_chunks(db: Session, workspace_id: Optional[str]) -> int:
+    """
+    Mark chunks that exhausted retries as completed.
+    This allows parent events to be updated even if some chunks failed.
+
+    Returns:
+        Count of exhausted chunks processed
+    """
+    query = db.query(EventChunk).filter(
+        EventChunk.processing_stage == "pending",
+        EventChunk.classified_at.is_(None),
+        EventChunk.retry_count >= MAX_RETRIES,
+    )
+
+    if workspace_id:
+        query = query.filter(EventChunk.workspace_id == UUID(workspace_id))
+
+    chunks = query.all()
+    count = 0
+
+    for chunk in chunks:
+        now = datetime.now(timezone.utc)
+
+        chunk.is_feature_relevant = False
+        chunk.processing_stage = "completed"
+        chunk.classification_confidence = 0.0
+        chunk.classified_at = now
+
+        logger.warning(f"⚠️ Chunk {chunk.id} exhausted retries, marking as completed")
+        db.commit()
+        count += 1
+
+    return count
+
+
 @celery_app.task(
     name="app.sync_engine.tasks.ai_pipeline.classify_events",
     bind=True,
@@ -58,7 +198,9 @@ def classify_events(
     min_score: float = MIN_CLASSIFICATION_SCORE,
 ) -> Dict[str, Any]:
     """
-    Classify chunked events using Tier-1 AI.
+    Classify ALL chunked events using Tier-1 AI.
+
+    LOOPS until ALL events/chunks are classified, then triggers Tier 2.
 
     THIS IS THE ONLY FILTER POINT:
     - Score >= 6 proceeds to Tier-2 extraction (all further processing happens)
@@ -80,6 +222,57 @@ def classify_events(
                 logger.error("❌ Database connection failed!")
                 return {"status": "error", "reason": "database_connection_failed"}
 
+            # ============================================================
+            # PHASE 0: RECOVERY - Fix orphaned and exhausted items
+            # ============================================================
+
+            # Fix orphaned messages (have classified NormalizedEvent but tier1_processed=false)
+            orphaned_count = _process_orphaned_messages(db, workspace_id)
+            if orphaned_count > 0:
+                logger.info(f"📊 Fixed {orphaned_count} orphaned messages")
+
+            # Handle exhausted events and chunks
+            exhausted_events = _process_exhausted_events(db, workspace_id)
+            exhausted_chunks = _process_exhausted_chunks(db, workspace_id)
+            if exhausted_events > 0 or exhausted_chunks > 0:
+                logger.info(
+                    f"📊 Processed {exhausted_events} exhausted events, "
+                    f"{exhausted_chunks} exhausted chunks"
+                )
+
+            # Update parent events (handles chunks that exhausted retries)
+            _update_parent_events_after_classification(db, workspace_id)
+
+            # ============================================================
+            # DIAGNOSTIC LOGGING
+            # ============================================================
+            pending_messages = db.query(Message).filter(
+                Message.tier1_processed == False
+            )
+            if workspace_id:
+                pending_messages = pending_messages.filter(
+                    Message.workspace_id == UUID(workspace_id)
+                )
+            pending_count = pending_messages.count()
+            logger.info(f"📊 Tier 1 Start: {pending_count} messages with tier1_processed=false")
+
+            # Log NormalizedEvents in each stage
+            for stage in ["normalized", "chunked", "classified", "completed", "extracted"]:
+                stage_query = db.query(NormalizedEvent).filter(
+                    NormalizedEvent.processing_stage == stage
+                )
+                if workspace_id:
+                    stage_query = stage_query.filter(
+                        NormalizedEvent.workspace_id == UUID(workspace_id)
+                    )
+                count = stage_query.count()
+                if count > 0:
+                    logger.info(f"   - {stage}: {count} events")
+
+            # ============================================================
+            # PHASE 1: CLASSIFICATION LOOP
+            # ============================================================
+
             ai_service = get_tiered_ai_service()
 
             total_classified = 0
@@ -87,27 +280,33 @@ def classify_events(
             total_skipped = 0
             total_errors = 0
 
-            # Process non-chunked events first
-            non_chunked_stats = _classify_non_chunked_events(
-                db, ai_service, workspace_id, batch_size // 2, min_score
-            )
-            total_classified += non_chunked_stats["classified"]
-            total_relevant += non_chunked_stats["relevant"]
-            total_skipped += non_chunked_stats["skipped"]
-            total_errors += non_chunked_stats["errors"]
+            # LOOP until ALL events and chunks are classified
+            while True:
+                # Process non-chunked events
+                non_chunked_stats = _classify_non_chunked_events(
+                    db, ai_service, workspace_id, batch_size, min_score
+                )
 
-            # Process chunks
-            chunk_stats = _classify_chunks(
-                db, ai_service, workspace_id, batch_size // 2, min_score
-            )
-            total_classified += chunk_stats["classified"]
-            total_relevant += chunk_stats["relevant"]
-            total_skipped += chunk_stats["skipped"]
-            total_errors += chunk_stats["errors"]
+                # Process chunks
+                chunk_stats = _classify_chunks(
+                    db, ai_service, workspace_id, batch_size, min_score
+                )
 
-            db.commit()
+                # Accumulate stats for this batch
+                batch_classified = non_chunked_stats["classified"] + chunk_stats["classified"]
+                total_classified += batch_classified
+                total_relevant += non_chunked_stats["relevant"] + chunk_stats["relevant"]
+                total_skipped += non_chunked_stats["skipped"] + chunk_stats["skipped"]
+                total_errors += non_chunked_stats["errors"] + chunk_stats["errors"]
 
-            # Log early return if nothing to process
+                # Exit loop when no more items to classify
+                if batch_classified == 0:
+                    logger.info("✅ Tier-1 loop complete: No more items to classify")
+                    break
+
+                logger.info(f"📊 Tier-1 batch: {batch_classified} classified, continuing loop...")
+
+            # Log final results
             if total_classified == 0:
                 logger.info("✅ Tier-1 classification: No items to classify (all already processed)")
                 return {
@@ -123,11 +322,11 @@ def classify_events(
                 f"{total_relevant} feature-relevant, {total_skipped} skipped, {total_errors} errors"
             )
 
-            # Trigger next stage if we found any relevant content
+            # ONLY trigger Tier 2 AFTER loop completes (all messages classified)
             if total_relevant > 0:
                 from app.sync_engine.tasks.ai_pipeline.tier2_extraction import extract_features
                 extract_features.delay(workspace_id=workspace_id)
-                logger.info("🔗 Triggered extraction stage")
+                logger.info("🔗 Triggered Tier-2 extraction (all Tier-1 complete)")
 
             return {
                 "status": "success",
@@ -220,10 +419,15 @@ def _classify_non_chunked_events(
                     message.processed_at = now
                     logger.debug(f"✓ Marked message {message.id} tier1_processed=True, feature_score={result.score:.1f}")
 
+            # Commit after each event to avoid statement timeout from accumulated updates
+            db.commit()
+
         except Exception as e:
             logger.error(f"Error classifying event {event.id}: {e}")
+            db.rollback()
             event.retry_count = (event.retry_count or 0) + 1
             event.processing_error = f"Classification error: {str(e)[:400]}"
+            db.commit()
             stats["errors"] += 1
 
     return stats
@@ -293,10 +497,15 @@ def _classify_chunks(
 
             stats["classified"] += 1
 
+            # Commit after each chunk to avoid statement timeout
+            db.commit()
+
         except Exception as e:
             logger.error(f"Error classifying chunk {chunk.id}: {e}")
+            db.rollback()
             chunk.retry_count = (chunk.retry_count or 0) + 1
             chunk.processing_error = f"Classification error: {str(e)[:400]}"
+            db.commit()
             stats["errors"] += 1
 
     # Update parent events that have all chunks classified
@@ -371,3 +580,6 @@ def _update_parent_events_after_classification(
                     message.feature_score = score
                     message.processed_at = now
                     logger.info(f"✓ Marked chunked message {message.id} tier1_processed=True, feature_score={score:.1f}")
+
+            # Commit after each parent event update to avoid timeout
+            db.commit()

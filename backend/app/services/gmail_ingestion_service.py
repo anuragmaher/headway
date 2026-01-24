@@ -250,6 +250,13 @@ class GmailIngestionService:
             # Commit all messages for this label
             db.commit()
 
+            # CRITICAL: Trigger AI pipeline for newly ingested messages
+            # This ensures Gmail messages are processed like Slack/Gong/Fathom
+            if new_added > 0:
+                from app.sync_engine.tasks.ai_pipeline.normalization import normalize_source_data
+                normalize_source_data.delay(workspace_id=str(connector.workspace_id))
+                logger.info(f"🔗 Triggered AI pipeline for {new_added} new Gmail messages")
+
         except Exception as e:
             logger.error(f"Error fetching threads from label {label.label_name}: {str(e)}")
             db.rollback()
