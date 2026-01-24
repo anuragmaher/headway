@@ -297,7 +297,7 @@ export const createCustomerAskSlice: StateCreator<
 
     try {
       console.log('[Explorer] Fetching mentions for customer ask:', customerAskId);
-      const response = await themesApi.getMentionsForCustomerAsk(customerAskId);
+      const response = await themesApi.getMentionsForCustomerAsk(customerAskId, 50, 0, true);
 
       const mentions: MentionItem[] = response.mentions.map((m: Mention) =>
         transformMention(m)
@@ -341,7 +341,7 @@ export const createCustomerAskSlice: StateCreator<
 
     try {
       console.log('[Explorer] Prefetching mentions for customer ask:', customerAskId);
-      const response = await themesApi.getMentionsForCustomerAsk(customerAskId);
+      const response = await themesApi.getMentionsForCustomerAsk(customerAskId, 50, 0, true);
 
       const mentions: MentionItem[] = response.mentions.map((m: Mention) =>
         transformMention(m)
@@ -378,7 +378,8 @@ export const createCustomerAskSlice: StateCreator<
       const response = await themesApi.getMentionsForCustomerAsk(
         selectedCustomerAskId,
         50,
-        offset
+        offset,
+        true
       );
 
       const newMentions: MentionItem[] = response.mentions.map((m: Mention) =>
@@ -443,7 +444,10 @@ function transformMention(mention: Mention): MentionItem {
     (lca) => ({
       id: lca.id,
       name: lca.name,
+      subThemeId: lca.sub_theme_id,
       subThemeName: lca.sub_theme_name,
+      themeId: lca.theme_id,
+      themeName: lca.theme_name,
     })
   );
 

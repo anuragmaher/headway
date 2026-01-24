@@ -545,9 +545,10 @@ class CustomerAskService:
                     all_other_ca_ids.add(link.customer_ask_id)
 
             # OPTIMIZATION: Batch fetch ALL other CustomerAsks in one query
+            # Include sub_theme and theme for full hierarchy display
             if all_other_ca_ids:
                 other_cas = self.db.query(CustomerAsk).options(
-                    joinedload(CustomerAsk.sub_theme)
+                    joinedload(CustomerAsk.sub_theme).joinedload(SubTheme.theme)
                 ).filter(
                     CustomerAsk.id.in_(list(all_other_ca_ids))
                 ).all()
@@ -587,10 +588,14 @@ class CustomerAskService:
             for ca_id in ca_ids_for_msg:
                 if ca_id != customer_ask_id and ca_id in other_ca_map:
                     ca = other_ca_map[ca_id]
+                    sub_theme = ca.sub_theme
                     linked_customer_asks.append(LinkedCustomerAsk(
                         id=ca.id,
                         name=ca.name,
-                        sub_theme_name=ca.sub_theme.name if ca.sub_theme else None
+                        sub_theme_id=sub_theme.id if sub_theme else None,
+                        sub_theme_name=sub_theme.name if sub_theme else None,
+                        theme_id=sub_theme.theme.id if sub_theme and sub_theme.theme else None,
+                        theme_name=sub_theme.theme.name if sub_theme and sub_theme.theme else None
                     ))
 
             mentions.append(MentionResponse(
