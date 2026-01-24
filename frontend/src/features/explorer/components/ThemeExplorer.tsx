@@ -12,6 +12,7 @@ import { CustomerAsksColumn } from './CustomerAsksColumn';
 import { MentionsPanel } from './MentionsPanel';
 import { MobileNavigationHeader } from './MobileNavigationHeader';
 import { MobileMentionsDrawer } from './MobileMentionsDrawer';
+import { MentionsBottomPanel } from './MentionsBottomPanel';
 import { AddThemeDialog } from './dialogs/AddThemeDialog';
 import { AddSubThemeDialog } from './dialogs/AddSubThemeDialog';
 import { EditThemeDialog } from './dialogs/EditThemeDialog';
@@ -244,50 +245,75 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
     );
   }
 
-  // Desktop Three-Column Layout (existing)
+  // Desktop Three-Column Layout with Bottom Panel
   return (
     <Fade in timeout={300}>
       <Box
-      className={className}
-      sx={{
-        display: 'flex',
-        height: '100%',
-        width: '100%',
-        overflow: 'hidden',
-        bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
-        position: 'relative',
-      }}
-    >
-      {/* Left Column - Themes */}
-      <ThemesColumn width={220} />
-
-      {/* Middle Column - SubThemes */}
-      <SubThemesColumn width={280} />
-
-      {/* Right Section - CustomerAsks + Mentions Panel (split-screen) */}
-      <Box
+        className={className}
         sx={{
-          flex: 1,
           display: 'flex',
-          position: 'relative',
+          flexDirection: 'column',
+          height: '100%',
+          width: '100%',
           overflow: 'hidden',
-          minWidth: 0,
+          bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
+          position: 'relative',
         }}
       >
-        {/* CustomerAsks Column - shrinks when panel is open */}
-        <CustomerAsksColumn isPanelOpen={isPanelOpen} />
+        {/* Main Content Area - Three Columns */}
+        <Box 
+          sx={{ 
+            display: 'flex',
+            flex: 1,
+            overflow: 'hidden',
+            minHeight: 0,
+          }}
+        >
+          {/* Left Column - Themes */}
+          <ThemesColumn width={220} />
 
-        {/* Slide-in Panel - Mentions */}
-        <MentionsPanel />
-      </Box>
+          {/* Middle Column - SubThemes */}
+          <SubThemesColumn width={280} />
 
-      {/* Dialogs */}
-      <AddThemeDialog />
-      <AddSubThemeDialog />
-      <EditThemeDialog />
-      <EditSubThemeDialog />
-      <DeleteConfirmDialog />
-      <MergeSubThemeDialog />
+          {/* Right Column - Customer Asks with Bottom Panel Container */}
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              position: 'relative',
+              overflow: 'hidden',
+              minWidth: 0,
+            }}
+          >
+            {/* Customer Asks Column */}
+            <Box
+              sx={{
+                flex: 1,
+                height: isPanelOpen ? '50%' : '100%',
+                transition: 'height 0.3s ease-in-out',
+                overflow: 'hidden',
+              }}
+            >
+              <CustomerAsksColumn isPanelOpen={false} />
+            </Box>
+
+            {/* Bottom Panel for Mentions - Only in this column */}
+            <MentionsBottomPanel
+              open={isPanelOpen}
+              onClose={() => closeMentionsPanel()}
+              height="50%"
+            />
+          </Box>
+        </Box>
+
+        {/* Dialogs */}
+        <AddThemeDialog />
+        <AddSubThemeDialog />
+        <EditThemeDialog />
+        <EditSubThemeDialog />
+        <DeleteConfirmDialog />
+        <MergeSubThemeDialog />
       </Box>
     </Fade>
   );
