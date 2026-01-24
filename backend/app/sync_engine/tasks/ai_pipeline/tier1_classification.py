@@ -20,6 +20,7 @@ from sqlalchemy.orm import Session
 
 from app.tasks.celery_app import celery_app
 from app.models.normalized_event import NormalizedEvent, EventChunk
+from app.models.message import Message
 from app.services.tiered_ai_service import get_tiered_ai_service
 from app.sync_engine.tasks.base import (
     engine,
@@ -207,6 +208,18 @@ def _classify_non_chunked_events(
 
             stats["classified"] += 1
 
+            # CRITICAL: Update the source Message with tier1 results
+            # This ensures tier1_processed=True and feature_score are set
+            if event.source_table == "messages" and event.source_record_id:
+                message = db.query(Message).filter(
+                    Message.id == event.source_record_id
+                ).first()
+                if message:
+                    message.tier1_processed = True
+                    message.feature_score = result.score  # Store 0-10 score
+                    message.processed_at = now
+                    logger.debug(f"✓ Marked message {message.id} tier1_processed=True, feature_score={result.score:.1f}")
+
         except Exception as e:
             logger.error(f"Error classifying event {event.id}: {e}")
             event.retry_count = (event.retry_count or 0) + 1
@@ -344,3 +357,17 @@ def _update_parent_events_after_classification(
                 event.classification_confidence = max_confidence[0]
 
             event.classified_at = now
+
+            # CRITICAL: Update the source Message with tier1 results
+            # This ensures tier1_processed=True and feature_score are set for chunked messages
+            if event.source_table == "messages" and event.source_record_id:
+                message = db.query(Message).filter(
+                    Message.id == event.source_record_id
+                ).first()
+                if message:
+                    # Convert confidence (0-1) back to score (0-10)
+                    score = (event.classification_confidence or 0) * 10.0
+                    message.tier1_processed = True
+                    message.feature_score = score
+                    message.processed_at = now
+                    logger.info(f"✓ Marked chunked message {message.id} tier1_processed=True, feature_score={score:.1f}")
