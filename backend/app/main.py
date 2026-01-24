@@ -7,6 +7,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 import os
 import logging
 import traceback
+from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 
 from app.core.config import settings
@@ -14,6 +15,11 @@ from app.core.database import create_all_tables
 
 # Load environment variables
 load_dotenv()
+
+# Initialize Langfuse OpenTelemetry tracing BEFORE any AI clients are created
+# This must happen early to instrument the OpenAI SDK
+from app.core.langfuse_tracing import init_langfuse_tracing, shutdown_tracing
+tracing_enabled = init_langfuse_tracing()
 
 # Log startup configuration (with sensitive data masked)
 print("=" * 80)
@@ -44,6 +50,7 @@ print(f"🔑 OPENAI_API_KEY: {'✅ Set' if settings.OPENAI_API_KEY else '❌ Not
 print(f"🔐 JWT_SECRET_KEY: {'✅ Set (custom)' if settings.JWT_SECRET_KEY != 'your-super-secret-jwt-key-change-in-production' else '⚠️  Using default (change in production!)'}")
 print(f"🎯 CORS_ORIGINS: {', '.join(settings.CORS_ORIGINS[:3])}...")
 print(f"🔗 SUPABASE_URL: {settings.SUPABASE_URL[:40]}...")
+print(f"📊 LANGFUSE_TRACING: {'✅ Enabled' if tracing_enabled else '❌ Disabled'}")
 print("=" * 80)
 
 # Test database connection on startup
@@ -58,12 +65,23 @@ except Exception as e:
 
 print("=" * 80)
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan manager for startup/shutdown events."""
+    # Startup
+    yield
+    # Shutdown - flush any pending traces
+    shutdown_tracing()
+
+
 app = FastAPI(
     title="HeadwayHQ API",
     description="Product Intelligence Platform API",
     version="1.0.0",
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
+    lifespan=lifespan
 )
 
 # GZip compression middleware (must be added BEFORE CORS for proper ordering)
