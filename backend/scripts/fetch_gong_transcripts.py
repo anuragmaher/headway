@@ -815,6 +815,11 @@ Examples:
         default="production",
         help="Label of the Langfuse prompt to use (default: production)"
     )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Force re-processing of already processed calls (skip duplicate check)"
+    )
     
     args = parser.parse_args()
     
@@ -876,6 +881,7 @@ Examples:
         processed_count = 0
         stored_count = 0
         db_saved_count = 0
+        skipped_count = 0
         
         for i, call in enumerate(calls, 1):
             metadata = call.get('metaData', {})
@@ -884,6 +890,31 @@ Examples:
             
             print(f"\n[{i}/{len(calls)}] Fetching transcript for: {title}")
             print(f"   Call ID: {call_id}")
+            
+            # Check if this call has already been processed (unless --force is used)
+            if not args.force:
+                existing = db.query(TranscriptClassification).filter(
+                    TranscriptClassification.workspace_id == workspace_id,
+                    TranscriptClassification.source_type == "gong",
+                    TranscriptClassification.source_id == str(call_id)
+                ).first()
+                
+                if existing and existing.processing_status == "completed":
+                    skipped_count += 1
+                    print(f"   ⏭️  Already processed (status: {existing.processing_status}), skipping AI processing...")
+                    print(f"      Use --force to re-process this call")
+                    # Still save files if they don't exist, but skip AI processing
+                    transcript = fetch_gong_transcript(credentials, call_id)
+                    if transcript:
+                        json_filepath, txt_filepath = save_transcript_to_file(call, transcript, args.output_dir, i)
+                        saved_json_files.append(json_filepath)
+                        if txt_filepath:
+                            saved_txt_files.append(txt_filepath)
+                            print(f"   💾 Saved JSON: {os.path.basename(json_filepath)}")
+                            print(f"   💾 Saved TXT:  {os.path.basename(txt_filepath)}")
+                        else:
+                            print(f"   💾 Saved JSON: {os.path.basename(json_filepath)}")
+                    continue
             
             transcript = fetch_gong_transcript(credentials, call_id)
             
@@ -956,6 +987,7 @@ Examples:
         print(f"   Calls fetched: {len(calls)}")
         print(f"   Transcripts fetched: {len(saved_txt_files)}")
         if args.use_langfuse:
+            print(f"   Already processed (skipped): {skipped_count}/{len(calls)}")
             print(f"   AI processed: {processed_count}/{len(calls)}")
             print(f"   Saved to database: {db_saved_count}/{len(calls)}")
             print(f"   Stored in dataset: {stored_count}/{len(calls)}")
