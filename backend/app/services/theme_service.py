@@ -787,3 +787,187 @@ class TranscriptClassificationService:
                 TranscriptClassification.source_id.ilike(search_term)
             )
         ).limit(limit).all()
+
+    def get_transcript_insights(
+        self,
+        workspace_id: UUID
+    ) -> Dict:
+        """Get aggregated insights from all transcript classifications
+        
+        Returns comprehensive analytics including:
+        - Total transcripts analyzed
+        - Sentiment distribution
+        - Risk assessment breakdown
+        - Top themes and companies
+        - Timeline trends
+        - Health signals
+        - Feature request frequency
+        """
+        from app.models.transcript_classification import TranscriptClassification
+        from app.models.theme import Theme
+        from sqlalchemy import func, case
+        from datetime import datetime, timedelta
+        from collections import defaultdict
+        import json
+        
+        # Get all completed transcript classifications
+        classifications = self.db.query(
+            TranscriptClassification.id,
+            TranscriptClassification.source_type,
+            TranscriptClassification.source_title,
+            TranscriptClassification.extracted_data,
+            TranscriptClassification.transcript_date,
+            TranscriptClassification.created_at,
+            TranscriptClassification.theme_ids,
+            TranscriptClassification.sub_theme_ids,
+        ).filter(
+            TranscriptClassification.workspace_id == workspace_id,
+            TranscriptClassification.processing_status == 'completed'
+        ).all()
+        
+        total_transcripts = len(classifications)
+        
+        # Initialize aggregation structures
+        sentiment_distribution = {'positive': 0, 'neutral': 0, 'negative': 0}
+        deal_risk_distribution = defaultdict(int)
+        churn_risk_distribution = defaultdict(int)
+        expansion_signal_distribution = defaultdict(int)
+        source_type_distribution = defaultdict(int)
+        theme_mentions = defaultdict(int)
+        company_mentions = defaultdict(int)
+        health_signals = {'positive': 0, 'negative': 0}
+        feature_mappings_count = 0
+        total_speakers = 0
+        transcripts_by_date = defaultdict(int)
+        call_types = defaultdict(int)
+        top_themes = []
+        top_companies = []
+        
+        # Process each classification
+        for tc in classifications:
+            extracted_data = tc.extracted_data or {}
+            
+            # Source type
+            source_type_distribution[tc.source_type or 'unknown'] += 1
+            
+            # Date tracking
+            if tc.transcript_date:
+                date_key = tc.transcript_date.date().isoformat()
+                transcripts_by_date[date_key] += 1
+            elif tc.created_at:
+                date_key = tc.created_at.date().isoformat()
+                transcripts_by_date[date_key] += 1
+            
+            # Sentiment from call_metadata
+            call_metadata = extracted_data.get('call_metadata', {})
+            overall_sentiment = call_metadata.get('overall_sentiment')
+            if overall_sentiment is not None:
+                if overall_sentiment > 0.1:
+                    sentiment_distribution['positive'] += 1
+                elif overall_sentiment < -0.1:
+                    sentiment_distribution['negative'] += 1
+                else:
+                    sentiment_distribution['neutral'] += 1
+            
+            # Call type
+            call_type = call_metadata.get('call_type')
+            if call_type:
+                call_types[call_type.replace('_', ' ').title()] += 1
+            
+            # Risk assessment
+            risk_assessment = extracted_data.get('risk_assessment', {})
+            if risk_assessment.get('deal_risk'):
+                deal_risk_distribution[risk_assessment['deal_risk'].lower()] += 1
+            if risk_assessment.get('churn_risk') and risk_assessment.get('churn_risk') != 'n/a':
+                churn_risk_distribution[risk_assessment['churn_risk'].lower()] += 1
+            if risk_assessment.get('expansion_signal'):
+                expansion_signal_distribution[risk_assessment['expansion_signal'].lower()] += 1
+            
+            # Customer metadata
+            customer_metadata = extracted_data.get('customer_metadata', {})
+            company_name = customer_metadata.get('company_name')
+            if company_name:
+                company_mentions[company_name] += 1
+            
+            # Health signals
+            key_insights = extracted_data.get('key_insights', {})
+            health_signals_data = key_insights.get('health_signals', {})
+            if health_signals_data:
+                if health_signals_data.get('positive'):
+                    health_signals['positive'] += len(health_signals_data.get('positive', []))
+                if health_signals_data.get('negative'):
+                    health_signals['negative'] += len(health_signals_data.get('negative', []))
+            
+            # Feature mappings
+            mappings = extracted_data.get('mappings', [])
+            feature_mappings_count += len(mappings)
+            
+            # Speakers
+            speakers = extracted_data.get('speakers', [])
+            total_speakers += len(speakers)
+            
+            # Theme mentions (from theme_ids array)
+            if tc.theme_ids:
+                for theme_id in tc.theme_ids:
+                    theme_mentions[str(theme_id)] += 1
+        
+        # Get theme names for top themes
+        theme_ids_list = list(theme_mentions.keys())
+        if theme_ids_list:
+            themes = self.db.query(Theme).filter(
+                Theme.id.in_([UUID(tid) for tid in theme_ids_list if tid]),
+                Theme.workspace_id == workspace_id
+            ).all()
+            theme_map = {str(t.id): t.name for t in themes}
+            
+            # Build top themes list
+            top_themes_data = [
+                {'theme_id': tid, 'name': theme_map.get(tid, tid), 'count': count}
+                for tid, count in sorted(theme_mentions.items(), key=lambda x: x[1], reverse=True)[:10]
+            ]
+            top_themes = top_themes_data
+        
+        # Top companies
+        top_companies = [
+            {'name': name, 'count': count}
+            for name, count in sorted(company_mentions.items(), key=lambda x: x[1], reverse=True)[:10]
+        ]
+        
+        # Timeline data (last 30 days)
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=30)
+        timeline_data = []
+        current_date = start_date
+        while current_date <= end_date:
+            date_key = current_date.isoformat()
+            timeline_data.append({
+                'date': date_key,
+                'count': transcripts_by_date.get(date_key, 0)
+            })
+            current_date += timedelta(days=1)
+        
+        # Calculate averages
+        avg_feature_mappings = feature_mappings_count / total_transcripts if total_transcripts > 0 else 0
+        avg_speakers = total_speakers / total_transcripts if total_transcripts > 0 else 0
+        
+        return {
+            'summary': {
+                'total_transcripts': total_transcripts,
+                'total_feature_mappings': feature_mappings_count,
+                'total_speakers': total_speakers,
+                'avg_feature_mappings_per_transcript': round(avg_feature_mappings, 2),
+                'avg_speakers_per_transcript': round(avg_speakers, 2),
+            },
+            'sentiment_distribution': sentiment_distribution,
+            'risk_assessment': {
+                'deal_risk': dict(deal_risk_distribution),
+                'churn_risk': dict(churn_risk_distribution),
+                'expansion_signal': dict(expansion_signal_distribution),
+            },
+            'source_type_distribution': dict(source_type_distribution),
+            'call_types': dict(call_types),
+            'top_themes': top_themes,
+            'top_companies': top_companies,
+            'health_signals': health_signals,
+            'timeline': timeline_data,
+        }

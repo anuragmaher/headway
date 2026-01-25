@@ -202,6 +202,38 @@ export const themesApi = {
     return response.data;
   },
 
+  async getTranscriptInsights(): Promise<{
+    summary: {
+      total_transcripts: number;
+      total_feature_mappings: number;
+      total_speakers: number;
+      avg_feature_mappings_per_transcript: number;
+      avg_speakers_per_transcript: number;
+    };
+    sentiment_distribution: {
+      positive: number;
+      neutral: number;
+      negative: number;
+    };
+    risk_assessment: {
+      deal_risk: Record<string, number>;
+      churn_risk: Record<string, number>;
+      expansion_signal: Record<string, number>;
+    };
+    source_type_distribution: Record<string, number>;
+    call_types: Record<string, number>;
+    top_themes: Array<{ theme_id: string; name: string; count: number }>;
+    top_companies: Array<{ name: string; count: number }>;
+    health_signals: {
+      positive: number;
+      negative: number;
+    };
+    timeline: Array<{ date: string; count: number }>;
+  }> {
+    const response = await api.get(`${BASE_URL}/transcript-classifications/insights`);
+    return response.data;
+  },
+
   async listTranscriptClassifications(
     themeId?: string,
     subThemeId?: string,

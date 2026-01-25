@@ -1,0 +1,478 @@
+================================================================================
+Call: Hiver Demo for ActiveState
+Date: 2026-01-06T22:30:36+05:30
+================================================================================
+
+Alex Krumm (alexander.k@grexit.com):
+  our waiting.
+
+Alex Krumm (alexander.k@grexit.com):
+  Your room is full. I'm going to let the guys in.
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah, yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  Morrison county.
+
+Moris Chen (morisc@activestate.com):
+  Hello, Morris. It's not open. How are you doing, Alex?
+
+Alex Krumm (alexander.k@grexit.com):
+  I'm doing pretty well. How about yourself?
+
+Moris Chen (morisc@activestate.com):
+  I am doing well. I added two of my team members. One is Ken ashcroft, but he has no idea what I added him for. This is going to be a surprise for him because everybody was on vacation and we still did not get a chance to sync.
+
+Moris Chen (morisc@activestate.com):
+  And Leslie, so Ken is running the customer success part. So post sale and Leslie is the magician that convinces customers that our solution is the best solution on the planet. So, she manages the field engineering team and she's a solution architect. So pre sales… Leslie, you missed the first 10 seconds. I added you guys because we didn't get a chance to talk about this. I had a conversation with Alex before the break about an interesting solution that he showed me. He added his solution architect. I'm guessing, right? Yep to show us something interesting on what hiver has to offer. It is a different solution. You'll see that it's kind of a Gmail base, which is kind of interesting. I wanted you to take a look at it and see if this is something we can leverage because we rely very heavily on Salesforce and Jira, but we don't have anything in between. It kind of bridges the gap. So, Alex, Leslie and Ken… they are the people who will eventually be using a solution or any solution that we implement. So they are the people that they are the buyers. I'm just the approval of the budget… wonderful.
+
+Alex Krumm (alexander.k@grexit.com):
+  Well, I'm Alex, one of the account executives over here at hiver, I've been in the kind of help desk contact center as a solution space for the last 10 years. So, I have a little knowledge, but always more to learn joined by Manoj. He's our lead solutions architect.
+
+Manoj Kiran (manoj@grexit.com):
+  Hi, guys. Hi, Moris. Hi, Ken, hi, Leslie.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. Where are you based? Manoj?
+
+Manoj Kiran (manoj@grexit.com):
+  So, I'm from India, Chennai, the southern part.
+
+Moris Chen (morisc@activestate.com):
+  Southern part. Is it warm there now? It's warm, right? Sorry, it is warm there right now, correct?
+
+Manoj Kiran (manoj@grexit.com):
+  Not really.
+
+Moris Chen (morisc@activestate.com):
+  Oh, really?
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah, surprisingly, it's better.
+
+Moris Chen (morisc@activestate.com):
+  Well, Ken is having fun in his ice cube over there.
+
+Ken Ashcroft (kena@activestate.com):
+  Yeah, I'm in Montreal. So, lots of snow here, hopefully going snowboarding after work.
+
+Alex Krumm (alexander.k@grexit.com):
+  Night snowboarding is not for the fan of heart.
+
+Ken Ashcroft (kena@activestate.com):
+  Oh, no, we got the mountain. I go. It's all lit up. All the runs. Are they got lights across the whole mountain? It's awesome. It's, really nice there.
+
+Moris Chen (morisc@activestate.com):
+  Nice. Ken didn't say this, but he has a whole new equipment, snowboard and everything, you know, what happens when you get something new, you got to test it out and break it in at least 20 times.
+
+Ken Ashcroft (kena@activestate.com):
+  Yeah… love it. All right. Let's do this demo. I'm curious.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. So just to set the stage, so hiver is a AI powered help desk solution built on and we're essentially a Chrome extension that's built on top of Gmail. What this does is it augments shared inboxes or like any sort of shared channel allowing for full visibility into who's owning it, making it really easy to catch up on conversations that might be happening, you know, kind of in a siloed view, pushing them to a shared inbox. So when you go in there to chat with the conversation or chat with the customer, you should have everything in one place.
+
+Ken Ashcroft (kena@activestate.com):
+  So we would create an inbox per customer. Basically, is that what the idea would be? Or like an alias?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. So you could either have an alias per customer or we have a way of routing named accounts based on, you know, the account owner. Okay? So you could do it. Either way depends how special you want the customer to feel.
+
+Ken Ashcroft (kena@activestate.com):
+  Nice. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  So this should look pretty familiar. The, you know, top part, traditional Gmail. Everything in yellow is hiver related.
+
+Ken Ashcroft (kena@activestate.com):
+  Okay.
+
+Alex Krumm (alexander.k@grexit.com):
+  So if you have like a support info at custom domain for the customer, everything will funnel into one inbox. And then we have a litany of ways of assignment, but it could be skill based, ownership based capacity based. And when the conversation comes in before we even click into it, we have an SLA, amended… sentiment, AI sentiment and then various ways of tagging which could be keyword based or AI based tagging to like more delineate where this is going.
+
+Alex Krumm (alexander.k@grexit.com):
+  Now, when I enter the conversation here, you know, Jake from Phoenix digital is asking for, you know, payment extension… on the right hand rail is where we have our ownership so it could be assigned to a specific person or if you wanted to like loop in accounting, we could move this to a different shared inbox as needed… like very prevalent if it's not actually support related. And then we're trying to give you more as much information on the contact as possible. So, in Jake's case, we have other emails that Jake has sent in that we can link out to… domain level emails that Jake's Phoenix digital is writing about. And then we have a connected app experience where we have over 100 applications that including Salesforce that we're able to populate data in. So kind of the whole concept is, how do we give you more information about this customer in the Gmail inbox? And then finally, when I go to reply, let… me just get rid of my old note.
+
+Alex Krumm (alexander.k@grexit.com):
+  You know, we offer like a full template library kind of like what you'd expect.
+
+Alex Krumm (alexander.k@grexit.com):
+  And one thing that's interesting is let's say you're like a customer success manager and you're like, hey, I actually want to, you know, work with my engineering team because maybe there's like some slight nuance that we want to just like confirm. I can draft the email here, share it as a draft and now reassign it to that engineer or at mention of a group bye. So that's kind of just my quick overview of how this works conceptually. You can feel free to dig in as much as you'd like, so.
+
+Ken Ashcroft (kena@activestate.com):
+  Moris. I'm just wondering. So you were saying this was supposed to bridge between Salesforce and Jira? Well, yeah, I guess Jira, I'm not seeing how that is. It looks like it's Hubspot.
+
+Moris Chen (morisc@activestate.com):
+  Here, the connection to Hubspot. Okay, collect some behavioral information. I'm guessing from that specific account… this interface because it's on Gmail… and everything is on one platform. Essentially, no real there's no, the learning curve is actually quite small here.
+
+Ken Ashcroft (kena@activestate.com):
+  Yeah, yeah, for sure.
+
+Alex Krumm (alexander.k@grexit.com):
+  I see you pulled up the create Jira issue. Yep. Yes, you could be creating Jira tickets directly from this view like… while emailing.
+
+Ken Ashcroft (kena@activestate.com):
+  Okay. What about Salesforce? Does it do the same thing for Salesforce? Yeah. Okay. Yeah. All right. Cool.
+
+Moris Chen (morisc@activestate.com):
+  As you said, the concept of running all of this from Gmail, is I've never seen that before.
+
+Alex Krumm (alexander.k@grexit.com):
+  yeah, it's pretty unique. We have over 3,000 customers that use this. So… it's definitely designed for scale.
+
+Moris Chen (morisc@activestate.com):
+  How's the open source security?
+
+Moris Chen (morisc@activestate.com):
+  Wow.
+
+Ken Ashcroft (kena@activestate.com):
+  Wow.
+
+Moris Chen (morisc@activestate.com):
+  I'm plugging us in everywhere you.
+
+Ken Ashcroft (kena@activestate.com):
+  Never. She just amazes me. Sometimes you just.
+
+Alex Krumm (alexander.k@grexit.com):
+  Turn the demo, why don't you, Moris?
+
+Moris Chen (morisc@activestate.com):
+  I can't turn it off, unfortunately. Yeah.
+
+Ken Ashcroft (kena@activestate.com):
+  That's good.
+
+Moris Chen (morisc@activestate.com):
+  Every conversation I'm in it's like how is the open source security?
+
+Ken Ashcroft (kena@activestate.com):
+  So, this lets you, so, so this support group that you have, so that's a mailbox that's actually a mailbox that you have support as a mailbox looks like with the icon on the side there, right?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, essentially, it's a set. You could like point multiple domains into one, like shared mailbox like.
+
+Ken Ashcroft (kena@activestate.com):
+  Did you create the support and sandbox and finance? Are those things that you created in your application in Gmail? Those three folders on the left? Yes. So you create those, can you show me how you, how that works? How you create one of those? Yeah, perfect. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  So, here we would just create a shared inbox. Yeah.
+
+Manoj Kiran (manoj@grexit.com):
+  Sorry, Alex, can I just have a question? So by create, do you mean created from scratch?
+
+Ken Ashcroft (kena@activestate.com):
+  Well, I just want to know like, are you creating the shared mailbox within the application here or is that you're picking a shared mailbox out of Gmail and then configuring the application to use it?
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah, we're doing the second one, so.
+
+Ken Ashcroft (kena@activestate.com):
+  The second? Okay. So, yeah, got it. It's.
+
+Manoj Kiran (manoj@grexit.com):
+  either a Gmail account or a Google group, or even an alias. Yeah, all of these three addresses can be set up as a shared mailbox in hive.
+
+Ken Ashcroft (kena@activestate.com):
+  Perfect. Okay. Yeah, that's what I wanted to know, do.
+
+Moris Chen (morisc@activestate.com):
+  You refer to it as a channel. So, if you create a new inbox, you can add collaborators into that, right? So it becomes like a project management more than an inbox.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, it's the goal is to semi, augment the inbox into more like a ticketing platform around the conversation?
+
+Ken Ashcroft (kena@activestate.com):
+  Yeah, it allows you to set up the automation for that stuff, right? Plus, yeah, it also sorts it. Okay. That's interesting. Yeah. So.
+
+Alex Krumm (alexander.k@grexit.com):
+  Like within the shared inbox, I think where it gets really interesting. I don't know Manoj, if you want to talk through some of the automations that we discussed earlier.
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. So a bunch… of rules are possible like assignment wise, you can set up the conditions based on, you know, subject lines, keywords, when the email was created, anything shift basis or even based on sentiment analysis, like if the tone of the email is negative, then immediately escalate and forward it to the L, to escalation, all of these and even the categories of emails that you receive, you use the automation to add the tags, add those emails into custom views within the mailbox, so that you can have a quick view of who's working on what, and what that email is about. All of that is possible, using the automation. It's basically a flowchart, Alex, can you open any of the automation?
+
+Ken Ashcroft (kena@activestate.com):
+  I see. Okay.
+
+Ken Ashcroft (kena@activestate.com):
+  Yeah. Can you scroll down? I just want to see the triggers? Sorry, can you go back to the triggers?
+
+Alex Krumm (alexander.k@grexit.com):
+  Oh, yes.
+
+Ken Ashcroft (kena@activestate.com):
+  So, you got conversations received. Okay. So email headers, let's scroll down a little bit more… okay, stats for your stuff SLA, violated. Okay. Keep going down.
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. These custom fields that you guys see like priority type of missionary. So this is basically that we have created for this particular mailbox. So you have like four kinds of custom fields, drop down, text number and date. So you can create any of them. And based on that, you can have the automation trigger. Okay?
+
+Ken Ashcroft (kena@activestate.com):
+  Interesting. Okay. And this is it. So then if condition, okay.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. If same conditions.
+
+Ken Ashcroft (kena@activestate.com):
+  Yeah. And then there's your actions. Okay? So all you can chain them up to nice.
+
+Alex Krumm (alexander.k@grexit.com):
+  And I think another really interesting one is the concept of the AI extract.
+
+Ken Ashcroft (kena@activestate.com):
+  Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  So here's… our conditions, but here we're saying, okay, AI come in here, pull out information from the email and we wanted to, you know, find the invoice number, but it could find any piece of information, right?
+
+Alex Krumm (alexander.k@grexit.com):
+  And it's kind of a similar concept. So it's like, okay, we extract this. And now we can add this information into whether it's a note or like a custom field or something else.
+
+Ken Ashcroft (kena@activestate.com):
+  All right. Another question I have then is, can you go back to your mailbox view?
+
+Ken Ashcroft (kena@activestate.com):
+  Okay. So, say, I set up sandbox, and I want that same setup, Leslie to have it too. How does that work?
+
+Alex Krumm (alexander.k@grexit.com):
+  So, Leslie should have access to sandbox?
+
+Ken Ashcroft (kena@activestate.com):
+  Yeah. So we both are, you know, we both have access to the sandbox, I set up my rules in my Gmail for, you know, using your tool here, hiver and I want Leslie to have the exact same thing. How does that work?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. So each inbox has you go, Manoj. Sorry?
+
+Ken Ashcroft (kena@activestate.com):
+  No.
+
+Manoj Kiran (manoj@grexit.com):
+  You simply add her as a member to the shadmail box?
+
+Ken Ashcroft (kena@activestate.com):
+  Okay. So, she would see it then as soon as I add her, can you show me? Yes, like you just?
+
+Alex Krumm (alexander.k@grexit.com):
+  So, we're going to add her as a participant and.
+
+Ken Ashcroft (kena@activestate.com):
+  Then she would automatically see it on hers at that point, correct? In her Gmail. Okay, that makes it easy.
+
+Alex Krumm (alexander.k@grexit.com):
+  And then we have, you know, various different types of user roles and you select which inboxes they have access to.
+
+Alex Krumm (alexander.k@grexit.com):
+  It gets really interesting when, you know, let's say, Leslie, you decide to go on vacation, not that gets to happen but somebody could come in here into like a team view and then see, okay, it looks like, you know, jukta has 15, you know, emails that have not been resolved, could come in here, start covering your coworkers directly from this view.
+
+Leslie Pascual (lesliep@activestate.com):
+  How easy is it to go from like the internal conversation and assignments to then responses to the customer as well? Like what, I guess, where's the differentiation between that, what we're you know, our workflow internally and our communications back to the customer?
+
+Alex Krumm (alexander.k@grexit.com):
+  I guess, could you give me an example of what, how you do it today?
+
+Leslie Pascual (lesliep@activestate.com):
+  And actually, Ken, you might need to help me with this because that's more your support Lane. I was just curious to see how we differentiate between what's internal versus what's external?
+
+Ken Ashcroft (kena@activestate.com):
+  For support? You mean? Or, I mean, generally, all our support cases start with support at activestate. So, and as soon as soon as something is sent to that email, we, it automatically creates a case in Salesforce, right?
+
+Leslie Pascual (lesliep@activestate.com):
+  Oh, and then we right now go through our Salesforce.
+
+Ken Ashcroft (kena@activestate.com):
+  Yeah, we don't work on internally. Yeah, we don't work on, we don't reply to the email directly. We, we reply to it through Salesforce. Yeah… and pretty much most pretty much all customers, that send regular support tickets, follow that process, people that might not, they may be new or they, you know, or they think of something after a QBR, they may send it to me directly, but then I just reply at, you know, what's support to get it into the Salesforce?
+
+Moris Chen (morisc@activestate.com):
+  This is, it's interesting like this is very targeted for support. But there is the way I was looking at, it is the cross pollination between support, sales, pre, sales and post sales.
+
+Manoj Kiran (manoj@grexit.com):
+  The.
+
+Moris Chen (morisc@activestate.com):
+  ability to collaborate here, that is outside of Salesforce, but update Salesforce, is interesting.
+
+Ken Ashcroft (kena@activestate.com):
+  I mean, if we created a mail group for each of those disciplines and we always CC that mail group, then this would work, right? And I've done that at past jobs. It's like anytime that was emailed to me, something was emailed to me when I did a reply, it always CC the team. So everybody had a copy of the email and would be a part of the communication.
+
+Moris Chen (morisc@activestate.com):
+  Yeah. What.
+
+Alex Krumm (alexander.k@grexit.com):
+  you could do is this is a silly marketing email example, but I'm in my personal inbox, I can add it to a shared inbox from here.
+
+Manoj Kiran (manoj@grexit.com):
+  So, you know, after.
+
+Alex Krumm (alexander.k@grexit.com):
+  QBR, somebody emails you directly and you're like actually this is a support ticket. I mean, drop it in and.
+
+Moris Chen (morisc@activestate.com):
+  I don't know if you already showed this or not. But if you go into a specific email from a customer that came in, will you have the, yeah… all the Salesforce or all the account details, Salesforce information will be on the right, it will pull directly all that information, yeah.
+
+Moris Chen (morisc@activestate.com):
+  And the contract information, yeah.
+
+Ken Ashcroft (kena@activestate.com):
+  Yeah, that's helpful. Do you?
+
+Moris Chen (morisc@activestate.com):
+  Have contact and do you have contract information as well here?
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. So, Moris, let me take that. So regarding the integration. So, if there are any other fields that you would like to bring in from Salesforce into hiver, it's just a matter of request. We can work with the product team and, you know, add those, yeah, add those custom fields for you. That's not going to be an issue.
+
+Moris Chen (morisc@activestate.com):
+  So, as long as that, even if it's a, we can talk about custom or custom fields, but it's it will be very easy to go in and see even if we've dealt even if we have like a support term or support level, whoever opens this ticket will be able to see on the right, all that information.
+
+Manoj Kiran (manoj@grexit.com):
+  Interesting. Yeah. Okay.
+
+Moris Chen (morisc@activestate.com):
+  And then we, and that is the same goes for Jira, yeah.
+
+Manoj Kiran (manoj@grexit.com):
+  So, Jira works basically like a task like, you know, the task creation too. So let's say an email is sent to the shared mailbox. If there is no task based on this in Jira, you could simply create a task from here or you could just simply copy the object link from Jira and paste it on the right panel. And then it just adds this email to the existing Jira ticket on Jira task.
+
+Moris Chen (morisc@activestate.com):
+  And helpscout will pull in the contact information, right?
+
+Manoj Kiran (manoj@grexit.com):
+  Yes, the contact deal information. So Alex, can we go into admin panel, Admin panel. I know.
+
+Moris Chen (morisc@activestate.com):
+  That you guys sell this, as a support tool. But the integration is actually what makes it a little more interesting to me, the ability to have like a command center?
+
+Manoj Kiran (manoj@grexit.com):
+  Excuse me. So Moris, it did actually start as like a complete support system, you know, for the customer support teams alone. But right now, you know, we have many finance teams, admin teams, it teams using them. And as… you mentioned, because of the integrations and the level of categories that, you know, when Leslie mentioned how we can differentiate from internal or external. And when Ken mentioned that, you know, use the email addresses and everything. So everything revolves around tags there, right? So you simply create automation based on email domains or custom objects. Like you can just upload a sheet of the domains and say it's like internal or external, who needs to be assigned to you, just upload the sheet and get the entire automation running based on the sheet.
+
+Ken Ashcroft (kena@activestate.com):
+  That's interesting there.
+
+Manoj Kiran (manoj@grexit.com):
+  So if you have like account executives for, you know, for 10 domains, you just enter those. And in the automation, you don't have to manually enter those domains. You just have to select which customer mapping goes to which.
+
+Ken Ashcroft (kena@activestate.com):
+  I'd almost take that customer mapping and map it not to a person but to a mail group. A team's mail group, right? So there'd be CS, you know, customer success then there'd be, you know, Leslie's group and support and just break them up into different groups.
+
+Manoj Kiran (manoj@grexit.com):
+  Exactly.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah.
+
+Moris Chen (morisc@activestate.com):
+  Like a simple thing would be like if the sentiment of the reply of the email is positive, give them a csat. If the sentiment is not good, send them to escalate this to someone else or follow up. If there is a sentiment, I can, yeah, I can create a rule engine based on sentiment analysis there. If there is a sentiment that basically, I don't know if you can tell if they're inquiring about services or contracts or anything like that, you can send them to sales. I can see how a lot of this. So we do miss a lot of opportunities even in support tickets where they show interest in something else and.
+
+Manoj Kiran (manoj@grexit.com):
+  we.
+
+Moris Chen (morisc@activestate.com):
+  don't tag them correctly to be reviewed by sales, for example. So you might lose or miss on an upsell opportunity, but it looks like you guys have some of that functionality.
+
+Alex Krumm (alexander.k@grexit.com):
+  Definitely. So.
+
+Moris Chen (morisc@activestate.com):
+  We.
+
+Alex Krumm (alexander.k@grexit.com):
+  also have go.
+
+Manoj Kiran (manoj@grexit.com):
+  Ahead, Alex, I was about to say the same thing. So, Moris, I was about to say that, you know, let's say manual tagging is one way, then you have the automation to set up rules to tag them. And then you have the AI tagging. You just train these emails like 10 times AI learns it. And even if somebody misses adding the tag, the AI will take care of adding the tag to the email.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. And then we can use these tags in something that is called a view. So one a tag could then use to kick off a different workflow to reassign this or bring visibility. But then we can create a view which is essentially like a set of conditions that say, show me all emails that meet the following criteria. I don't think I have sales. Oh, there we go. Sales request. And then, you know, any other data points that would be material. And then, you know, a salesperson or a sales manager could have a starred view like what I have here. And then they don't have to click through everything. They'll just go to this view.
+
+Moris Chen (morisc@activestate.com):
+  And all those tags are inserted into the email itself. Show me, I saw an email where it has like a ton of tags underneath. So.
+
+Alex Krumm (alexander.k@grexit.com):
+  These are labels that hiver amends to every email. And this is what's allowing us to map our metadata on the right hand side to the correct email.
+
+Moris Chen (morisc@activestate.com):
+  And this is something that customer will see this.
+
+Alex Krumm (alexander.k@grexit.com):
+  Is something that internally, you see customers would not see this.
+
+Moris Chen (morisc@activestate.com):
+  Will not see this. Okay. Got it. So scroll down a little bit. Oh, that's it a little bit, move it up. You'll see this message because you're subscribed to the Google group support. Okay? So not tags specifically, but a message. Okay? This.
+
+Alex Krumm (alexander.k@grexit.com):
+  Is just, yeah.
+
+Moris Chen (morisc@activestate.com):
+  That's all why you got this message. It's more of a disclaimer. I got it.
+
+Alex Krumm (alexander.k@grexit.com):
+  Exactly. This is a Google disclaimer, if we just had like a shared inbox instead of a group, it would be different.
+
+Moris Chen (morisc@activestate.com):
+  And this is something you've built on top of Google or is it something you build like it's something that Google provides you with? Like I'm… trying to say this is like a plugin on top of the browser or if it's something that you've built with like an SDK that Google provides or Gmail provides? I've never seen this before. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  Manoj, I'm, sending that to you.
+
+Moris Chen (morisc@activestate.com):
+  So to,
+
+Manoj Kiran (manoj@grexit.com):
+  build the hiver itself, right? Like the whole together. Oh,
+
+Moris Chen (morisc@activestate.com):
+  just keep in mind that all of us are developers, so you can be technical.
+
+Manoj Kiran (manoj@grexit.com):
+  No, it's basically an extension, which, you know, which abides within Gmail set of, oh,
+
+Moris Chen (morisc@activestate.com):
+  so, it's extension?
+
+Manoj Kiran (manoj@grexit.com):
+  Architecture.
+
+Moris Chen (morisc@activestate.com):
+  yeah. Yeah. Okay. Got it. Yeah, got it. So, it's an extension on the browser. Yeah, that would be, I think I said this to Alex, but this would be a bit of a challenge to get through infosec because they'll have to do a lot of analysis to understand what access you have to things if it's just a, because if you sit on the browser, then essentially, you have access to everything the browser does, not just the inbox, which basically the inbox is pretty much everything. But I'm sure you have soc too, and everything else, right?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yep. Soc two, type two.
+
+Moris Chen (morisc@activestate.com):
+  Iso.
+
+Alex Krumm (alexander.k@grexit.com):
+  fedramp.
+
+Ken Ashcroft (kena@activestate.com):
+  Any chance, fedramp?
+
+Moris Chen (morisc@activestate.com):
+  I doubt that this will be fedramp approved. Yeah, I don't see the CIA approving or the nsa approving this well.
+
+Ken Ashcroft (kena@activestate.com):
+  You never know, but if somebody has fedramp approved, you know, everybody likes soc because we can trust what controls you have in place because we all understand that, right? If you hit fedramp level, then it's soc on steroids. It's, really expensive and difficult to get fedramp certified. Yeah.
+
+Moris Chen (morisc@activestate.com):
+  Yeah, it's worth asking. Soc two is like 50,000 dollars. Fedramp is like a 1,000,000 dollars. Oh, yeah. At.
+
+Ken Ashcroft (kena@activestate.com):
+  Least at least a 1,000,000, yeah.
+
+Moris Chen (morisc@activestate.com):
+  Fedramp is a 1,000,000 dollars.
+
+Ken Ashcroft (kena@activestate.com):
+  Let's put it this way. You have to hire a consulting company to help you figure out how to get through the fedramp certifications.
+
+Moris Chen (morisc@activestate.com):
+  We have a call, the internal call that we have for the team, Alex and Manoj. Thank you for this. I'm sure that we will talk about this on the call that follows and we'll have some questions and we'll be in touch. Thank you very much for the demo.
+
+Ken Ashcroft (kena@activestate.com):
+  Thank you very.
+
+Alex Krumm (alexander.k@grexit.com):
+  Nice to meet you all.
+
+Moris Chen (morisc@activestate.com):
+  Take care.
