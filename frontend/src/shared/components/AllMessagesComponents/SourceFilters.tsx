@@ -22,11 +22,9 @@ interface TypeFiltersProps {
 }
 
 const sourceOptions: { value: SourceType; label: string }[] = [
-  { value: 'all', label: 'All Sources' },
-  { value: 'gmail', label: 'Gmail' },
+  { value: 'all', label: 'All Transcripts' },
   { value: 'gong', label: 'Gong' },
   { value: 'fathom', label: 'Fathom' },
-  { value: 'slack', label: 'Slack' },
 ];
 
 const typeOptions: { value: SyncType; label: string }[] = [

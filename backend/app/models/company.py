@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Boolean, DateTime
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, ARRAY
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import uuid
@@ -16,7 +16,7 @@ class Company(Base):
     name = Column(String, nullable=False, index=True)
     website = Column(String, nullable=True)  # Company website URL from onboarding
     size = Column(String, nullable=True)  # Team size from onboarding (e.g., "1-10", "11-50")
-    domain = Column(String, nullable=True, index=True)  # company.com - extracted from email
+    domains = Column(ARRAY(String), nullable=True, default=list)  # ["hiver.com", "hiverhq.com"]
     industry = Column(String, nullable=True)  # Industry from onboarding
     role = Column(String, nullable=True)  # User's role from onboarding (e.g., "Product Manager")
 

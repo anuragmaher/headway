@@ -1,9 +1,10 @@
 """
 Periodic Fathom sync task.
 
-Syncs Fathom sessions from all active connectors every 15 minutes.
-Uses optimized batch ingestion - data storage only, no AI extraction.
-AI extraction happens in a separate batch processing task.
+Syncs Fathom sessions from all active connectors every 1 hour.
+Also supports on-demand sync via Sources API when user clicks "Sync All Sources".
+Uses optimized batch ingestion to raw_transcripts table.
+AI processing happens in a separate Celery task (transcript_processing).
 """
 
 import logging
@@ -38,15 +39,15 @@ logger = logging.getLogger(__name__)
 )
 def sync_fathom_periodic(self):
     """
-    Periodic task to sync Fathom sessions every 15 minutes.
+    Periodic task to sync Fathom sessions every 1 hour.
 
     This task:
-    - Runs every 15 minutes (staggered by 20 seconds after Gong)
+    - Runs every 1 hour via Celery Beat
+    - Also triggered on-demand via Sources API ("Sync All Sources")
     - Only syncs workspaces with active Fathom connectors
     - Fetches latest Fathom sessions from the last 24 hours
-    - Creates SyncHistory records for tracking
-    - Extracts features with AI
-    - Updates the database
+    - Stores raw data in raw_transcripts table (ai_processed=False)
+    - AI processing happens separately via transcript_processing task
     """
     try:
         logger.info("🚀 Starting periodic Fathom sync task")

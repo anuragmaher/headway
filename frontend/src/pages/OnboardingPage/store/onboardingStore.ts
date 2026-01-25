@@ -200,6 +200,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
               industry: companyData.industry || '',
               teamSize: companyData.team_size || '',
               role: companyData.role || '',
+              domains: companyData.domains || [],
             },
           });
         } catch (error) {
@@ -213,14 +214,33 @@ export const useOnboardingStore = create<OnboardingStore>()(
         const state = get();
         set({ isSaving: true, error: null });
         try {
+          // Parse domainsInput if it exists (user didn't blur the field)
+          let domains = state.companyData.domains;
+          if (state.companyData.domainsInput !== undefined) {
+            domains = state.companyData.domainsInput
+              .split(',')
+              .map((d) => d.trim().toLowerCase())
+              .filter(Boolean);
+          }
+
           await onboardingApi.saveCompanyData(workspaceId, {
             name: state.companyData.name,
             website: state.companyData.website || undefined,
             industry: state.companyData.industry,
             team_size: state.companyData.teamSize || undefined,
             role: state.companyData.role || undefined,
+            domains: domains || undefined,
           });
-          set({ isSaving: false });
+
+          // Clear domainsInput and update domains with parsed value
+          set({
+            isSaving: false,
+            companyData: {
+              ...state.companyData,
+              domains: domains || [],
+              domainsInput: undefined,
+            },
+          });
         } catch (error) {
           console.error('Failed to save company data:', error);
           set({ isSaving: false, error: 'Failed to save company data' });
@@ -329,7 +349,11 @@ export const useOnboardingStore = create<OnboardingStore>()(
       partialize: (state) => ({
         currentStep: state.currentStep,
         completedSteps: state.completedSteps,
-        companyData: state.companyData,
+        // Exclude domainsInput from persistence (it's temporary state)
+        companyData: {
+          ...state.companyData,
+          domainsInput: undefined,
+        },
         taxonomyData: state.taxonomyData,
         taxonomySubStep: state.taxonomySubStep,
         selectedCompetitors: state.selectedCompetitors,

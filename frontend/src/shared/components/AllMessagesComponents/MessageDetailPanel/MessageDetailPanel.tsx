@@ -223,7 +223,7 @@ const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
                 value="insights"
                 icon={<InsightsIcon sx={{ fontSize: 16 }} />}
                 iconPosition="start"
-                label="AI Insights"
+                label="Key Insights"
                 sx={{
                   textTransform: 'none',
                   fontWeight: 500,

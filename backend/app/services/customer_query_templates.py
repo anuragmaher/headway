@@ -707,7 +707,6 @@ class GetLastConversationTemplate(QueryTemplate):
             "source": message.source,
             "sent_at": message.sent_at.isoformat() if message.sent_at else None,
             "author_name": message.author_name,
-            "ai_insights": message.ai_insights
         }
 
 
@@ -730,28 +729,13 @@ class GetPainPointsTemplate(QueryTemplate):
         )
 
     def execute(self, db: Session, customer_id: str, params: Dict[str, Any] = None) -> Dict[str, Any]:
-        messages = db.query(Message)\
-            .filter(
-                Message.customer_id == customer_id,
-                Message.ai_insights.isnot(None)
-            )\
-            .order_by(desc(Message.sent_at))\
-            .all()
-
-        pain_points = []
-        for msg in messages:
-            if msg.ai_insights and 'pain_points' in msg.ai_insights:
-                for pp in msg.ai_insights['pain_points']:
-                    pain_points.append({
-                        "description": pp.get('description'),
-                        "impact": pp.get('impact'),
-                        "quote": pp.get('quote'),
-                        "message_date": msg.sent_at.isoformat() if msg.sent_at else None
-                    })
-
+        # NOTE: ai_insights column was removed from messages table
+        # Pain points are now extracted via transcript_classifications
+        # This template returns empty results until the new pipeline is integrated
         return {
-            "pain_points": pain_points,
-            "total_count": len(pain_points)
+            "pain_points": [],
+            "total_count": 0,
+            "note": "Pain point extraction is being upgraded to use the new AI pipeline"
         }
 
 
@@ -772,45 +756,18 @@ class GetSentimentSummaryTemplate(QueryTemplate):
         )
 
     def execute(self, db: Session, customer_id: str, params: Dict[str, Any] = None) -> Dict[str, Any]:
-        messages = db.query(Message)\
-            .filter(
-                Message.customer_id == customer_id,
-                Message.ai_insights.isnot(None)
-            )\
-            .order_by(desc(Message.sent_at))\
-            .limit(10)\
-            .all()
-
-        sentiments = []
-        for msg in messages:
-            if msg.ai_insights and 'sentiment' in msg.ai_insights:
-                sent = msg.ai_insights['sentiment']
-                sentiments.append({
-                    "overall": sent.get('overall'),
-                    "score": sent.get('score'),
-                    "reasoning": sent.get('reasoning'),
-                    "message_date": msg.sent_at.isoformat() if msg.sent_at else None
-                })
-
-        # Calculate average sentiment
-        positive_count = sum(1 for s in sentiments if s.get('overall') == 'positive')
-        negative_count = sum(1 for s in sentiments if s.get('overall') == 'negative')
-        neutral_count = sum(1 for s in sentiments if s.get('overall') == 'neutral')
-
-        overall = 'neutral'
-        if positive_count > negative_count and positive_count > neutral_count:
-            overall = 'positive'
-        elif negative_count > positive_count and negative_count > neutral_count:
-            overall = 'negative'
-
+        # NOTE: ai_insights column was removed from messages table
+        # Sentiment analysis is now extracted via transcript_classifications
+        # This template returns placeholder results until the new pipeline is integrated
         return {
-            "overall_sentiment": overall,
+            "overall_sentiment": "neutral",
             "sentiment_breakdown": {
-                "positive": positive_count,
-                "neutral": neutral_count,
-                "negative": negative_count
+                "positive": 0,
+                "neutral": 0,
+                "negative": 0
             },
-            "recent_sentiments": sentiments[:5]
+            "recent_sentiments": [],
+            "note": "Sentiment analysis is being upgraded to use the new AI pipeline"
         }
 
 

@@ -580,40 +580,41 @@ async def get_ai_insights_progress(
     - Estimated time remaining (approximate)
 
     Progress bar auto-hides at 100%.
-    Messages are never hidden if AI insights are missing.
+
+    NOTE: AI insights have been replaced by transcript classifications.
+    This endpoint now returns progress based on raw_transcripts processing.
     """
     try:
-        from app.models.message import Message
-        from app.models.ai_insight import AIInsight
+        from app.models.raw_transcript import RawTranscript
         from sqlalchemy import func
         from datetime import datetime, timedelta
 
-        # Calculate progress from actual data
-        # Get messages from last 7 days
+        # Calculate progress from raw_transcripts
         seven_days_ago = datetime.utcnow() - timedelta(days=7)
 
-        # Count total eligible messages
-        total_messages = db.query(func.count(Message.id)).filter(
-            Message.workspace_id == workspace_id,
-            Message.created_at >= seven_days_ago
+        # Count total raw transcripts
+        total_transcripts = db.query(func.count(RawTranscript.id)).filter(
+            RawTranscript.workspace_id == workspace_id,
+            RawTranscript.created_at >= seven_days_ago
         ).scalar() or 0
 
-        # Count messages with AI insights
-        completed_count = db.query(func.count(AIInsight.id)).filter(
-            AIInsight.workspace_id == workspace_id,
-            AIInsight.created_at >= seven_days_ago
+        # Count processed transcripts
+        completed_count = db.query(func.count(RawTranscript.id)).filter(
+            RawTranscript.workspace_id == workspace_id,
+            RawTranscript.created_at >= seven_days_ago,
+            RawTranscript.ai_processed == True
         ).scalar() or 0
 
         # Calculate percent complete
         percent_complete = 100.0
-        if total_messages > 0:
-            percent_complete = min(100.0, (completed_count / total_messages) * 100.0)
+        if total_transcripts > 0:
+            percent_complete = min(100.0, (completed_count / total_transcripts) * 100.0)
 
-        pending_count = max(0, total_messages - completed_count)
+        pending_count = max(0, total_transcripts - completed_count)
 
         return AIInsightsProgressResponse(
             workspace_id=str(workspace_id),
-            total_eligible=total_messages,
+            total_eligible=total_transcripts,
             completed_count=completed_count,
             pending_count=pending_count,
             processing_count=0,
@@ -655,92 +656,14 @@ async def get_message_ai_insights(
     """
     Get AI insights for a specific message.
 
-    Returns:
-    - Theme assignments with confidence and explanation
-    - Summary
-    - Pain point (if any)
-    - Feature request (if any)
-    - Sentiment and urgency
-    - Processing status
+    NOTE: This endpoint is deprecated. AI insights have been replaced by
+    transcript classifications. Use the transcript classifications API instead.
     """
-    try:
-        from app.models.ai_insight import AIInsight
-        from app.models.message_customer_ask import MessageCustomerAsk
-        from app.models.customer_ask import CustomerAsk
-        from app.models.sub_theme import SubTheme
-        from app.schemas.sources import LinkedCustomerAskInfo
-        from sqlalchemy.orm import joinedload
-
-        # Get insight for this message
-        insight = db.query(AIInsight).filter(
-            AIInsight.message_id == message_id,
-            AIInsight.workspace_id == workspace_id,
-        ).first()
-
-        if not insight:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="AI insights not found for this message. It may still be processing."
-            )
-
-        # Fetch linked customer asks for this message
-        linked_customer_asks = []
-        links = db.query(MessageCustomerAsk).filter(
-            MessageCustomerAsk.message_id == message_id
-        ).all()
-
-        if links:
-            ca_ids = [link.customer_ask_id for link in links]
-            customer_asks = db.query(CustomerAsk).options(
-                joinedload(CustomerAsk.sub_theme).joinedload(SubTheme.theme)
-            ).filter(
-                CustomerAsk.id.in_(ca_ids)
-            ).all()
-
-            for ca in customer_asks:
-                sub_theme = ca.sub_theme
-                linked_customer_asks.append(LinkedCustomerAskInfo(
-                    id=str(ca.id),
-                    name=ca.name,
-                    sub_theme_id=str(sub_theme.id) if sub_theme else None,
-                    sub_theme_name=sub_theme.name if sub_theme else None,
-                    theme_id=str(sub_theme.theme.id) if sub_theme and sub_theme.theme else None,
-                    theme_name=sub_theme.theme.name if sub_theme and sub_theme.theme else None,
-                ))
-
-        return AIInsightsResponse(
-            id=str(insight.id),
-            message_id=str(insight.message_id),
-            status="completed",
-            themes=None,
-            summary=insight.summary,
-            pain_point=insight.pain_point,
-            pain_point_quote=insight.pain_point_quote,
-            feature_request=insight.feature_request,
-            customer_usecase=insight.customer_usecase,
-            explanation=None,
-            sentiment=insight.sentiment,
-            urgency=None,
-            keywords=insight.keywords,
-            locked_theme_id=str(insight.theme_id) if insight.theme_id else None,
-            locked_theme_name=None,
-            linked_customer_asks=linked_customer_asks,
-            model_version=insight.model_version,
-            tokens_used=insight.tokens_used,
-            latency_ms=None,
-            created_at=insight.created_at,
-            completed_at=insight.created_at,
-            error_message=None,
-        )
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error fetching AI insights for message: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to fetch AI insights"
-        )
+    # AI Insights model no longer exists - return 404
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="AI insights not found. This feature has been replaced by transcript classifications."
+    )
 
 
 @router.post(

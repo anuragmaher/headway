@@ -6,7 +6,7 @@ from typing import List, Optional
 from uuid import UUID
 
 from app.core.deps import get_current_user, get_db
-from app.services.message_service import MessageService, AIInsightService
+from app.services.message_service import MessageService
 from app.schemas.message import (
     MessageResponse, MessageListResponse, MessageWithInsights,
     AIInsightResponse, AIInsightListResponse, SyncHistoryResponse,
@@ -121,14 +121,8 @@ async def get_message(
             detail="Access denied"
         )
 
-    # Get AI insight for the message
-    insight_service = AIInsightService(db)
-    insight = insight_service.get_insight_by_message(message_id)
-
+    # AI insights have been removed - return message without insights
     response = MessageWithInsights.model_validate(message)
-    if insight:
-        response.ai_insights = AIInsightResponse.model_validate(insight)
-
     return response
 
 
@@ -184,7 +178,9 @@ async def delete_message(
     service.delete_message(message_id)
 
 
-# === AI Insights Endpoints ===
+# === AI Insights Endpoints (DEPRECATED) ===
+# AI insights have been replaced by transcript classifications.
+# These endpoints return empty/404 responses for backward compatibility.
 
 @router.get("/insights", response_model=AIInsightListResponse)
 async def list_insights(
@@ -196,28 +192,9 @@ async def list_insights(
     current_user: dict = Depends(get_current_user),
     db = Depends(get_db)
 ):
-    """List AI insights with filters"""
-    workspace_id = current_user.get('workspace_id')
-    if not workspace_id:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User does not have a workspace"
-        )
-
-    service = AIInsightService(db)
-    insights, total = service.list_insights(
-        workspace_id=UUID(workspace_id),
-        theme_id=theme_id,
-        sub_theme_id=sub_theme_id,
-        customer_ask_id=customer_ask_id,
-        page=page,
-        page_size=page_size
-    )
-
-    return AIInsightListResponse(
-        insights=[AIInsightResponse.model_validate(i) for i in insights],
-        total=total
-    )
+    """List AI insights with filters (DEPRECATED - returns empty list)"""
+    # AI insights have been removed - return empty list
+    return AIInsightListResponse(insights=[], total=0)
 
 
 @router.get("/insights/{insight_id}", response_model=AIInsightResponse)
@@ -226,23 +203,11 @@ async def get_insight(
     current_user: dict = Depends(get_current_user),
     db = Depends(get_db)
 ):
-    """Get an AI insight"""
-    service = AIInsightService(db)
-    insight = service.get_insight(insight_id)
-
-    if not insight:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Insight not found"
-        )
-
-    if str(insight.workspace_id) != current_user.get('workspace_id'):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied"
-        )
-
-    return AIInsightResponse.model_validate(insight)
+    """Get an AI insight (DEPRECATED - always returns 404)"""
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="AI insights have been deprecated. Use transcript classifications instead."
+    )
 
 
 # === Sync History Endpoints ===

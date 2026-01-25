@@ -40,14 +40,8 @@ celery_app = Celery(
         "app.sync_engine.tasks.ondemand.gong",
         "app.sync_engine.tasks.ondemand.fathom",
         "app.sync_engine.tasks.ondemand.themes",
-        # === AI PIPELINE (state-driven tiered processing) ===
-        "app.sync_engine.tasks.ai_pipeline.normalization",
-        "app.sync_engine.tasks.ai_pipeline.chunking",
-        "app.sync_engine.tasks.ai_pipeline.tier1_classification",
-        "app.sync_engine.tasks.ai_pipeline.tier2_extraction",
-        "app.sync_engine.tasks.ai_pipeline.tier3_aggregation",
-        # === AI INSIGHTS (dedicated per-message insights) ===
-        "app.sync_engine.tasks.ai_insights.worker",
+        # === TRANSCRIPT PROCESSING ===
+        "app.sync_engine.tasks.ai_pipeline.transcript_processing",
     ]
 )
 
@@ -57,7 +51,6 @@ celery_app.autodiscover_tasks([
     'app.sync_engine.tasks.periodic',
     'app.sync_engine.tasks.ondemand',
     'app.sync_engine.tasks.ai_pipeline',
-    'app.sync_engine.tasks.ai_insights',
 ], force=True)
 
 # Configure Celery with memory optimization for production
@@ -143,15 +136,15 @@ celery_app.conf.beat_schedule = {
         "task": "app.sync_engine.sync_tasks.sync_slack_periodic",
         "schedule": schedule(run_every=1800),  # 1800 seconds = 30 minutes
     },
-    # Gong sync every 30 minutes (staggered by 20 seconds)
+    # Gong sync every 1 hour (also supports on-demand via Sources API)
     "sync-gong-calls": {
         "task": "app.sync_engine.sync_tasks.sync_gong_periodic",
-        "schedule": schedule(run_every=1820),  # 1820 seconds = 30m 20s (staggered)
+        "schedule": schedule(run_every=3600),  # 3600 seconds = 1 hour
     },
-    # Fathom sync every 30 minutes (staggered by 40 seconds)
+    # Fathom sync every 1 hour (also supports on-demand via Sources API)
     "sync-fathom-sessions": {
         "task": "app.sync_engine.sync_tasks.sync_fathom_periodic",
-        "schedule": schedule(run_every=1840),  # 1840 seconds = 30m 40s (staggered)
+        "schedule": schedule(run_every=3600),  # 3600 seconds = 1 hour
     },
     # Gmail sync every 30 minutes (staggered by 60 seconds)
     "sync-gmail-threads": {
@@ -159,22 +152,19 @@ celery_app.conf.beat_schedule = {
         "schedule": schedule(run_every=1860),  # 1860 seconds = 31 minutes (staggered)
     },
 
-    # === AI PIPELINE ===
-    # FULLY STATE-DRIVEN ARCHITECTURE - No scheduled AI tasks!
-    #
-    # Pipeline is triggered automatically when new messages are ingested:
-    # ingestion → normalize → chunk → classify → extract → AI insights
-    #
-    # Each stage triggers the next immediately upon completion.
-    # No time-based scheduling - purely event-driven.
+    # === TRANSCRIPT PROCESSING ===
+    # Process raw transcripts every 2 minutes
+    "process-raw-transcripts": {
+        "task": "app.sync_engine.tasks.ai_pipeline.transcript_processing.process_raw_transcripts",
+        "schedule": schedule(run_every=120),  # 120 seconds = 2 minutes
+    },
 }
 
 logger.info(f"Celery app initialized with broker: {settings.REDIS_URL}")
 logger.info("Data Ingestion (periodic):")
-logger.info("  - Slack: every 30 min | Gong: every 30m 20s | Fathom: every 30m 40s | Gmail: every 31 min")
-logger.info("AI Pipeline (STATE-DRIVEN - triggered on ingestion):")
-logger.info("  ingestion → normalize → chunk → classify → extract → AI insights")
-logger.info("  Each stage triggers the next immediately - no scheduled tasks")
+logger.info("  - Slack: every 30 min | Gong: every 1 hour | Fathom: every 1 hour | Gmail: every 31 min")
+logger.info("Transcript Processing (periodic):")
+logger.info("  - Process raw transcripts: every 2 min")
 
 
 # ============================================================================

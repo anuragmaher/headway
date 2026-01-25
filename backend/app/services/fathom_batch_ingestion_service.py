@@ -1,12 +1,12 @@
 """
-Optimized Fathom Batch Ingestion Service - Fast batch data storage without AI extraction.
+Optimized Fathom Batch Ingestion Service - Fast batch data storage for raw transcripts.
 
 This service focuses on:
 1. Fast fetching of Fathom sessions and transcripts
-2. Batch insertion into the database
-3. Deferred AI processing (marked as tier1_processed=False, tier2_processed=False)
+2. Batch insertion into raw_transcripts table
+3. Deferred AI processing (ai_processed=False)
 
-AI extraction happens in a separate batch processing task (Tier 1 -> Tier 2).
+AI extraction happens in a separate Celery task (transcript_processing).
 
 Usage:
     from app.services.fathom_batch_ingestion_service import fathom_batch_ingestion_service
@@ -31,7 +31,6 @@ from sqlalchemy import and_
 
 from app.models.workspace import Workspace
 from app.models.workspace_connector import WorkspaceConnector
-from app.models.customer import Customer
 from app.services.batch_db_service import batch_db_service
 
 logger = logging.getLogger(__name__)
@@ -39,12 +38,12 @@ logger = logging.getLogger(__name__)
 
 class FathomBatchIngestionService:
     """
-    Optimized Fathom ingestion service.
+    Optimized Fathom ingestion service for raw transcripts.
 
     Key optimizations:
     - Batch API calls where possible
     - No inline AI extraction (deferred to batch processing)
-    - Batch database inserts
+    - Batch database inserts to raw_transcripts
     - Minimal memory footprint
     """
 
@@ -64,7 +63,7 @@ class FathomBatchIngestionService:
 
         This method:
         1. Fetches sessions from Fathom API
-        2. Batch inserts into Message table with tier1_processed=False
+        2. Batch inserts into raw_transcripts table with ai_processed=False
         3. Returns counts for sync tracking
 
         AI extraction is NOT performed here - it happens in a separate task.
@@ -123,28 +122,23 @@ class FathomBatchIngestionService:
                 logger.info("No Fathom sessions found in date range")
                 return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
-            # Prepare messages for batch insert
-            messages = []
+            # Prepare raw transcripts for batch insert
+            transcripts = []
             for session_data in sessions:
                 try:
-                    message = self._prepare_message(
-                        session_data=session_data,
-                        workspace_id=workspace_id,
-                        workspace=workspace
-                    )
-                    if message:
-                        messages.append(message)
+                    transcript = self._prepare_raw_transcript(session_data=session_data)
+                    if transcript:
+                        transcripts.append(transcript)
                 except Exception as e:
                     logger.error(f"Error preparing session {session_data.get('recording_id')}: {e}")
                     continue
 
-            # Batch insert all messages
-            result = batch_db_service.batch_insert_messages(
+            # Batch insert all raw transcripts
+            result = batch_db_service.batch_insert_raw_transcripts(
                 db=db,
-                messages=messages,
+                transcripts=transcripts,
                 workspace_id=workspace_id,
-                connector_id=str(connector.id),
-                source="fathom"
+                source_type="fathom"
             )
 
             # Update connector sync status
@@ -268,13 +262,11 @@ class FathomBatchIngestionService:
             pass
         return 0
 
-    def _prepare_message(
+    def _prepare_raw_transcript(
         self,
-        session_data: Dict[str, Any],
-        workspace_id: str,
-        workspace: Workspace
+        session_data: Dict[str, Any]
     ) -> Optional[Dict[str, Any]]:
-        """Prepare a session as a message dict for batch insert."""
+        """Prepare a session as a raw transcript dict for batch insert."""
         session_id = str(session_data.get('recording_id'))
 
         if not session_id or session_id == 'None':
@@ -282,99 +274,34 @@ class FathomBatchIngestionService:
 
         # Extract session info
         title = session_data.get('title') or f"Session {session_id}"
-        recorded_by = session_data.get('recorded_by', {})
-        user_email = recorded_by.get('email')
-        user_name = recorded_by.get('name') or user_email or 'Unknown'
-
-        # Get calendar invitees
-        calendar_invitees = session_data.get('calendar_invitees', [])
 
         # Calculate duration
         duration_seconds = self._get_duration(session_data)
 
-        # Format transcript
-        transcript_text = self._format_transcript(session_data.get('transcript'))
-
         # Parse timestamp
-        sent_at = datetime.now(timezone.utc)
+        transcript_date = datetime.now(timezone.utc)
         created_at = session_data.get('created_at')
         if created_at:
             try:
-                sent_at = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                transcript_date = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
             except ValueError:
                 pass
 
-        # Extract external customer info from invitees
-        customer_domain = None
-        customer_name = None
-        for invitee in calendar_invitees:
-            if invitee.get('is_external', False):
-                email = invitee.get('email', '')
-                if '@' in email:
-                    customer_domain = invitee.get('email_domain') or email.split('@')[1]
-                    customer_name = invitee.get('name')
-                    break
+        # Count participants from calendar_invitees
+        calendar_invitees = session_data.get('calendar_invitees', [])
+        participant_count = len(calendar_invitees) + 1  # +1 for recorded_by
 
-        # Prepare metadata (store everything for later AI processing)
-        message_metadata = {
-            "session_id": session_id,
-            "title": title,
-            "duration_seconds": duration_seconds,
-            "recording_url": session_data.get('share_url'),
-            "user_email": user_email,
-            "user_name": user_name,
-            "page_url": session_data.get('page_url'),
-            "device_type": session_data.get('device_type'),
-            "browser": session_data.get('browser'),
-            "os": session_data.get('os'),
-            "rage_clicks": session_data.get('rage_clicks', 0),
-            "error_clicks": session_data.get('error_clicks', 0),
-            "dead_clicks": session_data.get('dead_clicks', 0),
-            "frustrated_gestures": session_data.get('frustrated_gestures', 0),
-            "tags": session_data.get('tags', []),
-            "has_transcript": bool(transcript_text),
-            "customer_domain": customer_domain,
-            "customer_name": customer_name,
-            "calendar_invitees": [
-                {
-                    "name": inv.get("name"),
-                    "email": inv.get("email"),
-                    "is_external": inv.get("is_external", False)
-                }
-                for inv in calendar_invitees
-            ],
-        }
+        # Store complete raw data as-is
+        raw_data = session_data
 
         return {
-            "external_id": session_id,
-            "content": transcript_text or f"[Session: {title}]",
+            "source_id": session_id,
+            "raw_data": raw_data,
             "title": title,
-            "channel_name": "Fathom Sessions",
-            "channel_id": "fathom_sessions",
-            "author_name": user_name,
-            "author_email": user_email,
-            "metadata": message_metadata,
-            "sent_at": sent_at,
+            "duration_seconds": duration_seconds,
+            "transcript_date": transcript_date,
+            "participant_count": participant_count,
         }
-
-    def _format_transcript(self, transcript_data: Any) -> str:
-        """Format transcript into readable text."""
-        if not transcript_data:
-            return ""
-
-        if isinstance(transcript_data, str):
-            return transcript_data
-
-        if isinstance(transcript_data, list):
-            lines = []
-            for item in transcript_data:
-                speaker_name = item.get('speaker', {}).get('display_name', 'Unknown')
-                text = item.get('text', '').strip()
-                if text:
-                    lines.append(f"{speaker_name}: {text}")
-            return "\n".join(lines)
-
-        return ""
 
 
 # Global service instance

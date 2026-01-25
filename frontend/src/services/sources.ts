@@ -202,32 +202,124 @@ export interface LinkedCustomerAskInfo {
 }
 
 /** AI insights status for a message */
-export type AIInsightsStatus = 'queued' | 'processing' | 'completed' | 'failed' | 'none';
+export type AIInsightsStatus = 'pending' | 'processing' | 'completed' | 'failed' | 'queued' | 'none';
 
-/** AI insights for a single message */
+// ============ Key Insights Types (from transcript_classifications) ============
+
+/** Health signals extracted from transcript */
+export interface HealthSignals {
+  positive?: string[];
+  negative?: string[];
+}
+
+/** Key insights from transcript classification */
+export interface KeyInsights {
+  strongest_needs?: string[];
+  health_signals?: HealthSignals;
+  blockers?: string[];
+  product_feedback_for_pm?: string;
+}
+
+/** Risk assessment from transcript classification */
+export interface RiskAssessment {
+  deal_risk?: string;
+  deal_risk_reasons?: string[];
+  churn_risk?: string;
+  churn_risk_reasons?: string[];
+  expansion_signal?: string;
+  expansion_reasons?: string[];
+  customer_type?: string;
+}
+
+/** Customer metadata from transcript classification */
+export interface CustomerMetadata {
+  company_name?: string;
+  company_stage?: string;
+  use_case?: string;
+  timeline?: string;
+  current_solution?: string;
+  budget_signals?: string;
+}
+
+/** Speaker information from transcript classification */
+export interface SpeakerInfo {
+  name: string;
+  email?: string;
+  company?: string;
+  job_role?: string;
+  role_type?: string;
+  authority_level?: string;
+}
+
+/** Call metadata from transcript classification */
+export interface CallMetadata {
+  duration_minutes?: number;
+  overall_sentiment?: number;
+  call_type?: string;
+  next_steps?: string;
+}
+
+/** Theme summary from transcript classification */
+export interface ThemeSummaryItem {
+  theme_id?: string;
+  theme_name?: string;
+  mention_count?: number;
+  avg_impact?: number;
+  avg_confidence?: number;
+  has_blocker?: boolean;
+}
+
+/** Feature mapping from transcript classification */
+export interface FeatureMapping {
+  theme_id?: string;
+  sub_theme_id?: string;
+  interpreted_need?: string;
+  verbatim_quote?: string;
+  reasoning?: string;
+  signal_type?: string;
+  impact_score?: number;
+  confidence_score?: number;
+  sentiment?: number;
+  business_context?: string;
+}
+
+/** AI insights for a single message/transcript */
 export interface AIInsightsResponse {
-  id: string;
-  message_id: string;
+  // Status
   status: AIInsightsStatus;
-  themes: AIInsightsTheme[] | null;
-  summary: string | null;
-  pain_point: string | null;
-  pain_point_quote: string | null;  // Direct quote from message
-  feature_request: string | null;
-  customer_usecase: string | null;  // Use case extracted by AI
-  explanation: string | null;
-  sentiment: string | null;
-  urgency: string | null;
-  keywords: string[] | null;
-  locked_theme_id: string | null;
-  locked_theme_name: string | null;
-  linked_customer_asks: LinkedCustomerAskInfo[];  // Customer asks linked to this message
-  model_version: string;
-  tokens_used: number | null;
-  latency_ms: number | null;
-  created_at: string;
-  completed_at: string | null;
-  error_message: string | null;
+
+  // Key Insights sections (new structure from transcript_classifications)
+  key_insights?: KeyInsights;
+  risk_assessment?: RiskAssessment;
+  customer_metadata?: CustomerMetadata;
+  speakers?: SpeakerInfo[];
+  call_metadata?: CallMetadata;
+  theme_summary?: Record<string, ThemeSummaryItem>;
+  mappings?: FeatureMapping[];
+  raw_response?: Record<string, unknown>;
+
+  // Legacy fields (for backwards compatibility)
+  id?: string;
+  message_id?: string;
+  themes?: AIInsightsTheme[] | null;
+  summary?: string | null;
+  pain_point?: string | null;
+  pain_point_quote?: string | null;
+  feature_request?: string | null;
+  customer_usecase?: string | null;
+  explanation?: string | null;
+  sentiment?: string | null;
+  urgency?: string | null;
+  keywords?: string[] | null;
+  locked_theme_id?: string | null;
+  locked_theme_name?: string | null;
+  linked_customer_asks?: LinkedCustomerAskInfo[];
+  model_version?: string;
+  tokens_used?: number | null;
+  latency_ms?: number | null;
+  created_at?: string;
+  completed_at?: string | null;
+  error_message?: string | null;
 }
 
 /** Workspace-level AI insights progress for UI progress indicator */

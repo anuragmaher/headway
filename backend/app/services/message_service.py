@@ -8,12 +8,10 @@ from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import and_, or_, func, desc
 
 from app.models.message import Message
-from app.models.ai_insight import AIInsight
 from app.models.workspace_connector import WorkspaceConnector
 from app.models.customer_ask import CustomerAsk
 from app.schemas.message import (
-    MessageCreate, MessageUpdate, MessageResponse,
-    AIInsightCreate, AIInsightResponse, SourceType
+    MessageCreate, MessageUpdate, MessageResponse, SourceType
 )
 
 
@@ -300,137 +298,7 @@ class MessageService:
         }
 
 
-class AIInsightService:
-    """Service for managing AI insights"""
 
-    def __init__(self, db: Session):
-        self.db = db
-
-    # === AI Insight CRUD ===
-
-    def create_insight(self, workspace_id: UUID, data: AIInsightCreate) -> AIInsight:
-        """Create a new AI insight"""
-        insight = AIInsight(
-            message_id=data.message_id,
-            workspace_id=workspace_id,
-            theme_id=data.theme_id,
-            sub_theme_id=data.sub_theme_id,
-            customer_ask_id=data.customer_ask_id,
-            model_version=data.model_version,
-            summary=data.summary,
-            pain_point=data.pain_point,
-            pain_point_quote=data.pain_point_quote,
-            feature_request=data.feature_request,
-            customer_usecase=data.customer_usecase,
-            sentiment=data.sentiment.value if data.sentiment else None,
-            keywords=data.keywords,
-            tokens_used=data.tokens_used
-        )
-        self.db.add(insight)
-        self.db.commit()
-        self.db.refresh(insight)
-        return insight
-
-    def get_or_create_insight(
-        self,
-        workspace_id: UUID,
-        message_id: UUID,
-        model_version: str,
-        data: AIInsightCreate
-    ) -> Tuple[AIInsight, bool]:
-        """Get existing insight or create new one"""
-        existing = self.get_insight_by_message(message_id, model_version)
-        if existing:
-            return existing, False
-
-        insight = self.create_insight(workspace_id, data)
-        return insight, True
-
-    def get_insight(self, insight_id: UUID) -> Optional[AIInsight]:
-        """Get an insight by ID"""
-        return self.db.query(AIInsight).filter(AIInsight.id == insight_id).first()
-
-    def get_insight_by_message(
-        self,
-        message_id: UUID,
-        model_version: Optional[str] = None
-    ) -> Optional[AIInsight]:
-        """Get insight for a message"""
-        query = self.db.query(AIInsight).filter(AIInsight.message_id == message_id)
-
-        if model_version:
-            query = query.filter(AIInsight.model_version == model_version)
-
-        return query.first()
-
-    def list_insights(
-        self,
-        workspace_id: UUID,
-        theme_id: Optional[UUID] = None,
-        sub_theme_id: Optional[UUID] = None,
-        customer_ask_id: Optional[UUID] = None,
-        page: int = 1,
-        page_size: int = 50
-    ) -> Tuple[List[AIInsight], int]:
-        """List AI insights with pagination and filters"""
-        query = self.db.query(AIInsight).filter(AIInsight.workspace_id == workspace_id)
-
-        if theme_id:
-            query = query.filter(AIInsight.theme_id == theme_id)
-        if sub_theme_id:
-            query = query.filter(AIInsight.sub_theme_id == sub_theme_id)
-        if customer_ask_id:
-            query = query.filter(AIInsight.customer_ask_id == customer_ask_id)
-
-        total = query.count()
-        insights = query.order_by(desc(AIInsight.created_at)).offset(
-            (page - 1) * page_size
-        ).limit(page_size).all()
-
-        return insights, total
-
-    def update_insight(
-        self,
-        insight_id: UUID,
-        theme_id: Optional[UUID] = None,
-        sub_theme_id: Optional[UUID] = None,
-        customer_ask_id: Optional[UUID] = None
-    ) -> Optional[AIInsight]:
-        """Update insight theme/customer_ask assignment"""
-        insight = self.get_insight(insight_id)
-        if not insight:
-            return None
-
-        if theme_id is not None:
-            insight.theme_id = theme_id
-        if sub_theme_id is not None:
-            insight.sub_theme_id = sub_theme_id
-        if customer_ask_id is not None:
-            insight.customer_ask_id = customer_ask_id
-
-        insight.updated_at = datetime.now(timezone.utc)
-        self.db.commit()
-        self.db.refresh(insight)
-        return insight
-
-    def delete_insight(self, insight_id: UUID) -> bool:
-        """Delete an AI insight"""
-        insight = self.get_insight(insight_id)
-        if not insight:
-            return False
-
-        self.db.delete(insight)
-        self.db.commit()
-        return True
-
-    def get_insights_with_messages(
-        self,
-        workspace_id: UUID,
-        limit: int = 100
-    ) -> List[AIInsight]:
-        """Get insights with loaded message relationships"""
-        return self.db.query(AIInsight).options(
-            joinedload(AIInsight.message)
-        ).filter(
-            AIInsight.workspace_id == workspace_id
-        ).order_by(desc(AIInsight.created_at)).limit(limit).all()
+# NOTE: AIInsightService has been removed.
+# AI insights are now handled via transcript_classifications table.
+# See app.services.theme_service.TranscriptClassificationService for new functionality.

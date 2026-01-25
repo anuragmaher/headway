@@ -203,7 +203,6 @@ async def test_register(data: dict):
 # Include routers
 from app.api.v1.auth import router as auth_router
 from app.api.v1.slack import router as slack_router
-from app.api.v1.clustering import router as clustering_router
 from app.api.v1.workspaces import router as workspaces_router
 from app.api.v1.endpoints.customers import router as customers_router
 from app.api.v1.gmail import router as gmail
@@ -218,7 +217,6 @@ from app.api.v1.sources import router as sources_router
 
 app.include_router(auth_router, prefix="/api/v1/auth", tags=["authentication"])
 app.include_router(slack_router, prefix="/api/v1/slack", tags=["slack"])
-app.include_router(clustering_router, prefix="/api/v1/clustering", tags=["clustering"])
 app.include_router(workspaces_router, prefix="/api/v1/workspaces", tags=["workspaces"])
 app.include_router(customers_router, prefix="/api/v1/customers", tags=["customers"])
 app.include_router(gmail, prefix="/api/v1", tags=["gmail"])

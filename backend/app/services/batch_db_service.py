@@ -24,6 +24,7 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy import and_
 
 from app.models.message import Message
+from app.models.raw_transcript import RawTranscript
 from app.models.customer_ask import CustomerAsk
 from app.models.customer import Customer
 from app.services.customer_extraction_service import customer_extraction_service
@@ -158,22 +159,183 @@ class BatchDatabaseService:
             "inserted_ids": inserted_ids
         }
 
+    def batch_insert_raw_transcripts(
+        self,
+        db: Session,
+        transcripts: List[Dict[str, Any]],
+        workspace_id: str,
+        source_type: str,
+        batch_size: int = DEFAULT_BATCH_SIZE,
+    ) -> Dict[str, Any]:
+        """
+        Batch insert raw transcripts with duplicate detection.
+
+        Args:
+            db: Database session
+            transcripts: List of transcript dictionaries with required fields:
+                - source_id: Unique ID from source system (e.g., Gong call ID)
+                - raw_data: Complete raw transcript/call data as dict
+                - Optional: title, duration_seconds, transcript_date, participant_count
+            workspace_id: Workspace UUID string
+            source_type: Source type ('gong', 'fathom')
+            batch_size: Number of records per batch
+
+        Returns:
+            Dict with:
+                - 'total_checked': Total transcripts checked
+                - 'new_added': Number of new transcripts inserted
+                - 'duplicates_skipped': Number of duplicates skipped
+                - 'inserted_ids': List of UUID strings for newly inserted transcripts
+        """
+        if not transcripts:
+            return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
+
+        total_checked = len(transcripts)
+        new_added = 0
+        duplicates_skipped = 0
+        inserted_ids: List[str] = []
+
+        try:
+            # Get existing source_ids in one query for duplicate detection
+            source_ids = [t.get("source_id") for t in transcripts if t.get("source_id")]
+
+            existing_ids = self._get_existing_transcript_source_ids(
+                db=db,
+                source_ids=source_ids,
+                workspace_id=workspace_id,
+                source_type=source_type
+            )
+
+            # Filter out duplicates
+            new_transcripts = [
+                t for t in transcripts
+                if t.get("source_id") and t["source_id"] not in existing_ids
+            ]
+            duplicates_skipped = total_checked - len(new_transcripts)
+
+            if not new_transcripts:
+                logger.info(f"All {total_checked} transcripts already exist, skipping batch insert")
+                return {
+                    "total_checked": total_checked,
+                    "new_added": 0,
+                    "duplicates_skipped": duplicates_skipped,
+                    "inserted_ids": []
+                }
+
+            # Process in batches
+            for i in range(0, len(new_transcripts), batch_size):
+                batch = new_transcripts[i:i + batch_size]
+
+                # Prepare transcript objects for bulk insert
+                transcript_mappings = []
+                for t in batch:
+                    mapping = self._prepare_raw_transcript_mapping(
+                        transcript=t,
+                        workspace_id=workspace_id,
+                        source_type=source_type
+                    )
+                    if mapping:
+                        transcript_mappings.append(mapping)
+                        inserted_ids.append(str(mapping["id"]))
+
+                if transcript_mappings:
+                    db.bulk_insert_mappings(RawTranscript, transcript_mappings)
+                    new_added += len(transcript_mappings)
+
+            db.commit()
+            logger.info(
+                f"Raw transcript batch insert complete: {new_added} new, "
+                f"{duplicates_skipped} duplicates skipped out of {total_checked} total"
+            )
+
+        except Exception as e:
+            logger.error(f"Error in raw transcript batch insert: {e}")
+            db.rollback()
+            raise
+
+        return {
+            "total_checked": total_checked,
+            "new_added": new_added,
+            "duplicates_skipped": duplicates_skipped,
+            "inserted_ids": inserted_ids
+        }
+
+    def _get_existing_transcript_source_ids(
+        self,
+        db: Session,
+        source_ids: List[str],
+        workspace_id: str,
+        source_type: str
+    ) -> Set[str]:
+        """Get set of source_ids that already exist in raw_transcripts."""
+        if not source_ids:
+            return set()
+
+        try:
+            query = db.query(RawTranscript.source_id).filter(
+                and_(
+                    RawTranscript.workspace_id == UUID(workspace_id),
+                    RawTranscript.source_type == source_type,
+                    RawTranscript.source_id.in_(source_ids)
+                )
+            )
+            existing = query.all()
+            return {row[0] for row in existing}
+
+        except Exception as e:
+            logger.error(f"Error checking existing transcripts: {e}")
+            return set()
+
+    def _prepare_raw_transcript_mapping(
+        self,
+        transcript: Dict[str, Any],
+        workspace_id: str,
+        source_type: str
+    ) -> Optional[Dict[str, Any]]:
+        """Prepare a raw transcript dictionary for bulk_insert_mappings."""
+        source_id = transcript.get("source_id")
+        if not source_id:
+            return None
+
+        now = datetime.now(timezone.utc)
+
+        # Parse transcript_date if provided
+        transcript_date = transcript.get("transcript_date")
+        if isinstance(transcript_date, str):
+            try:
+                transcript_date = datetime.fromisoformat(transcript_date.replace("Z", "+00:00"))
+            except (ValueError, TypeError):
+                transcript_date = now
+        elif not isinstance(transcript_date, datetime):
+            transcript_date = now
+
+        transcript_id = uuid_module.uuid4()
+
+        mapping = {
+            "id": transcript_id,
+            "workspace_id": UUID(workspace_id),
+            "source_type": source_type,
+            "source_id": source_id,
+            "raw_data": transcript.get("raw_data", {}),
+            "ai_processed": False,
+            "retry_count": 0,
+            "title": transcript.get("title"),
+            "duration_seconds": transcript.get("duration_seconds"),
+            "transcript_date": transcript_date,
+            "participant_count": transcript.get("participant_count"),
+            "created_at": now,
+        }
+
+        return mapping
+
     def _trigger_ai_pipeline(self, workspace_id: str) -> None:
         """
-        Trigger the AI pipeline to process newly inserted messages.
-
-        State-driven architecture: Ingestion triggers normalization,
-        which then chains through the entire pipeline automatically.
+        Legacy method - AI pipeline is now triggered separately via Celery Beat.
+        Kept for backward compatibility with messages-based ingestion.
         """
-        try:
-            from app.sync_engine.tasks.ai_pipeline.normalization import normalize_source_data
-
-            # Trigger normalization asynchronously - it will chain to subsequent stages
-            normalize_source_data.delay(workspace_id=workspace_id)
-            logger.info(f"🚀 Triggered AI pipeline for workspace {workspace_id}")
-        except Exception as e:
-            # Don't fail the insert if pipeline trigger fails
-            logger.warning(f"Failed to trigger AI pipeline: {e}")
+        # No-op: Raw transcript processing is now handled by Celery Beat schedule
+        # The process_raw_transcripts task runs every 5 minutes
+        pass
 
     def _get_existing_external_ids(
         self,

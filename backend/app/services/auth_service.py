@@ -118,10 +118,10 @@ class AuthService:
         
         if existing_company:
             # Company exists - check if user's email domain matches
-            if existing_company.domain and existing_company.domain != email_domain:
+            if existing_company.domains and email_domain not in existing_company.domains:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=f"Email domain '{email_domain}' does not match company domain '{existing_company.domain}'"
+                    detail=f"Email domain '{email_domain}' does not match company domains '{existing_company.domains}'"
                 )
             company = existing_company
         else:
@@ -129,7 +129,7 @@ class AuthService:
             company = Company(
                 name=user_data.company_name,
                 size=user_data.company_size,
-                domain=email_domain
+                domains=[email_domain]
             )
             user_role = "owner"  # First user in company becomes owner
             
@@ -262,9 +262,9 @@ class AuthService:
             # Extract domain from email for company association
             email_domain = email.split('@')[1].lower()
 
-            # Check if company exists by domain
+            # Check if company exists by domain (domains is an array)
             existing_company = self.db.query(Company).filter(
-                Company.domain == email_domain
+                Company.domains.any(email_domain)
             ).first()
 
             if existing_company:
@@ -278,7 +278,7 @@ class AuthService:
                 company = Company(
                     name=company_name,
                     size="1-10",  # Default size for new workspaces
-                    domain=email_domain
+                    domains=[email_domain]
                 )
                 user_role = "owner"
                 logger.info(f"Creating new workspace '{company_name}' for domain '{email_domain}' from Google login")
@@ -291,7 +291,7 @@ class AuthService:
                     logger.warning(f"IntegrityError creating company: {str(e)}")
                     # Company may have been created by another request, try again
                     existing_company = self.db.query(Company).filter(
-                        Company.domain == email_domain
+                        Company.domains.any(email_domain)
                     ).first()
                     if existing_company:
                         company = existing_company
@@ -308,7 +308,7 @@ class AuthService:
                             company = Company(
                                 name=fallback_name,
                                 size="1-10",  # Default size for new workspaces
-                                domain=email_domain
+                                domains=[email_domain]
                             )
                             self.db.add(company)
                             self.db.flush()

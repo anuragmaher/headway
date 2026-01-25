@@ -19,6 +19,8 @@ from app.models.workspace_connector import WorkspaceConnector
 from app.models.theme import Theme
 from app.models.customer_ask import CustomerAsk
 from app.models.sync_history import SyncHistory
+from app.models.raw_transcript import RawTranscript
+from app.models.transcript_classification import TranscriptClassification
 from app.schemas.sources import (
     MessageResponse,
     MessageListResponse,
@@ -180,32 +182,33 @@ class SourcesService:
         message_id: UUID,
     ) -> Dict[str, Any]:
         """
-        Get full details of a specific message.
+        Get full details of a specific transcript.
 
         Args:
             workspace_id: Workspace UUID
-            message_id: Message UUID
+            message_id: Transcript UUID
 
         Returns:
-            Complete message details
+            Complete transcript details with Key Insights
 
         Raises:
-            HTTPException: If message not found
+            HTTPException: If transcript not found
         """
         from fastapi import HTTPException, status
 
-        message = self.db.query(Message).filter(
-            Message.id == message_id,
-            Message.workspace_id == workspace_id,
+        # Only look in raw_transcripts table (transcripts only mode)
+        transcript = self.db.query(RawTranscript).filter(
+            RawTranscript.id == message_id,
+            RawTranscript.workspace_id == workspace_id,
         ).first()
 
-        if not message:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Message not found"
-            )
+        if transcript:
+            return self._format_transcript_details(transcript)
 
-        return self._format_message_details(message)
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transcript not found"
+        )
 
     def _format_message_details(self, msg: Message) -> Dict[str, Any]:
         """Format Message model to detailed response"""
@@ -295,6 +298,190 @@ class SourcesService:
             # Related customer asks
             'related_customer_asks': related_customer_asks,
         }
+
+    def _format_transcript_details(self, transcript: RawTranscript) -> Dict[str, Any]:
+        """Format RawTranscript model to detailed response with Key Insights"""
+        raw_data = transcript.raw_data or {}
+
+        # Extract duration
+        duration_secs = transcript.duration_seconds
+        duration_formatted = None
+        if duration_secs:
+            try:
+                mins, secs = divmod(duration_secs, 60)
+                hours, mins = divmod(mins, 60)
+                if hours > 0:
+                    duration_formatted = f"{hours}h {mins}m"
+                else:
+                    duration_formatted = f"{mins}m {secs}s"
+            except (ValueError, TypeError):
+                pass
+
+        # Extract parties from raw_data
+        parties = raw_data.get('parties', [])
+        participants = [
+            {
+                'name': p.get('name', 'Unknown'),
+                'email': p.get('emailAddress', ''),
+                'role': 'internal' if p.get('affiliation') == 'Internal' else 'external'
+            }
+            for p in parties
+        ]
+
+        # Format transcript content for display
+        transcript_text = self._format_transcript_text(raw_data)
+
+        # Get AI classification with Key Insights
+        ai_insights = {
+            'status': 'pending',
+            'key_insights': {},
+            'risk_assessment': {},
+            'customer_metadata': {},
+            'speakers': [],
+            'call_metadata': {},
+            'theme_summary': {},
+            'mappings': [],
+        }
+
+        classification = self.db.query(TranscriptClassification).filter(
+            TranscriptClassification.workspace_id == transcript.workspace_id,
+            TranscriptClassification.source_type == transcript.source_type,
+            TranscriptClassification.source_id == transcript.source_id,
+        ).first()
+
+        if classification:
+            extracted_data = classification.extracted_data or {}
+
+            # Set status based on processing status
+            if classification.processing_status == 'completed':
+                ai_insights['status'] = 'completed'
+            elif classification.processing_status == 'failed':
+                ai_insights['status'] = 'failed'
+            else:
+                ai_insights['status'] = 'processing'
+
+            # Extract Key Insights sections
+            ai_insights['key_insights'] = extracted_data.get('key_insights', {})
+            ai_insights['risk_assessment'] = extracted_data.get('risk_assessment', {})
+            ai_insights['customer_metadata'] = extracted_data.get('customer_metadata', {})
+            ai_insights['speakers'] = extracted_data.get('speakers', [])
+            ai_insights['call_metadata'] = extracted_data.get('call_metadata', {})
+            ai_insights['theme_summary'] = extracted_data.get('theme_summary', {})
+            ai_insights['mappings'] = extracted_data.get('mappings', [])
+
+            # Also include raw data for debugging/display purposes
+            ai_insights['raw_response'] = classification.raw_ai_response
+
+        # Extract call metadata from raw transcript data
+        call_metadata = raw_data.get('metaData', raw_data.get('call_metadata', {}))
+
+        return {
+            'id': str(transcript.id),
+            'type': 'transcript' if transcript.source_type == 'gong' else 'meeting',
+            'source': transcript.source_type,
+            'title': transcript.title or f"{transcript.source_type.capitalize()} Call",
+            'content': transcript_text,
+            'sender': 'Transcript',
+            'sender_email': None,
+            'channel_name': None,
+            'sent_at': transcript.transcript_date.isoformat() if transcript.transcript_date else None,
+            'created_at': transcript.created_at.isoformat() if transcript.created_at else None,
+            'tier1_processed': transcript.ai_processed,
+            'tier2_processed': transcript.ai_processed,
+            'processed_at': transcript.processing_completed_at.isoformat() if transcript.processing_completed_at else None,
+            # Metadata fields
+            'metadata': call_metadata,
+            'ai_insights': ai_insights,
+            'thread_id': None,
+            # Gong/Fathom specific fields
+            'duration': duration_secs,
+            'duration_formatted': duration_formatted,
+            'parties': parties,
+            'participants': participants,
+            'customer_info': None,
+            'recording_url': call_metadata.get('recordingUrl') or call_metadata.get('recording_url'),
+            'has_transcript': True,
+            'call_id': transcript.source_id if transcript.source_type == 'gong' else None,
+            'session_id': transcript.source_id if transcript.source_type == 'fathom' else None,
+            # Gmail specific fields (not applicable)
+            'subject': None,
+            'from_name': None,
+            'from_email': None,
+            'to_emails': [],
+            'snippet': None,
+            'message_count': None,
+            'thread_date': None,
+            'label_name': None,
+            # Related customer asks (from classification)
+            'related_customer_asks': [],
+        }
+
+    def _format_transcript_text(self, raw_data: Dict[str, Any]) -> str:
+        """Format raw transcript data as readable text."""
+        if not raw_data:
+            return "No transcript available."
+
+        # Build speaker mapping from parties
+        parties = raw_data.get('parties', [])
+        speaker_map = {}
+        for party in parties:
+            speaker_id = party.get('speakerId')
+            if speaker_id:
+                name = party.get('name', 'Unknown')
+                email = party.get('emailAddress', '')
+                speaker_map[str(speaker_id)] = {'name': name, 'email': email}
+
+        # Get transcript segments
+        transcript_data = raw_data.get('transcript', {})
+        if isinstance(transcript_data, dict):
+            transcript_segments = transcript_data.get('transcript', [])
+        elif isinstance(transcript_data, list):
+            transcript_segments = transcript_data
+        else:
+            transcript_segments = []
+
+        if not isinstance(transcript_segments, list):
+            return "Transcript format not recognized."
+
+        lines = []
+        for segment in transcript_segments:
+            if not isinstance(segment, dict):
+                continue
+
+            speaker_id = str(segment.get('speakerId', ''))
+            speaker_info = speaker_map.get(speaker_id, {'name': 'Unknown Speaker', 'email': ''})
+
+            name = speaker_info['name']
+            email = speaker_info['email']
+
+            sentences = segment.get('sentences', [])
+            if not sentences:
+                text = segment.get('text', '')
+                if text:
+                    sentences = [{'text': text}]
+                else:
+                    continue
+
+            text_parts = []
+            for sentence in sentences:
+                if isinstance(sentence, dict):
+                    text = sentence.get('text', '').strip()
+                    if text:
+                        text_parts.append(text)
+                elif isinstance(sentence, str):
+                    text_parts.append(sentence.strip())
+
+            if not text_parts:
+                continue
+
+            full_text = ' '.join(text_parts)
+
+            if email:
+                lines.append(f"{name} ({email}): {full_text}")
+            else:
+                lines.append(f"{name}: {full_text}")
+
+        return "\n\n".join(lines) if lines else "No transcript content found."
 
     # ============ Sync History Operations ============
 
