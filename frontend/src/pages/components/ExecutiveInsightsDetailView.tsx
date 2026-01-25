@@ -1,0 +1,1226 @@
+/**
+ * Executive Insights Detail View - Standalone detail panel for transcript classification
+ * Reuses the logic from TranscriptClassificationDetailPanel but works standalone
+ */
+
+import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Typography,
+  IconButton,
+  Chip,
+  Paper,
+  useTheme,
+  alpha,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Grid,
+  LinearProgress,
+} from '@mui/material';
+import {
+  Close as CloseIcon,
+  ExpandMore as ExpandMoreIcon,
+  CheckCircle as CheckCircleIcon,
+  Error as ErrorIcon,
+  Schedule as ScheduleIcon,
+  Category as CategoryIcon,
+  Code as CodeIcon,
+  Info as InfoIcon,
+  People as PeopleIcon,
+  Insights as InsightsIcon,
+  TrendingUp as TrendingUpIcon,
+  Warning as WarningIcon,
+  Business as BusinessIcon,
+  Assessment as AssessmentIcon,
+  Lightbulb as LightbulbIcon,
+  SentimentSatisfied as SentimentSatisfiedIcon,
+  SentimentNeutral as SentimentNeutralIcon,
+  SentimentDissatisfied as SentimentDissatisfiedIcon,
+} from '@mui/icons-material';
+import { formatDateTime } from '@/features/explorer/utils/dateUtils';
+import type { TranscriptClassification, Theme, SubTheme } from '@/shared/types/api.types';
+import { themesApi } from '@/services/themes.api';
+
+interface ExecutiveInsightsDetailViewProps {
+  classification: TranscriptClassification;
+  themes: Theme[];
+  subThemes: SubTheme[];
+  onClose: () => void;
+}
+
+export function ExecutiveInsightsDetailView({
+  classification,
+  themes,
+  subThemes,
+  onClose,
+}: ExecutiveInsightsDetailViewProps) {
+  const theme = useTheme();
+  const [rawResponseExpanded, setRawResponseExpanded] = useState(false);
+  const [transcriptCounts, setTranscriptCounts] = useState<{
+    themeCounts: Record<string, number>;
+    subThemeCounts: Record<string, number>;
+  }>({ themeCounts: {}, subThemeCounts: {} });
+
+  // Fetch transcript counts
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const response = await themesApi.getTranscriptClassificationCounts();
+        setTranscriptCounts({
+          themeCounts: response.theme_counts || {},
+          subThemeCounts: response.sub_theme_counts || {},
+        });
+      } catch (error) {
+        console.error('Failed to fetch transcript counts:', error);
+      }
+    };
+    fetchCounts();
+  }, []);
+
+  const extractedData = classification.extracted_data || {};
+  const rawAiResponse = classification.raw_ai_response || extractedData;
+  
+  const mappings = (extractedData.mappings as any[]) || [];
+  const speakers = (extractedData.speakers as any[]) || [];
+  const keyInsights = extractedData.key_insights || {};
+  const callMetadata = extractedData.call_metadata || {};
+  const themeSummary = extractedData.theme_summary || {};
+  const riskAssessment = extractedData.risk_assessment || {};
+  const customerMetadata = extractedData.customer_metadata || {};
+
+  // Helper functions
+  const getThemeName = (themeId: string): string => {
+    const foundTheme = themes.find(t => t.id === themeId);
+    return foundTheme?.name || themeId;
+  };
+
+  const getSubThemeName = (subThemeId: string): string => {
+    const foundSubTheme = subThemes.find(st => st.id === subThemeId);
+    return foundSubTheme?.name || subThemeId;
+  };
+
+  const getThemeTranscriptCount = (themeId: string): number => {
+    return transcriptCounts.themeCounts[themeId] || 0;
+  };
+
+  const getSubThemeTranscriptCount = (subThemeId: string): number => {
+    return transcriptCounts.subThemeCounts[subThemeId] || 0;
+  };
+
+  const getStatusIcon = () => {
+    switch (classification.processing_status) {
+      case 'completed':
+        return <CheckCircleIcon sx={{ fontSize: 16 }} />;
+      case 'failed':
+        return <ErrorIcon sx={{ fontSize: 16 }} />;
+      case 'processing':
+        return <ScheduleIcon sx={{ fontSize: 16 }} />;
+      default:
+        return <ScheduleIcon sx={{ fontSize: 16 }} />;
+    }
+  };
+
+  const getStatusColor = () => {
+    switch (classification.processing_status) {
+      case 'completed':
+        return theme.palette.success.main;
+      case 'failed':
+        return theme.palette.error.main;
+      case 'processing':
+        return theme.palette.warning.main;
+      default:
+        return theme.palette.text.disabled;
+    }
+  };
+
+  const formatSourceType = (sourceType: string): string => {
+    return sourceType.toUpperCase();
+  };
+
+  const getSourceTypeColor = (sourceType: string): string => {
+    const colors: Record<string, string> = {
+      gong: '#7C5CFF',
+      fathom: '#00D1FF',
+      zoom: '#2D8CFF',
+      slack: '#4A154B',
+      gmail: '#EA4335',
+    };
+    return colors[sourceType.toLowerCase()] || theme.palette.primary.main;
+  };
+
+  const getRiskColor = (risk: string): string => {
+    const riskLower = risk?.toLowerCase() || '';
+    if (riskLower === 'low') return theme.palette.success.main;
+    if (riskLower === 'medium') return theme.palette.warning.main;
+    if (riskLower === 'high') return theme.palette.error.main;
+    return theme.palette.text.secondary;
+  };
+
+  const getSentimentIcon = (sentiment?: number) => {
+    if (sentiment === undefined || sentiment === null) return null;
+    if (sentiment > 0.3) return <SentimentSatisfiedIcon sx={{ fontSize: 18, color: theme.palette.success.main }} />;
+    if (sentiment < -0.3) return <SentimentDissatisfiedIcon sx={{ fontSize: 18, color: theme.palette.error.main }} />;
+    return <SentimentNeutralIcon sx={{ fontSize: 18, color: theme.palette.warning.main }} />;
+  };
+
+  return (
+    <Box
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
+      }}
+    >
+      {/* Header */}
+      <Box
+        sx={{
+          px: 3,
+          py: 2.5,
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          borderBottom: `1px solid ${theme.palette.divider}`,
+          bgcolor: 'background.paper',
+          flexShrink: 0,
+        }}
+      >
+        <Box sx={{ flex: 1, minWidth: 0, pr: 2 }}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: 600,
+              color: 'text.primary',
+              mb: 1.5,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+            }}
+          >
+            {classification.source_title || 'Untitled Transcript'}
+          </Typography>
+          
+          {/* Status Chips */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mb: 1 }}>
+            <Chip
+              label={formatSourceType(classification.source_type)}
+              size="small"
+              sx={{
+                bgcolor: alpha(getSourceTypeColor(classification.source_type), 0.1),
+                color: getSourceTypeColor(classification.source_type),
+                fontWeight: 500,
+                fontSize: '0.75rem',
+                height: 24,
+              }}
+            />
+            <Chip
+              icon={getStatusIcon()}
+              label={classification.processing_status.charAt(0).toUpperCase() + classification.processing_status.slice(1)}
+              size="small"
+              sx={{
+                bgcolor: alpha(getStatusColor(), 0.1),
+                color: getStatusColor(),
+                fontWeight: 500,
+                fontSize: '0.75rem',
+                height: 24,
+                '& .MuiChip-icon': {
+                  color: getStatusColor(),
+                },
+              }}
+            />
+            {callMetadata.overall_sentiment !== undefined && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                {getSentimentIcon(callMetadata.overall_sentiment)}
+                <Typography variant="caption" color="text.secondary">
+                  {callMetadata.overall_sentiment > 0 ? 'Positive' : callMetadata.overall_sentiment < 0 ? 'Negative' : 'Neutral'}
+                </Typography>
+              </Box>
+            )}
+          </Box>
+
+          {/* Date and Duration */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {classification.transcript_date && (
+              <Typography variant="body2" color="text.secondary">
+                {formatDateTime(classification.transcript_date)}
+              </Typography>
+            )}
+            {callMetadata.duration_minutes && (
+              <Typography variant="body2" color="text.secondary">
+                {callMetadata.duration_minutes} min
+              </Typography>
+            )}
+            {callMetadata.call_type && (
+              <Chip
+                label={callMetadata.call_type.replace('_', ' ')}
+                size="small"
+                sx={{
+                  height: 20,
+                  fontSize: '0.7rem',
+                  bgcolor: alpha(theme.palette.info.main, 0.1),
+                  color: 'info.main',
+                }}
+              />
+            )}
+          </Box>
+        </Box>
+        
+        <IconButton 
+          onClick={onClose} 
+          size="small" 
+          sx={{ 
+            flexShrink: 0,
+            color: 'text.secondary',
+            '&:hover': {
+              bgcolor: alpha(theme.palette.action.hover, 0.1),
+            },
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </Box>
+
+      {/* Content - Scrollable */}
+      <Box
+        sx={{
+          flex: 1,
+          overflow: 'auto',
+          p: 3,
+        }}
+      >
+        {/* Key Insights Section */}
+        {Object.keys(keyInsights).length > 0 && (
+          <Box sx={{ mb: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
+              <InsightsIcon sx={{ color: 'primary.main', fontSize: 20 }} />
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                Key Insights
+              </Typography>
+            </Box>
+            
+            <Grid container spacing={2}>
+              {/* Strongest Needs */}
+              {keyInsights.strongest_needs && Array.isArray(keyInsights.strongest_needs) && keyInsights.strongest_needs.length > 0 && (
+                <Grid item xs={12} md={6}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                      border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                      borderRadius: 2,
+                      height: '100%',
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                      <LightbulbIcon sx={{ fontSize: 18, color: theme.palette.warning.main }} />
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                        Strongest Needs
+                      </Typography>
+                    </Box>
+                    <Box component="ul" sx={{ m: 0, pl: 2 }}>
+                      {keyInsights.strongest_needs.map((need: string, idx: number) => (
+                        <li key={idx}>
+                          <Typography variant="body2" color="text.primary" sx={{ mb: 0.5 }}>
+                            {need}
+                          </Typography>
+                        </li>
+                      ))}
+                    </Box>
+                  </Paper>
+                </Grid>
+              )}
+
+              {/* Health Signals */}
+              {keyInsights.health_signals && (
+                <Grid item xs={12} md={6}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                      border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                      borderRadius: 2,
+                      height: '100%',
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                      <TrendingUpIcon sx={{ fontSize: 18, color: theme.palette.success.main }} />
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                        Health Signals
+                      </Typography>
+                    </Box>
+                    {keyInsights.health_signals.positive && Array.isArray(keyInsights.health_signals.positive) && keyInsights.health_signals.positive.length > 0 && (
+                      <Box sx={{ mb: 1 }}>
+                        <Typography variant="caption" color="success.main" sx={{ fontWeight: 500, display: 'block', mb: 0.5 }}>
+                          Positive
+                        </Typography>
+                        {keyInsights.health_signals.positive.map((signal: string, idx: number) => (
+                          <Chip
+                            key={idx}
+                            label={signal}
+                            size="small"
+                            sx={{
+                              mr: 0.5,
+                              mb: 0.5,
+                              bgcolor: alpha(theme.palette.success.main, 0.1),
+                              color: 'success.main',
+                              fontSize: '0.7rem',
+                            }}
+                          />
+                        ))}
+                      </Box>
+                    )}
+                    {keyInsights.health_signals.negative && Array.isArray(keyInsights.health_signals.negative) && keyInsights.health_signals.negative.length > 0 && (
+                      <Box>
+                        <Typography variant="caption" color="error.main" sx={{ fontWeight: 500, display: 'block', mb: 0.5 }}>
+                          Negative
+                        </Typography>
+                        {keyInsights.health_signals.negative.map((signal: string, idx: number) => (
+                          <Chip
+                            key={idx}
+                            label={signal}
+                            size="small"
+                            sx={{
+                              mr: 0.5,
+                              mb: 0.5,
+                              bgcolor: alpha(theme.palette.error.main, 0.1),
+                              color: 'error.main',
+                              fontSize: '0.7rem',
+                            }}
+                          />
+                        ))}
+                      </Box>
+                    )}
+                  </Paper>
+                </Grid>
+              )}
+
+              {/* Blockers */}
+              {keyInsights.blockers && Array.isArray(keyInsights.blockers) && keyInsights.blockers.length > 0 && (
+                <Grid item xs={12}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      bgcolor: alpha(theme.palette.error.main, 0.05),
+                      border: `1px solid ${alpha(theme.palette.error.main, 0.3)}`,
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                      <WarningIcon sx={{ fontSize: 18, color: theme.palette.error.main }} />
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'error.main' }}>
+                        Blockers
+                      </Typography>
+                    </Box>
+                    <Box component="ul" sx={{ m: 0, pl: 2 }}>
+                      {keyInsights.blockers.map((blocker: string, idx: number) => (
+                        <li key={idx}>
+                          <Typography variant="body2" color="error.main">
+                            {blocker}
+                          </Typography>
+                        </li>
+                      ))}
+                    </Box>
+                  </Paper>
+                </Grid>
+              )}
+
+              {/* Product Feedback */}
+              {keyInsights.product_feedback_for_pm && (
+                <Grid item xs={12}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      bgcolor: alpha(theme.palette.info.main, 0.05),
+                      border: `1px solid ${alpha(theme.palette.info.main, 0.3)}`,
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'info.main' }}>
+                      Product Feedback for PM
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {keyInsights.product_feedback_for_pm}
+                    </Typography>
+                  </Paper>
+                </Grid>
+              )}
+            </Grid>
+          </Box>
+        )}
+
+        {/* Risk Assessment Section */}
+        {Object.keys(riskAssessment).length > 0 && (
+          <Box sx={{ mb: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
+              <AssessmentIcon sx={{ color: 'primary.main', fontSize: 20 }} />
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                Risk Assessment
+              </Typography>
+            </Box>
+            
+            <Grid container spacing={2}>
+              {riskAssessment.deal_risk && (
+                <Grid item xs={12} sm={6} md={3}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                      border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+                      Deal Risk
+                    </Typography>
+                    <Chip
+                      label={riskAssessment.deal_risk}
+                      size="small"
+                      sx={{
+                        bgcolor: alpha(getRiskColor(riskAssessment.deal_risk), 0.1),
+                        color: getRiskColor(riskAssessment.deal_risk),
+                        fontWeight: 600,
+                        textTransform: 'capitalize',
+                      }}
+                    />
+                  </Paper>
+                </Grid>
+              )}
+
+              {riskAssessment.churn_risk && riskAssessment.churn_risk !== 'n/a' && (
+                <Grid item xs={12} sm={6} md={3}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                      border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+                      Churn Risk
+                    </Typography>
+                    <Chip
+                      label={riskAssessment.churn_risk}
+                      size="small"
+                      sx={{
+                        bgcolor: alpha(getRiskColor(riskAssessment.churn_risk), 0.1),
+                        color: getRiskColor(riskAssessment.churn_risk),
+                        fontWeight: 600,
+                        textTransform: 'capitalize',
+                      }}
+                    />
+                  </Paper>
+                </Grid>
+              )}
+
+              {riskAssessment.expansion_signal && (
+                <Grid item xs={12} sm={6} md={3}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                      border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+                      Expansion Signal
+                    </Typography>
+                    <Chip
+                      label={riskAssessment.expansion_signal}
+                      size="small"
+                      sx={{
+                        bgcolor: alpha(getRiskColor(riskAssessment.expansion_signal), 0.1),
+                        color: getRiskColor(riskAssessment.expansion_signal),
+                        fontWeight: 600,
+                        textTransform: 'capitalize',
+                      }}
+                    />
+                  </Paper>
+                </Grid>
+              )}
+
+              {riskAssessment.customer_type && (
+                <Grid item xs={12} sm={6} md={3}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                      border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+                      Customer Type
+                    </Typography>
+                    <Chip
+                      label={riskAssessment.customer_type}
+                      size="small"
+                      sx={{
+                        bgcolor: alpha(theme.palette.info.main, 0.1),
+                        color: 'info.main',
+                        fontWeight: 600,
+                        textTransform: 'capitalize',
+                      }}
+                    />
+                  </Paper>
+                </Grid>
+              )}
+            </Grid>
+
+            {/* Risk Reasons */}
+            {(riskAssessment.deal_risk_reasons && riskAssessment.deal_risk_reasons.length > 0) ||
+             (riskAssessment.churn_risk_reasons && riskAssessment.churn_risk_reasons.length > 0) ||
+             (riskAssessment.expansion_reasons && riskAssessment.expansion_reasons.length > 0) ? (
+              <Box sx={{ mt: 2 }}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    p: 2,
+                    bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                    border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                    borderRadius: 2,
+                  }}
+                >
+                  {riskAssessment.deal_risk_reasons && riskAssessment.deal_risk_reasons.length > 0 && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                        Deal Risk Reasons
+                      </Typography>
+                      <Box component="ul" sx={{ m: 0, pl: 2 }}>
+                        {riskAssessment.deal_risk_reasons.map((reason: string, idx: number) => (
+                          <li key={idx}>
+                            <Typography variant="body2" color="text.primary">
+                              {reason}
+                            </Typography>
+                          </li>
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
+                  {riskAssessment.expansion_reasons && riskAssessment.expansion_reasons.length > 0 && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                        Expansion Reasons
+                      </Typography>
+                      <Box component="ul" sx={{ m: 0, pl: 2 }}>
+                        {riskAssessment.expansion_reasons.map((reason: string, idx: number) => (
+                          <li key={idx}>
+                            <Typography variant="body2" color="text.primary">
+                              {reason}
+                            </Typography>
+                          </li>
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
+                  {riskAssessment.churn_risk_reasons && riskAssessment.churn_risk_reasons.length > 0 && (
+                    <Box>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'error.main' }}>
+                        Churn Risk Reasons
+                      </Typography>
+                      <Box component="ul" sx={{ m: 0, pl: 2 }}>
+                        {riskAssessment.churn_risk_reasons.map((reason: string, idx: number) => (
+                          <li key={idx}>
+                            <Typography variant="body2" color="error.main">
+                              {reason}
+                            </Typography>
+                          </li>
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
+                </Paper>
+              </Box>
+            ) : null}
+          </Box>
+        )}
+
+        {/* Customer Metadata Section */}
+        {Object.keys(customerMetadata).length > 0 && (
+          <Box sx={{ mb: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
+              <BusinessIcon sx={{ color: 'primary.main', fontSize: 20 }} />
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                Customer Information
+              </Typography>
+            </Box>
+            
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2.5,
+                bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                borderRadius: 2,
+              }}
+            >
+              <Grid container spacing={2}>
+                {customerMetadata.company_name && (
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontWeight: 500 }}>
+                      Company Name
+                    </Typography>
+                    <Typography variant="body2" color="text.primary" sx={{ fontWeight: 500 }}>
+                      {customerMetadata.company_name}
+                    </Typography>
+                  </Grid>
+                )}
+                {customerMetadata.company_stage && (
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontWeight: 500 }}>
+                      Company Stage
+                    </Typography>
+                    <Chip
+                      label={customerMetadata.company_stage.toUpperCase()}
+                      size="small"
+                      sx={{
+                        bgcolor: alpha(theme.palette.primary.main, 0.1),
+                        color: 'primary.main',
+                        fontWeight: 500,
+                      }}
+                    />
+                  </Grid>
+                )}
+                {customerMetadata.use_case && (
+                  <Grid item xs={12}>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontWeight: 500 }}>
+                      Use Case
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {customerMetadata.use_case}
+                    </Typography>
+                  </Grid>
+                )}
+                {customerMetadata.timeline && (
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontWeight: 500 }}>
+                      Timeline
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {customerMetadata.timeline}
+                    </Typography>
+                  </Grid>
+                )}
+                {customerMetadata.current_solution && (
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontWeight: 500 }}>
+                      Current Solution
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {customerMetadata.current_solution}
+                    </Typography>
+                  </Grid>
+                )}
+                {customerMetadata.budget_signals && (
+                  <Grid item xs={12}>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontWeight: 500 }}>
+                      Budget Signals
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {customerMetadata.budget_signals}
+                    </Typography>
+                  </Grid>
+                )}
+              </Grid>
+            </Paper>
+          </Box>
+        )}
+
+        {/* Speakers Section */}
+        {speakers.length > 0 && (
+          <Box sx={{ mb: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
+              <PeopleIcon sx={{ color: 'primary.main', fontSize: 20 }} />
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                Speakers ({speakers.length})
+              </Typography>
+            </Box>
+            
+            <Grid container spacing={2}>
+              {speakers.map((speaker: any, index: number) => (
+                <Grid item xs={12} sm={6} key={index}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                      border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                      {speaker.name}
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                      {speaker.email && (
+                        <Typography variant="body2" color="text.secondary">
+                          {speaker.email}
+                        </Typography>
+                      )}
+                      {speaker.company && (
+                        <Typography variant="body2" color="text.secondary">
+                          {speaker.company}
+                        </Typography>
+                      )}
+                      {speaker.job_role && speaker.job_role !== 'unknown' && (
+                        <Typography variant="body2" color="text.secondary">
+                          {speaker.job_role}
+                        </Typography>
+                      )}
+                      <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                        {speaker.role_type && (
+                          <Chip
+                            label={speaker.role_type.replace('_', ' ')}
+                            size="small"
+                            sx={{
+                              height: 20,
+                              fontSize: '0.7rem',
+                              bgcolor: speaker.role_type === 'customer' 
+                                ? alpha(theme.palette.primary.main, 0.1)
+                                : alpha(theme.palette.secondary.main, 0.1),
+                              color: speaker.role_type === 'customer' ? 'primary.main' : 'secondary.main',
+                            }}
+                          />
+                        )}
+                        {speaker.authority_level && speaker.authority_level !== 'unknown' && (
+                          <Chip
+                            label={speaker.authority_level}
+                            size="small"
+                            sx={{
+                              height: 20,
+                              fontSize: '0.7rem',
+                              bgcolor: alpha(theme.palette.info.main, 0.1),
+                              color: 'info.main',
+                            }}
+                          />
+                        )}
+                      </Box>
+                    </Box>
+                  </Paper>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        )}
+
+        {/* Call Metadata Section */}
+        {Object.keys(callMetadata).length > 0 && callMetadata.next_steps && (
+          <Box sx={{ mb: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
+              <InfoIcon sx={{ color: 'primary.main', fontSize: 20 }} />
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                Call Details
+              </Typography>
+            </Box>
+            
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2.5,
+                bgcolor: alpha(theme.palette.info.main, 0.05),
+                border: `1px solid ${alpha(theme.palette.info.main, 0.3)}`,
+                borderRadius: 2,
+              }}
+            >
+              {callMetadata.next_steps && (
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'info.main' }}>
+                    Next Steps
+                  </Typography>
+                  <Typography variant="body2" color="text.primary">
+                    {callMetadata.next_steps}
+                  </Typography>
+                </Box>
+              )}
+            </Paper>
+          </Box>
+        )}
+
+        {/* Theme Summary Section */}
+        {Object.keys(themeSummary).length > 0 && (
+          <Box sx={{ mb: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
+              <CategoryIcon sx={{ color: 'primary.main', fontSize: 20 }} />
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                Theme Summary
+              </Typography>
+            </Box>
+            
+            <Grid container spacing={2}>
+              {Object.values(themeSummary).map((themeData: any, index: number) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                      border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                      borderRadius: 2,
+                      height: '100%',
+                    }}
+                  >
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                      {themeData.theme_name || getThemeName(themeData.theme_id)}
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Mentions: {themeData.mention_count || 0}
+                        </Typography>
+                        <LinearProgress
+                          variant="determinate"
+                          value={Math.min((themeData.mention_count || 0) * 10, 100)}
+                          sx={{
+                            mt: 0.5,
+                            height: 4,
+                            borderRadius: 2,
+                            bgcolor: alpha(theme.palette.primary.main, 0.1),
+                            '& .MuiLinearProgress-bar': {
+                              bgcolor: theme.palette.primary.main,
+                            },
+                          }}
+                        />
+                      </Box>
+                      {themeData.avg_impact && (
+                        <Box>
+                          <Typography variant="caption" color="text.secondary">
+                            Avg Impact: {themeData.avg_impact}
+                          </Typography>
+                          <LinearProgress
+                            variant="determinate"
+                            value={themeData.avg_impact}
+                            sx={{
+                              mt: 0.5,
+                              height: 4,
+                              borderRadius: 2,
+                              bgcolor: alpha(theme.palette.warning.main, 0.1),
+                              '& .MuiLinearProgress-bar': {
+                                bgcolor: theme.palette.warning.main,
+                              },
+                            }}
+                          />
+                        </Box>
+                      )}
+                      {themeData.avg_confidence && (
+                        <Typography variant="caption" color="text.secondary">
+                          Avg Confidence: {themeData.avg_confidence}%
+                        </Typography>
+                      )}
+                      {themeData.has_blocker && (
+                        <Chip
+                          label="Has Blocker"
+                          size="small"
+                          sx={{
+                            bgcolor: alpha(theme.palette.error.main, 0.1),
+                            color: 'error.main',
+                            fontSize: '0.7rem',
+                            width: 'fit-content',
+                          }}
+                        />
+                      )}
+                    </Box>
+                  </Paper>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        )}
+
+        {/* Feature Mappings Section */}
+        {mappings.length > 0 && (
+          <Box sx={{ mb: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
+              <CategoryIcon sx={{ color: 'primary.main', fontSize: 20 }} />
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                Feature Mappings ({mappings.length})
+              </Typography>
+            </Box>
+            
+            {mappings.map((mapping: any, index: number) => (
+              <Paper
+                key={index}
+                elevation={0}
+                sx={{
+                  p: 2.5,
+                  mb: 2,
+                  bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                  border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                  borderRadius: 2,
+                  '&:last-child': {
+                    mb: 0,
+                  },
+                }}
+              >
+                {/* Interpreted Need */}
+                {mapping.interpreted_need && (
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      fontWeight: 500, 
+                      mb: 1.5,
+                      color: 'text.primary',
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {mapping.interpreted_need}
+                  </Typography>
+                )}
+
+                {/* Verbatim Quote */}
+                {mapping.verbatim_quote && (
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: 'text.secondary',
+                      fontStyle: 'italic',
+                      mb: 1.5,
+                      pl: 2,
+                      borderLeft: `3px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    "{mapping.verbatim_quote}"
+                  </Typography>
+                )}
+
+                {/* Reasoning */}
+                {mapping.reasoning && (
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary" 
+                    sx={{ 
+                      mb: 2,
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {mapping.reasoning}
+                  </Typography>
+                )}
+
+                {/* Additional Mapping Details */}
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                  {mapping.signal_type && (
+                    <Chip
+                      label={mapping.signal_type.replace('_', ' ')}
+                      size="small"
+                      sx={{
+                        height: 22,
+                        fontSize: '0.7rem',
+                        bgcolor: alpha(theme.palette.info.main, 0.1),
+                        color: 'info.main',
+                      }}
+                    />
+                  )}
+                  {mapping.impact_score && (
+                    <Chip
+                      label={`Impact: ${mapping.impact_score}`}
+                      size="small"
+                      sx={{
+                        height: 22,
+                        fontSize: '0.7rem',
+                        bgcolor: alpha(theme.palette.warning.main, 0.1),
+                        color: 'warning.main',
+                      }}
+                    />
+                  )}
+                  {mapping.confidence_score && (
+                    <Chip
+                      label={`Confidence: ${mapping.confidence_score}%`}
+                      size="small"
+                      sx={{
+                        height: 22,
+                        fontSize: '0.7rem',
+                        bgcolor: alpha(theme.palette.success.main, 0.1),
+                        color: 'success.main',
+                      }}
+                    />
+                  )}
+                  {mapping.sentiment !== undefined && mapping.sentiment !== null && (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      {getSentimentIcon(mapping.sentiment)}
+                      <Typography variant="caption" color="text.secondary">
+                        {mapping.sentiment > 0 ? 'Positive' : mapping.sentiment < 0 ? 'Negative' : 'Neutral'}
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
+
+                {/* Business Context */}
+                {mapping.business_context && (
+                  <Box
+                    sx={{
+                      p: 1.5,
+                      mb: 2,
+                      bgcolor: alpha(theme.palette.info.main, 0.05),
+                      borderRadius: 1,
+                    }}
+                  >
+                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500, display: 'block', mb: 0.5 }}>
+                      Business Context
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {mapping.business_context}
+                    </Typography>
+                  </Box>
+                )}
+
+                {/* Theme and Sub-theme Tags */}
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  {mapping.theme_id && (
+                    <Chip
+                      label={`Theme: ${getThemeName(mapping.theme_id)} (${getThemeTranscriptCount(mapping.theme_id)})`}
+                      size="small"
+                      sx={{
+                        bgcolor: alpha(theme.palette.primary.main, 0.1),
+                        color: 'primary.main',
+                        fontWeight: 500,
+                        fontSize: '0.75rem',
+                        height: 24,
+                      }}
+                    />
+                  )}
+                  {mapping.sub_theme_id && (
+                    <Chip
+                      label={`Sub-theme: ${getSubThemeName(mapping.sub_theme_id)} (${getSubThemeTranscriptCount(mapping.sub_theme_id)})`}
+                      size="small"
+                      sx={{
+                        bgcolor: alpha(theme.palette.secondary.main, 0.1),
+                        color: 'secondary.main',
+                        fontWeight: 500,
+                        fontSize: '0.75rem',
+                        height: 24,
+                      }}
+                    />
+                  )}
+                </Box>
+              </Paper>
+            ))}
+          </Box>
+        )}
+
+        {/* Raw AI Response Section */}
+        <Accordion
+          expanded={rawResponseExpanded}
+          onChange={() => setRawResponseExpanded(!rawResponseExpanded)}
+          sx={{
+            mb: 3,
+            bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+            border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+            boxShadow: 'none',
+            '&:before': {
+              display: 'none',
+            },
+          }}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            sx={{
+              px: 2,
+              py: 1.5,
+              '& .MuiAccordionSummary-content': {
+                my: 0,
+              },
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <CodeIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+              <Typography variant="subtitle2" sx={{ fontWeight: 500 }}>
+                Raw AI Response
+              </Typography>
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails sx={{ px: 2, pb: 2, pt: 0 }}>
+            <Box
+              sx={{
+                bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#F5F5F5',
+                p: 2,
+                borderRadius: 1,
+                overflow: 'auto',
+                maxHeight: 400,
+              }}
+            >
+              <pre
+                style={{
+                  margin: 0,
+                  fontSize: '0.75rem',
+                  fontFamily: 'monospace',
+                  color: theme.palette.text.primary,
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {JSON.stringify(rawAiResponse, null, 2)}
+              </pre>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Source Information Section */}
+        <Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+            <InfoIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+            <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary' }}>
+              Source Information
+            </Typography>
+          </Box>
+          
+          <Paper
+            elevation={0}
+            sx={{
+              p: 2,
+              bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+              border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+              borderRadius: 2,
+            }}
+          >
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500, mb: 0.5, display: 'block' }}>
+                  Source ID
+                </Typography>
+                <Typography variant="body2" color="text.primary">
+                  {classification.source_id}
+                </Typography>
+              </Box>
+              
+              {classification.created_at && (
+                <Box>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500, mb: 0.5, display: 'block' }}>
+                    Created
+                  </Typography>
+                  <Typography variant="body2" color="text.primary">
+                    {formatDateTime(classification.created_at)}
+                  </Typography>
+                </Box>
+              )}
+              
+              {classification.source_type && (
+                <Box>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500, mb: 0.5, display: 'block' }}>
+                    Source Type
+                  </Typography>
+                  <Typography variant="body2" color="text.primary">
+                    {formatSourceType(classification.source_type)}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </Paper>
+        </Box>
+      </Box>
+    </Box>
+  );
+}
