@@ -37,6 +37,9 @@ from app.models.normalized_event import NormalizedEvent, EventChunk
 from app.models.extracted_fact import ExtractedFact, AggregationRun
 from app.models.clustering import ClusteringRun
 
+# Transcript classifications
+from app.models.transcript_classification import TranscriptClassification
+
 __all__ = [
     # Core
     "Company",
@@ -65,4 +68,6 @@ __all__ = [
     "ExtractedFact",
     "AggregationRun",
     "ClusteringRun",
+    # Transcript classifications
+    "TranscriptClassification",
 ]

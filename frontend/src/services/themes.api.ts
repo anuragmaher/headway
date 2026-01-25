@@ -20,6 +20,8 @@ import type {
   CustomerAskUpdate,
   CustomerAskListResponse,
   MentionListResponse,
+  TranscriptClassification,
+  TranscriptClassificationListResponse,
 } from '@/shared/types/api.types';
 
 const BASE_URL = '/api/v1/themes';
@@ -183,6 +185,56 @@ export const themesApi = {
     const response = await api.get<MentionListResponse>(
       `${BASE_URL}/customer-asks/${customerAskId}/mentions`,
       { params: { limit, offset, include_linked_asks: includeLinkedAsks } }
+    );
+    return response.data;
+  },
+
+  // === Transcript Classifications ===
+
+  async getTranscriptClassificationCounts(): Promise<{
+    theme_counts: Record<string, number>;
+    sub_theme_counts: Record<string, number>;
+  }> {
+    const response = await api.get<{
+      theme_counts: Record<string, number>;
+      sub_theme_counts: Record<string, number>;
+    }>(`${BASE_URL}/transcript-classifications/counts`);
+    return response.data;
+  },
+
+  async listTranscriptClassifications(
+    themeId?: string,
+    subThemeId?: string,
+    sourceType?: string,
+    processingStatus?: string
+  ): Promise<TranscriptClassificationListResponse> {
+    const params = new URLSearchParams();
+    if (themeId) params.append('theme_id', themeId);
+    if (subThemeId) params.append('sub_theme_id', subThemeId);
+    if (sourceType) params.append('source_type', sourceType);
+    if (processingStatus) params.append('processing_status', processingStatus);
+
+    const response = await api.get<TranscriptClassificationListResponse>(
+      `${BASE_URL}/transcript-classifications?${params.toString()}`
+    );
+    return response.data;
+  },
+
+  async getTranscriptClassification(
+    classificationId: string
+  ): Promise<TranscriptClassification> {
+    const response = await api.get<TranscriptClassification>(
+      `${BASE_URL}/transcript-classifications/${classificationId}`
+    );
+    return response.data;
+  },
+
+  async searchTranscriptClassifications(
+    query: string,
+    limit: number = 20
+  ): Promise<TranscriptClassification[]> {
+    const response = await api.get<TranscriptClassification[]>(
+      `${BASE_URL}/transcript-classifications/search?q=${encodeURIComponent(query)}&limit=${limit}`
     );
     return response.data;
   },

@@ -154,15 +154,15 @@ export const createUISlice: StateCreator<
     // Fetch sub-themes when theme is selected
     if (themeId) {
       get().fetchSubThemes(themeId);
-      get().clearCustomerAsks();
+      get().clearTranscriptClassifications();  // Clear when theme changes
     } else {
       get().clearSubThemes();
-      get().clearCustomerAsks();
+      get().clearTranscriptClassifications();
     }
   },
 
   selectSubTheme: (subThemeId: string | null) => {
-    const { isMobile } = get();
+    const { isMobile, selectedThemeId } = get();
     
     set({
       selectedSubThemeId: subThemeId,
@@ -176,16 +176,16 @@ export const createUISlice: StateCreator<
       const subTheme = get().subThemes.find(st => st.id === subThemeId);
       get().pushMobileNavigation({
         view: 'customerAsks',
-        title: subTheme?.name || 'Customer Asks',
+        title: subTheme?.name || 'Transcript Classifications',
         selectedId: subThemeId
       });
     }
 
-    // Fetch customer asks when sub-theme is selected
+    // Fetch transcript classifications when sub-theme is selected
     if (subThemeId) {
-      get().fetchCustomerAsks(subThemeId);
+      get().fetchTranscriptClassifications(subThemeId, selectedThemeId || undefined);
     } else {
-      get().clearCustomerAsks();
+      get().clearTranscriptClassifications();
     }
   },
 

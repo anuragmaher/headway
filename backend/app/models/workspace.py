@@ -43,6 +43,9 @@ class Workspace(Base):
     extracted_facts = relationship("ExtractedFact", back_populates="workspace", cascade="all, delete-orphan")
     aggregation_runs = relationship("AggregationRun", back_populates="workspace", cascade="all, delete-orphan")
     clustering_runs = relationship("ClusteringRun", back_populates="workspace", cascade="all, delete-orphan")
+    
+    # Transcript classifications
+    transcript_classifications = relationship("TranscriptClassification", back_populates="workspace", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         return f"<Workspace(id={self.id}, name='{self.name}')>"

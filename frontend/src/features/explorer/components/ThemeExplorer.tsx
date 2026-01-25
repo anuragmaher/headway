@@ -2,16 +2,17 @@
  * ThemeExplorer - Main container for the explorer interface
  * Enterprise-grade exploration and triage workspace for product managers
  *
- * Structure: Theme Selection -> Split View (SubThemes + CustomerAsks) -> Mentions (slide-in panel)
+ * Structure: Theme Selection -> Split View (SubThemes + TranscriptClassifications) -> Details (slide-in panel)
  */
 import React, { useEffect, useRef } from 'react';
 import { Box, CircularProgress, Alert, AlertTitle, useTheme, useMediaQuery, Slide, Typography, Fade, Button, alpha } from '@mui/material';
 import { SubThemesColumn } from './SubThemesColumn';
-import { CustomerAsksColumn } from './CustomerAsksColumn';
+import { TranscriptClassificationsColumn } from './TranscriptClassificationsColumn';
 import { MentionsPanel } from './MentionsPanel';
 import { MobileNavigationHeader } from './MobileNavigationHeader';
 import { MobileMentionsDrawer } from './MobileMentionsDrawer';
 import { MentionsBottomPanel } from './MentionsBottomPanel';
+import { TranscriptClassificationRightPanel } from './TranscriptClassificationsColumn/TranscriptClassificationRightPanel';
 import { ThemeSelectionView } from './ThemeSelectionView';
 import { AddThemeDialog } from './dialogs/AddThemeDialog';
 import { AddSubThemeDialog } from './dialogs/AddSubThemeDialog';
@@ -31,6 +32,7 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isPanelOpen = useIsMentionsPanelOpen();
   const [bottomPanelHeight, setBottomPanelHeight] = React.useState(50); // percentage
+  const [rightPanelWidth, setRightPanelWidth] = React.useState(50); // percentage for transcript classification detail panel
   const {
     isInitializing,
     isInitialized,
@@ -49,14 +51,16 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
     mobileActiveView,
     mobileNavigationStack,
     selectedFeedbackId,
-    selectedCustomerAskId,
+    selectedTranscriptClassificationId,
     // Actions
     selectTheme,
     selectSubTheme,
     selectFeedback,
-    selectCustomerAsk,
+    selectTranscriptClassification,
     closeMentionsPanel,
   } = useExplorerStore();
+  
+  const isTranscriptClassificationPanelOpen = !!selectedTranscriptClassificationId;
 
   // Ref to prevent duplicate initialization calls
   const initCalledRef = useRef(false);
@@ -236,10 +240,10 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
             </Box>
           </Slide>
 
-          {/* Step 2: Customer Asks */}
+          {/* Step 2: Transcript Classifications */}
           <Slide direction="left" in={mobileActiveView === 'customerAsks'} mountOnEnter unmountOnExit>
             <Box sx={{ height: '100%', width: '100%', position: 'absolute' }}>
-              <CustomerAsksColumn isPanelOpen={false} />
+              <TranscriptClassificationsColumn isPanelOpen={false} />
             </Box>
           </Slide>
           {/* 
@@ -253,7 +257,7 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
 
         {/* Mobile Mentions Drawer - Alternative approach */}
         <MobileMentionsDrawer
-          open={!!selectedCustomerAskId}
+          open={!!selectedTranscriptClassificationId}
           onClose={() => closeMentionsPanel()}
         />
 
@@ -298,7 +302,7 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
     );
   }
 
-  // Step 2: Theme selected - Show two-column split view (SubThemes + CustomerAsks) with draggable bottom panel
+  // Step 2: Theme selected - Show two-column split view (SubThemes + TranscriptClassifications) with draggable bottom panel
   return (
     <Fade in timeout={300}>
       <Box
@@ -339,7 +343,7 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
           </Button>
         </Box>
 
-        {/* Main Content Area - Two Columns (SubThemes + CustomerAsks) */}
+        {/* Main Content Area - Two Columns (SubThemes + TranscriptClassifications) */}
         <Box 
           sx={{ 
             display: 'flex',
@@ -351,7 +355,7 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
           {/* Left Column - SubThemes */}
           <SubThemesColumn width={280} />
 
-          {/* Right Column - Customer Asks with Mentions Panel Container (Horizontal Split) */}
+          {/* Right Column - Transcript Classifications with Details Panel Container (Vertical Split) */}
           <Box
             sx={{
               flex: 1,
@@ -362,26 +366,25 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
               minWidth: 0,
             }}
           >
-            {/* Customer Asks Column */}
+            {/* Transcript Classifications Column */}
             <Box
               sx={{
                 flex: 1,
-                width: isPanelOpen ? `${100 - bottomPanelHeight}%` : '100%',
+                width: isTranscriptClassificationPanelOpen ? `${100 - rightPanelWidth}%` : '100%',
                 transition: 'width 0.3s ease-in-out',
                 overflow: 'hidden',
-                borderRight: isPanelOpen ? `1px solid ${theme.palette.divider}` : 'none',
+                borderRight: isTranscriptClassificationPanelOpen ? `1px solid ${theme.palette.divider}` : 'none',
               }}
             >
-              <CustomerAsksColumn isPanelOpen={isPanelOpen} />
+              <TranscriptClassificationsColumn isPanelOpen={isTranscriptClassificationPanelOpen} />
             </Box>
 
-            {/* Right Panel for Mentions */}
-            <MentionsBottomPanel
-              open={isPanelOpen}
-              onClose={() => closeMentionsPanel()}
-              height={`${bottomPanelHeight}%`}
-              onHeightChange={setBottomPanelHeight}
-              orientation="horizontal"
+            {/* Right Panel for Transcript Classification Details */}
+            <TranscriptClassificationRightPanel
+              open={isTranscriptClassificationPanelOpen}
+              onClose={() => selectTranscriptClassification(null)}
+              width={`${rightPanelWidth}%`}
+              onWidthChange={setRightPanelWidth}
             />
           </Box>
         </Box>

@@ -1,0 +1,266 @@
+[
+  {
+    "id": "a98ad030-84ee-4d2a-803a-5f965ddabf0d",
+    "name": "Getting Started",
+    "description": "Initial setup and onboarding for new users",
+    "sort_order": 0,
+    "sub_themes": [
+      {
+        "id": "60f63056-8dea-4c3a-8ccc-841e8376a57f",
+        "name": "Account Setup",
+        "description": "Create and configure your account",
+        "sort_order": 0
+      },
+      {
+        "id": "87670ad7-8ca7-490f-9cba-aa6384fddb13",
+        "name": "First Steps",
+        "description": "Basic actions to take after signup",
+        "sort_order": 1
+      },
+      {
+        "id": "9b797a07-1be7-4878-9910-449e9ad7d4ab",
+        "name": "Gmail Integration",
+        "description": "Connect Hiver with your Gmail",
+        "sort_order": 2
+      },
+      {
+        "id": "f0a73269-39fa-4d66-b938-dbaeffbbc321",
+        "name": "Shared Inbox Setup",
+        "description": "Establish a shared inbox for your team",
+        "sort_order": 3
+      },
+      {
+        "id": "3baa3697-3dec-475d-be00-16eba3c6b0b8",
+        "name": "Import Data",
+        "description": "Transfer existing data into Hiver",
+        "sort_order": 4
+      },
+      {
+        "id": "7e04cd1f-1834-49e1-90dc-f0c67bdfe2ac",
+        "name": "Mobile Access",
+        "description": "Using Hiver on mobile devices",
+        "sort_order": 5
+      }
+    ]
+  },
+  {
+    "id": "bb903958-9aa3-45d3-896a-098875b6f618",
+    "name": "Multi-Channel Support",
+    "description": "Manage customer interactions across various platforms",
+    "sort_order": 1,
+    "sub_themes": [
+      {
+        "id": "8a15346b-3b62-4768-803a-c8aad6aaa775",
+        "name": "Email Management",
+        "description": "Handle customer emails efficiently",
+        "sort_order": 0
+      },
+      {
+        "id": "87e6fcc7-bc7f-423e-bc67-59d653e1dc2b",
+        "name": "Chat Support",
+        "description": "Integrate chat for real-time support",
+        "sort_order": 1
+      },
+      {
+        "id": "3b7cf0c3-e8b6-475e-9f01-97cd03a02d2d",
+        "name": "Social Media Integration",
+        "description": "Connect social channels for support",
+        "sort_order": 2
+      },
+      {
+        "id": "516aa759-9346-4d10-9308-a9ed32c77364",
+        "name": "Phone Support",
+        "description": "Manage customer calls effectively",
+        "sort_order": 3
+      },
+      {
+        "id": "6b09ef31-1377-456c-8dda-69b3f4f4a2ad",
+        "name": "Unified Inbox",
+        "description": "Consolidate messages from all channels",
+        "sort_order": 4
+      },
+      {
+        "id": "77d9fa3a-bfea-445a-b939-e849b7889416",
+        "name": "Response Templates",
+        "description": "Use templates for quick replies",
+        "sort_order": 5
+      }
+    ]
+  },
+  {
+    "id": "25989a75-759b-4aea-a97d-0da42e6a5cbf",
+    "name": "Workflow Automation",
+    "description": "Streamline repetitive tasks with automation",
+    "sort_order": 2,
+    "sub_themes": [
+      {
+        "id": "ebff2f70-8581-4b67-adf6-80455f3b6beb",
+        "name": "Rule Creation",
+        "description": "Set rules for automated actions",
+        "sort_order": 0
+      },
+      {
+        "id": "17109f19-7c84-4eb5-bcfb-d35ddc474522",
+        "name": "Task Assignment",
+        "description": "Automatically assign tasks to team members",
+        "sort_order": 1
+      },
+      {
+        "id": "c5610224-1eb7-49d3-b2f6-53a08a0fe5cf",
+        "name": "Email Triggers",
+        "description": "Trigger actions based on email events",
+        "sort_order": 2
+      },
+      {
+        "id": "12fa1017-4651-44ed-b8fb-e5c618c1d595",
+        "name": "Follow-Up Reminders",
+        "description": "Automate reminders for follow-ups",
+        "sort_order": 3
+      },
+      {
+        "id": "86ab8d45-7651-48dc-af0d-e95488e625e9",
+        "name": "SLA Management",
+        "description": "Manage service level agreements efficiently",
+        "sort_order": 4
+      },
+      {
+        "id": "6e11736d-1f5c-4c62-8419-e8570353cf20",
+        "name": "Performance Reports",
+        "description": "Generate reports on automated tasks",
+        "sort_order": 5
+      }
+    ]
+  },
+  {
+    "id": "50fbdd18-0a06-4a9a-b974-9a5139365c0a",
+    "name": "Team Collaboration",
+    "description": "Enhance teamwork and communication within Hiver",
+    "sort_order": 3,
+    "sub_themes": [
+      {
+        "id": "6738bd6c-4d49-4c6d-80dd-45cb6f15e037",
+        "name": "Shared Notes",
+        "description": "Collaborate on notes within Hiver",
+        "sort_order": 0
+      },
+      {
+        "id": "2c77ba0f-5d6f-49e4-b3bb-91e03e18ad7a",
+        "name": "Conversation Assignment",
+        "description": "Assign conversations to team members",
+        "sort_order": 1
+      },
+      {
+        "id": "5b9e4453-2b10-4b62-859f-7a57ba1793af",
+        "name": "Approval Workflows",
+        "description": "Manage approvals within the team",
+        "sort_order": 2
+      },
+      {
+        "id": "ebbaa53a-48dc-4247-914f-924e155f3d60",
+        "name": "Internal Comments",
+        "description": "Add comments for team discussions",
+        "sort_order": 3
+      },
+      {
+        "id": "64dac13a-c2a0-428e-9be6-0779ac49b160",
+        "name": "Task Management",
+        "description": "Track tasks assigned to team members",
+        "sort_order": 4
+      },
+      {
+        "id": "235612a9-66d8-4a85-9af2-ff61724aa4d8",
+        "name": "Collaboration Tools",
+        "description": "Utilize tools for effective teamwork",
+        "sort_order": 5
+      }
+    ]
+  },
+  {
+    "id": "4810ba4f-d7b6-4814-a5b9-2b5d29dc0687",
+    "name": "AI Features",
+    "description": "Leverage AI to boost productivity and efficiency",
+    "sort_order": 4,
+    "sub_themes": [
+      {
+        "id": "8e8dfd3a-576c-4ac8-a541-098b16cae7af",
+        "name": "Smart Suggestions",
+        "description": "Get AI-driven suggestions for responses",
+        "sort_order": 0
+      },
+      {
+        "id": "46a8b261-737e-458e-9c76-d0370b91860b",
+        "name": "Sentiment Analysis",
+        "description": "Analyze customer sentiment in interactions",
+        "sort_order": 1
+      },
+      {
+        "id": "afc3a16f-c884-45ce-8fea-3c403f85fb14",
+        "name": "Automated Insights",
+        "description": "Receive insights based on data analysis",
+        "sort_order": 2
+      },
+      {
+        "id": "d7249605-6cdf-4ff7-89df-9e23f8f5d8a2",
+        "name": "Predictive Responses",
+        "description": "Use AI to predict customer needs",
+        "sort_order": 3
+      },
+      {
+        "id": "f01e35f6-1190-494e-9a10-9e1e0fa56820",
+        "name": "Performance Optimization",
+        "description": "Optimize workflows with AI recommendations",
+        "sort_order": 4
+      },
+      {
+        "id": "9b437ad0-b43b-41a3-8a4b-82333d879fc5",
+        "name": "Chatbot Integration",
+        "description": "Integrate chatbots for customer support",
+        "sort_order": 5
+      }
+    ]
+  },
+  {
+    "id": "e8fae85a-f5dd-4d1f-ac3c-517b014fc03d",
+    "name": "SLA Management",
+    "description": "Set and manage service level agreements effectively",
+    "sort_order": 5,
+    "sub_themes": [
+      {
+        "id": "6d1359e8-c21e-40d0-8728-9ed1a8d48a0f",
+        "name": "Response Time Targets",
+        "description": "Define targets for response times",
+        "sort_order": 0
+      },
+      {
+        "id": "6b04d9f4-7713-4a62-aa07-08edf3c3ecaf",
+        "name": "Resolution Time Goals",
+        "description": "Set goals for resolving issues",
+        "sort_order": 1
+      },
+      {
+        "id": "b927151c-011b-47e3-9248-7a091d40ba87",
+        "name": "Performance Tracking",
+        "description": "Monitor SLA performance metrics",
+        "sort_order": 2
+      },
+      {
+        "id": "004d675b-a2b8-48bc-8e6f-4c437e1e5ea1",
+        "name": "Alerts and Notifications",
+        "description": "Receive alerts for SLA breaches",
+        "sort_order": 3
+      },
+      {
+        "id": "46bd358a-8811-4079-b1f1-db5c84977f5c",
+        "name": "Reporting Tools",
+        "description": "Generate reports on SLA compliance",
+        "sort_order": 4
+      },
+      {
+        "id": "a39afda4-3b06-4313-a18c-fd4e25501871",
+        "name": "Team Accountability",
+        "description": "Ensure team accountability for SLAs",
+        "sort_order": 5
+      }
+    ]
+  }
+]

@@ -182,6 +182,33 @@ export interface CustomerAskListResponse {
   total: number;
 }
 
+// === Transcript Classification Types ===
+
+export interface TranscriptClassification {
+  id: UUID;
+  workspace_id: UUID;
+  source_type: string;
+  source_id: string;
+  source_title: string | null;
+  theme_id: UUID | null;
+  sub_theme_id: UUID | null;
+  theme_ids: UUID[] | null;  // Array of all theme IDs from mappings (for fast filtering)
+  sub_theme_ids: UUID[] | null;  // Array of all sub-theme IDs from mappings (for fast filtering)
+  extracted_data: Record<string, unknown>;
+  raw_ai_response: Record<string, unknown> | null;
+  processing_status: string;
+  error_message: string | null;
+  confidence_score: string | null;
+  transcript_date: string | null;
+  created_at: string;
+  updated_at: string | null;
+}
+
+export interface TranscriptClassificationListResponse {
+  transcript_classifications: TranscriptClassification[];
+  total: number;
+}
+
 // === Message Types ===
 
 export type SourceType = 'slack' | 'gmail' | 'gong' | 'fathom' | 'intercom';

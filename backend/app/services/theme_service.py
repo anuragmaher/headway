@@ -2,10 +2,11 @@
 Theme Service for managing the theme hierarchy (Theme -> SubTheme -> CustomerAsk)
 """
 from typing import Optional, List, Dict, Any
+from sqlalchemy import func
 from uuid import UUID
 from datetime import datetime, timezone
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import and_, func
+from sqlalchemy import and_, func, or_, text
 
 from app.models.theme import Theme
 from app.models.sub_theme import SubTheme
@@ -630,3 +631,159 @@ class CustomerAskService:
             "has_more": has_more,
             "next_cursor": str(offset + limit) if has_more else None
         }
+
+
+class TranscriptClassificationService:
+    """Service for managing transcript classifications"""
+
+    def __init__(self, db: Session):
+        self.db = db
+
+    def get_transcript_classification(self, classification_id: UUID) -> Optional["TranscriptClassification"]:
+        """Get a transcript classification by ID"""
+        from app.models.transcript_classification import TranscriptClassification
+        return self.db.query(TranscriptClassification).filter(
+            TranscriptClassification.id == classification_id
+        ).first()
+
+    def list_transcript_classifications(
+        self,
+        workspace_id: UUID,
+        theme_id: Optional[UUID] = None,
+        sub_theme_id: Optional[UUID] = None,
+        source_type: Optional[str] = None,
+        processing_status: Optional[str] = None
+    ) -> List["TranscriptClassification"]:
+        """List transcript classifications with optional filters
+        
+        Filters by theme_id/sub_theme_id check both:
+        1. Top-level theme_id/sub_theme_id fields
+        2. Mappings array in extracted_data JSONB field
+        """
+        from app.models.transcript_classification import TranscriptClassification
+        from sqlalchemy import or_, text
+        
+        # Create the base query
+        query = self.db.query(TranscriptClassification).filter(
+            TranscriptClassification.workspace_id == workspace_id
+        )
+
+        if theme_id:
+            # Check top-level theme_id OR theme_ids array
+            # Performance: Uses GIN index on theme_ids array - @> operator is more index-friendly than ANY()
+            query = query.filter(
+                or_(
+                    TranscriptClassification.theme_id == theme_id,
+                    # Use @> (contains) operator - GIN index optimized for this, faster than ANY()
+                    text("theme_ids @> ARRAY[:theme_id]::uuid[]").bindparams(theme_id=theme_id)
+                )
+            )
+
+        if sub_theme_id:
+            # Check top-level sub_theme_id OR sub_theme_ids array
+            # Performance: Uses GIN index on sub_theme_ids array - @> operator is more index-friendly than ANY()
+            query = query.filter(
+                or_(
+                    TranscriptClassification.sub_theme_id == sub_theme_id,
+                    # Use @> (contains) operator - GIN index optimized for this, faster than ANY()
+                    text("sub_theme_ids @> ARRAY[:sub_theme_id]::uuid[]").bindparams(sub_theme_id=sub_theme_id)
+                )
+            )
+
+        if source_type:
+            query = query.filter(TranscriptClassification.source_type == source_type)
+
+        if processing_status:
+            query = query.filter(TranscriptClassification.processing_status == processing_status)
+
+        return query.order_by(TranscriptClassification.transcript_date.desc().nullsfirst()).all()
+
+    def get_transcript_classification_counts(
+        self,
+        workspace_id: UUID
+    ) -> Dict[str, Dict[str, int]]:
+        """Get transcript classification counts grouped by theme_id and sub_theme_id
+        
+        Returns:
+            {
+                "theme_counts": { "theme_id": count, ... },
+                "sub_theme_counts": { "sub_theme_id": count, ... }
+            }
+        
+        This is a lightweight query that only counts, doesn't fetch full transcript data.
+        Uses array columns for efficient counting.
+        """
+        from app.models.transcript_classification import TranscriptClassification
+        from sqlalchemy import func, text
+        
+        # Get all transcript classifications (lightweight - only IDs and array columns)
+        # This is still much faster than fetching full extracted_data
+        classifications = self.db.query(
+            TranscriptClassification.id,
+            TranscriptClassification.theme_id,
+            TranscriptClassification.sub_theme_id,
+            TranscriptClassification.theme_ids,
+            TranscriptClassification.sub_theme_ids
+        ).filter(
+            TranscriptClassification.workspace_id == workspace_id
+        ).all()
+        
+        # Count unique transcripts per theme and sub-theme
+        theme_counts: Dict[str, int] = {}
+        sub_theme_counts: Dict[str, int] = {}
+        
+        for tc in classifications:
+            # Track which themes/sub-themes this transcript is mapped to
+            transcript_themes = set()
+            transcript_sub_themes = set()
+            
+            # Add from theme_ids array
+            if tc.theme_ids:
+                for theme_id in tc.theme_ids:
+                    if theme_id:
+                        transcript_themes.add(str(theme_id))
+            
+            # Add from top-level theme_id
+            if tc.theme_id:
+                transcript_themes.add(str(tc.theme_id))
+            
+            # Add from sub_theme_ids array
+            if tc.sub_theme_ids:
+                for sub_theme_id in tc.sub_theme_ids:
+                    if sub_theme_id:
+                        transcript_sub_themes.add(str(sub_theme_id))
+            
+            # Add from top-level sub_theme_id
+            if tc.sub_theme_id:
+                transcript_sub_themes.add(str(tc.sub_theme_id))
+            
+            # Count this transcript once for each theme/sub-theme it's mapped to
+            for theme_id in transcript_themes:
+                theme_counts[theme_id] = theme_counts.get(theme_id, 0) + 1
+            
+            for sub_theme_id in transcript_sub_themes:
+                sub_theme_counts[sub_theme_id] = sub_theme_counts.get(sub_theme_id, 0) + 1
+        
+        return {
+            "theme_counts": theme_counts,
+            "sub_theme_counts": sub_theme_counts
+        }
+
+    def search_transcript_classifications(
+        self,
+        workspace_id: UUID,
+        q: str,
+        limit: int = 20
+    ) -> List["TranscriptClassification"]:
+        """Search transcript classifications by source title or extracted data"""
+        from app.models.transcript_classification import TranscriptClassification
+        from sqlalchemy import or_
+        
+        search_term = f"%{q}%"
+        return self.db.query(TranscriptClassification).filter(
+            TranscriptClassification.workspace_id == workspace_id,
+            or_(
+                TranscriptClassification.source_title.ilike(search_term),
+                TranscriptClassification.source_id.ilike(search_term)
+            )
+        ).limit(limit).all()

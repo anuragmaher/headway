@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { Close as CloseIcon, ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import { MentionsPanel } from './MentionsPanel';
+import { TranscriptClassificationDetailPanel } from './TranscriptClassificationsColumn/TranscriptClassificationDetailPanel';
 import { useExplorerStore } from '../store';
 
 interface MobileMentionsDrawerProps {
@@ -23,7 +24,14 @@ export const MobileMentionsDrawer: React.FC<MobileMentionsDrawerProps> = ({
   onClose,
 }) => {
   const theme = useTheme();
-  const { selectedFeedbackId, selectedCustomerAskId, selectCustomerAsk, closeMentionsPanel } = useExplorerStore();
+  const { 
+    selectedFeedbackId, 
+    selectedCustomerAskId, 
+    selectedTranscriptClassificationId,
+    selectCustomerAsk, 
+    selectTranscriptClassification,
+    closeMentionsPanel 
+  } = useExplorerStore();
 
   return (
     <Drawer
@@ -56,7 +64,7 @@ export const MobileMentionsDrawer: React.FC<MobileMentionsDrawerProps> = ({
               <ArrowBackIcon />
             </IconButton>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              Mentions
+              {selectedTranscriptClassificationId ? 'Transcript Details' : 'Mentions'}
             </Typography>
           </Box>
           
@@ -67,7 +75,12 @@ export const MobileMentionsDrawer: React.FC<MobileMentionsDrawerProps> = ({
 
         {/* Content */}
         <Box sx={{ flex: 1, overflow: 'hidden' }}>
-          {(selectedFeedbackId || selectedCustomerAskId) && (
+          {selectedTranscriptClassificationId && (
+            <TranscriptClassificationDetailPanel 
+              onClose={() => selectTranscriptClassification(null)} 
+            />
+          )}
+          {(selectedFeedbackId || selectedCustomerAskId) && !selectedTranscriptClassificationId && (
             <MentionsPanel isMobileFullScreen />
           )}
         </Box>

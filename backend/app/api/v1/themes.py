@@ -10,12 +10,13 @@ from typing import List, Optional
 from uuid import UUID
 
 from app.core.deps import get_current_user, get_db
-from app.services.theme_service import ThemeService, SubThemeService, CustomerAskService
+from app.services.theme_service import ThemeService, SubThemeService, CustomerAskService, TranscriptClassificationService
 from app.schemas.theme import (
     ThemeCreate, ThemeUpdate, ThemeResponse, ThemeWithSubThemes, ThemeHierarchy,
     ThemeListResponse, SubThemeCreate, SubThemeUpdate, SubThemeResponse,
     SubThemeListResponse, SubThemeWithCustomerAsks, CustomerAskCreate,
-    CustomerAskUpdate, CustomerAskResponse, CustomerAskListResponse
+    CustomerAskUpdate, CustomerAskResponse, CustomerAskListResponse,
+    TranscriptClassificationResponse, TranscriptClassificationListResponse
 )
 from app.schemas.mention import MentionListResponse
 
@@ -482,6 +483,132 @@ async def get_mentions_for_customer_ask(
     )
 
     return MentionListResponse(**result)
+
+
+# === Transcript Classification Endpoints ===
+# These MUST come BEFORE parameterized paths (/{theme_id}) to avoid UUID parsing errors
+
+@router.get("/transcript-classifications/counts")
+async def get_transcript_classification_counts(
+    current_user: dict = Depends(get_current_user),
+    db = Depends(get_db)
+):
+    """Get transcript classification counts grouped by theme and sub-theme (lightweight, no full data)"""
+    workspace_id = current_user.get('workspace_id')
+    if not workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User does not have a workspace"
+        )
+
+    try:
+        service = TranscriptClassificationService(db)
+        counts = service.get_transcript_classification_counts(UUID(workspace_id))
+        return counts
+    except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"Error in get_transcript_classification_counts: {e}")
+        print(error_details)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch transcript classification counts: {str(e)}"
+        )
+
+
+@router.get("/transcript-classifications", response_model=TranscriptClassificationListResponse)
+async def list_transcript_classifications(
+    theme_id: Optional[UUID] = None,
+    sub_theme_id: Optional[UUID] = None,
+    source_type: Optional[str] = None,
+    processing_status: Optional[str] = None,
+    current_user: dict = Depends(get_current_user),
+    db = Depends(get_db)
+):
+    """List transcript classifications"""
+    workspace_id = current_user.get('workspace_id')
+    if not workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User does not have a workspace"
+        )
+
+    try:
+        service = TranscriptClassificationService(db)
+        classifications = service.list_transcript_classifications(
+            UUID(workspace_id),
+            theme_id=theme_id,
+            sub_theme_id=sub_theme_id,
+            source_type=source_type,
+            processing_status=processing_status
+        )
+
+        return TranscriptClassificationListResponse(
+            transcript_classifications=[TranscriptClassificationResponse.model_validate(tc) for tc in classifications],
+            total=len(classifications)
+        )
+    except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"Error in list_transcript_classifications: {e}")
+        print(error_details)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch transcript classifications: {str(e)}"
+        )
+
+
+@router.get("/transcript-classifications/{classification_id}", response_model=TranscriptClassificationResponse)
+async def get_transcript_classification(
+    classification_id: UUID,
+    current_user: dict = Depends(get_current_user),
+    db = Depends(get_db)
+):
+    """Get a transcript classification by ID"""
+    workspace_id = current_user.get('workspace_id')
+    if not workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User does not have a workspace"
+        )
+
+    service = TranscriptClassificationService(db)
+    classification = service.get_transcript_classification(classification_id)
+
+    if not classification:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transcript classification not found"
+        )
+
+    if str(classification.workspace_id) != workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied"
+        )
+
+    return TranscriptClassificationResponse.model_validate(classification)
+
+
+@router.get("/transcript-classifications/search", response_model=List[TranscriptClassificationResponse])
+async def search_transcript_classifications(
+    q: str,
+    limit: int = 20,
+    current_user: dict = Depends(get_current_user),
+    db = Depends(get_db)
+):
+    """Search transcript classifications"""
+    workspace_id = current_user.get('workspace_id')
+    if not workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User does not have a workspace"
+        )
+
+    service = TranscriptClassificationService(db)
+    results = service.search_transcript_classifications(UUID(workspace_id), q, limit)
+
+    return [TranscriptClassificationResponse.model_validate(tc) for tc in results]
 
 
 # === Theme Endpoints (Parameterized paths - /{theme_id}/*) ===

@@ -165,7 +165,7 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
             {selectedTheme.name}
           </Typography>
           <Typography variant="body2" color="textSecondary">
-            Select a sub-theme to view customer asks
+            Select a sub-theme to view transcript classifications
           </Typography>
         </Box>
         <Tooltip title="Add Sub Theme">

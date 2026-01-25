@@ -187,5 +187,41 @@ class MessageSummary(BaseModel):
         from_attributes = True
 
 
+# === Transcript Classification Schemas ===
+
+class TranscriptClassificationBase(BaseModel):
+    """Base schema for transcript classifications"""
+    source_type: str = Field(..., max_length=50)
+    source_id: str = Field(..., max_length=255)
+    source_title: Optional[str] = Field(None, max_length=500)
+    theme_id: Optional[UUID] = None
+    sub_theme_id: Optional[UUID] = None
+    theme_ids: Optional[List[UUID]] = None  # Array of all theme IDs from mappings (for fast filtering)
+    sub_theme_ids: Optional[List[UUID]] = None  # Array of all sub-theme IDs from mappings (for fast filtering)
+    extracted_data: Dict[str, Any] = Field(default_factory=dict)
+    processing_status: str = Field(default="completed", max_length=50)
+    confidence_score: Optional[str] = Field(None, max_length=20)
+    transcript_date: Optional[datetime] = None
+
+
+class TranscriptClassificationResponse(TranscriptClassificationBase):
+    """Schema for transcript classification response"""
+    id: UUID
+    workspace_id: UUID
+    raw_ai_response: Optional[Dict[str, Any]] = None
+    error_message: Optional[str] = None
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+class TranscriptClassificationListResponse(BaseModel):
+    """List of transcript classifications"""
+    transcript_classifications: List[TranscriptClassificationResponse]
+    total: int
+
+
 # Update forward references
 CustomerAskWithMessages.model_rebuild()

@@ -97,14 +97,14 @@ export const createSubThemeSlice: StateCreator<
         subThemesCache: { ...state.subThemesCache, [themeId]: subThemes },
       }));
 
-      // OPTIMIZATION: Prefetch first sub-theme's customer asks in background
+      // OPTIMIZATION: Prefetch first sub-theme's transcript classifications in background
       // This makes the first sub-theme click instant
-      // Use prefetchCustomerAsks to only update cache, not visible state
+      // Use prefetchTranscriptClassifications to only update cache, not visible state
       if (subThemes.length > 0) {
-        console.log('[Explorer] Prefetching customer asks for first sub-theme:', subThemes[0].id);
+        console.log('[Explorer] Prefetching transcript classifications for first sub-theme:', subThemes[0].id);
         // Fire and forget - don't await to avoid blocking
-        get().prefetchCustomerAsks(subThemes[0].id).catch((err) => {
-          console.warn('[Explorer] Failed to prefetch customer asks:', err);
+        get().prefetchTranscriptClassifications(subThemes[0].id, themeId).catch((err) => {
+          console.warn('[Explorer] Failed to prefetch transcript classifications:', err);
         });
       }
     } catch (error) {
@@ -150,10 +150,7 @@ export const createSubThemeSlice: StateCreator<
         subThemesCache: { ...state.subThemesCache, [themeId]: subThemes },
       }));
 
-      // Chain prefetch: also prefetch customer asks for first sub-theme
-      if (subThemes.length > 0) {
-        get().prefetchCustomerAsks(subThemes[0].id).catch(() => {});
-      }
+      // Note: No need to prefetch transcript classifications - they're fetched once when theme is selected
     } catch (error) {
       console.warn('[Explorer] Prefetch sub-themes failed:', error);
       // Don't set error state for prefetch failures

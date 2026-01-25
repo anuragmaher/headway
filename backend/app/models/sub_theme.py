@@ -32,6 +32,7 @@ class SubTheme(Base):
     workspace = relationship("Workspace", back_populates="sub_themes")
     customer_asks = relationship("CustomerAsk", back_populates="sub_theme", cascade="all, delete-orphan")
     ai_insights = relationship("AIInsight", back_populates="sub_theme")
+    transcript_classifications = relationship("TranscriptClassification", back_populates="sub_theme")
 
     # Indexes for performance
     __table_args__ = (

@@ -1,0 +1,313 @@
+================================================================================
+Call: Hiver Demo | Rohit <> Alex
+Date: 2025-12-27T00:02:18+05:30
+================================================================================
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  hi, Alex. How are you?
+
+Alex Krumm (alexander.k@grexit.com):
+  Good. Hi, Rohit, how are you?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Good, good. Glad to see that fellow entrepreneurs are working on this.
+
+Alex Krumm (alexander.k@grexit.com):
+  weekend. Yes, you know, it's a good time because there's less noise happening on the day to day. I.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Agree, I agree. I think a lot of the noise just gets filtered out. People are not available and, you know, whatever conversations you have are meaningful.
+
+Alex Krumm (alexander.k@grexit.com):
+  Exactly. Well, I appreciate you reaching out to book some time. I was looking at chapter apps and, you know, was kind of curious to hear what the exact kind of use case that you have in mind in terms of what you're looking to kind of resolve or build for?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Sure. So, you know, while we are building custom applications for other customers, we have our own learning platform. And as we are scaling our business, we don't have enough resources to work on the customer service side ourselves.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  And because we've only used Freshdesk for emails, but a lot of tickets are no longer coming on Freshdesk. And a lot of support queries keep coming on whatsapp to us. We want to figure out what the best way of doing it is. And if you have an offering that fits for us, where we can just plug and play without thinking about it, that's where I would think about it from our team's perspective.
+
+Alex Krumm (alexander.k@grexit.com):
+  Okay. Very interesting. Yeah, we're like an AI powered help desk solution where… you know, and you're on Gmail as well, correct? Like Gmail. Freshdesk. Well.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Yeah, Google workspace is the, is where the company emails are hosted, not the one I'm calling from right now. This is on zoho. So zoho also has Freshdesk equivalent, but we are not using that, we're you know? So whatever I've seen of Zendesk and Freshdesk doesn't seem to work for us is what I can think. So, I thought, you know, it's important to see if you have something that could work for us that we could put in customer facing user… interfaces.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, we're built as kind of a Zendesk front alternative. I can show you a little bit about it, but real focus on like email, whatsapp and chat in terms of channels. We have some like kind of full AI resolve over chat, but overall like we're trying to optimize for the person like for an agent to be able to come in here and manage high volume of interactions in one place.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Right. So, okay, go ahead. Why don't you show me what you have? And then I'll sort of ask my questions or can do a few things that we need sure.
+
+Alex Krumm (alexander.k@grexit.com):
+  So just… to kind of start off, we work within the Google workspace. So we're a Google cloud partner. How this works is that you have a Chrome extension for hiver, And on the left hand side, we have our normal Gmail inbox, and then below that, this is how we're creating an augmented help desk experience. So what that means is you'll have like your support at email or, you know, accounting at or just general shared email addresses, whether it's a Google group, standalone email, something else. We're able to point those into an inbox. Then we have various settings of how we assign work. We could have just a general unassigned section or we could set it up for skill based routing or auto assignment. So in that example, you know, this is an email that has come in before I even interact with it. We have an SLA apply… and AI tagging, and we could do tagging through automations as well if that's preferred. And then when I open the email, this… column will automatically pop up. But the whole idea is how do we give the agent as much information about, you know, Jake and his interactions with you as possible? So right hand rail, you know, classic custom dispositions or custom fields on a ticket like you'd expect in Freshdesk, or Zendesk, we can do like AI extracts ticket summaries, et cetera. Then on the contact of Jake at Phoenix digital, here are all Jake's emails to us. So I can, you know, go see all related emails as well as domain level emails if it's kind of more true B to B. And then finally, I have connected apps. So like Salesforce, Hubspot, Jira… like any other kind of card information that you'd like to see to help answer this? We're trying to host here. So we have over 100 connected apps… when I, then if I come down here, I just want to reply to Jake… kind of what you'd expect, you know, full template library for email templates.
+
+Alex Krumm (alexander.k@grexit.com):
+  And then I have very… so let's just say I feel good about this. I'm going to click send. We have various statuses. So send in pending usually means that we still owe something to Jake and want to have visibility, send in close. You know, we're just closing out a ticket. It can, it'll reopen if he responds and then send close and unassign. This could be if it's you know, a very pooled support model or, you know, you always want it being routed to the next available agent instead of like ownership on the ticket.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Yeah, if you have to assign it to someone else in the team.
+
+Alex Krumm (alexander.k@grexit.com):
+  Exactly.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  So, one question, right? How does this… account manager see a list of all open issues?
+
+Alex Krumm (alexander.k@grexit.com):
+  So a couple… ways one, we have the team segment, which is show me every open conversation. So here, we have 19 open conversations in this inbox. And then it's showing every single one based on who it's assigned to. So it looks like Yukta has a buildup maybe they're on pto. I could come here, you know, take bulk action, reassign them to someone else or just start working through them myself.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  But let's say, I want to know what's happening. Let's go back to mine again, right? What are my open tickets or open tickets with my team, right? Those are the two sort of cases that come up a lot. And today, the complaint from customers is we reported this issue 15 days ago. You still haven't closed it, right? And it's just gotten lost in the mails. And even when I ask the employee saying, can you give me a list of all open issues? Oftentimes he's missing out two or three important issues which are pending for a long time.
+
+Alex Krumm (alexander.k@grexit.com):
+  So, I have a way to show that. So let's say that we have some sort of custom stage. So if we want the dropdown of a custom field and maybe it's like progress on a situation, I… can come over here and create a view and a view is just like a custom search. So it's like show me all conversations that meet the following criteria. So we'll say like open pending closed, but then are in the following approval states and… have these other dispositions. So this will give you a way of saying like, okay, this is all the conversations that are impending that meet the following criteria that I need to be aware of. And we just call that a custom view. And this view can be set up like per person. So they don't have to be shared with everyone. Like the, you know, the CSM could have their own view. Like for me, it's like krumm's view here. Got it. So.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  One other question, right? So, how would I see, I mean today, I can't read the email boxes of every employee even though I am the workspace, admin, right? I mean I could, but then I have to log in as them and read it, right? At least that's what I have done… in your option is, will it be able to read and pull out their pending issues? So.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yes. If we have sent them to one of these shared mailboxes, if… they're getting individual emails directly to their own inbox, like, you know, you're not, we're not showing this data if it's in my personal inbox… however, you know, typically we see customers, it's like, okay, your end customers might know the CSM and email them one on one, right? That's.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  exactly what's happening, right? So, and that person is dropping the issue?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yes. So we've solved for this. The way is we can add it to a shared mailbox, manually? Okay? Or we can set up an automation that if we're receiving an email from a certain client domain, automatically add that to a shared inbox. So got it. Yeah. So… okay, there's a little dichotomy there because like maybe not everything belongs in the shared inbox, but.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Yeah. I mean, we could certainly do that with two three clients to begin with and check that out, right? And see how that works. So, so how do you charge for this? And is it only a Google Chrome extension? Or is it also available as an API that we can build our own chatbot?
+
+Alex Krumm (alexander.k@grexit.com):
+  So… our more built out product right now is this Chrome extension. We do have like a chat as well. So let me just show you just the quick chat capability. So we have within, we essentially have an admin panel overlaid in here and then per inbox, you have your own settings. So like the whatsapp inbox, and then like chat.
+
+Alex Krumm (alexander.k@grexit.com):
+  And then within chat is where you design your chatbot.
+
+Alex Krumm (alexander.k@grexit.com):
+  This one's very simple.
+
+Alex Krumm (alexander.k@grexit.com):
+  So, yeah, you can have your own chatbot that you can insert into the app as well.
+
+Alex Krumm (alexander.k@grexit.com):
+  And then we also have like a knowledge base is very similar to Zendesk but where it's interesting is we can have various knowledge sources. So I didn't really show our AI copilot that much but essentially, you can create an internal hall, not an internal knowledge base or an external. Most people are using it internally right now, but you can check out ours externally… if you use notion, you can connect notion. And then any other documents like just upload them. What this is doing? Is we're creating like an internal rag system where?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Let me just.
+
+Alex Krumm (alexander.k@grexit.com):
+  We're just going to reply to Sarah why?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Would I consider this over notebook LM?
+
+Alex Krumm (alexander.k@grexit.com):
+  Over which LLM?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Notebook notebook from Google workspace, right? Notebook LM?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. So I… would say the reason is that you can continuously train this one with the data. We allow you to say, hey, this is an email that we want to replicate and learn from this. You… know, I'm just going to say number three, but all this is doing is it's like right now it's chat gbt five two, as the LLM.
+
+Alex Krumm (alexander.k@grexit.com):
+  So, just ways to like write the emails, try to make it easier for your team. And then we could share this as a draft. And then if I, you know, I could reassign this to a manager or someone else to review.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  But it automatically does reassign after reading the mail as well, right? If I write, I'm assigning it to John, then it should just assign it to John's email id. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  We could do that with a workflow essentially, it's like, and we can show you that later. But in terms of cost… one… we offer a free two week trial just to prove this out, get your team in here.
+
+Alex Krumm (alexander.k@grexit.com):
+  It's pretty lightweight to set up but, you know, per seat per month on an annual or a monthly payment plan monthly. No, no commitment. You know, you're just paying month to month.
+
+Alex Krumm (alexander.k@grexit.com):
+  Then kind of what you'd want is somewhere either, you know, the skill based routing and kind of the full customization lies in the elite plan. And then our pro plan is very feature rich for what it is. So includes all the channels, you know, surveys load balancing in terms of sending assigning work. But the custom objects… is how we do like named account management and being able to assign work based on like a, if… you have or how many clients are you serving, let me take a step back and ask that we.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  have about 40 customers, 40 enterprises.
+
+Alex Krumm (alexander.k@grexit.com):
+  And how many csms do you have? Three? Okay. Yeah, with 40 enterprises, you, we could just do a automation for work assignment instead of using custom objects. I, I'm speaking my language, not yours. So I apologize. But the reason I say that is that you could definitely use the pro plan and have the functionality required, what?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  About the data, right? So we, because a lot of customers send email attachments with pi data, et cetera. Of the users. How do you address that?
+
+Alex Krumm (alexander.k@grexit.com):
+  Is this like healthcare information or?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Not healthcare, but I mean, when I say pi, it's name, email, id, phone number, date of birth, sometimes, I mean, even though we don't need it, but they send it, yes.
+
+Alex Krumm (alexander.k@grexit.com):
+  So we… have great security protocols here. You know, the non starters of like soc two, type two, iso 27 o one, every piece of data that touches our, since we're in the email, every pieces of data is like treated with, to like hipaa standards like essentially, but… in terms of how we're storing data? So, with our Gmail product?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  I mean, do you, essentially, do you read and keep a copy of our emails or we don't.
+
+Alex Krumm (alexander.k@grexit.com):
+  keep a copy, but we do read.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  You do read. So, in theory, we have given you access to our mailboxes with whatever information might be inside of them, yes. Can that be, you know, is there any assurance, that will not be used outside or leaked outside?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, we have a lot of assurance. Like traditional, you know, msa… and I would say like the biggest piece is you can also, so the AI is the piece that's like reading the emails. You can turn off AI features if that's a major concern as well?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  But if you turn off AI, what features will be left with?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, you'll still be left with… the full functionality of auto assignment, being able to do all these searches because really, we're just like appending more metadata on the right hand rail to the email and we're essentially creating like a ticket id and matching that to this. Our software lives on like Aws in the us. So that's kind of how we work… understood.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  So, your free plan, let's just, do we get all this same security in the free plan too? You do… we… don't and how many mailboxes does it allow us to use?
+
+Alex Krumm (alexander.k@grexit.com):
+  The free plan only comes with one mailbox… no automations.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Got it. Aren't, you a little more expensive than Zendesk if I sort of compare?
+
+Alex Krumm (alexander.k@grexit.com):
+  Not, no, because Zendesk kind of continues to add things on ours is like an all in one price. It includes like, you know, implementation, ongoing success. And then we also have like 24 seven technical support over chat and they'll hop on a quick zoom with you as needed.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  And, and, where is the company headquartered? Where is the team located? Yup. So.
+
+Alex Krumm (alexander.k@grexit.com):
+  Sales and some customer success in the us distributed. Our founders live in san Mateo, then the majority of the teams in, bangalore in.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Bangalore. Okay. Yeah. Okay. Kind of like us, I'm in San Francisco, we.
+
+Alex Krumm (alexander.k@grexit.com):
+  Have 300.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  People. Wow. Okay. Wow. Just give me one second take.
+
+Alex Krumm (alexander.k@grexit.com):
+  Your time?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Hi, sorry… you're good.
+
+Alex Krumm (alexander.k@grexit.com):
+  Well, I guess on the pricing front, I know that Freshdesk is more competitive than… what ballpark would you want to be in order to explore something like this?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  I mean, so, if I look at, you know, I'm paying for Freshdesk, something… like 200 dollars a year for one seat right? At the moment, the question was, do I make it three seats and use more of Freshdesk or upgrade to the next version of Freshdesk or… on any other option, right? That's that's what I'm where I am at right now?
+
+Alex Krumm (alexander.k@grexit.com):
+  So, and how many users would you have in a tool like this because you mentioned you have a few csms, right?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  I have only three or so. Okay.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, because it does, it is like a significant price jump if you go for, you know, three at 65 a month? Yeah.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  That's well, it's not the free part, right? I mean, I, the free doesn't sort of meet the requirement. I mean, in the sense, I mean, I'm already in a paid version of Freshdesk at sort of somewhere like a little less than your growth pricing, but I don't have too much AI in it at the moment. At least on the plan I'm on, right? So I need to study that and see, I'm sure your AI plan that, you know, may be cheaper than the next one, which is your pro plan. So they'll probably be between 25 and 65 a month is my guess, with the eye, yes.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. And with three users, like, we can be a little more aggressive on pricing if needed. If you had, if you were willing to do an annual commitment. Again… we do a month to month options, but that bumps it up quite a bit cool.
+
+Alex Krumm (alexander.k@grexit.com):
+  But yes, we do offer that two week free trial. I think the growth plan. So it comes with two inboxes max, do… you have more than one like one domain that, it points into or how many domains are there? No?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  We'll use all the customers are typically writing in on one domain. Okay? I mean one domain for us. Customers could obviously 40 different domains, yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  No, exactly. So a shared inbox can have multiple domains pointed into it. And then the custom fields are on the right hand rail of like that in status. So obviously, you get open pending and closed, but then custom ones, you get two of those on the growth plan. I just want to confirm what our.
+
+Alex Krumm (alexander.k@grexit.com):
+  I just want to confirm the number of automations on the growth plan.
+
+Alex Krumm (alexander.k@grexit.com):
+  We just refreshed pricing. So something's moved, which is why it's taking me a second.
+
+Alex Krumm (alexander.k@grexit.com):
+  But yeah, it doesn't look like we've changed our automate number of automation. So, yes, you'll be able to set up, sorry, rule based automations, 10 per inbox. This is definitely enough. The rule based automations is how we'd assign work. So what that looks like is we're going into the admin panel, shared inbox support automations.
+
+Alex Krumm (alexander.k@grexit.com):
+  This would be like a pro example. But.
+
+Alex Krumm (alexander.k@grexit.com):
+  We're essentially saying if a new conversation happens inbound or outbound… and it contains any of the following words… then we're going to use AI to extract a piece of information. In this case, an invoice number… and then we could add the invoice number in this case to a note, but we could also drop it into a custom field.
+
+Alex Krumm (alexander.k@grexit.com):
+  So, that's kind of one simple way. And then in terms of creating like an assignment automation… we're going to say, hey, a new email is coming in if it's from, you know, a certain domain.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  So, this is the tool that you all have created for this, right? Yes.
+
+Alex Krumm (alexander.k@grexit.com):
+  This is our own tool.
+
+Alex Krumm (alexander.k@grexit.com):
+  And the, I would say like the biggest thing is like sure, we have a pretty robust platform that's like akin to the Freshdesk or zendesks of the world. But the biggest thing is like we are actually here to support the customers. So we have this 24 seven, 365 technical support that will help you set up automations, you know, rules troubleshoot verse, you know, if you're a small customer on Zendesk… it's going to be a pretty slow response time to anything. And this is also available on our free plan for you.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Know, understood. Yeah, understood. Okay. If you can send me this information, I'll send it to my team and I'll ask them to try the free version out, okay? And, and then we can come back, you know, if after doing some more comparisons to see which one works best for us.
+
+Alex Krumm (alexander.k@grexit.com):
+  Do you want to start them on a free trial or on the free plan?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Let me ask them to first study it. Okay, start with that, right? That's super fair, I assume, then they can try the free plan first on their own without my intervention. And once they give me their findings of how they would use it and what else they would like in it, then we can do a move to the next part of the discussion of, should we go ahead with a trial of the paid plan grant?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  At that point, I can be back in touch with you if the finding from them is that, yes, this was going to work. Okay? And.
+
+Alex Krumm (alexander.k@grexit.com):
+  just out of curiosity, you said you also live in California, yeah?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  I'm in San Francisco, yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  Nice. Yeah. Both my C or my CEO and CTR out there. So he lives just south of San Francisco. I'm a new yorker myself?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Okay. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  Did you, were you born in the us or did you come here after starting your company? Well?
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  I mean, I was born in India. I studied in India then I studied here, then I worked here, then I went back to India. Now, I'm both here and the team is in India. So I go back and forth.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, that's a lot of travel, but it's probably, it's yeah, it's good to have a good business and, you know, the labor cost is great. So.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Yeah. I mean, it's the only, I think the only way for bootstrap companies to set up is, you know?
+
+Alex Krumm (alexander.k@grexit.com):
+  So, I would agree. Yeah, we have like some VC funding, but that was from years ago, and now we're you.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Know, we operate, same here. So, okay. Well.
+
+Alex Krumm (alexander.k@grexit.com):
+  It was great to meet you. I'll send everybody this information if you need like a longer free trial, you know, maybe like three, four weeks. We could arrange something like that just to, you know, I'd hate for them to like use the free plan and get frustrated if we could like give them growth or something… great. Okay. Yeah, sorry, I.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  had to call. That just came in. So all.
+
+Alex Krumm (alexander.k@grexit.com):
+  good. I'll let you get to the next one. It was very nice to meet you very.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Nice to meet you. Yeah, thank you. Thank you for this. And yes, we'll be, you know, once we evaluate it properly, we'll be back in touch. Okay?
+
+Alex Krumm (alexander.k@grexit.com):
+  Wonderful. Okay.
+
+Rohit Kumar (rohit.kumar@chapterapps.ai):
+  Thank you.

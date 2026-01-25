@@ -26,6 +26,7 @@ import {
   LocalOfferOutlined as SubThemeIcon,
 } from '@mui/icons-material';
 import type { ExplorerSubTheme, FeedbackSource } from '../../types';
+import { useTranscriptCounts } from '../../hooks/useTranscriptCounts';
 
 // Source icons as simple SVG components
 const SlackIcon = ({ size = 14 }: { size?: number }) => (
@@ -100,6 +101,8 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
   const muiTheme = useTheme();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const { subThemeCounts } = useTranscriptCounts();
+  const transcriptCount = subThemeCounts[subTheme.id] || 0;
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -255,11 +258,12 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
                 <Typography
                   variant="caption"
                   sx={{
-                    color: 'text.disabled',
+                    color: transcriptCount > 0 ? 'text.secondary' : 'text.disabled',
                     fontSize: '0.7rem',
+                    fontWeight: transcriptCount > 0 ? 500 : 400,
                   }}
                 >
-                  No sources
+                  {transcriptCount > 0 ? `${transcriptCount} transcript${transcriptCount !== 1 ? 's' : ''}` : 'No transcripts'}
                 </Typography>
               )}
             </Box>

@@ -9,11 +9,13 @@ import {
   createSubThemeSlice,
   createFeedbackSlice,
   createCustomerAskSlice,
+  createTranscriptClassificationSlice,
   createUISlice,
   type ThemeSlice,
   type SubThemeSlice,
   type FeedbackSlice,
   type CustomerAskSlice,
+  type TranscriptClassificationSlice,
   type UISlice,
 } from './slices';
 import { useAuthStore } from '../../../features/auth/store/auth-store';
@@ -22,7 +24,7 @@ import { useAuthStore } from '../../../features/auth/store/auth-store';
 // Store Type Definition
 // ============================================================================
 
-export interface ExplorerStore extends ThemeSlice, SubThemeSlice, FeedbackSlice, CustomerAskSlice, UISlice {
+export interface ExplorerStore extends ThemeSlice, SubThemeSlice, FeedbackSlice, CustomerAskSlice, TranscriptClassificationSlice, UISlice {
   // Utility methods
   getWorkspaceId: () => string | null;
   getAuthToken: () => string | null;
@@ -48,6 +50,7 @@ export const useExplorerStore = create<ExplorerStore>()(
       ...createSubThemeSlice(set, get, api),
       ...createFeedbackSlice(set, get, api),
       ...createCustomerAskSlice(set, get, api),
+      ...createTranscriptClassificationSlice(set, get, api),
       ...createUISlice(set, get, api),
 
       // Global state
@@ -74,6 +77,13 @@ export const useExplorerStore = create<ExplorerStore>()(
 
         try {
           await get().fetchThemes();
+          
+          // Fetch transcript counts once on initial load (lightweight, shared across all components)
+          console.log('[Explorer] Fetching transcript counts on initial load');
+          get().fetchTranscriptCounts().catch((err) => {
+            console.warn('[Explorer] Failed to fetch transcript counts:', err);
+          });
+          
           set({ isInitialized: true, isInitializing: false });
 
           // OPTIMIZATION: Prefetch first theme's sub-themes in background
@@ -228,6 +238,17 @@ export const useIsLoadingCustomerAsks = () => useExplorerStore((state) => state.
 export const useCustomerAsksError = () => useExplorerStore((state) => state.customerAsksError);
 export const useSelectedCustomerAskId = () => useExplorerStore((state) => state.selectedCustomerAskId);
 
+// TranscriptClassification selectors
+export const useTranscriptClassifications = () => useExplorerStore((state) => state.transcriptClassifications);
+export const useSelectedTranscriptClassification = () => {
+  const transcriptClassifications = useExplorerStore((state) => state.transcriptClassifications);
+  const selectedTranscriptClassificationId = useExplorerStore((state) => state.selectedTranscriptClassificationId);
+  return transcriptClassifications.find((tc) => tc.id === selectedTranscriptClassificationId) || null;
+};
+export const useIsLoadingTranscriptClassifications = () => useExplorerStore((state) => state.isLoadingTranscriptClassifications);
+export const useTranscriptClassificationsError = () => useExplorerStore((state) => state.transcriptClassificationsError);
+export const useSelectedTranscriptClassificationId = () => useExplorerStore((state) => state.selectedTranscriptClassificationId);
+
 // Mentions selectors
 export const useMentions = () => useExplorerStore((state) => state.mentions);
 export const useIsLoadingMentions = () => useExplorerStore((state) => state.isLoadingMentions);
@@ -293,6 +314,12 @@ export const useExplorerActions = () => {
     selectCustomerAsk: store.selectCustomerAsk,
     updateCustomerAskStatus: store.updateCustomerAskStatus,
     clearCustomerAsks: store.clearCustomerAsks,
+
+    // TranscriptClassification actions
+    fetchTranscriptCounts: store.fetchTranscriptCounts,
+    fetchTranscriptClassifications: store.fetchTranscriptClassifications,
+    selectTranscriptClassification: store.selectTranscriptClassification,
+    clearTranscriptClassifications: store.clearTranscriptClassifications,
 
     // Mentions actions
     fetchMentions: store.fetchMentions,

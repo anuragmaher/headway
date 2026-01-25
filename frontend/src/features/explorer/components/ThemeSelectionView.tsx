@@ -25,6 +25,7 @@ import {
 } from '@mui/icons-material';
 import { useThemes, useIsLoadingThemes, useExplorerActions } from '../store';
 import type { ExplorerTheme } from '../types/explorer.types';
+import { useTranscriptCounts } from '../hooks/useTranscriptCounts';
 
 interface ThemeSelectionViewProps {
   onThemeSelect: (themeId: string) => void;
@@ -41,6 +42,7 @@ export const ThemeSelectionView: React.FC<ThemeSelectionViewProps> = ({
     openEditThemeDialog,
     openDeleteConfirm,
   } = useExplorerActions();
+  const { themeCounts } = useTranscriptCounts();
 
   const getThemeColor = () => {
     // Use neutral, professional color for all themes
@@ -237,14 +239,7 @@ export const ThemeSelectionView: React.FC<ThemeSelectionViewProps> = ({
                   />
                   
                   <Chip
-                    label={`${theme.customerAskCount || 0} asks`}
-                    size="small"
-                    variant="outlined"
-                    color="default"
-                  />
-                  
-                  <Chip
-                    label={`${theme.feedbackCount || 0} feedback`}
+                    label={`${themeCounts[theme.id] || 0} transcript${(themeCounts[theme.id] || 0) !== 1 ? 's' : ''}`}
                     size="small"
                     variant="outlined"
                     color="default"

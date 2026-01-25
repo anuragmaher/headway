@@ -28,6 +28,7 @@ class Theme(Base):
     workspace = relationship("Workspace", back_populates="themes")
     sub_themes = relationship("SubTheme", back_populates="theme", cascade="all, delete-orphan")
     ai_insights = relationship("AIInsight", back_populates="theme")
+    transcript_classifications = relationship("TranscriptClassification", back_populates="theme")
 
     # Indexes for performance
     __table_args__ = (
