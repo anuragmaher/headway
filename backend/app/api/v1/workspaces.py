@@ -969,11 +969,16 @@ async def get_company_domains(
                 detail="Workspace not found"
             )
 
+        # Get domains from the related company
+        company_domains = []
+        if workspace.company and workspace.company.domains:
+            company_domains = workspace.company.domains
+
         return WorkspaceResponse(
             id=str(workspace.id),
             name=workspace.name,
-            slug=workspace.slug,
-            company_domains=workspace.company_domains or []
+            slug=workspace.name,
+            company_domains=company_domains
         )
 
     except HTTPException:
@@ -1010,7 +1015,7 @@ async def update_company_domains(
         Updated workspace with company_domains
 
     Raises:
-        HTTPException: If workspace not found
+        HTTPException: If workspace not found or no company associated
     """
     try:
         from app.models.workspace import Workspace
@@ -1028,18 +1033,24 @@ async def update_company_domains(
                 detail="Workspace not found"
             )
 
-        # Update company domains
-        workspace.company_domains = domains_data.company_domains
+        if not workspace.company:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No company associated with this workspace"
+            )
+
+        # Update company domains on the related company
+        workspace.company.domains = domains_data.company_domains
         db.commit()
-        db.refresh(workspace)
+        db.refresh(workspace.company)
 
         logger.info(f"Company domains updated successfully for workspace {workspace_id}")
 
         return WorkspaceResponse(
             id=str(workspace.id),
             name=workspace.name,
-            slug=workspace.slug,
-            company_domains=workspace.company_domains or []
+            slug=workspace.name,
+            company_domains=workspace.company.domains or []
         )
 
     except HTTPException:
