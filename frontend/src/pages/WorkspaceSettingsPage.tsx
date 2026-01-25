@@ -13,6 +13,7 @@ import { useWorkspaceSettingsStore } from "@/shared/store/WorkspaceStore/workspa
 import {
   ConnectedDataSources,
   CompetitorsSection,
+  CompanyDomainsSection,
   AvailableConnectors,
   SlackConnectionDialog,
   GongConnectorDialog,
@@ -31,6 +32,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
     loadGmailAccounts,
     loadCompanyDetails,
     loadCompetitors,
+    loadCompanyDomains,
     saveCompanyDetails,
   } = useWorkspaceSettingsStore((state) => ({
     companyData: state.companyData,
@@ -40,6 +42,7 @@ export function WorkspaceSettingsPage(): JSX.Element {
     loadGmailAccounts: state.loadGmailAccounts,
     loadCompanyDetails: state.loadCompanyDetails,
     loadCompetitors: state.loadCompetitors,
+    loadCompanyDomains: state.loadCompanyDomains,
     saveCompanyDetails: state.saveCompanyDetails,
   }));
 
@@ -66,11 +69,12 @@ export function WorkspaceSettingsPage(): JSX.Element {
     }
   }, []);
 
-  // Load company details and competitors when workspace_id is available
+  // Load company details, competitors, and domains when workspace_id is available
   useEffect(() => {
     if (workspaceId && accessToken) {
       loadCompanyDetails(workspaceId);
       loadCompetitors(workspaceId, accessToken);
+      loadCompanyDomains(workspaceId, accessToken);
     }
   }, [workspaceId, accessToken]);
 
@@ -95,6 +99,13 @@ export function WorkspaceSettingsPage(): JSX.Element {
           </Grid>
           <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
             <CompetitorsSection />
+          </Grid>
+        </Grid>
+
+        {/* Company Domains Section */}
+        <Grid container spacing={3} sx={{ mb: 3 }}>
+          <Grid item xs={12} md={6}>
+            <CompanyDomainsSection />
           </Grid>
         </Grid>
 
