@@ -57,6 +57,7 @@ export async function saveCompanyData(
     industry: string;
     team_size?: string;
     role?: string;
+    domains?: string[];
   }
 ): Promise<CompanyDataResponse> {
   const response = await api.post(`${BASE_URL}/company`, data, {

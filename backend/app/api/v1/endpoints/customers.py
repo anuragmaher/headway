@@ -25,7 +25,6 @@ from app.schemas.customer import (
 )
 from app.core.deps import get_current_user
 from app.models.customer_ask import CustomerAsk
-from app.services.ai_extraction_service import get_ai_extraction_service
 
 # Alias for backward compatibility
 Feature = CustomerAsk

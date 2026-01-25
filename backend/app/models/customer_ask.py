@@ -49,8 +49,6 @@ class CustomerAsk(Base):
     sub_theme = relationship("SubTheme", back_populates="customer_asks")
     workspace = relationship("Workspace", back_populates="customer_asks")
     messages = relationship("Message", back_populates="customer_ask")  # DEPRECATED - use message_links
-    ai_insights = relationship("AIInsight", back_populates="customer_ask")
-    extracted_facts = relationship("ExtractedFact", back_populates="customer_ask")
 
     # NEW: Many-to-many relationship via junction table
     # One CustomerAsk can have multiple messages linked (mentions)

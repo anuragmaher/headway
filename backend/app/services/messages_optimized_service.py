@@ -1,14 +1,13 @@
 """
-Optimized Messages Service - High-performance message loading for large datasets.
+Optimized Messages Service - High-performance transcript loading for large datasets.
 
 This service provides:
-- Efficient pagination for messages
+- Efficient pagination for transcripts (Gong/Fathom)
 - Redis caching for counts and frequently accessed data
 - Cursor-based pagination for infinite scroll scenarios
-- AI insights filtering
 
 Production-ready optimizations:
-- Single query for paginated data
+- Single query for paginated data from raw_transcripts table
 - Cached counts with short TTL (reduces COUNT queries by ~95%)
 - Deferred loading of heavy fields (content loaded on-demand)
 - Connection pooling optimized for high throughput
@@ -23,7 +22,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from app.services.cache_service import get_cache_service, DEFAULT_TTL
-from app.schemas.sources import MessageResponse, MessageListResponse, MessageAIInsight
+from app.schemas.sources import MessageResponse, MessageListResponse
 
 logger = logging.getLogger(__name__)
 
@@ -34,10 +33,10 @@ MESSAGE_LIST_TTL = timedelta(seconds=30)  # Very short TTL for list data
 
 class OptimizedMessagesService:
     """
-    High-performance message service using optimized SQL and caching.
+    High-performance transcript service using optimized SQL and caching.
 
     Key optimizations:
-    1. Simple queries on unified messages table
+    1. Simple queries on raw_transcripts table (Gong/Fathom only)
     2. Database-level sorting and pagination (no Python post-processing)
     3. Redis caching for expensive COUNT operations
     4. Cursor-based pagination option for better performance on large datasets
@@ -156,23 +155,26 @@ class OptimizedMessagesService:
         source_filter: Optional[str]
     ) -> int:
         """
-        Compute total message count.
+        Compute total count of transcripts from raw_transcripts table.
+        Only supports gong and fathom sources.
         """
-        if source_filter and source_filter not in ('all',):
+        # Only count transcripts from raw_transcripts table
+        if source_filter and source_filter in ('gong', 'fathom'):
             query = text("""
                 SELECT COUNT(*)
-                FROM messages
+                FROM raw_transcripts
                 WHERE workspace_id = :workspace_id
-                AND source = :source
+                AND source_type = :source
             """)
             result = self.db.execute(query, {
                 "workspace_id": workspace_id,
                 "source": source_filter
             })
         else:
+            # Count all transcripts (both gong and fathom)
             query = text("""
                 SELECT COUNT(*)
-                FROM messages
+                FROM raw_transcripts
                 WHERE workspace_id = :workspace_id
             """)
             result = self.db.execute(query, {"workspace_id": workspace_id})
@@ -190,17 +192,10 @@ class OptimizedMessagesService:
         cursor: Optional[str] = None,
     ) -> List[MessageResponse]:
         """
-        Execute optimized query for message pagination.
+        Execute optimized query for transcripts from raw_transcripts table.
+        Only supports gong and fathom sources.
         """
         workspace_str = str(workspace_id)
-
-        # Determine sort column
-        sort_col_map = {
-            "timestamp": "sent_at",
-            "sender": "author_name",
-            "source": "source",
-        }
-        sort_col = sort_col_map.get(sort_by, "sent_at")
 
         # Build cursor condition if provided
         cursor_condition = ""
@@ -209,51 +204,48 @@ class OptimizedMessagesService:
             try:
                 cursor_dt = datetime.fromisoformat(cursor.replace('Z', '+00:00'))
                 if sort_order == "DESC":
-                    cursor_condition = "AND sent_at < :cursor_ts"
+                    cursor_condition = "AND COALESCE(transcript_date, created_at) < :cursor_ts"
                 else:
-                    cursor_condition = "AND sent_at > :cursor_ts"
+                    cursor_condition = "AND COALESCE(transcript_date, created_at) > :cursor_ts"
                 cursor_params["cursor_ts"] = cursor_dt
             except (ValueError, TypeError):
                 pass  # Invalid cursor, ignore
 
         # Build source filter condition
         source_condition = ""
-        if source_filter and source_filter not in ('all',):
-            source_condition = "AND source = :source_filter"
+        if source_filter and source_filter in ('gong', 'fathom'):
+            source_condition = "AND source_type = :source_filter"
             cursor_params["source_filter"] = source_filter
 
+        # Build query for raw_transcripts only
         query = text(f"""
             SELECT
                 id::text,
                 COALESCE(title,
-                    CASE source
-                        WHEN 'slack' THEN 'Slack Message'
-                        WHEN 'gmail' THEN 'Email Thread'
+                    CASE source_type
                         WHEN 'gong' THEN 'Gong Call'
                         WHEN 'fathom' THEN 'Fathom Meeting'
-                        ELSE 'Message'
+                        ELSE 'Transcript'
                     END
                 ) as title,
-                COALESCE(author_name, author_email, 'Unknown') as sender,
-                author_email as sender_email,
-                CASE source
-                    WHEN 'slack' THEN 'slack'
-                    WHEN 'gmail' THEN 'email'
+                'Transcript' as sender,
+                NULL as sender_email,
+                CASE source_type
                     WHEN 'gong' THEN 'transcript'
                     WHEN 'fathom' THEN 'meeting'
-                    ELSE 'email'
+                    ELSE 'transcript'
                 END as source_type,
-                source,
-                COALESCE(SUBSTRING(content FROM 1 FOR 150), '') as preview,
-                sent_at as sort_timestamp,
-                channel_name,
-                tier1_processed,
-                tier2_processed
-            FROM messages
+                source_type as source,
+                '' as preview,
+                COALESCE(transcript_date, created_at) as sort_timestamp,
+                NULL as channel_name,
+                ai_processed as tier1_processed,
+                ai_processed as tier2_processed
+            FROM raw_transcripts
             WHERE workspace_id = :workspace_id
             {source_condition}
             {cursor_condition}
-            ORDER BY {sort_col} {sort_order} NULLS LAST
+            ORDER BY COALESCE(transcript_date, created_at) {sort_order} NULLS LAST
             LIMIT :limit OFFSET :offset
         """)
 
@@ -314,123 +306,83 @@ class OptimizedMessagesService:
         sort_order: str,
     ) -> MessageListResponse:
         """
-        Get messages that have completed AI insights.
-
-        This joins messages with ai_insights table
-        to return only messages with completed insights.
-        Now includes full AI insight data in the response.
+        Get transcripts that have completed AI classification.
+        Uses transcript_classifications table to find processed transcripts.
         """
         workspace_str = str(workspace_id)
-        offset = (page - 1) * page_size
 
-        # Determine sort column
-        sort_col_map = {
-            "timestamp": "m.sent_at",
-            "sender": "m.author_name",
-            "source": "m.source",
-        }
-        sort_col = sort_col_map.get(sort_by, "m.sent_at")
-
-        # Build source condition
+        # Build source filter condition
         source_condition = ""
-        params: Dict[str, Any] = {
-            "workspace_id": workspace_str,
-            "limit": page_size,
-            "offset": offset,
-        }
-
-        if source_filter and source_filter not in ('all',):
-            source_condition = "AND m.source = :source_filter"
+        params: Dict[str, Any] = {"workspace_id": workspace_str}
+        if source_filter and source_filter in ('gong', 'fathom'):
+            source_condition = "AND rt.source_type = :source_filter"
             params["source_filter"] = source_filter
 
-        # Query messages with FULL AI insights data
-        query = text(f"""
-            SELECT
-                m.id::text,
-                COALESCE(m.title,
-                    CASE m.source
-                        WHEN 'slack' THEN 'Slack Message'
-                        WHEN 'gmail' THEN 'Email Thread'
-                        WHEN 'gong' THEN 'Gong Call'
-                        WHEN 'fathom' THEN 'Fathom Meeting'
-                        ELSE 'Message'
-                    END
-                ) as title,
-                COALESCE(m.author_name, m.author_email, 'Unknown') as sender,
-                m.author_email as sender_email,
-                CASE m.source
-                    WHEN 'slack' THEN 'slack'
-                    WHEN 'gmail' THEN 'email'
-                    WHEN 'gong' THEN 'transcript'
-                    WHEN 'fathom' THEN 'meeting'
-                    ELSE 'email'
-                END as source_type,
-                m.source,
-                COALESCE(SUBSTRING(m.content FROM 1 FOR 150), '') as preview,
-                m.sent_at as sort_timestamp,
-                m.channel_name,
-                m.tier1_processed,
-                m.tier2_processed,
-                -- AI Insight fields (full data)
-                ai.id::text as ai_id,
-                ai.summary,
-                ai.pain_point,
-                ai.pain_point_quote,
-                ai.feature_request,
-                ai.customer_usecase,
-                ai.sentiment,
-                ai.keywords,
-                ai.model_version,
-                ai.tokens_used,
-                ai.created_at as ai_created_at
-            FROM messages m
-            INNER JOIN ai_insights ai ON ai.message_id = m.id
-            WHERE m.workspace_id = :workspace_id
-            {source_condition}
-            ORDER BY {sort_col} {sort_order} NULLS LAST
-            LIMIT :limit OFFSET :offset
-        """)
-
-        # Count query for pagination
+        # Count query - only transcripts with classifications
         count_query = text(f"""
-            SELECT COUNT(*)
-            FROM messages m
-            INNER JOIN ai_insights ai ON ai.message_id = m.id
-            WHERE m.workspace_id = :workspace_id
+            SELECT COUNT(DISTINCT rt.id)
+            FROM raw_transcripts rt
+            INNER JOIN transcript_classifications tc
+                ON rt.workspace_id = tc.workspace_id
+                AND rt.source_type = tc.source_type
+                AND rt.source_id = tc.source_id
+            WHERE rt.workspace_id = :workspace_id
+            AND tc.processing_status = 'completed'
             {source_condition}
         """)
-
-        # Execute count
-        count_result = self.db.execute(count_query, params)
-        total = count_result.scalar() or 0
+        total = self.db.execute(count_query, params).scalar() or 0
 
         if total == 0:
             return self._empty_response(page, page_size)
 
-        # Execute main query
-        result = self.db.execute(query, params)
+        # Calculate pagination
+        total_pages = (total + page_size - 1) // page_size
+        offset = (page - 1) * page_size
+
+        # Data query
+        data_query = text(f"""
+            SELECT
+                rt.id::text,
+                COALESCE(rt.title,
+                    CASE rt.source_type
+                        WHEN 'gong' THEN 'Gong Call'
+                        WHEN 'fathom' THEN 'Fathom Meeting'
+                        ELSE 'Transcript'
+                    END
+                ) as title,
+                'Transcript' as sender,
+                NULL as sender_email,
+                CASE rt.source_type
+                    WHEN 'gong' THEN 'transcript'
+                    WHEN 'fathom' THEN 'meeting'
+                    ELSE 'transcript'
+                END as source_type,
+                rt.source_type as source,
+                '' as preview,
+                COALESCE(rt.transcript_date, rt.created_at) as sort_timestamp,
+                NULL as channel_name,
+                rt.ai_processed as tier1_processed,
+                rt.ai_processed as tier2_processed
+            FROM raw_transcripts rt
+            INNER JOIN transcript_classifications tc
+                ON rt.workspace_id = tc.workspace_id
+                AND rt.source_type = tc.source_type
+                AND rt.source_id = tc.source_id
+            WHERE rt.workspace_id = :workspace_id
+            AND tc.processing_status = 'completed'
+            {source_condition}
+            ORDER BY COALESCE(rt.transcript_date, rt.created_at) {sort_order} NULLS LAST
+            LIMIT :limit OFFSET :offset
+        """)
+
+        params["limit"] = page_size
+        params["offset"] = offset
+
+        result = self.db.execute(data_query, params)
         rows = result.fetchall()
 
-        # Convert to response objects with AI insights
         messages = []
         for row in rows:
-            # Build AI insight object if data exists
-            ai_insights = None
-            if row[11]:  # ai_id exists (shifted by 1 due to tier2_processed)
-                ai_insights = MessageAIInsight(
-                    id=row[11],
-                    summary=row[12],
-                    pain_point=row[13],
-                    pain_point_quote=row[14],
-                    feature_request=row[15],
-                    customer_usecase=row[16],
-                    sentiment=row[17],
-                    keywords=row[18] or [],
-                    model_version=row[19],
-                    tokens_used=row[20],
-                    created_at=row[21],
-                )
-
             messages.append(MessageResponse(
                 id=row[0],
                 title=row[1],
@@ -444,10 +396,7 @@ class OptimizedMessagesService:
                 channel_name=row[8],
                 tier1_processed=row[9],
                 tier2_processed=row[10],
-                ai_insights=ai_insights,
             ))
-
-        total_pages = (total + page_size - 1) // page_size
 
         return MessageListResponse(
             messages=messages,
@@ -465,10 +414,10 @@ class OptimizedMessagesService:
         message_ids: List[str],
     ) -> Dict[str, MessageResponse]:
         """
-        Batch load multiple messages by ID.
+        Batch load multiple transcripts by ID.
 
-        Useful for preloading messages that are likely to be viewed.
-        Returns a dict mapping message_id to MessageResponse.
+        Useful for preloading transcripts that are likely to be viewed.
+        Returns a dict mapping transcript_id to MessageResponse.
         """
         if not message_ids:
             return {}
@@ -479,23 +428,27 @@ class OptimizedMessagesService:
         query = text(f"""
             SELECT
                 id::text,
-                COALESCE(title, 'Message') as title,
-                COALESCE(author_name, author_email, 'Unknown') as sender,
-                author_email as sender_email,
-                CASE source
-                    WHEN 'slack' THEN 'slack'
-                    WHEN 'gmail' THEN 'email'
+                COALESCE(title,
+                    CASE source_type
+                        WHEN 'gong' THEN 'Gong Call'
+                        WHEN 'fathom' THEN 'Fathom Meeting'
+                        ELSE 'Transcript'
+                    END
+                ) as title,
+                'Transcript' as sender,
+                NULL as sender_email,
+                CASE source_type
                     WHEN 'gong' THEN 'transcript'
                     WHEN 'fathom' THEN 'meeting'
-                    ELSE 'email'
+                    ELSE 'transcript'
                 END as source_type,
-                source,
-                COALESCE(SUBSTRING(content FROM 1 FOR 150), '') as preview,
-                sent_at as sort_timestamp,
-                channel_name,
-                tier1_processed,
-                tier2_processed
-            FROM messages
+                source_type as source,
+                '' as preview,
+                COALESCE(transcript_date, created_at) as sort_timestamp,
+                NULL as channel_name,
+                ai_processed as tier1_processed,
+                ai_processed as tier2_processed
+            FROM raw_transcripts
             WHERE workspace_id = :workspace_id
             AND id::text IN ({id_list})
         """)

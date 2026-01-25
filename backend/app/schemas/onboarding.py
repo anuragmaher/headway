@@ -17,6 +17,7 @@ class CompanySetupData(BaseModel):
     industry: str = Field(..., min_length=1, max_length=100, description="Industry category")
     team_size: Optional[str] = Field(None, max_length=50, description="Team size range")
     role: Optional[str] = Field(None, max_length=100, description="User's role in the company")
+    domains: Optional[List[str]] = Field(None, description="Company email domains (e.g., ['hiver.com', 'hiverhq.com'])")
 
 
 class CompanyDataResponse(BaseModel):
@@ -26,6 +27,7 @@ class CompanyDataResponse(BaseModel):
     industry: Optional[str] = None
     team_size: Optional[str] = None
     role: Optional[str] = None
+    domains: Optional[List[str]] = None
 
 
 # ============================================

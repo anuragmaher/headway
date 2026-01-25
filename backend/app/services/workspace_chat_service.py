@@ -154,7 +154,9 @@ Table: messages
 - title (TEXT)
 - sent_at (TIMESTAMP)
 - author_name (TEXT)
-- ai_insights (JSONB) - Contains extracted insights
+- tier1_processed (BOOLEAN) - Whether tier 1 AI processing is done
+- tier2_processed (BOOLEAN) - Whether tier 2 AI processing is done
+- feature_score (FLOAT) - AI relevance score (0-10)
 
 Table: features
 - id (UUID PRIMARY KEY)
@@ -178,13 +180,6 @@ Table: feature_messages (junction table)
 - feature_id (UUID FK to features.id)
 - message_id (UUID FK to messages.id)
 
-ai_insights JSONB structure in messages table:
-{{
-  "feature_requests": [{{"name": "", "description": "", "urgency": "", "quote": "", "theme": ""}}],
-  "pain_points": [{{"description": "", "impact": "", "quote": ""}}],
-  "sentiment": {{"overall": "positive|neutral|negative", "score": 0.0-1.0}}
-}}
-
 Current workspace_id: {workspace_id}
 
 {themes_context}
@@ -200,18 +195,16 @@ CRITICAL RULES:
 1. ONLY generate SELECT statements
 2. ALWAYS include WHERE workspace_id = '{workspace_id}' for customers, messages, features, and themes tables
 3. Add LIMIT 100 to prevent huge result sets
-4. For JSONB queries, use proper operators: ->, ->>, @>, ?
-5. Use JOINs when querying across tables
-6. For aggregations, use appropriate GROUP BY
-7. Use descriptive column aliases for clarity
-8. Ensure all columns referenced exist in the schema
-9. IMPORTANT: For "most urgent" or "urgent" queries, use ORDER BY with CASE to sort urgency properly (critical > high > medium > low). DO NOT filter by urgency='critical' alone.
+4. Use JOINs when querying across tables
+5. For aggregations, use appropriate GROUP BY
+6. Use descriptive column aliases for clarity
+7. Ensure all columns referenced exist in the schema
+8. IMPORTANT: For "most urgent" or "urgent" queries, use ORDER BY with CASE to sort urgency properly (critical > high > medium > low). DO NOT filter by urgency='critical' alone.
 
 Common query patterns:
 - Customers with most messages: SELECT c.name, COUNT(m.id) as message_count FROM customers c LEFT JOIN messages m ON m.customer_id = c.id WHERE c.workspace_id = '{workspace_id}' GROUP BY c.id, c.name ORDER BY message_count DESC LIMIT 100
 - Most urgent feature requests by customer: SELECT c.name AS customer_name, f.name AS feature_name, f.urgency FROM customers c JOIN messages m ON m.customer_id = c.id JOIN feature_messages fm ON fm.message_id = m.id JOIN features f ON f.id = fm.feature_id WHERE c.workspace_id = '{workspace_id}' ORDER BY CASE f.urgency WHEN 'critical' THEN 1 WHEN 'high' THEN 2 WHEN 'medium' THEN 3 WHEN 'low' THEN 4 ELSE 5 END, c.name LIMIT 100
 - Feature requests by customer: SELECT c.name, f.name, f.urgency FROM customers c JOIN feature_messages fm ON fm.message_id IN (SELECT id FROM messages WHERE customer_id = c.id) JOIN features f ON f.id = fm.feature_id WHERE c.workspace_id = '{workspace_id}' LIMIT 100
-- Top pain points: SELECT content, ai_insights->'pain_points' as pain_points FROM messages WHERE workspace_id = '{workspace_id}' AND ai_insights->'pain_points' IS NOT NULL LIMIT 100
 - Industry breakdown: SELECT industry, COUNT(*) as count FROM customers WHERE workspace_id = '{workspace_id}' GROUP BY industry ORDER BY count DESC LIMIT 100
 
 Return ONLY the SQL query, no explanation or markdown formatting."""

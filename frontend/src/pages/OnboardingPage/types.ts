@@ -62,6 +62,8 @@ export interface CompanySetupData {
   industry: string;
   teamSize: string;
   role: string;
+  domains: string[];
+  domainsInput?: string; // Temporary storage for raw input while typing
 }
 
 export const INITIAL_COMPANY_DATA: CompanySetupData = {
@@ -70,6 +72,7 @@ export const INITIAL_COMPANY_DATA: CompanySetupData = {
   industry: '',
   teamSize: '',
   role: '',
+  domains: [],
 };
 
 export const INDUSTRIES = [
@@ -256,6 +259,7 @@ export interface CompanyDataResponse {
   industry: string | null;
   team_size: string | null;
   role: string | null;
+  domains: string[] | null;
 }
 
 export interface OnboardingProgressResponse {

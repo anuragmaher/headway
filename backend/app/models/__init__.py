@@ -21,9 +21,6 @@ from app.models.connector_label import ConnectorLabel
 from app.models.message import Message
 from app.models.message_customer_ask import MessageCustomerAsk
 
-# AI insights
-from app.models.ai_insight import AIInsight
-
 # CRM
 from app.models.customer import Customer
 from app.models.competitor import Competitor
@@ -32,12 +29,8 @@ from app.models.competitor import Competitor
 from app.models.onboarding_progress import OnboardingProgress
 from app.models.sync_history import SyncHistory
 
-# AI pipeline (kept)
-from app.models.normalized_event import NormalizedEvent, EventChunk
-from app.models.extracted_fact import ExtractedFact, AggregationRun
-from app.models.clustering import ClusteringRun
-
-# Transcript classifications
+# Transcript processing
+from app.models.raw_transcript import RawTranscript
 from app.models.transcript_classification import TranscriptClassification
 
 __all__ = [
@@ -54,20 +47,13 @@ __all__ = [
     "ConnectorLabel",
     "Message",
     "MessageCustomerAsk",
-    # AI insights
-    "AIInsight",
     # CRM
     "Customer",
     "Competitor",
     # Progress tracking
     "OnboardingProgress",
     "SyncHistory",
-    # AI pipeline
-    "NormalizedEvent",
-    "EventChunk",
-    "ExtractedFact",
-    "AggregationRun",
-    "ClusteringRun",
-    # Transcript classifications
+    # Transcript processing
+    "RawTranscript",
     "TranscriptClassification",
 ]

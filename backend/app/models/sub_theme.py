@@ -31,7 +31,6 @@ class SubTheme(Base):
     theme = relationship("Theme", back_populates="sub_themes")
     workspace = relationship("Workspace", back_populates="sub_themes")
     customer_asks = relationship("CustomerAsk", back_populates="sub_theme", cascade="all, delete-orphan")
-    ai_insights = relationship("AIInsight", back_populates="sub_theme")
     transcript_classifications = relationship("TranscriptClassification", back_populates="sub_theme")
 
     # Indexes for performance

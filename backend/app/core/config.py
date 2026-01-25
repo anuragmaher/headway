@@ -1,6 +1,10 @@
 from pydantic_settings import BaseSettings
 from typing import List, Optional
 import os
+from pathlib import Path
+
+# Get the backend directory (where .env should be)
+BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 class Settings(BaseSettings):
@@ -77,7 +81,7 @@ class Settings(BaseSettings):
     CELERY_RESULT_BACKEND: str = "redis://localhost:6379/0"
     
     class Config:
-        env_file = ".env"
+        env_file = BACKEND_DIR / ".env"
         case_sensitive = True
 
 

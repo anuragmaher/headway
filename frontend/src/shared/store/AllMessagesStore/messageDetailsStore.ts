@@ -69,7 +69,7 @@ const initialState = {
 export const useMessageDetailsStore = create<MessageDetailsState>((set, get) => ({
   ...initialState,
 
-  /** Open the detail panel and fetch message details + AI insights */
+  /** Open the detail panel and fetch message details (AI insights included in response) */
   openPanel: async (messageId: string, workspaceId: string) => {
     // If same message is already selected, just open the panel
     if (get().selectedMessageId === messageId && get().selectedMessage) {
@@ -88,15 +88,16 @@ export const useMessageDetailsStore = create<MessageDetailsState>((set, get) => 
     });
 
     try {
-      // Fetch message details and AI insights in parallel
-      const [details, insights] = await Promise.all([
-        sourcesService.getMessageDetails(workspaceId, messageId),
-        sourcesService.getMessageAIInsights(workspaceId, messageId).catch(() => null),
-      ]);
+      // Fetch message details (AI insights are now included in the response)
+      const details = await sourcesService.getMessageDetails(workspaceId, messageId);
+
+      // Extract AI insights from the response (new Key Insights structure)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const aiInsights = (details as any).ai_insights || null;
 
       set({
         selectedMessage: details,
-        aiInsights: insights,
+        aiInsights: aiInsights,
         isLoading: false,
         isLoadingInsights: false,
       });

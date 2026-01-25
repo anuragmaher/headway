@@ -391,9 +391,10 @@ Table: customers
 - id (UUID), name, domain, industry, arr, mrr, deal_stage, use_cases, contact_name, contact_email
 
 Table: messages
-- id (UUID), customer_id (FK), content, source, title, sent_at, author_name, ai_insights (JSONB)
+- id (UUID), customer_id (FK), content, source, title, sent_at, author_name
+- tier1_processed (BOOLEAN), tier2_processed (BOOLEAN), feature_score (FLOAT)
 
-Table: features
+Table: features (customer_asks)
 - id (UUID), name, description, urgency, status, mention_count, theme_id, last_mentioned
 
 Table: themes
@@ -401,13 +402,6 @@ Table: themes
 
 Table: feature_messages (association table)
 - feature_id (FK), message_id (FK)
-
-ai_insights JSONB structure:
-{
-  "feature_requests": [{"name", "description", "urgency", "quote", "theme"}],
-  "pain_points": [{"description", "impact", "quote"}],
-  "sentiment": {"overall": "positive|neutral|negative", "score": 0-1}
-}
 """
 
         system_prompt = f"""{schema_context}
@@ -419,7 +413,6 @@ CRITICAL RULES:
 2. ALWAYS include WHERE customer_id = '{customer_id}'
 3. Add LIMIT 100 to prevent huge result sets
 4. Use parameterized values, not string concatenation
-5. For JSONB queries, use proper operators: ->, ->>, @>
 
 Return ONLY the SQL query, no explanation."""
 

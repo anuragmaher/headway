@@ -12,7 +12,6 @@ from app.models.theme import Theme
 from app.models.sub_theme import SubTheme
 from app.models.customer_ask import CustomerAsk
 from app.models.message import Message
-from app.models.ai_insight import AIInsight
 from app.models.message_customer_ask import MessageCustomerAsk
 from app.schemas.theme import (
     ThemeCreate, ThemeUpdate, ThemeResponse, ThemeWithSubThemes, ThemeHierarchy,
@@ -513,10 +512,8 @@ class CustomerAskService:
         total_count = junction_query[0][1] if junction_query else 0
         message_ids = [entry.message_id for entry in junction_entries]
 
-        # Get messages with eager loading of AI insights (single query)
-        messages = self.db.query(Message).options(
-            joinedload(Message.ai_insights)
-        ).filter(
+        # Get messages (single query)
+        messages = self.db.query(Message).filter(
             Message.id.in_(message_ids)
         ).all()
 
@@ -562,24 +559,8 @@ class CustomerAskService:
             if not msg:
                 continue
 
-            # Get the first AI insight (most recent by model version)
+            # AI insights have been removed - transcript classifications are used instead
             ai_insight = None
-            if msg.ai_insights:
-                latest_insight = msg.ai_insights[0]
-                ai_insight = AIInsightResponse(
-                    id=latest_insight.id,
-                    message_id=latest_insight.message_id,
-                    model_version=latest_insight.model_version,
-                    summary=latest_insight.summary,
-                    pain_point=latest_insight.pain_point,
-                    pain_point_quote=latest_insight.pain_point_quote,
-                    feature_request=latest_insight.feature_request,
-                    customer_usecase=latest_insight.customer_usecase,
-                    sentiment=latest_insight.sentiment,
-                    keywords=latest_insight.keywords or [],
-                    tokens_used=latest_insight.tokens_used,
-                    created_at=latest_insight.created_at
-                )
 
             # Get ALL CustomerAsk IDs this message is linked to (from pre-fetched map)
             ca_ids_for_msg = message_to_ca_ids.get(msg.id, [customer_ask_id])

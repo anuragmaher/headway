@@ -77,7 +77,6 @@ class Message(Base):
     connector = relationship("WorkspaceConnector", back_populates="messages")
     customer_ask = relationship("CustomerAsk", back_populates="messages")  # DEPRECATED - use customer_ask_links
     customer = relationship("Customer", back_populates="messages")
-    ai_insights = relationship("AIInsight", back_populates="message", cascade="all, delete-orphan")
 
     # NEW: Many-to-many relationship via junction table
     # One message can link to multiple CustomerAsks (e.g., call transcript with multiple features)

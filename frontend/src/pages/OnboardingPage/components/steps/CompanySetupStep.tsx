@@ -28,6 +28,7 @@ import {
   People as PeopleIcon,
   Category as CategoryIcon,
   Person as PersonIcon,
+  AlternateEmail as AlternateEmailIcon,
 } from '@mui/icons-material';
 import {
   useCompanyData,
@@ -125,6 +126,38 @@ export function CompanySetupStep(): JSX.Element {
               startAdornment: (
                 <InputAdornment position="start">
                   <LanguageIcon sx={{ color: '#94a3b8', fontSize: 18 }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+
+        {/* Company Domains */}
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Company Domains"
+            value={companyData.domainsInput ?? companyData.domains?.join(', ') ?? ''}
+            onChange={(e) => {
+              // Store raw input while typing
+              updateCompanyData({ domainsInput: e.target.value });
+            }}
+            onBlur={(e) => {
+              // Parse into array on blur
+              const domains = e.target.value
+                .split(',')
+                .map((d) => d.trim().toLowerCase())
+                .filter(Boolean);
+              updateCompanyData({ domains, domainsInput: undefined });
+            }}
+            placeholder="e.g., hiver.com, hiverhq.com"
+            helperText="Email domains to identify internal team members (comma-separated)"
+            size="small"
+            sx={inputSx}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AlternateEmailIcon sx={{ color: '#94a3b8', fontSize: 18 }} />
                 </InputAdornment>
               ),
             }}

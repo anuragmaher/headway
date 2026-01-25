@@ -2,8 +2,8 @@
 On-demand Gong sync task.
 
 Triggered by the Sources API when user clicks "Sync All Sources".
-Uses optimized batch ingestion - data storage only, no AI extraction.
-AI extraction happens in a separate batch processing task.
+Stores raw call data in raw_transcripts table (ai_processed=False).
+AI processing happens in a separate Celery task (transcript_processing).
 """
 
 import logging
@@ -30,7 +30,8 @@ def sync_workspace_gong(self, workspace_id: str, sync_id: str):
     On-demand task to sync Gong for a specific workspace.
 
     Triggered by the Sources API when user clicks "Sync All Sources".
-    Uses batch ingestion - AI extraction happens in separate task.
+    Stores raw data in raw_transcripts table (ai_processed=False).
+    AI processing happens via transcript_processing Celery task.
     """
     logger.info(f"🚀 Starting on-demand Gong sync for workspace {workspace_id}")
 

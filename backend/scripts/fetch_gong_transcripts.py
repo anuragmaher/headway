@@ -899,35 +899,22 @@ Examples:
                     TranscriptClassification.source_id == str(call_id)
                 ).first()
                 
-                # Skip if already processed AND arrays are populated (fully processed)
-                # If arrays are NULL, we should still process to populate them
                 if existing and existing.processing_status == "completed":
-                    # Check if arrays need to be populated (backfill for old records)
-                    needs_backfill = (
-                        existing.theme_ids is None or 
-                        existing.sub_theme_ids is None or
-                        len(existing.theme_ids or []) == 0 or
-                        len(existing.sub_theme_ids or []) == 0
-                    )
-                    
-                    if not needs_backfill:
-                        skipped_count += 1
-                        print(f"   ⏭️  Already processed (status: {existing.processing_status}), skipping AI processing...")
-                        print(f"      Use --force to re-process this call")
-                        # Still save files if they don't exist, but skip AI processing
-                        transcript = fetch_gong_transcript(credentials, call_id)
-                        if transcript:
-                            json_filepath, txt_filepath = save_transcript_to_file(call, transcript, args.output_dir, i)
-                            saved_json_files.append(json_filepath)
-                            if txt_filepath:
-                                saved_txt_files.append(txt_filepath)
-                                print(f"   💾 Saved JSON: {os.path.basename(json_filepath)}")
-                                print(f"   💾 Saved TXT:  {os.path.basename(txt_filepath)}")
-                            else:
-                                print(f"   💾 Saved JSON: {os.path.basename(json_filepath)}")
-                        continue
-                    else:
-                        print(f"   🔄 Already processed but arrays missing, will backfill arrays...")
+                    skipped_count += 1
+                    print(f"   ⏭️  Already processed (status: {existing.processing_status}), skipping AI processing...")
+                    print(f"      Use --force to re-process this call")
+                    # Still save files if they don't exist, but skip AI processing
+                    transcript = fetch_gong_transcript(credentials, call_id)
+                    if transcript:
+                        json_filepath, txt_filepath = save_transcript_to_file(call, transcript, args.output_dir, i)
+                        saved_json_files.append(json_filepath)
+                        if txt_filepath:
+                            saved_txt_files.append(txt_filepath)
+                            print(f"   💾 Saved JSON: {os.path.basename(json_filepath)}")
+                            print(f"   💾 Saved TXT:  {os.path.basename(txt_filepath)}")
+                        else:
+                            print(f"   💾 Saved JSON: {os.path.basename(json_filepath)}")
+                    continue
             
             transcript = fetch_gong_transcript(credentials, call_id)
             

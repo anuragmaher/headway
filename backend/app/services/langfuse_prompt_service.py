@@ -7,10 +7,8 @@ This service fetches chat-type prompts from Langfuse, enabling:
 - Prompt observability and analytics
 - Easy prompt updates without code deployment
 
-Chat-type prompts in Langfuse (return messages array):
-- tier1_ai_prompt: Tier 1 classification (system + user messages)
-- tier2_ai_prompt: Tier 2 extraction (system + user messages)
-- ai_insights_prompt: AI Insights generation (system + user messages)
+Chat-type prompts in Langfuse:
+- transcript_classification_prompt: Classify transcripts into themes/sub-themes
 """
 
 import logging
@@ -26,7 +24,7 @@ _langfuse_client = None
 _langfuse_lock = threading.Lock()
 
 
-def _get_langfuse_client():
+def get_langfuse_client():
     """Get or create the Langfuse client (singleton)."""
     global _langfuse_client
 
@@ -69,9 +67,7 @@ class LangfusePromptService:
 
     # Prompt name mappings (local key -> Langfuse prompt name)
     PROMPT_NAMES = {
-        "tier1": "tier1_ai_prompt",
-        "tier2": "tier2_ai_prompt",
-        "ai_insights": "ai_insights_prompt",
+        "transcript_classification": "classification prompt",
     }
 
     def __init__(self):
@@ -90,7 +86,7 @@ class LangfusePromptService:
         ready to be passed directly to OpenAI's chat completions API.
 
         Args:
-            prompt_key: Key from PROMPT_NAMES mapping (tier1, tier2, ai_insights)
+            prompt_key: Key from PROMPT_NAMES mapping or direct Langfuse prompt name
             variables: Variables to interpolate into the prompt messages
 
         Returns:
@@ -99,7 +95,7 @@ class LangfusePromptService:
         """
         prompt_name = self.PROMPT_NAMES.get(prompt_key, prompt_key)
 
-        client = _get_langfuse_client()
+        client = get_langfuse_client()
         if not client:
             logger.error(f"Langfuse client not available for prompt '{prompt_name}'")
             return None
@@ -135,7 +131,7 @@ class LangfusePromptService:
         """
         prompt_name = self.PROMPT_NAMES.get(prompt_key, prompt_key)
 
-        client = _get_langfuse_client()
+        client = get_langfuse_client()
         if not client:
             return None, None
 
@@ -170,67 +166,21 @@ def get_langfuse_prompt_service() -> LangfusePromptService:
 # Convenience functions for direct chat prompt access
 # ============================================================================
 
-def get_tier1_chat_prompt(**variables) -> List[Dict[str, str]]:
+def get_transcript_classification_prompt(**variables) -> List[Dict[str, str]]:
     """
-    Get Tier 1 classification chat prompt from Langfuse.
+    Get transcript classification chat prompt from Langfuse.
 
     Variables:
-        text: Message content (max 4000 chars)
-        source_type: slack/gmail/gong/fathom
-        actor_role: internal/external/customer/unknown
+        THEMES_JSON: Complete themes and sub-themes as JSON
+        TRANSCRIPT: Complete raw transcript data
+        COMPANY_NAME: Company name from onboarding
+        COMPANY_DOMAINS: Company email domains (comma-separated)
 
     Returns:
-        List of messages ready for OpenAI chat completions API
+        List of messages ready for OpenAI/Anthropic chat completions API
     """
     service = get_langfuse_prompt_service()
-    messages = service.get_chat_prompt("tier1", variables=variables)
+    messages = service.get_chat_prompt("transcript_classification", variables=variables)
     if not messages:
-        raise ValueError("Failed to fetch tier1_ai_prompt from Langfuse. Check your Langfuse configuration.")
-    return messages
-
-
-def get_tier2_chat_prompt(**variables) -> List[Dict[str, str]]:
-    """
-    Get Tier 2 extraction chat prompt from Langfuse.
-
-    Variables:
-        text: Message content (max 5000 chars)
-        source_type: slack/gmail/gong/fathom
-        actor_name: Author name
-        actor_role: internal/external/customer/unknown
-        title: Message title/subject
-        themes_list: Formatted themes list
-        features_list: Formatted existing features list
-
-    Returns:
-        List of messages ready for OpenAI chat completions API
-    """
-    service = get_langfuse_prompt_service()
-    messages = service.get_chat_prompt("tier2", variables=variables)
-    if not messages:
-        raise ValueError("Failed to fetch tier2_ai_prompt from Langfuse. Check your Langfuse configuration.")
-    return messages
-
-
-def get_ai_insights_chat_prompt(**variables) -> List[Dict[str, str]]:
-    """
-    Get AI Insights chat prompt from Langfuse.
-
-    Variables:
-        message_content: Message content (max 4000 chars)
-        message_title: Title/subject
-        source_type: slack/gmail/gong/fathom
-        author_name: Author name
-        author_role: Role
-        themes_text: Formatted available themes
-        locked_theme_text: Locked theme info (if any)
-        customer_asks_text: Linked customer asks (if any)
-
-    Returns:
-        List of messages ready for OpenAI chat completions API
-    """
-    service = get_langfuse_prompt_service()
-    messages = service.get_chat_prompt("ai_insights", variables=variables)
-    if not messages:
-        raise ValueError("Failed to fetch ai_insights_prompt from Langfuse. Check your Langfuse configuration.")
+        raise ValueError("Failed to fetch 'classification prompt' from Langfuse. Check your Langfuse configuration.")
     return messages

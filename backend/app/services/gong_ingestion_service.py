@@ -1,12 +1,12 @@
 """
-Optimized Gong Ingestion Service - Fast batch data storage without AI extraction.
+Optimized Gong Ingestion Service - Fast batch data storage for raw transcripts.
 
 This service focuses on:
 1. Fast fetching of Gong calls and transcripts
-2. Batch insertion into the database
-3. Deferred AI processing (marked as tier1_processed=False, tier2_processed=False)
+2. Batch insertion into raw_transcripts table
+3. Deferred AI processing (ai_processed=False)
 
-AI extraction happens in a separate batch processing task (Tier 1 -> Tier 2).
+AI extraction happens in a separate Celery task (transcript_processing).
 
 Usage:
     from app.services.gong_ingestion_service import gong_ingestion_service
@@ -31,7 +31,6 @@ from sqlalchemy import and_
 
 from app.models.workspace import Workspace
 from app.models.workspace_connector import WorkspaceConnector
-from app.models.customer import Customer
 from app.services.batch_db_service import batch_db_service
 
 logger = logging.getLogger(__name__)
@@ -39,12 +38,12 @@ logger = logging.getLogger(__name__)
 
 class GongIngestionService:
     """
-    Optimized Gong ingestion service.
+    Optimized Gong ingestion service for raw transcripts.
 
     Key optimizations:
     - Batch API calls where possible
     - No inline AI extraction (deferred to batch processing)
-    - Batch database inserts
+    - Batch database inserts to raw_transcripts
     - Minimal memory footprint
     """
 
@@ -65,7 +64,7 @@ class GongIngestionService:
         This method:
         1. Fetches calls from Gong API
         2. Fetches transcripts (if enabled)
-        3. Batch inserts into Message table with tier1_processed=False
+        3. Batch inserts into raw_transcripts table with ai_processed=False
         4. Returns counts for sync tracking
 
         AI extraction is NOT performed here - it happens in a separate task.
@@ -118,30 +117,27 @@ class GongIngestionService:
                 logger.info("No Gong calls found in date range")
                 return {"total_checked": 0, "new_added": 0, "duplicates_skipped": 0, "inserted_ids": []}
 
-            # Prepare messages for batch insert
-            messages = []
+            # Prepare raw transcripts for batch insert
+            transcripts = []
             for call_data in calls:
                 try:
-                    message = self._prepare_message(
+                    transcript = self._prepare_raw_transcript(
                         call_data=call_data,
                         credentials=credentials,
-                        fetch_transcript=fetch_transcripts,
-                        workspace_id=workspace_id,
-                        workspace=workspace
+                        fetch_transcript=fetch_transcripts
                     )
-                    if message:
-                        messages.append(message)
+                    if transcript:
+                        transcripts.append(transcript)
                 except Exception as e:
                     logger.error(f"Error preparing call {call_data.get('metaData', {}).get('id')}: {e}")
                     continue
 
-            # Batch insert all messages
-            result = batch_db_service.batch_insert_messages(
+            # Batch insert all raw transcripts
+            result = batch_db_service.batch_insert_raw_transcripts(
                 db=db,
-                messages=messages,
+                transcripts=transcripts,
                 workspace_id=workspace_id,
-                connector_id=str(connector.id),
-                source="gong"
+                source_type="gong"
             )
 
             # Update connector sync status
@@ -261,15 +257,13 @@ class GongIngestionService:
             logger.warning(f"Could not fetch transcript for call {call_id}: {e}")
             return None
 
-    def _prepare_message(
+    def _prepare_raw_transcript(
         self,
         call_data: Dict[str, Any],
         credentials: Dict[str, str],
         fetch_transcript: bool,
-        workspace_id: str,
-        workspace: Workspace
     ) -> Optional[Dict[str, Any]]:
-        """Prepare a call as a message dict for batch insert."""
+        """Prepare a call as a raw transcript dict for batch insert."""
         metadata = call_data.get('metaData', {})
         call_id = metadata.get('id')
 
@@ -284,106 +278,36 @@ class GongIngestionService:
         # Get parties
         parties = call_data.get('parties', [])
 
-        # Build speaker map
-        speaker_map = {}
-        for party in parties:
-            party_id = party.get('speakerId')
-            if party_id:
-                speaker_map[party_id] = party.get('name', 'Unknown')
-
-        # Find primary author (first internal party)
-        author_name = "Unknown"
-        author_email = None
-        for party in parties:
-            if party.get('affiliation') == 'Internal':
-                author_name = party.get('name', 'Unknown')
-                author_email = party.get('emailAddress')
-                break
-
         # Fetch transcript if requested
-        transcript_text = ""
         transcript_data = None
         if fetch_transcript:
             transcript_data = self._fetch_transcript(credentials, call_id)
-            if transcript_data:
-                transcript_text = self._format_transcript(transcript_data, speaker_map)
 
         # Parse timestamp
-        sent_at = datetime.now(timezone.utc)
+        transcript_date = datetime.now(timezone.utc)
         if started:
             try:
-                sent_at = datetime.fromisoformat(started.replace('Z', '+00:00'))
+                transcript_date = datetime.fromisoformat(started.replace('Z', '+00:00'))
             except ValueError:
                 pass
 
-        # Extract external customer info
-        customer_domain = None
-        customer_name = None
-        for party in parties:
-            if party.get('affiliation') == 'External':
-                email = party.get('emailAddress', '')
-                if '@' in email:
-                    customer_domain = email.split('@')[1]
-                    customer_name = party.get('name')
-                    break
+        # Count participants
+        participant_count = len(parties)
 
-        # Prepare metadata (store everything for later AI processing)
-        message_metadata = {
-            "call_id": call_id,
-            "title": title,
-            "duration_seconds": duration_seconds,
-            "parties": [
-                {
-                    "name": p.get("name"),
-                    "email": p.get("emailAddress"),
-                    "affiliation": p.get("affiliation")
-                }
-                for p in parties
-            ],
-            "has_transcript": transcript_data is not None,
-            "customer_domain": customer_domain,
-            "customer_name": customer_name,
-            # Store raw data for later if needed
-            "raw_metadata": metadata,
+        # Store complete raw data - including call data and transcript
+        raw_data = {
+            "call_data": call_data,
+            "transcript": transcript_data,
         }
-
-        # Don't store full transcript_data to save space
-        # The transcript_text in content is sufficient
 
         return {
-            "external_id": call_id,
-            "content": transcript_text or f"[Call: {title}]",
+            "source_id": call_id,
+            "raw_data": raw_data,
             "title": title,
-            "channel_name": "Gong Calls",
-            "channel_id": "gong_calls",
-            "author_name": author_name,
-            "author_email": author_email,
-            "metadata": message_metadata,
-            "sent_at": sent_at,
+            "duration_seconds": duration_seconds,
+            "transcript_date": transcript_date,
+            "participant_count": participant_count,
         }
-
-    def _format_transcript(
-        self,
-        transcript_data: Dict[str, Any],
-        speaker_map: Dict[str, str]
-    ) -> str:
-        """Format transcript into readable text."""
-        lines = []
-        last_speaker = None
-
-        for item in transcript_data.get('transcript', []):
-            speaker_id = item.get('speakerId', 'Unknown')
-            speaker_name = speaker_map.get(speaker_id, f'Speaker {speaker_id}')
-
-            for sentence in item.get('sentences', []):
-                text = sentence.get('text', '').strip()
-                if text:
-                    if last_speaker and last_speaker != speaker_name:
-                        lines.append("")  # Add blank line on speaker change
-                    lines.append(f"{speaker_name}: {text}")
-                    last_speaker = speaker_name
-
-        return "\n".join(lines)
 
 
 # Global service instance

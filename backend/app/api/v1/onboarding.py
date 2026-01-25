@@ -98,6 +98,7 @@ async def get_company_data(
         industry=company.industry,
         team_size=company.size,
         role=company.role,
+        domains=company.domains,
     )
 
 
@@ -142,6 +143,8 @@ async def save_company_data(
         company.size = request.team_size
     if request.role is not None:
         company.role = request.role
+    if request.domains is not None:
+        company.domains = request.domains
 
     db.commit()
     db.refresh(company)
@@ -152,6 +155,7 @@ async def save_company_data(
         industry=company.industry,
         team_size=company.size,
         role=company.role,
+        domains=company.domains,
     )
 
 
