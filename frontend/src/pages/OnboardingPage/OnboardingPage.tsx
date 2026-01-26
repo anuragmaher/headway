@@ -39,8 +39,8 @@ const STEP_CONTENT = [
     description: 'Tell us about your company and what you do.',
   },
   {
-    title: 'Product taxonomy',
-    description: 'We\'ll analyze your website to generate product categories.',
+    title: 'Theme Taxonomy',
+    description: 'Organize customer conversations into themes and subthemes',
   },
   {
     title: 'Connect data sources',

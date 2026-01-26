@@ -129,13 +129,19 @@ export interface TaxonomyData {
   url: string;
   themes: Theme[];
   selectedThemes: string[];
+  aiSuggestions: Theme[];
+  suggestionUrl: string;
 }
 
 export const INITIAL_TAXONOMY_DATA: TaxonomyData = {
   url: '',
   themes: [],
   selectedThemes: [],
+  aiSuggestions: [],
+  suggestionUrl: '',
 };
+
+export type TaxonomyViewMode = 'default' | 'add-theme' | 'suggest-panel';
 
 export type TaxonomyStatus = 'idle' | 'processing' | 'completed' | 'failed';
 

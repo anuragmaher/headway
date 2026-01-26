@@ -41,6 +41,11 @@ interface OnboardingActions {
   setTaxonomyStatus: (status: TaxonomyStatus) => void;
   setTaxonomyError: (error: string | null) => void;
   setTaxonomySubStep: (subStep: TaxonomySubStep) => void;
+  addTheme: (theme: Theme) => void;
+  removeTheme: (themeName: string) => void;
+  addSubthemeToTheme: (themeName: string, subtheme: { name: string; description: string; confidence: number }) => void;
+  setAISuggestions: (suggestions: Theme[]) => void;
+  clearAISuggestions: () => void;
 
   // Connected sources (Step 2)
   setConnectedSources: (sources: ConnectedSource[]) => void;
@@ -146,6 +151,62 @@ export const useOnboardingStore = create<OnboardingStore>()(
         set({ taxonomyError: error, taxonomyStatus: error ? 'failed' : 'idle' }),
 
       setTaxonomySubStep: (subStep) => set({ taxonomySubStep: subStep }),
+
+      addTheme: (theme) =>
+        set((state) => {
+          // Don't add if theme with same name already exists
+          if (state.taxonomyData.themes.some((t) => t.name === theme.name)) {
+            return state;
+          }
+          return {
+            taxonomyData: {
+              ...state.taxonomyData,
+              themes: [...state.taxonomyData.themes, theme],
+              selectedThemes: [...state.taxonomyData.selectedThemes, theme.name],
+            },
+          };
+        }),
+
+      removeTheme: (themeName) =>
+        set((state) => ({
+          taxonomyData: {
+            ...state.taxonomyData,
+            themes: state.taxonomyData.themes.filter((t) => t.name !== themeName),
+            selectedThemes: state.taxonomyData.selectedThemes.filter((n) => n !== themeName),
+          },
+        })),
+
+      addSubthemeToTheme: (themeName, subtheme) =>
+        set((state) => ({
+          taxonomyData: {
+            ...state.taxonomyData,
+            themes: state.taxonomyData.themes.map((theme) =>
+              theme.name === themeName
+                ? {
+                    ...theme,
+                    sub_themes: [...theme.sub_themes, subtheme],
+                  }
+                : theme
+            ),
+          },
+        })),
+
+      setAISuggestions: (suggestions) =>
+        set((state) => ({
+          taxonomyData: {
+            ...state.taxonomyData,
+            aiSuggestions: suggestions,
+          },
+        })),
+
+      clearAISuggestions: () =>
+        set((state) => ({
+          taxonomyData: {
+            ...state.taxonomyData,
+            aiSuggestions: [],
+            suggestionUrl: '',
+          },
+        })),
 
       // ============================================
       // Connected Sources (Step 2)
