@@ -2,7 +2,7 @@
  * MessagesTabContent - Content area for the Messages tab
  */
 
-import { Box, Typography, CircularProgress, Pagination, Paper, alpha, useTheme } from '@mui/material';
+import { Box, Typography, CircularProgress, Pagination, Paper, alpha, useTheme, useMediaQuery } from '@mui/material';
 import { MessageList } from './MessageList';
 import { MessageDetailPanel } from './MessageDetailPanel';
 import { Message } from '@/shared/types/AllMessagesTypes';
@@ -29,6 +29,7 @@ export function MessagesTabContent({
   isDetailOpen,
 }: MessagesTabContentProps): JSX.Element {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Box
@@ -43,11 +44,11 @@ export function MessagesTabContent({
       {/* Left Panel - Message List */}
       <Box
         sx={{
-          width: isDetailOpen ? '50%' : '100%',
+          width: isMobile || !isDetailOpen ? '100%' : '50%',
           overflow: 'hidden',
           minWidth: 0,
-          pl: 2.5,
-          pr: isDetailOpen ? 0 : 2.5,
+          pl: { xs: 1.5, sm: 2.5 },
+          pr: isMobile || !isDetailOpen ? { xs: 1.5, sm: 2.5 } : 0,
           py: 1.5,
           transition: 'width 0.25s ease-out, padding-right 0.25s ease-out',
         }}

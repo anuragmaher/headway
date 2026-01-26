@@ -6,7 +6,7 @@
  */
 
 import { forwardRef, useState } from 'react';
-import { Box, Typography, IconButton, alpha, useTheme, CircularProgress, Alert, Paper, Slide, Tabs, Tab } from '@mui/material';
+import { Box, Typography, IconButton, alpha, useTheme, CircularProgress, Alert, Paper, Slide, Tabs, Tab, Drawer, useMediaQuery } from '@mui/material';
 import {
   Close as CloseIcon,
   Email as EmailIcon,
@@ -77,6 +77,7 @@ const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
   ({ selectedMessage, isLoading, error, sourceColor, onClose }, ref) => {
     const theme = useTheme();
     const [activeTab, setActiveTab] = useState<DetailTab>('insights');
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const handleTabChange = (_: React.SyntheticEvent, newValue: DetailTab) => {
       setActiveTab(newValue);
@@ -100,15 +101,15 @@ const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
       <Box
         ref={ref}
         sx={{
-          width: '50%',
+          width: isMobile ? '100%' : '50%',
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          pl: 1.5,
-          pr: 2.5,
-          py: 1.5,
-          position: 'absolute',
+          pl: isMobile ? 0 : 1.5,
+          pr: isMobile ? 0 : 2.5,
+          py: isMobile ? 0 : 1.5,
+          position: isMobile ? 'relative' : 'absolute',
           right: 0,
           top: 0,
         }}
@@ -119,12 +120,34 @@ const PanelContent = forwardRef<HTMLDivElement, PanelContentProps>(
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            borderRadius: 2,
-            border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+            borderRadius: isMobile ? 0 : 2,
+            border: isMobile ? 'none' : `1px solid ${alpha(theme.palette.divider, 0.08)}`,
             bgcolor: theme.palette.background.paper,
             overflow: 'hidden',
+            height: '100%',
           }}
         >
+          {/* Drag Handle for Mobile */}
+          {isMobile && (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                pt: 1.5,
+                pb: 0.5,
+              }}
+            >
+              <Box
+                sx={{
+                  width: 40,
+                  height: 4,
+                  borderRadius: 2,
+                  bgcolor: alpha(theme.palette.text.secondary, 0.3),
+                }}
+              />
+            </Box>
+          )}
+
           {/* Compact Header */}
           <Box
             sx={{
@@ -313,6 +336,7 @@ PanelContent.displayName = 'PanelContent';
 
 export function MessageDetailPanel(): JSX.Element | null {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { isOpen, selectedMessage, isLoading, error, closePanel } =
     useMessageDetailsStore();
 
@@ -324,6 +348,38 @@ export function MessageDetailPanel(): JSX.Element | null {
     ? getSourceColor(selectedMessage.source, theme)
     : theme.palette.primary.main;
 
+  // Mobile: Use Drawer from bottom
+  if (isMobile) {
+    return (
+      <Drawer
+        anchor="bottom"
+        open={isOpen}
+        onClose={handleClose}
+        PaperProps={{
+          sx: {
+            height: '90vh',
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+            overflow: 'hidden',
+          },
+        }}
+        SlideProps={{
+          direction: 'up',
+          timeout: 300,
+        }}
+      >
+        <PanelContent
+          selectedMessage={selectedMessage}
+          isLoading={isLoading}
+          error={error}
+          sourceColor={sourceColor}
+          onClose={handleClose}
+        />
+      </Drawer>
+    );
+  }
+
+  // Desktop: Use side panel with slide animation
   return (
     <Slide direction="left" in={isOpen} mountOnEnter unmountOnExit timeout={250}>
       <PanelContent
