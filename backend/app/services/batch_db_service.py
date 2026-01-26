@@ -206,11 +206,38 @@ class BatchDatabaseService:
                 source_type=source_type
             )
 
-            # Filter out duplicates
-            new_transcripts = [
-                t for t in transcripts
-                if t.get("source_id") and t["source_id"] not in existing_ids
-            ]
+            # Also get existing title+date combinations to prevent same-name duplicates
+            existing_title_dates = self._get_existing_transcript_title_dates(
+                db=db,
+                workspace_id=workspace_id
+            )
+
+            # Filter out duplicates by source_id OR by title+date
+            new_transcripts = []
+            for t in transcripts:
+                if not t.get("source_id"):
+                    continue
+                if t["source_id"] in existing_ids:
+                    continue
+                # Check title+date duplicate
+                title = t.get("title") or ""
+                transcript_date = t.get("transcript_date")
+                if transcript_date:
+                    if isinstance(transcript_date, str):
+                        try:
+                            from datetime import datetime
+                            transcript_date = datetime.fromisoformat(transcript_date.replace("Z", "+00:00"))
+                        except (ValueError, TypeError):
+                            transcript_date = None
+                    if transcript_date:
+                        date_key = (title.lower().strip(), transcript_date.date())
+                        if date_key in existing_title_dates:
+                            logger.debug(f"Skipping duplicate by title+date: {title}")
+                            continue
+                        # Add to set to prevent duplicates within same batch
+                        existing_title_dates.add(date_key)
+                new_transcripts.append(t)
+
             duplicates_skipped = total_checked - len(new_transcripts)
 
             if not new_transcripts:
@@ -284,6 +311,31 @@ class BatchDatabaseService:
 
         except Exception as e:
             logger.error(f"Error checking existing transcripts: {e}")
+            return set()
+
+    def _get_existing_transcript_title_dates(
+        self,
+        db: Session,
+        workspace_id: str
+    ) -> Set[tuple]:
+        """
+        Get set of (title, date) tuples that already exist in raw_transcripts.
+        Used to prevent duplicate transcripts with same name on same day.
+        """
+        try:
+            from sqlalchemy import func, cast, Date
+
+            query = db.query(
+                func.lower(func.coalesce(RawTranscript.title, '')),
+                cast(func.coalesce(RawTranscript.transcript_date, RawTranscript.created_at), Date)
+            ).filter(
+                RawTranscript.workspace_id == UUID(workspace_id)
+            )
+            existing = query.all()
+            return {(row[0].strip(), row[1]) for row in existing if row[1]}
+
+        except Exception as e:
+            logger.error(f"Error checking existing transcript titles: {e}")
             return set()
 
     def _prepare_raw_transcript_mapping(

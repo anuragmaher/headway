@@ -317,16 +317,42 @@ class SourcesService:
             except (ValueError, TypeError):
                 pass
 
-        # Extract parties from raw_data
+        # Extract parties/participants from raw_data
+        # Handle both Gong format (parties array) and Fathom format (speakers in transcript entries)
         parties = raw_data.get('parties', [])
-        participants = [
-            {
-                'name': p.get('name', 'Unknown'),
-                'email': p.get('emailAddress', ''),
-                'role': 'internal' if p.get('affiliation') == 'Internal' else 'external'
-            }
-            for p in parties
-        ]
+        participants = []
+
+        if parties:
+            # Gong format: parties array with speaker info
+            participants = [
+                {
+                    'name': p.get('name', 'Unknown'),
+                    'email': p.get('emailAddress', ''),
+                    'role': 'internal' if p.get('affiliation') == 'Internal' else 'external'
+                }
+                for p in parties
+            ]
+        else:
+            # Fathom format: extract unique speakers from transcript entries
+            transcript_data = raw_data.get('transcript', [])
+            if isinstance(transcript_data, list):
+                seen_speakers = set()
+                for entry in transcript_data:
+                    if not isinstance(entry, dict):
+                        continue
+                    speaker = entry.get('speaker')
+                    if speaker and isinstance(speaker, dict):
+                        name = speaker.get('display_name', 'Unknown')
+                        if name and name not in seen_speakers:
+                            seen_speakers.add(name)
+                            email = speaker.get('matched_calendar_invitee_email', '') or speaker.get('email', '')
+                            # Determine role based on available info (default to external for now)
+                            role = 'internal' if speaker.get('is_internal') else 'external'
+                            participants.append({
+                                'name': name,
+                                'email': email or '',
+                                'role': role
+                            })
 
         # Format transcript content for display
         transcript_text = self._format_transcript_text(raw_data)
@@ -364,10 +390,26 @@ class SourcesService:
             ai_insights['key_insights'] = extracted_data.get('key_insights', {})
             ai_insights['risk_assessment'] = extracted_data.get('risk_assessment', {})
             ai_insights['customer_metadata'] = extracted_data.get('customer_metadata', {})
-            ai_insights['speakers'] = extracted_data.get('speakers', [])
             ai_insights['call_metadata'] = extracted_data.get('call_metadata', {})
             ai_insights['theme_summary'] = extracted_data.get('theme_summary', {})
             ai_insights['mappings'] = extracted_data.get('mappings', [])
+
+            # Merge AI-extracted speakers with raw transcript data to fill in missing emails
+            ai_speakers = extracted_data.get('speakers', [])
+            if ai_speakers and participants:
+                # Build lookup map from participants (name -> email)
+                email_lookup = {p['name'].lower(): p['email'] for p in participants if p.get('email')}
+                for speaker in ai_speakers:
+                    speaker_email = speaker.get('email', '')
+                    # If email is missing or "unknown", try to fill from raw data
+                    if not speaker_email or speaker_email.lower() == 'unknown':
+                        speaker_name = speaker.get('name', '').lower()
+                        if speaker_name in email_lookup:
+                            speaker['email'] = email_lookup[speaker_name]
+                        else:
+                            # Clear "unknown" to empty string
+                            speaker['email'] = ''
+            ai_insights['speakers'] = ai_speakers
 
             # Also include raw data for debugging/display purposes
             ai_insights['raw_response'] = classification.raw_ai_response
@@ -417,11 +459,16 @@ class SourcesService:
         }
 
     def _format_transcript_text(self, raw_data: Dict[str, Any]) -> str:
-        """Format raw transcript data as readable text."""
+        """Format raw transcript data as readable text.
+
+        Handles both Gong and Fathom transcript formats:
+        - Gong: Uses 'parties' array with speakerId mapping to transcript segments
+        - Fathom: Has 'speaker.display_name' directly in each transcript entry
+        """
         if not raw_data:
             return "No transcript available."
 
-        # Build speaker mapping from parties
+        # Build speaker mapping from parties (Gong format)
         parties = raw_data.get('parties', [])
         speaker_map = {}
         for party in parties:
@@ -448,6 +495,22 @@ class SourcesService:
             if not isinstance(segment, dict):
                 continue
 
+            # Check for Fathom format first (speaker object with display_name)
+            speaker_obj = segment.get('speaker')
+            if speaker_obj and isinstance(speaker_obj, dict):
+                # Fathom format: speaker info is directly in the segment
+                name = speaker_obj.get('display_name', 'Unknown Speaker')
+                email = speaker_obj.get('matched_calendar_invitee_email', '') or speaker_obj.get('email', '')
+                text = segment.get('text', '').strip()
+
+                if text:
+                    if email:
+                        lines.append(f"{name} ({email}): {text}")
+                    else:
+                        lines.append(f"{name}: {text}")
+                continue
+
+            # Gong format: use speakerId to lookup in speaker_map
             speaker_id = str(segment.get('speakerId', ''))
             speaker_info = speaker_map.get(speaker_id, {'name': 'Unknown Speaker', 'email': ''})
 
