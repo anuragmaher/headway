@@ -155,31 +155,48 @@ class OptimizedMessagesService:
         source_filter: Optional[str]
     ) -> int:
         """
-        Compute total count of transcripts from raw_transcripts table.
+        Compute total count of unique transcripts from raw_transcripts table.
         Only supports gong and fathom sources.
+        Deduplicates by title and transcript_date to avoid showing duplicates with same name/date.
         """
         # Only count transcripts from raw_transcripts table
         if source_filter and source_filter in ('gong', 'fathom'):
             query = text("""
                 SELECT COUNT(*)
-                FROM raw_transcripts
-                WHERE workspace_id = :workspace_id
-                AND source_type = :source
+                FROM (
+                    SELECT DISTINCT ON (COALESCE(title, ''), DATE(COALESCE(transcript_date, created_at))) id
+                    FROM raw_transcripts
+                    WHERE workspace_id = :workspace_id
+                    AND source_type = :source
+                ) AS unique_transcripts
             """)
             result = self.db.execute(query, {
                 "workspace_id": workspace_id,
                 "source": source_filter
             })
         else:
-            # Count all transcripts (both gong and fathom)
+            # Count all unique transcripts (both gong and fathom)
             query = text("""
                 SELECT COUNT(*)
-                FROM raw_transcripts
-                WHERE workspace_id = :workspace_id
+                FROM (
+                    SELECT DISTINCT ON (COALESCE(title, ''), DATE(COALESCE(transcript_date, created_at))) id
+                    FROM raw_transcripts
+                    WHERE workspace_id = :workspace_id
+                ) AS unique_transcripts
             """)
             result = self.db.execute(query, {"workspace_id": workspace_id})
 
         return result.scalar() or 0
+
+    def _get_sort_column(self, sort_by: str) -> str:
+        """Map sort_by parameter to actual SQL column name."""
+        sort_columns = {
+            "timestamp": "sort_timestamp",
+            "title": "title",
+            "source": "source",
+            "sender": "sender",
+        }
+        return sort_columns.get(sort_by, "sort_timestamp")
 
     def _execute_query(
         self,
@@ -217,35 +234,42 @@ class OptimizedMessagesService:
             source_condition = "AND source_type = :source_filter"
             cursor_params["source_filter"] = source_filter
 
-        # Build query for raw_transcripts only
+        # Get the sort column based on sort_by parameter
+        sort_column = self._get_sort_column(sort_by)
+
+        # Build query for raw_transcripts only with deduplication
+        # Use DISTINCT ON to remove duplicates based on title and date (same meeting name on same day)
         query = text(f"""
-            SELECT
-                id::text,
-                COALESCE(title,
+            SELECT * FROM (
+                SELECT DISTINCT ON (COALESCE(title, ''), DATE(COALESCE(transcript_date, created_at)))
+                    id::text,
+                    COALESCE(title,
+                        CASE source_type
+                            WHEN 'gong' THEN 'Gong Call'
+                            WHEN 'fathom' THEN 'Fathom Meeting'
+                            ELSE 'Transcript'
+                        END
+                    ) as title,
+                    'Transcript' as sender,
+                    NULL as sender_email,
                     CASE source_type
-                        WHEN 'gong' THEN 'Gong Call'
-                        WHEN 'fathom' THEN 'Fathom Meeting'
-                        ELSE 'Transcript'
-                    END
-                ) as title,
-                'Transcript' as sender,
-                NULL as sender_email,
-                CASE source_type
-                    WHEN 'gong' THEN 'transcript'
-                    WHEN 'fathom' THEN 'meeting'
-                    ELSE 'transcript'
-                END as source_type,
-                source_type as source,
-                '' as preview,
-                COALESCE(transcript_date, created_at) as sort_timestamp,
-                NULL as channel_name,
-                ai_processed as tier1_processed,
-                ai_processed as tier2_processed
-            FROM raw_transcripts
-            WHERE workspace_id = :workspace_id
-            {source_condition}
-            {cursor_condition}
-            ORDER BY COALESCE(transcript_date, created_at) {sort_order} NULLS LAST
+                        WHEN 'gong' THEN 'transcript'
+                        WHEN 'fathom' THEN 'meeting'
+                        ELSE 'transcript'
+                    END as source_type_display,
+                    source_type as source,
+                    '' as preview,
+                    COALESCE(transcript_date, created_at) as sort_timestamp,
+                    NULL as channel_name,
+                    ai_processed as tier1_processed,
+                    ai_processed as tier2_processed
+                FROM raw_transcripts
+                WHERE workspace_id = :workspace_id
+                {source_condition}
+                {cursor_condition}
+                ORDER BY COALESCE(title, ''), DATE(COALESCE(transcript_date, created_at)), created_at DESC
+            ) AS unique_transcripts
+            ORDER BY {sort_column} {sort_order} NULLS LAST
             LIMIT :limit OFFSET :offset
         """)
 
@@ -318,17 +342,23 @@ class OptimizedMessagesService:
             source_condition = "AND rt.source_type = :source_filter"
             params["source_filter"] = source_filter
 
-        # Count query - only transcripts with classifications
+        # Get the sort column based on sort_by parameter
+        sort_column = self._get_sort_column(sort_by)
+
+        # Count query - only unique transcripts with classifications (deduplicate by title + date)
         count_query = text(f"""
-            SELECT COUNT(DISTINCT rt.id)
-            FROM raw_transcripts rt
-            INNER JOIN transcript_classifications tc
-                ON rt.workspace_id = tc.workspace_id
-                AND rt.source_type = tc.source_type
-                AND rt.source_id = tc.source_id
-            WHERE rt.workspace_id = :workspace_id
-            AND tc.processing_status = 'completed'
-            {source_condition}
+            SELECT COUNT(*)
+            FROM (
+                SELECT DISTINCT ON (COALESCE(rt.title, ''), DATE(COALESCE(rt.transcript_date, rt.created_at))) rt.id
+                FROM raw_transcripts rt
+                INNER JOIN transcript_classifications tc
+                    ON rt.workspace_id = tc.workspace_id
+                    AND rt.source_type = tc.source_type
+                    AND rt.source_id = tc.source_id
+                WHERE rt.workspace_id = :workspace_id
+                AND tc.processing_status = 'completed'
+                {source_condition}
+            ) AS unique_transcripts
         """)
         total = self.db.execute(count_query, params).scalar() or 0
 
@@ -339,39 +369,42 @@ class OptimizedMessagesService:
         total_pages = (total + page_size - 1) // page_size
         offset = (page - 1) * page_size
 
-        # Data query
+        # Data query with deduplication by title + date
         data_query = text(f"""
-            SELECT
-                rt.id::text,
-                COALESCE(rt.title,
+            SELECT * FROM (
+                SELECT DISTINCT ON (COALESCE(rt.title, ''), DATE(COALESCE(rt.transcript_date, rt.created_at)))
+                    rt.id::text,
+                    COALESCE(rt.title,
+                        CASE rt.source_type
+                            WHEN 'gong' THEN 'Gong Call'
+                            WHEN 'fathom' THEN 'Fathom Meeting'
+                            ELSE 'Transcript'
+                        END
+                    ) as title,
+                    'Transcript' as sender,
+                    NULL as sender_email,
                     CASE rt.source_type
-                        WHEN 'gong' THEN 'Gong Call'
-                        WHEN 'fathom' THEN 'Fathom Meeting'
-                        ELSE 'Transcript'
-                    END
-                ) as title,
-                'Transcript' as sender,
-                NULL as sender_email,
-                CASE rt.source_type
-                    WHEN 'gong' THEN 'transcript'
-                    WHEN 'fathom' THEN 'meeting'
-                    ELSE 'transcript'
-                END as source_type,
-                rt.source_type as source,
-                '' as preview,
-                COALESCE(rt.transcript_date, rt.created_at) as sort_timestamp,
-                NULL as channel_name,
-                rt.ai_processed as tier1_processed,
-                rt.ai_processed as tier2_processed
-            FROM raw_transcripts rt
-            INNER JOIN transcript_classifications tc
-                ON rt.workspace_id = tc.workspace_id
-                AND rt.source_type = tc.source_type
-                AND rt.source_id = tc.source_id
-            WHERE rt.workspace_id = :workspace_id
-            AND tc.processing_status = 'completed'
-            {source_condition}
-            ORDER BY COALESCE(rt.transcript_date, rt.created_at) {sort_order} NULLS LAST
+                        WHEN 'gong' THEN 'transcript'
+                        WHEN 'fathom' THEN 'meeting'
+                        ELSE 'transcript'
+                    END as source_type_display,
+                    rt.source_type as source,
+                    '' as preview,
+                    COALESCE(rt.transcript_date, rt.created_at) as sort_timestamp,
+                    NULL as channel_name,
+                    rt.ai_processed as tier1_processed,
+                    rt.ai_processed as tier2_processed
+                FROM raw_transcripts rt
+                INNER JOIN transcript_classifications tc
+                    ON rt.workspace_id = tc.workspace_id
+                    AND rt.source_type = tc.source_type
+                    AND rt.source_id = tc.source_id
+                WHERE rt.workspace_id = :workspace_id
+                AND tc.processing_status = 'completed'
+                {source_condition}
+                ORDER BY COALESCE(rt.title, ''), DATE(COALESCE(rt.transcript_date, rt.created_at)), rt.created_at DESC
+            ) AS unique_transcripts
+            ORDER BY {sort_column} {sort_order} NULLS LAST
             LIMIT :limit OFFSET :offset
         """)
 
@@ -441,7 +474,7 @@ class OptimizedMessagesService:
                     WHEN 'gong' THEN 'transcript'
                     WHEN 'fathom' THEN 'meeting'
                     ELSE 'transcript'
-                END as source_type,
+                END as source_type_display,
                 source_type as source,
                 '' as preview,
                 COALESCE(transcript_date, created_at) as sort_timestamp,
