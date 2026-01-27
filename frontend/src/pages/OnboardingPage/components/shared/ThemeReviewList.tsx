@@ -13,6 +13,7 @@ import {
 } from '@mui/icons-material';
 import { useState } from 'react';
 import type { Theme } from '../../types';
+import { useOnboardingColors } from '../../hooks/useOnboardingColors';
 
 interface ThemeReviewListProps {
   themes: Theme[];
@@ -31,11 +32,12 @@ interface ThemeRowProps {
 function ThemeRow({ theme, selected, onToggle, isLast }: ThemeRowProps): JSX.Element {
   const [expanded, setExpanded] = useState(false);
   const hasSubThemes = theme.sub_themes && theme.sub_themes.length > 0;
+  const colors = useOnboardingColors();
 
   return (
     <Box
       sx={{
-        borderBottom: isLast ? 'none' : '1px solid #f1f5f9',
+        borderBottom: isLast ? 'none' : `1px solid ${colors.background.hover}`,
       }}
     >
       {/* Main row */}
@@ -48,9 +50,9 @@ function ThemeRow({ theme, selected, onToggle, isLast }: ThemeRowProps): JSX.Ele
           gap: 1.5,
           cursor: 'pointer',
           transition: 'all 0.15s ease',
-          bgcolor: selected ? '#f0f9ff' : 'transparent',
+          bgcolor: selected ? colors.background.selected : 'transparent',
           '&:hover': {
-            bgcolor: selected ? '#e0f2fe' : '#f8fafc',
+            bgcolor: selected ? colors.background.selectedHover : colors.background.subtle,
           },
         }}
         onClick={onToggle}
@@ -62,9 +64,9 @@ function ThemeRow({ theme, selected, onToggle, isLast }: ThemeRowProps): JSX.Ele
           onChange={onToggle}
           sx={{
             p: 0,
-            color: '#d1d5db',
+            color: colors.border.default,
             '&.Mui-checked': {
-              color: '#3b82f6',
+              color: colors.primary.main,
             },
           }}
         />
@@ -74,7 +76,7 @@ function ThemeRow({ theme, selected, onToggle, isLast }: ThemeRowProps): JSX.Ele
             sx={{
               fontSize: '0.875rem',
               fontWeight: 500,
-              color: selected ? '#1d4ed8' : '#1e293b',
+              color: selected ? colors.chip.selected.text : colors.text.primary,
               lineHeight: 1.4,
             }}
           >
@@ -83,7 +85,7 @@ function ThemeRow({ theme, selected, onToggle, isLast }: ThemeRowProps): JSX.Ele
           <Typography
             sx={{
               fontSize: '0.75rem',
-              color: '#64748b',
+              color: colors.text.secondary,
               lineHeight: 1.3,
               mt: 0.25,
             }}
@@ -105,11 +107,11 @@ function ThemeRow({ theme, selected, onToggle, isLast }: ThemeRowProps): JSX.Ele
               px: 1,
               py: 0.5,
               borderRadius: 1,
-              bgcolor: expanded ? '#e2e8f0' : '#f1f5f9',
+              bgcolor: expanded ? colors.border.default : colors.background.hover,
               cursor: 'pointer',
               transition: 'all 0.15s ease',
               '&:hover': {
-                bgcolor: '#e2e8f0',
+                bgcolor: colors.border.default,
               },
             }}
           >
@@ -117,15 +119,15 @@ function ThemeRow({ theme, selected, onToggle, isLast }: ThemeRowProps): JSX.Ele
               sx={{
                 fontSize: '0.6875rem',
                 fontWeight: 500,
-                color: '#64748b',
+                color: colors.text.secondary,
               }}
             >
               {theme.sub_themes.length}
             </Typography>
             {expanded ? (
-              <ArrowUpIcon sx={{ fontSize: 16, color: '#64748b' }} />
+              <ArrowUpIcon sx={{ fontSize: 16, color: colors.text.secondary }} />
             ) : (
-              <ArrowDownIcon sx={{ fontSize: 16, color: '#64748b' }} />
+              <ArrowDownIcon sx={{ fontSize: 16, color: colors.text.secondary }} />
             )}
           </Box>
         )}
@@ -138,9 +140,9 @@ function ThemeRow({ theme, selected, onToggle, isLast }: ThemeRowProps): JSX.Ele
             mx: 2,
             mb: 1.5,
             ml: 5.5,
-            bgcolor: '#f8fafc',
+            bgcolor: colors.background.subtle,
             borderRadius: 1.5,
-            border: '1px solid #e2e8f0',
+            border: `1px solid ${colors.border.input}`,
             overflow: 'hidden',
           }}
         >
@@ -150,7 +152,7 @@ function ThemeRow({ theme, selected, onToggle, isLast }: ThemeRowProps): JSX.Ele
               sx={{
                 px: 1.5,
                 py: 1,
-                borderBottom: idx < theme.sub_themes.length - 1 ? '1px solid #e2e8f0' : 'none',
+                borderBottom: idx < theme.sub_themes.length - 1 ? `1px solid ${colors.border.input}` : 'none',
                 display: 'flex',
                 alignItems: 'flex-start',
                 gap: 1,
@@ -161,7 +163,7 @@ function ThemeRow({ theme, selected, onToggle, isLast }: ThemeRowProps): JSX.Ele
                   width: 4,
                   height: 4,
                   borderRadius: '50%',
-                  bgcolor: '#94a3b8',
+                  bgcolor: colors.text.muted,
                   mt: 0.75,
                   flexShrink: 0,
                 }}
@@ -171,7 +173,7 @@ function ThemeRow({ theme, selected, onToggle, isLast }: ThemeRowProps): JSX.Ele
                   sx={{
                     fontSize: '0.75rem',
                     fontWeight: 500,
-                    color: '#334155',
+                    color: colors.text.primary,
                     lineHeight: 1.4,
                   }}
                 >
@@ -180,7 +182,7 @@ function ThemeRow({ theme, selected, onToggle, isLast }: ThemeRowProps): JSX.Ele
                 <Typography
                   sx={{
                     fontSize: '0.6875rem',
-                    color: '#64748b',
+                    color: colors.text.secondary,
                     lineHeight: 1.4,
                   }}
                 >
@@ -201,6 +203,7 @@ export function ThemeReviewList({
   onToggleTheme,
   onRegenerate,
 }: ThemeReviewListProps): JSX.Element {
+  const colors = useOnboardingColors();
   const themeNames = themes.map((t) => t.name);
   const validSelectedThemes = selectedThemes.filter((name) => themeNames.includes(name));
   const selectedCount = validSelectedThemes.length;
@@ -226,10 +229,10 @@ export function ThemeReviewList({
   return (
     <Box
       sx={{
-        bgcolor: 'white',
+        bgcolor: colors.background.paper,
         borderRadius: 2.5,
-        border: '1px solid #e2e8f0',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+        border: `1px solid ${colors.border.input}`,
+        boxShadow: colors.shadow.card,
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
@@ -247,8 +250,8 @@ export function ThemeReviewList({
           justifyContent: 'space-between',
           px: 2,
           py: 1.5,
-          bgcolor: '#fafbfc',
-          borderBottom: '1px solid #e2e8f0',
+          bgcolor: colors.background.subtle,
+          borderBottom: `1px solid ${colors.border.input}`,
           flexShrink: 0,
         }}
       >
@@ -258,20 +261,20 @@ export function ThemeReviewList({
               width: 28,
               height: 28,
               borderRadius: 1,
-              bgcolor: '#eff6ff',
+              bgcolor: colors.primary.lighter,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <CategoryIcon sx={{ fontSize: 16, color: '#3b82f6' }} />
+            <CategoryIcon sx={{ fontSize: 16, color: colors.primary.main }} />
           </Box>
           <Box>
             <Typography
               sx={{
                 fontSize: '0.8125rem',
                 fontWeight: 600,
-                color: '#1e293b',
+                color: colors.text.primary,
                 lineHeight: 1.2,
               }}
             >
@@ -280,7 +283,7 @@ export function ThemeReviewList({
             <Typography
               sx={{
                 fontSize: '0.6875rem',
-                color: '#64748b',
+                color: colors.text.secondary,
                 lineHeight: 1.2,
               }}
             >
@@ -296,11 +299,11 @@ export function ThemeReviewList({
               px: 1.5,
               py: 0.5,
               borderRadius: 1,
-              bgcolor: '#f1f5f9',
+              bgcolor: colors.background.hover,
               cursor: 'pointer',
               transition: 'all 0.15s ease',
               '&:hover': {
-                bgcolor: '#e2e8f0',
+                bgcolor: colors.border.default,
               },
             }}
           >
@@ -308,7 +311,7 @@ export function ThemeReviewList({
               sx={{
                 fontSize: '0.6875rem',
                 fontWeight: 500,
-                color: '#475569',
+                color: colors.text.secondary,
               }}
             >
               {selectedCount === totalCount && totalCount > 0 ? 'Clear all' : 'Select all'}
@@ -320,10 +323,10 @@ export function ThemeReviewList({
               onClick={onRegenerate}
               sx={{
                 p: 0.75,
-                color: '#64748b',
-                bgcolor: '#f1f5f9',
+                color: colors.text.secondary,
+                bgcolor: colors.background.hover,
                 '&:hover': {
-                  bgcolor: '#e2e8f0',
+                  bgcolor: colors.border.default,
                 },
               }}
               title="Regenerate themes"
@@ -363,15 +366,15 @@ export function ThemeReviewList({
         sx={{
           px: 2,
           py: 1,
-          bgcolor: '#fafbfc',
-          borderTop: '1px solid #e2e8f0',
+          bgcolor: colors.background.subtle,
+          borderTop: `1px solid ${colors.border.input}`,
           flexShrink: 0,
         }}
       >
         <Typography
           sx={{
             fontSize: '0.6875rem',
-            color: '#94a3b8',
+            color: colors.text.muted,
             textAlign: 'center',
           }}
         >

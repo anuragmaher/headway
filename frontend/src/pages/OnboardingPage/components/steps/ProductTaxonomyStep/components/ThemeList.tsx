@@ -10,11 +10,20 @@ import { ThemeCard } from './ThemeCard';
 interface ThemeListProps {
   themes: Theme[];
   onAddSubtheme: (themeName: string, subtheme: SubTheme) => void;
+  onRemoveSubtheme?: (themeName: string, subthemeName: string) => void;
+  onEditSubtheme?: (themeName: string, subthemeName: string, updates: { name: string; description: string }) => void;
   onEditTheme?: (themeName: string) => void;
   onDeleteTheme?: (themeName: string) => void;
 }
 
-export function ThemeList({ themes, onAddSubtheme, onEditTheme, onDeleteTheme }: ThemeListProps): JSX.Element {
+export function ThemeList({
+  themes,
+  onAddSubtheme,
+  onRemoveSubtheme,
+  onEditSubtheme,
+  onEditTheme,
+  onDeleteTheme,
+}: ThemeListProps): JSX.Element {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       {themes.map((theme, index) => (
@@ -22,6 +31,8 @@ export function ThemeList({ themes, onAddSubtheme, onEditTheme, onDeleteTheme }:
           key={`${theme.name}-${index}`}
           theme={theme}
           onAddSubtheme={onAddSubtheme}
+          onRemoveSubtheme={onRemoveSubtheme}
+          onEditSubtheme={onEditSubtheme}
           onEditTheme={onEditTheme}
           onDeleteTheme={onDeleteTheme}
         />

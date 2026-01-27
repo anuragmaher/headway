@@ -31,6 +31,7 @@ import {
   useConnectedSources,
   useOnboardingStore,
 } from '../../store/onboardingStore';
+import { useOnboardingColors } from '../../hooks/useOnboardingColors';
 
 interface SourceConfig {
   id: string;
@@ -48,32 +49,10 @@ const SOURCES: SourceConfig[] = [
   { id: 'slack', name: 'Slack', description: 'Shared channels', icon: <SlackIcon />, color: '#4A154B', category: 'messaging' },
 ];
 
-const inputSx = {
-  '& .MuiOutlinedInput-root': {
-    bgcolor: 'white',
-    borderRadius: 1.5,
-    '& fieldset': {
-      borderColor: '#e2e8f0',
-    },
-    '&:hover fieldset': {
-      borderColor: '#cbd5e1',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#2563eb',
-      borderWidth: 2,
-    },
-  },
-  '& .MuiInputBase-input': {
-    color: '#1e293b',
-  },
-  '& .MuiInputLabel-root': {
-    color: '#64748b',
-  },
-};
-
 export function DataSourcesStep(): JSX.Element {
   const tokens = useAuthStore((state) => state.tokens);
   const workspaceId = tokens?.workspace_id;
+  const colors = useOnboardingColors();
 
   const connectedSources = useConnectedSources();
   const { setConnectedSources, loadConnectedSources } = useOnboardingStore();
@@ -85,6 +64,29 @@ export function DataSourcesStep(): JSX.Element {
   const [fathomApiToken, setFathomApiToken] = useState('');
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectError, setConnectError] = useState<string | null>(null);
+
+  const inputSx = {
+    '& .MuiOutlinedInput-root': {
+      bgcolor: colors.background.input,
+      borderRadius: 1.5,
+      '& fieldset': {
+        borderColor: colors.border.input,
+      },
+      '&:hover fieldset': {
+        borderColor: colors.border.default,
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: colors.border.focused,
+        borderWidth: 2,
+      },
+    },
+    '& .MuiInputBase-input': {
+      color: colors.text.primary,
+    },
+    '& .MuiInputLabel-root': {
+      color: colors.text.secondary,
+    },
+  };
 
   // Helper to check if a source type is connected
   const isSourceConnected = (sourceType: string): boolean => {
@@ -195,13 +197,13 @@ export function DataSourcesStep(): JSX.Element {
           gap: 1.5,
           p: 1.5,
           borderRadius: 1.5,
-          bgcolor: 'white',
+          bgcolor: colors.background.paper,
           border: '1px solid',
-          borderColor: isConnected ? '#22c55e' : '#e2e8f0',
+          borderColor: isConnected ? colors.success.main : colors.border.input,
           transition: 'all 0.2s ease',
           '&:hover': {
-            borderColor: isConnected ? '#22c55e' : '#cbd5e1',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+            borderColor: isConnected ? colors.success.main : colors.border.default,
+            boxShadow: colors.shadow.card,
           },
         }}
       >
@@ -223,10 +225,10 @@ export function DataSourcesStep(): JSX.Element {
         </Box>
 
         <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Typography sx={{ fontWeight: 600, color: '#1e293b', fontSize: '0.8125rem' }}>
+          <Typography sx={{ fontWeight: 600, color: colors.text.primary, fontSize: '0.8125rem' }}>
             {source.name}
           </Typography>
-          <Typography sx={{ fontSize: '0.75rem', color: '#64748b' }}>
+          <Typography sx={{ fontSize: '0.75rem', color: colors.text.secondary }}>
             {source.description}
           </Typography>
         </Box>
@@ -237,13 +239,13 @@ export function DataSourcesStep(): JSX.Element {
             icon={<CheckIcon sx={{ fontSize: '0.875rem !important' }} />}
             label="Connected"
             sx={{
-              bgcolor: '#dcfce7',
-              color: '#166534',
+              bgcolor: colors.chip.success.bg,
+              color: colors.chip.success.text,
               fontWeight: 600,
               fontSize: '0.7rem',
               height: 24,
               '& .MuiChip-icon': {
-                color: '#166534',
+                color: colors.chip.success.text,
               },
             }}
           />
@@ -255,14 +257,14 @@ export function DataSourcesStep(): JSX.Element {
             sx={{
               textTransform: 'none',
               fontWeight: 600,
-              borderColor: '#e2e8f0',
-              color: '#1e293b',
+              borderColor: colors.border.input,
+              color: colors.text.primary,
               borderRadius: 1,
               px: 2,
               fontSize: '0.75rem',
               '&:hover': {
-                borderColor: '#2563eb',
-                bgcolor: '#f8fafc',
+                borderColor: colors.border.focused,
+                bgcolor: colors.background.subtle,
               },
             }}
           >
@@ -282,9 +284,9 @@ export function DataSourcesStep(): JSX.Element {
             px: 2,
             py: 1.5,
             borderRadius: 1.5,
-            bgcolor: '#fef2f2',
-            border: '1px solid #fecaca',
-            color: '#b91c1c',
+            bgcolor: colors.error.light,
+            border: `1px solid ${colors.error.border}`,
+            color: colors.error.main,
             fontSize: '0.8125rem',
           }}
         >
@@ -295,7 +297,7 @@ export function DataSourcesStep(): JSX.Element {
       <Typography
         variant="subtitle2"
         sx={{
-          color: '#64748b',
+          color: colors.text.secondary,
           fontWeight: 600,
           mb: 1.5,
           textTransform: 'uppercase',
@@ -312,7 +314,7 @@ export function DataSourcesStep(): JSX.Element {
       <Typography
         variant="subtitle2"
         sx={{
-          color: '#64748b',
+          color: colors.text.secondary,
           fontWeight: 600,
           mb: 1.5,
           textTransform: 'uppercase',
@@ -336,9 +338,9 @@ export function DataSourcesStep(): JSX.Element {
           sx: { borderRadius: 2 },
         }}
       >
-        <DialogTitle sx={{ fontWeight: 600, color: '#1e293b' }}>Connect Gong</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 600, color: colors.text.primary }}>Connect Gong</DialogTitle>
         <DialogContent>
-          <Typography sx={{ fontSize: '0.875rem', color: '#64748b', mb: 3 }}>
+          <Typography sx={{ fontSize: '0.875rem', color: colors.text.secondary, mb: 3 }}>
             Enter your Gong API credentials from Gong settings.
           </Typography>
           <TextField
@@ -363,7 +365,7 @@ export function DataSourcesStep(): JSX.Element {
           <Button
             onClick={() => setGongDialogOpen(false)}
             disabled={isConnecting}
-            sx={{ color: '#64748b' }}
+            sx={{ color: colors.text.secondary }}
           >
             Cancel
           </Button>
@@ -372,8 +374,8 @@ export function DataSourcesStep(): JSX.Element {
             onClick={handleConnectGong}
             disabled={isConnecting || !gongAccessKey.trim() || !gongSecretKey.trim()}
             sx={{
-              bgcolor: '#2563eb',
-              '&:hover': { bgcolor: '#1d4ed8' },
+              bgcolor: colors.primary.main,
+              '&:hover': { bgcolor: colors.primary.dark },
             }}
           >
             {isConnecting ? <CircularProgress size={20} /> : 'Connect'}
@@ -391,9 +393,9 @@ export function DataSourcesStep(): JSX.Element {
           sx: { borderRadius: 2 },
         }}
       >
-        <DialogTitle sx={{ fontWeight: 600, color: '#1e293b' }}>Connect Fathom</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 600, color: colors.text.primary }}>Connect Fathom</DialogTitle>
         <DialogContent>
-          <Typography sx={{ fontSize: '0.875rem', color: '#64748b', mb: 3 }}>
+          <Typography sx={{ fontSize: '0.875rem', color: colors.text.secondary, mb: 3 }}>
             Enter your Fathom API token from Fathom settings.
           </Typography>
           <TextField
@@ -410,7 +412,7 @@ export function DataSourcesStep(): JSX.Element {
           <Button
             onClick={() => setFathomDialogOpen(false)}
             disabled={isConnecting}
-            sx={{ color: '#64748b' }}
+            sx={{ color: colors.text.secondary }}
           >
             Cancel
           </Button>
@@ -419,8 +421,8 @@ export function DataSourcesStep(): JSX.Element {
             onClick={handleConnectFathom}
             disabled={isConnecting || !fathomApiToken.trim()}
             sx={{
-              bgcolor: '#2563eb',
-              '&:hover': { bgcolor: '#1d4ed8' },
+              bgcolor: colors.primary.main,
+              '&:hover': { bgcolor: colors.primary.dark },
             }}
           >
             {isConnecting ? <CircularProgress size={20} /> : 'Connect'}

@@ -40,6 +40,7 @@ celery_app = Celery(
         "app.sync_engine.tasks.ondemand.gong",
         "app.sync_engine.tasks.ondemand.fathom",
         "app.sync_engine.tasks.ondemand.themes",
+        "app.sync_engine.tasks.ondemand.initial_sync",
         # === TRANSCRIPT PROCESSING ===
         "app.sync_engine.tasks.ai_pipeline.transcript_processing",
     ]

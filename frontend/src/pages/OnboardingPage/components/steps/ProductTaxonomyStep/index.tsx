@@ -28,6 +28,9 @@ export function ProductTaxonomyStep(): JSX.Element {
   const addTheme = useOnboardingStore((state) => state.addTheme);
   const removeTheme = useOnboardingStore((state) => state.removeTheme);
   const addSubthemeToTheme = useOnboardingStore((state) => state.addSubthemeToTheme);
+  const removeSubthemeFromTheme = useOnboardingStore((state) => state.removeSubthemeFromTheme);
+  const updateSubthemeInTheme = useOnboardingStore((state) => state.updateSubthemeInTheme);
+  const clearAISuggestions = useOnboardingStore((state) => state.clearAISuggestions);
 
   // AI suggestions
   const {
@@ -61,6 +64,7 @@ export function ProductTaxonomyStep(): JSX.Element {
   const handleCloseSuggestPanel = () => {
     setShowSuggestPanel(false);
     setSuggestionUrl('');
+    clearAISuggestions();
   };
 
   const handleAddThemeFromForm = (name: string, description: string) => {
@@ -80,6 +84,14 @@ export function ProductTaxonomyStep(): JSX.Element {
 
   const handleAddSubtheme = (themeName: string, subtheme: SubTheme) => {
     addSubthemeToTheme(themeName, subtheme);
+  };
+
+  const handleRemoveSubtheme = (themeName: string, subthemeName: string) => {
+    removeSubthemeFromTheme(themeName, subthemeName);
+  };
+
+  const handleEditSubtheme = (themeName: string, subthemeName: string, updates: { name: string; description: string }) => {
+    updateSubthemeInTheme(themeName, subthemeName, updates);
   };
 
   const handleDeleteTheme = (themeName: string) => {
@@ -164,6 +176,8 @@ export function ProductTaxonomyStep(): JSX.Element {
               <ThemeList
                 themes={themes}
                 onAddSubtheme={handleAddSubtheme}
+                onRemoveSubtheme={handleRemoveSubtheme}
+                onEditSubtheme={handleEditSubtheme}
                 onEditTheme={handleEditTheme}
                 onDeleteTheme={handleDeleteTheme}
               />

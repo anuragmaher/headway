@@ -6,7 +6,8 @@
 import { useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import type { Theme } from '../../../types';
-import { TAXONOMY_COLORS, TAXONOMY_TEXT } from '../constants';
+import { TAXONOMY_TEXT } from '../constants';
+import { useTaxonomyColors } from '../hooks/useTaxonomyColors';
 
 interface SuggestedThemeRowProps {
   theme: Theme;
@@ -19,6 +20,7 @@ export function SuggestedThemeRow({
   onAdd,
   isAdded,
 }: SuggestedThemeRowProps): JSX.Element {
+  const colors = useTaxonomyColors();
   const [isHovered, setIsHovered] = useState(false);
 
   const subthemeCount = theme.sub_themes?.length || 0;
@@ -33,7 +35,7 @@ export function SuggestedThemeRow({
         justifyContent: 'space-between',
         py: 1.5,
         px: 2,
-        borderBottom: `1px solid ${TAXONOMY_COLORS.border.light}`,
+        borderBottom: `1px solid ${colors.border.light}`,
         transition: 'background-color 0.15s ease',
         '&:last-child': {
           borderBottom: 'none',
@@ -48,7 +50,7 @@ export function SuggestedThemeRow({
           sx={{
             fontWeight: 600,
             fontSize: '0.9375rem',
-            color: TAXONOMY_COLORS.text.primary,
+            color: colors.text.primary,
             lineHeight: 1.4,
           }}
         >
@@ -58,7 +60,7 @@ export function SuggestedThemeRow({
           <Typography
             sx={{
               fontSize: '0.8125rem',
-              color: TAXONOMY_COLORS.text.secondary,
+              color: colors.text.secondary,
               lineHeight: 1.4,
               mt: 0.25,
             }}
@@ -70,7 +72,7 @@ export function SuggestedThemeRow({
           <Typography
             sx={{
               fontSize: '0.75rem',
-              color: TAXONOMY_COLORS.purple.main,
+              color: colors.purple.main,
               fontWeight: 500,
               mt: 0.5,
             }}
@@ -90,18 +92,18 @@ export function SuggestedThemeRow({
             textTransform: 'none',
             fontWeight: 600,
             fontSize: '0.8125rem',
-            bgcolor: isAdded ? TAXONOMY_COLORS.border.default : TAXONOMY_COLORS.purple.main,
+            bgcolor: isAdded ? colors.border.default : colors.purple.main,
             borderRadius: 1.5,
             px: 2,
             py: 0.5,
             minWidth: 70,
             boxShadow: 'none',
             '&:hover': {
-              bgcolor: isAdded ? TAXONOMY_COLORS.border.default : TAXONOMY_COLORS.purple.hover,
+              bgcolor: isAdded ? colors.border.default : colors.purple.hover,
             },
             '&:disabled': {
-              bgcolor: TAXONOMY_COLORS.background.hover,
-              color: TAXONOMY_COLORS.text.muted,
+              bgcolor: colors.background.hover,
+              color: colors.text.muted,
             },
           }}
         >

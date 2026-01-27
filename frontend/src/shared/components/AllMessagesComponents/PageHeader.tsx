@@ -4,7 +4,6 @@
 
 import {
   Box,
-  Typography,
   Button,
   Tabs,
   Tab,
@@ -18,6 +17,7 @@ import {
   ChatBubbleOutline as MessagesIcon,
   History as HistoryIcon,
 } from '@mui/icons-material';
+import { SyncSourcesDropdown } from './SyncSourcesDropdown';
 
 interface PageHeaderProps {
   activeTab: number;
@@ -27,7 +27,7 @@ interface PageHeaderProps {
   syncingAll: boolean;
   workspaceId: string | undefined;
   onSyncTheme: () => void;
-  onSyncAllSources: () => void;
+  onSyncSources: (selectedSources: string[]) => void;
 }
 
 export function PageHeader({
@@ -38,7 +38,7 @@ export function PageHeader({
   syncingAll,
   workspaceId,
   onSyncTheme,
-  onSyncAllSources,
+  onSyncSources,
 }: PageHeaderProps): JSX.Element {
   const theme = useTheme();
 
@@ -139,27 +139,11 @@ export function PageHeader({
         >
           {syncingThemes ? 'Syncing...' : 'Sync Theme'}
         </Button>
-        <Button
-          variant="contained"
-          size="small"
-          startIcon={syncingAll ? <CircularProgress size={14} color="inherit" /> : <MessagesIcon sx={{ fontSize: 16 }} />}
-          onClick={onSyncAllSources}
+        <SyncSourcesDropdown
+          syncing={syncingAll}
           disabled={syncingAll || !workspaceId}
-          sx={{
-            textTransform: 'none',
-            fontWeight: 500,
-            fontSize: '0.8rem',
-            borderRadius: 1.5,
-            px: 1.5,
-            py: 0.5,
-            boxShadow: 'none',
-            '&:hover': {
-              boxShadow: 'none',
-            },
-          }}
-        >
-          {syncingAll ? 'Syncing...' : 'Sync All Sources'}
-        </Button>
+          onSync={onSyncSources}
+        />
       </Box>
     </Box>
   );

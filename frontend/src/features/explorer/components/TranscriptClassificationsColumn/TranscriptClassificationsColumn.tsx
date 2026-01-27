@@ -58,8 +58,8 @@ export const TranscriptClassificationsColumn: React.FC<TranscriptClassifications
       <Box sx={columnSx}>
         <Box
           sx={{
-            px: 3,
-            py: 2,
+            px: 2,
+            py: 1.25,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -69,7 +69,7 @@ export const TranscriptClassificationsColumn: React.FC<TranscriptClassifications
           }}
         >
           <Typography
-            variant="h5"
+            variant="subtitle1"
             sx={{
               fontWeight: 600,
               color: 'text.primary',
@@ -84,11 +84,11 @@ export const TranscriptClassificationsColumn: React.FC<TranscriptClassifications
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            p: 4,
+            p: 3,
           }}
         >
-          <Typography sx={{ fontSize: '0.875rem', color: 'text.disabled' }}>
-            Select a theme and sub-theme to view transcript classifications
+          <Typography sx={{ fontSize: '0.8125rem', color: 'text.disabled' }}>
+            Select a theme and sub-theme to view classifications
           </Typography>
         </Box>
       </Box>
@@ -101,8 +101,8 @@ export const TranscriptClassificationsColumn: React.FC<TranscriptClassifications
       <Box sx={columnSx}>
         <Box
           sx={{
-            px: 3,
-            py: 2,
+            px: 2,
+            py: 1.25,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -112,7 +112,7 @@ export const TranscriptClassificationsColumn: React.FC<TranscriptClassifications
           }}
         >
           <Typography
-            variant="h5"
+            variant="subtitle1"
             sx={{
               fontWeight: 600,
               color: 'text.primary',
@@ -127,10 +127,10 @@ export const TranscriptClassificationsColumn: React.FC<TranscriptClassifications
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            p: 4,
+            p: 3,
           }}
         >
-          <Typography sx={{ fontSize: '0.875rem', color: 'text.disabled' }}>
+          <Typography sx={{ fontSize: '0.8125rem', color: 'text.disabled' }}>
             Select a sub-theme to view transcript classifications
           </Typography>
         </Box>
@@ -143,36 +143,26 @@ export const TranscriptClassificationsColumn: React.FC<TranscriptClassifications
       {/* Header - Shows selected sub-theme name */}
       <Box
         sx={{
-          px: 3,
-          py: 2,
+          px: 2,
+          py: 1.25,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           borderBottom: `1px solid ${theme.palette.divider}`,
           bgcolor: 'background.paper',
           flexShrink: 0,
+          minHeight: 56, // Match SubThemesColumn header height
         }}
       >
-        <Box>
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: 600,
-              color: 'text.primary',
-              mb: 0.5,
-            }}
-          >
-            {selectedSubTheme.name}
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: '0.75rem',
-              color: 'text.secondary',
-            }}
-          >
-            Transcript classifications and feature requests
-          </Typography>
-        </Box>
+        <Typography
+          variant="subtitle1"
+          sx={{
+            fontWeight: 600,
+            color: 'text.primary',
+          }}
+        >
+          {selectedSubTheme.name}
+        </Typography>
       </Box>
 
       {/* Content area with scroll */}
@@ -199,8 +189,8 @@ export const TranscriptClassificationsColumn: React.FC<TranscriptClassifications
               <Skeleton
                 key={i}
                 variant="rounded"
-                height={120}
-                sx={{ mb: 1.5, borderRadius: 1.5 }}
+                height={100}
+                sx={{ mb: 1, borderRadius: 1 }}
               />
             ))}
           </Box>

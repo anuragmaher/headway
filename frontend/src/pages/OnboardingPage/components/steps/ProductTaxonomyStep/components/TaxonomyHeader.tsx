@@ -6,7 +6,8 @@
 
 import { Box, Button } from '@mui/material';
 import { Add as AddIcon, AutoAwesome as AutoAwesomeIcon } from '@mui/icons-material';
-import { TAXONOMY_COLORS, TAXONOMY_TEXT } from '../constants';
+import { TAXONOMY_TEXT } from '../constants';
+import { useTaxonomyColors } from '../hooks/useTaxonomyColors';
 
 interface TaxonomyHeaderProps {
   onAddTheme: () => void;
@@ -21,6 +22,8 @@ export function TaxonomyHeader({
   isAddDisabled = false,
   isSuggestDisabled = false,
 }: TaxonomyHeaderProps): JSX.Element {
+  const colors = useTaxonomyColors();
+
   return (
     <Box sx={{ display: 'flex', gap: 1.5, mb: 2.5 }}>
       <Button
@@ -32,15 +35,15 @@ export function TaxonomyHeader({
           textTransform: 'none',
           fontWeight: 500,
           fontSize: '0.875rem',
-          borderColor: TAXONOMY_COLORS.border.default,
-          color: TAXONOMY_COLORS.text.primary,
-          bgcolor: '#ffffff',
+          borderColor: colors.border.default,
+          color: colors.text.primary,
+          bgcolor: colors.background.card,
           borderRadius: 1.5,
           px: 2,
           py: 1,
           '&:hover': {
-            borderColor: TAXONOMY_COLORS.text.secondary,
-            bgcolor: '#ffffff',
+            borderColor: colors.text.secondary,
+            bgcolor: colors.background.card,
           },
         }}
       >
@@ -56,18 +59,18 @@ export function TaxonomyHeader({
           textTransform: 'none',
           fontWeight: 600,
           fontSize: '0.875rem',
-          bgcolor: TAXONOMY_COLORS.purple.main,
+          bgcolor: colors.purple.main,
           color: '#ffffff',
           borderRadius: 1.5,
           px: 2.5,
           py: 1,
           boxShadow: 'none',
           '&:hover': {
-            bgcolor: TAXONOMY_COLORS.purple.hover,
-            boxShadow: `0 4px 12px ${TAXONOMY_COLORS.purple.border}`,
+            bgcolor: colors.purple.hover,
+            boxShadow: `0 4px 12px ${colors.purple.border}`,
           },
           '&:disabled': {
-            bgcolor: TAXONOMY_COLORS.border.default,
+            bgcolor: colors.border.default,
             color: '#ffffff',
           },
         }}

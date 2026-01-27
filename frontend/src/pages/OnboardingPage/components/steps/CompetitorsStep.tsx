@@ -26,6 +26,7 @@ import {
   useSelectedCompetitors,
   useOnboardingStore,
 } from '../../store/onboardingStore';
+import { useOnboardingColors } from '../../hooks/useOnboardingColors';
 
 interface CompetitorSuggestion {
   name: string;
@@ -33,33 +34,11 @@ interface CompetitorSuggestion {
   description?: string;
 }
 
-const inputSx = {
-  '& .MuiOutlinedInput-root': {
-    bgcolor: 'white',
-    borderRadius: 1.5,
-    '& fieldset': {
-      borderColor: '#e2e8f0',
-    },
-    '&:hover fieldset': {
-      borderColor: '#cbd5e1',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#2563eb',
-      borderWidth: 2,
-    },
-  },
-  '& .MuiInputBase-input': {
-    color: '#1e293b',
-  },
-  '& .MuiInputLabel-root': {
-    color: '#64748b',
-  },
-};
-
 export function CompetitorsStep(): JSX.Element {
   const tokens = useAuthStore((state) => state.tokens);
   const workspaceId = tokens?.workspace_id;
   const accessToken = tokens?.access_token;
+  const colors = useOnboardingColors();
 
   const selectedCompetitors = useSelectedCompetitors();
   const { addCompetitor, removeCompetitor } = useOnboardingStore();
@@ -68,6 +47,29 @@ export function CompetitorsStep(): JSX.Element {
   const [isLoading, setIsLoading] = useState(true);
   const [customInput, setCustomInput] = useState('');
   const hasFetched = useRef(false);
+
+  const inputSx = {
+    '& .MuiOutlinedInput-root': {
+      bgcolor: colors.background.input,
+      borderRadius: 1.5,
+      '& fieldset': {
+        borderColor: colors.border.input,
+      },
+      '&:hover fieldset': {
+        borderColor: colors.border.default,
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: colors.border.focused,
+        borderWidth: 2,
+      },
+    },
+    '& .MuiInputBase-input': {
+      color: colors.text.primary,
+    },
+    '& .MuiInputLabel-root': {
+      color: colors.text.secondary,
+    },
+  };
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -174,7 +176,7 @@ export function CompetitorsStep(): JSX.Element {
         <Typography
           variant="subtitle2"
           sx={{
-            color: '#64748b',
+            color: colors.text.secondary,
             fontWeight: 600,
             textTransform: 'uppercase',
             fontSize: '0.7rem',
@@ -189,9 +191,9 @@ export function CompetitorsStep(): JSX.Element {
               onClick={handleRefresh}
               size="small"
               sx={{
-                color: '#64748b',
+                color: colors.text.secondary,
                 p: 0.5,
-                '&:hover': { bgcolor: '#f1f5f9' },
+                '&:hover': { bgcolor: colors.background.hover },
               }}
             >
               <RefreshIcon sx={{ fontSize: 16 }} />
@@ -201,8 +203,8 @@ export function CompetitorsStep(): JSX.Element {
             label={`${selectedCompetitors.length} selected`}
             size="small"
             sx={{
-              bgcolor: selectedCompetitors.length > 0 ? '#dbeafe' : '#f1f5f9',
-              color: selectedCompetitors.length > 0 ? '#1d4ed8' : '#64748b',
+              bgcolor: selectedCompetitors.length > 0 ? colors.chip.selected.bg : colors.background.hover,
+              color: selectedCompetitors.length > 0 ? colors.chip.selected.text : colors.text.secondary,
               fontWeight: 600,
               fontSize: '0.7rem',
               height: 22,
@@ -221,8 +223,8 @@ export function CompetitorsStep(): JSX.Element {
             py: 4,
             px: 3,
             borderRadius: 2,
-            bgcolor: 'white',
-            border: '1px solid #e2e8f0',
+            bgcolor: colors.background.paper,
+            border: `1px solid ${colors.border.input}`,
           }}
         >
           <Box
@@ -234,7 +236,7 @@ export function CompetitorsStep(): JSX.Element {
             <CircularProgress
               size={40}
               thickness={3}
-              sx={{ color: '#2563eb' }}
+              sx={{ color: colors.primary.main }}
             />
             <Box
               sx={{
@@ -244,14 +246,14 @@ export function CompetitorsStep(): JSX.Element {
                 transform: 'translate(-50%, -50%)',
               }}
             >
-              <AutoAwesomeIcon sx={{ color: '#2563eb', fontSize: 16 }} />
+              <AutoAwesomeIcon sx={{ color: colors.primary.main, fontSize: 16 }} />
             </Box>
           </Box>
           <Typography
             sx={{
               fontWeight: 600,
               fontSize: '0.875rem',
-              color: '#1e293b',
+              color: colors.text.primary,
               mb: 0.5,
             }}
           >
@@ -260,7 +262,7 @@ export function CompetitorsStep(): JSX.Element {
           <Typography
             sx={{
               fontSize: '0.75rem',
-              color: '#64748b',
+              color: colors.text.secondary,
               textAlign: 'center',
             }}
           >
@@ -283,22 +285,22 @@ export function CompetitorsStep(): JSX.Element {
                   px: 2,
                   py: 0.875,
                   borderRadius: 1,
-                  bgcolor: selected ? '#dbeafe' : 'white',
+                  bgcolor: selected ? colors.background.selected : colors.background.paper,
                   border: '1px solid',
-                  borderColor: selected ? '#2563eb' : '#e2e8f0',
+                  borderColor: selected ? colors.primary.main : colors.border.input,
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
                   '&:hover': {
-                    borderColor: '#2563eb',
-                    bgcolor: selected ? '#dbeafe' : '#f8fafc',
+                    borderColor: colors.primary.main,
+                    bgcolor: selected ? colors.background.selected : colors.background.subtle,
                   },
                 }}
               >
-                {selected && <CheckIcon sx={{ fontSize: 14, color: '#2563eb' }} />}
+                {selected && <CheckIcon sx={{ fontSize: 14, color: colors.primary.main }} />}
                 <Typography
                   sx={{
                     fontWeight: selected ? 600 : 500,
-                    color: selected ? '#1d4ed8' : '#1e293b',
+                    color: selected ? colors.chip.selected.text : colors.text.primary,
                     fontSize: '0.8125rem',
                   }}
                 >
@@ -314,12 +316,12 @@ export function CompetitorsStep(): JSX.Element {
             py: 4,
             px: 3,
             borderRadius: 1.5,
-            border: '2px dashed #e2e8f0',
-            bgcolor: 'white',
+            border: `2px dashed ${colors.border.input}`,
+            bgcolor: colors.background.paper,
             textAlign: 'center',
           }}
         >
-          <Typography sx={{ color: '#64748b', fontSize: '0.8125rem' }}>
+          <Typography sx={{ color: colors.text.secondary, fontSize: '0.8125rem' }}>
             No suggestions available. Add competitors manually below.
           </Typography>
         </Box>
@@ -336,7 +338,7 @@ export function CompetitorsStep(): JSX.Element {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <AddIcon sx={{ color: '#94a3b8', fontSize: 18 }} />
+              <AddIcon sx={{ color: colors.text.muted, fontSize: 18 }} />
             </InputAdornment>
           ),
         }}
@@ -347,7 +349,7 @@ export function CompetitorsStep(): JSX.Element {
           <Typography
             variant="subtitle2"
             sx={{
-              color: '#64748b',
+              color: colors.text.secondary,
               fontWeight: 600,
               textTransform: 'uppercase',
               fontSize: '0.7rem',
@@ -365,14 +367,14 @@ export function CompetitorsStep(): JSX.Element {
                 onDelete={() => removeCompetitor(competitor.name)}
                 size="small"
                 sx={{
-                  bgcolor: '#dbeafe',
-                  color: '#1d4ed8',
+                  bgcolor: colors.chip.selected.bg,
+                  color: colors.chip.selected.text,
                   fontWeight: 500,
                   fontSize: '0.75rem',
                   '& .MuiChip-deleteIcon': {
-                    color: '#1d4ed8',
+                    color: colors.chip.selected.text,
                     '&:hover': {
-                      color: '#1e40af',
+                      color: colors.primary.darker,
                     },
                   },
                 }}

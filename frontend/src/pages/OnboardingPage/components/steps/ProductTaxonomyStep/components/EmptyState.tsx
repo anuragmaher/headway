@@ -5,15 +5,18 @@
 
 import { Box, Typography } from '@mui/material';
 import { Description as DescriptionIcon } from '@mui/icons-material';
-import { TAXONOMY_COLORS, TAXONOMY_TEXT } from '../constants';
+import { TAXONOMY_TEXT } from '../constants';
+import { useTaxonomyColors } from '../hooks/useTaxonomyColors';
 
 export function EmptyState(): JSX.Element {
+  const colors = useTaxonomyColors();
+
   return (
     <Box
       sx={{
-        bgcolor: TAXONOMY_COLORS.background.card,
+        bgcolor: colors.background.card,
         borderRadius: 2,
-        border: `1px solid ${TAXONOMY_COLORS.border.light}`,
+        border: `1px solid ${colors.border.light}`,
         py: 6,
         px: 4,
         display: 'flex',
@@ -27,7 +30,7 @@ export function EmptyState(): JSX.Element {
           width: 56,
           height: 56,
           borderRadius: 2,
-          bgcolor: TAXONOMY_COLORS.background.hover,
+          bgcolor: colors.background.hover,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -37,7 +40,7 @@ export function EmptyState(): JSX.Element {
         <DescriptionIcon
           sx={{
             fontSize: 28,
-            color: TAXONOMY_COLORS.text.muted,
+            color: colors.text.muted,
           }}
         />
       </Box>
@@ -46,7 +49,7 @@ export function EmptyState(): JSX.Element {
         sx={{
           fontWeight: 600,
           fontSize: '1rem',
-          color: TAXONOMY_COLORS.text.primary,
+          color: colors.text.primary,
           mb: 0.5,
         }}
       >
@@ -56,7 +59,7 @@ export function EmptyState(): JSX.Element {
       <Typography
         sx={{
           fontSize: '0.875rem',
-          color: TAXONOMY_COLORS.text.secondary,
+          color: colors.text.secondary,
           textAlign: 'center',
         }}
       >

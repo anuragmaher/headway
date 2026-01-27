@@ -317,32 +317,6 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
           position: 'relative',
         }}
       >
-        {/* Header with Back Button */}
-        <Box 
-          sx={{ 
-            px: 3, 
-            py: 1.5, 
-            borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-            backgroundColor: theme.palette.background.paper,
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <Button
-            variant="text"
-            size="small"
-            startIcon={<Box component="span" sx={{ fontSize: 18 }}>←</Box>}
-            onClick={() => selectTheme(null)}
-            sx={{ 
-              textTransform: 'none',
-              color: 'text.primary',
-              '&:hover': { backgroundColor: alpha(theme.palette.action.hover, 0.08) }
-            }}
-          >
-            Back to Themes
-          </Button>
-        </Box>
-
         {/* Main Content Area - Two Columns (SubThemes + TranscriptClassifications) */}
         <Box 
           sx={{ 
@@ -353,7 +327,7 @@ export const ThemeExplorer: React.FC<ThemeExplorerProps> = ({ className }) => {
           }}
         >
           {/* Left Column - SubThemes */}
-          <SubThemesColumn width={280} />
+          <SubThemesColumn width={280} onBack={() => selectTheme(null)} />
 
           {/* Right Column - Transcript Classifications with Details Panel Container (Vertical Split) */}
           <Box

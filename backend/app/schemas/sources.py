@@ -133,7 +133,8 @@ class SyncHistoryListResponse(BaseModel):
 
 class SyncSourceRequest(BaseModel):
     """Request to sync a specific data source"""
-    source_type: Optional[str] = None  # If None, sync all sources
+    source_type: Optional[str] = None  # If None, sync all sources (deprecated, use source_types)
+    source_types: Optional[List[str]] = None  # List of source types to sync (gmail, slack, gong, fathom)
     hours_back: int = Field(default=24, ge=1, le=168)  # 1-168 hours (1 week max)
 
 

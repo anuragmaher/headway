@@ -11,7 +11,8 @@ import {
 } from '@mui/icons-material';
 import type { Theme } from '../../../types';
 import { SuggestedThemeRow } from './SuggestedThemeRow';
-import { TAXONOMY_COLORS, TAXONOMY_TEXT } from '../constants';
+import { TAXONOMY_TEXT } from '../constants';
+import { useTaxonomyColors } from '../hooks/useTaxonomyColors';
 
 interface AISuggestionsPanelProps {
   url: string;
@@ -30,12 +31,14 @@ export function AISuggestionsPanel({
   onAddTheme,
   onClose,
 }: AISuggestionsPanelProps): JSX.Element {
+  const colors = useTaxonomyColors();
+
   return (
     <Box
       sx={{
-        bgcolor: TAXONOMY_COLORS.purple.light,
+        bgcolor: colors.purple.light,
         borderRadius: 2,
-        border: `1px solid ${TAXONOMY_COLORS.purple.main}`,
+        border: `1px solid ${colors.purple.main}`,
         overflow: 'hidden',
         mb: 2,
       }}
@@ -47,21 +50,21 @@ export function AISuggestionsPanel({
           alignItems: 'center',
           justifyContent: 'space-between',
           p: 2,
-          borderBottom: isLoading || suggestions.length > 0 ? `1px solid ${TAXONOMY_COLORS.purple.border}` : 'none',
+          borderBottom: isLoading || suggestions.length > 0 ? `1px solid ${colors.purple.border}` : 'none',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
           <AutoAwesomeIcon
             sx={{
               fontSize: 20,
-              color: TAXONOMY_COLORS.purple.main,
+              color: colors.purple.main,
             }}
           />
           <Typography
             sx={{
               fontWeight: 600,
               fontSize: '0.9375rem',
-              color: TAXONOMY_COLORS.purple.main,
+              color: colors.purple.main,
             }}
           >
             {TAXONOMY_TEXT.aiSuggestions.title}
@@ -72,9 +75,9 @@ export function AISuggestionsPanel({
               size="small"
               sx={{
                 fontSize: '0.75rem',
-                bgcolor: 'white',
-                border: `1px solid ${TAXONOMY_COLORS.border.light}`,
-                color: TAXONOMY_COLORS.text.secondary,
+                bgcolor: colors.background.card,
+                border: `1px solid ${colors.border.light}`,
+                color: colors.text.secondary,
                 maxWidth: 200,
                 '& .MuiChip-label': {
                   overflow: 'hidden',
@@ -89,9 +92,9 @@ export function AISuggestionsPanel({
           onClick={onClose}
           sx={{
             p: 0.5,
-            color: TAXONOMY_COLORS.text.secondary,
+            color: colors.text.secondary,
             '&:hover': {
-              color: TAXONOMY_COLORS.text.primary,
+              color: colors.text.primary,
             },
           }}
         >
@@ -113,7 +116,7 @@ export function AISuggestionsPanel({
           <CircularProgress
             size={36}
             sx={{
-              color: TAXONOMY_COLORS.purple.main,
+              color: colors.purple.main,
               mb: 2,
             }}
           />
@@ -121,18 +124,18 @@ export function AISuggestionsPanel({
             sx={{
               fontWeight: 500,
               fontSize: '0.9375rem',
-              color: TAXONOMY_COLORS.purple.main,
+              color: colors.purple.main,
               mb: 0.5,
             }}
           >
             {TAXONOMY_TEXT.aiSuggestions.loadingText}
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <LinkIcon sx={{ fontSize: 14, color: TAXONOMY_COLORS.text.muted }} />
+            <LinkIcon sx={{ fontSize: 14, color: colors.text.muted }} />
             <Typography
               sx={{
                 fontSize: '0.8125rem',
-                color: TAXONOMY_COLORS.purple.main,
+                color: colors.purple.main,
               }}
             >
               {url}
@@ -143,7 +146,7 @@ export function AISuggestionsPanel({
 
       {/* Results */}
       {!isLoading && suggestions.length > 0 && (
-        <Box sx={{ bgcolor: 'white' }}>
+        <Box sx={{ bgcolor: colors.background.card }}>
           {suggestions.map((theme, index) => (
             <SuggestedThemeRow
               key={`${theme.name}-${index}`}

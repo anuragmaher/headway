@@ -16,9 +16,9 @@ import {
   AutoAwesome as AutoAwesomeIcon,
   Close as CloseIcon,
   Language as LanguageIcon,
-  Description as DescriptionIcon,
 } from '@mui/icons-material';
-import { TAXONOMY_COLORS, TAXONOMY_TEXT } from '../constants';
+import { TAXONOMY_TEXT } from '../constants';
+import { useTaxonomyColors } from '../hooks/useTaxonomyColors';
 
 interface SuggestDocsPanelProps {
   onAnalyze: (url: string) => void;
@@ -31,6 +31,7 @@ export function SuggestDocsPanel({
   onClose,
   isAnalyzing,
 }: SuggestDocsPanelProps): JSX.Element {
+  const colors = useTaxonomyColors();
   const [url, setUrl] = useState('');
 
   const handleAnalyze = () => {
@@ -48,9 +49,9 @@ export function SuggestDocsPanel({
   return (
     <Box
       sx={{
-        bgcolor: TAXONOMY_COLORS.purple.light,
+        bgcolor: colors.purple.light,
         borderRadius: 2,
-        border: `1px solid ${TAXONOMY_COLORS.purple.main}`,
+        border: `1px solid ${colors.purple.main}`,
         p: 2.5,
         mb: 2,
       }}
@@ -68,14 +69,14 @@ export function SuggestDocsPanel({
           <AutoAwesomeIcon
             sx={{
               fontSize: 20,
-              color: TAXONOMY_COLORS.purple.main,
+              color: colors.purple.main,
             }}
           />
           <Typography
             sx={{
               fontWeight: 600,
               fontSize: '0.9375rem',
-              color: TAXONOMY_COLORS.purple.main,
+              color: colors.purple.main,
             }}
           >
             {TAXONOMY_TEXT.suggestPanel.title}
@@ -86,9 +87,9 @@ export function SuggestDocsPanel({
           onClick={onClose}
           sx={{
             p: 0.5,
-            color: TAXONOMY_COLORS.text.secondary,
+            color: colors.text.secondary,
             '&:hover': {
-              color: TAXONOMY_COLORS.text.primary,
+              color: colors.text.primary,
             },
           }}
         >
@@ -100,7 +101,7 @@ export function SuggestDocsPanel({
       <Typography
         sx={{
           fontSize: '0.8125rem',
-          color: TAXONOMY_COLORS.text.secondary,
+          color: colors.text.secondary,
           mb: 2,
         }}
       >
@@ -121,17 +122,24 @@ export function SuggestDocsPanel({
             startAdornment: (
               <InputAdornment position="start">
                 <LanguageIcon
-                  sx={{ fontSize: 18, color: TAXONOMY_COLORS.text.muted }}
+                  sx={{ fontSize: 18, color: colors.text.muted }}
                 />
               </InputAdornment>
             ),
           }}
           sx={{
             '& .MuiOutlinedInput-root': {
-              bgcolor: 'white',
+              bgcolor: colors.background.card,
               borderRadius: 1.5,
               '&.Mui-focused fieldset': {
-                borderColor: TAXONOMY_COLORS.purple.main,
+                borderColor: colors.purple.main,
+              },
+            },
+            '& .MuiOutlinedInput-input': {
+              color: colors.text.primary,
+              '&::placeholder': {
+                color: colors.text.muted,
+                opacity: 1,
               },
             },
           }}
@@ -144,36 +152,21 @@ export function SuggestDocsPanel({
             textTransform: 'none',
             fontWeight: 600,
             fontSize: '0.875rem',
-            bgcolor: TAXONOMY_COLORS.purple.main,
+            bgcolor: colors.purple.main,
             borderRadius: 1.5,
             px: 2.5,
             whiteSpace: 'nowrap',
             boxShadow: 'none',
             '&:hover': {
-              bgcolor: TAXONOMY_COLORS.purple.hover,
+              bgcolor: colors.purple.hover,
             },
             '&:disabled': {
-              bgcolor: TAXONOMY_COLORS.border.default,
+              bgcolor: colors.border.default,
             },
           }}
         >
           {TAXONOMY_TEXT.suggestPanel.analyzeButton}
         </Button>
-      </Box>
-
-      {/* Support Text */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-        <DescriptionIcon
-          sx={{ fontSize: 16, color: TAXONOMY_COLORS.purple.main }}
-        />
-        <Typography
-          sx={{
-            fontSize: '0.75rem',
-            color: TAXONOMY_COLORS.purple.main,
-          }}
-        >
-          {TAXONOMY_TEXT.suggestPanel.supportText}
-        </Typography>
       </Box>
     </Box>
   );

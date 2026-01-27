@@ -115,9 +115,9 @@ export const TranscriptClassificationCard: React.FC<TranscriptClassificationCard
     <Box
       onClick={() => onSelect(classification.id)}
       sx={{
-        p: 1.5,
-        mb: 1,
-        borderRadius: 1.5,
+        p: 1.25,
+        mb: 0.75,
+        borderRadius: 1,
         cursor: 'pointer',
         bgcolor: isSelected
           ? theme.palette.mode === 'dark'

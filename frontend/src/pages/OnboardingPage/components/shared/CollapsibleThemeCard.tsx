@@ -1,7 +1,7 @@
 /**
  * CollapsibleThemeCard Component
  * Expandable theme card for taxonomy display
- * Light mode design for split-layout onboarding
+ * Supports light and dark mode
  */
 
 import { useState } from 'react';
@@ -18,6 +18,7 @@ import {
 } from '@mui/icons-material';
 import type { Theme } from '../../types';
 import { ConfidenceScore } from './ConfidenceScore';
+import { useOnboardingColors } from '../../hooks/useOnboardingColors';
 
 interface CollapsibleThemeCardProps {
   theme: Theme;
@@ -32,20 +33,21 @@ export function CollapsibleThemeCard({
 }: CollapsibleThemeCardProps): JSX.Element {
   const [expanded, setExpanded] = useState(false);
   const hasSubThemes = theme.sub_themes && theme.sub_themes.length > 0;
+  const colors = useOnboardingColors();
 
   return (
     <Box
       sx={{
         mb: 1,
         borderRadius: 1,
-        bgcolor: 'white',
+        bgcolor: colors.background.paper,
         border: '1px solid',
-        borderColor: selected ? '#2563eb' : '#e2e8f0',
+        borderColor: selected ? colors.primary.main : colors.border.input,
         overflow: 'hidden',
         transition: 'all 0.2s ease',
         '&:hover': {
-          borderColor: selected ? '#2563eb' : '#cbd5e1',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+          borderColor: selected ? colors.primary.main : colors.border.default,
+          boxShadow: colors.shadow.card,
         },
       }}
     >
@@ -67,9 +69,9 @@ export function CollapsibleThemeCard({
           onChange={onToggle}
           sx={{
             p: 0,
-            color: '#cbd5e1',
+            color: colors.border.default,
             '&.Mui-checked': {
-              color: '#2563eb',
+              color: colors.primary.main,
             },
             '& .MuiSvgIcon-root': { fontSize: 18 },
           }}
@@ -81,7 +83,7 @@ export function CollapsibleThemeCard({
               sx={{
                 fontWeight: 600,
                 fontSize: '0.8125rem',
-                color: selected ? '#1d4ed8' : '#1e293b',
+                color: selected ? colors.chip.selected.text : colors.text.primary,
               }}
               noWrap
             >
@@ -92,7 +94,7 @@ export function CollapsibleThemeCard({
           <Typography
             sx={{
               fontSize: '0.7rem',
-              color: '#64748b',
+              color: colors.text.secondary,
               display: '-webkit-box',
               WebkitLineClamp: 1,
               WebkitBoxOrient: 'vertical',
@@ -112,9 +114,9 @@ export function CollapsibleThemeCard({
             }}
             sx={{
               p: 0.25,
-              color: '#94a3b8',
+              color: colors.text.muted,
               '&:hover': {
-                bgcolor: '#f1f5f9',
+                bgcolor: colors.background.hover,
               },
             }}
           >
@@ -133,8 +135,8 @@ export function CollapsibleThemeCard({
             px: 1.5,
             py: 1,
             pl: 5,
-            bgcolor: '#f8fafc',
-            borderTop: '1px solid #e2e8f0',
+            bgcolor: colors.background.subtle,
+            borderTop: `1px solid ${colors.border.input}`,
           }}
         >
           {theme.sub_themes?.map((sub, idx) => (
@@ -145,10 +147,10 @@ export function CollapsibleThemeCard({
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 py: 0.5,
-                borderBottom: idx < theme.sub_themes.length - 1 ? '1px solid #e2e8f0' : 'none',
+                borderBottom: idx < theme.sub_themes.length - 1 ? `1px solid ${colors.border.input}` : 'none',
               }}
             >
-              <Typography sx={{ fontWeight: 500, fontSize: '0.7rem', color: '#1e293b' }}>
+              <Typography sx={{ fontWeight: 500, fontSize: '0.7rem', color: colors.text.primary }}>
                 {sub.name}
               </Typography>
               <ConfidenceScore score={sub.confidence} size="small" />

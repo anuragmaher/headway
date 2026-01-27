@@ -29,6 +29,7 @@ import {
   useSelectedCompetitors,
 } from './store/onboardingStore';
 import { onboardingApi } from './services/onboarding-api';
+import { useOnboardingColors } from './hooks/useOnboardingColors';
 
 const TOTAL_STEPS = 4;
 
@@ -55,6 +56,7 @@ const STEP_CONTENT = [
 export function OnboardingPage(): JSX.Element {
   const navigate = useNavigate();
   const [isCompleting, setIsCompleting] = useState(false);
+  const colors = useOnboardingColors();
 
   const user = useUser();
   const tokens = useAuthStore((state) => state.tokens);
@@ -216,7 +218,7 @@ export function OnboardingPage(): JSX.Element {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          bgcolor: '#f1f5f9',
+          bgcolor: colors.background.page,
         }}
       >
         <CircularProgress />
@@ -229,7 +231,7 @@ export function OnboardingPage(): JSX.Element {
       sx={{
         height: '100vh',
         display: 'flex',
-        bgcolor: '#f1f5f9',
+        bgcolor: colors.background.page,
         overflow: 'hidden',
       }}
     >
@@ -264,14 +266,14 @@ export function OnboardingPage(): JSX.Element {
           <Typography
             sx={{
               fontSize: '0.8125rem',
-              color: '#64748b',
+              color: colors.text.secondary,
             }}
           >
             Having troubles?{' '}
             <Link
               href="#"
               sx={{
-                color: '#2563eb',
+                color: colors.link.default,
                 fontWeight: 600,
                 textDecoration: 'none',
                 '&:hover': {
@@ -310,7 +312,7 @@ export function OnboardingPage(): JSX.Element {
                 variant="h5"
                 sx={{
                   fontWeight: 700,
-                  color: '#1e293b',
+                  color: colors.text.primary,
                   mb: 0.5,
                   fontSize: { xs: '1.25rem', sm: '1.5rem' },
                 }}
@@ -320,7 +322,7 @@ export function OnboardingPage(): JSX.Element {
               <Typography
                 sx={{
                   fontSize: '0.875rem',
-                  color: '#64748b',
+                  color: colors.text.secondary,
                 }}
               >
                 {stepContent.description}
@@ -352,13 +354,13 @@ export function OnboardingPage(): JSX.Element {
                 startIcon={<ArrowBackIcon sx={{ fontSize: 18 }} />}
                 sx={{
                   textTransform: 'uppercase',
-                  color: '#64748b',
+                  color: colors.text.secondary,
                   fontWeight: 500,
                   fontSize: '0.7rem',
                   letterSpacing: '0.05em',
                   py: 1,
                   '&:hover': {
-                    bgcolor: 'rgba(0,0,0,0.04)',
+                    bgcolor: colors.button.secondary.hover,
                   },
                 }}
               >
@@ -380,16 +382,16 @@ export function OnboardingPage(): JSX.Element {
                 fontSize: '0.875rem',
                 fontWeight: 600,
                 borderRadius: 1.5,
-                bgcolor: '#1e293b',
+                bgcolor: colors.button.primary.bg,
                 boxShadow: 'none',
                 minWidth: 120,
                 '&:hover': {
-                  bgcolor: '#0f172a',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                  bgcolor: colors.button.primary.hover,
+                  boxShadow: colors.shadow.hover,
                 },
                 '&:disabled': {
-                  bgcolor: '#cbd5e1',
-                  color: '#94a3b8',
+                  bgcolor: colors.button.primary.disabled,
+                  color: colors.button.primary.disabledText,
                 },
               }}
             >

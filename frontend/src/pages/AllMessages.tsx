@@ -308,7 +308,7 @@ export function SourcesPage(): JSX.Element {
     }
   };
 
-  const handleSyncAllSources = async () => {
+  const handleSyncSources = async (selectedSources: string[]) => {
     if (!workspaceId) return;
 
     if (syncPollingIntervalRef.current) {
@@ -318,10 +318,15 @@ export function SourcesPage(): JSX.Element {
 
     setSyncingAll(true);
     try {
-      const response = await sourcesService.syncAllSources(workspaceId);
+      // Pass selected sources to the API (empty array means sync all)
+      const sourceTypesToSync = selectedSources.length > 0 ? selectedSources : undefined;
+      const response = await sourcesService.syncAllSources(workspaceId, 24, sourceTypesToSync);
 
       if (response.total_sources === 0) {
-        setSnackbarMessage('No connected data sources found. Please connect a data source first.');
+        const message = selectedSources.length > 0
+          ? `No connected sources found for: ${selectedSources.join(', ')}. Please connect the data source first.`
+          : 'No connected data sources found. Please connect a data source first.';
+        setSnackbarMessage(message);
         setSnackbarSeverity('error');
         setSyncingAll(false);
       } else {
@@ -467,7 +472,7 @@ export function SourcesPage(): JSX.Element {
             syncingAll={syncingAll}
             workspaceId={workspaceId}
             onSyncTheme={handleSyncTheme}
-            onSyncAllSources={handleSyncAllSources}
+            onSyncSources={handleSyncSources}
           />
 
           {/* Filters */}
