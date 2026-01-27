@@ -530,11 +530,36 @@ def _save_classification(
     ai_result: Dict[str, Any]
 ) -> TranscriptClassification:
     """Save AI classification result to transcript_classifications table."""
+    from app.models.sub_theme import SubTheme
 
     workspace_id = raw_transcript.workspace_id
 
     # Extract theme/sub-theme IDs from AI response
     theme_ids, sub_theme_ids = _extract_theme_ids_from_response(ai_result)
+
+    # Validate theme IDs exist in database to avoid foreign key violations
+    if theme_ids:
+        valid_theme_ids = db.query(Theme.id).filter(
+            Theme.workspace_id == workspace_id,
+            Theme.id.in_(theme_ids)
+        ).all()
+        valid_theme_ids = [t[0] for t in valid_theme_ids]
+        invalid_theme_ids = [t for t in theme_ids if t not in valid_theme_ids]
+        if invalid_theme_ids:
+            logger.warning(f"Filtered out {len(invalid_theme_ids)} invalid theme_ids: {invalid_theme_ids}")
+        theme_ids = valid_theme_ids
+
+    # Validate sub_theme IDs exist in database
+    if sub_theme_ids:
+        valid_sub_theme_ids = db.query(SubTheme.id).filter(
+            SubTheme.workspace_id == workspace_id,
+            SubTheme.id.in_(sub_theme_ids)
+        ).all()
+        valid_sub_theme_ids = [s[0] for s in valid_sub_theme_ids]
+        invalid_sub_theme_ids = [s for s in sub_theme_ids if s not in valid_sub_theme_ids]
+        if invalid_sub_theme_ids:
+            logger.warning(f"Filtered out {len(invalid_sub_theme_ids)} invalid sub_theme_ids: {invalid_sub_theme_ids}")
+        sub_theme_ids = valid_sub_theme_ids
 
     # Set primary theme_id and sub_theme_id (first from lists)
     theme_id = theme_ids[0] if theme_ids else None
@@ -668,10 +693,19 @@ def process_raw_transcripts(
 
             except Exception as e:
                 logger.error(f"Error processing transcript {transcript.id}: {e}", exc_info=True)
-                transcript.processing_error = str(e)
-                transcript.retry_count += 1
+                # Rollback the failed transaction before updating error info
+                db.rollback()
+                try:
+                    # Re-fetch the transcript after rollback to update error info
+                    transcript = db.query(RawTranscript).filter(RawTranscript.id == transcript.id).first()
+                    if transcript:
+                        transcript.processing_error = str(e)[:1000]  # Truncate error message
+                        transcript.retry_count += 1
+                        db.commit()
+                except Exception as update_err:
+                    logger.error(f"Failed to update transcript error info: {update_err}")
+                    db.rollback()
                 failed += 1
-                db.commit()
 
         result = {
             "processed": processed,
