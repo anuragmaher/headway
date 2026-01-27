@@ -35,58 +35,60 @@ import {
   useOnboardingStore,
 } from '../../store/onboardingStore';
 import { INDUSTRIES, TEAM_SIZES, ROLES } from '../../types';
-
-const inputSx = {
-  '& .MuiOutlinedInput-root': {
-    bgcolor: 'white',
-    borderRadius: 1.5,
-    '& fieldset': {
-      borderColor: '#e2e8f0',
-    },
-    '&:hover fieldset': {
-      borderColor: '#cbd5e1',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#2563eb',
-      borderWidth: 2,
-    },
-  },
-  '& .MuiInputBase-input': {
-    color: '#1e293b',
-  },
-  '& .MuiInputLabel-root': {
-    color: '#64748b',
-  },
-};
-
-const selectSx = {
-  '& .MuiOutlinedInput-root': {
-    bgcolor: 'white',
-    borderRadius: 1.5,
-    '& fieldset': {
-      borderColor: '#e2e8f0',
-    },
-    '&:hover fieldset': {
-      borderColor: '#cbd5e1',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#2563eb',
-      borderWidth: 2,
-    },
-  },
-  '& .MuiSelect-select': {
-    color: '#1e293b',
-  },
-  '& .MuiInputLabel-root': {
-    color: '#64748b',
-  },
-};
+import { useOnboardingColors } from '../../hooks/useOnboardingColors';
 
 export function CompanySetupStep(): JSX.Element {
   const companyData = useCompanyData();
   const updateCompanyData = useOnboardingStore(
     (state) => state.updateCompanyData
   );
+  const colors = useOnboardingColors();
+
+  const inputSx = {
+    '& .MuiOutlinedInput-root': {
+      bgcolor: colors.background.input,
+      borderRadius: 1.5,
+      '& fieldset': {
+        borderColor: colors.border.input,
+      },
+      '&:hover fieldset': {
+        borderColor: colors.border.default,
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: colors.border.focused,
+        borderWidth: 2,
+      },
+    },
+    '& .MuiInputBase-input': {
+      color: colors.text.primary,
+    },
+    '& .MuiInputLabel-root': {
+      color: colors.text.secondary,
+    },
+  };
+
+  const selectSx = {
+    '& .MuiOutlinedInput-root': {
+      bgcolor: colors.background.input,
+      borderRadius: 1.5,
+      '& fieldset': {
+        borderColor: colors.border.input,
+      },
+      '&:hover fieldset': {
+        borderColor: colors.border.default,
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: colors.border.focused,
+        borderWidth: 2,
+      },
+    },
+    '& .MuiSelect-select': {
+      color: colors.text.primary,
+    },
+    '& .MuiInputLabel-root': {
+      color: colors.text.secondary,
+    },
+  };
 
   return (
     <Box>
@@ -105,7 +107,7 @@ export function CompanySetupStep(): JSX.Element {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <BusinessIcon sx={{ color: '#94a3b8', fontSize: 18 }} />
+                  <BusinessIcon sx={{ color: colors.text.muted, fontSize: 18 }} />
                 </InputAdornment>
               ),
             }}
@@ -125,7 +127,7 @@ export function CompanySetupStep(): JSX.Element {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <LanguageIcon sx={{ color: '#94a3b8', fontSize: 18 }} />
+                  <LanguageIcon sx={{ color: colors.text.muted, fontSize: 18 }} />
                 </InputAdornment>
               ),
             }}
@@ -157,7 +159,7 @@ export function CompanySetupStep(): JSX.Element {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <AlternateEmailIcon sx={{ color: '#94a3b8', fontSize: 18 }} />
+                  <AlternateEmailIcon sx={{ color: colors.text.muted, fontSize: 18 }} />
                 </InputAdornment>
               ),
             }}
@@ -174,7 +176,7 @@ export function CompanySetupStep(): JSX.Element {
               label="Industry"
               startAdornment={
                 <InputAdornment position="start">
-                  <CategoryIcon sx={{ color: '#94a3b8', fontSize: 18, ml: 0.5 }} />
+                  <CategoryIcon sx={{ color: colors.text.muted, fontSize: 18, ml: 0.5 }} />
                 </InputAdornment>
               }
             >
@@ -193,7 +195,7 @@ export function CompanySetupStep(): JSX.Element {
         sx={{
           fontSize: '0.75rem',
           fontWeight: 600,
-          color: '#64748b',
+          color: colors.text.secondary,
           textTransform: 'uppercase',
           letterSpacing: '0.05em',
           mt: 4,
@@ -214,7 +216,7 @@ export function CompanySetupStep(): JSX.Element {
               label="Team Size"
               startAdornment={
                 <InputAdornment position="start">
-                  <PeopleIcon sx={{ color: '#94a3b8', fontSize: 18, ml: 0.5 }} />
+                  <PeopleIcon sx={{ color: colors.text.muted, fontSize: 18, ml: 0.5 }} />
                 </InputAdornment>
               }
             >
@@ -240,7 +242,7 @@ export function CompanySetupStep(): JSX.Element {
               label="Your Role"
               startAdornment={
                 <InputAdornment position="start">
-                  <PersonIcon sx={{ color: '#94a3b8', fontSize: 18, ml: 0.5 }} />
+                  <PersonIcon sx={{ color: colors.text.muted, fontSize: 18, ml: 0.5 }} />
                 </InputAdornment>
               }
             >

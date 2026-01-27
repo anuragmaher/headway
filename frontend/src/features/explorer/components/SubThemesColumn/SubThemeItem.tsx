@@ -145,13 +145,13 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       sx={{
-        mx: 1.5,
-        my: 1,
-        px: 2,
-        py: 1.5,
+        mx: 1,
+        my: 0.75,
+        px: 1.5,
+        py: 1,
         cursor: 'pointer',
-        borderRadius: 2,
-        transition: 'all 0.2s ease',
+        borderRadius: 1,
+        transition: 'all 0.15s ease',
         bgcolor: isSelected 
           ? alpha(muiTheme.palette.info.main, 0.1)
           : 'background.paper',
@@ -177,13 +177,13 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
         },
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
         {/* Sub-theme icon with background */}
         <Box
           sx={{
-            width: 40,
-            height: 40,
-            borderRadius: 1.5,
+            width: 32,
+            height: 32,
+            borderRadius: 0.75,
             bgcolor: isSelected
               ? alpha(muiTheme.palette.info.main, 0.15)
               : alpha(muiTheme.palette.info.main, 0.08),
@@ -192,10 +192,10 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
             justifyContent: 'center',
             color: isSelected ? muiTheme.palette.info.main : muiTheme.palette.info.main,
             flexShrink: 0,
-            transition: 'all 0.2s ease',
+            transition: 'all 0.15s ease',
           }}
         >
-          <SubThemeIcon sx={{ fontSize: 20 }} />
+          <SubThemeIcon sx={{ fontSize: 16 }} />
         </Box>
 
         {/* Content */}
@@ -234,9 +234,9 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
                     <Tooltip key={source} title={config.label} arrow>
                       <Box
                         sx={{
-                          width: 20,
-                          height: 20,
-                          borderRadius: 1,
+                          width: 18,
+                          height: 18,
+                          borderRadius: 0.5,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -324,7 +324,7 @@ export const SubThemeItem: React.FC<SubThemeItemProps> = ({
             sx: {
               minWidth: 140,
               boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
-              borderRadius: 1.5,
+              borderRadius: 1,
             },
           },
         }}

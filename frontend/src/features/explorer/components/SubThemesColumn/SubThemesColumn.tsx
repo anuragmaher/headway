@@ -16,10 +16,12 @@ import {
 
 interface SubThemesColumnProps {
   width?: number | string;
+  onBack?: () => void;
 }
 
 export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
   width = 260,
+  onBack,
 }) => {
   const theme = useTheme();
   const subThemes = useSubThemes();
@@ -87,8 +89,8 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
       >
         <Box
           sx={{
-            px: 3,
-            py: 2,
+            px: 2,
+            py: 1.25,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -98,7 +100,7 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
           }}
         >
           <Typography
-            variant="h5"
+            variant="subtitle1"
             sx={{
               fontWeight: 600,
               color: 'text.primary',
@@ -137,35 +139,49 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
         bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
       }}
     >
-      {/* Header - Shows selected theme name */}
+      {/* Header - Shows selected theme name with back button */}
       <Box
         sx={{
-          px: 3,
-          py: 2,
+          px: 2,
+          py: 1.25,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           borderBottom: `1px solid ${theme.palette.divider}`,
           bgcolor: 'background.paper',
           flexShrink: 0,
+          minHeight: 56, // Match TranscriptClassificationsColumn header height
         }}
       >
         <Box sx={{ flex: 1, minWidth: 0 }}>
+          {onBack && (
+            <Typography
+              onClick={onBack}
+              sx={{
+                fontSize: '0.75rem',
+                color: 'text.secondary',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 0.5,
+                mb: 0.5,
+                '&:hover': { color: 'primary.main' },
+              }}
+            >
+              ← Back to Themes
+            </Typography>
+          )}
           <Typography
-            variant="h5"
+            variant="subtitle1"
             sx={{
               fontWeight: 600,
               color: 'text.primary',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
-              mb: 0.5,
             }}
           >
             {selectedTheme.name}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            Select a sub-theme to view transcript classifications
           </Typography>
         </Box>
         <Tooltip title="Add Sub Theme">
@@ -173,24 +189,27 @@ export const SubThemesColumn: React.FC<SubThemesColumnProps> = ({
             size="small"
             onClick={openAddSubThemeDialog}
             sx={{
-              ml: 2,
+              ml: 1.5,
               bgcolor: alpha(theme.palette.primary.main, 0.1),
               color: 'primary.main',
               '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.16) },
             }}
           >
-            <AddIcon />
+            <AddIcon sx={{ fontSize: 18 }} />
           </IconButton>
         </Tooltip>
       </Box>
 
       {/* Content */}
-      <Box 
-        sx={{ 
-          flex: 1, 
-          overflow: 'auto', 
+      <Box
+        sx={{
+          flex: 1,
+          overflow: 'auto',
           bgcolor: theme.palette.mode === 'dark' ? 'background.default' : '#FAFAFA',
           py: 1,
+          // Hide scrollbar but allow scrolling
+          scrollbarWidth: 'none', // Firefox
+          '&::-webkit-scrollbar': { display: 'none' }, // Chrome, Safari, Edge
         }}
       >
         {isLoading ? (

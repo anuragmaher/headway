@@ -288,7 +288,23 @@ async def sync_all_sources(
         
         # Group sources by type and dispatch appropriate Celery tasks
         source_types_found = set(s['type'] for s in connected_sources)
-        
+
+        # Filter by requested source types if specified
+        requested_source_types = None
+        if request and request.source_types:
+            requested_source_types = set(request.source_types)
+            source_types_found = source_types_found & requested_source_types
+        elif request and request.source_type:
+            # Backwards compatibility for single source_type
+            source_types_found = source_types_found & {request.source_type}
+
+        if not source_types_found:
+            return SyncAllSourcesResponse(
+                message="No matching data sources found for the requested types",
+                sync_operations=[],
+                total_sources=0,
+            )
+
         for source_type in source_types_found:
             try:
                 # Create sync history record for tracking

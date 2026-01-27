@@ -1,10 +1,11 @@
 /**
  * ConfidenceScore Component
  * Color-coded confidence percentage (Green >= 80%, Orange < 80%)
- * Light mode design for split-layout onboarding
+ * Supports light and dark mode
  */
 
 import { Box } from '@mui/material';
+import { useOnboardingColors } from '../../hooks/useOnboardingColors';
 
 interface ConfidenceScoreProps {
   score: number;
@@ -15,10 +16,11 @@ export function ConfidenceScore({
   score,
   size = 'medium',
 }: ConfidenceScoreProps): JSX.Element {
+  const colors = useOnboardingColors();
   const isHigh = score >= 80;
 
-  const bgColor = isHigh ? '#dcfce7' : '#fef3c7';
-  const textColor = isHigh ? '#166534' : '#92400e';
+  const bgColor = isHigh ? colors.success.light : colors.warning.light;
+  const textColor = isHigh ? colors.success.dark : colors.warning.main;
 
   return (
     <Box

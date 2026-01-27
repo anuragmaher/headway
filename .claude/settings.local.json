@@ -22,7 +22,10 @@
       "Bash(source venv/bin/activate)",
       "Bash(pip install:*)",
       "Bash(lsof:*)",
-      "Bash(xargs kill -9)"
+      "Bash(xargs kill -9)",
+      "Bash(./venv/bin/uvicorn:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npm run:*)"
     ]
   }
 }

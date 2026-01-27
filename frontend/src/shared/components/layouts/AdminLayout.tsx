@@ -6,8 +6,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Box,
   Drawer,
-  AppBar,
-  Toolbar,
   List,
   Typography,
   IconButton,
@@ -332,96 +330,60 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
         </List>
       </Box>
 
-      {/* Expand button at bottom (only when collapsed) */}
-      {collapsed && (
+      {/* Bottom section - Theme toggle, Profile, and Expand button */}
+      <Box sx={{
+        p: collapsed ? 1 : 1.5,
+        borderTop: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 1,
+      }}>
+        {/* Theme toggle and Profile row */}
         <Box sx={{
-          p: 1,
-          borderTop: `1px solid ${alpha(theme.palette.divider, 0.06)}`,
-          display: { xs: 'none', sm: 'flex' },
-          justifyContent: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: collapsed ? 'center' : 'space-between',
+          gap: 1,
         }}>
-          <Tooltip title="Expand" placement="right" arrow>
+          {collapsed ? (
+            <Tooltip title="Toggle theme" placement="right" arrow>
+              <Box>
+                <ThemeToggle size="small" showTooltip={false} />
+              </Box>
+            </Tooltip>
+          ) : (
+            <ThemeToggle size="small" />
+          )}
+
+          {!collapsed && (
             <IconButton
-              onClick={handleDrawerCollapse}
+              onClick={handleProfileMenuOpen}
+              aria-label="account menu"
               size="small"
               sx={{
-                width: 28,
-                height: 28,
-                color: theme.palette.text.secondary,
-                '&:hover': { bgcolor: alpha(theme.palette.action.hover, 0.08) },
+                p: 0.25,
+                borderRadius: 1.5,
+                transition: 'all 0.2s ease',
+                '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.08) },
               }}
             >
-              <ExpandIcon sx={{ fontSize: 18 }} />
+              <Avatar sx={{
+                width: 28,
+                height: 28,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                fontSize: '0.75rem',
+                fontWeight: 600,
+              }}>
+                {user?.first_name?.[0] || user?.email[0].toUpperCase()}
+              </Avatar>
             </IconButton>
-          </Tooltip>
+          )}
         </Box>
-      )}
-    </Box>
-  );
 
-  return (
-    <>
-      <GlobalStyles
-        styles={{
-          'html, body, #root': {
-            margin: 0,
-            padding: 0,
-            height: '100%',
-            overflow: 'hidden',
-          },
-        }}
-      />
-      <Box sx={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden' }}>
-        {/* App Bar */}
-        <AppBar
-          position="fixed"
-          elevation={0}
-          sx={{
-            left: { xs: 0, sm: currentDrawerWidth },
-            width: { xs: '100%', sm: `calc(100% - ${currentDrawerWidth}px)` },
-            transition: 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-            background: theme.palette.mode === 'dark' ? '#1A1A1A' : '#fafbfc',
-            backdropFilter: 'none',
-            borderBottom: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
-            borderRadius: 0,
-            color: theme.palette.text.primary,
-          }}
-        >
-          <Toolbar sx={{ minHeight: { xs: 48, sm: 48 }, height: 48, px: { xs: 1.5, sm: 2 } }}>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              size="small"
-              sx={{ mr: 1.5, display: { sm: 'none' } }}
-            >
-              <MenuIcon fontSize="small" />
-            </IconButton>
-
-            <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', minWidth: 0 }}>
-              {headerContent ? (
-                headerContent
-              ) : (
-                <Typography
-                  variant="subtitle1"
-                  noWrap
-                  component="div"
-                  sx={{
-                    fontWeight: 600,
-                    fontSize: '0.9rem',
-                    color: theme.palette.text.secondary,
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  {navigationItems.find(item => location.pathname === item.path)?.text || 'HeadwayHQ'}
-                </Typography>
-              )}
-            </Box>
-
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              <ThemeToggle size="small" />
-
+        {/* Profile button when collapsed */}
+        {collapsed && (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Tooltip title="Profile" placement="right" arrow>
               <IconButton
                 onClick={handleProfileMenuOpen}
                 aria-label="account menu"
@@ -443,41 +405,79 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
                   {user?.first_name?.[0] || user?.email[0].toUpperCase()}
                 </Avatar>
               </IconButton>
+            </Tooltip>
+          </Box>
+        )}
 
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleProfileMenuClose}
-                onClick={handleProfileMenuClose}
-                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                PaperProps={{
-                  sx: {
-                    mt: 0.5,
-                    borderRadius: 2,
-                    minWidth: 160,
-                    boxShadow: `0 4px 20px ${alpha(theme.palette.common.black, 0.12)}`,
-                  }
+        {/* Expand button (only when collapsed) */}
+        {collapsed && (
+          <Box sx={{ display: { xs: 'none', sm: 'flex' }, justifyContent: 'center' }}>
+            <Tooltip title="Expand" placement="right" arrow>
+              <IconButton
+                onClick={handleDrawerCollapse}
+                size="small"
+                sx={{
+                  width: 28,
+                  height: 28,
+                  color: theme.palette.text.secondary,
+                  '&:hover': { bgcolor: alpha(theme.palette.action.hover, 0.08) },
                 }}
               >
-                <MenuItem onClick={() => navigate(ROUTES.SETTINGS_PROFILE)} sx={{ py: 1, fontSize: '0.875rem' }}>
-                  <ListItemIcon><PersonIcon fontSize="small" /></ListItemIcon>
-                  Profile
-                </MenuItem>
-                <MenuItem onClick={() => navigate(ROUTES.SETTINGS_WORKSPACE)} sx={{ py: 1, fontSize: '0.875rem' }}>
-                  <ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon>
-                  Settings
-                </MenuItem>
-                <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={handleLogout} sx={{ py: 1, fontSize: '0.875rem' }}>
-                  <ListItemIcon><LogoutIcon fontSize="small" /></ListItemIcon>
-                  Logout
-                </MenuItem>
-              </Menu>
-            </Box>
-          </Toolbar>
-        </AppBar>
+                <ExpandIcon sx={{ fontSize: 18 }} />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        )}
+      </Box>
 
+      {/* Profile Menu (rendered here for proper positioning) */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleProfileMenuClose}
+        onClick={handleProfileMenuClose}
+        transformOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        PaperProps={{
+          sx: {
+            mt: -1,
+            ml: 1,
+            borderRadius: 2,
+            minWidth: 160,
+            boxShadow: `0 4px 20px ${alpha(theme.palette.common.black, 0.12)}`,
+          }
+        }}
+      >
+        <MenuItem onClick={() => navigate(ROUTES.SETTINGS_PROFILE)} sx={{ py: 1, fontSize: '0.875rem' }}>
+          <ListItemIcon><PersonIcon fontSize="small" /></ListItemIcon>
+          Profile
+        </MenuItem>
+        <MenuItem onClick={() => navigate(ROUTES.SETTINGS_WORKSPACE)} sx={{ py: 1, fontSize: '0.875rem' }}>
+          <ListItemIcon><SettingsIcon fontSize="small" /></ListItemIcon>
+          Settings
+        </MenuItem>
+        <Divider sx={{ my: 0.5 }} />
+        <MenuItem onClick={handleLogout} sx={{ py: 1, fontSize: '0.875rem' }}>
+          <ListItemIcon><LogoutIcon fontSize="small" /></ListItemIcon>
+          Logout
+        </MenuItem>
+      </Menu>
+    </Box>
+  );
+
+  return (
+    <>
+      <GlobalStyles
+        styles={{
+          'html, body, #root': {
+            margin: 0,
+            padding: 0,
+            height: '100%',
+            overflow: 'hidden',
+          },
+        }}
+      />
+      <Box sx={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden' }}>
         {/* Mobile Drawer */}
         <Drawer
           variant="temporary"
@@ -532,7 +532,38 @@ export function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
           overflow: 'hidden',
         }}
       >
-        <Box sx={{ minHeight: 48, flexShrink: 0 }} />
+        {/* Mobile menu button */}
+        <Box
+          sx={{
+            display: { xs: 'flex', sm: 'none' },
+            alignItems: 'center',
+            px: 1.5,
+            py: 1,
+            borderBottom: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+            bgcolor: theme.palette.mode === 'dark' ? '#1A1A1A' : '#fafbfc',
+          }}
+        >
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            size="small"
+          >
+            <MenuIcon fontSize="small" />
+          </IconButton>
+          <Typography
+            variant="subtitle1"
+            sx={{
+              ml: 1,
+              fontWeight: 600,
+              fontSize: '0.875rem',
+              color: theme.palette.text.primary,
+            }}
+          >
+            {navigationItems.find(item => location.pathname === item.path)?.text || 'Headway'}
+          </Typography>
+        </Box>
         <Box sx={{ flexGrow: 1, overflowX: 'hidden', overflowY: 'auto' }}>
           <PageTransition>
             {children}

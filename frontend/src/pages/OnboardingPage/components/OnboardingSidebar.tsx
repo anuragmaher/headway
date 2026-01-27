@@ -6,6 +6,7 @@
 import { Box, Typography } from '@mui/material';
 import { Check as CheckIcon } from '@mui/icons-material';
 import { ONBOARDING_STEPS, type TaxonomySubStep } from '../types';
+import { useOnboardingColors } from '../hooks/useOnboardingColors';
 
 interface OnboardingSidebarProps {
   currentStep: number;
@@ -18,13 +19,15 @@ export function OnboardingSidebar({
   completedSteps,
   taxonomySubStep = 'website-url',
 }: OnboardingSidebarProps): JSX.Element {
+  const colors = useOnboardingColors();
+
   return (
     <Box
       sx={{
         width: 320,
         minHeight: '100vh',
-        bgcolor: '#f8fafc',
-        borderRight: '1px solid #e2e8f0',
+        bgcolor: colors.background.sidebar,
+        borderRight: `1px solid ${colors.border.input}`,
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
@@ -39,11 +42,11 @@ export function OnboardingSidebar({
               width: 36,
               height: 36,
               borderRadius: 1.5,
-              background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+              background: colors.sidebar.logoGradient,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
+              boxShadow: `0 4px 12px ${colors.sidebar.logoShadow}`,
             }}
           >
             <Typography sx={{ color: 'white', fontWeight: 700, fontSize: '1.125rem' }}>
@@ -53,7 +56,7 @@ export function OnboardingSidebar({
           <Typography
             sx={{
               fontWeight: 600,
-              color: '#1e293b',
+              color: colors.text.primary,
               fontSize: '1.125rem',
               letterSpacing: '-0.02em',
             }}
@@ -81,8 +84,8 @@ export function OnboardingSidebar({
                   py: 1.5,
                   px: 2,
                   borderRadius: 2,
-                  bgcolor: isCurrent ? 'white' : 'transparent',
-                  boxShadow: isCurrent ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+                  bgcolor: isCurrent ? colors.background.paper : 'transparent',
+                  boxShadow: isCurrent ? colors.shadow.card : 'none',
                   transition: 'all 0.2s ease',
                 }}
               >
@@ -96,11 +99,11 @@ export function OnboardingSidebar({
                     alignItems: 'center',
                     justifyContent: 'center',
                     bgcolor: isCompleted
-                      ? '#22c55e'
+                      ? colors.sidebar.stepComplete
                       : isCurrent
-                        ? '#2563eb'
-                        : '#e2e8f0',
-                    color: isCompleted || isCurrent ? 'white' : '#94a3b8',
+                        ? colors.sidebar.stepActive
+                        : colors.sidebar.stepInactive,
+                    color: isCompleted || isCurrent ? 'white' : colors.text.muted,
                     fontSize: '0.75rem',
                     fontWeight: 600,
                     transition: 'all 0.2s ease',
@@ -119,10 +122,10 @@ export function OnboardingSidebar({
                     fontSize: '0.75rem',
                     fontWeight: 600,
                     color: isCurrent
-                      ? '#1e293b'
+                      ? colors.text.primary
                       : isCompleted
-                        ? '#22c55e'
-                        : '#64748b',
+                        ? colors.sidebar.stepTextComplete
+                        : colors.sidebar.stepTextInactive,
                     letterSpacing: '0.05em',
                     textTransform: 'uppercase',
                     flex: 1,
@@ -147,7 +150,7 @@ export function OnboardingSidebar({
                           py: 0.75,
                           px: 2,
                           borderRadius: 1,
-                          bgcolor: isActiveSubStep ? 'rgba(37, 99, 235, 0.08)' : 'transparent',
+                          bgcolor: isActiveSubStep ? colors.sidebar.substepActive : 'transparent',
                           transition: 'all 0.2s ease',
                         }}
                       >
@@ -156,14 +159,14 @@ export function OnboardingSidebar({
                             width: 6,
                             height: 6,
                             borderRadius: '50%',
-                            bgcolor: isActiveSubStep ? '#2563eb' : '#cbd5e1',
+                            bgcolor: isActiveSubStep ? colors.sidebar.stepActive : colors.border.default,
                             transition: 'all 0.2s ease',
                           }}
                         />
                         <Typography
                           sx={{
                             fontSize: '0.8125rem',
-                            color: isActiveSubStep ? '#2563eb' : '#64748b',
+                            color: isActiveSubStep ? colors.sidebar.stepTextActive : colors.sidebar.stepTextInactive,
                             fontWeight: isActiveSubStep ? 600 : 400,
                             transition: 'all 0.2s ease',
                           }}
@@ -206,9 +209,9 @@ export function OnboardingSidebar({
               transform: 'translateX(-50%)',
               width: 70,
               height: 85,
-              bgcolor: '#dbeafe',
+              bgcolor: colors.illustration.doc1,
               borderRadius: 1.5,
-              border: '2px solid #93c5fd',
+              border: `2px solid ${colors.illustration.doc1Border}`,
             }}
           />
           <Box
@@ -219,9 +222,9 @@ export function OnboardingSidebar({
               transform: 'translateX(-50%) rotate(-5deg)',
               width: 62,
               height: 75,
-              bgcolor: '#bfdbfe',
+              bgcolor: colors.illustration.doc2,
               borderRadius: 1.5,
-              border: '2px solid #60a5fa',
+              border: `2px solid ${colors.illustration.doc2Border}`,
             }}
           />
           <Box
@@ -232,7 +235,7 @@ export function OnboardingSidebar({
               transform: 'translateX(-50%) rotate(5deg)',
               width: 54,
               height: 65,
-              bgcolor: '#2563eb',
+              bgcolor: colors.illustration.doc3,
               borderRadius: 1.5,
               display: 'flex',
               flexDirection: 'column',
@@ -248,7 +251,7 @@ export function OnboardingSidebar({
                 sx={{
                   width: '60%',
                   height: 4,
-                  bgcolor: 'rgba(255,255,255,0.3)',
+                  bgcolor: colors.illustration.docLines,
                   borderRadius: 0.5,
                 }}
               />

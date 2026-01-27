@@ -26,11 +26,11 @@ export function useTaxonomyGeneration(): UseTaxonomyGenerationReturn {
 
   const {
     setTaxonomyUrl,
-    setTaxonomyThemes,
+    setAISuggestions,
     setTaxonomyStatus,
   } = useOnboardingStore();
 
-  const themes = useOnboardingStore((state) => state.taxonomyData.themes);
+  const aiSuggestions = useOnboardingStore((state) => state.taxonomyData.aiSuggestions ?? []);
   const status = useOnboardingStore((state) => state.taxonomyStatus);
 
   const generate = useCallback(
@@ -44,12 +44,12 @@ export function useTaxonomyGeneration(): UseTaxonomyGenerationReturn {
       setError(null);
       setTaxonomyUrl(url);
       setTaxonomyStatus('processing');
-      setTaxonomyThemes([]);
+      setAISuggestions([]);
 
       try {
         const response = await onboardingApi.generateTaxonomy(workspaceId, url);
 
-        setTaxonomyThemes(response.themes);
+        setAISuggestions(response.themes);
         setTaxonomyStatus('completed');
       } catch (err) {
         console.error('Error generating taxonomy:', err);
@@ -60,15 +60,15 @@ export function useTaxonomyGeneration(): UseTaxonomyGenerationReturn {
         setIsGenerating(false);
       }
     },
-    [workspaceId, setTaxonomyUrl, setTaxonomyThemes, setTaxonomyStatus]
+    [workspaceId, setTaxonomyUrl, setAISuggestions, setTaxonomyStatus]
   );
 
   return {
     generate,
     isGenerating,
-    isCompleted: status === 'completed' && themes.length > 0,
+    isCompleted: status === 'completed' && aiSuggestions.length > 0,
     hasFailed: status === 'failed',
     error,
-    themes,
+    themes: aiSuggestions,
   };
 }

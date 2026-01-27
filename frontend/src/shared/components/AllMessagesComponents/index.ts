@@ -28,3 +28,6 @@ export { SyncHistoryTabContent } from './SyncHistoryTabContent';
 // AI Insights
 export { AIInsightsProgressIndicator } from './AIInsightsProgressIndicator';
 export { AIProgressBadge } from './AIProgressBadge';
+
+// Sync controls
+export { SyncSourcesDropdown } from './SyncSourcesDropdown';

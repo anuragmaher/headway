@@ -14,6 +14,7 @@ import logging
 from app.models.user import User
 from app.models.company import Company
 from app.models.workspace import Workspace
+from app.models.workspace_connector import WorkspaceConnector
 from app.schemas.auth import UserCreate, UserUpdate, LoginRequest
 from app.core.security import (
     verify_password,
@@ -548,29 +549,56 @@ class AuthService:
     
     def complete_onboarding(self, user_id: str) -> User:
         """
-        Mark user onboarding as completed.
-        
+        Mark user onboarding as completed and trigger initial data sync.
+
+        After marking onboarding complete, checks if the user's workspace has
+        any Gong or Fathom connectors configured. If so, dispatches a background
+        Celery task to fetch the last 50 transcripts from each source.
+
         Args:
             user_id: ID of user to update
-            
+
         Returns:
             Updated User object
-            
+
         Raises:
             HTTPException: If user not found
         """
         user = self.get_user_by_id(user_id)
-        
+
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="User not found"
             )
-        
+
         user.onboarding_completed = True
         user.updated_at = datetime.utcnow()
-        
+
         self.db.commit()
         self.db.refresh(user)
-        
+
+        # Trigger initial sync for connected Gong/Fathom sources
+        if user.workspace_id:
+            try:
+                # Check if there are any Gong or Fathom connectors with credentials
+                has_transcript_sources = self.db.query(WorkspaceConnector).filter(
+                    WorkspaceConnector.workspace_id == user.workspace_id,
+                    WorkspaceConnector.connector_type.in_(["gong", "fathom"]),
+                    WorkspaceConnector.credentials.isnot(None),
+                    WorkspaceConnector.is_active == True,
+                ).first() is not None
+
+                if has_transcript_sources:
+                    # Import here to avoid circular imports
+                    from app.sync_engine.tasks.ondemand.initial_sync import sync_workspace_initial
+
+                    workspace_id = str(user.workspace_id)
+                    sync_workspace_initial.delay(workspace_id)
+                    logger.info(f"Triggered initial sync for workspace {workspace_id} after onboarding")
+
+            except Exception as e:
+                # Don't fail onboarding if sync task dispatch fails
+                logger.error(f"Failed to trigger initial sync for workspace {user.workspace_id}: {e}")
+
         return user

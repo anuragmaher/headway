@@ -453,15 +453,25 @@ export async function getDataSourcesStatus(
 }
 
 /**
- * Trigger sync for all connected data sources
+ * Trigger sync for data sources
+ * @param workspaceId - The workspace ID
+ * @param hoursBack - Hours of history to sync (default: 24)
+ * @param sourceTypes - Optional list of source types to sync (gmail, slack, gong, fathom). If empty, syncs all.
  */
 export async function syncAllSources(
   workspaceId: string,
-  hoursBack: number = 24
+  hoursBack: number = 24,
+  sourceTypes?: string[]
 ): Promise<SyncAllSourcesResponse> {
+  const payload: { hours_back: number; source_types?: string[] } = {
+    hours_back: hoursBack,
+  };
+  if (sourceTypes && sourceTypes.length > 0) {
+    payload.source_types = sourceTypes;
+  }
   const response = await api.post<SyncAllSourcesResponse>(
     `/api/v1/sources/${workspaceId}/sync-all`,
-    { hours_back: hoursBack }
+    payload
   );
   return response.data;
 }
