@@ -32,6 +32,8 @@ import {
   useOnboardingStore,
 } from '../../store/onboardingStore';
 import { useOnboardingColors } from '../../hooks/useOnboardingColors';
+import { SlackConnectionDialog } from '@/shared/components/WorkspaceComponents/SlackConnectionDialog';
+import { useWorkspaceSettingsStore } from '@/shared/store/WorkspaceStore/workspaceSettingsStore';
 
 interface SourceConfig {
   id: string;
@@ -57,6 +59,13 @@ export function DataSourcesStep(): JSX.Element {
   const connectedSources = useConnectedSources();
   const { setConnectedSources, loadConnectedSources } = useOnboardingStore();
 
+  // Slack connection state from workspace settings store
+  const { openSlackDialog, slackDialogOpen, loadSlackIntegrations } = useWorkspaceSettingsStore((state) => ({
+    openSlackDialog: state.openSlackDialog,
+    slackDialogOpen: state.slackDialogOpen,
+    loadSlackIntegrations: state.loadSlackIntegrations,
+  }));
+
   const [gongDialogOpen, setGongDialogOpen] = useState(false);
   const [fathomDialogOpen, setFathomDialogOpen] = useState(false);
   const [gongAccessKey, setGongAccessKey] = useState('');
@@ -64,6 +73,16 @@ export function DataSourcesStep(): JSX.Element {
   const [fathomApiToken, setFathomApiToken] = useState('');
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectError, setConnectError] = useState<string | null>(null);
+  const [prevSlackDialogOpen, setPrevSlackDialogOpen] = useState(false);
+
+  // Reload connected sources when Slack dialog closes (after connection)
+  useEffect(() => {
+    if (prevSlackDialogOpen && !slackDialogOpen && workspaceId) {
+      // Dialog was open and now closed - reload sources to check if Slack was connected
+      loadConnectedSources(workspaceId);
+    }
+    setPrevSlackDialogOpen(slackDialogOpen);
+  }, [slackDialogOpen, prevSlackDialogOpen, workspaceId, loadConnectedSources]);
 
   const inputSx = {
     '& .MuiOutlinedInput-root': {
@@ -128,7 +147,7 @@ export function DataSourcesStep(): JSX.Element {
         localStorage.removeItem('onboarding-gmail-connect');
       }
     } else if (sourceId === 'slack') {
-      setConnectError('Connect Slack from Settings after onboarding.');
+      openSlackDialog();
     } else if (sourceId === 'gong') {
       setGongDialogOpen(true);
     } else if (sourceId === 'fathom') {
@@ -429,6 +448,9 @@ export function DataSourcesStep(): JSX.Element {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Slack Connection Dialog */}
+      <SlackConnectionDialog />
     </Box>
   );
 }
