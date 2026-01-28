@@ -15,9 +15,17 @@ export interface FeatureSuggestion {
 }
 
 export interface ThemeSlackConnectRequest {
-  integration_id: string;
+  connector_id: string;
   channel_id: string;
   channel_name: string;
+}
+
+export interface ThemeSlackConnectionResponse {
+  theme_id: string;
+  slack_integration_id: string | null;
+  slack_channel_id: string | null;
+  slack_channel_name: string | null;
+  connected: boolean;
 }
 
 export const themeService = {
@@ -69,17 +77,16 @@ export const themeService = {
   },
 
   /**
-   * Connect a theme to a Slack channel
+   * Connect a theme to a Slack channel for notifications
    */
   connectThemeToSlack: async (
     themeId: string,
-    workspaceId: string,
     request: ThemeSlackConnectRequest
-  ): Promise<any> => {
-    const response = await api.post(
-      `/api/v1/features/themes/${themeId}/slack/connect?workspace_id=${workspaceId}`,
+  ): Promise<ThemeSlackConnectionResponse> => {
+    const response = await api.post<ThemeSlackConnectionResponse>(
+      `/api/v1/themes/${themeId}/slack/connect`,
       {
-        integration_id: request.integration_id,
+        connector_id: request.connector_id,
         channel_id: request.channel_id,
         channel_name: request.channel_name,
       }
@@ -91,11 +98,22 @@ export const themeService = {
    * Disconnect a theme from Slack
    */
   disconnectThemeFromSlack: async (
-    themeId: string,
-    workspaceId: string
-  ): Promise<any> => {
-    const response = await api.delete(
-      `/api/v1/features/themes/${themeId}/slack/disconnect?workspace_id=${workspaceId}`
+    themeId: string
+  ): Promise<ThemeSlackConnectionResponse> => {
+    const response = await api.delete<ThemeSlackConnectionResponse>(
+      `/api/v1/themes/${themeId}/slack/disconnect`
+    );
+    return response.data;
+  },
+
+  /**
+   * Get the Slack connection status for a theme
+   */
+  getThemeSlackStatus: async (
+    themeId: string
+  ): Promise<ThemeSlackConnectionResponse> => {
+    const response = await api.get<ThemeSlackConnectionResponse>(
+      `/api/v1/themes/${themeId}/slack/status`
     );
     return response.data;
   },

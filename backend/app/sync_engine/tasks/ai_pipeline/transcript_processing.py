@@ -7,8 +7,10 @@ Processes raw transcripts from the raw_transcripts table:
 3. Calls Claude API via Langfuse prompt
 4. Stores results in transcript_classifications table
 5. Marks raw transcript as ai_processed = true
+6. Sends Slack notifications to themes with connected channels
 """
 
+import asyncio
 import json
 import logging
 from datetime import datetime, timezone
@@ -24,6 +26,7 @@ from app.models.transcript_classification import TranscriptClassification
 from app.models.theme import Theme
 from app.models.user import User
 from app.services.langfuse_prompt_service import get_langfuse_client
+from app.services.theme_slack_notification_service import ThemeSlackNotificationService
 
 logger = logging.getLogger(__name__)
 
@@ -528,11 +531,46 @@ def _save_classification(
     db: Session,
     raw_transcript: RawTranscript,
     ai_result: Dict[str, Any]
-) -> TranscriptClassification:
-    """Save AI classification result to transcript_classifications table."""
+) -> tuple[TranscriptClassification, List[UUID]]:
+    """Save AI classification result to transcript_classifications table.
+
+    Returns:
+        Tuple of (TranscriptClassification, List of theme_ids for notifications)
+    """
     from app.models.sub_theme import SubTheme
 
     workspace_id = raw_transcript.workspace_id
+
+    # Extract participants from raw transcript data (parties array from Gong/Fathom)
+    raw_data = raw_transcript.raw_data or {}
+    parties = raw_data.get('parties', [])
+    participants = []
+    for party in parties:
+        name = party.get('name', '')
+        email = party.get('emailAddress', '') or party.get('email', '')
+        if name and name.lower() not in ['unknown', 'unknown speaker']:
+            participants.append({
+                'name': name,
+                'email': email
+            })
+        elif email:
+            participants.append({
+                'name': email.split('@')[0],
+                'email': email
+            })
+
+    # Extract company name from call metadata if available
+    call_metadata = raw_data.get('call_metadata', {}) or raw_data.get('metaData', {})
+    company_from_transcript = call_metadata.get('company', '') or call_metadata.get('companyName', '')
+
+    # Enrich AI result with transcript metadata
+    if participants:
+        ai_result['participants'] = participants
+    if company_from_transcript and company_from_transcript.lower() not in ['unknown', '']:
+        if 'customer_metadata' not in ai_result:
+            ai_result['customer_metadata'] = {}
+        if not ai_result['customer_metadata'].get('company_name'):
+            ai_result['customer_metadata']['company_name'] = company_from_transcript
 
     # Extract theme/sub-theme IDs from AI response
     theme_ids, sub_theme_ids = _extract_theme_ids_from_response(ai_result)
@@ -608,7 +646,44 @@ def _save_classification(
         f"theme_ids={theme_ids}, sub_theme_ids={sub_theme_ids}"
     )
 
-    return classification
+    return classification, theme_ids
+
+
+def _send_theme_slack_notifications(
+    db: Session,
+    classification: TranscriptClassification,
+    theme_ids: List[UUID]
+) -> None:
+    """
+    Send Slack notifications to themes with connected channels.
+
+    This is a fire-and-forget operation that should not block transcript processing.
+    Errors are logged but not raised.
+    """
+    if not theme_ids:
+        return
+
+    try:
+        # Run the async notification service in a sync context
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            result = loop.run_until_complete(
+                ThemeSlackNotificationService.send_notifications_for_classification(
+                    db=db,
+                    classification=classification,
+                    theme_ids=theme_ids
+                )
+            )
+            if result.get("sent", 0) > 0:
+                logger.info(f"Sent {result['sent']} Slack notification(s) for classification {classification.id}")
+            if result.get("failed", 0) > 0:
+                logger.warning(f"Failed to send {result['failed']} Slack notification(s) for classification {classification.id}")
+        finally:
+            loop.close()
+    except Exception as e:
+        # Log but don't fail the transcript processing
+        logger.error(f"Error sending Slack notifications for classification {classification.id}: {e}")
 
 
 @shared_task(
@@ -659,6 +734,8 @@ def process_raw_transcripts(
         skipped = 0
 
         for transcript in transcripts:
+            classification = None
+            theme_ids = []
             try:
                 logger.info(f"Processing transcript {transcript.id} ({transcript.source_type}/{transcript.source_id})")
 
@@ -680,7 +757,7 @@ def process_raw_transcripts(
                     logger.warning(f"AI processing failed for transcript {transcript.id}: {ai_result.get('error')}")
                 else:
                     # Save classification
-                    _save_classification(db, transcript, ai_result)
+                    classification, theme_ids = _save_classification(db, transcript, ai_result)
 
                     # Mark as processed
                     transcript.ai_processed = True
@@ -690,6 +767,10 @@ def process_raw_transcripts(
                     logger.info(f"Successfully processed transcript {transcript.id}")
 
                 db.commit()
+
+                # Send Slack notifications to themes (fire and forget, don't block processing)
+                if classification and theme_ids:
+                    _send_theme_slack_notifications(db, classification, theme_ids)
 
             except Exception as e:
                 logger.error(f"Error processing transcript {transcript.id}: {e}", exc_info=True)

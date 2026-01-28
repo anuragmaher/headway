@@ -12,6 +12,8 @@ import {
   ListItemIcon,
   ListItemText,
   useTheme,
+  Tooltip,
+  Divider,
 } from '@mui/material';
 import {
   MoreHoriz as DotsIcon,
@@ -23,6 +25,13 @@ import {
 } from '@mui/icons-material';
 import type { ExplorerTheme } from '../../types';
 
+// Slack icon component
+const SlackIcon = ({ size = 14, color = 'currentColor' }: { size?: number; color?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
+    <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zm1.271 0a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zm0 1.271a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zm10.124 2.521a2.528 2.528 0 0 1 2.52-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.52V8.834zm-1.271 0a2.528 2.528 0 0 1-2.521 2.521 2.528 2.528 0 0 1-2.521-2.521V2.522A2.528 2.528 0 0 1 15.166 0a2.528 2.528 0 0 1 2.521 2.522v6.312zm-2.521 10.124a2.528 2.528 0 0 1 2.521 2.52A2.528 2.528 0 0 1 15.166 24a2.528 2.528 0 0 1-2.521-2.522v-2.52h2.521zm0-1.271a2.528 2.528 0 0 1-2.521-2.521 2.528 2.528 0 0 1 2.521-2.521h6.312A2.528 2.528 0 0 1 24 15.166a2.528 2.528 0 0 1-2.522 2.521h-6.312z"/>
+  </svg>
+);
+
 interface ThemeItemProps {
   theme: ExplorerTheme;
   isSelected: boolean;
@@ -31,6 +40,8 @@ interface ThemeItemProps {
   onDelete?: (themeId: string) => void;
   onLock?: (themeId: string) => void;
   onUnlock?: (themeId: string) => void;
+  onConnectSlack?: (themeId: string) => void;
+  onDisconnectSlack?: (themeId: string) => void;
 }
 
 export const ThemeItem: React.FC<ThemeItemProps> = ({
@@ -41,10 +52,14 @@ export const ThemeItem: React.FC<ThemeItemProps> = ({
   onDelete,
   onLock,
   onUnlock,
+  onConnectSlack,
+  onDisconnectSlack,
 }) => {
   const muiTheme = useTheme();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [isHovered, setIsHovered] = useState(false);
+
+  const isSlackConnected = Boolean(theme.slackChannelId);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -71,6 +86,16 @@ export const ThemeItem: React.FC<ThemeItemProps> = ({
     } else {
       onLock?.(theme.id);
     }
+    handleMenuClose();
+  };
+
+  const handleSlackConnect = () => {
+    onConnectSlack?.(theme.id);
+    handleMenuClose();
+  };
+
+  const handleSlackDisconnect = () => {
+    onDisconnectSlack?.(theme.id);
     handleMenuClose();
   };
 
@@ -127,6 +152,14 @@ export const ThemeItem: React.FC<ThemeItemProps> = ({
           {theme.isLocked && (
             <LockIcon sx={{ fontSize: 11, color: 'text.disabled', flexShrink: 0 }} />
           )}
+          {/* Slack connected indicator */}
+          {isSlackConnected && (
+            <Tooltip title={`Connected to #${theme.slackChannelName}`} arrow placement="top">
+              <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                <SlackIcon size={11} color={muiTheme.palette.mode === 'dark' ? '#E8E8E8' : '#4A154B'} />
+              </Box>
+            </Tooltip>
+          )}
         </Box>
         {/* Stats row - Sub-theme count and mention count */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 0.25 }}>
@@ -179,7 +212,7 @@ export const ThemeItem: React.FC<ThemeItemProps> = ({
         slotProps={{
           paper: {
             sx: {
-              minWidth: 140,
+              minWidth: 180,
               boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
               borderRadius: 1.5,
             },
@@ -198,6 +231,38 @@ export const ThemeItem: React.FC<ThemeItemProps> = ({
           </ListItemIcon>
           <ListItemText primary={theme.isLocked ? 'Unlock' : 'Lock'} primaryTypographyProps={{ fontSize: '0.8125rem' }} />
         </MenuItem>
+
+        <Divider sx={{ my: 0.5 }} />
+
+        {/* Slack Integration Options */}
+        {isSlackConnected ? (
+          <MenuItem onClick={handleSlackDisconnect} sx={{ fontSize: '0.8125rem', py: 0.75 }}>
+            <ListItemIcon>
+              <SlackIcon size={16} color={muiTheme.palette.text.secondary} />
+            </ListItemIcon>
+            <ListItemText
+              primary="Disconnect Slack"
+              secondary={`#${theme.slackChannelName}`}
+              primaryTypographyProps={{ fontSize: '0.8125rem' }}
+              secondaryTypographyProps={{ fontSize: '0.6875rem' }}
+            />
+          </MenuItem>
+        ) : (
+          <MenuItem onClick={handleSlackConnect} sx={{ fontSize: '0.8125rem', py: 0.75 }}>
+            <ListItemIcon>
+              <SlackIcon size={16} color={muiTheme.palette.text.secondary} />
+            </ListItemIcon>
+            <ListItemText
+              primary="Connect to Slack"
+              secondary="Get notifications"
+              primaryTypographyProps={{ fontSize: '0.8125rem' }}
+              secondaryTypographyProps={{ fontSize: '0.6875rem' }}
+            />
+          </MenuItem>
+        )}
+
+        <Divider sx={{ my: 0.5 }} />
+
         <MenuItem onClick={handleDelete} sx={{ fontSize: '0.8125rem', py: 0.75, color: 'error.main' }}>
           <ListItemIcon>
             <DeleteIcon sx={{ fontSize: 16, color: 'error.main' }} />
