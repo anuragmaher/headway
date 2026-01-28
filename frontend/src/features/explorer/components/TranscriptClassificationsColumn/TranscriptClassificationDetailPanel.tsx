@@ -110,8 +110,14 @@ export const TranscriptClassificationDetailPanel: React.FC<TranscriptClassificat
 
   const extractedData = classification.extractedData || {};
   const rawAiResponse = classification.rawAiResponse || extractedData;
-  
-  // Extract all sections from the response
+
+  // NEW FORMAT: Extract new prompt format fields
+  const customer = (extractedData.customer as { company?: string; type?: string; use_case?: string }) || null;
+  const featureSignals = (extractedData.feature_signals as any[]) || [];
+  const unmappedSignals = (extractedData.unmapped_signals as any[]) || [];
+  const pmSummary = (extractedData.pm_summary as string) || '';
+
+  // OLD FORMAT: Extract all sections from the response (backward compatibility)
   const mappings = (extractedData.mappings as any[]) || [];
   const speakers = (extractedData.speakers as any[]) || [];
   const keyInsights = extractedData.key_insights || {};
@@ -119,6 +125,28 @@ export const TranscriptClassificationDetailPanel: React.FC<TranscriptClassificat
   const themeSummary = extractedData.theme_summary || {};
   const riskAssessment = extractedData.risk_assessment || {};
   const customerMetadata = extractedData.customer_metadata || {};
+
+  // Helper function to get signal type color
+  const getSignalTypeColor = (signalType: string): string => {
+    switch (signalType) {
+      case 'feature_request': return theme.palette.info.main;
+      case 'implicit_need': return theme.palette.secondary.main;
+      case 'deal_blocker': return theme.palette.error.main;
+      case 'adoption_blocker': return theme.palette.warning.main;
+      default: return theme.palette.text.secondary;
+    }
+  };
+
+  // Helper function to get signal type label
+  const getSignalTypeLabel = (signalType: string): string => {
+    switch (signalType) {
+      case 'feature_request': return 'Feature Request';
+      case 'implicit_need': return 'Implicit Need';
+      case 'deal_blocker': return 'Deal Blocker';
+      case 'adoption_blocker': return 'Adoption Blocker';
+      default: return signalType.replace('_', ' ');
+    }
+  };
 
   // Helper function to get theme name by ID
   const getThemeName = (themeId: string): string => {
@@ -329,8 +357,70 @@ export const TranscriptClassificationDetailPanel: React.FC<TranscriptClassificat
           p: 3,
         }}
       >
-        {/* Key Insights Section */}
-        {Object.keys(keyInsights).length > 0 && (
+        {/* NEW FORMAT: Customer Info Section */}
+        {customer && (customer.company || customer.type || customer.use_case) && (
+          <Box sx={{ mb: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+              <BusinessIcon sx={{ color: 'primary.main', fontSize: 20 }} />
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                Customer
+              </Typography>
+            </Box>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2.5,
+                bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                borderRadius: 2,
+              }}
+            >
+              <Grid container spacing={2}>
+                {customer.company && (
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontWeight: 500 }}>
+                      Company
+                    </Typography>
+                    <Typography variant="body2" color="text.primary" sx={{ fontWeight: 500 }}>
+                      {customer.company}
+                    </Typography>
+                  </Grid>
+                )}
+                {customer.type && (
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontWeight: 500 }}>
+                      Type
+                    </Typography>
+                    <Chip
+                      label={customer.type === 'prospect' ? 'Prospect' : 'Existing Customer'}
+                      size="small"
+                      sx={{
+                        bgcolor: customer.type === 'prospect'
+                          ? alpha(theme.palette.warning.main, 0.1)
+                          : alpha(theme.palette.success.main, 0.1),
+                        color: customer.type === 'prospect' ? 'warning.main' : 'success.main',
+                        fontWeight: 500,
+                      }}
+                    />
+                  </Grid>
+                )}
+                {customer.use_case && (
+                  <Grid item xs={12}>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5, fontWeight: 500 }}>
+                      Use Case
+                    </Typography>
+                    <Typography variant="body2" color="text.primary">
+                      {customer.use_case}
+                    </Typography>
+                  </Grid>
+                )}
+              </Grid>
+            </Paper>
+          </Box>
+        )}
+
+        {/* Key Insights Section - Supports both old and new formats */}
+        {(Object.keys(keyInsights).length > 0 || featureSignals.length > 0 || pmSummary) && (
           <Box sx={{ mb: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
               <InsightsIcon sx={{ color: 'primary.main', fontSize: 20 }} />
@@ -338,158 +428,389 @@ export const TranscriptClassificationDetailPanel: React.FC<TranscriptClassificat
                 Key Insights
               </Typography>
             </Box>
-            
-            <Grid container spacing={2}>
-              {/* Strongest Needs */}
-              {keyInsights.strongest_needs && Array.isArray(keyInsights.strongest_needs) && keyInsights.strongest_needs.length > 0 && (
-                <Grid item xs={12} md={6}>
+
+            {/* NEW FORMAT: PM Summary */}
+            {pmSummary && (
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 2,
+                  mb: 2,
+                  bgcolor: alpha(theme.palette.info.main, 0.05),
+                  border: `1px solid ${alpha(theme.palette.info.main, 0.3)}`,
+                  borderRadius: 2,
+                }}
+              >
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'info.main' }}>
+                  PM Summary
+                </Typography>
+                <Typography variant="body2" color="text.primary">
+                  {pmSummary}
+                </Typography>
+              </Paper>
+            )}
+
+            {/* NEW FORMAT: Feature Signals */}
+            {featureSignals.length > 0 && (
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5, color: 'text.primary' }}>
+                  Feature Signals ({featureSignals.length})
+                </Typography>
+                {featureSignals.map((signal: any, idx: number) => (
                   <Paper
+                    key={idx}
                     elevation={0}
                     sx={{
                       p: 2,
-                      bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
-                      border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                      mb: 1.5,
+                      bgcolor: signal.is_blocker
+                        ? alpha(theme.palette.error.main, 0.05)
+                        : theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                      border: `1px solid ${signal.is_blocker
+                        ? alpha(theme.palette.error.main, 0.3)
+                        : alpha(theme.palette.divider, 0.5)}`,
                       borderRadius: 2,
-                      height: '100%',
                     }}
                   >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
-                      <LightbulbIcon sx={{ fontSize: 18, color: theme.palette.warning.main }} />
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                        Strongest Needs
+                    {/* Quote */}
+                    {signal.quote && (
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: 'text.secondary',
+                          fontStyle: 'italic',
+                          mb: 1.5,
+                          pl: 2,
+                          borderLeft: `3px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+                          lineHeight: 1.6,
+                        }}
+                      >
+                        "{signal.quote}"
                       </Typography>
-                    </Box>
-                    <Box component="ul" sx={{ m: 0, pl: 2 }}>
-                      {keyInsights.strongest_needs.map((need: string, idx: number) => (
-                        <li key={idx}>
-                          <Typography variant="body2" color="text.primary" sx={{ mb: 0.5 }}>
-                            {need}
-                          </Typography>
-                        </li>
-                      ))}
+                    )}
+                    {/* Need interpretation */}
+                    {signal.need && (
+                      <Typography variant="body2" sx={{ mb: 1.5, fontWeight: 500, color: 'text.primary' }}>
+                        {signal.need}
+                      </Typography>
+                    )}
+                    {/* Chips row */}
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      {signal.signal_type && (
+                        <Chip
+                          label={getSignalTypeLabel(signal.signal_type)}
+                          size="small"
+                          sx={{
+                            height: 22,
+                            fontSize: '0.7rem',
+                            bgcolor: alpha(getSignalTypeColor(signal.signal_type), 0.1),
+                            color: getSignalTypeColor(signal.signal_type),
+                            fontWeight: 500,
+                          }}
+                        />
+                      )}
+                      {signal.impact && (
+                        <Chip
+                          label={`Impact: ${signal.impact}`}
+                          size="small"
+                          sx={{
+                            height: 22,
+                            fontSize: '0.7rem',
+                            bgcolor: alpha(theme.palette.warning.main, 0.1),
+                            color: 'warning.main',
+                            fontWeight: 500,
+                          }}
+                        />
+                      )}
+                      {signal.is_blocker && (
+                        <Chip
+                          label="BLOCKER"
+                          size="small"
+                          sx={{
+                            height: 22,
+                            fontSize: '0.7rem',
+                            bgcolor: alpha(theme.palette.error.main, 0.15),
+                            color: 'error.main',
+                            fontWeight: 600,
+                          }}
+                        />
+                      )}
+                      {signal.theme && (
+                        <Chip
+                          label={signal.theme}
+                          size="small"
+                          sx={{
+                            height: 22,
+                            fontSize: '0.7rem',
+                            bgcolor: alpha(theme.palette.primary.main, 0.1),
+                            color: 'primary.main',
+                            fontWeight: 500,
+                          }}
+                        />
+                      )}
+                      {signal.sub_theme && (
+                        <Chip
+                          label={signal.sub_theme}
+                          size="small"
+                          sx={{
+                            height: 22,
+                            fontSize: '0.7rem',
+                            bgcolor: alpha(theme.palette.secondary.main, 0.1),
+                            color: 'secondary.main',
+                            fontWeight: 500,
+                          }}
+                        />
+                      )}
                     </Box>
                   </Paper>
-                </Grid>
-              )}
+                ))}
+              </Box>
+            )}
 
-              {/* Health Signals */}
-              {keyInsights.health_signals && (
-                <Grid item xs={12} md={6}>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 2,
-                      bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
-                      border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
-                      borderRadius: 2,
-                      height: '100%',
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
-                      <TrendingUpIcon sx={{ fontSize: 18, color: theme.palette.success.main }} />
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                        Health Signals
-                      </Typography>
-                    </Box>
-                    {keyInsights.health_signals.positive && Array.isArray(keyInsights.health_signals.positive) && keyInsights.health_signals.positive.length > 0 && (
-                      <Box sx={{ mb: 1 }}>
-                        <Typography variant="caption" color="success.main" sx={{ fontWeight: 500, display: 'block', mb: 0.5 }}>
-                          Positive
+            {/* NEW FORMAT: Unmapped Signals (collapsible) */}
+            {unmappedSignals.length > 0 && (
+              <Accordion
+                sx={{
+                  mb: 2,
+                  bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                  border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                  boxShadow: 'none',
+                  '&:before': { display: 'none' },
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  sx={{ px: 2, py: 1 }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <WarningIcon sx={{ fontSize: 18, color: theme.palette.warning.main }} />
+                    <Typography variant="subtitle2" sx={{ fontWeight: 500 }}>
+                      Unmapped Signals ({unmappedSignals.length})
+                    </Typography>
+                  </Box>
+                </AccordionSummary>
+                <AccordionDetails sx={{ px: 2, pb: 2, pt: 0 }}>
+                  {unmappedSignals.map((signal: any, idx: number) => (
+                    <Paper
+                      key={idx}
+                      elevation={0}
+                      sx={{
+                        p: 2,
+                        mb: 1,
+                        bgcolor: alpha(theme.palette.warning.main, 0.05),
+                        border: `1px solid ${alpha(theme.palette.warning.main, 0.2)}`,
+                        borderRadius: 1,
+                        '&:last-child': { mb: 0 },
+                      }}
+                    >
+                      {signal.quote && (
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: 'text.secondary',
+                            fontStyle: 'italic',
+                            mb: 1,
+                          }}
+                        >
+                          "{signal.quote}"
                         </Typography>
-                        {keyInsights.health_signals.positive.map((signal: string, idx: number) => (
+                      )}
+                      {signal.need && (
+                        <Typography variant="body2" sx={{ mb: 1, color: 'text.primary' }}>
+                          {signal.need}
+                        </Typography>
+                      )}
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center' }}>
+                        {signal.signal_type && (
                           <Chip
-                            key={idx}
-                            label={signal}
+                            label={getSignalTypeLabel(signal.signal_type)}
                             size="small"
                             sx={{
-                              mr: 0.5,
-                              mb: 0.5,
-                              bgcolor: alpha(theme.palette.success.main, 0.1),
-                              color: 'success.main',
-                              fontSize: '0.7rem',
+                              height: 20,
+                              fontSize: '0.65rem',
+                              bgcolor: alpha(getSignalTypeColor(signal.signal_type), 0.1),
+                              color: getSignalTypeColor(signal.signal_type),
                             }}
                           />
-                        ))}
-                      </Box>
-                    )}
-                    {keyInsights.health_signals.negative && Array.isArray(keyInsights.health_signals.negative) && keyInsights.health_signals.negative.length > 0 && (
-                      <Box>
-                        <Typography variant="caption" color="error.main" sx={{ fontWeight: 500, display: 'block', mb: 0.5 }}>
-                          Negative
-                        </Typography>
-                        {keyInsights.health_signals.negative.map((signal: string, idx: number) => (
+                        )}
+                        {signal.impact && (
                           <Chip
-                            key={idx}
-                            label={signal}
+                            label={`Impact: ${signal.impact}`}
                             size="small"
                             sx={{
-                              mr: 0.5,
-                              mb: 0.5,
-                              bgcolor: alpha(theme.palette.error.main, 0.1),
-                              color: 'error.main',
-                              fontSize: '0.7rem',
+                              height: 20,
+                              fontSize: '0.65rem',
+                              bgcolor: alpha(theme.palette.warning.main, 0.1),
+                              color: 'warning.main',
                             }}
                           />
+                        )}
+                        {(signal.suggested_theme || signal.suggested_sub_theme) && (
+                          <Typography variant="caption" color="text.secondary">
+                            Suggested: {signal.suggested_theme}{signal.suggested_sub_theme ? ` → ${signal.suggested_sub_theme}` : ''}
+                          </Typography>
+                        )}
+                      </Box>
+                    </Paper>
+                  ))}
+                </AccordionDetails>
+              </Accordion>
+            )}
+
+            {/* OLD FORMAT: Keep existing key_insights rendering for backward compatibility */}
+            {Object.keys(keyInsights).length > 0 && featureSignals.length === 0 && (
+              <Grid container spacing={2}>
+                {/* Strongest Needs */}
+                {keyInsights.strongest_needs && Array.isArray(keyInsights.strongest_needs) && keyInsights.strongest_needs.length > 0 && (
+                  <Grid item xs={12} md={6}>
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        p: 2,
+                        bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                        border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                        borderRadius: 2,
+                        height: '100%',
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                        <LightbulbIcon sx={{ fontSize: 18, color: theme.palette.warning.main }} />
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                          Strongest Needs
+                        </Typography>
+                      </Box>
+                      <Box component="ul" sx={{ m: 0, pl: 2 }}>
+                        {keyInsights.strongest_needs.map((need: string, idx: number) => (
+                          <li key={idx}>
+                            <Typography variant="body2" color="text.primary" sx={{ mb: 0.5 }}>
+                              {need}
+                            </Typography>
+                          </li>
                         ))}
                       </Box>
-                    )}
-                  </Paper>
-                </Grid>
-              )}
+                    </Paper>
+                  </Grid>
+                )}
 
-              {/* Blockers */}
-              {keyInsights.blockers && Array.isArray(keyInsights.blockers) && keyInsights.blockers.length > 0 && (
-                <Grid item xs={12}>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 2,
-                      bgcolor: alpha(theme.palette.error.main, 0.05),
-                      border: `1px solid ${alpha(theme.palette.error.main, 0.3)}`,
-                      borderRadius: 2,
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                      <WarningIcon sx={{ fontSize: 18, color: theme.palette.error.main }} />
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'error.main' }}>
-                        Blockers
-                      </Typography>
-                    </Box>
-                    <Box component="ul" sx={{ m: 0, pl: 2 }}>
-                      {keyInsights.blockers.map((blocker: string, idx: number) => (
-                        <li key={idx}>
-                          <Typography variant="body2" color="error.main">
-                            {blocker}
+                {/* Health Signals */}
+                {keyInsights.health_signals && (
+                  <Grid item xs={12} md={6}>
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        p: 2,
+                        bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
+                        border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                        borderRadius: 2,
+                        height: '100%',
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                        <TrendingUpIcon sx={{ fontSize: 18, color: theme.palette.success.main }} />
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                          Health Signals
+                        </Typography>
+                      </Box>
+                      {keyInsights.health_signals.positive && Array.isArray(keyInsights.health_signals.positive) && keyInsights.health_signals.positive.length > 0 && (
+                        <Box sx={{ mb: 1 }}>
+                          <Typography variant="caption" color="success.main" sx={{ fontWeight: 500, display: 'block', mb: 0.5 }}>
+                            Positive
                           </Typography>
-                        </li>
-                      ))}
-                    </Box>
-                  </Paper>
-                </Grid>
-              )}
+                          {keyInsights.health_signals.positive.map((signal: string, idx: number) => (
+                            <Chip
+                              key={idx}
+                              label={signal}
+                              size="small"
+                              sx={{
+                                mr: 0.5,
+                                mb: 0.5,
+                                bgcolor: alpha(theme.palette.success.main, 0.1),
+                                color: 'success.main',
+                                fontSize: '0.7rem',
+                              }}
+                            />
+                          ))}
+                        </Box>
+                      )}
+                      {keyInsights.health_signals.negative && Array.isArray(keyInsights.health_signals.negative) && keyInsights.health_signals.negative.length > 0 && (
+                        <Box>
+                          <Typography variant="caption" color="error.main" sx={{ fontWeight: 500, display: 'block', mb: 0.5 }}>
+                            Negative
+                          </Typography>
+                          {keyInsights.health_signals.negative.map((signal: string, idx: number) => (
+                            <Chip
+                              key={idx}
+                              label={signal}
+                              size="small"
+                              sx={{
+                                mr: 0.5,
+                                mb: 0.5,
+                                bgcolor: alpha(theme.palette.error.main, 0.1),
+                                color: 'error.main',
+                                fontSize: '0.7rem',
+                              }}
+                            />
+                          ))}
+                        </Box>
+                      )}
+                    </Paper>
+                  </Grid>
+                )}
 
-              {/* Product Feedback */}
-              {keyInsights.product_feedback_for_pm && (
-                <Grid item xs={12}>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 2,
-                      bgcolor: alpha(theme.palette.info.main, 0.05),
-                      border: `1px solid ${alpha(theme.palette.info.main, 0.3)}`,
-                      borderRadius: 2,
-                    }}
-                  >
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'info.main' }}>
-                      Product Feedback for PM
-                    </Typography>
-                    <Typography variant="body2" color="text.primary">
-                      {keyInsights.product_feedback_for_pm}
-                    </Typography>
-                  </Paper>
-                </Grid>
-              )}
-            </Grid>
+                {/* Blockers */}
+                {keyInsights.blockers && Array.isArray(keyInsights.blockers) && keyInsights.blockers.length > 0 && (
+                  <Grid item xs={12}>
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        p: 2,
+                        bgcolor: alpha(theme.palette.error.main, 0.05),
+                        border: `1px solid ${alpha(theme.palette.error.main, 0.3)}`,
+                        borderRadius: 2,
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <WarningIcon sx={{ fontSize: 18, color: theme.palette.error.main }} />
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'error.main' }}>
+                          Blockers
+                        </Typography>
+                      </Box>
+                      <Box component="ul" sx={{ m: 0, pl: 2 }}>
+                        {keyInsights.blockers.map((blocker: string, idx: number) => (
+                          <li key={idx}>
+                            <Typography variant="body2" color="error.main">
+                              {blocker}
+                            </Typography>
+                          </li>
+                        ))}
+                      </Box>
+                    </Paper>
+                  </Grid>
+                )}
+
+                {/* Product Feedback */}
+                {keyInsights.product_feedback_for_pm && (
+                  <Grid item xs={12}>
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        p: 2,
+                        bgcolor: alpha(theme.palette.info.main, 0.05),
+                        border: `1px solid ${alpha(theme.palette.info.main, 0.3)}`,
+                        borderRadius: 2,
+                      }}
+                    >
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'info.main' }}>
+                        Product Feedback for PM
+                      </Typography>
+                      <Typography variant="body2" color="text.primary">
+                        {keyInsights.product_feedback_for_pm}
+                      </Typography>
+                    </Paper>
+                  </Grid>
+                )}
+              </Grid>
+            )}
           </Box>
         )}
 
