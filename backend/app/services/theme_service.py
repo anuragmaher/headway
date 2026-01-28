@@ -1055,6 +1055,24 @@ class TranscriptClassificationService:
             if not isinstance(segment, dict):
                 continue
 
+            # Check for Fathom format first (speaker object with display_name)
+            speaker_obj = segment.get('speaker')
+            if speaker_obj and isinstance(speaker_obj, dict):
+                # Fathom format: speaker info is directly in the segment
+                name = speaker_obj.get('display_name', 'Unknown Speaker')
+                email = speaker_obj.get('matched_calendar_invitee_email', '') or speaker_obj.get('email', '')
+                text = segment.get('text', '').strip()
+
+                if text:
+                    if email:
+                        lines.append(f"{name} ({email}):")
+                    else:
+                        lines.append(f"{name}:")
+                    lines.append(f"  {text}")
+                    lines.append("")
+                continue
+
+            # Gong format: use speakerId to lookup in speaker_map
             speaker_id = str(segment.get('speakerId', ''))
             speaker_info = speaker_map.get(speaker_id, {'name': 'Unknown Speaker', 'email': ''})
 
