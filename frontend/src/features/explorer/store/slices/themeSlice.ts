@@ -31,7 +31,7 @@ export type ThemeSlice = ThemeState & ThemeActions;
 
 const initialThemeState: ThemeState = {
   themes: [],
-  isLoadingThemes: false,
+  isLoadingThemes: true, // Start with loading true to show skeleton until first fetch completes
   themesError: null,
 };
 

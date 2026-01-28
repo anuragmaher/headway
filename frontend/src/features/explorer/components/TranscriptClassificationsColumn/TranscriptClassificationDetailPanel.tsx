@@ -2,7 +2,7 @@
  * TranscriptClassificationDetailPanel - Detailed view for selected transcript classification
  * Shows feature mappings, key insights, risk assessment, customer metadata, and more
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -16,6 +16,7 @@ import {
   AccordionDetails,
   Grid,
   LinearProgress,
+  CircularProgress,
 } from '@mui/material';
 import {
   Close as CloseIcon,
@@ -38,12 +39,13 @@ import {
   SentimentDissatisfied as SentimentDissatisfiedIcon,
 } from '@mui/icons-material';
 import { formatDateTime } from '../../utils/dateUtils';
-import { 
+import {
   useSelectedTranscriptClassification,
   useThemes,
   useSubThemes,
 } from '../../store';
 import { useTranscriptCounts } from '../../hooks/useTranscriptCounts';
+import { themesApi } from '../../../../services/themes.api';
 
 interface TranscriptClassificationDetailPanelProps {
   onClose: () => void;
@@ -57,7 +59,38 @@ export const TranscriptClassificationDetailPanel: React.FC<TranscriptClassificat
   const themes = useThemes();
   const subThemes = useSubThemes();
   const { themeCounts, subThemeCounts } = useTranscriptCounts();
-  const [rawResponseExpanded, setRawResponseExpanded] = useState(false);
+  const [transcriptExpanded, setTranscriptExpanded] = useState(false);
+  const [transcriptText, setTranscriptText] = useState<string | null>(null);
+  const [transcriptLoading, setTranscriptLoading] = useState(false);
+  const [transcriptError, setTranscriptError] = useState<string | null>(null);
+
+  // Fetch transcript when accordion is expanded
+  const handleTranscriptToggle = useCallback(async () => {
+    const newExpanded = !transcriptExpanded;
+    setTranscriptExpanded(newExpanded);
+
+    // Fetch transcript only when expanding and not already loaded
+    if (newExpanded && !transcriptText && classification?.id) {
+      setTranscriptLoading(true);
+      setTranscriptError(null);
+      try {
+        const text = await themesApi.getTranscriptText(classification.id);
+        setTranscriptText(text);
+      } catch (error) {
+        console.error('Failed to fetch transcript:', error);
+        setTranscriptError('Failed to load transcript');
+      } finally {
+        setTranscriptLoading(false);
+      }
+    }
+  }, [transcriptExpanded, transcriptText, classification?.id]);
+
+  // Reset transcript state when classification changes
+  useEffect(() => {
+    setTranscriptText(null);
+    setTranscriptError(null);
+    setTranscriptExpanded(false);
+  }, [classification?.id]);
 
   if (!classification) {
     return (
@@ -1115,10 +1148,10 @@ export const TranscriptClassificationDetailPanel: React.FC<TranscriptClassificat
           </Box>
         )}
 
-        {/* Raw AI Response Section */}
+        {/* Transcript Section */}
         <Accordion
-          expanded={rawResponseExpanded}
-          onChange={() => setRawResponseExpanded(!rawResponseExpanded)}
+          expanded={transcriptExpanded}
+          onChange={handleTranscriptToggle}
           sx={{
             mb: 3,
             bgcolor: theme.palette.mode === 'dark' ? 'background.paper' : '#FFFFFF',
@@ -1142,7 +1175,7 @@ export const TranscriptClassificationDetailPanel: React.FC<TranscriptClassificat
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <CodeIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
               <Typography variant="subtitle2" sx={{ fontWeight: 500 }}>
-                Raw AI Response
+                Full Transcript
               </Typography>
             </Box>
           </AccordionSummary>
@@ -1153,21 +1186,137 @@ export const TranscriptClassificationDetailPanel: React.FC<TranscriptClassificat
                 p: 2,
                 borderRadius: 1,
                 overflow: 'auto',
-                maxHeight: 400,
+                maxHeight: 500,
               }}
             >
-              <pre
-                style={{
-                  margin: 0,
-                  fontSize: '0.75rem',
-                  fontFamily: 'monospace',
-                  color: theme.palette.text.primary,
-                  whiteSpace: 'pre-wrap',
-                  wordBreak: 'break-word',
-                }}
-              >
-                {JSON.stringify(rawAiResponse, null, 2)}
-              </pre>
+              {transcriptLoading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
+                  <CircularProgress size={24} />
+                  <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
+                    Loading transcript...
+                  </Typography>
+                </Box>
+              ) : transcriptError ? (
+                <Typography
+                  variant="body2"
+                  color="error"
+                  sx={{ fontStyle: 'italic', textAlign: 'center', py: 2 }}
+                >
+                  {transcriptError}
+                </Typography>
+              ) : transcriptText ? (
+                <Box sx={{ fontFamily: 'inherit' }}>
+                  {transcriptText.split('\n').map((line: string, index: number) => {
+                    // Check if line is a header (starts with = or contains "Call:" or "Date:")
+                    const isHeader = line.startsWith('=') || line.startsWith('Call:') || line.startsWith('Date:');
+                    // Check if line is a speaker line (ends with :) and doesn't start with whitespace
+                    const isSpeakerLine = line.trim().endsWith(':') && !line.startsWith(' ') && !line.startsWith('\t') && line.length < 100;
+                    // Check if line is dialogue (starts with whitespace)
+                    const isDialogue = line.startsWith('  ') || line.startsWith('\t');
+
+                    if (line.startsWith('=')) {
+                      return (
+                        <Box
+                          key={index}
+                          sx={{
+                            borderBottom: `1px solid ${alpha(theme.palette.divider, 0.3)}`,
+                            my: 1,
+                          }}
+                        />
+                      );
+                    }
+
+                    if (isHeader) {
+                      return (
+                        <Typography
+                          key={index}
+                          variant="subtitle2"
+                          sx={{
+                            fontWeight: 600,
+                            color: 'primary.main',
+                            mb: 0.5,
+                          }}
+                        >
+                          {line}
+                        </Typography>
+                      );
+                    }
+
+                    if (isSpeakerLine) {
+                      return (
+                        <Typography
+                          key={index}
+                          variant="body2"
+                          sx={{
+                            fontWeight: 600,
+                            color: 'text.primary',
+                            mt: 1.5,
+                            mb: 0.25,
+                          }}
+                        >
+                          {line}
+                        </Typography>
+                      );
+                    }
+
+                    if (isDialogue) {
+                      return (
+                        <Typography
+                          key={index}
+                          variant="body2"
+                          sx={{
+                            color: 'text.secondary',
+                            pl: 2,
+                            lineHeight: 1.6,
+                          }}
+                        >
+                          {line.trim()}
+                        </Typography>
+                      );
+                    }
+
+                    if (line.includes('[TRANSCRIPT TRUNCATED')) {
+                      return (
+                        <Typography
+                          key={index}
+                          variant="body2"
+                          sx={{
+                            color: 'warning.main',
+                            fontStyle: 'italic',
+                            textAlign: 'center',
+                            my: 2,
+                          }}
+                        >
+                          {line}
+                        </Typography>
+                      );
+                    }
+
+                    // Empty line
+                    if (!line.trim()) {
+                      return <Box key={index} sx={{ height: 8 }} />;
+                    }
+
+                    return (
+                      <Typography
+                        key={index}
+                        variant="body2"
+                        sx={{ color: 'text.secondary' }}
+                      >
+                        {line}
+                      </Typography>
+                    );
+                  })}
+                </Box>
+              ) : (
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ fontStyle: 'italic', textAlign: 'center', py: 2 }}
+                >
+                  Click to load the full transcript...
+                </Typography>
+              )}
             </Box>
           </AccordionDetails>
         </Accordion>

@@ -261,6 +261,15 @@ export const themesApi = {
     return response.data;
   },
 
+  async getTranscriptText(
+    classificationId: string
+  ): Promise<string> {
+    const response = await api.get<{ transcript: string }>(
+      `${BASE_URL}/transcript-classifications/${classificationId}/transcript`
+    );
+    return response.data.transcript;
+  },
+
   async searchTranscriptClassifications(
     query: string,
     limit: number = 20

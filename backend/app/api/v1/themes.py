@@ -670,6 +670,53 @@ async def get_transcript_classification(
     return TranscriptClassificationResponse.model_validate(classification)
 
 
+@router.get("/transcript-classifications/{classification_id}/transcript")
+async def get_transcript_text(
+    classification_id: UUID,
+    current_user: dict = Depends(get_current_user),
+    db = Depends(get_db)
+):
+    """Get the formatted transcript text for a transcript classification.
+
+    Fetches the raw transcript from raw_transcripts table and formats it
+    for display with speaker names and dialogue.
+    """
+    workspace_id = current_user.get('workspace_id')
+    if not workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User does not have a workspace"
+        )
+
+    service = TranscriptClassificationService(db)
+
+    # First verify access to the classification
+    classification = service.get_transcript_classification(classification_id)
+
+    if not classification:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transcript classification not found"
+        )
+
+    if str(classification.workspace_id) != workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied"
+        )
+
+    # Get the formatted transcript
+    transcript_text = service.get_raw_transcript(classification_id)
+
+    if not transcript_text:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Raw transcript not found"
+        )
+
+    return {"transcript": transcript_text}
+
+
 # === Theme Endpoints (Parameterized paths - /{theme_id}/*) ===
 # These MUST come AFTER all static paths to avoid UUID parsing errors
 
