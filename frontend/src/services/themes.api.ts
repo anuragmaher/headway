@@ -270,6 +270,48 @@ export const themesApi = {
     );
     return response.data;
   },
+
+  // === Theme Slack Integration ===
+
+  async connectThemeToSlack(
+    themeId: string,
+    connectorId: string,
+    channelId: string,
+    channelName: string
+  ): Promise<ThemeSlackConnectionResponse> {
+    const response = await api.post<ThemeSlackConnectionResponse>(
+      `${BASE_URL}/${themeId}/slack/connect`,
+      {
+        connector_id: connectorId,
+        channel_id: channelId,
+        channel_name: channelName,
+      }
+    );
+    return response.data;
+  },
+
+  async disconnectThemeFromSlack(themeId: string): Promise<ThemeSlackConnectionResponse> {
+    const response = await api.delete<ThemeSlackConnectionResponse>(
+      `${BASE_URL}/${themeId}/slack/disconnect`
+    );
+    return response.data;
+  },
+
+  async getThemeSlackStatus(themeId: string): Promise<ThemeSlackConnectionResponse> {
+    const response = await api.get<ThemeSlackConnectionResponse>(
+      `${BASE_URL}/${themeId}/slack/status`
+    );
+    return response.data;
+  },
 };
+
+// Type for Slack connection response
+export interface ThemeSlackConnectionResponse {
+  theme_id: string;
+  slack_integration_id: string | null;
+  slack_channel_id: string | null;
+  slack_channel_name: string | null;
+  connected: boolean;
+}
 
 export default themesApi;

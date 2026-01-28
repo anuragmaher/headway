@@ -131,9 +131,9 @@ async def get_themes(
                 parent_theme_id=None,  # No nested themes in new schema
                 sub_theme_count=sub_theme_count,
                 level=0,  # All themes are root level in new schema
-                slack_integration_id=None,
-                slack_channel_id=None,
-                slack_channel_name=None
+                slack_integration_id=str(theme.slack_integration_id) if theme.slack_integration_id else None,
+                slack_channel_id=theme.slack_channel_id,
+                slack_channel_name=theme.slack_channel_name
             ))
 
         return theme_responses
@@ -197,9 +197,9 @@ async def create_theme(
             parent_theme_id=None,
             sub_theme_count=0,
             level=0,
-            slack_integration_id=None,
-            slack_channel_id=None,
-            slack_channel_name=None
+            slack_integration_id=str(new_theme.slack_integration_id) if new_theme.slack_integration_id else None,
+            slack_channel_id=new_theme.slack_channel_id,
+            slack_channel_name=new_theme.slack_channel_name
         )
 
     except HTTPException:
@@ -282,9 +282,9 @@ async def update_theme(
             parent_theme_id=None,
             sub_theme_count=sub_theme_count,
             level=0,
-            slack_integration_id=None,
-            slack_channel_id=None,
-            slack_channel_name=None
+            slack_integration_id=str(theme.slack_integration_id) if theme.slack_integration_id else None,
+            slack_channel_id=theme.slack_channel_id,
+            slack_channel_name=theme.slack_channel_name
         )
 
     except HTTPException:

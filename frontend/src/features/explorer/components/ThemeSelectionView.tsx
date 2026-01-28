@@ -2,7 +2,7 @@
  * ThemeSelectionView - Large widget-based theme selection when no theme is selected
  * Shows themes as attractive cards/widgets for better initial experience
  */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -14,18 +14,35 @@ import {
   useTheme,
   alpha,
   Skeleton,
-  Tooltip,
   Button,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   FolderOpen as ThemeIcon,
+  MoreVert as MoreVertIcon,
 } from '@mui/icons-material';
 import { useThemes, useIsLoadingThemes, useExplorerActions } from '../store';
 import type { ExplorerTheme } from '../types/explorer.types';
 import { useTranscriptCounts } from '../hooks/useTranscriptCounts';
+import { ConnectSlackDialog } from './dialogs/ConnectSlackDialog';
+import { slackService } from '@/services/slack';
+import { themeService } from '@/services/theme';
+
+// Slack icon component
+const SlackIcon = ({ size = 16, color = 'currentColor' }: { size?: number; color?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
+    <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zm1.271 0a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zm0 1.271a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zm10.124 2.521a2.528 2.528 0 0 1 2.52-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.52V8.834zm-1.271 0a2.528 2.528 0 0 1-2.521 2.521 2.528 2.528 0 0 1-2.521-2.521V2.522A2.528 2.528 0 0 1 15.166 0a2.528 2.528 0 0 1 2.521 2.522v6.312zm-2.521 10.124a2.528 2.528 0 0 1 2.521 2.52A2.528 2.528 0 0 1 15.166 24a2.528 2.528 0 0 1-2.521-2.522v-2.52h2.521zm0-1.271a2.528 2.528 0 0 1-2.521-2.521 2.528 2.528 0 0 1 2.521-2.521h6.312A2.528 2.528 0 0 1 24 15.166a2.528 2.528 0 0 1-2.522 2.521h-6.312z"/>
+  </svg>
+);
 
 interface ThemeSelectionViewProps {
   onThemeSelect: (themeId: string) => void;
@@ -41,8 +58,105 @@ export const ThemeSelectionView: React.FC<ThemeSelectionViewProps> = ({
     openAddThemeDialog,
     openEditThemeDialog,
     openDeleteConfirm,
+    fetchThemes,
   } = useExplorerActions();
   const { themeCounts } = useTranscriptCounts();
+
+  // Menu state
+  const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null);
+  const [selectedMenuTheme, setSelectedMenuTheme] = useState<ExplorerTheme | null>(null);
+
+  // Slack integration state
+  const [hasSlackIntegration, setHasSlackIntegration] = useState(false);
+  const [slackDialogOpen, setSlackDialogOpen] = useState(false);
+  const [slackDialogThemeId, setSlackDialogThemeId] = useState<string>('');
+  const [slackDialogThemeName, setSlackDialogThemeName] = useState<string>('');
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
+    open: false,
+    message: '',
+    severity: 'success',
+  });
+
+  // Check if workspace has Slack integration
+  useEffect(() => {
+    const checkSlackIntegration = async () => {
+      try {
+        const integrations = await slackService.getIntegrations();
+        setHasSlackIntegration(integrations.length > 0);
+      } catch {
+        setHasSlackIntegration(false);
+      }
+    };
+    checkSlackIntegration();
+  }, []);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, theme: ExplorerTheme) => {
+    event.stopPropagation();
+    setMenuAnchorEl(event.currentTarget);
+    setSelectedMenuTheme(theme);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
+    setSelectedMenuTheme(null);
+  };
+
+  const handleEditFromMenu = () => {
+    if (selectedMenuTheme) {
+      openEditThemeDialog(selectedMenuTheme.id);
+    }
+    handleMenuClose();
+  };
+
+  const handleDeleteFromMenu = () => {
+    if (selectedMenuTheme) {
+      openDeleteConfirm(selectedMenuTheme.id, 'theme');
+    }
+    handleMenuClose();
+  };
+
+  const handleConnectSlackFromMenu = () => {
+    if (selectedMenuTheme) {
+      setSlackDialogThemeId(selectedMenuTheme.id);
+      setSlackDialogThemeName(selectedMenuTheme.name);
+      setSlackDialogOpen(true);
+    }
+    handleMenuClose();
+  };
+
+  const handleDisconnectSlack = async () => {
+    if (selectedMenuTheme) {
+      try {
+        await themeService.disconnectThemeFromSlack(selectedMenuTheme.id);
+        setSnackbar({
+          open: true,
+          message: 'Slack channel disconnected',
+          severity: 'success',
+        });
+        fetchThemes();
+      } catch {
+        setSnackbar({
+          open: true,
+          message: 'Failed to disconnect Slack channel',
+          severity: 'error',
+        });
+      }
+    }
+    handleMenuClose();
+  };
+
+  const handleSlackConnectSuccess = () => {
+    setSnackbar({
+      open: true,
+      message: 'Slack channel connected successfully',
+      severity: 'success',
+    });
+    fetchThemes();
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
 
   const getThemeColor = () => {
     // Use neutral, professional color for all themes
@@ -134,7 +248,7 @@ export const ThemeSelectionView: React.FC<ThemeSelectionViewProps> = ({
       <Grid container spacing={3}>
         {[...themes]
           .sort((a, b) => (b.feedbackCount || 0) - (a.feedbackCount || 0))
-          .map((theme, index) => (
+          .map((theme) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={theme.id}>
             <Card
               sx={{
@@ -169,32 +283,13 @@ export const ThemeSelectionView: React.FC<ThemeSelectionViewProps> = ({
                     <ThemeIcon sx={{ fontSize: 24 }} />
                   </Box>
                   
-                  <Box sx={{ display: 'flex', gap: 0.5 }}>
-                    <Tooltip title="Edit Theme">
-                      <IconButton 
-                        size="small" 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openEditThemeDialog(theme.id);
-                        }}
-                        sx={{ opacity: 0.7, '&:hover': { opacity: 1 } }}
-                      >
-                        <EditIcon sx={{ fontSize: 16 }} />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete Theme">
-                      <IconButton 
-                        size="small" 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openDeleteConfirm(theme.id, 'theme');
-                        }}
-                        sx={{ opacity: 0.7, '&:hover': { opacity: 1, color: 'error.main' } }}
-                      >
-                        <DeleteIcon sx={{ fontSize: 16 }} />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
+                  <IconButton
+                    size="small"
+                    onClick={(e) => handleMenuOpen(e, theme)}
+                    sx={{ opacity: 0.7, '&:hover': { opacity: 1 } }}
+                  >
+                    <MoreVertIcon sx={{ fontSize: 18 }} />
+                  </IconButton>
                 </Box>
 
                 {/* Theme Info */}
@@ -279,12 +374,12 @@ export const ThemeSelectionView: React.FC<ThemeSelectionViewProps> = ({
             }}
             onClick={() => openAddThemeDialog()}
           >
-            <CardContent 
-              sx={{ 
-                height: '100%', 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center', 
+            <CardContent
+              sx={{
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
                 justifyContent: 'center',
                 textAlign: 'center',
                 p: 3,
@@ -305,11 +400,11 @@ export const ThemeSelectionView: React.FC<ThemeSelectionViewProps> = ({
               >
                 <AddIcon sx={{ fontSize: 24 }} />
               </Box>
-              
+
               <Typography variant="subtitle1" sx={{ fontWeight: 600, color: 'text.primary', mb: 0.5 }}>
                 Add New Theme
               </Typography>
-              
+
               <Typography variant="caption" color="textSecondary">
                 Create a new product theme
               </Typography>
@@ -317,6 +412,91 @@ export const ThemeSelectionView: React.FC<ThemeSelectionViewProps> = ({
           </Card>
         </Grid>
       </Grid>
+
+      {/* Theme Context Menu */}
+      <Menu
+        anchorEl={menuAnchorEl}
+        open={Boolean(menuAnchorEl)}
+        onClose={handleMenuClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        slotProps={{
+          paper: {
+            sx: {
+              minWidth: 180,
+              boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+              borderRadius: 1.5,
+            },
+          },
+        }}
+      >
+        <MenuItem onClick={handleEditFromMenu} sx={{ fontSize: '0.875rem', py: 1 }}>
+          <ListItemIcon>
+            <EditIcon sx={{ fontSize: 18 }} />
+          </ListItemIcon>
+          <ListItemText primary="Edit Theme" primaryTypographyProps={{ fontSize: '0.875rem' }} />
+        </MenuItem>
+
+        {hasSlackIntegration && (
+          <>
+            <Divider sx={{ my: 0.5 }} />
+            {selectedMenuTheme?.slackChannelId ? (
+              <MenuItem onClick={handleDisconnectSlack} sx={{ fontSize: '0.875rem', py: 1 }}>
+                <ListItemIcon>
+                  <SlackIcon size={18} color={muiTheme.palette.text.secondary} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Disconnect Slack"
+                  secondary={`#${selectedMenuTheme.slackChannelName}`}
+                  primaryTypographyProps={{ fontSize: '0.875rem' }}
+                  secondaryTypographyProps={{ fontSize: '0.75rem' }}
+                />
+              </MenuItem>
+            ) : (
+              <MenuItem onClick={handleConnectSlackFromMenu} sx={{ fontSize: '0.875rem', py: 1 }}>
+                <ListItemIcon>
+                  <SlackIcon size={18} color={muiTheme.palette.text.secondary} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Connect Slack Channel"
+                  secondary="Get notifications"
+                  primaryTypographyProps={{ fontSize: '0.875rem' }}
+                  secondaryTypographyProps={{ fontSize: '0.75rem' }}
+                />
+              </MenuItem>
+            )}
+          </>
+        )}
+
+        <Divider sx={{ my: 0.5 }} />
+        <MenuItem onClick={handleDeleteFromMenu} sx={{ fontSize: '0.875rem', py: 1, color: 'error.main' }}>
+          <ListItemIcon>
+            <DeleteIcon sx={{ fontSize: 18, color: 'error.main' }} />
+          </ListItemIcon>
+          <ListItemText primary="Delete Theme" primaryTypographyProps={{ fontSize: '0.875rem' }} />
+        </MenuItem>
+      </Menu>
+
+      {/* Slack Connection Dialog */}
+      <ConnectSlackDialog
+        open={slackDialogOpen}
+        onClose={() => setSlackDialogOpen(false)}
+        themeId={slackDialogThemeId}
+        themeName={slackDialogThemeName}
+        onSuccess={handleSlackConnectSuccess}
+      />
+
+      {/* Snackbar for feedback */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} variant="filled">
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
