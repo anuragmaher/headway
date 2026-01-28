@@ -123,13 +123,140 @@ MAX_TRANSCRIPT_CHARS = 80000
 def _format_transcript_as_text(raw_data: Dict[str, Any]) -> str:
     """
     Format raw transcript data as readable text with speaker names, emails, and dialogue.
-    Similar to format_transcript_as_text in fetch_gong_transcripts.py
+
+    Handles multiple raw_data formats:
+    1. Nested format from gong_ingestion_service: {call_data: {..., parties: [...]}, transcript: {...}}
+    2. Direct Gong format: {parties: [...], transcript: [...], metaData: {...}}
+    3. Fathom format: {title, transcript: [{text, speaker: {display_name, ...}, timestamp}], calendar_invitees, ...}
     """
     if not raw_data:
         return "No transcript available."
 
+    # Detect Fathom format by checking for Fathom-specific fields
+    is_fathom = (
+        'recorded_by' in raw_data or
+        'calendar_invitees' in raw_data or
+        'share_url' in raw_data or
+        'recording_id' in raw_data
+    )
+
+    if is_fathom:
+        return _format_fathom_transcript(raw_data)
+    else:
+        return _format_gong_transcript(raw_data)
+
+
+def _format_fathom_transcript(raw_data: Dict[str, Any]) -> str:
+    """
+    Format Fathom transcript data as readable text.
+
+    Fathom format:
+    {
+        "title": "Meeting Title",
+        "meeting_title": "Meeting Title",
+        "created_at": "2026-01-22T20:21:28Z",
+        "recording_start_time": "2026-01-22T20:14:49Z",
+        "transcript": [
+            {
+                "text": "Hello",
+                "speaker": {"display_name": "John Doe", "matched_calendar_invitee_email": "john@example.com"},
+                "timestamp": "00:00:35"
+            }
+        ],
+        "calendar_invitees": [{"name": "...", "email": "..."}],
+        "recorded_by": {"name": "...", "email": "..."}
+    }
+    """
+    lines = []
+
+    # Extract title (try both field names)
+    title = raw_data.get('title') or raw_data.get('meeting_title', 'Untitled Call')
+
+    # Extract date (prefer recording_start_time, fallback to created_at)
+    started = raw_data.get('recording_start_time') or raw_data.get('created_at', '')
+
+    # Build header
+    lines.append("=" * 80)
+    lines.append(f"Call: {title}")
+    if started:
+        lines.append(f"Date: {started}")
+    lines.append("=" * 80)
+    lines.append("")
+
+    # Build speaker email mapping from calendar_invitees
+    # Map display_name -> email for lookup
+    invitee_map = {}
+    calendar_invitees = raw_data.get('calendar_invitees', [])
+    for invitee in calendar_invitees:
+        name = invitee.get('name', '')
+        email = invitee.get('email', '')
+        matched_speaker = invitee.get('matched_speaker_display_name')
+        if matched_speaker:
+            invitee_map[matched_speaker] = {'name': name, 'email': email}
+        if name:
+            invitee_map[name] = {'name': name, 'email': email}
+
+    # Also add recorded_by to the map
+    recorded_by = raw_data.get('recorded_by', {})
+    if recorded_by:
+        name = recorded_by.get('name', '')
+        email = recorded_by.get('email', '')
+        if name:
+            invitee_map[name] = {'name': name, 'email': email}
+
+    # Get transcript segments
+    transcript_segments = raw_data.get('transcript', [])
+    if not isinstance(transcript_segments, list):
+        return "No transcript content found."
+
+    for segment in transcript_segments:
+        if not isinstance(segment, dict):
+            continue
+
+        # Extract speaker info from Fathom format
+        speaker_data = segment.get('speaker', {})
+        display_name = speaker_data.get('display_name', 'Unknown Speaker')
+        matched_email = speaker_data.get('matched_calendar_invitee_email', '')
+
+        # Try to find email from invitee map if not directly available
+        email = matched_email
+        if not email and display_name in invitee_map:
+            email = invitee_map[display_name].get('email', '')
+
+        # Extract text
+        text = segment.get('text', '').strip()
+        if not text:
+            continue
+
+        # Format: Name (email): what they said
+        if email:
+            lines.append(f"{display_name} ({email}):")
+        else:
+            lines.append(f"{display_name}:")
+        lines.append(f"  {text}")
+        lines.append("")
+
+    return "\n".join(lines) if lines else "No transcript content found."
+
+
+def _format_gong_transcript(raw_data: Dict[str, Any]) -> str:
+    """
+    Format Gong transcript data as readable text.
+
+    Handles:
+    1. Nested format from gong_ingestion_service: {call_data: {..., parties: [...]}, transcript: {...}}
+    2. Direct format: {parties: [...], transcript: [...], metaData: {...}}
+    """
+    # Handle nested structure from gong_ingestion_service
+    # raw_data = {"call_data": {...}, "transcript": {...}}
+    call_data = raw_data.get('call_data', {})
+
     # Build speaker mapping from parties
-    parties = raw_data.get('parties', [])
+    # Try nested location first (call_data.parties), then root level (parties)
+    parties = call_data.get('parties', []) if call_data else []
+    if not parties:
+        parties = raw_data.get('parties', [])
+
     speaker_map = {}
     for party in parties:
         speaker_id = party.get('speakerId')
@@ -141,7 +268,8 @@ def _format_transcript_as_text(raw_data: Dict[str, Any]) -> str:
                 'email': email
             }
 
-    # Get transcript data - could be in different locations
+    # Get transcript data - handle nested structure
+    # In nested format: raw_data['transcript'] contains the transcript API response
     transcript_data = raw_data.get('transcript', {})
     if isinstance(transcript_data, dict):
         transcript_segments = transcript_data.get('transcript', [])
@@ -158,8 +286,10 @@ def _format_transcript_as_text(raw_data: Dict[str, Any]) -> str:
 
     lines = []
 
-    # Add header
-    call_metadata = raw_data.get('call_metadata', raw_data.get('metaData', {}))
+    # Add header - try nested location first (call_data.metaData), then root level
+    call_metadata = call_data.get('metaData', {}) if call_data else {}
+    if not call_metadata:
+        call_metadata = raw_data.get('call_metadata', raw_data.get('metaData', {}))
     title = call_metadata.get('title', 'Untitled Call')
     started = call_metadata.get('started', '')
 
@@ -216,26 +346,45 @@ def _format_transcript_as_text(raw_data: Dict[str, Any]) -> str:
     return "\n".join(lines) if lines else "No transcript content found."
 
 
+def _format_themes_as_text(themes: List[Theme]) -> str:
+    """
+    Format themes and sub-themes as readable text for AI prompts.
+    Similar to format_for_langfuse in export_themes_json.py
+
+    Example output:
+    THEME: Integration Requests (ID: xxx)
+      Description: Requests for new integrations with other tools
+      Sub-themes:
+        - CRM Integration (ID: yyy): Integration with Salesforce, HubSpot, etc.
+        - Analytics Integration (ID: zzz): Integration with analytics platforms
+    """
+    lines = []
+    for theme in themes:
+        lines.append(f"THEME: {theme.name} (ID: {theme.id})")
+        if theme.description:
+            lines.append(f"  Description: {theme.description}")
+        lines.append("  Sub-themes:")
+        if theme.sub_themes:
+            for st in theme.sub_themes:
+                desc = st.description or "No description"
+                lines.append(f"    - {st.name} (ID: {st.id}): {desc}")
+        else:
+            lines.append("    (No sub-themes defined)")
+        lines.append("")
+    return "\n".join(lines) if lines else "No themes defined."
+
+
 def _load_prompt_variables(db: Session, raw_transcript: RawTranscript) -> Dict[str, Any]:
     """Load all variables needed for Langfuse prompt."""
 
     workspace = raw_transcript.workspace
     company = workspace.company
 
-    # 1. THEMES_JSON - Load themes + sub-themes as JSON
+    # 1. THEMES - Load themes + sub-themes and format as readable text
+    # Using text format instead of JSON for better AI comprehension
     themes = db.query(Theme).filter(Theme.workspace_id == workspace.id).all()
-    themes_json = [
-        {
-            "id": str(theme.id),
-            "name": theme.name,
-            "description": theme.description,
-            "sub_themes": [
-                {"id": str(st.id), "name": st.name, "description": st.description}
-                for st in theme.sub_themes
-            ]
-        }
-        for theme in themes
-    ]
+    themes_text = _format_themes_as_text(themes)
+    logger.info(f"Formatted themes text: {len(themes_text)} chars, {len(themes)} themes")
 
     # 2. TRANSCRIPT - Format as readable text (like fetch_gong_transcripts.py does)
     # This ensures Langfuse prompt doesn't split into 64K+ messages
@@ -268,8 +417,8 @@ def _load_prompt_variables(db: Session, raw_transcript: RawTranscript) -> Dict[s
             company_domains = [domain] if domain else []
 
     return {
-        "THEMES_JSON": json.dumps(themes_json, indent=2),
-        "TRANSCRIPT": transcript_text,  # Pass as text, not JSON (like fetch_gong_transcripts.py)
+        "THEMES_JSON": themes_text,
+        "TRANSCRIPT": transcript_text,
         "Company_Name": company_name,
         "Company_Domains": ", ".join(company_domains) if company_domains else "Not specified",
     }
@@ -436,7 +585,26 @@ def _extract_theme_ids_from_response(ai_result: Dict[str, Any]) -> tuple[list, l
     # Log the AI response structure for debugging
     logger.info(f"AI response keys: {list(ai_result.keys())}")
 
-    # Try multiple possible locations for theme data
+    # NEW FORMAT: Check "feature_signals" array (new Langfuse prompt format)
+    feature_signals = ai_result.get("feature_signals", [])
+    if feature_signals:
+        logger.info(f"Found {len(feature_signals)} feature_signals in AI response (new format)")
+        for signal in feature_signals:
+            theme_id_str = signal.get("theme_id")
+            if theme_id_str:
+                try:
+                    theme_ids.append(UUID(str(theme_id_str)))
+                except (ValueError, TypeError) as e:
+                    logger.debug(f"Could not parse theme_id '{theme_id_str}': {e}")
+
+            sub_theme_id_str = signal.get("sub_theme_id")
+            if sub_theme_id_str:
+                try:
+                    sub_theme_ids.append(UUID(str(sub_theme_id_str)))
+                except (ValueError, TypeError) as e:
+                    logger.debug(f"Could not parse sub_theme_id '{sub_theme_id_str}': {e}")
+
+    # BACKWARD COMPAT: Try multiple possible locations for theme data
     # 1. Check "mappings" array
     mappings = ai_result.get("mappings", [])
     if mappings:

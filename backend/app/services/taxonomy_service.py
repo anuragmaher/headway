@@ -151,7 +151,7 @@ def _is_relevant_url(url: str) -> bool:
 # Crawling
 # -------------------------------------------------------------------
 
-def crawl_website(url: str, max_pages: int = 5) -> List[CrawledPage]:
+def crawl_website(url: str, max_pages: int = 2) -> List[CrawledPage]:
     """
     Crawl a website using Firecrawl and return processed pages.
     Falls back to single page scrape if crawl fails.

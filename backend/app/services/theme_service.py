@@ -990,12 +990,25 @@ class TranscriptClassificationService:
         return self._format_transcript_as_text(raw_transcript.raw_data)
 
     def _format_transcript_as_text(self, raw_data: Dict) -> str:
-        """Format raw transcript data as readable text with speaker names and dialogue."""
+        """Format raw transcript data as readable text with speaker names and dialogue.
+
+        Handles multiple raw_data formats:
+        1. Nested format from gong_ingestion_service: {call_data: {..., parties: [...]}, transcript: {...}}
+        2. Direct format: {parties: [...], transcript: [...], metaData: {...}}
+        """
         if not raw_data:
             return "No transcript available."
 
+        # Handle nested structure from gong_ingestion_service
+        # raw_data = {"call_data": {...}, "transcript": {...}}
+        call_data = raw_data.get('call_data', {})
+
         # Build speaker mapping from parties
-        parties = raw_data.get('parties', [])
+        # Try nested location first (call_data.parties), then root level (parties)
+        parties = call_data.get('parties', []) if call_data else []
+        if not parties:
+            parties = raw_data.get('parties', [])
+
         speaker_map = {}
         for party in parties:
             speaker_id = party.get('speakerId')
@@ -1007,7 +1020,8 @@ class TranscriptClassificationService:
                     'email': email
                 }
 
-        # Get transcript data - could be in different locations
+        # Get transcript data - handle nested structure
+        # In nested format: raw_data['transcript'] contains the transcript API response
         transcript_data = raw_data.get('transcript', {})
         if isinstance(transcript_data, dict):
             transcript_segments = transcript_data.get('transcript', [])
@@ -1023,8 +1037,10 @@ class TranscriptClassificationService:
 
         lines = []
 
-        # Add header
-        call_metadata = raw_data.get('call_metadata', raw_data.get('metaData', {}))
+        # Add header - try nested location first (call_data.metaData), then root level
+        call_metadata = call_data.get('metaData', {}) if call_data else {}
+        if not call_metadata:
+            call_metadata = raw_data.get('call_metadata', raw_data.get('metaData', {}))
         title = call_metadata.get('title', 'Untitled Call')
         started = call_metadata.get('started', '')
 

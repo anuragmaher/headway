@@ -79,7 +79,7 @@ def sync_workspace_initial(self, workspace_id: str):
                         gong_ingestion_service.ingest_calls(
                             db=db,
                             workspace_id=workspace_id,
-                            limit=50,
+                            limit=10,
                             days_back=30,
                             fetch_transcripts=True,
                         )
@@ -111,7 +111,7 @@ def sync_workspace_initial(self, workspace_id: str):
                         fathom_batch_ingestion_service.ingest_sessions(
                             db=db,
                             workspace_id=workspace_id,
-                            limit=50,
+                            limit=10,
                             days_back=30,
                         )
                     )

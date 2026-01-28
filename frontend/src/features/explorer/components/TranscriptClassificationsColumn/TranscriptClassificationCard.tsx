@@ -14,6 +14,7 @@ import {
   CheckCircle as SuccessIcon,
   Error as ErrorIcon,
   Schedule as PendingIcon,
+  Warning as WarningIcon,
 } from '@mui/icons-material';
 import type { TranscriptClassificationItem } from '../../store/slices/transcriptClassificationSlice';
 
@@ -66,8 +67,21 @@ export const TranscriptClassificationCard: React.FC<TranscriptClassificationCard
   // Extract summary and mappings from extracted_data
   const getSummaryAndMappings = () => {
     const data = classification.extractedData;
-    
-    // Check for mappings array (primary structure)
+
+    // NEW FORMAT: Check feature_signals first (new Langfuse prompt format)
+    const featureSignals = data?.feature_signals;
+    if (Array.isArray(featureSignals) && featureSignals.length > 0) {
+      const firstSignal = featureSignals[0];
+      const blockerCount = featureSignals.filter((s: any) => s.is_blocker).length;
+      return {
+        summary: firstSignal.need || firstSignal.quote || 'Feature Signal',
+        mappingsCount: featureSignals.length,
+        blockerCount: blockerCount,
+        mappings: featureSignals,
+      };
+    }
+
+    // OLD FORMAT: Check for mappings array (primary structure)
     const mappings = data?.mappings;
     if (Array.isArray(mappings) && mappings.length > 0) {
       // Return first mapping's interpreted_need or verbatim_quote as summary
@@ -75,15 +89,17 @@ export const TranscriptClassificationCard: React.FC<TranscriptClassificationCard
       return {
         summary: firstMapping.interpreted_need || firstMapping.verbatim_quote || firstMapping.reasoning || 'Transcript Classification',
         mappingsCount: mappings.length,
+        blockerCount: 0,
         mappings: mappings,
       };
     }
-    
+
     // Fallback to other structures
     if (data?.classification?.summary) {
       return {
         summary: data.classification.summary,
         mappingsCount: 0,
+        blockerCount: 0,
         mappings: [],
       };
     }
@@ -91,6 +107,7 @@ export const TranscriptClassificationCard: React.FC<TranscriptClassificationCard
       return {
         summary: data.insights.key_points[0],
         mappingsCount: 0,
+        blockerCount: 0,
         mappings: [],
       };
     }
@@ -98,18 +115,20 @@ export const TranscriptClassificationCard: React.FC<TranscriptClassificationCard
       return {
         summary: data.features[0].name,
         mappingsCount: 0,
+        blockerCount: 0,
         mappings: [],
       };
     }
-    
+
     return {
       summary: classification.sourceTitle || 'Transcript Classification',
       mappingsCount: 0,
+      blockerCount: 0,
       mappings: [],
     };
   };
 
-  const { summary, mappingsCount, mappings } = getSummaryAndMappings();
+  const { summary, mappingsCount, blockerCount, mappings } = getSummaryAndMappings();
 
   return (
     <Box
@@ -235,18 +254,28 @@ export const TranscriptClassificationCard: React.FC<TranscriptClassificationCard
         </Typography>
       </Box>
 
-      {/* Mappings count and confidence score */}
+      {/* Mappings count, blockers, and confidence score */}
       <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
-        {mappingsCount > 0 && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <Typography sx={{ fontSize: '0.6875rem', color: 'text.disabled' }}>
-              Mappings:
-            </Typography>
-            <Typography sx={{ fontSize: '0.6875rem', fontWeight: 600, color: 'text.secondary' }}>
-              {mappingsCount}
-            </Typography>
-          </Box>
-        )}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          {mappingsCount > 0 && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Typography sx={{ fontSize: '0.6875rem', color: 'text.disabled' }}>
+                Signals:
+              </Typography>
+              <Typography sx={{ fontSize: '0.6875rem', fontWeight: 600, color: 'text.secondary' }}>
+                {mappingsCount}
+              </Typography>
+            </Box>
+          )}
+          {blockerCount > 0 && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <WarningIcon sx={{ fontSize: 14, color: 'error.main' }} />
+              <Typography sx={{ fontSize: '0.6875rem', fontWeight: 600, color: 'error.main' }}>
+                {blockerCount} blocker{blockerCount > 1 ? 's' : ''}
+              </Typography>
+            </Box>
+          )}
+        </Box>
         {classification.confidenceScore && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <Typography sx={{ fontSize: '0.6875rem', color: 'text.disabled' }}>
