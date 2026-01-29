@@ -27,6 +27,7 @@ export function ProductTaxonomyStep(): JSX.Element {
   const { themes } = useOnboardingStore((state) => state.taxonomyData);
   const addTheme = useOnboardingStore((state) => state.addTheme);
   const removeTheme = useOnboardingStore((state) => state.removeTheme);
+  const updateTheme = useOnboardingStore((state) => state.updateTheme);
   const addSubthemeToTheme = useOnboardingStore((state) => state.addSubthemeToTheme);
   const removeSubthemeFromTheme = useOnboardingStore((state) => state.removeSubthemeFromTheme);
   const updateSubthemeInTheme = useOnboardingStore((state) => state.updateSubthemeInTheme);
@@ -98,9 +99,8 @@ export function ProductTaxonomyStep(): JSX.Element {
     removeTheme(themeName);
   };
 
-  const handleEditTheme = (themeName: string) => {
-    // TODO: Implement edit theme functionality
-    console.log('Edit theme:', themeName);
+  const handleEditTheme = (themeName: string, updates: { name: string; description: string }) => {
+    updateTheme(themeName, updates);
   };
 
   const handleCancelAddTheme = () => {
@@ -139,7 +139,11 @@ export function ProductTaxonomyStep(): JSX.Element {
               isLoading={isGenerating}
               suggestions={aiSuggestions}
               addedThemeNames={addedThemeNames}
+              addedThemes={themes}
               onAddTheme={handleAddThemeFromSuggestion}
+              onRemoveTheme={handleDeleteTheme}
+              onAddSubtheme={handleAddSubtheme}
+              onRemoveSubtheme={handleRemoveSubtheme}
               onClose={handleCloseSuggestPanel}
             />
           </Box>

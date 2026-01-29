@@ -294,7 +294,7 @@ export function OnboardingPage(): JSX.Element {
             flexDirection: 'column',
             px: { xs: 3, sm: 5, md: 8, lg: 12 },
             pb: 3,
-            maxWidth: 720,
+            maxWidth: 900,
             overflowY: 'auto',
             overflowX: 'hidden',
             // Hide scrollbar but keep functionality

@@ -54,7 +54,7 @@ export const TAXONOMY_TEXT = {
   },
   addThemeForm: {
     namePlaceholder: 'Theme name',
-    descriptionPlaceholder: 'Description (optional)',
+    descriptionPlaceholder: 'Description',
     generateButton: 'Generate description with AI',
     addButton: 'Add Theme',
     cancelButton: 'Cancel',

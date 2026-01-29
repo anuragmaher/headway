@@ -43,6 +43,7 @@ interface OnboardingActions {
   setTaxonomySubStep: (subStep: TaxonomySubStep) => void;
   addTheme: (theme: Theme) => void;
   removeTheme: (themeName: string) => void;
+  updateTheme: (themeName: string, updates: { name: string; description: string }) => void;
   addSubthemeToTheme: (themeName: string, subtheme: { name: string; description: string; confidence: number }) => void;
   removeSubthemeFromTheme: (themeName: string, subthemeName: string) => void;
   updateSubthemeInTheme: (themeName: string, subthemeName: string, updates: { name: string; description: string }) => void;
@@ -175,6 +176,22 @@ export const useOnboardingStore = create<OnboardingStore>()(
             ...state.taxonomyData,
             themes: state.taxonomyData.themes.filter((t) => t.name !== themeName),
             selectedThemes: state.taxonomyData.selectedThemes.filter((n) => n !== themeName),
+          },
+        })),
+
+      updateTheme: (themeName, updates) =>
+        set((state) => ({
+          taxonomyData: {
+            ...state.taxonomyData,
+            themes: state.taxonomyData.themes.map((theme) =>
+              theme.name === themeName
+                ? { ...theme, name: updates.name, description: updates.description }
+                : theme
+            ),
+            // Update selectedThemes if theme name changed
+            selectedThemes: state.taxonomyData.selectedThemes.map((name) =>
+              name === themeName ? updates.name : name
+            ),
           },
         })),
 

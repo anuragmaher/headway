@@ -28,7 +28,7 @@ export function AddThemeForm({
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleSubmit = () => {
-    if (name.trim()) {
+    if (name.trim() && description.trim()) {
       onSubmit(name.trim(), description.trim());
     }
   };
@@ -48,7 +48,7 @@ export function AddThemeForm({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey && name.trim()) {
+    if (e.key === 'Enter' && !e.shiftKey && name.trim() && description.trim()) {
       e.preventDefault();
       handleSubmit();
     } else if (e.key === 'Escape') {
@@ -101,6 +101,7 @@ export function AddThemeForm({
         fullWidth
         multiline
         rows={3}
+        required
         placeholder={TAXONOMY_TEXT.addThemeForm.descriptionPlaceholder}
         value={description}
         onChange={(e) => setDescription(e.target.value)}
@@ -163,7 +164,7 @@ export function AddThemeForm({
         <Button
           variant="contained"
           onClick={handleSubmit}
-          disabled={!name.trim() || isSubmitting}
+          disabled={!name.trim() || !description.trim() || isSubmitting}
           sx={{
             textTransform: 'none',
             fontWeight: 600,
