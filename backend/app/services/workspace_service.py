@@ -29,8 +29,102 @@ logger = logging.getLogger(__name__)
 class WorkspaceService:
     """Service class for workspace operations"""
 
+    # API URLs for credential validation
+    GONG_API_BASE_URL = "https://api.gong.io"
+    FATHOM_API_BASE_URL = "https://api.fathom.ai"
+
     def __init__(self, db: Session):
         self.db = db
+
+    def _validate_gong_credentials(
+        self,
+        access_key: str,
+        secret_key: str
+    ) -> tuple[bool, str]:
+        """
+        Validate Gong API credentials by making a test API call.
+
+        Args:
+            access_key: Gong API access key
+            secret_key: Gong API secret key
+
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        try:
+            # Use the users endpoint to validate credentials
+            # This is a lightweight call that verifies authentication
+            url = f"{self.GONG_API_BASE_URL}/v2/users"
+            auth = (access_key, secret_key)
+
+            response = requests.get(
+                url,
+                auth=auth,
+                headers={"Content-Type": "application/json"},
+                timeout=15
+            )
+
+            if response.status_code == 200:
+                return True, ""
+            elif response.status_code == 401:
+                return False, "Invalid Gong credentials. Please check your Access Key and Secret Key."
+            elif response.status_code == 403:
+                return False, "Access denied. Please ensure your Gong API credentials have the required permissions."
+            else:
+                return False, f"Failed to connect to Gong API. Status: {response.status_code}"
+
+        except requests.exceptions.Timeout:
+            return False, "Connection to Gong API timed out. Please try again."
+        except requests.exceptions.ConnectionError:
+            return False, "Could not connect to Gong API. Please check your network connection."
+        except Exception as e:
+            logger.error(f"Error validating Gong credentials: {e}")
+            return False, "Failed to validate Gong credentials. Please try again."
+
+    def _validate_fathom_credentials(
+        self,
+        api_token: str
+    ) -> tuple[bool, str]:
+        """
+        Validate Fathom API credentials by making a test API call.
+
+        Args:
+            api_token: Fathom API token
+
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        try:
+            # Use the meetings endpoint with limit=1 to validate credentials
+            url = f"{self.FATHOM_API_BASE_URL}/external/v1/meetings"
+            headers = {
+                "X-Api-Key": api_token,
+                "Content-Type": "application/json"
+            }
+
+            response = requests.get(
+                url,
+                headers=headers,
+                params={"limit": 1},
+                timeout=15
+            )
+
+            if response.status_code == 200:
+                return True, ""
+            elif response.status_code == 401:
+                return False, "Invalid Fathom API token. Please check your API Token."
+            elif response.status_code == 403:
+                return False, "Access denied. Please ensure your Fathom API token has the required permissions."
+            else:
+                return False, f"Failed to connect to Fathom API. Status: {response.status_code}"
+
+        except requests.exceptions.Timeout:
+            return False, "Connection to Fathom API timed out. Please try again."
+        except requests.exceptions.ConnectionError:
+            return False, "Could not connect to Fathom API. Please check your network connection."
+        except Exception as e:
+            logger.error(f"Error validating Fathom credentials: {e}")
+            return False, "Failed to validate Fathom credentials. Please try again."
 
     def save_connector(
         self,
@@ -60,6 +154,31 @@ class WorkspaceService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Workspace not found"
             )
+
+        # Validate credentials before saving
+        if connector_data.connector_type == "gong":
+            is_valid, error_message = self._validate_gong_credentials(
+                connector_data.gong_access_key,
+                connector_data.gong_secret_key
+            )
+            if not is_valid:
+                logger.warning(f"Gong credential validation failed for workspace {workspace_id}: {error_message}")
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=error_message
+                )
+        elif connector_data.connector_type == "fathom":
+            is_valid, error_message = self._validate_fathom_credentials(
+                connector_data.fathom_api_token
+            )
+            if not is_valid:
+                logger.warning(f"Fathom credential validation failed for workspace {workspace_id}: {error_message}")
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=error_message
+                )
+
+        logger.info(f"Credentials validated successfully for {connector_data.connector_type}")
 
         # Check if connector of this type already exists
         existing_connector = self.db.query(WorkspaceConnector).filter(

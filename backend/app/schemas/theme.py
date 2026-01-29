@@ -75,7 +75,7 @@ class CustomerAskWithMessages(CustomerAskResponse):
 class SubThemeBase(BaseModel):
     """Base schema for sub-themes"""
     name: str
-    description: Optional[str] = None
+    description: str = Field(..., description="Sub-theme description (required)")
     sort_order: int = 0
 
 
@@ -114,7 +114,7 @@ class SubThemeWithCustomerAsks(SubThemeResponse):
 class ThemeBase(BaseModel):
     """Base schema for themes"""
     name: str
-    description: Optional[str] = None
+    description: str = Field(..., description="Theme description (required)")
     sort_order: int = 0
 
 

@@ -22,7 +22,7 @@ interface ThemeCardProps {
   onAddSubtheme: (themeName: string, subtheme: SubTheme) => void;
   onRemoveSubtheme?: (themeName: string, subthemeName: string) => void;
   onEditSubtheme?: (themeName: string, subthemeName: string, updates: { name: string; description: string }) => void;
-  onEditTheme?: (themeName: string) => void;
+  onEditTheme?: (themeName: string, updates: { name: string; description: string }) => void;
   onDeleteTheme?: (themeName: string) => void;
 }
 
@@ -44,11 +44,14 @@ export function ThemeCard({
   const [editingSubtheme, setEditingSubtheme] = useState<string | null>(null);
   const [editSubthemeName, setEditSubthemeName] = useState('');
   const [editSubthemeDescription, setEditSubthemeDescription] = useState('');
+  const [isEditingTheme, setIsEditingTheme] = useState(false);
+  const [editThemeName, setEditThemeName] = useState('');
+  const [editThemeDescription, setEditThemeDescription] = useState('');
 
   const hasSubThemes = theme.sub_themes && theme.sub_themes.length > 0;
 
   const handleAddSubtheme = () => {
-    if (newSubthemeName.trim()) {
+    if (newSubthemeName.trim() && newSubthemeDescription.trim()) {
       onAddSubtheme(theme.name, {
         name: newSubthemeName.trim(),
         description: newSubthemeDescription.trim(),
@@ -76,7 +79,7 @@ export function ThemeCard({
   };
 
   const handleSaveEditSubtheme = (originalName: string) => {
-    if (editSubthemeName.trim() && onEditSubtheme) {
+    if (editSubthemeName.trim() && editSubthemeDescription.trim() && onEditSubtheme) {
       onEditSubtheme(theme.name, originalName, {
         name: editSubthemeName.trim(),
         description: editSubthemeDescription.trim(),
@@ -102,6 +105,39 @@ export function ThemeCard({
     }
   };
 
+  const handleStartEditTheme = () => {
+    setIsEditingTheme(true);
+    setEditThemeName(theme.name);
+    setEditThemeDescription(theme.description || '');
+  };
+
+  const handleSaveEditTheme = () => {
+    if (editThemeName.trim() && editThemeDescription.trim() && onEditTheme) {
+      onEditTheme(theme.name, {
+        name: editThemeName.trim(),
+        description: editThemeDescription.trim(),
+      });
+      setIsEditingTheme(false);
+      setEditThemeName('');
+      setEditThemeDescription('');
+    }
+  };
+
+  const handleCancelEditTheme = () => {
+    setIsEditingTheme(false);
+    setEditThemeName('');
+    setEditThemeDescription('');
+  };
+
+  const handleThemeEditKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      handleCancelEditTheme();
+    } else if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSaveEditTheme();
+    }
+  };
+
   return (
     <Box
       onMouseEnter={() => setIsHovered(true)}
@@ -114,105 +150,203 @@ export function ThemeCard({
       }}
     >
       {/* Theme Header */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          p: 2,
-          cursor: 'pointer',
-          transition: 'background-color 0.15s ease',
-          '&:hover': {
-            bgcolor: colors.background.subtle,
-          },
-        }}
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <IconButton
-          size="small"
-          sx={{
-            p: 0.5,
-            mr: 1,
-            color: colors.text.secondary,
-          }}
-        >
-          {isExpanded ? (
-            <ArrowUpIcon sx={{ fontSize: 20 }} />
-          ) : (
-            <ArrowDownIcon sx={{ fontSize: 20 }} />
-          )}
-        </IconButton>
-
-        <Box sx={{ flex: 1 }}>
-          <Typography
+      {isEditingTheme ? (
+        // Inline edit form for theme
+        <Box sx={{ p: 2 }}>
+          <TextField
+            fullWidth
+            size="small"
+            placeholder="Theme name"
+            value={editThemeName}
+            onChange={(e) => setEditThemeName(e.target.value)}
+            onKeyDown={handleThemeEditKeyDown}
+            autoFocus
             sx={{
-              fontWeight: 600,
-              fontSize: '0.9375rem',
-              color: colors.text.primary,
-              lineHeight: 1.4,
+              mb: 1.5,
+              '& .MuiOutlinedInput-root': {
+                bgcolor: colors.background.input,
+                borderRadius: 1.5,
+                '&.Mui-focused fieldset': {
+                  borderColor: colors.purple.main,
+                },
+              },
+              '& .MuiInputBase-input': {
+                fontSize: '0.9375rem',
+                fontWeight: 600,
+                color: colors.text.primary,
+                '&::placeholder': {
+                  color: colors.text.muted,
+                  opacity: 1,
+                },
+              },
             }}
-          >
-            {theme.name}
-          </Typography>
-          {theme.description && (
-            <Typography
-              sx={{
+          />
+          <TextField
+            fullWidth
+            size="small"
+            required
+            placeholder="Description"
+            value={editThemeDescription}
+            onChange={(e) => setEditThemeDescription(e.target.value)}
+            onKeyDown={handleThemeEditKeyDown}
+            multiline
+            rows={2}
+            sx={{
+              mb: 1.5,
+              '& .MuiOutlinedInput-root': {
+                bgcolor: colors.background.input,
+                borderRadius: 1.5,
+                '&.Mui-focused fieldset': {
+                  borderColor: colors.purple.main,
+                },
+              },
+              '& .MuiInputBase-input': {
                 fontSize: '0.875rem',
-                color: colors.text.secondary,
-                lineHeight: 1.5,
-                mt: 0.25,
+                color: colors.text.primary,
+                '&::placeholder': {
+                  color: colors.text.muted,
+                  opacity: 1,
+                },
+              },
+            }}
+          />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Button
+              size="small"
+              variant="contained"
+              onClick={handleSaveEditTheme}
+              disabled={!editThemeName.trim() || !editThemeDescription.trim()}
+              sx={{
+                textTransform: 'none',
+                borderRadius: 1.5,
+                bgcolor: colors.purple.main,
+                color: '#ffffff',
+                '&:hover': {
+                  bgcolor: colors.purple.hover,
+                },
               }}
             >
-              {theme.description}
-            </Typography>
-          )}
+              Save
+            </Button>
+            <Button
+              size="small"
+              variant="text"
+              onClick={handleCancelEditTheme}
+              sx={{
+                textTransform: 'none',
+                color: colors.text.secondary,
+                '&:hover': {
+                  bgcolor: 'transparent',
+                  color: colors.text.primary,
+                },
+              }}
+            >
+              Cancel
+            </Button>
+          </Box>
         </Box>
-
-        {/* Edit & Delete Icons - shown on hover */}
-        {isHovered && (
-          <Box
+      ) : (
+        // Normal display
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            p: 2,
+            cursor: 'pointer',
+            transition: 'background-color 0.15s ease',
+            '&:hover': {
+              bgcolor: colors.background.subtle,
+            },
+          }}
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <IconButton
+            size="small"
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0.5,
-              ml: 1,
+              p: 0.5,
+              mr: 1,
+              color: colors.text.secondary,
             }}
-            onClick={(e) => e.stopPropagation()}
           >
-            {onEditTheme && (
-              <IconButton
-                size="small"
-                onClick={() => onEditTheme(theme.name)}
-                sx={{
-                  p: 0.5,
-                  color: colors.text.muted,
-                  '&:hover': {
-                    color: colors.text.secondary,
-                    bgcolor: colors.background.hover,
-                  },
-                }}
-              >
-                <EditIcon sx={{ fontSize: 18 }} />
-              </IconButton>
+            {isExpanded ? (
+              <ArrowUpIcon sx={{ fontSize: 20 }} />
+            ) : (
+              <ArrowDownIcon sx={{ fontSize: 20 }} />
             )}
-            {onDeleteTheme && (
-              <IconButton
-                size="small"
-                onClick={() => onDeleteTheme(theme.name)}
+          </IconButton>
+
+          <Box sx={{ flex: 1 }}>
+            <Typography
+              sx={{
+                fontWeight: 600,
+                fontSize: '0.9375rem',
+                color: colors.text.primary,
+                lineHeight: 1.4,
+              }}
+            >
+              {theme.name}
+            </Typography>
+            {theme.description && (
+              <Typography
                 sx={{
-                  p: 0.5,
-                  color: colors.text.muted,
-                  '&:hover': {
-                    color: colors.action.delete,
-                    bgcolor: colors.action.deleteHover,
-                  },
+                  fontSize: '0.875rem',
+                  color: colors.text.secondary,
+                  lineHeight: 1.5,
+                  mt: 0.25,
                 }}
               >
-                <DeleteIcon sx={{ fontSize: 18 }} />
-              </IconButton>
+                {theme.description}
+              </Typography>
             )}
           </Box>
-        )}
-      </Box>
+
+          {/* Edit & Delete Icons - shown on hover */}
+          {isHovered && (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+                ml: 1,
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {onEditTheme && (
+                <IconButton
+                  size="small"
+                  onClick={handleStartEditTheme}
+                  sx={{
+                    p: 0.5,
+                    color: colors.text.muted,
+                    '&:hover': {
+                      color: colors.text.secondary,
+                      bgcolor: colors.background.hover,
+                    },
+                  }}
+                >
+                  <EditIcon sx={{ fontSize: 18 }} />
+                </IconButton>
+              )}
+              {onDeleteTheme && (
+                <IconButton
+                  size="small"
+                  onClick={() => onDeleteTheme(theme.name)}
+                  sx={{
+                    p: 0.5,
+                    color: colors.text.muted,
+                    '&:hover': {
+                      color: colors.action.delete,
+                      bgcolor: colors.action.deleteHover,
+                    },
+                  }}
+                >
+                  <DeleteIcon sx={{ fontSize: 18 }} />
+                </IconButton>
+              )}
+            </Box>
+          )}
+        </Box>
+      )}
 
       {/* Subthemes - Collapsible */}
       <Collapse in={isExpanded && hasSubThemes}>
@@ -268,7 +402,8 @@ export function ThemeCard({
                   <TextField
                     fullWidth
                     size="small"
-                    placeholder="Description (optional)"
+                    required
+                    placeholder="Description"
                     value={editSubthemeDescription}
                     onChange={(e) => setEditSubthemeDescription(e.target.value)}
                     onKeyDown={(e) => handleEditKeyDown(e, subtheme.name)}
@@ -298,7 +433,7 @@ export function ThemeCard({
                       size="small"
                       variant="contained"
                       onClick={() => handleSaveEditSubtheme(subtheme.name)}
-                      disabled={!editSubthemeName.trim()}
+                      disabled={!editSubthemeName.trim() || !editSubthemeDescription.trim()}
                       sx={{
                         textTransform: 'none',
                         borderRadius: 1.5,
@@ -452,7 +587,8 @@ export function ThemeCard({
             <TextField
               fullWidth
               size="small"
-              placeholder="Description (optional)"
+              required
+              placeholder="Description"
               value={newSubthemeDescription}
               onChange={(e) => setNewSubthemeDescription(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -482,7 +618,7 @@ export function ThemeCard({
                 size="small"
                 variant="contained"
                 onClick={handleAddSubtheme}
-                disabled={!newSubthemeName.trim()}
+                disabled={!newSubthemeName.trim() || !newSubthemeDescription.trim()}
                 sx={{
                   textTransform: 'none',
                   borderRadius: 1.5,

@@ -19,7 +19,11 @@ interface AISuggestionsPanelProps {
   isLoading: boolean;
   suggestions: Theme[];
   addedThemeNames: string[];
+  addedThemes: Theme[];
   onAddTheme: (theme: Theme) => void;
+  onRemoveTheme: (themeName: string) => void;
+  onAddSubtheme: (themeName: string, subtheme: { name: string; description: string; confidence: number }) => void;
+  onRemoveSubtheme: (themeName: string, subthemeName: string) => void;
   onClose: () => void;
 }
 
@@ -28,7 +32,11 @@ export function AISuggestionsPanel({
   isLoading,
   suggestions,
   addedThemeNames,
+  addedThemes,
   onAddTheme,
+  onRemoveTheme,
+  onAddSubtheme,
+  onRemoveSubtheme,
   onClose,
 }: AISuggestionsPanelProps): JSX.Element {
   const colors = useTaxonomyColors();
@@ -146,15 +154,36 @@ export function AISuggestionsPanel({
 
       {/* Results */}
       {!isLoading && suggestions.length > 0 && (
-        <Box sx={{ bgcolor: colors.background.card }}>
-          {suggestions.map((theme, index) => (
-            <SuggestedThemeRow
-              key={`${theme.name}-${index}`}
-              theme={theme}
-              onAdd={() => onAddTheme(theme)}
-              isAdded={addedThemeNames.includes(theme.name)}
-            />
-          ))}
+        <Box
+          sx={{
+            bgcolor: colors.background.card,
+            maxHeight: 200, // Show approximately 3 suggestions at a time
+            overflowY: 'auto',
+            // Hide scrollbar but keep scroll functionality
+            scrollbarWidth: 'none', // Firefox
+            msOverflowStyle: 'none', // IE/Edge
+            '&::-webkit-scrollbar': {
+              display: 'none', // Chrome/Safari/Opera
+            },
+          }}
+        >
+          {suggestions.map((theme, index) => {
+            const isAdded = addedThemeNames.includes(theme.name);
+            const addedTheme = addedThemes.find(t => t.name === theme.name);
+            const addedSubthemes = addedTheme?.sub_themes?.map(st => st.name) || [];
+            return (
+              <SuggestedThemeRow
+                key={`${theme.name}-${index}`}
+                theme={theme}
+                onAddTheme={onAddTheme}
+                onRemoveTheme={onRemoveTheme}
+                onAddSubtheme={onAddSubtheme}
+                onRemoveSubtheme={onRemoveSubtheme}
+                isAdded={isAdded}
+                addedSubthemes={addedSubthemes}
+              />
+            );
+          })}
         </Box>
       )}
     </Box>
