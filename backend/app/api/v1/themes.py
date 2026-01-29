@@ -6,6 +6,7 @@ Static paths (/customer-asks, /sub-themes, /hierarchy, /reorder) MUST come
 BEFORE parameterized paths (/{theme_id}) to avoid UUID parsing errors.
 """
 from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
 from typing import List, Optional
 from uuid import UUID
 
@@ -19,8 +20,28 @@ from app.schemas.theme import (
     TranscriptClassificationResponse, TranscriptClassificationListResponse
 )
 from app.schemas.mention import MentionListResponse
+from app.models.theme import Theme
+from app.models.workspace_connector import WorkspaceConnector, ConnectorType
 
 router = APIRouter()
+
+
+# === Slack Connection Schemas ===
+
+class ThemeSlackConnectRequest(BaseModel):
+    """Request to connect a theme to a Slack channel"""
+    connector_id: str  # workspace_connector id
+    channel_id: str  # Slack channel ID (e.g., C1234567890)
+    channel_name: str  # Slack channel name for display
+
+
+class ThemeSlackConnectionResponse(BaseModel):
+    """Response for theme Slack connection status"""
+    theme_id: str
+    slack_integration_id: Optional[str] = None
+    slack_channel_id: Optional[str] = None
+    slack_channel_name: Optional[str] = None
+    connected: bool
 
 
 # === Theme Endpoints (Static paths first) ===
@@ -649,6 +670,53 @@ async def get_transcript_classification(
     return TranscriptClassificationResponse.model_validate(classification)
 
 
+@router.get("/transcript-classifications/{classification_id}/transcript")
+async def get_transcript_text(
+    classification_id: UUID,
+    current_user: dict = Depends(get_current_user),
+    db = Depends(get_db)
+):
+    """Get the formatted transcript text for a transcript classification.
+
+    Fetches the raw transcript from raw_transcripts table and formats it
+    for display with speaker names and dialogue.
+    """
+    workspace_id = current_user.get('workspace_id')
+    if not workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User does not have a workspace"
+        )
+
+    service = TranscriptClassificationService(db)
+
+    # First verify access to the classification
+    classification = service.get_transcript_classification(classification_id)
+
+    if not classification:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transcript classification not found"
+        )
+
+    if str(classification.workspace_id) != workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied"
+        )
+
+    # Get the formatted transcript
+    transcript_text = service.get_raw_transcript(classification_id)
+
+    if not transcript_text:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Raw transcript not found"
+        )
+
+    return {"transcript": transcript_text}
+
+
 # === Theme Endpoints (Parameterized paths - /{theme_id}/*) ===
 # These MUST come AFTER all static paths to avoid UUID parsing errors
 
@@ -757,4 +825,160 @@ async def list_sub_themes(
     return SubThemeListResponse(
         sub_themes=[SubThemeResponse(**st) for st in sub_themes_with_counts],
         total=len(sub_themes_with_counts)
+    )
+
+
+# === Theme Slack Integration Endpoints ===
+
+@router.post("/{theme_id}/slack/connect", response_model=ThemeSlackConnectionResponse)
+async def connect_theme_to_slack(
+    theme_id: UUID,
+    data: ThemeSlackConnectRequest,
+    current_user: dict = Depends(get_current_user),
+    db = Depends(get_db)
+):
+    """
+    Connect a theme to a Slack channel for notifications.
+
+    When transcript insights are classified under this theme, notifications
+    will be sent to the connected Slack channel.
+    """
+    workspace_id = current_user.get('workspace_id')
+    if not workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User does not have a workspace"
+        )
+
+    # Verify theme exists and belongs to workspace
+    theme = db.query(Theme).filter(Theme.id == theme_id).first()
+    if not theme:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Theme not found"
+        )
+
+    if str(theme.workspace_id) != workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied"
+        )
+
+    # Verify workspace connector exists and is a Slack connector
+    connector = db.query(WorkspaceConnector).filter(
+        WorkspaceConnector.id == data.connector_id,
+        WorkspaceConnector.workspace_id == workspace_id,
+        WorkspaceConnector.connector_type == ConnectorType.SLACK.value,
+        WorkspaceConnector.is_active == True
+    ).first()
+
+    if not connector:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Slack connector not found or not active"
+        )
+
+    # Update theme with Slack connection
+    theme.slack_integration_id = connector.id
+    theme.slack_channel_id = data.channel_id
+    theme.slack_channel_name = data.channel_name
+
+    db.commit()
+    db.refresh(theme)
+
+    return ThemeSlackConnectionResponse(
+        theme_id=str(theme.id),
+        slack_integration_id=str(theme.slack_integration_id) if theme.slack_integration_id else None,
+        slack_channel_id=theme.slack_channel_id,
+        slack_channel_name=theme.slack_channel_name,
+        connected=True
+    )
+
+
+@router.delete("/{theme_id}/slack/disconnect", response_model=ThemeSlackConnectionResponse)
+async def disconnect_theme_from_slack(
+    theme_id: UUID,
+    current_user: dict = Depends(get_current_user),
+    db = Depends(get_db)
+):
+    """
+    Disconnect a theme from its Slack channel.
+
+    Notifications will no longer be sent when transcript insights are
+    classified under this theme.
+    """
+    workspace_id = current_user.get('workspace_id')
+    if not workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User does not have a workspace"
+        )
+
+    # Verify theme exists and belongs to workspace
+    theme = db.query(Theme).filter(Theme.id == theme_id).first()
+    if not theme:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Theme not found"
+        )
+
+    if str(theme.workspace_id) != workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied"
+        )
+
+    # Clear Slack connection
+    theme.slack_integration_id = None
+    theme.slack_channel_id = None
+    theme.slack_channel_name = None
+
+    db.commit()
+    db.refresh(theme)
+
+    return ThemeSlackConnectionResponse(
+        theme_id=str(theme.id),
+        slack_integration_id=None,
+        slack_channel_id=None,
+        slack_channel_name=None,
+        connected=False
+    )
+
+
+@router.get("/{theme_id}/slack/status", response_model=ThemeSlackConnectionResponse)
+async def get_theme_slack_status(
+    theme_id: UUID,
+    current_user: dict = Depends(get_current_user),
+    db = Depends(get_db)
+):
+    """
+    Get the Slack connection status for a theme.
+    """
+    workspace_id = current_user.get('workspace_id')
+    if not workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User does not have a workspace"
+        )
+
+    # Verify theme exists and belongs to workspace
+    theme = db.query(Theme).filter(Theme.id == theme_id).first()
+    if not theme:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Theme not found"
+        )
+
+    if str(theme.workspace_id) != workspace_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied"
+        )
+
+    return ThemeSlackConnectionResponse(
+        theme_id=str(theme.id),
+        slack_integration_id=str(theme.slack_integration_id) if theme.slack_integration_id else None,
+        slack_channel_id=theme.slack_channel_id,
+        slack_channel_name=theme.slack_channel_name,
+        connected=theme.slack_channel_id is not None
     )

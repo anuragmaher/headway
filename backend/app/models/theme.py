@@ -20,6 +20,11 @@ class Theme(Base):
     # Workspace relationship
     workspace_id = Column(UUID(as_uuid=True), ForeignKey("workspaces.id", ondelete="CASCADE"), nullable=False)
 
+    # Slack integration for theme-specific notifications
+    slack_integration_id = Column(UUID(as_uuid=True), ForeignKey("workspace_connectors.id", ondelete="SET NULL"), nullable=True)
+    slack_channel_id = Column(String(50), nullable=True)
+    slack_channel_name = Column(String(255), nullable=True)
+
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
@@ -28,6 +33,7 @@ class Theme(Base):
     workspace = relationship("Workspace", back_populates="themes")
     sub_themes = relationship("SubTheme", back_populates="theme", cascade="all, delete-orphan")
     transcript_classifications = relationship("TranscriptClassification", back_populates="theme")
+    slack_integration = relationship("WorkspaceConnector", foreign_keys=[slack_integration_id])
 
     # Indexes for performance
     __table_args__ = (

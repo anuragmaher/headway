@@ -21,6 +21,10 @@ export interface ExplorerTheme {
   isLocked: boolean;
   createdAt: string;
   updatedAt: string;
+  // Slack integration fields
+  slackIntegrationId?: string | null;
+  slackChannelId?: string | null;
+  slackChannelName?: string | null;
 }
 
 export interface ExplorerSubTheme {

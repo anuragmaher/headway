@@ -31,7 +31,7 @@ export type ThemeSlice = ThemeState & ThemeActions;
 
 const initialThemeState: ThemeState = {
   themes: [],
-  isLoadingThemes: false,
+  isLoadingThemes: true, // Start with loading true to show skeleton until first fetch completes
   themesError: null,
 };
 
@@ -61,10 +61,15 @@ export const createThemeSlice: StateCreator<
         color: (theme.color as string) || '#1976D2',
         feedbackCount: (theme.customer_ask_count as number) || 0,
         subThemeCount: (theme.sub_theme_count as number) || 0,
+        customerAskCount: (theme.customer_ask_count as number) || 0,
         isAIGenerated: false,
         isLocked: false,
         createdAt: theme.created_at as string,
         updatedAt: theme.updated_at as string,
+        // Slack integration fields
+        slackIntegrationId: (theme.slack_integration_id as string) || null,
+        slackChannelId: (theme.slack_channel_id as string) || null,
+        slackChannelName: (theme.slack_channel_name as string) || null,
       }));
 
       console.log('[Explorer] Fetched themes:', themes.length, 'items');
@@ -93,10 +98,15 @@ export const createThemeSlice: StateCreator<
         color: input.color || '#1976D2',
         feedbackCount: 0,
         subThemeCount: 0,
+        customerAskCount: 0,
         isAIGenerated: false,
         isLocked: false,
         createdAt: response.data.created_at,
         updatedAt: response.data.updated_at,
+        // Slack integration fields (null for new themes)
+        slackIntegrationId: response.data.slack_integration_id || null,
+        slackChannelId: response.data.slack_channel_id || null,
+        slackChannelName: response.data.slack_channel_name || null,
       };
 
       set((state) => ({

@@ -360,6 +360,7 @@ class SourcesService:
         # Get AI classification with Key Insights
         ai_insights = {
             'status': 'pending',
+            # OLD FORMAT fields (backward compatibility)
             'key_insights': {},
             'risk_assessment': {},
             'customer_metadata': {},
@@ -367,6 +368,11 @@ class SourcesService:
             'call_metadata': {},
             'theme_summary': {},
             'mappings': [],
+            # NEW FORMAT fields (Langfuse prompt)
+            'customer': None,
+            'feature_signals': [],
+            'unmapped_signals': [],
+            'pm_summary': '',
         }
 
         classification = self.db.query(TranscriptClassification).filter(
@@ -386,7 +392,13 @@ class SourcesService:
             else:
                 ai_insights['status'] = 'processing'
 
-            # Extract Key Insights sections
+            # NEW FORMAT: Extract new Langfuse prompt fields
+            ai_insights['customer'] = extracted_data.get('customer')
+            ai_insights['feature_signals'] = extracted_data.get('feature_signals', [])
+            ai_insights['unmapped_signals'] = extracted_data.get('unmapped_signals', [])
+            ai_insights['pm_summary'] = extracted_data.get('pm_summary', '')
+
+            # OLD FORMAT: Extract Key Insights sections (backward compatibility)
             ai_insights['key_insights'] = extracted_data.get('key_insights', {})
             ai_insights['risk_assessment'] = extracted_data.get('risk_assessment', {})
             ai_insights['customer_metadata'] = extracted_data.get('customer_metadata', {})
@@ -464,12 +476,22 @@ class SourcesService:
         Handles both Gong and Fathom transcript formats:
         - Gong: Uses 'parties' array with speakerId mapping to transcript segments
         - Fathom: Has 'speaker.display_name' directly in each transcript entry
+
+        Also handles nested structure from gong_ingestion_service:
+        - raw_data = {"call_data": {..., parties: [...]}, "transcript": {...}}
         """
         if not raw_data:
             return "No transcript available."
 
+        # Handle nested structure from gong_ingestion_service
+        call_data = raw_data.get('call_data', {})
+
         # Build speaker mapping from parties (Gong format)
-        parties = raw_data.get('parties', [])
+        # Try nested location first (call_data.parties), then root level (parties)
+        parties = call_data.get('parties', []) if call_data else []
+        if not parties:
+            parties = raw_data.get('parties', [])
+
         speaker_map = {}
         for party in parties:
             speaker_id = party.get('speakerId')
@@ -479,6 +501,7 @@ class SourcesService:
                 speaker_map[str(speaker_id)] = {'name': name, 'email': email}
 
         # Get transcript segments
+        # Try nested location first (raw_data.transcript.transcript), then root transcript
         transcript_data = raw_data.get('transcript', {})
         if isinstance(transcript_data, dict):
             transcript_segments = transcript_data.get('transcript', [])

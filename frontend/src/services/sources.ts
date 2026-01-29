@@ -283,12 +283,48 @@ export interface FeatureMapping {
   business_context?: string;
 }
 
+/** Feature signal from new Langfuse prompt format */
+export interface FeatureSignal {
+  quote?: string;
+  need?: string;
+  theme_id?: string;
+  theme?: string;
+  sub_theme_id?: string;
+  sub_theme?: string;
+  signal_type?: 'feature_request' | 'implicit_need' | 'deal_blocker' | 'adoption_blocker';
+  impact?: number;
+  is_blocker?: boolean;
+}
+
+/** Unmapped signal from new Langfuse prompt format */
+export interface UnmappedSignal {
+  quote?: string;
+  need?: string;
+  signal_type?: string;
+  suggested_theme?: string;
+  suggested_sub_theme?: string;
+  impact?: number;
+}
+
+/** Customer info from new Langfuse prompt format */
+export interface CustomerInfo {
+  company?: string;
+  type?: 'prospect' | 'existing_customer';
+  use_case?: string;
+}
+
 /** AI insights for a single message/transcript */
 export interface AIInsightsResponse {
   // Status
   status: AIInsightsStatus;
 
-  // Key Insights sections (new structure from transcript_classifications)
+  // NEW FORMAT: Langfuse prompt fields
+  customer?: CustomerInfo | null;
+  feature_signals?: FeatureSignal[];
+  unmapped_signals?: UnmappedSignal[];
+  pm_summary?: string;
+
+  // OLD FORMAT: Key Insights sections (backward compatibility)
   key_insights?: KeyInsights;
   risk_assessment?: RiskAssessment;
   customer_metadata?: CustomerMetadata;
