@@ -5,40 +5,27 @@
   "started": "2025-11-10T18:30:53+05:30",
   "signals": [
     {
-      "problem_statement": "The customer struggles to manage client inquiries effectively due to a lack of structured workflow and tracking.",
-      "suggested_solution": "A ticketing system to track response times and assign inquiries to team members.",
+      "problem_statement": "The customer struggles to manage inbound client questions effectively due to distractions and lack of organization.",
+      "customer_ask": "A ticketing system for tracking response times and assigning emails to team members.",
+      "suggested_solution": "Implement a structured system for handling client email questions.",
       "customer_role": "Admin",
-      "context": "Small business with about 150 clients, receiving 5-10 client inquiries per week, currently managed by one person.",
+      "context": "Small business with about 150 clients, managing 5-10 client questions per week.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer needs a way to categorize and prioritize client emails to ensure timely responses.",
+      "problem_statement": "The customer lacks a way to categorize and prioritize client emails, leading to potential delays in responses.",
+      "customer_ask": "A system for tagging and categorizing emails for better organization.",
+      "suggested_solution": "Use tags to sort and categorize incoming emails.",
       "customer_role": "Admin",
-      "context": "Plans to have a dedicated inbox for client inquiries with a growing team of three people managing it.",
-      "confidence": "medium"
+      "context": "Small business with about 150 clients, managing 5-10 client questions per week.",
+      "confidence": "high"
     },
     {
-      "problem_statement": "The customer requires a system to escalate unanswered emails to ensure they are addressed in a timely manner.",
+      "problem_statement": "The customer needs a way to track the performance of their email responses and team efficiency.",
+      "customer_ask": "Access to analytics and reporting on email response times and team performance.",
+      "suggested_solution": "Provide metrics and reports on email handling and response times.",
       "customer_role": "Admin",
-      "context": "Currently managing client inquiries alone, with plans to expand the team.",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer is looking for a way to create and use email templates for repetitive inquiries to save time.",
-      "customer_role": "Admin",
-      "context": "Handling a mix of simple and complex client inquiries, with a need for efficiency.",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer is concerned about retaining email data and workflows if they decide to cancel the subscription.",
-      "customer_role": "Admin",
-      "context": "Evaluating the long-term implications of using a new email management system.",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer is interested in having support available during the setup process to ensure proper configuration.",
-      "customer_role": "Admin",
-      "context": "Planning to implement the system with a new hire in January.",
+      "context": "Small business with about 150 clients, managing 5-10 client questions per week.",
       "confidence": "medium"
     }
   ]

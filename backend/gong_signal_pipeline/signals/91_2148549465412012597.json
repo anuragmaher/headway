@@ -5,21 +5,19 @@
   "started": "2025-11-10T18:35:18+05:30",
   "signals": [
     {
-      "problem_statement": "The customer needs additional shared mailboxes for different departments but is limited by the current plan's restrictions.",
+      "problem_statement": "The customer is unable to create additional shared mailboxes due to a limitation in the current plan.",
+      "customer_ask": "We would require like three more shared mailboxes.",
+      "suggested_solution": "Consider upgrading to a plan that allows for more shared mailboxes.",
       "customer_role": "Admin",
-      "context": "Currently using Hiver with three active mailboxes and requires three more for different teams.",
+      "context": "Team size of approximately 30 people across multiple departments.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer is facing limitations with the number of automations and features available in their current plan.",
+      "problem_statement": "The default SLA settings for the PPS team are not functioning as expected, specifically the 'due soon' status is not visible.",
+      "customer_ask": "The PPS team needs reminders for what has to go up, when and things of that sort.",
+      "suggested_solution": "The PPS team should reach out to support for assistance.",
       "customer_role": "Admin",
-      "context": "The customer is considering upgrading to a plan that offers unlimited features and automations as their team grows.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer’s PPS team is unable to see 'due soon' reminders for their emails, which is critical for their support workflow.",
-      "customer_role": "Support Lead",
-      "context": "The PPS team needs timely reminders for resolution and response times to manage their support effectively.",
+      "context": "PPS team requires timely reminders for task management.",
       "confidence": "medium"
     }
   ]

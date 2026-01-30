@@ -29,6 +29,9 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 PROMPT_THEME = SCRIPT_DIR / "prompts" / "step6_incremental_theme.txt"
 PROMPT_ASK = SCRIPT_DIR / "prompts" / "step6_incremental_ask.txt"
 
+# Chunk size for theme classification to avoid LLM output truncation
+THEME_CLASSIFY_CHUNK_SIZE = 40
+
 
 def load_last_batch_ids(signals_dir: Path) -> list[str]:
     path = signals_dir / "last_batch_transcript_ids.json"
@@ -107,7 +110,7 @@ def classify_signals_into_themes(
         messages=[{"role": "user", "content": user_content}],
         temperature=0,
         response_format={"type": "json_object"},
-        max_tokens=8000,
+        max_tokens=16000,
     )
     raw = response.choices[0].message.content
     out = json.loads(raw)
@@ -204,11 +207,15 @@ def main() -> None:
         sys.exit(1)
     client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
-    # Prompt 1: classify signals into themes
+    # Prompt 1: classify signals into themes (chunked to avoid truncation)
     print("Classifying new signals into existing themes...")
-    theme_result = classify_signals_into_themes(client, existing_themes, new_signals, args.model)
-    classified_signals = theme_result.get("classified_signals", [])
-    proposed_new_themes = theme_result.get("proposed_new_themes", [])
+    classified_signals = []
+    proposed_new_themes = []
+    for i in range(0, len(new_signals), THEME_CLASSIFY_CHUNK_SIZE):
+        chunk = new_signals[i : i + THEME_CLASSIFY_CHUNK_SIZE]
+        theme_result = classify_signals_into_themes(client, existing_themes, chunk, args.model)
+        classified_signals.extend(theme_result.get("classified_signals", []))
+        proposed_new_themes.extend(theme_result.get("proposed_new_themes", []))
 
     # Map signal_id -> (theme_id, sub_theme_id) for matched signals
     for c in classified_signals:

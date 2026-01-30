@@ -5,40 +5,39 @@
   "started": "2025-11-10T17:58:04+05:30",
   "signals": [
     {
-      "problem_statement": "The customer needs automation to assign emails to the correct department without manual intervention.",
-      "customer_role": "Support Lead",
-      "context": "Handling customer emails related to flight cancellations and rescheduling, with multiple departments involved.",
-      "confidence": "high"
+      "problem_statement": "The customer needs automation to assign emails to different departments based on the content of the emails.",
+      "customer_ask": "We might need some automations plus AI to automatically transfer emails to the appropriate group.",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Operations team handling customer emails related to airline services."
     },
     {
-      "problem_statement": "The customer requires AI capabilities to track SLA breaches and automate notifications to team leaders.",
-      "customer_role": "Support Lead",
-      "context": "Managing email responses and ensuring timely follow-ups for customer queries.",
-      "confidence": "high"
+      "problem_statement": "The customer lacks a feature to automatically notify team leads when SLA breaches occur.",
+      "customer_ask": "Do we have an option to escalate that particular email directly to the team leader?",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Operations team managing multiple email groups."
     },
     {
-      "problem_statement": "The customer is looking for a writing assistant feature to help agents draft emails with fewer grammatical errors.",
-      "customer_role": "Support Lead",
-      "context": "Agents frequently write emails to customers and need assistance to improve clarity and professionalism.",
-      "confidence": "medium"
+      "problem_statement": "The customer requires a feature that allows agents to see pending emails immediately after closing a ticket.",
+      "customer_ask": "I want the new ticket to open in my screen as soon as I resolve one.",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Operations team handling customer emails."
     },
     {
-      "problem_statement": "The customer wants a feature that automatically opens a new email for agents after they close a current one.",
-      "customer_role": "Support Lead",
-      "context": "Agents are handling multiple emails and need a more efficient workflow to manage their tasks.",
-      "confidence": "medium"
+      "problem_statement": "The customer is looking for AI capabilities to track SLA breaches and provide real-time reporting.",
+      "customer_ask": "If you have any automations to track our SLA breaches and the current reports.",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Operations team managing customer emails."
     },
     {
-      "problem_statement": "The customer needs a way to summarize long email threads to quickly understand the main issues.",
-      "customer_role": "Support Lead",
-      "context": "Dealing with complex customer inquiries that involve multiple back-and-forth emails.",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer is interested in integrating their backend system with Hiver to pull relevant data for email prioritization.",
-      "customer_role": "Product Lead",
-      "context": "Managing customer inquiries related to travel dates and cancellations that require timely responses.",
-      "confidence": "medium"
+      "problem_statement": "The customer needs a writing assistance feature to help agents with grammatical errors in emails.",
+      "customer_ask": "If you have that feature already with you guys, that will be very helpful for us.",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Operations team handling customer emails."
     }
   ]
 }

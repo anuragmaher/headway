@@ -1667,6 +1667,1538 @@
           "context": "Managing contact information for marketing purposes."
         }
       ]
+    },
+    {
+      "transcript_id": "42_6164406999499399669",
+      "call_id": "6164406999499399669",
+      "title": "Gasera <> Hiver : Trial Feedback",
+      "started": "2025-11-06T17:30:23+05:30",
+      "signals": [
+        {
+          "problem_statement": "When responding to emails from the support address, team members cannot see their sent messages in their inbox or sent mail.",
+          "customer_ask": "Clarification on how to track emails sent from the support address.",
+          "customer_role": "Support Lead",
+          "context": "Small team using the tool for customer support",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer had difficulty locating the shared comment feature when needed.",
+          "customer_ask": "Help in finding the shared comment feature.",
+          "customer_role": "Support Lead",
+          "context": "Small team using the tool for customer support",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "43_7358947301194959400",
+      "call_id": "7358947301194959400",
+      "title": "Hiver Sync",
+      "started": "2025-11-06T18:32:42+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer cannot assign an email to more than one person, which limits collaboration on shared tasks.",
+          "customer_ask": "Is there any way that we can assign an email to more than one person?",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer cannot access the spam folder from their individual inboxes, which may lead to missed important emails.",
+          "customer_ask": "Is there any way to add the spam folder into my own inbox with the HR section?",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer cannot edit tag names once created, which restricts their ability to organize and manage tags effectively.",
+          "customer_ask": "I just wondered if there is any way to amend what the tag was called.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer needs an automatic reply setup for emails assigned to a part-time employee to inform senders of potential delays.",
+          "customer_ask": "Is there any kind of way that we could get an automatic reply set up for anything that gets assigned to Jen?",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer wants to see pending emails more prominently in their interface, indicating a need for better visibility of important tasks.",
+          "customer_ask": "Would it be possible to move pending up so that we can see it on that first page?",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "44_3896480921453114404",
+      "call_id": "3896480921453114404",
+      "title": "Hiver & John with Printville",
+      "started": "2025-11-06T19:11:14+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer is not utilizing all features of the current plan and feels they are overpaying for unused capabilities.",
+          "customer_ask": "To continue using Hiver at the same rate without a significant price increase.",
+          "suggested_solution": "A minimal price increase of one dollar per user per month.",
+          "customer_role": "Admin",
+          "context": "Team of 14 users, primarily using basic features.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is concerned about the potential price increase and its impact on their decision to renew.",
+          "customer_ask": "To honor the current pricing or keep the increase minimal.",
+          "suggested_solution": "To negotiate a lower price increase.",
+          "customer_role": "Admin",
+          "context": "Team of 14 users, primarily using basic features.",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "transcript_id": "45_3769740830625009605",
+      "call_id": "3769740830625009605",
+      "title": "Hiver Demo | Oliver <> Yukta",
+      "started": "2025-11-06T19:31:54+05:30",
+      "signals": []
+    },
+    {
+      "transcript_id": "46_1685282307001139557",
+      "call_id": "1685282307001139557",
+      "title": "Hiver & Arden with Lifeworksot",
+      "started": "2025-11-06T19:39:35+05:30",
+      "signals": []
+    },
+    {
+      "transcript_id": "47_5712193747321677237",
+      "call_id": "5712193747321677237",
+      "title": "Hiver & Victor with The Casumo Company Limited (AI Addon)",
+      "started": "2025-11-06T20:00:07+05:30",
+      "signals": [
+        {
+          "problem_statement": "The AI tagging feature may not effectively handle multiple languages, which is crucial for the finance department that deals with invoices in different languages.",
+          "customer_ask": "How can we teach Hiver to understand several languages at the same time?",
+          "confidence": "high",
+          "customer_role": "Admin",
+          "context": "Finance department handling 30-50 emails daily in multiple languages",
+          "suggested_solution": "Implement AI tagging that can recognize and categorize emails based on different languages."
+        },
+        {
+          "problem_statement": "The current system requires manual intervention to sort emails by language, which is inefficient.",
+          "customer_ask": "Can AI tagging be used for language specificity to automatically assign emails to the right team member?",
+          "confidence": "medium",
+          "customer_role": "Admin",
+          "context": "Finance department with team members fluent in different languages",
+          "suggested_solution": "Use AI tagging to automatically assign emails based on the language detected."
+        },
+        {
+          "problem_statement": "The team struggles with managing and documenting processes effectively, leading to inefficiencies.",
+          "customer_ask": "How can we centralize our knowledge and processes to make them more accessible?",
+          "confidence": "medium",
+          "customer_role": "Admin",
+          "context": "Finance department with scattered documentation across different platforms",
+          "suggested_solution": "Utilize the co-pilot feature to consolidate and streamline process documentation."
+        }
+      ]
+    },
+    {
+      "transcript_id": "48_7768713414820477796",
+      "call_id": "7768713414820477796",
+      "title": "Hiver Sandbox Sync",
+      "started": "2025-11-06T20:47:25+05:30",
+      "signals": [
+        {
+          "problem_statement": "The integration between Hiver and Outlook does not support email deletion synchronization.",
+          "customer_ask": "Confirmation on whether deleting an email in Hiver will also delete it in Outlook.",
+          "customer_role": "Admin",
+          "context": "Public institution, evaluating integration with existing systems.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer requires detailed security and technical feasibility information for Hiver's integration with Outlook.",
+          "customer_ask": "Request for documents or information to provide to the IT team regarding security risks and access requirements.",
+          "customer_role": "Admin",
+          "context": "Public institution, needs to comply with thorough IT review processes.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is uncertain about the timeline for accessing the sandbox environment for testing.",
+          "customer_ask": "Request for extended access to the sandbox until the end of the day tomorrow.",
+          "customer_role": "Admin",
+          "context": "Public institution, team needs more time to test the platform.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "49_4967298708131430806",
+      "call_id": "4967298708131430806",
+      "title": "Hiver & Nancy with Maze Media Ltd",
+      "started": "2025-11-06T21:03:26+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer is looking for ways to improve efficiency in their processes and systems.",
+          "customer_ask": "Are there ways in which we can be more efficient with our systems?",
+          "confidence": "high",
+          "customer_role": "Admin",
+          "context": "Marketing agency with a focus on finance and accounts"
+        },
+        {
+          "problem_statement": "The customer is unsure about the capabilities of the AI features and how they can be applied to their current workflows.",
+          "customer_ask": "Can you explain how the AI features can be applied to our current workflows?",
+          "confidence": "medium",
+          "customer_role": "Admin",
+          "context": "Marketing agency with a focus on finance and accounts"
+        },
+        {
+          "problem_statement": "The customer is concerned about the potential costs associated with upgrading to the AI features.",
+          "customer_ask": "Is there a free trial available to test the features?",
+          "confidence": "medium",
+          "customer_role": "Admin",
+          "context": "Marketing agency with a focus on finance and accounts"
+        }
+      ]
+    },
+    {
+      "transcript_id": "50_2968242996037638571",
+      "call_id": "2968242996037638571",
+      "title": "Hiver AI for Pattern",
+      "started": "2025-11-06T21:44:48+05:30",
+      "signals": [
+        {
+          "problem_statement": "The AI tagging system inaccurately applies tags, leading to confusion and inefficiency.",
+          "customer_ask": "Is there any way to report when a tag is not applied when it should have been?",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer experiences failures when trying to report tagging issues through the interface.",
+          "customer_ask": "Can you fix the issue where it says 'fail to report tag'?",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The AI requires significant training time (1-2 weeks) to function effectively, which delays its usefulness.",
+          "customer_ask": "Can we expedite the training process for the AI?",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The AI's ability to learn from varied email content is limited, making it difficult to apply tags accurately.",
+          "customer_ask": "Can the AI be improved to better handle diverse email content?",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "51_1949955582615015228",
+      "call_id": "1949955582615015228",
+      "title": "Hiver & Desiree Fuentes with",
+      "started": "2025-11-06T21:35:53+05:30",
+      "signals": []
+    },
+    {
+      "transcript_id": "52_7765196998698818288",
+      "call_id": "7765196998698818288",
+      "title": "Hiver Demo | Daniel <> Cole",
+      "started": "2025-11-06T22:05:49+05:30",
+      "signals": [
+        {
+          "problem_statement": "The current use of a Google group for managing shared mailboxes is ineffective, leading to communication issues and potential oversight of customer interactions.",
+          "customer_ask": "A shared mailbox for sales that allows better visibility and management of communications.",
+          "customer_role": "Owner",
+          "context": "Wildlife removal company with plans to expand from three to six employees.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "There is a need for better integration between Hiver and Housecall Pro to streamline customer management and job tracking.",
+          "customer_ask": "Integration opportunities between Hiver and Housecall Pro.",
+          "customer_role": "Owner",
+          "context": "Wildlife removal company using Housecall Pro for field service management.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The current notification system for tagged messages in Hiver is insufficient, as team members may miss notifications unless they are actively checking the platform.",
+          "customer_ask": "A chat bot that notifies team members when they are tagged in a thread.",
+          "customer_role": "Owner",
+          "context": "Wildlife removal company with a team trained on Google Chat.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The sales team struggles with documentation and note-taking during customer interactions, which could lead to gaps in customer service.",
+          "customer_ask": "A solution that encourages better documentation practices among sales staff.",
+          "customer_role": "Owner",
+          "context": "Wildlife removal company with a sales team that has issues with keeping up with documentation.",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "transcript_id": "53_3947310817572786406",
+      "call_id": "3947310817572786406",
+      "title": "Hiver Demo Somerset County Educational Services Commission<> Cole",
+      "started": "2025-11-06T22:31:46+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer is limited in their ability to streamline workflows and tags due to a legacy plan with Helpscout.",
+          "customer_ask": "They are looking to see if Hiver can solve some of the issues they are currently facing and be more efficient.",
+          "customer_role": "Admin",
+          "context": "Special education transportation department with a significant budget increase and a growing number of users.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer cannot create or manage company profiles effectively, leading to difficulties in handling multiple contacts from the same organization.",
+          "customer_ask": "They want to know if Hiver can allow them to create company profiles.",
+          "suggested_solution": "The customer suggested that they need company profiles for better organization.",
+          "customer_role": "Admin",
+          "context": "Managing multiple contacts from various districts and transportation companies.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is concerned about the limitations on the number of recipients for outgoing emails, which could affect their communication with contractors and districts.",
+          "customer_ask": "They need clarification on whether Hiver has a limit on the number of recipients for outgoing emails.",
+          "customer_role": "Admin",
+          "context": "Sending emails to contractors and districts for important information.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer is looking for a way to set reminders or timers on emails to ensure follow-ups are not missed.",
+          "customer_ask": "They want to know if they can set a timer for emails to pop back up in the queue.",
+          "suggested_solution": "The customer suggested having a feature to remind them to follow up on emails.",
+          "customer_role": "Admin",
+          "context": "Managing follow-ups with contractors regarding student information.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "54_5832822436037059608",
+      "call_id": "5832822436037059608",
+      "title": "Hiver Demo | Sean <> Cole",
+      "started": "2025-11-06T23:30:49+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer needs a ticketing software to track onboarding and offboarding processes but finds the current product lacks asset management features.",
+          "customer_ask": "A system that generates tasks or child tickets for onboarding and offboarding.",
+          "suggested_solution": "A more comprehensive project management or service desk solution that includes asset management.",
+          "customer_role": "IT Director",
+          "context": "Small company with about 150 end users.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is looking for a simplistic trouble tracking system but is unsure if the product fits their needs.",
+          "customer_ask": "Clarification on whether the product can serve as a service desk.",
+          "suggested_solution": "A solution that combines ticket management with project management capabilities.",
+          "customer_role": "IT Director",
+          "context": "Small company with about 150 end users.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "55_5498142965980726726",
+      "call_id": "5498142965980726726",
+      "title": "Hiver Demo | Emily <> Jeevan",
+      "started": "2025-11-06T23:32:19+05:30",
+      "signals": [
+        {
+          "problem_statement": "The splitting of inboxes caused workflow disruptions for the customer.",
+          "customer_ask": "They want to try using the product again properly.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer has multiple shared inboxes and finds it cumbersome to manage them separately.",
+          "customer_ask": "They would like to know if it's possible to consolidate all shared inboxes into one.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer expressed a need for better visibility and tracking of email assignments and statuses.",
+          "customer_ask": "They want to ensure they can see all assigned emails and their statuses easily.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer is concerned about the integration capabilities with their existing systems, specifically Acumatica.",
+          "customer_ask": "They want to know if there is integration with Acumatica.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "56_902598329924121265",
+      "call_id": "902598329924121265",
+      "title": "Hiver pricing sync",
+      "started": "2025-11-07T00:32:33+05:30",
+      "signals": [
+        {
+          "problem_statement": "The entry-level plan does not support shared inboxes, which is a limitation for the customer.",
+          "customer_ask": "Clarification on the number of shared mailboxes supported by different plans.",
+          "customer_role": "Admin",
+          "context": "Considering options for shared inboxes for a team.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is exploring alternatives to Hiver due to limitations in shared mailbox capabilities.",
+          "customer_ask": "Looking into Google's shared mailbox options.",
+          "customer_role": "Admin",
+          "context": "Comparing Hiver with Google Workspace for shared inbox functionality.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "57_2465563737737913140",
+      "call_id": "2465563737737913140",
+      "title": "Hiver Demo | Tristian <> Cole",
+      "started": "2025-11-07T02:44:31+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer lacks a centralized way to track owner inbound messages across multiple platforms, leading to potential missed communications.",
+          "customer_ask": "A way to track owner messages that haven't been responded to in the last 24 hours.",
+          "suggested_solution": "A centralized interface within Hiver to see all communications for owners, tenants, and vendors in an organized fashion.",
+          "customer_role": "Property Manager",
+          "context": "Property management company with seven active team members managing 170 doors.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is concerned about team members responding to the same email without awareness of each other's actions.",
+          "customer_ask": "A solution to prevent multiple responses to the same tenant email.",
+          "suggested_solution": "A feature that allows tracking of email responses to avoid duplication.",
+          "customer_role": "Property Manager",
+          "context": "Property management company with seven active team members managing 170 doors.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer needs internal communication capabilities to replace Slack.",
+          "customer_ask": "A feature for internal communications within the platform.",
+          "suggested_solution": "An all-in-one platform that includes internal communication features.",
+          "customer_role": "Operations System Strategy Manager",
+          "context": "Property management company with seven active team members managing 170 doors.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer requires a way to track KPIs related to response times for owners and tenants.",
+          "customer_ask": "The ability to pull reports for KPI purposes.",
+          "suggested_solution": "A feature that allows tracking and reporting of response times.",
+          "customer_role": "Operations System Strategy Manager",
+          "context": "Property management company with seven active team members managing 170 doors.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is concerned about the potential complexity and learning curve of the new software.",
+          "customer_ask": "A system that is easy to learn and not overly complex.",
+          "suggested_solution": "A simplified interface that reduces clutter and complexity.",
+          "customer_role": "Property Manager",
+          "context": "Property management company with seven active team members managing 170 doors.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "58_5263166639052428378",
+      "call_id": "5263166639052428378",
+      "title": "Hiver Meeting",
+      "started": "2025-11-07T14:31:48+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer needs a form for pickup requests that allows customers to fill out specific information.",
+          "customer_ask": "Can hiver create a form for pickup requests?",
+          "suggested_solution": "A form that customers can fill out to create an email request.",
+          "customer_role": "Admin",
+          "context": "Team of 6-7 people managing multiple mailboxes.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is concerned about the safety and privacy of their emails when using the product.",
+          "customer_ask": "How is the safety of emails managed?",
+          "suggested_solution": "Clarification on email security and compliance.",
+          "customer_role": "Admin",
+          "context": "Team of 6-7 people managing multiple mailboxes.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer requires the product interface to support the German language.",
+          "customer_ask": "Is there an option to switch to German?",
+          "suggested_solution": "Provide a German interface option for the product.",
+          "customer_role": "Admin",
+          "context": "Team of 6-7 people managing multiple mailboxes.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "59_880109070710881970",
+      "call_id": "880109070710881970",
+      "title": "Hiver AI & Jon with Docto",
+      "started": "2025-11-07T14:32:22+05:30",
+      "signals": [
+        {
+          "problem_statement": "The current tagging system does not adequately capture the variety of ways customers phrase their inquiries, leading to potential misclassification.",
+          "customer_ask": "We would like a more flexible tagging system that can understand different phrases for similar requests.",
+          "confidence": "high",
+          "customer_role": "Admin",
+          "context": "Admin team of about five managing inbound emails for a telehealth medical service."
+        },
+        {
+          "problem_statement": "There is a lack of automation in responding to customer inquiries, requiring manual review of all responses.",
+          "customer_ask": "We need a system that can suggest responses based on previous interactions.",
+          "confidence": "high",
+          "customer_role": "Admin",
+          "context": "Admin team of about five managing inbound emails for a telehealth medical service."
+        },
+        {
+          "problem_statement": "The current system does not provide a way to automatically extract and surface important information like invoice numbers from emails.",
+          "customer_ask": "We would like a feature that can extract specific data from emails and display it prominently.",
+          "confidence": "medium",
+          "customer_role": "Admin",
+          "context": "Admin team of about five managing inbound emails for a telehealth medical service."
+        }
+      ]
+    },
+    {
+      "transcript_id": "60_7353414352892152204",
+      "call_id": "7353414352892152204",
+      "title": "Hiver<> bamboopayment",
+      "started": "2025-11-07T15:02:06+05:30",
+      "signals": [
+        {
+          "problem_statement": "Zendesk is perceived as an expensive tool that requires extensive setup and configuration, making it difficult for the team to utilize its full capacity.",
+          "customer_ask": "Looking for a tool that allows automation and connects with internal documentation.",
+          "confidence": "high",
+          "customer_role": "Admin",
+          "context": "Payments processing company with a small team."
+        },
+        {
+          "problem_statement": "The current setup in Zendesk is complicated, requiring significant time and technical expertise to manage workflows and automations.",
+          "customer_ask": "Desires a solution that is simple and easy to operate without needing a dedicated person for setup.",
+          "confidence": "high",
+          "customer_role": "Admin",
+          "context": "Payments processing company with a small team."
+        },
+        {
+          "problem_statement": "There is a lack of intuitive AI features in Zendesk, which are offered as additional paid services rather than included by default.",
+          "customer_ask": "Wants an AI-powered solution that does not require extra payments for basic functionalities.",
+          "confidence": "high",
+          "customer_role": "Admin",
+          "context": "Payments processing company with a small team."
+        },
+        {
+          "problem_statement": "The process of managing chargebacks through Zendesk is cumbersome and not fully automated, requiring manual intervention.",
+          "customer_ask": "Looking for a more efficient automation process that integrates seamlessly with their existing workflows.",
+          "confidence": "medium",
+          "customer_role": "Admin",
+          "context": "Payments processing company with a small team."
+        },
+        {
+          "problem_statement": "The current analytics and reporting capabilities in Zendesk are perceived as complicated and not user-friendly.",
+          "customer_ask": "Wants a solution that allows easy access to KPIs and dashboard creation.",
+          "confidence": "medium",
+          "customer_role": "Admin",
+          "context": "Payments processing company with a small team."
+        },
+        {
+          "problem_statement": "The need for a customer portal in Zendesk requires complex programming, making it inaccessible for the team.",
+          "customer_ask": "Desires a simpler way to set up a customer portal without extensive technical knowledge.",
+          "confidence": "medium",
+          "customer_role": "Admin",
+          "context": "Payments processing company with a small team."
+        }
+      ]
+    },
+    {
+      "transcript_id": "61_2529682253429226658",
+      "call_id": "2529682253429226658",
+      "title": "Hiver<> Piceci Services",
+      "started": "2025-11-07T17:30:36.131+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer needs a shared inbox solution for freelancers to communicate with clients using a single email address.",
+          "customer_ask": "We need a shared inbox like a shared email.",
+          "suggested_solution": "Remove the requirement for freelancers to have Google Workspace email IDs.",
+          "customer_role": "Admin",
+          "context": "Team managing freelancers for client communication.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "Freelancers cannot send emails as the company's domain due to Google Workspace limitations.",
+          "customer_ask": "Find a solution that allows freelancers to communicate without needing their own Google Workspace email IDs.",
+          "suggested_solution": "Enable freelancers to use a shared email ID for client communication.",
+          "customer_role": "Admin",
+          "context": "Team managing freelancers for client communication.",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "transcript_id": "62_5063150964855671922",
+      "call_id": "5063150964855671922",
+      "title": "Hiver <> Genesis Media Limited - AI Feature Commercials",
+      "started": "2025-11-07T17:31:51+05:30",
+      "signals": [
+        {
+          "problem_statement": "The AI compose feature is underutilized by team members despite its usefulness to some individuals.",
+          "customer_ask": "Suggestions on how to encourage team members to use AI compose.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer needs a tool that can review legal agreements and contracts, which is a significant part of their work.",
+          "customer_ask": "A feature that allows uploading agreements for review against organizational norms and legal requirements.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The current task management process is fragmented, with team members using different methods and tools.",
+          "customer_ask": "Integration of task management features into Hiver to centralize task handling.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer lacks a centralized system for handling incoming legal requests, relying solely on email.",
+          "customer_ask": "A structured way to manage incoming requests through Hiver.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "63_7968688745761658790",
+      "call_id": "7968688745761658790",
+      "title": "Hiver Demo | Chloe <> Yukta",
+      "started": "2025-11-07T18:28:31.304+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer is struggling with the distribution of emails among team members using Gmail's shared inbox, which is not effective for their needs.",
+          "customer_ask": "Looking for a system that allows appropriate delegation of emails.",
+          "suggested_solution": "A central command to see all emails and mark them as being worked on in real time.",
+          "customer_role": "Admin",
+          "context": "Small team of 3-4 people managing household-related emails.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "Emails are being duplicated across personal and shared inboxes, leading to inefficiencies.",
+          "customer_ask": "A solution to avoid duplicating work and manage emails more effectively.",
+          "suggested_solution": "A way to manage emails without them being forwarded to personal inboxes.",
+          "customer_role": "Admin",
+          "context": "Small team of 3-4 people managing household-related emails.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer needs a way to track who is handling which emails to avoid confusion and ensure accountability.",
+          "customer_ask": "A system that shows who is working on what email.",
+          "suggested_solution": "Visibility into email assignments and the ability to reassign emails when necessary.",
+          "customer_role": "Admin",
+          "context": "Small team of 3-4 people managing household-related emails.",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "transcript_id": "64_4243852835283383400",
+      "call_id": "4243852835283383400",
+      "title": "Hiver & Naima with",
+      "started": "2025-11-07T19:24:55+05:30",
+      "signals": [
+        {
+          "problem_statement": "The AI tagging feature is not functioning as expected, causing confusion in setup.",
+          "customer_ask": "I really don't understand how am I supposed to set it up?",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The thank you detector is not closing tickets as it should when receiving thank you messages.",
+          "customer_ask": "I was wondering if there's something I can add to it like if it says thank you right now.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The integration with Asana lacks customization options, making it difficult to create tickets efficiently.",
+          "customer_ask": "Is there a way I can create tickets from here?",
+          "suggested_solution": "I was thinking of using Zapier between Asana and Hiver.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The current ticket creation process does not allow for necessary fields and attachments, limiting functionality.",
+          "customer_ask": "Is there a way I can understand if I'm not generating my ticket from here on Asana?",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "There is a need for a more streamlined autoresponder setup to handle incoming emails efficiently.",
+          "customer_ask": "I was wondering if I should have automated replies to everybody who sends it in an email.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "65_1799444064847399580",
+      "call_id": "1799444064847399580",
+      "title": "Hiver Test Account Set up",
+      "started": "2025-11-07T19:34:19+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer is experiencing significant manual tasks in Outlook, leading to a lack of transparency and visibility on ticket ownership and email responses.",
+          "customer_ask": "A better solution to manage transparency and visibility on tickets and emails.",
+          "confidence": "high",
+          "customer_role": "Admin",
+          "context": "Sales team managing multiple email domains and shared mailboxes."
+        },
+        {
+          "problem_statement": "The customer is unable to access their sales mailbox due to third-party application restrictions set by their Microsoft admin.",
+          "customer_ask": "Assistance in whitelisting Hiver in their Microsoft account.",
+          "confidence": "high",
+          "customer_role": "Admin",
+          "context": "Sales team managing multiple email domains and shared mailboxes."
+        },
+        {
+          "problem_statement": "The customer is unsure how to sync past emails into Hiver, as it requires engineering work to import older emails.",
+          "customer_ask": "Clarification on the process to import older emails into Hiver.",
+          "confidence": "medium",
+          "customer_role": "Admin",
+          "context": "Sales team managing multiple email domains and shared mailboxes."
+        },
+        {
+          "problem_statement": "The customer wants to create custom statuses for their email management workflow but is limited by the inability to customize default statuses in Hiver.",
+          "customer_ask": "The ability to create custom statuses for email management.",
+          "confidence": "medium",
+          "customer_role": "Admin",
+          "context": "Sales team managing multiple email domains and shared mailboxes."
+        }
+      ]
+    },
+    {
+      "transcript_id": "66_8554135351031083585",
+      "call_id": "8554135351031083585",
+      "title": "Hiver & Desiree with Cirrus Payroll",
+      "started": "2025-11-07T20:00:54+05:30",
+      "signals": [
+        {
+          "problem_statement": "The AI add-on package is only available as a full suite, which may not be cost-effective for all team members.",
+          "customer_ask": "Consider offering the AI features a la carte.",
+          "customer_role": "Admin",
+          "context": "Team size not specified, but includes payroll and implementation teams.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "There is a need for better tracking of client communication sentiment to improve client retention.",
+          "customer_ask": "Enhance sentiment tracking capabilities.",
+          "customer_role": "Admin",
+          "context": "Team size not specified, focused on client interactions.",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "transcript_id": "67_2571136605912954864",
+      "call_id": "2571136605912954864",
+      "title": "Hiver Trial Set Up",
+      "started": "2025-11-07T20:51:07+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer is concerned about the limitations of user licenses when setting up their trial account.",
+          "customer_ask": "Clarification on whether they can add more users without exceeding their license limit.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is unsure about the process of integrating chat functionality into their website.",
+          "customer_ask": "How to implement chat on their website.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer is facing difficulties with collaboration features, specifically regarding external users accessing shared inboxes.",
+          "customer_ask": "How to invite external users to collaborate on emails.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is looking for a way to automate follow-up emails for pending requests.",
+          "customer_ask": "Can they set up automated reminders for emails that haven't received a response?",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is concerned about the lack of differentiation in handling emails for different terminals.",
+          "customer_ask": "How to manage emails specific to different terminals effectively.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "68_4113860263497002780",
+      "call_id": "4113860263497002780",
+      "title": "Hiver & Nick with MVS Canada Logistics - Ship Your Car With The Experts",
+      "started": "2025-11-07T20:31:44+05:30",
+      "signals": [
+        {
+          "problem_statement": "The AI extract feature is not functioning as expected, limiting the customer's ability to confirm and proceed with automation.",
+          "customer_ask": "Interested in understanding how the AI features work and if there are other features that could improve their use case.",
+          "confidence": "high",
+          "customer_role": "Admin",
+          "context": "Small logistics team managing multiple email workflows."
+        },
+        {
+          "problem_statement": "The customer is unsure about how to set up multiple shared inboxes and whether they need to duplicate automations for each inbox.",
+          "customer_ask": "Clarification on how to manage multiple email addresses without creating separate inboxes.",
+          "confidence": "medium",
+          "customer_role": "Admin",
+          "context": "Small logistics team managing multiple email workflows."
+        },
+        {
+          "problem_statement": "The customer is facing limitations in extracting specific data (like phone numbers and VINs) from emails, which affects their operational efficiency.",
+          "customer_ask": "Ability to extract phone numbers and VINs using an API.",
+          "confidence": "medium",
+          "customer_role": "Admin",
+          "context": "Small logistics team managing multiple email workflows."
+        }
+      ]
+    },
+    {
+      "transcript_id": "69_8319358155378002711",
+      "call_id": "8319358155378002711",
+      "title": "Hiver Demo | Chip <> Cole",
+      "started": "2025-11-07T20:31:00+05:30",
+      "signals": [
+        {
+          "problem_statement": "The current system lacks a simple way to track customer inquiries and escalate them to a support ticket.",
+          "customer_ask": "We want a simple system to be able to track that and know when someone needs help.",
+          "customer_role": "CEO",
+          "context": "Small team handling customer inquiries related to classes for young adults and juveniles.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The existing AI chatbot does not effectively differentiate between distinct user populations, leading to inappropriate responses.",
+          "customer_ask": "We need to distinguish what kind of user the customer is and answer appropriately.",
+          "customer_role": "Director of Operations",
+          "context": "Multiple user types including adult learners, juvenile learners, and court staff.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The complexity of the current system's trigger paths is causing issues in providing accurate responses.",
+          "customer_ask": "We need to simplify the process of creating conversational triggers.",
+          "customer_role": "Director of Operations",
+          "context": "Struggling with complex trigger paths for different user types.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "There is a need for a generative AI feature to enhance customer interactions, but it is not yet available.",
+          "customer_ask": "We need the generative AI to feel like customers are talking to a person.",
+          "customer_role": "CEO",
+          "context": "Looking for a solution that can handle customer inquiries effectively as they scale.",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "transcript_id": "70_7894666056939405593",
+      "call_id": "7894666056939405593",
+      "title": "Hiver Trial Set Up",
+      "started": "2025-11-07T20:51:07+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer is concerned about the limitations of user licenses when setting up their trial account.",
+          "customer_ask": "Clarification on whether they can use a Google group instead of individual user licenses.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is unsure about the process for setting up chat functionality on their website.",
+          "customer_ask": "How does the chat work and if it needs to be implemented on their website first?",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer is looking for a way to manage emails related to specific terminals effectively.",
+          "customer_ask": "How to handle emails that are specific to certain terminals?",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is concerned about the lack of a mobile application for managing emails.",
+          "customer_ask": "Is there a phone app or extension available?",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer is facing issues with collaboration features, specifically when trying to invite external users.",
+          "customer_ask": "How to invite someone outside their domain for collaboration?",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is looking for a way to automate follow-up emails for pending requests.",
+          "customer_ask": "Can they set up automated follow-ups for emails that haven't received a response?",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "transcript_id": "71_236128162399131925",
+      "call_id": "236128162399131925",
+      "title": "Hiver Trial Sync",
+      "started": "2025-11-07T21:31:03+05:30",
+      "signals": []
+    },
+    {
+      "transcript_id": "72_8303457519254880340",
+      "call_id": "8303457519254880340",
+      "title": "Hiver Demo | Liza <> Cole",
+      "started": "2025-11-07T22:30:29+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer experiences issues with automated emails creating separate tickets instead of merging them into one thread.",
+          "customer_ask": "Is there any way to combine them into a merged item?",
+          "suggested_solution": "A feature to automatically merge duplicate tickets from automated systems.",
+          "customer_role": "Product Manager",
+          "context": "Small support team managing client inquiries and tech tickets.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is unsure about the ability to customize ticket statuses beyond the default options.",
+          "customer_ask": "Can we add new statuses or do we only have those three?",
+          "suggested_solution": "The ability to create custom statuses for better ticket management.",
+          "customer_role": "Product Manager",
+          "context": "Small support team managing client inquiries and tech tickets.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer is concerned about the visibility of system-generated tags in the email interface.",
+          "customer_ask": "Should the team avoid removing system-generated tags?",
+          "suggested_solution": "Clear guidance on the importance of not removing system-generated tags.",
+          "customer_role": "Product Manager",
+          "context": "Small support team managing client inquiries and tech tickets.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "73_5936591522611905187",
+      "call_id": "5936591522611905187",
+      "title": "Hiver & Jesse with Earnest Homes",
+      "started": "2025-11-07T22:32:19+05:30",
+      "signals": [
+        {
+          "problem_statement": "The AI copilot settings change unexpectedly, causing it to become disabled without user action.",
+          "customer_ask": "To understand why the settings change and ensure they remain enabled.",
+          "customer_role": "Support Lead",
+          "context": "Team size not specified, using AI features.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The AI copilot does not assist in composing new emails, limiting its functionality for users who want to draft emails from knowledge base information.",
+          "customer_ask": "To have the copilot assist in composing new emails using information from the knowledge base.",
+          "suggested_solution": "To allow the copilot to create drafts for new emails.",
+          "customer_role": "Support Lead",
+          "context": "Team size not specified, using AI features.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The AI sentiment analysis feature is not useful for the customer's business context, leading to dissatisfaction with the overall AI package.",
+          "customer_ask": "To reconsider the pricing structure based on the features they actually use.",
+          "customer_role": "Sales",
+          "context": "Team size not specified, evaluating AI features.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "There is uncertainty about the AI's language preference settings, specifically whether it uses American or British English.",
+          "customer_ask": "To clarify if there is an option to select the language preference for AI responses.",
+          "customer_role": "Sales",
+          "context": "Team size not specified, evaluating AI features.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "74_9120382904616406833",
+      "call_id": "9120382904616406833",
+      "title": "Hiver & Nick with Rêve",
+      "started": "2025-11-07T23:00:32+05:30",
+      "signals": [
+        {
+          "problem_statement": "The AI feature for recognizing thank yous is not functioning as expected.",
+          "customer_ask": "I was going to add this, the AI thing that's supposed to recognize thank yous and does not work.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The knowledge base lacks article ownership and a review cadence.",
+          "customer_ask": "I almost have to create hyperlinks into... I have to put all the articles into hiver.",
+          "suggested_solution": "Have an approver effectively like a review approver and a back or like a flow.",
+          "customer_role": "Admin",
+          "context": "Team size not specified, using Hiver for support and knowledge management.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "There is no integration with ClickUp for accessing articles.",
+          "customer_ask": "We were not able to read ClickUp articles.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The current knowledge base setup requires duplicating content across platforms.",
+          "customer_ask": "I have to create a Gmail inbox of some sort that she monitors as opposed to doing this.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The knowledge base cannot be set up as both internal and external simultaneously.",
+          "customer_ask": "It would be great if we could do both one of each.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer is looking for a self-service bot for their agents.",
+          "customer_ask": "A self-service bot would be helpful for our agents.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "75_1184762400299844154",
+      "call_id": "1184762400299844154",
+      "title": "Conservice Accounting/ Hiver AI",
+      "started": "2025-11-07T23:30:03+05:30",
+      "signals": [
+        {
+          "problem_statement": "The AI tagging system requires 10 manually tagged emails to learn, which may slow down the implementation process.",
+          "customer_ask": "A way to auto-apply custom fields based on email signatures.",
+          "suggested_solution": "If AI could grab information from signatures to fill custom fields automatically.",
+          "customer_role": "CSM",
+          "context": "Team size not specified, dealing with high email volume.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The sentiment analysis feature inaccurately marks emails as negative when they are auto-responses like 'mailbox not found'.",
+          "customer_ask": "Clarification on how sentiment is determined.",
+          "suggested_solution": "Improvement in the sentiment analysis to avoid misclassifying auto-responses.",
+          "customer_role": "CSM",
+          "context": "Team size not specified, dealing with high email volume.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "Team members are closing emails prematurely, which may lead to unresolved issues and affect AI learning.",
+          "customer_ask": "A warning when trying to close unresolved emails.",
+          "suggested_solution": "Implement a 'send and tend' option to prevent premature email closures.",
+          "customer_role": "CSM",
+          "context": "Team size not specified, dealing with high email volume.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The current reporting capabilities do not allow tracking changes in sentiment over time.",
+          "customer_ask": "Ability to pull reports on sentiment changes for monthly reviews.",
+          "suggested_solution": "Develop reporting features to track sentiment changes over time.",
+          "customer_role": "CSM",
+          "context": "Team size not specified, dealing with high email volume.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "76_560965286115951240",
+      "call_id": "560965286115951240",
+      "title": "Hiver & bryson with bkarrenagency.com",
+      "started": "2025-11-08T00:13:25+05:30",
+      "signals": [
+        {
+          "problem_statement": "The shared inbox setup does not allow the executive assistant to filter emails properly, leading to clutter in the inbox.",
+          "customer_ask": "I want my executive assistant to see all the same emails that are coming into my Gmail inbox.",
+          "suggested_solution": "Implement a method to auto-close or filter emails to avoid clutter.",
+          "customer_role": "Admin",
+          "context": "10 people on the team using three shared inboxes.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The current plan limits the number of users and mailboxes, which restricts team access to the product.",
+          "customer_ask": "I don't want to upgrade because it doubles the cost.",
+          "suggested_solution": "Provide a more affordable upgrade option or a way to manage within the current limits.",
+          "customer_role": "Admin",
+          "context": "10 people on the team using three shared inboxes.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "There is no way to automate the handling of duplicate late payment notices from vendors.",
+          "customer_ask": "Is there a way for these automations to catch duplicate late payment notices?",
+          "suggested_solution": "Develop a feature that can identify and filter out duplicate emails based on subject lines.",
+          "customer_role": "Admin",
+          "context": "10 people on the team using three shared inboxes.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer lacks a straightforward way to export data into Google Sheets for tracking team performance.",
+          "customer_ask": "I'd love to have somebody quickly set it up so that I can just dump that data into a Google sheet automatically.",
+          "suggested_solution": "Create an automated export feature that integrates with Google Sheets.",
+          "customer_role": "Admin",
+          "context": "10 people on the team using three shared inboxes.",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "transcript_id": "77_8167914542088254924",
+      "call_id": "8167914542088254924",
+      "title": "Hiver Trial Kick Off",
+      "started": "2025-11-08T00:32:05+05:30",
+      "signals": [
+        {
+          "problem_statement": "The current shared inbox setup is becoming hard to manage due to the number of project volumes.",
+          "customer_ask": "Are we able to filter tags within an inbox?",
+          "customer_role": "CSM",
+          "context": "Team size not specified, managing multiple projects and high email volume.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "There is a need for automation to manage email assignments and organization more efficiently.",
+          "customer_ask": "Can we set it so that emails are automatically directed to the right shared inbox based on project tags?",
+          "customer_role": "CSM",
+          "context": "Team size not specified, dealing with multiple projects and regulatory communications.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is concerned about losing track of emails that require follow-up.",
+          "customer_ask": "Is there a way to nudge me if I haven't received a response to an email?",
+          "customer_role": "Support Lead",
+          "context": "Team size not specified, managing client communications.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer needs a way to import historical emails into the new system.",
+          "customer_ask": "How do you help customers with that onboarding transition?",
+          "customer_role": "CSM",
+          "context": "Team size not specified, transitioning to a new email management system.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "78_6608624762484707053",
+      "call_id": "6608624762484707053",
+      "title": "Good Vibe Squad <> Hiver pricing",
+      "started": "2025-11-08T01:00:57+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer is unaware of significant pricing changes and feels forced into a higher payment tier without consent.",
+          "customer_ask": "I would like to see what we can do to just downgrade this and request for a refund.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer feels that the product is not being utilized effectively for their needs, particularly in customer success.",
+          "customer_ask": "I could downgrade to like the free plan and we wouldn't be affected.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is confused about being charged for more users than they actually have.",
+          "customer_ask": "What is the bare minimum? And I don't know if you even have like a free plan that just doesn't have all the bells and whistles?",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is exploring options for using the product for sales outreach but is concerned about email deliverability issues.",
+          "customer_ask": "Have you guys had any use cases of like, you know, huge outbound sales team using hiver?",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "79_6733089573398834509",
+      "call_id": "6733089573398834509",
+      "title": "Hiver Demo | Adam <> Cole",
+      "started": "2025-11-08T01:30:25+05:30",
+      "signals": [
+        {
+          "problem_statement": "The current email management process is inconsistent and varies among team members, leading to inefficiencies.",
+          "customer_ask": "We need to standardize our email management processes.",
+          "customer_role": "CSM",
+          "context": "Team of 30-40, expanding to 60-70, using Outlook and distribution lists for email management.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "There is a lack of visibility into outstanding tasks and responsibilities within the team.",
+          "customer_ask": "We need better visibility into what's outstanding and what needs to be completed.",
+          "customer_role": "CSM",
+          "context": "Team of 30-40, expanding to 60-70, using Outlook and distribution lists for email management.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The current system does not effectively handle the routing of emails based on the content, leading to potential delays in response.",
+          "customer_ask": "We are looking for skill-based routing to improve email assignment.",
+          "customer_role": "CSM",
+          "context": "Team of 30-40, expanding to 60-70, using Outlook and distribution lists for email management.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "There is no way to track whether team members are reading and responding to emails efficiently.",
+          "customer_ask": "We need analytics to understand response times and email engagement.",
+          "customer_role": "CSM",
+          "context": "Team of 30-40, expanding to 60-70, using Outlook and distribution lists for email management.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The product currently lacks calendar integration, which is essential for scheduling meetings directly from emails.",
+          "customer_ask": "Is there a calendar integration available?",
+          "suggested_solution": "Implement calendar integration to sync with Outlook.",
+          "customer_role": "CSM",
+          "context": "Team of 30-40, expanding to 60-70, using Outlook and distribution lists for email management.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "80_5292951530895901561",
+      "call_id": "5292951530895901561",
+      "title": "Hiver Demo Studiopack<> Cole",
+      "started": "2025-11-08T02:00:10+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer is currently managing multiple inboxes and spreadsheets, leading to an inefficient and error-prone workflow.",
+          "customer_ask": "The customer wants to automate their workflows and consolidate communication into a single inbox.",
+          "suggested_solution": "The customer suggested using tokens in email subject lines to route replies correctly based on brand.",
+          "customer_role": "CSM",
+          "context": "The customer is a fractional consulting service for high volume photography studios, managing multiple brands.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer lacks the knowledge to engineer the automation and token system needed for their communication setup.",
+          "customer_ask": "The customer is looking for guidance on how to implement the token system and ensure proper email routing.",
+          "suggested_solution": "The customer expressed a need for support in understanding how to set up the automation correctly.",
+          "customer_role": "CSM",
+          "context": "The customer is working with a client that has multiple brands and needs to separate responses based on brand.",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "transcript_id": "81_4159000703936356841",
+      "call_id": "4159000703936356841",
+      "title": "Hiver Introduction with Carrot",
+      "started": "2025-11-08T03:00:34+05:30",
+      "signals": [
+        {
+          "problem_statement": "Hiver currently does not integrate with Fivetran, which is a limitation for the customer's phone support needs.",
+          "customer_ask": "Keep me posted on any developments regarding the Fivetran integration.",
+          "suggested_solution": "Consider adding integration with Fivetran.",
+          "customer_role": "VP of Operations",
+          "context": "Oversees member success and customer success tools, evaluating CRM platforms.",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "transcript_id": "82_4237821098797114805",
+      "call_id": "4237821098797114805",
+      "title": "Hiver Onboarding",
+      "started": "2025-11-10T09:31:16+05:30",
+      "signals": [
+        {
+          "problem_statement": "The phone number field in the setup process has a character limit that does not accommodate longer toll-free numbers.",
+          "customer_ask": "A way to input longer phone numbers without restrictions.",
+          "customer_role": "Admin",
+          "context": "Team size not specified, onboarding process.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is unsure about how to set up SLAs that consider only business hours.",
+          "customer_ask": "Clarification on how to set SLAs based on business hours.",
+          "customer_role": "Admin",
+          "context": "Team size not specified, onboarding process.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is looking for a way to automate the tagging of emails based on specific criteria.",
+          "customer_ask": "Automation for tagging emails based on content.",
+          "customer_role": "Admin",
+          "context": "Team size not specified, onboarding process.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer wants to ensure that their team can easily access and use templates for repetitive queries.",
+          "customer_ask": "Help in creating and managing email templates.",
+          "customer_role": "Admin",
+          "context": "Team size not specified, onboarding process.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "83_6891956699798489920",
+      "call_id": "6891956699798489920",
+      "title": "Hiver Demo | michael <> Rakesh",
+      "started": "2025-11-10T13:29:24+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer spends a lot of time sorting through emails, which is inefficient for their small team.",
+          "customer_ask": "They want a solution that can help them be more efficient without being as complex as Salesforce.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer has issues with tracking missing stock and damaged goods using a Google spreadsheet, which is time-consuming.",
+          "customer_ask": "They want a system that can assign ticket numbers and track these issues more effectively.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer experienced a significant email loss due to a staff member deleting emails instead of responding.",
+          "customer_ask": "They need a solution that ensures no emails are missed, even when staff are away.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer does not have any reporting or analytics on their email management, leading to a lack of visibility on email status.",
+          "customer_ask": "They want to track how many emails are open, pending, or closed.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer needs a simple solution that non-technical staff can use without extensive training.",
+          "customer_ask": "They require a user-friendly interface that their team can easily adopt.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer is concerned about managing personal emails of staff members while ensuring their own emails remain private.",
+          "customer_ask": "They want to set up a hierarchy where they can manage staff members' personal inboxes without exposing their own.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer currently lacks integration with social media platforms like Facebook and Instagram for managing messages.",
+          "customer_ask": "They want to connect with Instagram messages, which is important for their business.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "84_8467393708427380958",
+      "call_id": "8467393708427380958",
+      "title": "Hiver <> Ramafilter : Demo",
+      "started": "2025-11-10T13:31:55+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer is facing disorganization and clutter in their current email handling process, leading to missed communications.",
+          "customer_ask": "A centralized platform to handle emails and chat support.",
+          "suggested_solution": "A structured flow that acts as a bridge between the team and customers.",
+          "customer_role": "CSM",
+          "context": "A team of five handling customer support across multiple regions.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer lacks individual email addresses for team members, which complicates email management.",
+          "customer_ask": "To introduce individual email addresses for team members.",
+          "suggested_solution": "Using personal Gmail accounts for company-related inboxes is not ideal.",
+          "customer_role": "CSM",
+          "context": "A team of five handling customer support across multiple regions.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer is looking for AI capabilities to automate responses based on keywords to improve response times.",
+          "customer_ask": "AI responses to customer inquiries based on keywords.",
+          "suggested_solution": "AI agents to handle conversations before they reach human agents.",
+          "customer_role": "CSM",
+          "context": "A team of five handling customer support across multiple regions.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The customer needs to set up SLA policies to manage response times effectively.",
+          "customer_ask": "To understand how to set SLA breaches.",
+          "suggested_solution": "Setting up SLA policies for different emails based on response times.",
+          "customer_role": "CSM",
+          "context": "A team of five handling customer support across multiple regions.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer wants to download analytics reports to track SLA breaches and customer inquiries.",
+          "customer_ask": "To know how to download analytics reports.",
+          "suggested_solution": "Exporting reports to CSV based on different parameters.",
+          "customer_role": "CSM",
+          "context": "A team of five handling customer support across multiple regions.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "85_8404049517560791372",
+      "call_id": "8404049517560791372",
+      "title": "Virtue Tax <> Hiver || Renewal discussion",
+      "started": "2025-11-10T14:27:48.224+05:30",
+      "signals": [
+        {
+          "problem_statement": "The AI sentiment analysis feature does not work in Hebrew, limiting its usefulness for the customer.",
+          "customer_ask": "To improve AI sentiment analysis to recognize Hebrew.",
+          "suggested_solution": "Enhance the AI to better identify emotions in local languages.",
+          "customer_role": "Admin",
+          "context": "Team size of 17, using AI sentiment analysis.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The sentiment analysis does not accurately classify sentiments as positive or negative based on recognized keywords.",
+          "customer_ask": "To improve the accuracy of sentiment classification.",
+          "suggested_solution": "Tweak the AI to better identify sentiment patterns.",
+          "customer_role": "Admin",
+          "context": "Team size of 17, using AI sentiment analysis.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "86_2840736752872732243",
+      "call_id": "2840736752872732243",
+      "title": "Hiver Demo | Simon <> Rakesh",
+      "started": "2025-11-10T15:01:13+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer support team forgets to reply to angry emails from customers, leading to unresolved issues.",
+          "customer_ask": "A tool that can flag emails where support did not reply or did not reply appropriately.",
+          "suggested_solution": "Implement a flagging tool to manage email responses.",
+          "customer_role": "CSM",
+          "context": "30 people in customer support, managing over 2000 active construction sites.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer lacks a sentiment analysis tool to identify angry customers and adjust responses accordingly.",
+          "customer_ask": "A sentiment analyzer that can indicate when a customer is angry.",
+          "suggested_solution": "A tool that analyzes customer emails to determine sentiment and suggest appropriate responses.",
+          "customer_role": "CSM",
+          "context": "30 people in customer support, managing over 2000 active construction sites.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer needs a way to automatically categorize emails by construction site to improve quality management.",
+          "customer_ask": "A dashboard that shows construction sites and associated emails.",
+          "suggested_solution": "Automatically tag emails by construction site to facilitate easier tracking and management.",
+          "customer_role": "CSM",
+          "context": "30 people in customer support, managing over 2000 active construction sites.",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "transcript_id": "87_389262988359592902",
+      "call_id": "389262988359592902",
+      "title": "Hiver Feedback | Asha <> Yukta",
+      "started": "2025-11-10T18:11:36+05:30",
+      "signals": [
+        {
+          "problem_statement": "The current ticket management system is insufficient for the customer's needs.",
+          "customer_ask": "Looking for something more advanced than Lina AI.",
+          "customer_role": "Admin",
+          "context": "Team size not specified, focusing on ticket management and email management.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The product does not support integration with WhatsApp for chatbot functionality.",
+          "customer_ask": "Integration of a WhatsApp chatbot.",
+          "suggested_solution": "Enable WhatsApp chatbot functionality.",
+          "customer_role": "Admin",
+          "context": "Team size not specified, focusing on WhatsApp usage for communication.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The product lacks support for Arabic conversation in the chatbot.",
+          "customer_ask": "Support for Arabic conversation over WhatsApp.",
+          "suggested_solution": "Implement Arabic language support in the chatbot.",
+          "customer_role": "Admin",
+          "context": "Team size not specified, focusing on communication needs in Arabic.",
+          "confidence": "medium"
+        },
+        {
+          "problem_statement": "The product does not currently support forms and customer portal features.",
+          "customer_ask": "Inquiry about forms and customer portal support.",
+          "suggested_solution": "Add support for forms and customer portal.",
+          "customer_role": "Admin",
+          "context": "Team size not specified, looking for enhanced customer interaction features.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "88_3360790303363631583",
+      "call_id": "3360790303363631583",
+      "title": "Hiver & Rana with Air IQ",
+      "started": "2025-11-10T17:58:04+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer needs automation to assign emails to different departments based on the content of the emails.",
+          "customer_ask": "We might need some automations plus AI to automatically transfer emails to the appropriate group.",
+          "confidence": "high",
+          "customer_role": "Admin",
+          "context": "Operations team handling customer emails related to airline services."
+        },
+        {
+          "problem_statement": "The customer lacks a feature to automatically notify team leads when SLA breaches occur.",
+          "customer_ask": "Do we have an option to escalate that particular email directly to the team leader?",
+          "confidence": "high",
+          "customer_role": "Admin",
+          "context": "Operations team managing multiple email groups."
+        },
+        {
+          "problem_statement": "The customer requires a feature that allows agents to see pending emails immediately after closing a ticket.",
+          "customer_ask": "I want the new ticket to open in my screen as soon as I resolve one.",
+          "confidence": "medium",
+          "customer_role": "Admin",
+          "context": "Operations team handling customer emails."
+        },
+        {
+          "problem_statement": "The customer is looking for AI capabilities to track SLA breaches and provide real-time reporting.",
+          "customer_ask": "If you have any automations to track our SLA breaches and the current reports.",
+          "confidence": "high",
+          "customer_role": "Admin",
+          "context": "Operations team managing customer emails."
+        },
+        {
+          "problem_statement": "The customer needs a writing assistance feature to help agents with grammatical errors in emails.",
+          "customer_ask": "If you have that feature already with you guys, that will be very helpful for us.",
+          "confidence": "medium",
+          "customer_role": "Admin",
+          "context": "Operations team handling customer emails."
+        }
+      ]
+    },
+    {
+      "transcript_id": "89_1503865447707759680",
+      "call_id": "1503865447707759680",
+      "title": "Hiver Demo | Chris <> Yukta",
+      "started": "2025-11-10T18:30:53+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer struggles to manage inbound client questions effectively due to distractions and lack of organization.",
+          "customer_ask": "A ticketing system for tracking response times and assigning emails to team members.",
+          "suggested_solution": "Implement a structured system for handling client email questions.",
+          "customer_role": "Admin",
+          "context": "Small business with about 150 clients, managing 5-10 client questions per week.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer lacks a way to categorize and prioritize client emails, leading to potential delays in responses.",
+          "customer_ask": "A system for tagging and categorizing emails for better organization.",
+          "suggested_solution": "Use tags to sort and categorize incoming emails.",
+          "customer_role": "Admin",
+          "context": "Small business with about 150 clients, managing 5-10 client questions per week.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The customer needs a way to track the performance of their email responses and team efficiency.",
+          "customer_ask": "Access to analytics and reporting on email response times and team performance.",
+          "suggested_solution": "Provide metrics and reports on email handling and response times.",
+          "customer_role": "Admin",
+          "context": "Small business with about 150 clients, managing 5-10 client questions per week.",
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "transcript_id": "90_416503973008057754",
+      "call_id": "416503973008057754",
+      "title": "Nora Maria<>Hiver: Introductory Call",
+      "started": "2025-11-10T18:32:05+05:30",
+      "signals": [
+        {
+          "problem_statement": "Missive has a complicated setup for managing delegated inboxes, making it difficult for users to see and manage emails assigned to colleagues.",
+          "customer_ask": "A simpler way to manage delegated inboxes.",
+          "customer_role": "Admin",
+          "context": "Managing customer communications for a social media agency with multiple accounts.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The integration with Instagram in Missive is unstable, leading to disconnections that require manual checks to ensure messages are being received.",
+          "customer_ask": "A more stable connection for Instagram integration.",
+          "customer_role": "Admin",
+          "context": "Managing 30 Instagram accounts with high volume of conversations.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "Missive lacks social media integration, which is essential for managing communications across platforms like Instagram and TikTok.",
+          "customer_ask": "Integration with social media platforms, especially Instagram and TikTok.",
+          "customer_role": "Admin",
+          "context": "Social media management for clients, requiring a central inbox for all communications.",
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "transcript_id": "91_2148549465412012597",
+      "call_id": "2148549465412012597",
+      "title": "Exploring Hiver for Pratilipi",
+      "started": "2025-11-10T18:35:18+05:30",
+      "signals": [
+        {
+          "problem_statement": "The customer is unable to create additional shared mailboxes due to a limitation in the current plan.",
+          "customer_ask": "We would require like three more shared mailboxes.",
+          "suggested_solution": "Consider upgrading to a plan that allows for more shared mailboxes.",
+          "customer_role": "Admin",
+          "context": "Team size of approximately 30 people across multiple departments.",
+          "confidence": "high"
+        },
+        {
+          "problem_statement": "The default SLA settings for the PPS team are not functioning as expected, specifically the 'due soon' status is not visible.",
+          "customer_ask": "The PPS team needs reminders for what has to go up, when and things of that sort.",
+          "suggested_solution": "The PPS team should reach out to support for assistance.",
+          "customer_role": "Admin",
+          "context": "PPS team requires timely reminders for task management.",
+          "confidence": "medium"
+        }
+      ]
     }
   ]
 }

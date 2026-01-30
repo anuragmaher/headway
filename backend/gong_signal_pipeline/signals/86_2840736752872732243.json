@@ -5,35 +5,27 @@
   "started": "2025-11-10T15:01:13+05:30",
   "signals": [
     {
-      "problem_statement": "The customer support team forgets to reply to emails, leading to poor customer communication.",
-      "suggested_solution": "A tool to flag unanswered emails and track response quality.",
+      "problem_statement": "The customer support team forgets to reply to angry emails from customers, leading to unresolved issues.",
+      "customer_ask": "A tool that can flag emails where support did not reply or did not reply appropriately.",
+      "suggested_solution": "Implement a flagging tool to manage email responses.",
       "customer_role": "CSM",
-      "context": "2000 active construction sites, 30 customer support staff, using Gmail for communication.",
+      "context": "30 people in customer support, managing over 2000 active construction sites.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer needs a sentiment analysis tool to identify angry customers and adjust responses accordingly.",
+      "problem_statement": "The customer lacks a sentiment analysis tool to identify angry customers and adjust responses accordingly.",
+      "customer_ask": "A sentiment analyzer that can indicate when a customer is angry.",
+      "suggested_solution": "A tool that analyzes customer emails to determine sentiment and suggest appropriate responses.",
       "customer_role": "CSM",
-      "context": "Managing customer relations for multiple small construction sites.",
+      "context": "30 people in customer support, managing over 2000 active construction sites.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer requires a way to automatically tag emails by construction site to improve visibility and management.",
+      "problem_statement": "The customer needs a way to automatically categorize emails by construction site to improve quality management.",
+      "customer_ask": "A dashboard that shows construction sites and associated emails.",
+      "suggested_solution": "Automatically tag emails by construction site to facilitate easier tracking and management.",
       "customer_role": "CSM",
-      "context": "Handling numerous construction sites with varying issues and communication.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer seeks a dashboard that summarizes issues per construction site, highlighting problems and customer sentiment.",
-      "customer_role": "CSM",
-      "context": "Quality management team needs to monitor multiple construction sites and their associated emails.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer wants to implement a flagging tool quickly to manage email responses effectively.",
-      "suggested_solution": "A flagging tool to identify emails that require attention.",
-      "customer_role": "CSM",
-      "context": "Looking to implement a solution within two weeks for quality management.",
+      "context": "30 people in customer support, managing over 2000 active construction sites.",
       "confidence": "high"
     }
   ]
