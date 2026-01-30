@@ -5,34 +5,37 @@
   "started": "2025-11-07T23:00:32+05:30",
   "signals": [
     {
-      "problem_statement": "The customer needs a more efficient way to manage knowledge base articles, including ownership and review processes.",
-      "customer_role": "Support Lead",
-      "context": "Using Hiver for support with a focus on knowledge base management.",
+      "problem_statement": "The AI feature for recognizing thank yous is not functioning as expected.",
+      "customer_ask": "I was going to add this, the AI thing that's supposed to recognize thank yous and does not work.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer is looking for a self-service bot for their real estate agents to access knowledge base information easily.",
-      "customer_role": "Support Lead",
-      "context": "Current knowledge base is inadequate for agent self-service needs.",
+      "problem_statement": "The knowledge base lacks article ownership and a review cadence.",
+      "customer_ask": "I almost have to create hyperlinks into... I have to put all the articles into hiver.",
+      "suggested_solution": "Have an approver effectively like a review approver and a back or like a flow.",
+      "customer_role": "Admin",
+      "context": "Team size not specified, using Hiver for support and knowledge management.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The AI feature for recognizing thank you messages is not functioning as expected.",
-      "customer_role": "Support Lead",
-      "context": "Experiencing limitations with AI capabilities in the support workflow.",
+      "problem_statement": "There is no integration with ClickUp for accessing articles.",
+      "customer_ask": "We were not able to read ClickUp articles.",
       "confidence": "medium"
     },
     {
-      "problem_statement": "The customer finds it cumbersome to manage knowledge base articles across multiple platforms without integration.",
-      "customer_role": "Support Lead",
-      "context": "Using ClickUp for knowledge management but facing integration issues with Hiver.",
-      "confidence": "high"
+      "problem_statement": "The current knowledge base setup requires duplicating content across platforms.",
+      "customer_ask": "I have to create a Gmail inbox of some sort that she monitors as opposed to doing this.",
+      "confidence": "medium"
     },
     {
-      "problem_statement": "The customer requires a more flexible chat function that can integrate with their knowledge base and provide AI-enabled responses.",
-      "customer_role": "Support Lead",
-      "context": "Looking to enhance customer interaction through a chat widget on their website.",
-      "confidence": "high"
+      "problem_statement": "The knowledge base cannot be set up as both internal and external simultaneously.",
+      "customer_ask": "It would be great if we could do both one of each.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is looking for a self-service bot for their agents.",
+      "customer_ask": "A self-service bot would be helpful for our agents.",
+      "confidence": "medium"
     }
   ]
 }

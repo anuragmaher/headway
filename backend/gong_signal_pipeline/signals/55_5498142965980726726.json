@@ -5,35 +5,24 @@
   "started": "2025-11-06T23:32:19+05:30",
   "signals": [
     {
-      "problem_statement": "The customer struggles with managing multiple shared inboxes, leading to workflow inefficiencies.",
-      "suggested_solution": "The customer is interested in consolidating multiple shared inboxes into one to simplify their workflow.",
-      "customer_role": "CSM",
-      "context": "The customer has around five shared inboxes that require attention from multiple team members.",
+      "problem_statement": "The splitting of inboxes caused workflow disruptions for the customer.",
+      "customer_ask": "They want to try using the product again properly.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer experienced confusion with email assignments, leading to emails disappearing from their view.",
-      "customer_role": "CSM",
-      "context": "The customer is concerned about losing visibility on emails once assigned to other team members.",
+      "problem_statement": "The customer has multiple shared inboxes and finds it cumbersome to manage them separately.",
+      "customer_ask": "They would like to know if it's possible to consolidate all shared inboxes into one.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer expressed a need for better visibility and tracking of email assignments and statuses.",
+      "customer_ask": "They want to ensure they can see all assigned emails and their statuses easily.",
       "confidence": "medium"
     },
     {
-      "problem_statement": "The customer needs a way to track the performance and resolution times of their email interactions.",
-      "customer_role": "CSM",
-      "context": "The customer is interested in metrics related to email handling, such as average response and resolution times.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer requires a more efficient way to manage customer inquiries that come through various channels, including email and chat.",
-      "customer_role": "CSM",
-      "context": "The customer is looking for a solution that integrates chat and email management seamlessly.",
+      "problem_statement": "The customer is concerned about the integration capabilities with their existing systems, specifically Acumatica.",
+      "customer_ask": "They want to know if there is integration with Acumatica.",
       "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer is evaluating multiple solutions and is concerned about pricing and potential discounts.",
-      "customer_role": "CSM",
-      "context": "The customer is considering a small team of 5-10 users and is looking for competitive pricing.",
-      "confidence": "high"
     }
   ]
 }

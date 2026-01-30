@@ -5,33 +5,31 @@
   "started": "2025-11-07T20:31:00+05:30",
   "signals": [
     {
-      "problem_statement": "The customer needs a simple system to track AI chatbot interactions and escalate unresolved issues to human agents.",
+      "problem_statement": "The current system lacks a simple way to track customer inquiries and escalate them to a support ticket.",
+      "customer_ask": "We want a simple system to be able to track that and know when someone needs help.",
       "customer_role": "CEO",
-      "context": "Currently using a complex system with multiple moving parts; aiming to streamline customer support for various user types.",
+      "context": "Small team handling customer inquiries related to classes for young adults and juveniles.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer struggles with differentiating responses based on distinct user populations (adult learners, juvenile learners, court staff).",
+      "problem_statement": "The existing AI chatbot does not effectively differentiate between distinct user populations, leading to inappropriate responses.",
+      "customer_ask": "We need to distinguish what kind of user the customer is and answer appropriately.",
       "customer_role": "Director of Operations",
-      "context": "Handling inquiries from diverse user groups with different needs; currently using a form to categorize users but facing challenges in providing tailored responses.",
+      "context": "Multiple user types including adult learners, juvenile learners, and court staff.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer is concerned about the complexity of setting up conditional logic and conversational triggers in their current system.",
+      "problem_statement": "The complexity of the current system's trigger paths is causing issues in providing accurate responses.",
+      "customer_ask": "We need to simplify the process of creating conversational triggers.",
       "customer_role": "Director of Operations",
-      "context": "Experiencing difficulties in creating effective conversational paths for their chatbot, leading to unresolved customer inquiries.",
+      "context": "Struggling with complex trigger paths for different user types.",
       "confidence": "medium"
     },
     {
-      "problem_statement": "The customer anticipates increased customer service challenges as they scale their operations nationally.",
+      "problem_statement": "There is a need for a generative AI feature to enhance customer interactions, but it is not yet available.",
+      "customer_ask": "We need the generative AI to feel like customers are talking to a person.",
       "customer_role": "CEO",
-      "context": "Recently invested in scaling the company; expects customer service issues to grow as they expand.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer is looking for a generative AI solution that mimics human conversation to improve user experience.",
-      "customer_role": "CEO",
-      "context": "Currently relying on a basic chatbot; needs a more advanced solution to enhance customer interactions.",
+      "context": "Looking for a solution that can handle customer inquiries effectively as they scale.",
       "confidence": "high"
     }
   ]

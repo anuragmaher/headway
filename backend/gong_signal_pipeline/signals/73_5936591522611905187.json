@@ -5,28 +5,32 @@
   "started": "2025-11-07T22:32:19+05:30",
   "signals": [
     {
-      "problem_statement": "The AI copilot settings change unexpectedly, causing disruptions in its functionality.",
+      "problem_statement": "The AI copilot settings change unexpectedly, causing it to become disabled without user action.",
+      "customer_ask": "To understand why the settings change and ensure they remain enabled.",
       "customer_role": "Support Lead",
-      "context": "Using AI copilot feature for customer inquiries, team of 14 people.",
+      "context": "Team size not specified, using AI features.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The AI copilot does not assist in composing new emails, limiting its utility for creating initial outreach.",
-      "suggested_solution": "Request for the copilot to assist in drafting new emails using knowledge base information.",
+      "problem_statement": "The AI copilot does not assist in composing new emails, limiting its functionality for users who want to draft emails from knowledge base information.",
+      "customer_ask": "To have the copilot assist in composing new emails using information from the knowledge base.",
+      "suggested_solution": "To allow the copilot to create drafts for new emails.",
       "customer_role": "Support Lead",
-      "context": "Team needs to create new email drafts for property inquiries.",
+      "context": "Team size not specified, using AI features.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The pricing for the AI features is perceived as too high given the limited usage of additional features.",
+      "problem_statement": "The AI sentiment analysis feature is not useful for the customer's business context, leading to dissatisfaction with the overall AI package.",
+      "customer_ask": "To reconsider the pricing structure based on the features they actually use.",
       "customer_role": "Sales",
-      "context": "Concern over the cost of AI features that are not fully utilized by the team.",
-      "confidence": "high"
+      "context": "Team size not specified, evaluating AI features.",
+      "confidence": "medium"
     },
     {
-      "problem_statement": "There is uncertainty about the AI's language preference settings, specifically between American and British English.",
+      "problem_statement": "There is uncertainty about the AI's language preference settings, specifically whether it uses American or British English.",
+      "customer_ask": "To clarify if there is an option to select the language preference for AI responses.",
       "customer_role": "Sales",
-      "context": "Concern about the AI's language output affecting communication consistency.",
+      "context": "Team size not specified, evaluating AI features.",
       "confidence": "medium"
     }
   ]

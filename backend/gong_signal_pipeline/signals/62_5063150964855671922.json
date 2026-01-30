@@ -5,29 +5,23 @@
   "started": "2025-11-07T17:31:51+05:30",
   "signals": [
     {
-      "problem_statement": "The legal team needs a tool that can review contracts and highlight areas that do not align with their internal guidelines.",
-      "suggested_solution": "An AI feature that checks agreements against organizational norms and provides suggestions for changes.",
-      "customer_role": "Support Lead",
-      "context": "Legal team handling contract reviews, primarily using email for requests.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The current AI compose feature is underutilized by team members, limiting its effectiveness.",
-      "customer_role": "Support Lead",
-      "context": "One user finds AI compose helpful, but others do not engage with it.",
+      "problem_statement": "The AI compose feature is underutilized by team members despite its usefulness to some individuals.",
+      "customer_ask": "Suggestions on how to encourage team members to use AI compose.",
       "confidence": "medium"
     },
     {
-      "problem_statement": "The team lacks a centralized task management system, leading to inefficiencies in handling tasks from various sources.",
-      "suggested_solution": "Integration of task management features into Hiver to better manage tasks from emails and compliance.",
-      "customer_role": "Support Lead",
-      "context": "Tasks are managed individually without a central system, leading to operational challenges.",
+      "problem_statement": "The customer needs a tool that can review legal agreements and contracts, which is a significant part of their work.",
+      "customer_ask": "A feature that allows uploading agreements for review against organizational norms and legal requirements.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The legal team requires a way to structure incoming requests more effectively to improve task management.",
-      "customer_role": "Support Lead",
-      "context": "Requests are currently handled through email without a structured approach.",
+      "problem_statement": "The current task management process is fragmented, with team members using different methods and tools.",
+      "customer_ask": "Integration of task management features into Hiver to centralize task handling.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer lacks a centralized system for handling incoming legal requests, relying solely on email.",
+      "customer_ask": "A structured way to manage incoming requests through Hiver.",
       "confidence": "medium"
     }
   ]

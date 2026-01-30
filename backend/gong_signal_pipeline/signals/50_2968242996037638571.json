@@ -5,40 +5,23 @@
   "started": "2025-11-06T21:44:48+05:30",
   "signals": [
     {
-      "problem_statement": "The AI tagging system is inaccurately applying tags, leading to confusion and inefficiency.",
-      "suggested_solution": "Ability to report inaccurate tag applications.",
-      "customer_role": "Support Lead",
-      "context": "Using AI tagging in a shared inbox with multiple users.",
+      "problem_statement": "The AI tagging system inaccurately applies tags, leading to confusion and inefficiency.",
+      "customer_ask": "Is there any way to report when a tag is not applied when it should have been?",
       "confidence": "high"
     },
     {
-      "problem_statement": "The AI fails to report when a tag should have been applied, causing workflow interruptions.",
-      "customer_role": "Support Lead",
-      "context": "Shared inbox environment where accurate tagging is critical.",
+      "problem_statement": "The customer experiences failures when trying to report tagging issues through the interface.",
+      "customer_ask": "Can you fix the issue where it says 'fail to report tag'?",
       "confidence": "high"
     },
     {
-      "problem_statement": "The AI requires extensive training time (1-2 weeks) to function effectively, which delays productivity.",
-      "customer_role": "Support Lead",
-      "context": "Need for timely responses in a customer support setting.",
+      "problem_statement": "The AI requires significant training time (1-2 weeks) to function effectively, which delays its usefulness.",
+      "customer_ask": "Can we expedite the training process for the AI?",
       "confidence": "medium"
     },
     {
       "problem_statement": "The AI's ability to learn from varied email content is limited, making it difficult to apply tags accurately.",
-      "customer_role": "Support Lead",
-      "context": "Handling diverse client communications in a shared inbox.",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The AI features, such as 'ask AI', are still in beta and require further training to be effective.",
-      "customer_role": "Support Lead",
-      "context": "Exploring AI capabilities for improving email responses.",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The current knowledge source upload options are limited to PDF files, restricting the types of documents that can be utilized.",
-      "customer_role": "Support Lead",
-      "context": "Need for diverse document formats to enhance AI learning.",
+      "customer_ask": "Can the AI be improved to better handle diverse email content?",
       "confidence": "medium"
     }
   ]

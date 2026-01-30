@@ -5,23 +5,18 @@
   "started": "2025-11-07T20:00:54+05:30",
   "signals": [
     {
-      "problem_statement": "Desiree's team needs a way to track client communication sentiment to improve client retention.",
-      "customer_role": "CSM",
-      "context": "Desiree is exploring AI capabilities for tracking sentiment in client communications.",
+      "problem_statement": "The AI add-on package is only available as a full suite, which may not be cost-effective for all team members.",
+      "customer_ask": "Consider offering the AI features a la carte.",
+      "customer_role": "Admin",
+      "context": "Team size not specified, but includes payroll and implementation teams.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The AI add-on is priced as a full package, which may not be cost-effective for all team members who won't use the features.",
-      "customer_role": "CSM",
-      "context": "Desiree's team has members who may not benefit from the AI features, making the $20 per user per month pricing a concern.",
+      "problem_statement": "There is a need for better tracking of client communication sentiment to improve client retention.",
+      "customer_ask": "Enhance sentiment tracking capabilities.",
+      "customer_role": "Admin",
+      "context": "Team size not specified, focused on client interactions.",
       "confidence": "high"
-    },
-    {
-      "problem_statement": "Desiree's team requires a way to manage and review negative client interactions effectively.",
-      "suggested_solution": "Desiree mentioned tagging herself to review negative interactions.",
-      "customer_role": "CSM",
-      "context": "Desiree is looking for methods to ensure negative interactions are flagged for management review.",
-      "confidence": "medium"
     }
   ]
 }

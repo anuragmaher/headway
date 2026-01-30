@@ -5,34 +5,25 @@
   "started": "2025-11-07T14:32:22+05:30",
   "signals": [
     {
-      "problem_statement": "The customer needs a more efficient way to categorize and manage diverse inquiries from patients and companies.",
+      "problem_statement": "The current tagging system does not adequately capture the variety of ways customers phrase their inquiries, leading to potential misclassification.",
+      "customer_ask": "We would like a more flexible tagging system that can understand different phrases for similar requests.",
+      "confidence": "high",
       "customer_role": "Admin",
-      "context": "Admin team of about five managing inbound emails for a telehealth medical service.",
-      "confidence": "high"
+      "context": "Admin team of about five managing inbound emails for a telehealth medical service."
     },
     {
-      "problem_statement": "The customer struggles with handling varied phrasing in cancellation requests and other inquiries, making it difficult to automate tagging.",
+      "problem_statement": "There is a lack of automation in responding to customer inquiries, requiring manual review of all responses.",
+      "customer_ask": "We need a system that can suggest responses based on previous interactions.",
+      "confidence": "high",
       "customer_role": "Admin",
-      "context": "Admin team managing diverse inquiries including appointment bookings and cancellations.",
-      "confidence": "high"
+      "context": "Admin team of about five managing inbound emails for a telehealth medical service."
     },
     {
-      "problem_statement": "The customer requires a system that can suggest responses based on previous interactions and knowledge sources without sending automated replies directly.",
+      "problem_statement": "The current system does not provide a way to automatically extract and surface important information like invoice numbers from emails.",
+      "customer_ask": "We would like a feature that can extract specific data from emails and display it prominently.",
+      "confidence": "medium",
       "customer_role": "Admin",
-      "context": "Admin team handling customer inquiries and needing to ensure responses are personalized.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer is looking for a way to track and analyze the quality of responses sent by their team to improve communication.",
-      "customer_role": "Admin",
-      "context": "Admin team managing customer interactions and wanting to enhance response quality.",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer needs a centralized knowledge base to streamline information access for their team.",
-      "customer_role": "Admin",
-      "context": "Admin team managing inquiries and needing a single source for information updates.",
-      "confidence": "high"
+      "context": "Admin team of about five managing inbound emails for a telehealth medical service."
     }
   ]
 }

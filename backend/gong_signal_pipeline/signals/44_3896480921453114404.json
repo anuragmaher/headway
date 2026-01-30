@@ -5,17 +5,20 @@
   "started": "2025-11-06T19:11:14+05:30",
   "signals": [
     {
-      "problem_statement": "The customer is concerned about the potential price increase for their subscription and is looking for a way to maintain their current pricing.",
-      "suggested_solution": "A minimal price increase of one dollar per user per month would make the customer happier.",
+      "problem_statement": "The customer is not utilizing all features of the current plan and feels they are overpaying for unused capabilities.",
+      "customer_ask": "To continue using Hiver at the same rate without a significant price increase.",
+      "suggested_solution": "A minimal price increase of one dollar per user per month.",
       "customer_role": "Admin",
-      "context": "Currently using Hiver with 14 users, primarily for rule-based automation.",
+      "context": "Team of 14 users, primarily using basic features.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer feels they are not utilizing all the features of the current plan and may not need the higher-tier subscription.",
+      "problem_statement": "The customer is concerned about the potential price increase and its impact on their decision to renew.",
+      "customer_ask": "To honor the current pricing or keep the increase minimal.",
+      "suggested_solution": "To negotiate a lower price increase.",
       "customer_role": "Admin",
-      "context": "Using only basic features of Hiver, indicating a mismatch between their needs and the plan they are on.",
-      "confidence": "medium"
+      "context": "Team of 14 users, primarily using basic features.",
+      "confidence": "high"
     }
   ]
 }

@@ -5,33 +5,39 @@
   "started": "2025-11-08T01:30:25+05:30",
   "signals": [
     {
-      "problem_statement": "The customer needs to standardize email management processes across their team to improve efficiency and reduce manual handling of emails.",
+      "problem_statement": "The current email management process is inconsistent and varies among team members, leading to inefficiencies.",
+      "customer_ask": "We need to standardize our email management processes.",
       "customer_role": "CSM",
-      "context": "Team of 30-40 people using distribution lists for email management, with plans to expand to 60-70.",
+      "context": "Team of 30-40, expanding to 60-70, using Outlook and distribution lists for email management.",
       "confidence": "high"
     },
     {
-      "problem_statement": "There is a lack of visibility into email handling and performance metrics, making it difficult to track response times and workload distribution.",
+      "problem_statement": "There is a lack of visibility into outstanding tasks and responsibilities within the team.",
+      "customer_ask": "We need better visibility into what's outstanding and what needs to be completed.",
       "customer_role": "CSM",
-      "context": "Current email management lacks analytics to measure response times and completion rates.",
+      "context": "Team of 30-40, expanding to 60-70, using Outlook and distribution lists for email management.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer experiences workflow friction due to inconsistent email sorting and handling methods among team members.",
+      "problem_statement": "The current system does not effectively handle the routing of emails based on the content, leading to potential delays in response.",
+      "customer_ask": "We are looking for skill-based routing to improve email assignment.",
       "customer_role": "CSM",
-      "context": "Different team members use various methods to manage their inboxes, leading to confusion and inefficiency.",
+      "context": "Team of 30-40, expanding to 60-70, using Outlook and distribution lists for email management.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer is looking for AI capabilities to automate email sorting and responses based on specific criteria.",
+      "problem_statement": "There is no way to track whether team members are reading and responding to emails efficiently.",
+      "customer_ask": "We need analytics to understand response times and email engagement.",
       "customer_role": "CSM",
-      "context": "The team is interested in using AI to streamline email management and improve response times.",
-      "confidence": "medium"
+      "context": "Team of 30-40, expanding to 60-70, using Outlook and distribution lists for email management.",
+      "confidence": "high"
     },
     {
-      "problem_statement": "The customer needs a solution that integrates with Outlook for email management but is concerned about the lack of calendar integration.",
+      "problem_statement": "The product currently lacks calendar integration, which is essential for scheduling meetings directly from emails.",
+      "customer_ask": "Is there a calendar integration available?",
+      "suggested_solution": "Implement calendar integration to sync with Outlook.",
       "customer_role": "CSM",
-      "context": "Currently using Outlook for email management and requires calendar functionality.",
+      "context": "Team of 30-40, expanding to 60-70, using Outlook and distribution lists for email management.",
       "confidence": "medium"
     }
   ]

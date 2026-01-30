@@ -5,33 +5,33 @@
   "started": "2025-11-06T22:31:46+05:30",
   "signals": [
     {
-      "problem_statement": "The customer is experiencing limitations with their current email management system (Helpscout) due to a legacy plan, which restricts their ability to streamline workflows and manage increasing user volume effectively.",
+      "problem_statement": "The customer is limited in their ability to streamline workflows and tags due to a legacy plan with Helpscout.",
+      "customer_ask": "They are looking to see if Hiver can solve some of the issues they are currently facing and be more efficient.",
       "customer_role": "Admin",
-      "context": "Special education transportation department with a significant budget increase from $6 million to over $41 million, managing shared email communications.",
+      "context": "Special education transportation department with a significant budget increase and a growing number of users.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer needs advanced workflow automation capabilities, such as skill-based routing and priority tagging, which are limited in their current system.",
+      "problem_statement": "The customer cannot create or manage company profiles effectively, leading to difficulties in handling multiple contacts from the same organization.",
+      "customer_ask": "They want to know if Hiver can allow them to create company profiles.",
+      "suggested_solution": "The customer suggested that they need company profiles for better organization.",
       "customer_role": "Admin",
-      "context": "Looking to improve efficiency in managing email communications for a growing department.",
+      "context": "Managing multiple contacts from various districts and transportation companies.",
       "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer is unable to create or manage company profiles and contacts effectively, leading to issues with duplicate contacts and inefficient email template usage.",
-      "customer_role": "Admin",
-      "context": "Managing multiple contacts from the same email address and needing better organization for email communications.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer requires the ability to set reminders or timers on emails to ensure follow-ups are not missed, which is not clearly confirmed as available in the current solution.",
-      "customer_role": "Admin",
-      "context": "Need for timely follow-ups on contractor communications.",
-      "confidence": "medium"
     },
     {
       "problem_statement": "The customer is concerned about the limitations on the number of recipients for outgoing emails, which could affect their communication with contractors and districts.",
+      "customer_ask": "They need clarification on whether Hiver has a limit on the number of recipients for outgoing emails.",
       "customer_role": "Admin",
-      "context": "Sending email blasts to multiple recipients for important updates.",
+      "context": "Sending emails to contractors and districts for important information.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is looking for a way to set reminders or timers on emails to ensure follow-ups are not missed.",
+      "customer_ask": "They want to know if they can set a timer for emails to pop back up in the queue.",
+      "suggested_solution": "The customer suggested having a feature to remind them to follow up on emails.",
+      "customer_role": "Admin",
+      "context": "Managing follow-ups with contractors regarding student information.",
       "confidence": "medium"
     }
   ]

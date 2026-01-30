@@ -5,15 +5,11 @@
   "started": "2025-11-08T03:00:34+05:30",
   "signals": [
     {
-      "problem_statement": "The customer is facing limitations with their current telephony tool, Fivenine, which does not integrate with Hiver.",
+      "problem_statement": "Hiver currently does not integrate with Fivetran, which is a limitation for the customer's phone support needs.",
+      "customer_ask": "Keep me posted on any developments regarding the Fivetran integration.",
+      "suggested_solution": "Consider adding integration with Fivetran.",
       "customer_role": "VP of Operations",
-      "context": "Currently using Fivenine for phone support, tied to a multi-year contract.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer is looking for a CRM solution that meets their operational needs as they are re-evaluating their current system, Zendesk.",
-      "customer_role": "VP of Operations",
-      "context": "Currently using Zendesk for about eight years and planning a re-evaluation in the summer of next year.",
+      "context": "Oversees member success and customer success tools, evaluating CRM platforms.",
       "confidence": "high"
     }
   ]

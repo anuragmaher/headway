@@ -5,26 +5,23 @@
   "started": "2025-11-06T20:47:25+05:30",
   "signals": [
     {
-      "problem_statement": "The customer needs to understand how email deletions in Hiver affect their Outlook inbox.",
-      "customer_role": "CSM",
-      "context": "Public institution, evaluating integration with Outlook/Microsoft 365.",
+      "problem_statement": "The integration between Hiver and Outlook does not support email deletion synchronization.",
+      "customer_ask": "Confirmation on whether deleting an email in Hiver will also delete it in Outlook.",
+      "customer_role": "Admin",
+      "context": "Public institution, evaluating integration with existing systems.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer requires detailed information on security risks and technical feasibility for integrating Hiver with their existing systems.",
-      "customer_role": "CSM",
-      "context": "Public institution, needs IT approval for platform implementation.",
+      "problem_statement": "The customer requires detailed security and technical feasibility information for Hiver's integration with Outlook.",
+      "customer_ask": "Request for documents or information to provide to the IT team regarding security risks and access requirements.",
+      "customer_role": "Admin",
+      "context": "Public institution, needs to comply with thorough IT review processes.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer is concerned about the lack of synchronization of tags and organization between Hiver and Outlook.",
-      "customer_role": "CSM",
-      "context": "Public institution, evaluating integration with Outlook/Microsoft 365.",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer needs extended access to the sandbox environment for their team to finalize their evaluation.",
-      "customer_role": "CSM",
+      "problem_statement": "The customer is uncertain about the timeline for accessing the sandbox environment for testing.",
+      "customer_ask": "Request for extended access to the sandbox until the end of the day tomorrow.",
+      "customer_role": "Admin",
       "context": "Public institution, team needs more time to test the platform.",
       "confidence": "medium"
     }

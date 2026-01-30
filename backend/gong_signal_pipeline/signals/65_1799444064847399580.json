@@ -5,34 +5,32 @@
   "started": "2025-11-07T19:34:19+05:30",
   "signals": [
     {
-      "problem_statement": "The customer is facing significant manual tasks in Outlook, leading to a lack of transparency and visibility on ticket ownership and email responses.",
-      "customer_role": "Sales",
-      "context": "The customer is managing a sales mailbox and is looking for a streamlined solution for email management.",
-      "confidence": "high"
+      "problem_statement": "The customer is experiencing significant manual tasks in Outlook, leading to a lack of transparency and visibility on ticket ownership and email responses.",
+      "customer_ask": "A better solution to manage transparency and visibility on tickets and emails.",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Sales team managing multiple email domains and shared mailboxes."
     },
     {
-      "problem_statement": "The customer needs to whitelist Hiver in their Microsoft account to allow third-party access, which is currently blocked.",
-      "customer_role": "Sales",
-      "context": "The customer is trying to set up a shared mailbox but is encountering access issues due to Microsoft account restrictions.",
-      "confidence": "high"
+      "problem_statement": "The customer is unable to access their sales mailbox due to third-party application restrictions set by their Microsoft admin.",
+      "customer_ask": "Assistance in whitelisting Hiver in their Microsoft account.",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Sales team managing multiple email domains and shared mailboxes."
     },
     {
-      "problem_statement": "The customer wants to integrate their existing CRM (Hubspot) with Hiver to track email stages and communication effectively.",
-      "customer_role": "Sales",
-      "context": "The customer is looking for a way to connect their sales process with email management to improve visibility across teams.",
-      "confidence": "medium"
+      "problem_statement": "The customer is unsure how to sync past emails into Hiver, as it requires engineering work to import older emails.",
+      "customer_ask": "Clarification on the process to import older emails into Hiver.",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Sales team managing multiple email domains and shared mailboxes."
     },
     {
-      "problem_statement": "The customer is interested in having custom statuses for their email management workflow but is limited by the inability to customize default statuses in Hiver.",
-      "customer_role": "Sales",
-      "context": "The customer is looking for a way to reflect their sales pipeline stages within Hiver.",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer needs to import past emails into Hiver, which requires significant engineering work and is not possible during the trial period.",
-      "customer_role": "Sales",
-      "context": "The customer is looking to migrate historical email data into the new system for continuity.",
-      "confidence": "high"
+      "problem_statement": "The customer wants to create custom statuses for their email management workflow but is limited by the inability to customize default statuses in Hiver.",
+      "customer_ask": "The ability to create custom statuses for email management.",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Sales team managing multiple email domains and shared mailboxes."
     }
   ]
 }

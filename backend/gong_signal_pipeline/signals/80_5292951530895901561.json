@@ -5,33 +5,19 @@
   "started": "2025-11-08T02:00:10+05:30",
   "signals": [
     {
-      "problem_statement": "The customer is managing multiple brands and needs a streamlined communication process to avoid confusion and errors in email routing.",
-      "context": "The customer is working with a client that has three brands and currently uses five separate inboxes and spreadsheets, leading to inefficiencies and human error.",
+      "problem_statement": "The customer is currently managing multiple inboxes and spreadsheets, leading to an inefficient and error-prone workflow.",
+      "customer_ask": "The customer wants to automate their workflows and consolidate communication into a single inbox.",
+      "suggested_solution": "The customer suggested using tokens in email subject lines to route replies correctly based on brand.",
       "customer_role": "CSM",
+      "context": "The customer is a fractional consulting service for high volume photography studios, managing multiple brands.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer requires automation in task management and email responses to improve workflow efficiency.",
-      "context": "The customer is looking to automate workflows for high volume photography studios and is currently using a mix of spreadsheets and task management software.",
+      "problem_statement": "The customer lacks the knowledge to engineer the automation and token system needed for their communication setup.",
+      "customer_ask": "The customer is looking for guidance on how to implement the token system and ensure proper email routing.",
+      "suggested_solution": "The customer expressed a need for support in understanding how to set up the automation correctly.",
       "customer_role": "CSM",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer is concerned about the complexity of setting up email tokens for proper email routing based on brand.",
-      "context": "The customer needs to ensure that replies to emails are directed to the correct brand's inbox without manual intervention.",
-      "customer_role": "CSM",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer is looking for a solution that allows for easy scalability as their business grows.",
-      "context": "The customer anticipates needing to add more users to the system as the business expands, and wants to ensure that the solution can accommodate this.",
-      "customer_role": "CSM",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer is frustrated with the current disjointed system that requires managing multiple tabs and tools.",
-      "context": "The customer currently has to manage five separate inboxes and multiple spreadsheets, which is cumbersome and prone to errors.",
-      "customer_role": "CSM",
+      "context": "The customer is working with a client that has multiple brands and needs to separate responses based on brand.",
       "confidence": "high"
     }
   ]

@@ -5,40 +5,46 @@
   "started": "2025-11-07T15:02:06+05:30",
   "signals": [
     {
-      "problem_statement": "Zendesk is too expensive and complex for the team's needs, requiring significant technical expertise to configure and manage.",
-      "customer_role": "Sales",
-      "context": "Payments processing company, currently using Zendesk for 10 people, paying around $12,000 a year.",
-      "confidence": "high"
+      "problem_statement": "Zendesk is perceived as an expensive tool that requires extensive setup and configuration, making it difficult for the team to utilize its full capacity.",
+      "customer_ask": "Looking for a tool that allows automation and connects with internal documentation.",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Payments processing company with a small team."
     },
     {
-      "problem_statement": "The customer needs a solution that allows for automation and integration with their internal documentation and workflows without requiring extensive technical support.",
-      "customer_role": "Sales",
-      "context": "Looking for a tool that simplifies automation and integrates with existing processes.",
-      "confidence": "high"
+      "problem_statement": "The current setup in Zendesk is complicated, requiring significant time and technical expertise to manage workflows and automations.",
+      "customer_ask": "Desires a solution that is simple and easy to operate without needing a dedicated person for setup.",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Payments processing company with a small team."
     },
     {
-      "problem_statement": "The current setup in Zendesk is not intuitive, making it difficult for the team to manage workflows and access necessary features without constant support.",
-      "customer_role": "Sales",
-      "context": "Team struggles with configuration and finding solutions to issues, leading to reliance on external help like ChatGPT.",
-      "confidence": "high"
+      "problem_statement": "There is a lack of intuitive AI features in Zendesk, which are offered as additional paid services rather than included by default.",
+      "customer_ask": "Wants an AI-powered solution that does not require extra payments for basic functionalities.",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Payments processing company with a small team."
     },
     {
-      "problem_statement": "The customer requires AI capabilities as a standard feature rather than an additional cost, as they find it unfair to pay extra for AI functionalities.",
-      "customer_role": "Sales",
-      "context": "Frustration with Zendesk's pricing model for AI features.",
-      "confidence": "high"
+      "problem_statement": "The process of managing chargebacks through Zendesk is cumbersome and not fully automated, requiring manual intervention.",
+      "customer_ask": "Looking for a more efficient automation process that integrates seamlessly with their existing workflows.",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Payments processing company with a small team."
     },
     {
-      "problem_statement": "The customer needs a simple way to manage multiple brands or teams within the support tool, similar to Zendesk's 'brands' feature.",
-      "customer_role": "Sales",
-      "context": "Looking for a way to separate support for different teams like fraud prevention and technical account management.",
-      "confidence": "high"
+      "problem_statement": "The current analytics and reporting capabilities in Zendesk are perceived as complicated and not user-friendly.",
+      "customer_ask": "Wants a solution that allows easy access to KPIs and dashboard creation.",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Payments processing company with a small team."
     },
     {
-      "problem_statement": "The customer is concerned about the complexity of migrating their existing customer database and ensuring a smooth onboarding process with the new tool.",
-      "customer_role": "Sales",
-      "context": "Planning to migrate from Zendesk to a new tool and needs assurance about data transfer and setup.",
-      "confidence": "high"
+      "problem_statement": "The need for a customer portal in Zendesk requires complex programming, making it inaccessible for the team.",
+      "customer_ask": "Desires a simpler way to set up a customer portal without extensive technical knowledge.",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Payments processing company with a small team."
     }
   ]
 }

@@ -5,28 +5,23 @@
   "started": "2025-11-08T01:00:57+05:30",
   "signals": [
     {
-      "problem_statement": "The customer is facing a significant price increase for a product they do not use extensively, leading to dissatisfaction and a potential cancellation.",
-      "suggested_solution": "Downgrade to a free plan or request a refund for the recent charge.",
-      "customer_role": "Admin",
-      "context": "Currently using Hiver with three users but only one is active; considering downgrading due to low usage.",
+      "problem_statement": "The customer is unaware of significant pricing changes and feels forced into a higher payment tier without consent.",
+      "customer_ask": "I would like to see what we can do to just downgrade this and request for a refund.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer is experiencing deliverability issues with their current CRM and is exploring alternatives for cold outreach.",
-      "customer_role": "Sales",
-      "context": "Looking for a solution to improve email deliverability for sales outreach, currently using a CRM that is not meeting their needs.",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer is confused about the pricing structure, specifically being charged for more users than they actively have.",
-      "customer_role": "Admin",
-      "context": "Billing confusion due to a tiered pricing model that charges for a minimum number of users.",
+      "problem_statement": "The customer feels that the product is not being utilized effectively for their needs, particularly in customer success.",
+      "customer_ask": "I could downgrade to like the free plan and we wouldn't be affected.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer is uncertain about the effectiveness of Hiver for outbound sales compared to other dedicated tools.",
-      "customer_role": "Sales",
-      "context": "Evaluating whether to use Hiver for sales processes instead of dedicated cold email software.",
+      "problem_statement": "The customer is confused about being charged for more users than they actually have.",
+      "customer_ask": "What is the bare minimum? And I don't know if you even have like a free plan that just doesn't have all the bells and whistles?",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is exploring options for using the product for sales outreach but is concerned about email deliverability issues.",
+      "customer_ask": "Have you guys had any use cases of like, you know, huge outbound sales team using hiver?",
       "confidence": "medium"
     }
   ]

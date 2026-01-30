@@ -5,34 +5,32 @@
   "started": "2025-11-06T22:05:49+05:30",
   "signals": [
     {
-      "problem_statement": "The customer struggles with managing communication effectively using a Google group for sales, leading to potential missed messages and duplicated efforts.",
-      "customer_role": "Admin",
-      "context": "Currently three people managing customer communications, expecting to expand to six next year.",
+      "problem_statement": "The current use of a Google group for managing shared mailboxes is ineffective, leading to communication issues and potential oversight of customer interactions.",
+      "customer_ask": "A shared mailbox for sales that allows better visibility and management of communications.",
+      "customer_role": "Owner",
+      "context": "Wildlife removal company with plans to expand from three to six employees.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer needs a way to ensure that customer inquiries are routed correctly to either sales or support based on their status as leads or existing customers.",
-      "customer_role": "Admin",
-      "context": "Using a shared inbox for both sales and support inquiries.",
+      "problem_statement": "There is a need for better integration between Hiver and Housecall Pro to streamline customer management and job tracking.",
+      "customer_ask": "Integration opportunities between Hiver and Housecall Pro.",
+      "customer_role": "Owner",
+      "context": "Wildlife removal company using Housecall Pro for field service management.",
       "confidence": "medium"
     },
     {
-      "problem_statement": "The customer is concerned about their sales team member's lack of documentation and follow-up, which could lead to issues if that person is unavailable.",
-      "customer_role": "Sales",
-      "context": "Salesperson is not consistently documenting customer interactions, which is critical for continuity.",
+      "problem_statement": "The current notification system for tagged messages in Hiver is insufficient, as team members may miss notifications unless they are actively checking the platform.",
+      "customer_ask": "A chat bot that notifies team members when they are tagged in a thread.",
+      "customer_role": "Owner",
+      "context": "Wildlife removal company with a team trained on Google Chat.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The sales team struggles with documentation and note-taking during customer interactions, which could lead to gaps in customer service.",
+      "customer_ask": "A solution that encourages better documentation practices among sales staff.",
+      "customer_role": "Owner",
+      "context": "Wildlife removal company with a sales team that has issues with keeping up with documentation.",
       "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer is looking for better integration between their current field service management tool and the new email management system to streamline operations.",
-      "customer_role": "Admin",
-      "context": "Currently using Housecall Pro for field service management and wants to integrate it with Hiver.",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer needs a more effective notification system for team members tagged in conversations, as current notifications may not be noticed.",
-      "customer_role": "Admin",
-      "context": "Team is accustomed to using Google Chat for notifications.",
-      "confidence": "medium"
     }
   ]
 }

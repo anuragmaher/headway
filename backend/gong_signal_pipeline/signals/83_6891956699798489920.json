@@ -5,57 +5,38 @@
   "started": "2025-11-10T13:29:24+05:30",
   "signals": [
     {
-      "problem_statement": "The customer struggles with managing a high volume of emails and ensuring that no emails are missed, especially when team members are absent.",
-      "customer_role": "Sales",
-      "context": "Shared inbox for sales, 4 users, handling 40-50 emails daily.",
+      "problem_statement": "The customer spends a lot of time sorting through emails, which is inefficient for their small team.",
+      "customer_ask": "They want a solution that can help them be more efficient without being as complex as Salesforce.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer spends excessive time sorting through emails manually, which is inefficient for their small team.",
-      "customer_role": "Sales",
-      "context": "4 people using email daily, looking for a more efficient solution than Salesforce.",
+      "problem_statement": "The customer has issues with tracking missing stock and damaged goods using a Google spreadsheet, which is time-consuming.",
+      "customer_ask": "They want a system that can assign ticket numbers and track these issues more effectively.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer has issues with team members deleting important emails instead of responding, leading to missed communications.",
-      "customer_role": "Sales",
-      "context": "Past experience of missing emails due to staff actions.",
+      "problem_statement": "The customer experienced a significant email loss due to a staff member deleting emails instead of responding.",
+      "customer_ask": "They need a solution that ensures no emails are missed, even when staff are away.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer relies heavily on Google Sheets for tracking stock and damaged goods, indicating a need for better integration and automation.",
-      "customer_role": "Sales",
-      "context": "Using a massive Google spreadsheet for tracking, looking for a more efficient system.",
+      "problem_statement": "The customer does not have any reporting or analytics on their email management, leading to a lack of visibility on email status.",
+      "customer_ask": "They want to track how many emails are open, pending, or closed.",
       "confidence": "medium"
     },
     {
-      "problem_statement": "The customer needs a simple-to-use solution that non-technical staff can operate without extensive training.",
-      "customer_role": "Sales",
-      "context": "Team members are technophobes and struggle with new software.",
+      "problem_statement": "The customer needs a simple solution that non-technical staff can use without extensive training.",
+      "customer_ask": "They require a user-friendly interface that their team can easily adopt.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer requires a way to manage personal inboxes of team members while maintaining privacy for sensitive communications.",
-      "customer_role": "Sales",
-      "context": "Need to manage staff emails without exposing personal or sensitive information.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer lacks reporting and analytics on email management, which hinders their ability to track performance and efficiency.",
-      "customer_role": "Sales",
-      "context": "Currently using Gmail without any reporting tools.",
+      "problem_statement": "The customer is concerned about managing personal emails of staff members while ensuring their own emails remain private.",
+      "customer_ask": "They want to set up a hierarchy where they can manage staff members' personal inboxes without exposing their own.",
       "confidence": "medium"
     },
     {
-      "problem_statement": "The customer is looking for a live chat solution that is not a chatbot, indicating a need for real-time human interaction.",
-      "customer_role": "Sales",
-      "context": "Currently using Zendesk live chat but seeking alternatives.",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer wants to integrate social media messaging (Instagram and Facebook) into their communication workflow, which is currently unsupported.",
-      "customer_role": "Sales",
-      "context": "Mainly receiving messages through Instagram.",
+      "problem_statement": "The customer currently lacks integration with social media platforms like Facebook and Instagram for managing messages.",
+      "customer_ask": "They want to connect with Instagram messages, which is important for their business.",
       "confidence": "medium"
     }
   ]

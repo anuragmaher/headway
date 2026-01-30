@@ -5,23 +5,28 @@
   "started": "2025-11-06T20:00:07+05:30",
   "signals": [
     {
-      "problem_statement": "The customer needs a solution for handling emails in multiple languages, particularly for tagging and understanding content in different alphabets.",
-      "customer_role": "Support Lead",
-      "context": "Finance department managing 30-50 emails daily in multiple languages including Macedonian and Spanish.",
-      "confidence": "high"
+      "problem_statement": "The AI tagging feature may not effectively handle multiple languages, which is crucial for the finance department that deals with invoices in different languages.",
+      "customer_ask": "How can we teach Hiver to understand several languages at the same time?",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Finance department handling 30-50 emails daily in multiple languages",
+      "suggested_solution": "Implement AI tagging that can recognize and categorize emails based on different languages."
     },
     {
-      "problem_statement": "The customer struggles with manually tagging emails related to invoices and payments, which could be automated to improve efficiency.",
-      "suggested_solution": "AI tagging for automatic categorization of emails as invoices or payment requests.",
-      "customer_role": "Support Lead",
-      "context": "Finance department managing 30-50 emails daily, looking for ways to streamline workflow.",
-      "confidence": "high"
+      "problem_statement": "The current system requires manual intervention to sort emails by language, which is inefficient.",
+      "customer_ask": "Can AI tagging be used for language specificity to automatically assign emails to the right team member?",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Finance department with team members fluent in different languages",
+      "suggested_solution": "Use AI tagging to automatically assign emails based on the language detected."
     },
     {
-      "problem_statement": "The customer has difficulty managing knowledge and processes scattered across different platforms, leading to inefficiencies.",
-      "customer_role": "Support Lead",
-      "context": "Documentation is not centralized, making it hard for team members to access necessary information quickly.",
-      "confidence": "medium"
+      "problem_statement": "The team struggles with managing and documenting processes effectively, leading to inefficiencies.",
+      "customer_ask": "How can we centralize our knowledge and processes to make them more accessible?",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Finance department with scattered documentation across different platforms",
+      "suggested_solution": "Utilize the co-pilot feature to consolidate and streamline process documentation."
     }
   ]
 }

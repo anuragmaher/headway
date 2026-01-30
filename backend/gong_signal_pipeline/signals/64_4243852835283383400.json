@@ -5,34 +5,29 @@
   "started": "2025-11-07T19:24:55+05:30",
   "signals": [
     {
-      "problem_statement": "The customer is struggling to set up AI tagging and the thank you detector feature, which are not functioning as expected.",
-      "customer_role": "CSM",
-      "context": "Using Hiver since September with 5 inboxes and 3 team members.",
+      "problem_statement": "The AI tagging feature is not functioning as expected, causing confusion in setup.",
+      "customer_ask": "I really don't understand how am I supposed to set it up?",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer cannot customize the fields when creating Asana tickets from Hiver, leading to inefficiencies in their workflow.",
-      "suggested_solution": "Integration with Zapier was considered as an alternative.",
-      "customer_role": "CSM",
-      "context": "Using Hiver to manage support tickets and integrate with Asana.",
+      "problem_statement": "The thank you detector is not closing tickets as it should when receiving thank you messages.",
+      "customer_ask": "I was wondering if there's something I can add to it like if it says thank you right now.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer needs to manually add the SRC number from Asana tasks when creating tickets in Hiver, which is cumbersome.",
-      "customer_role": "CSM",
-      "context": "Managing support tickets and tasks across Hiver and Asana.",
+      "problem_statement": "The integration with Asana lacks customization options, making it difficult to create tickets efficiently.",
+      "customer_ask": "Is there a way I can create tickets from here?",
+      "suggested_solution": "I was thinking of using Zapier between Asana and Hiver.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer wants to automate replies for incoming emails to manage response times better, especially for technical issues.",
-      "customer_role": "CSM",
-      "context": "Handling technical support inquiries via email.",
-      "confidence": "medium"
+      "problem_statement": "The current ticket creation process does not allow for necessary fields and attachments, limiting functionality.",
+      "customer_ask": "Is there a way I can understand if I'm not generating my ticket from here on Asana?",
+      "confidence": "high"
     },
     {
-      "problem_statement": "The customer is unsure if they are using Hiver to its full potential and is looking for guidance on best practices.",
-      "customer_role": "CSM",
-      "context": "Using Hiver for support management with a focus on maximizing efficiency.",
+      "problem_statement": "There is a need for a more streamlined autoresponder setup to handle incoming emails efficiently.",
+      "customer_ask": "I was wondering if I should have automated replies to everybody who sends it in an email.",
       "confidence": "medium"
     }
   ]

@@ -5,41 +5,32 @@
   "started": "2025-11-10T09:31:16+05:30",
   "signals": [
     {
-      "problem_statement": "The customer is experiencing limitations with the phone number input field during account setup, which restricts the entry of toll-free numbers.",
+      "problem_statement": "The phone number field in the setup process has a character limit that does not accommodate longer toll-free numbers.",
+      "customer_ask": "A way to input longer phone numbers without restrictions.",
       "customer_role": "Admin",
-      "context": "Setting up a shared inbox for a team, dealing with account configuration.",
+      "context": "Team size not specified, onboarding process.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer needs to categorize incoming emails into specific tags but is unsure about the best way to implement this with their team.",
-      "suggested_solution": "The customer suggested doing the tagging exercise with the team for better understanding.",
+      "problem_statement": "The customer is unsure about how to set up SLAs that consider only business hours.",
+      "customer_ask": "Clarification on how to set SLAs based on business hours.",
       "customer_role": "Admin",
-      "context": "Setting up email management workflows for a team.",
+      "context": "Team size not specified, onboarding process.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is looking for a way to automate the tagging of emails based on specific criteria.",
+      "customer_ask": "Automation for tagging emails based on content.",
+      "customer_role": "Admin",
+      "context": "Team size not specified, onboarding process.",
       "confidence": "medium"
     },
     {
-      "problem_statement": "The customer is looking for a way to automate the assignment of emails based on specific criteria to improve efficiency.",
+      "problem_statement": "The customer wants to ensure that their team can easily access and use templates for repetitive queries.",
+      "customer_ask": "Help in creating and managing email templates.",
       "customer_role": "Admin",
-      "context": "Managing a shared inbox for a team, dealing with high email volume.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer wants to ensure that their team can respond to emails within a specified SLA but is unclear on how to set this up effectively.",
-      "customer_role": "Admin",
-      "context": "Configuring SLAs for email responses in a shared inbox.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer is interested in using AI features for email management but is unsure how to implement them effectively.",
-      "customer_role": "Admin",
-      "context": "Exploring AI capabilities for email tagging and summarization.",
+      "context": "Team size not specified, onboarding process.",
       "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer is concerned about the manual process of tagging emails and is looking for automation options.",
-      "customer_role": "Admin",
-      "context": "Setting up email management workflows for a team.",
-      "confidence": "high"
     }
   ]
 }

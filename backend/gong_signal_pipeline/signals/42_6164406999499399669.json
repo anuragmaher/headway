@@ -5,15 +5,17 @@
   "started": "2025-11-06T17:30:23+05:30",
   "signals": [
     {
-      "problem_statement": "Team members cannot see emails sent from the support address in their inbox or sent items, leading to confusion about email responses.",
+      "problem_statement": "When responding to emails from the support address, team members cannot see their sent messages in their inbox or sent mail.",
+      "customer_ask": "Clarification on how to track emails sent from the support address.",
       "customer_role": "Support Lead",
-      "context": "Shared inbox with multiple team members using the support email address.",
+      "context": "Small team using the tool for customer support",
       "confidence": "high"
     },
     {
-      "problem_statement": "Customer is unsure about where to find shared comments on emails, indicating a lack of clarity in the user interface.",
+      "problem_statement": "The customer had difficulty locating the shared comment feature when needed.",
+      "customer_ask": "Help in finding the shared comment feature.",
       "customer_role": "Support Lead",
-      "context": "Limited testing time with new team members using the tool.",
+      "context": "Small team using the tool for customer support",
       "confidence": "medium"
     }
   ]

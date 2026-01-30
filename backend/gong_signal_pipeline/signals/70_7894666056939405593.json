@@ -5,34 +5,34 @@
   "started": "2025-11-07T20:51:07+05:30",
   "signals": [
     {
-      "problem_statement": "The customer is concerned about the limitations of user licenses and how it affects their ability to manage shared inboxes effectively.",
-      "customer_role": "Admin",
-      "context": "Managing multiple shared inboxes with a limited number of user licenses.",
+      "problem_statement": "The customer is concerned about the limitations of user licenses when setting up their trial account.",
+      "customer_ask": "Clarification on whether they can use a Google group instead of individual user licenses.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer needs a way to automate the assignment of emails to ensure a balanced workload among team members.",
-      "customer_role": "Admin",
-      "context": "Handling a high volume of emails across multiple terminals without manual triaging.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer requires a method to follow up on emails that have not received a response within a specified timeframe.",
-      "customer_role": "Admin",
-      "context": "Managing customer inquiries and ensuring timely follow-ups without manual intervention.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer is looking for a way to categorize emails based on specific keywords related to different terminals.",
-      "customer_role": "Admin",
-      "context": "Emails are specific to certain terminals, and they need to be assigned accordingly.",
-      "confidence": "high"
-    },
-    {
-      "problem_statement": "The customer is unsure about the effectiveness of AI features for tagging and categorizing emails.",
-      "customer_role": "Admin",
-      "context": "Considering the additional cost of AI features and their potential benefits.",
+      "problem_statement": "The customer is unsure about the process for setting up chat functionality on their website.",
+      "customer_ask": "How does the chat work and if it needs to be implemented on their website first?",
       "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is looking for a way to manage emails related to specific terminals effectively.",
+      "customer_ask": "How to handle emails that are specific to certain terminals?",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is concerned about the lack of a mobile application for managing emails.",
+      "customer_ask": "Is there a phone app or extension available?",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is facing issues with collaboration features, specifically when trying to invite external users.",
+      "customer_ask": "How to invite someone outside their domain for collaboration?",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is looking for a way to automate follow-up emails for pending requests.",
+      "customer_ask": "Can they set up automated follow-ups for emails that haven't received a response?",
+      "confidence": "high"
     }
   ]
 }

@@ -5,15 +5,17 @@
   "started": "2025-11-07T00:32:33+05:30",
   "signals": [
     {
-      "problem_statement": "The entry-level plan does not support shared inboxes, which is a requirement for the customer's workflow.",
+      "problem_statement": "The entry-level plan does not support shared inboxes, which is a limitation for the customer.",
+      "customer_ask": "Clarification on the number of shared mailboxes supported by different plans.",
       "customer_role": "Admin",
-      "context": "Considering options for shared inboxes for a team, evaluating Hiver and Google Workspace solutions.",
+      "context": "Considering options for shared inboxes for a team.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer is exploring alternatives to Hiver due to the limitations of the entry-level plan and the availability of a shared inbox feature in Google Workspace.",
+      "problem_statement": "The customer is exploring alternatives to Hiver due to limitations in shared mailbox capabilities.",
+      "customer_ask": "Looking into Google's shared mailbox options.",
       "customer_role": "Admin",
-      "context": "Comparing Hiver with Google Workspace for shared inbox capabilities.",
+      "context": "Comparing Hiver with Google Workspace for shared inbox functionality.",
       "confidence": "medium"
     }
   ]

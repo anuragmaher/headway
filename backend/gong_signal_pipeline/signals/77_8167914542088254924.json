@@ -5,35 +5,31 @@
   "started": "2025-11-08T00:32:05+05:30",
   "signals": [
     {
-      "problem_statement": "The customer struggles with managing a high volume of project-related emails and needs a more efficient way to organize and filter them.",
+      "problem_statement": "The current shared inbox setup is becoming hard to manage due to the number of project volumes.",
+      "customer_ask": "Are we able to filter tags within an inbox?",
       "customer_role": "CSM",
-      "context": "Managing multiple projects with high email volume across a shared inbox.",
+      "context": "Team size not specified, managing multiple projects and high email volume.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer requires automation to streamline the process of moving emails to the appropriate shared inbox based on project tags.",
-      "suggested_solution": "Automate the movement of emails to the correct shared inbox based on project tags.",
+      "problem_statement": "There is a need for automation to manage email assignments and organization more efficiently.",
+      "customer_ask": "Can we set it so that emails are automatically directed to the right shared inbox based on project tags?",
       "customer_role": "CSM",
-      "context": "Handling communications for multiple projects, needing to ensure emails are organized correctly.",
+      "context": "Team size not specified, dealing with multiple projects and regulatory communications.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer needs a way to ensure important emails do not get lost and requires reminders for follow-ups on unanswered emails.",
-      "suggested_solution": "Implement automated nudges for follow-ups on emails that have not received a response.",
-      "customer_role": "CSM",
-      "context": "Managing client communications and ensuring timely responses.",
+      "problem_statement": "The customer is concerned about losing track of emails that require follow-up.",
+      "customer_ask": "Is there a way to nudge me if I haven't received a response to an email?",
+      "customer_role": "Support Lead",
+      "context": "Team size not specified, managing client communications.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer is looking for a way to automatically tag emails based on specific keywords or phrases to improve organization.",
+      "problem_statement": "The customer needs a way to import historical emails into the new system.",
+      "customer_ask": "How do you help customers with that onboarding transition?",
       "customer_role": "CSM",
-      "context": "Managing numerous projects and needing to streamline email tagging.",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer wants to ensure that when responding to emails, the replies can come from either a shared inbox or individual email addresses, depending on the context.",
-      "customer_role": "CSM",
-      "context": "Managing client communications through shared inboxes.",
+      "context": "Team size not specified, transitioning to a new email management system.",
       "confidence": "medium"
     }
   ]

@@ -5,28 +5,20 @@
   "started": "2025-11-06T23:30:49+05:30",
   "signals": [
     {
-      "problem_statement": "The customer needs a simplistic trouble tracking system for onboarding and offboarding processes that can generate child tickets or tasks from a parent ticket.",
+      "problem_statement": "The customer needs a ticketing software to track onboarding and offboarding processes but finds the current product lacks asset management features.",
+      "customer_ask": "A system that generates tasks or child tickets for onboarding and offboarding.",
+      "suggested_solution": "A more comprehensive project management or service desk solution that includes asset management.",
       "customer_role": "IT Director",
-      "context": "Small company with about 150 end users, transitioning from an MSP to managing their own ticketing system.",
+      "context": "Small company with about 150 end users.",
       "confidence": "high"
     },
     {
-      "problem_statement": "The customer has a strong focus on data security and retention, which is a concern for their ticketing system.",
+      "problem_statement": "The customer is looking for a simplistic trouble tracking system but is unsure if the product fits their needs.",
+      "customer_ask": "Clarification on whether the product can serve as a service desk.",
+      "suggested_solution": "A solution that combines ticket management with project management capabilities.",
       "customer_role": "IT Director",
-      "context": "The company is not handling sensitive data but has a management preference for thorough data security practices.",
+      "context": "Small company with about 150 end users.",
       "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer is looking for a solution that integrates email and form submissions for ticket management.",
-      "customer_role": "IT Director",
-      "context": "The company uses Outlook and wants to streamline ticket submissions through email and potentially a form.",
-      "confidence": "medium"
-    },
-    {
-      "problem_statement": "The customer is seeking a service desk solution that can handle ticket management more effectively than their current system.",
-      "customer_role": "IT Director",
-      "context": "The customer is evaluating options for a service desk that can manage tickets better than their existing ITSM solution.",
-      "confidence": "high"
     }
   ]
 }
