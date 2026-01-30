@@ -1,26 +1,54 @@
 {
   "proposed_new_asks": [
     {
-      "ask_name": "Free Trial Inquiry",
-      "ask_description": "Customers are asking if there is a free trial available to test the features.",
+      "ask_name": "Email Tracking Clarification",
+      "ask_description": "Customers want clarification on how to track emails sent from specific addresses.",
       "supporting_asks": [
-        "49_4967298708131430806_2"
+        "42_6164406999499399669_0"
       ],
       "confidence": "medium",
-      "theme_id": "efffeca7-ec6a-41fb-aec7-515765430eea",
-      "theme_name": "Cost and Value Concerns"
+      "theme_id": "d60533b3-78b5-4d9e-b353-7ddf836de564",
+      "theme_name": "Visibility and Tracking Issues"
     },
     {
-      "ask_name": "Downgrade and Refund Requests",
-      "ask_description": "Customers are inquiring about downgrading their plans and requesting refunds.",
+      "ask_name": "Owner Message Tracking",
+      "ask_description": "Customers want a way to track owner messages that haven't been responded to in a specific timeframe.",
       "supporting_asks": [
-        "78_6608624762484707053_0",
-        "78_6608624762484707053_1",
-        "78_6608624762484707053_2"
+        "57_2465563737737913140_0"
       ],
       "confidence": "medium",
-      "theme_id": "efffeca7-ec6a-41fb-aec7-515765430eea",
-      "theme_name": "Cost and Value Concerns"
+      "theme_id": "d60533b3-78b5-4d9e-b353-7ddf836de564",
+      "theme_name": "Visibility and Tracking Issues"
+    },
+    {
+      "ask_name": "Pending Item Visibility",
+      "ask_description": "Customers want a better way to see pending items on their dashboard.",
+      "supporting_asks": [
+        "43_7358947301194959400_4"
+      ],
+      "confidence": "low",
+      "theme_id": "d60533b3-78b5-4d9e-b353-7ddf836de564",
+      "theme_name": "Visibility and Tracking Issues"
+    },
+    {
+      "ask_name": "Email Delegation System",
+      "ask_description": "Customers are looking for a system that allows appropriate delegation of emails.",
+      "supporting_asks": [
+        "63_7968688745761658790_0"
+      ],
+      "confidence": "low",
+      "theme_id": "d60533b3-78b5-4d9e-b353-7ddf836de564",
+      "theme_name": "Visibility and Tracking Issues"
+    },
+    {
+      "ask_name": "Transparency Management",
+      "ask_description": "Customers want a better solution to manage transparency and visibility on tickets and emails.",
+      "supporting_asks": [
+        "65_1799444064847399580_0"
+      ],
+      "confidence": "medium",
+      "theme_id": "d60533b3-78b5-4d9e-b353-7ddf836de564",
+      "theme_name": "Visibility and Tracking Issues"
     },
     {
       "ask_name": "Improved Documentation Practices",
@@ -33,30 +61,10 @@
       "theme_name": "Support and Communication Gaps"
     },
     {
-      "ask_name": "External Collaboration on Emails",
-      "ask_description": "A solution to invite external users to collaborate on emails.",
-      "supporting_asks": [
-        "67_2571136605912954864_2"
-      ],
-      "confidence": "medium",
-      "theme_id": "b6da0760-6375-4edf-b8f9-5ceda1f153a5",
-      "theme_name": "Support and Communication Gaps"
-    },
-    {
-      "ask_name": "Email Management Alerts",
+      "ask_name": "Email Response Management",
       "ask_description": "A tool that can flag emails where support did not reply or did not reply appropriately.",
       "supporting_asks": [
         "86_2840736752872732243_0"
-      ],
-      "confidence": "medium",
-      "theme_id": "b6da0760-6375-4edf-b8f9-5ceda1f153a5",
-      "theme_name": "Support and Communication Gaps"
-    },
-    {
-      "ask_name": "Sentiment Analysis for Customer Interactions",
-      "ask_description": "A sentiment analyzer that can indicate when a customer is angry.",
-      "supporting_asks": [
-        "86_2840736752872732243_1"
       ],
       "confidence": "medium",
       "theme_id": "b6da0760-6375-4edf-b8f9-5ceda1f153a5",
