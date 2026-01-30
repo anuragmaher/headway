@@ -1,14 +1,14 @@
 # Executive Summary — Customer Call Intelligence
 
 **Date:** Based on latest pipeline run  
-**Source:** 50 customer calls (sales demos, support, success)  
-**Method:** AI extraction of product-level needs and pains → problem-theme classification → quantification
+**Source:** 102 customer calls (sales demos, support, success)  
+**Method:** AI extraction of product-level needs and pains → problem-theme classification → incremental updates → quantification
 
 ---
 
 ## In brief
 
-We analyzed **50 customer calls** and turned them into **37 product signals** (needs, gaps, friction) grouped into **6 problem themes**. Themes describe customer problem areas, not features, and are suitable for discovery, prioritization, and roadmap discussions.
+We analyzed **102 customer calls** and turned them into **200 product signals** (needs, gaps, friction) grouped into **6 problem themes**. Themes describe customer problem areas, not features, and are suitable for discovery, prioritization, and roadmap discussions. (Includes incremental batches classified into the same taxonomy.)
 
 ---
 
@@ -16,10 +16,10 @@ We analyzed **50 customer calls** and turned them into **37 product signals** (n
 
 | Metric | Value |
 |--------|--------|
-| Customer calls analyzed | 50 |
-| Product-relevant signals mapped | 37 |
+| Customer calls analyzed | 102 |
+| Product-relevant signals mapped | 200 |
 | Themes (problem areas) | 6 |
-| Calls with at least one signal | 26 |
+| Calls with at least one signal | 73 |
 
 ---
 
@@ -29,28 +29,25 @@ What customers talked about most:
 
 | # | Theme | Mentions |
 |---|--------|----------|
-| 1 | **Email Management Inefficiencies** | 10 |
-| 2 | **Lack of Automation and Integration** | 7 |
-| 3 | **User Experience and Setup Challenges** | 5 |
-| 4 | **Cost and Value Concerns** | 5 |
-| 5 | **Visibility and Tracking Issues** | 5 |
-| 6 | **Support and Communication Gaps** | 5 |
+| 1 | **Lack of Automation and Integration** | 64 |
+| 2 | **User Experience and Setup Challenges** | 44 |
+| 3 | **Visibility and Tracking Issues** | 34 |
+| 4 | **Email Management Inefficiencies** | 23 |
+| 5 | **Cost and Value Concerns** | 19 |
+| 6 | **Support and Communication Gaps** | 16 |
 
 ---
 
 ## Strategic takeaways
 
-**1. Email and workflow dominate**  
-Email management inefficiencies are the top theme (10 mentions). Customers struggle with organizing emails, confusion, delays, and missed communications. Strong candidate for positioning and roadmap.
+**1. Automation and integration lead**  
+Lack of automation and integration is the top theme (64 mentions). Customers want better connectivity, workflow automation, and less manual work. Strong candidate for positioning and roadmap.
 
-**2. Automation and integration**  
-Lack of automation and integration (7) drives manual work and inefficiency. Clear demand for better connectivity and workflow automation; good input for integration roadmap and messaging.
+**2. UX and visibility**  
+User experience/setup (44) and visibility/tracking (34) show operational friction and demand for clarity. Messaging on ease of setup and visibility aligns with what we hear.
 
-**3. UX, visibility, and support**  
-User experience/setup (5), visibility/tracking (5), and support/communication gaps (5) point to operational friction. Messaging on ease of setup, visibility, and support quality aligns with what we hear.
-
-**4. Cost and value**  
-Cost and value concerns (5) show buyers care about ROI. Clear value story and pricing clarity help.
+**3. Email, cost, and support**  
+Email management (23), cost/value (19), and support/communication gaps (16) round out the set. Good input for roadmap and value messaging.
 
 ---
 
@@ -58,14 +55,15 @@ Cost and value concerns (5) show buyers care about ROI. Clear value story and pr
 
 1. **Validate with CS/Sales** — Review these 6 themes with customer-facing teams.
 2. **Roadmap alignment** — Use themes (with other inputs) for prioritization and sequencing.
-3. **Messaging** — Emphasize email workflow, automation, integration, visibility, and ease of setup in positioning.
-4. **Scale the analysis** — Run the pipeline on more calls for even more stable themes and trends.
+3. **Messaging** — Emphasize automation, integration, visibility, and ease of setup in positioning.
+4. **Scale the analysis** — Continue incremental runs on new calls to keep counts and trends current.
 
 ---
 
 ## How to use the detail
 
 - **PM_SUMMARY.md** — Product-level summary and “what this means for product.”
+- **THEME_ASKS_SUMMARY.md** — Grouped customer asks per theme.
 - **counts/summary.json** — Totals and top themes.
 - **counts/by_theme.json** — Counts and which calls support each theme (evidence).
 - **counts/trends.json** — Monthly breakdown of signal volume by theme.
