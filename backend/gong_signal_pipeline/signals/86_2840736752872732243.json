@@ -1,0 +1,40 @@
+{
+  "transcript_id": "86_2840736752872732243",
+  "call_id": "2840736752872732243",
+  "title": "Hiver Demo | Simon <> Rakesh",
+  "started": "2025-11-10T15:01:13+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer support team forgets to reply to emails, leading to poor customer communication.",
+      "suggested_solution": "A tool to flag unanswered emails and track response quality.",
+      "customer_role": "CSM",
+      "context": "2000 active construction sites, 30 customer support staff, using Gmail for communication.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer needs a sentiment analysis tool to identify angry customers and adjust responses accordingly.",
+      "customer_role": "CSM",
+      "context": "Managing customer relations for multiple small construction sites.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer requires a way to automatically tag emails by construction site to improve visibility and management.",
+      "customer_role": "CSM",
+      "context": "Handling numerous construction sites with varying issues and communication.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer seeks a dashboard that summarizes issues per construction site, highlighting problems and customer sentiment.",
+      "customer_role": "CSM",
+      "context": "Quality management team needs to monitor multiple construction sites and their associated emails.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer wants to implement a flagging tool quickly to manage email responses effectively.",
+      "suggested_solution": "A flagging tool to identify emails that require attention.",
+      "customer_role": "CSM",
+      "context": "Looking to implement a solution within two weeks for quality management.",
+      "confidence": "high"
+    }
+  ]
+}

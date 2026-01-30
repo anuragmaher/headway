@@ -1,0 +1,26 @@
+{
+  "transcript_id": "61_2529682253429226658",
+  "call_id": "2529682253429226658",
+  "title": "Hiver<> Piceci Services",
+  "started": "2025-11-07T17:30:36.131+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer needs a shared inbox solution for freelancers to communicate with clients using a single email ID without requiring each freelancer to have a Google Workspace account.",
+      "customer_role": "Admin",
+      "context": "Looking for a shared inbox solution for freelancers to communicate with clients, currently using Google Workspace.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is facing limitations with Google Workspace that prevent freelancers from sending emails using the company's domain without having their own Google Workspace accounts.",
+      "customer_role": "Admin",
+      "context": "Freelancers need to communicate with clients using a company email ID, but Google Workspace restrictions complicate this.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is looking for a solution that allows freelancers to communicate with clients without needing to be part of the organization or having Google Workspace accounts.",
+      "customer_role": "Admin",
+      "context": "Desiring a way for freelancers to use a shared email ID for client communication without organizational inclusion.",
+      "confidence": "high"
+    }
+  ]
+}

@@ -1,0 +1,377 @@
+{
+  "batch_index": 1,
+  "local_themes": [
+    {
+      "local_theme_id": "batch001_cluster0",
+      "canonical_problem": "They need a platform that can categorize emails based on urgency and type.",
+      "signal_count": 4,
+      "signal_ids": [
+        "03_5719076601574032786_0",
+        "03_5719076601574032786_2",
+        "08_2119599283047879042_1",
+        "17_7558156109571095059_0"
+      ],
+      "sample_phrasings": [
+        "They need a platform that can categorize emails based on urgency and type.",
+        "They want a dashboard that shows the count of different types of emails received.",
+        "This would help them with being able to organize just staying on top of emails.",
+        "A better solution to manage incoming emails and prioritize customer inquiries.",
+        "The customer struggles to manage a high volume of emails from multiple businesses in a single mailbox, leading to confusion and delays in response times."
+      ],
+      "sample_customer_asks": [
+        "They need a platform that can categorize emails based on urgency and type.",
+        "They want a dashboard that shows the count of different types of emails received.",
+        "This would help them with being able to organize just staying on top of emails.",
+        "A better solution to manage incoming emails and prioritize customer inquiries."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster1",
+      "canonical_problem": "I would need to automate that because now I'm responsible for the support in terms that I'll forward the message to someone in our team.",
+      "signal_count": 5,
+      "signal_ids": [
+        "01_2363083900669717369_0",
+        "01_2363083900669717369_1",
+        "01_2363083900669717369_2",
+        "06_8094309312712548763_1",
+        "08_2119599283047879042_0"
+      ],
+      "sample_phrasings": [
+        "I would need to automate that because now I'm responsible for the support in terms that I'll forward the message to someone in our team.",
+        "I need some kind of automation to help with the workflow, and to help like see where the case is going.",
+        "It would be good if I could create templates and just send them.",
+        "Looking for solutions to prevent things from getting dropped and missed.",
+        "I need something to help me and my team organize support questions and answer them efficiently."
+      ],
+      "sample_customer_asks": [
+        "I would need to automate that because now I'm responsible for the support in terms that I'll forward the message to someone in our team.",
+        "I need some kind of automation to help with the workflow, and to help like see where the case is going.",
+        "It would be good if I could create templates and just send them.",
+        "Looking for solutions to prevent things from getting dropped and missed.",
+        "I need something to help me and my team organize support questions and answer them efficiently."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster2",
+      "canonical_problem": "The customer implied a need for faster automation processing.",
+      "signal_count": 5,
+      "signal_ids": [
+        "04_7140568802910404179_0",
+        "08_4705776494156957892_0",
+        "08_4705776494156957892_1",
+        "08_4705776494156957892_2",
+        "16_8207084569033141903_1"
+      ],
+      "sample_phrasings": [
+        "The customer implied a need for faster automation processing.",
+        "The customer wants to discuss ideas internally to leverage the tool more effectively.",
+        "The customer is looking for ways to improve internal processes and email management.",
+        "The customer is interested in understanding the reporting features better.",
+        "The customer wants to ensure the chat system works smoothly with their existing workflows."
+      ],
+      "sample_customer_asks": [
+        "The customer implied a need for faster automation processing.",
+        "The customer wants to discuss ideas internally to leverage the tool more effectively.",
+        "The customer is looking for ways to improve internal processes and email management.",
+        "The customer is interested in understanding the reporting features better.",
+        "The customer wants to ensure the chat system works smoothly with their existing workflows."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster3",
+      "canonical_problem": "The customer expressed a desire to set up a Shopify integration.",
+      "signal_count": 2,
+      "signal_ids": [
+        "13_6700521185384121369_1",
+        "16_8207084569033141903_0"
+      ],
+      "sample_phrasings": [
+        "The customer expressed a desire to set up a Shopify integration.",
+        "The customer wants to see order details in the system.",
+        "The customer is facing challenges in integrating their Shopify account with the product.",
+        "The customer is not seeing order information after setting up the WooCommerce integration."
+      ],
+      "sample_customer_asks": [
+        "The customer expressed a desire to set up a Shopify integration.",
+        "The customer wants to see order details in the system."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster4",
+      "canonical_problem": "Looking to collate all different channels into one place.",
+      "signal_count": 5,
+      "signal_ids": [
+        "02_1779613692961633968_0",
+        "02_1779613692961633968_1",
+        "11_3175880567959328233_0",
+        "12_1745427232507876996_0",
+        "12_1745427232507876996_1"
+      ],
+      "sample_phrasings": [
+        "Looking to collate all different channels into one place.",
+        "Wants to explore integrating WhatsApp into Hiver.",
+        "Interested in using Hiver for a shared inbox.",
+        "We wanted to assess Hiver to see if there might be a good fit there.",
+        "It would be good to learn what are the possibilities in Hiver and how we could leverage its capabilities."
+      ],
+      "sample_customer_asks": [
+        "Looking to collate all different channels into one place.",
+        "Wants to explore integrating WhatsApp into Hiver.",
+        "Interested in using Hiver for a shared inbox.",
+        "We wanted to assess Hiver to see if there might be a good fit there.",
+        "It would be good to learn what are the possibilities in Hiver and how we could leverage its capabilities."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster5",
+      "canonical_problem": "Wants everything to be on one platform instead of using Gmail with a shared inbox.",
+      "signal_count": 3,
+      "signal_ids": [
+        "01_5759700453900699854_1",
+        "13_6700521185384121369_0",
+        "19_2343823255890827207_0"
+      ],
+      "sample_phrasings": [
+        "Wants everything to be on one platform instead of using Gmail with a shared inbox.",
+        "The customer implied a need for more than three shared mailboxes.",
+        "Looking for something more efficient for a shared email.",
+        "The customer needs a platform that integrates support emails without using a shared inbox.",
+        "The customer is limited to creating only three shared mailboxes on their current plan, which is insufficient for their needs."
+      ],
+      "sample_customer_asks": [
+        "Wants everything to be on one platform instead of using Gmail with a shared inbox.",
+        "The customer implied a need for more than three shared mailboxes.",
+        "Looking for something more efficient for a shared email."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster6",
+      "canonical_problem": "We want to better manage the emails that come in on the sales side.",
+      "signal_count": 7,
+      "signal_ids": [
+        "03_4349435023058882263_0",
+        "03_4349435023058882263_2",
+        "07_4927753820128544559_0",
+        "09_5721106057272665627_0",
+        "09_5721106057272665627_3",
+        "10_5959792932057107313_0",
+        "17_7558156109571095059_1"
+      ],
+      "sample_phrasings": [
+        "We want to better manage the emails that come in on the sales side.",
+        "We need a way to track how we are responding to emails and ensure nothing slips through the cracks.",
+        "Want to ensure there's an SLA on responses and proper workflows for email assignments.",
+        "We need a way to have a double check that the emails are getting processed in a timely manner.",
+        "We need a system that allows us to see who is responsible for each email."
+      ],
+      "sample_customer_asks": [
+        "We want to better manage the emails that come in on the sales side.",
+        "We need a way to track how we are responding to emails and ensure nothing slips through the cracks.",
+        "Want to ensure there's an SLA on responses and proper workflows for email assignments.",
+        "We need a way to have a double check that the emails are getting processed in a timely manner.",
+        "We need a system that allows us to see who is responsible for each email."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster7",
+      "canonical_problem": "We need a standardized process for the IT ticketing system.",
+      "signal_count": 4,
+      "signal_ids": [
+        "07_6948773107252228636_0",
+        "07_6948773107252228636_1",
+        "07_6948773107252228636_2",
+        "10_5959792932057107313_3"
+      ],
+      "sample_phrasings": [
+        "We need a standardized process for the IT ticketing system.",
+        "We want a portal for clients and employees to raise tickets.",
+        "We need a way for end users to see the status of their tickets.",
+        "We need the ability to classify tickets.",
+        "The current IT ticketing process is not standardized, leading to issues being raised without proper prioritization."
+      ],
+      "sample_customer_asks": [
+        "We need a standardized process for the IT ticketing system.",
+        "We want a portal for clients and employees to raise tickets.",
+        "We need a way for end users to see the status of their tickets.",
+        "We need the ability to classify tickets."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster8",
+      "canonical_problem": "Wants to understand pricing and what is included in the package.",
+      "signal_count": 3,
+      "signal_ids": [
+        "01_5759700453900699854_4",
+        "02_1779613692961633968_2",
+        "02_1779613692961633968_3"
+      ],
+      "sample_phrasings": [
+        "Wants to understand pricing and what is included in the package.",
+        "Wants to discuss the best case scenario on pricing.",
+        "Wants to know if AI features are included in the plan.",
+        "The customer is concerned about the cost of the proposed solution compared to their current tools.",
+        "The customer is concerned about the cost of multiple subscriptions and is looking for a more budget-friendly solution."
+      ],
+      "sample_customer_asks": [
+        "Wants to understand pricing and what is included in the package.",
+        "Wants to discuss the best case scenario on pricing.",
+        "Wants to know if AI features are included in the plan."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster9",
+      "canonical_problem": "We want emails addressed to specific individuals to be automatically assigned to them.",
+      "signal_count": 3,
+      "signal_ids": [
+        "03_4349435023058882263_1",
+        "03_5719076601574032786_1",
+        "07_4927753820128544559_3"
+      ],
+      "sample_phrasings": [
+        "We want emails addressed to specific individuals to be automatically assigned to them.",
+        "They need a feature that allows for assigning emails to specific team members.",
+        "Wants to know if there's a way to auto-assign emails based on their content.",
+        "There is a lack of automation in assigning emails to team members based on specific criteria, leading to inefficiencies.",
+        "The customer lacks a way to assign specific emails to team members effectively, which hampers workflow."
+      ],
+      "sample_customer_asks": [
+        "We want emails addressed to specific individuals to be automatically assigned to them.",
+        "They need a feature that allows for assigning emails to specific team members.",
+        "Wants to know if there's a way to auto-assign emails based on their content."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster10",
+      "canonical_problem": "Wants to know how to set up and view a group inbox.",
+      "signal_count": 2,
+      "signal_ids": [
+        "11_3175880567959328233_1",
+        "11_3175880567959328233_2"
+      ],
+      "sample_phrasings": [
+        "Wants to know how to set up and view a group inbox.",
+        "Inquires about importing past emails into the group.",
+        "The customer is unsure how to view a specific group inbox instead of their entire mailbox.",
+        "The customer is concerned about the lack of historical email import functionality without additional charges."
+      ],
+      "sample_customer_asks": [
+        "Wants to know how to set up and view a group inbox.",
+        "Inquires about importing past emails into the group."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster11",
+      "canonical_problem": "I want to make sure that I'm making the right decision.",
+      "signal_count": 2,
+      "signal_ids": [
+        "02_4097682197132396245_0",
+        "02_4097682197132396245_1"
+      ],
+      "sample_phrasings": [
+        "I want to make sure that I'm making the right decision.",
+        "I want to make sure I'm not going to lose any functions.",
+        "The customer is looking for a cost-saving alternative to their current solution, Help Scout.",
+        "The customer is concerned about losing functionality when switching from Help Scout to Hiver."
+      ],
+      "sample_customer_asks": [
+        "I want to make sure that I'm making the right decision.",
+        "I want to make sure I'm not going to lose any functions."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster12",
+      "canonical_problem": "Looking for a platform that is easy to use and set up workflows.",
+      "signal_count": 2,
+      "signal_ids": [
+        "01_5759700453900699854_0",
+        "09_5254544859118695564_0"
+      ],
+      "sample_phrasings": [
+        "Looking for a platform that is easy to use and set up workflows.",
+        "Looking for a new help desk solution that is relatively simple.",
+        "The customer finds Zendesk clunky and hard to set up desired workflows.",
+        "The current help desk solution using Monday.com is messy and not meeting the organization's needs."
+      ],
+      "sample_customer_asks": [
+        "Looking for a platform that is easy to use and set up workflows.",
+        "Looking for a new help desk solution that is relatively simple."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster13",
+      "canonical_problem": "Clarification on the automation capabilities.",
+      "signal_count": 2,
+      "signal_ids": [
+        "05_4946129105178624542_1",
+        "06_5385865537813788084_1"
+      ],
+      "sample_phrasings": [
+        "Clarification on the automation capabilities.",
+        "Could you walk me through how to use the shared inbox with the unassigned?",
+        "The customer is concerned about the manual approach to managing emails in shared mailboxes, which may lead to inefficiencies.",
+        "The customer finds the process of splitting conversations to make them private not scalable."
+      ],
+      "sample_customer_asks": [
+        "Clarification on the automation capabilities.",
+        "Could you walk me through how to use the shared inbox with the unassigned?"
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster14",
+      "canonical_problem": "We need a system that categorizes where everything is at in the process.",
+      "signal_count": 2,
+      "signal_ids": [
+        "09_5721106057272665627_1",
+        "09_5721106057272665627_2"
+      ],
+      "sample_phrasings": [
+        "We need a system that categorizes where everything is at in the process.",
+        "We want to categorize and track receipts to ensure none are missed.",
+        "The current email management process is inefficient, causing delays in processing important documents like invoices and reports.",
+        "There is no effective way to manage and track the processing of receipts and invoices, leading to potential oversights."
+      ],
+      "sample_customer_asks": [
+        "We need a system that categorizes where everything is at in the process.",
+        "We want to categorize and track receipts to ensure none are missed."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster15",
+      "canonical_problem": "Need a form that includes dropdowns and conditional elements to ensure correct ticket submission.",
+      "signal_count": 2,
+      "signal_ids": [
+        "09_5254544859118695564_1",
+        "09_5254544859118695564_2"
+      ],
+      "sample_phrasings": [
+        "Need a form that includes dropdowns and conditional elements to ensure correct ticket submission.",
+        "Desire for a system that can automatically route tickets based on dropdown selections rather than free text.",
+        "The current system does not allow for robust form capabilities, leading to issues with ticket routing.",
+        "There is a lack of automation in routing tickets based on user input, causing tickets to be sent to the wrong place."
+      ],
+      "sample_customer_asks": [
+        "Need a form that includes dropdowns and conditional elements to ensure correct ticket submission.",
+        "Desire for a system that can automatically route tickets based on dropdown selections rather than free text."
+      ]
+    },
+    {
+      "local_theme_id": "batch001_cluster16",
+      "canonical_problem": "Understanding what avenues we can go in from.",
+      "signal_count": 2,
+      "signal_ids": [
+        "06_8094309312712548763_0",
+        "06_8094309312712548763_2"
+      ],
+      "sample_phrasings": [
+        "Understanding what avenues we can go in from.",
+        "Inquiring about integration with Apple accounts.",
+        "The customer is experiencing issues with managing communication effectively due to the increasing number of team members involved.",
+        "The customer is looking for better integration options with their existing tools, specifically Microsoft and Apple."
+      ],
+      "sample_customer_asks": [
+        "Understanding what avenues we can go in from.",
+        "Inquiring about integration with Apple accounts."
+      ]
+    }
+  ]
+}

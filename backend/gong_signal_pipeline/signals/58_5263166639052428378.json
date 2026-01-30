@@ -1,0 +1,27 @@
+{
+  "transcript_id": "58_5263166639052428378",
+  "call_id": "5263166639052428378",
+  "title": "Hiver Meeting",
+  "started": "2025-11-07T14:31:48+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer needs a way to create a form for pickup requests that can generate an email at the end.",
+      "suggested_solution": "A form that customers can fill out for pickup requests.",
+      "customer_role": "Admin",
+      "context": "Managing customer pickup requests through email communication.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is looking for a solution to reduce spam and phishing emails in their inbox.",
+      "customer_role": "Admin",
+      "context": "Handling a high volume of emails and wanting to minimize unnecessary communication.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer requires the ability to translate the interface into German for their team.",
+      "customer_role": "Admin",
+      "context": "Working with a team that prefers to operate in their native language.",
+      "confidence": "medium"
+    }
+  ]
+}

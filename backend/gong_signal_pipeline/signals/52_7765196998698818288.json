@@ -1,0 +1,38 @@
+{
+  "transcript_id": "52_7765196998698818288",
+  "call_id": "7765196998698818288",
+  "title": "Hiver Demo | Daniel <> Cole",
+  "started": "2025-11-06T22:05:49+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer struggles with managing communication effectively using a Google group for sales, leading to potential missed messages and duplicated efforts.",
+      "customer_role": "Admin",
+      "context": "Currently three people managing customer communications, expecting to expand to six next year.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer needs a way to ensure that customer inquiries are routed correctly to either sales or support based on their status as leads or existing customers.",
+      "customer_role": "Admin",
+      "context": "Using a shared inbox for both sales and support inquiries.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is concerned about their sales team member's lack of documentation and follow-up, which could lead to issues if that person is unavailable.",
+      "customer_role": "Sales",
+      "context": "Salesperson is not consistently documenting customer interactions, which is critical for continuity.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is looking for better integration between their current field service management tool and the new email management system to streamline operations.",
+      "customer_role": "Admin",
+      "context": "Currently using Housecall Pro for field service management and wants to integrate it with Hiver.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer needs a more effective notification system for team members tagged in conversations, as current notifications may not be noticed.",
+      "customer_role": "Admin",
+      "context": "Team is accustomed to using Google Chat for notifications.",
+      "confidence": "medium"
+    }
+  ]
+}

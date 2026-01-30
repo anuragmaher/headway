@@ -1,0 +1,45 @@
+{
+  "transcript_id": "82_4237821098797114805",
+  "call_id": "4237821098797114805",
+  "title": "Hiver Onboarding",
+  "started": "2025-11-10T09:31:16+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer is experiencing limitations with the phone number input field during account setup, which restricts the entry of toll-free numbers.",
+      "customer_role": "Admin",
+      "context": "Setting up a shared inbox for a team, dealing with account configuration.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer needs to categorize incoming emails into specific tags but is unsure about the best way to implement this with their team.",
+      "suggested_solution": "The customer suggested doing the tagging exercise with the team for better understanding.",
+      "customer_role": "Admin",
+      "context": "Setting up email management workflows for a team.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is looking for a way to automate the assignment of emails based on specific criteria to improve efficiency.",
+      "customer_role": "Admin",
+      "context": "Managing a shared inbox for a team, dealing with high email volume.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer wants to ensure that their team can respond to emails within a specified SLA but is unclear on how to set this up effectively.",
+      "customer_role": "Admin",
+      "context": "Configuring SLAs for email responses in a shared inbox.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is interested in using AI features for email management but is unsure how to implement them effectively.",
+      "customer_role": "Admin",
+      "context": "Exploring AI capabilities for email tagging and summarization.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is concerned about the manual process of tagging emails and is looking for automation options.",
+      "customer_role": "Admin",
+      "context": "Setting up email management workflows for a team.",
+      "confidence": "high"
+    }
+  ]
+}

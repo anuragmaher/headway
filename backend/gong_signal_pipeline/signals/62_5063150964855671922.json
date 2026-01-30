@@ -1,0 +1,34 @@
+{
+  "transcript_id": "62_5063150964855671922",
+  "call_id": "5063150964855671922",
+  "title": "Hiver <> Genesis Media Limited - AI Feature Commercials",
+  "started": "2025-11-07T17:31:51+05:30",
+  "signals": [
+    {
+      "problem_statement": "The legal team needs a tool that can review contracts and highlight areas that do not align with their internal guidelines.",
+      "suggested_solution": "An AI feature that checks agreements against organizational norms and provides suggestions for changes.",
+      "customer_role": "Support Lead",
+      "context": "Legal team handling contract reviews, primarily using email for requests.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The current AI compose feature is underutilized by team members, limiting its effectiveness.",
+      "customer_role": "Support Lead",
+      "context": "One user finds AI compose helpful, but others do not engage with it.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The team lacks a centralized task management system, leading to inefficiencies in handling tasks from various sources.",
+      "suggested_solution": "Integration of task management features into Hiver to better manage tasks from emails and compliance.",
+      "customer_role": "Support Lead",
+      "context": "Tasks are managed individually without a central system, leading to operational challenges.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The legal team requires a way to structure incoming requests more effectively to improve task management.",
+      "customer_role": "Support Lead",
+      "context": "Requests are currently handled through email without a structured approach.",
+      "confidence": "medium"
+    }
+  ]
+}

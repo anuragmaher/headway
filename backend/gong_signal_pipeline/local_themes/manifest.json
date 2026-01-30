@@ -1,0 +1,11 @@
+{
+  "stage": "step2_cluster_signals",
+  "batch_files": [
+    "batch_001.json",
+    "batch_002.json"
+  ],
+  "total_signals_processed": 173,
+  "total_local_themes": 30,
+  "signals_dir": "/Users/anuragmaherchandani/headway/backend/gong_signal_pipeline/signals",
+  "output_dir": "/Users/anuragmaherchandani/headway/backend/gong_signal_pipeline/local_themes"
+}

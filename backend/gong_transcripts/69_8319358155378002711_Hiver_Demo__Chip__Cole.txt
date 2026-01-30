@@ -1,0 +1,673 @@
+================================================================================
+Call: Hiver Demo | Chip <> Cole
+Date: 2025-11-07T20:31:00+05:30
+================================================================================
+
+Cole Miller (cole@grexit.com):
+  hey, what's going on Alex?
+
+Alex Lundy (alex@procivica.com):
+  Hello. How are you?
+
+Cole Miller (cole@grexit.com):
+  I'm good. How are you?
+
+Alex Lundy (alex@procivica.com):
+  I'm great.
+
+Cole Miller (cole@grexit.com):
+  Nice. Where are you calling out of today?
+
+Alex Lundy (alex@procivica.com):
+  I am in Madison Georgia.
+
+Cole Miller (cole@grexit.com):
+  Oh, very cool.
+
+Alex Lundy (alex@procivica.com):
+  How about you?
+
+Cole Miller (cole@grexit.com):
+  I'm based out of Brooklyn New York.
+
+Alex Lundy (alex@procivica.com):
+  Oh, wow. Okay.
+
+Cole Miller (cole@grexit.com):
+  But I appreciate, you know, the both of you hopping on the call here today. So just to hop into it and set a quick agenda, we'd love to do a quick round of introductions, understand both your roles, what got you interested in hiver. Then we can jump into a product demonstration, and then we'll just save some time at the end for any questions and next steps, but I can kick us off first on the introductions. So, my name is Cole miller. I'm a senior account executive here at hiver. I've been in the email management, customer experience space for a little over six years now, and yeah, just looking forward to seeing how we can potentially help you all today.
+
+Alex Lundy (alex@procivica.com):
+  By the way?
+
+Chip Morris (chip@procivica.com):
+  I do, I'm having trouble technologically I can't see anything. I'm not sure what's going on. It's interesting. All I can see is me. So anyway, I'm chip Morris, I'm the founder and CEO of procivica and I will get this fixed. I don't mind looking at myself, but I'd rather see you guys.
+
+Alex Lundy (alex@procivica.com):
+  Well, we don't have cameras on if that makes you feel any better, no.
+
+Chip Morris (chip@procivica.com):
+  Okay. Fair enough. But I'm going to have to say, I think that you're going to have to share some stuff aren't you? Yeah. Okay. All right. Let's go. We're good, Alex, introduce yourself?
+
+Alex Lundy (alex@procivica.com):
+  Yeah, Alex, Lundy, director of operations for procivica. And I've been with the company now for I think actually four years. I told somebody three the other day. I think it's four years now.
+
+Chip Morris (chip@procivica.com):
+  Right at it.
+
+Cole Miller (cole@grexit.com):
+  Okay. Yeah. Well, great to meet you both. So just to kind of understand further, you know, chip it out. So like what brought you here to hiver today? Like what are you looking to solve for?
+
+Chip Morris (chip@procivica.com):
+  Yep. Well, I'll jump in and then I'll let Alex add to it.
+
+Chip Morris (chip@procivica.com):
+  Our company is procivica and you can see us at procivica com. We're currently using a product called talkto. We did that because it was just, you know, we were building our new website and building our new platform. And somebody said just we need something to go ahead and go with these guys. It looks like it because a good thing to start with is cheap or whatever. I don't even remember what pushed us in that direction but we did it because we needed to do something and it's working okay, but it's a lot of moving parts. And basically, this is what we need. We have people who are ordered to take classes first and second offenders, whether they're young adults or juveniles as well. As we have probation officers and folks who go in there to register folks. Those are the people who land on our site and who need help. 70 percent to 80 percent of the questions probably could be answered via AI via the chat bot, AI chat bot. We want a simple system to be able to track that, but know that just not even worry about that. We know that it's trained, right? We know it's given the right answers, it's not giving weird answers to the folks. It's resolving their issues. And when it's not a very simple way for them to escalate that. And we don't have a live person sitting there waiting. So it would need to be a ticket that triggers us. It says, hey, somebody's here. They need help. And then we can clearly see it and we can track those things. What are those things that are causing people to need help, personal attention, one on one. And so we want that's it, we want it to be clean. Now, I've landed on hiver, you asked the question. We chat gpt, we went in there. I searched, I said what are the top ones that would fit our needs? And it gave a few others. One of them was one of your competitors and it just didn't work out. Man. I looked at them and it was helpscout right? There were a lot of weird pricing issues around what they have, good product for the most part from what I could tell, but I didn't want to go any further because this is too weird. The pricing structure is bizarre and we do lean heavily on AI chatbot and their pricing was weird. So that's where we are that's what we need. And we'd love to hear what you guys can do for us.
+
+Cole Miller (cole@grexit.com):
+  So you're primarily just looking for an AI chatbot like for the website that's like the number one use case, something that can, you know, deflect conversations, run into end to end conversation without, you know, other folks getting involved.
+
+Chip Morris (chip@procivica.com):
+  Correct, and then obviously escalate to a ticket. So we can then we can track that. So those two things Alex, please jump in. What are your thoughts? Because I want Alex's hands on in this daily discussion.
+
+Alex Lundy (alex@procivica.com):
+  Yeah, I think that's a really good summary. The only thing I would add is the nuance to our customer base. We have several very distinct populations of users. And so differentiating those answers to the appropriate type of user has been difficult for us. One thing that talkto can do that we'd like to try to keep the functionality. I guess if we move services would be distinguishing what kind of user the customer is and being able to answer appropriately. For example, we have adult learners and juvenile learners. Juvenile learners do not pay for their courses. So there's no, how much does this cost? How do I pay? What forms of payment? Do you take all those types of questions? You know, it would need to answer appropriately to adults versus juveniles? And we also work with the learners themselves and with court staff. So the questions there are very different for those populations. And the way that we've handled that so far has been just a simple form fill off the bat. Are you a learner or a court staff? Are you an adult or a juvenile? And then being able to tailor the answers accordingly?
+
+Cole Miller (cole@grexit.com):
+  Yeah, you can see.
+
+Chip Morris (chip@procivica.com):
+  It, right? You can see that form if you go there.
+
+Cole Miller (cole@grexit.com):
+  Right. And are you currently using more conditional logic where if they select a button, it takes them down that conditional logic path or is it like actually conversational AI that's searching through your internal sources?
+
+Alex Lundy (alex@procivica.com):
+  I think my hunch is that one of the issues that we're having is we're doing both of those things. It's supposed to reference their answer on the form and then answer accordingly, right? So if they've clicked the radio button for juvenile, it should be answering them as a juvenile. But we… also have built several, they call them like triggers. It's a very complex process creating the… conversational triggers.
+
+Chip Morris (chip@procivica.com):
+  We've uploaded a document and we know we can put in text and we've got our faqs and they can, you know, they scrub our website, but then we upload a CSV to Scott. Here are the questions, but here are the answers to these three populations and you've got juvenile adult and then probation officer. And so it's supposed to answer it based upon when they answer that. Then it's going to only go to that pile of answers, right?
+
+Alex Lundy (alex@procivica.com):
+  And I think that for the most part works really well. It's the more complex stuff that has been built in the system. As far as those trigger paths that you're talking about, we have tried to do some of that but it's so complicated. We just really haven't been able to nail it. And I think the both of those methods working against each other is causing some of the issues that we're seeing.
+
+Cole Miller (cole@grexit.com):
+  Okay. I got it. And are you doing any email management today or is this strictly for chat?
+
+Chip Morris (chip@procivica.com):
+  It's strictly for chat. And when you say email, you mean like email support, people emailing us for support?
+
+Cole Miller (cole@grexit.com):
+  Yeah, exactly.
+
+Chip Morris (chip@procivica.com):
+  We handle that without any issues now as we scale just to let you know where we're positioned right now, we just invested a lot in our company to be able to go national to be able to be anywhere and then hold the weight of that. That's another reason we've got to get this right? Because as we scale, so do our problems and customer service issues. So or not our problems, but challenges and customer service issues increase, we want to be prepared for that. So I do anticipate we eventually will want to be able to deal with some email, incoming email support. But right now we can handle that. It's mainly we want to deal with it when they land on our site and they're taking care of it and they need help, right? Yeah.
+
+Cole Miller (cole@grexit.com):
+  Okay. No, that's perfect. So I can just show you what we have right now for chat. So right now we have more conditional logic but being released in a couple weeks, we have a very powerful generative AI platform chat agent that's going to be released. So I think as a, you know, once that's released, we can serve that as like a follow up to show you that workflow. But right now I'll just show you what we have currently. So what's nice about hiver team and kind of how we differentiate, right? We live within the Google workspace, and are you using Gmail or outlook today before I go further?
+
+Chip Morris (chip@procivica.com):
+  We use Gmail workspace.
+
+Cole Miller (cole@grexit.com):
+  Okay. You're using Google workspace. Got it. So, you know, you'll have access to hiver by logging into your Gmail environment. And then this is the backend, right? The admin panel where we're setting up our channels whether it's email management, chat, whatsapp, voice, knowledge base, customer portal, or also those automations and integrations that we might have. So this is kind of where we'll set it all up but going to, you know, the knowledge base. So kicking off a chat here, we do power our knowledge base through the chat. So this is what you can host on the website, have articles to hopefully self serve people before they even reach out to have, you know, a conversation for your team. But let's say, you know, we're going to start a new conversation here.
+
+Chip Morris (chip@procivica.com):
+  Okay.
+
+Cole Miller (cole@grexit.com):
+  So now I'm engaging you know, with chat and we can prompt that conversation, right? And this is where that conditional logic will take over where it's if you select one of these buttons, it will take you down that specific branch that has, you know, another set of questions that's kind of gauge the information, provide information, whatever it might be. So I'll select user addition, and it's going to prompt another question, right? Do I want to invite a user to account, share mailbox? And I can keep clicking these buttons as it takes me down that guided workflow from either where this is going to be able to self serve and deflect the ticket away from your team and just help them themselves or to a point where we need to escalate it and bring it to someone from a live chat experience with more of a human touch. So, and then going to the, you know, Google side. So this is the sales chat folder on the left hand side that will live in the workspace. And I can click in and see what's assigned to the bot right now. And this is actually the conversation that I'm having. So this can either be routed through automation or manual assignment. But in this case, I'll just assign it to myself… and I can kind of have that back and forth conversation in Gmail with the client. Just want to pause right here. Any questions so far?
+
+Chip Morris (chip@procivica.com):
+  I.
+
+Alex Lundy (alex@procivica.com):
+  really like that. It lives in Gmail. We've tried really hard to simplify our toolbox of platforms and services and different things as we've built our own system. So the fact that we're already in Google workspace. I really like that aspect a lot. Can you show us what it looks like? If, because I've been in one of these recently with a company going down their little button path, what happens when they need to escalate to a ticket, they're clicking those buttons and clicking down a path. And, it's not doing it.
+
+Cole Miller (cole@grexit.com):
+  Eventually it'll be like, hey, like, you know, we're going to route you to an agent and then it'll assign, we can either automatically assign to someone on your team, Alex, or like that's what we recommend we'll round rob it amongst the next person or we can create more of like a skill based approach. So do they?
+
+Alex Lundy (alex@procivica.com):
+  Have the ability to type in that chat at all or is it only click button?
+
+Cole Miller (cole@grexit.com):
+  They can type into it as well. But like for the generative ais, where it's going to be more conversational that's being released in a couple weeks. For this instance, it's taking them down to chat flow, but you can always leave a button where it's like escalate to a customer service agent, that's typically what I recommend clients do because some people just don't want to deal with the chat bots. So you could have a button here where it's like escalate it to a team member or something and it'll you know, push that forward. So going to like this is like where we can set that up though, Alex. So this is like the sales chat, you know, inbox. So to speak, where we can manage the participants, we can have a round Robin auto assignment that will automatically distribute those as they come in, you know, where you can design the widget, the logo, make it like very on brand and stuff like that. You know, we have like the bot configuration nudges. So if they're on like a certain page for a certain amount of time, we can trigger a nudge to prompt them to chat… the help articles, to help self serve and deflect conversations from the knowledge base, a pre chat form. So if you also want to collect this data, like we have that ability to collect the information. So you have it within your, you know, platform… and then some unavailability settings. So, you know, if people aren't available, like what happens? Like how are we handling that?
+
+Alex Lundy (alex@procivica.com):
+  Can you go back to the pre chat form for a second? Yeah. Okay. So that's just standard the way it is, right? We can't add questions to that.
+
+Cole Miller (cole@grexit.com):
+  Yes. So this is standard the way it is right now.
+
+Alex Lundy (alex@procivica.com):
+  Okay. So if they filled that out and then they click start conversation, and then we were to have two button or three buttons. Let's say that are like I'm a staff member, I'm an adult learner, I'm a juvenile learner, and they click one. Would that designation live on their like contact form, so to speak, or wherever those people or the participants tab?
+
+Cole Miller (cole@grexit.com):
+  Will that live on their contact form? Like if.
+
+Alex Lundy (alex@procivica.com):
+  you go back to participants, you know?
+
+Cole Miller (cole@grexit.com):
+  Yeah, like right here?
+
+Alex Lundy (alex@procivica.com):
+  Yeah. If I were to click on one, will it show me what they've selected? Like if they clicked adult or juvenile or staff member?
+
+Cole Miller (cole@grexit.com):
+  So we can route based on that, Alex. So if there's someone that deals with juveniles, like once they click that button, it'll go to that person.
+
+Alex Lundy (alex@procivica.com):
+  It's all going to go to the same person. We just need to know what they are.
+
+Cole Miller (cole@grexit.com):
+  Got it. So they'll be able to see that within the chat history, like they'll be able to see what they clicked and what they prompted. So they'll have all the context.
+
+Chip Morris (chip@procivica.com):
+  I'll tell you the one thing that's just jumping out to me though is the fact that it's going to be several weeks before the generative AI is going to be released. That's what we sort of lean on. Now, they feel like they're talking to somebody, you know, right? And that's what you're talking about, right? Just in layman's terms, it feels like you're talking to a person, yeah.
+
+Cole Miller (cole@grexit.com):
+  Exactly that's what's being released in a couple weeks right now. This is what we have. So it's like, you know, start the conversation, multiple choice question, select it, if then go there, maybe fill out this information, then assign to an agent, so on and so forth.
+
+Chip Morris (chip@procivica.com):
+  Right.
+
+Alex Lundy (alex@procivica.com):
+  When you say a couple weeks like three or like 12?
+
+Cole Miller (cole@grexit.com):
+  It should be released in two weeks. Oh… so if that's maybe for a touch base, why don't, we touch base at like because it sounds like that's like a need to have for your team, why don't we touch base in like let's say the 20 fifth, like same time and we can talk about the developments that have been released. If that works for y'all.
+
+Alex Lundy (alex@procivica.com):
+  yeah, chip, my thought would be, and this is an internal conversation that we need to have, but my only thought would be there could be some benefit to having two weeks to integrate, learn the system, get it set up in Gmail, really get these buttons and triggers and forms figured out. And right now we're pretty much touching every single customer support inquiry that comes in anyways. So I foresee that being the case for the next two weeks. So that's just something to consider. It would give us some time to bite.
+
+Cole Miller (cole@grexit.com):
+  This.
+
+Alex Lundy (alex@procivica.com):
+  off on a smaller bite. Yeah.
+
+Cole Miller (cole@grexit.com):
+  And we do offer a free trial too. So if like you want to test this for this next two weeks, we can get you set up.
+
+Chip Morris (chip@procivica.com):
+  Well, we probably will not put it on our site and, use it because we're just so you know, we just launched a new technology moved to a new platform. So all of our referring customer clients and all of our learners are having, we're having to really do a lot of debugging and fix things and so to throw that in and be trying to fix that. But I do think Alex is correct. It's not a bad idea for us to go ahead and start playing with it, setting it up, getting a feel for it before we do any kind of implementation as far as on the site itself, go live? Okay?
+
+Cole Miller (cole@grexit.com):
+  So.
+
+Chip Morris (chip@procivica.com):
+  Question. So on the 20 fifth, when do you anticipate that actually being live on your end? As far as the AI?
+
+Cole Miller (cole@grexit.com):
+  I was told the twentieth that was the timeframe that was delivered with me. I need to double check if that's still? Okay? That's the last I heard.
+
+Chip Morris (chip@procivica.com):
+  Okay. So the other thing I have is talk to me about pricing?
+
+Cole Miller (cole@grexit.com):
+  Yeah. So for what you'd be looking to do would be our pro plan, which is 45 dollars per user per month.
+
+Chip Morris (chip@procivica.com):
+  Okay. Any other hidden fees? Anything else that would, so.
+
+Cole Miller (cole@grexit.com):
+  For the AI as well, that would be 20 dollars per user per month for the generative AI?
+
+Chip Morris (chip@procivica.com):
+  In addition to the 45, yes. Okay. And so as far as an app, you guys don't have an app because you live in Gmail.
+
+Chip Morris (chip@procivica.com):
+  So we would basically, if we're anywhere and we're in our Gmail, we can basically go… into hiver. Is that correct? So we.
+
+Cole Miller (cole@grexit.com):
+  actually do have a mobile application that's dedicated that you can use. All right?
+
+Chip Morris (chip@procivica.com):
+  Cool.
+
+Cole Miller (cole@grexit.com):
+  But when, and if you guys have time now, I can kick you off with the trial. It takes like about five minutes if you want to just get this set up right now.
+
+Chip Morris (chip@procivica.com):
+  Sure.
+
+Cole Miller (cole@grexit.com):
+  Alex.
+
+Chip Morris (chip@procivica.com):
+  You okay with that?
+
+Alex Lundy (alex@procivica.com):
+  Yeah, I say, let's play around with it. Okay?
+
+Cole Miller (cole@grexit.com):
+  Cool. Would you want to drive this, Alex or chip or who would want to share their screen? So I can take them through it?
+
+Chip Morris (chip@procivica.com):
+  Alex, why don't you do that?
+
+Alex Lundy (alex@procivica.com):
+  Okay.
+
+Cole Miller (cole@grexit.com):
+  Awesome. So, if you just open a new Google Chrome tab, we can just take it from there.
+
+Alex Lundy (alex@procivica.com):
+  Okay. Let me share my screen… Google Chrome tab?
+
+Cole Miller (cole@grexit.com):
+  Okay, awesome. Yeah. Now, just type in hiver, Chrome extension.
+
+Cole Miller (cole@grexit.com):
+  And then select the first one, the Chrome web store… add to Chrome… add extension? Perfect.
+
+Cole Miller (cole@grexit.com):
+  And then set up hiver or is that the, is this the right email?
+
+Alex Lundy (alex@procivica.com):
+  No.
+
+Cole Miller (cole@grexit.com):
+  Oh, so not for this email, and then you try to switch accounts. You can do it. Clicking the top, right? A, or, yeah, that's.
+
+Alex Lundy (alex@procivica.com):
+  okay. So, how do I get back to it?
+
+Cole Miller (cole@grexit.com):
+  Refresh your screen right here?
+
+Cole Miller (cole@grexit.com):
+  Let's see… would you remove from Chrome real quick?
+
+Cole Miller (cole@grexit.com):
+  Okay. Go back to that same screen and then click on the, you see the top, right? The a change your profile right here? Yeah, and then add to Chrome.
+
+Alex Lundy (alex@procivica.com):
+  Got it.
+
+Cole Miller (cole@grexit.com):
+  And then add extension.
+
+Alex Lundy (alex@procivica.com):
+  Wait, this is not the right email.
+
+Cole Miller (cole@grexit.com):
+  How's that happening? Let's see and try switching gear, go to Alex at, yeah.
+
+Cole Miller (cole@grexit.com):
+  Or go back to that last screen. You can switch. I think if you just switch profiles on the last screen you downloaded that should work. If you click on the top, right? The a, and then go, yeah. Okay. Perfect. Set up with hiver. And then, yeah, just add your company information.
+
+Alex Lundy (alex@procivica.com):
+  Let me see. Hold on.
+
+Alex Lundy (alex@procivica.com):
+  And click off.
+
+Cole Miller (cole@grexit.com):
+  And then click on the top right hiver button, see like the yellow icon that's top right… further, right up there. It's like, right? Yeah, right there. Yeah, click on that and then log into hiver.
+
+Cole Miller (cole@grexit.com):
+  Give this one more refresh. Actually, it's probably just like loading up.
+
+Cole Miller (cole@grexit.com):
+  This little tech will support you here? See what's going on?
+
+Cole Miller (cole@grexit.com):
+  All right. I just pinged my technical support team. These will be hopping on like a minute or so.
+
+Alex Lundy (alex@procivica.com):
+  Did you see the message your team is already using hiver?
+
+Cole Miller (cole@grexit.com):
+  Oh, I didn't see that. Is that what you received? Yeah. Oh, okay. I did not see that. Let me check out what's going on. So someone must have started a trial or something.
+
+Chip Morris (chip@procivica.com):
+  I think I had already done that, but I didn't sign up. I didn't go any further. I just put the extension onto my computer.
+
+Cole Miller (cole@grexit.com):
+  Okay. That's probably what's blocking us right now? Oh, really? Yeah, that could be. So, let me someone on our technical support team is joining and they'll be able to assist. Yeah.
+
+Chip Morris (chip@procivica.com):
+  I didn't sign in on anything. I didn't set up anything. I just literally added the extension and then stopped it, asked me for emails and I didn't do any of that.
+
+Cole Miller (cole@grexit.com):
+  Okay.
+
+Chip Morris (chip@procivica.com):
+  So, I'm not sure.
+
+Cole Miller (cole@grexit.com):
+  Hey, badri.
+
+Cole Miller (cole@grexit.com):
+  Can you hear me?
+
+Badri:
+  Yes, I can hear you Cole.
+
+Cole Miller (cole@grexit.com):
+  Oh, perfect. Thanks for hopping on. So, we're just trying to download the hiver Chrome extension, but I think chip downloaded it, which is for some reason blocking Alex from creating a new environment for them. And we were just hoping to get your assistance.
+
+Badri:
+  Sure. I'm seeing Alex's screen, right? Okay. So, Alex, could you please share your entire screen? Because right now, I only see like a part of it?
+
+Cole Miller (cole@grexit.com):
+  You might be zoomed in a little bit.
+
+Alex Lundy (alex@procivica.com):
+  Your entire screen there we go.
+
+Badri:
+  Yeah, this looks better. Okay. So, is this the block where you keep encountering that you are already using hiver? So you're unable to log in?
+
+Cole Miller (cole@grexit.com):
+  Yeah, that's the account they want to use it for?
+
+Badri:
+  Okay. Cole, could you share any one of their email addresses? Preferably Alex's? Yeah, yep.
+
+Cole Miller (cole@grexit.com):
+  I'll send it to you.
+
+Cole Miller (cole@grexit.com):
+  Okay. I'll just slack that to you. Badri.
+
+Badri:
+  Bye.
+
+Badri:
+  Okay. Yeah, I don't see an associated account yet. Okay? So chip seems to have created a trial. So, can we have chip add Alex as a user? And then she should have no trouble logging in.
+
+Cole Miller (cole@grexit.com):
+  So, I don't think chip even downloaded the Chrome extension, and I don't see a grexit associated with his name.
+
+Chip Morris (chip@procivica.com):
+  Yeah, I never, really, I didn't set up anything. I added the extension, but I didn't sign into it or set it up?
+
+Badri:
+  So, is your address chip at the rate civia? Com? I'm sorry?
+
+Chip Morris (chip@procivica.com):
+  Procivica. Yeah, it's chip at procivica. Com. Yeah.
+
+Badri:
+  Yes, I see an associated trial with that address chip at the rate procivica. Com?
+
+Chip Morris (chip@procivica.com):
+  Oh, I did well. I did not mean to do that. You want me to go ahead and sign in with that? Yeah. Okay. Let me see if I can do that.
+
+Cole Miller (cole@grexit.com):
+  We can go on your screen too. Chip if you want us to walk you through it.
+
+Badri:
+  Yeah.
+
+Cole Miller (cole@grexit.com):
+  Ah,
+
+Chip Morris (chip@procivica.com):
+  actually, it gives me an option that says, don't set up this account. Do you want me to do that or go ahead and set it up? Because I haven't set anything up.
+
+Badri:
+  Chip, could you share your screen? Yeah.
+
+Chip Morris (chip@procivica.com):
+  I'm on a different computer. So, I've got two computers here. So you've got to give me a second to slide that over. Okay? Give.
+
+Badri:
+  me a second. Oh, no problem at all. Take your time. Yeah.
+
+Chip Morris (chip@procivica.com):
+  Yeah, I'll do that in just a second here. Shouldn't take me but a minute. Sorry about this guys. I just simply added the extension and didn't sign in for anything.
+
+Cole Miller (cole@grexit.com):
+  No, I'll get it. I'll get it.
+
+Chip Morris (chip@procivica.com):
+  All right.
+
+Badri:
+  Don't worry about it.
+
+Chip Morris (chip@procivica.com):
+  Okay. All right. Well, good to hear. Let's see. Sign in. Yeah, see that's? One of the issues we have is we have multiple emails in our Gmail. So I've got to go into the right account. This is going to take me a minute to do this.
+
+Badri:
+  That's okay. But I would recommend having a dedicated Chrome profile for your work address. Yeah. So you can sort of differentiate all your accounts and make sure.
+
+Chip Morris (chip@procivica.com):
+  Yeah,
+
+Chip Morris (chip@procivica.com):
+  Yeah. Take a minute guys.
+
+Chip Morris (chip@procivica.com):
+  It should be working now. All right. Let me share my screen.
+
+Chip Morris (chip@procivica.com):
+  Oh, Alex is still sharing, so.
+
+Alex Lundy (alex@procivica.com):
+  Oh, just a second.
+
+Alex Lundy (alex@procivica.com):
+  Wait, how do I stop?
+
+Cole Miller (cole@grexit.com):
+  Yeah, I can, let me see if I can override you right now?
+
+Alex Lundy (alex@procivica.com):
+  Am I still sharing?
+
+Cole Miller (cole@grexit.com):
+  Yes, you'll need to stop sharing.
+
+Cole Miller (cole@grexit.com):
+  There should be like a stop share button like a red stop share button at the top of the screen.
+
+Chip Morris (chip@procivica.com):
+  You should see mine now.
+
+Cole Miller (cole@grexit.com):
+  Okay. Yes. Okay.
+
+Chip Morris (chip@procivica.com):
+  What would you suggest?
+
+Cole Miller (cole@grexit.com):
+  Well, you can, if you want associate one of the shared mailboxes that you're using. So, if you have a support inbox or a Google group that you want to associate, you can do that or you can skip this step.
+
+Chip Morris (chip@procivica.com):
+  No, we'll just call it support. How about that?
+
+Cole Miller (cole@grexit.com):
+  Yeah. And then you connect the email and then whatever that.
+
+Chip Morris (chip@procivica.com):
+  We're not sharing her inbox now, though, are we Alex?
+
+Alex Lundy (alex@procivica.com):
+  No.
+
+Chip Morris (chip@procivica.com):
+  Yeah. So, we probably would, at this point to do this demo, we can always change it, correct? I'd rather.
+
+Cole Miller (cole@grexit.com):
+  Yeah, yeah, for sure.
+
+Chip Morris (chip@procivica.com):
+  Yeah. So, we're going to go ahead and call it support. Yeah.
+
+Cole Miller (cole@grexit.com):
+  And then, is it a dedicated login or is it a Google group?
+
+Chip Morris (chip@procivica.com):
+  It's a dedicated login?
+
+Cole Miller (cole@grexit.com):
+  Okay. So, yeah. Then we'd want to sign in with the top one?
+
+Chip Morris (chip@procivica.com):
+  Ah, see it's. Going to have, so you've been, I've set up mine, correct? And then I'll add Alex.
+
+Cole Miller (cole@grexit.com):
+  Yeah, this will make everything visible in that inbox though, just so you're aware… okay?
+
+Badri:
+  But your chip, you can, are signing in as chip, meaning your, could you click cancel?
+
+Cole Miller (cole@grexit.com):
+  Do you have like a, it's… basically signing in as your personal inbox and creating a shared mailbox from that? Do you have like the general query inbox that's more like on the website for, you know, external folks or whatever that might be?
+
+Chip Morris (chip@procivica.com):
+  Yeah. Well, that's going to be, Lauren who's not on here and she has support at procivica. Com. It is not a shared box.
+
+Cole Miller (cole@grexit.com):
+  Got it. That, that is what we would set up so you, we can just skip this step entirely then until that's yeah.
+
+Badri:
+  Just hit cancel and hit the X mark. Yeah, you can close the pop up like just hit the red button and then hit the X.
+
+Cole Miller (cole@grexit.com):
+  Mark. Yeah, and then go to users and roles, bottom left.
+
+Chip Morris (chip@procivica.com):
+  Hang on, users and roles bottom left. Okay?
+
+Cole Miller (cole@grexit.com):
+  Add users, and then you can invite Alex here.
+
+Chip Morris (chip@procivica.com):
+  Gotcha.
+
+Chip Morris (chip@procivica.com):
+  And what do I put there demo inbox?
+
+Cole Miller (cole@grexit.com):
+  Yeah, you can just, it's yeah, it's like dummy data that we provide clients just to get a feel for it. Okay, perfect. And then, Alex, now, you should be able to log in. No issues. Have access to this environment. Let us know if you're having any issues with that?
+
+Alex Lundy (alex@procivica.com):
+  Okay. Let me give it a try. One second.
+
+Chip Morris (chip@procivica.com):
+  You want me to stop sharing or hold off until she gets it up and going, doesn't really matter. I don't guess.
+
+Cole Miller (cole@grexit.com):
+  I guess, yeah, you can stop sharing. We, check out Alex's screen real quick to make sure. Yeah, yeah.
+
+Chip Morris (chip@procivica.com):
+  Sorry about that. It took us an extra eight to 10 minutes there, but, hey, you know?
+
+Cole Miller (cole@grexit.com):
+  No. All good.
+
+Alex Lundy (alex@procivica.com):
+  Okay. Can you guys see my screen now?
+
+Cole Miller (cole@grexit.com):
+  Yes. Okay. So, click top, right? Log in. See the, yeah… log in with hiver. Yeah, select that, continue?
+
+Cole Miller (cole@grexit.com):
+  Okay, awesome. So, now, you're in, you can hit explore hiver and then go top, right? Hit that hiver button one more time. I'll show you where you can kind of start setting up exit tour. Yeah, you can just say, exit tour. It's sometimes a little annoying in the beginning. And then we're waiting on the admin panel to load.
+
+Chip Morris (chip@procivica.com):
+  Did you, did you click on that?
+
+Cole Miller (cole@grexit.com):
+  Refresh your page one more time?
+
+Cole Miller (cole@grexit.com):
+  Do you like, the hard refresh top left, like the circular button on the top left of the, yeah. Okay. Now, click the hiver button, top, right?
+
+Cole Miller (cole@grexit.com):
+  And then exit tour… kabaji, why is that admin panel not popping up?
+
+Badri:
+  Cole, I believe, Alex's screen is frozen. I don't see, in real time, there's a delay between her screen being shared and me actually seeing it. So, what was your question again?
+
+Cole Miller (cole@grexit.com):
+  There's when she clicks on the hiver button, top, right? The admin panel should be popping up, but I'm just seeing my settings.
+
+Badri:
+  Oh, that's because Alex has been added as a member. So she doesn't have access.
+
+Cole Miller (cole@grexit.com):
+  To the admin, got it. Got it. Okay. So, chip you need to give her. So, if you go back to that users and roles chip, you have to give her admin access, users.
+
+Chip Morris (chip@procivica.com):
+  And roles?
+
+Cole Miller (cole@grexit.com):
+  And see how she's like a member.
+
+Chip Morris (chip@procivica.com):
+  So, I got her as a root as a supervisor, you're going to do admin?
+
+Cole Miller (cole@grexit.com):
+  Yeah, she wants total access.
+
+Chip Morris (chip@procivica.com):
+  Admin.
+
+Cole Miller (cole@grexit.com):
+  Yeah, admin is perfect.
+
+Chip Morris (chip@procivica.com):
+  All right. She's an admin.
+
+Cole Miller (cole@grexit.com):
+  Okay. So, refresh your screen one more time. And then this should be updated. Okay? And then top right?
+
+Alex Lundy (alex@procivica.com):
+  There we go. Okay?
+
+Cole Miller (cole@grexit.com):
+  Perfect. Then click admin panel… and then click on the chat, right in the middle. And then this is where you can start testing this and doing all that good stuff and creating that channel.
+
+Alex Lundy (alex@procivica.com):
+  Nice. Okay.
+
+Cole Miller (cole@grexit.com):
+  Or, but yeah, you'd have to create, you'd have to create the mailbox first to do the same. So, I'll show, she'd go out and go back to share mailboxes, top left, and then go create shared inbox, top, right? And then hiver chat. And then this is where you're going to like name it and all that stuff. Once it's created and you add the people, then you will have access to that other menu that I showed you before, where you can create the chat, flows, the contact form and all that stuff.
+
+Alex Lundy (alex@procivica.com):
+  Right. Okay.
+
+Cole Miller (cole@grexit.com):
+  Yeah, that's all right. So, you're pretty much all set up, ready to test.
+
+Cole Miller (cole@grexit.com):
+  So, I'll extend this out a couple of weeks as we wait for the gender, generative AI to release. But when would work for y'all to touch base? Well, let's say like the 20 fifth or 20 first work for you?
+
+Chip Morris (chip@procivica.com):
+  20 fifth works for me, Alex.
+
+Alex Lundy (alex@procivica.com):
+  Give me just a second.
+
+Alex Lundy (alex@procivica.com):
+  The 20 fifth works, I can't do the 20 sixth.
+
+Cole Miller (cole@grexit.com):
+  Okay. So, I'll send it for, I'll send it for 20 fifth, the same time I'll send you over some other additional information like set up guides, how to's as you're kind of testing. And then, I'll keep you posted once the generative AI portion comes out for our chat solution, and then we'll, we'll walk through it on our next call.
+
+Alex Lundy (alex@procivica.com):
+  I have one question, anything that we set up in our free trial, can that be transferred over to our account if we move forward the week of the 20 fifth? Once we see the chat features?
+
+Cole Miller (cole@grexit.com):
+  Yep, 100 percent. So, everything you do will transition. So you'll keep all progress.
+
+Alex Lundy (alex@procivica.com):
+  Awesome.
+
+Cole Miller (cole@grexit.com):
+  But it was great to meet you both. I will, I'll talk with y'all soon and, I hope you have a great weekend.
+
+Alex Lundy (alex@procivica.com):
+  Thank you so much. Thank you.
+
+Chip Morris (chip@procivica.com):
+  As well.
+
+Cole Miller (cole@grexit.com):
+  Okay. Thanks, guys. Take care bye.

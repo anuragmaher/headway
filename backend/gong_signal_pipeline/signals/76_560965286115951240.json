@@ -1,0 +1,34 @@
+{
+  "transcript_id": "76_560965286115951240",
+  "call_id": "560965286115951240",
+  "title": "Hiver & bryson with bkarrenagency.com",
+  "started": "2025-11-08T00:13:25+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer needs their executive assistant to access and manage emails without cluttering the main inbox.",
+      "suggested_solution": "Implement a tagging and auto-closing system for newsletters and other non-urgent emails.",
+      "customer_role": "Admin",
+      "context": "10 people on the team, using three shared inboxes.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is concerned about the cost of upgrading their plan, which doubles the monthly fee.",
+      "customer_role": "Admin",
+      "context": "Currently at the limit of users and mailboxes on the growth plan.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer wants to automate the tracking of email activity by team members for performance metrics.",
+      "suggested_solution": "Automate data exports to Google Sheets for weekly scorecards.",
+      "customer_role": "Admin",
+      "context": "Looking to compile email activity data for performance tracking.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer needs a way to filter out duplicate late payment notices from vendors to avoid clutter.",
+      "customer_role": "Admin",
+      "context": "Managing multiple emails regarding late payments from various clients.",
+      "confidence": "medium"
+    }
+  ]
+}

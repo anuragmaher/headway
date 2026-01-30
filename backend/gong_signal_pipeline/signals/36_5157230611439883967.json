@@ -1,0 +1,32 @@
+{
+  "transcript_id": "36_5157230611439883967",
+  "call_id": "5157230611439883967",
+  "title": "Hiver Meeting with Plaid",
+  "started": "2025-11-06T01:02:00+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer struggles to manage a high volume of emails in the AR inbox, with many emails not requiring a response.",
+      "customer_ask": "A tool that can filter out emails that don't need a response.",
+      "suggested_solution": "The customer suggested the AI could prioritize emails based on keywords like 'urgent'.",
+      "customer_role": "Admin",
+      "context": "Managing an AR inbox with an average of 100 emails daily.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is concerned that important emails may get filtered out by the AI.",
+      "customer_ask": "A way for the AI to recognize important emails that require attention.",
+      "suggested_solution": "The customer suggested that the AI should differentiate between remittance emails and those that contain questions.",
+      "customer_role": "Admin",
+      "context": "Managing an AR inbox with an average of 100 emails daily.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer needs a more efficient way to retrieve invoice copies from Netsuite.",
+      "customer_ask": "To check if the tool can pull invoice copies directly from Netsuite.",
+      "suggested_solution": "The customer suggested that the tool should be able to integrate with Netsuite to retrieve invoice copies.",
+      "customer_role": "Admin",
+      "context": "Managing an AR inbox with an average of 100 emails daily.",
+      "confidence": "medium"
+    }
+  ]
+}

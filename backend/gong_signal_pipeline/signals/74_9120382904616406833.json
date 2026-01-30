@@ -1,0 +1,38 @@
+{
+  "transcript_id": "74_9120382904616406833",
+  "call_id": "9120382904616406833",
+  "title": "Hiver & Nick with Rêve",
+  "started": "2025-11-07T23:00:32+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer needs a more efficient way to manage knowledge base articles, including ownership and review processes.",
+      "customer_role": "Support Lead",
+      "context": "Using Hiver for support with a focus on knowledge base management.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is looking for a self-service bot for their real estate agents to access knowledge base information easily.",
+      "customer_role": "Support Lead",
+      "context": "Current knowledge base is inadequate for agent self-service needs.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The AI feature for recognizing thank you messages is not functioning as expected.",
+      "customer_role": "Support Lead",
+      "context": "Experiencing limitations with AI capabilities in the support workflow.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer finds it cumbersome to manage knowledge base articles across multiple platforms without integration.",
+      "customer_role": "Support Lead",
+      "context": "Using ClickUp for knowledge management but facing integration issues with Hiver.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer requires a more flexible chat function that can integrate with their knowledge base and provide AI-enabled responses.",
+      "customer_role": "Support Lead",
+      "context": "Looking to enhance customer interaction through a chat widget on their website.",
+      "confidence": "high"
+    }
+  ]
+}

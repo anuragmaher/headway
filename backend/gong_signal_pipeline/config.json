@@ -1,0 +1,28 @@
+{
+  "input_transcripts_dir": "./gong_transcripts",
+  "pipeline_output_dir": "./gong_signal_pipeline",
+  "step1": {
+    "limit": 50,
+    "model": "gpt-4o-mini"
+  },
+  "step2": {
+    "batch_size": 30,
+    "min_signals_per_cluster": 2,
+    "distance_threshold": 0.5,
+    "min_confidence": "low",
+    "embedding_model": "text-embedding-3-small"
+  },
+  "step3": {
+    "existing_themes": null,
+    "model": "gpt-4o-mini"
+  },
+  "step4": {
+    "time_bucket": "month"
+  },
+  "step5": {
+    "model": "gpt-4o-mini"
+  },
+  "step6": {
+    "model": "gpt-4o-mini"
+  }
+}

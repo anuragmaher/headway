@@ -1,0 +1,267 @@
+{
+  "themes": [
+    {
+      "theme_id": "7df7d473-60ff-42f7-a6d8-32573572a5c4",
+      "theme_name": "Email Management Inefficiencies",
+      "total_signals_with_ask": 10,
+      "ask_groups": [
+        {
+          "ask_name": "Email Automation",
+          "ask_description": "Customers want to automate email handling to reduce manual forwarding and improve efficiency.",
+          "signals_supporting": 2,
+          "example_phrasing": [
+            "I would need to automate that because now I'm responsible for the support in terms that I'll forward the message to someone in our team."
+          ],
+          "confidence": "medium"
+        },
+        {
+          "ask_name": "Email Templates",
+          "ask_description": "Customers are looking for the ability to create and use email templates for quicker responses.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "It would be good if I could create templates and just send them."
+          ],
+          "confidence": "medium"
+        },
+        {
+          "ask_name": "Email Tracking and Management",
+          "ask_description": "Customers need a system to track email responses and ensure no emails are overlooked.",
+          "signals_supporting": 3,
+          "example_phrasing": [
+            "We need a way to track how we are responding to emails and ensure nothing slips through the cracks.",
+            "Looking for solutions to prevent things from getting dropped and missed."
+          ],
+          "confidence": "high"
+        },
+        {
+          "ask_name": "Email Categorization",
+          "ask_description": "Customers want a platform that can categorize emails based on urgency and type for better management.",
+          "signals_supporting": 2,
+          "example_phrasing": [
+            "They need a platform that can categorize emails based on urgency and type.",
+            "We need a system that categorizes where everything is at in the process."
+          ],
+          "confidence": "high"
+        },
+        {
+          "ask_name": "Integrated Email Management and Collaboration",
+          "ask_description": "Customers are seeking solutions that combine email management with team collaboration features.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "Looking for a solution that integrates email management and collaboration."
+          ],
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "theme_id": "d2c1839a-7c55-46be-9c0c-576812aeb74a",
+      "theme_name": "Lack of Automation and Integration",
+      "total_signals_with_ask": 7,
+      "ask_groups": [
+        {
+          "ask_name": "Automated Email Assignment",
+          "ask_description": "Customers want emails to be automatically assigned to specific individuals based on their content.",
+          "signals_supporting": 2,
+          "example_phrasing": [
+            "We want emails addressed to specific individuals to be automatically assigned to them.",
+            "Wants to know if there's a way to auto-assign emails based on their content."
+          ],
+          "confidence": "high"
+        },
+        {
+          "ask_name": "Integration with Shopify",
+          "ask_description": "Customers are looking for a way to integrate with Shopify.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "The customer expressed a desire to set up a Shopify integration."
+          ],
+          "confidence": "medium"
+        },
+        {
+          "ask_name": "Enhanced Ticket Submission Forms",
+          "ask_description": "Customers need forms with dropdowns and conditional elements for accurate ticket submissions.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "Need a form that includes dropdowns and conditional elements to ensure correct ticket submission."
+          ],
+          "confidence": "medium"
+        },
+        {
+          "ask_name": "AI for Request Prioritization",
+          "ask_description": "Customers are interested in AI functionality to automatically prioritize requests.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "Interested in AI functionality to prioritize requests automatically."
+          ],
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "theme_id": "d60533b3-78b5-4d9e-b353-7ddf836de564",
+      "theme_name": "Visibility and Tracking Issues",
+      "total_signals_with_ask": 5,
+      "ask_groups": [
+        {
+          "ask_name": "Dashboard for Email Metrics",
+          "ask_description": "Customers want a dashboard that displays various metrics related to email interactions.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "They want a dashboard that shows the count of different types of emails received."
+          ],
+          "confidence": "high"
+        },
+        {
+          "ask_name": "Timely Email Processing Confirmation",
+          "ask_description": "Customers need a mechanism to verify that emails are being processed promptly.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "We need a way to have a double check that the emails are getting processed in a timely manner."
+          ],
+          "confidence": "high"
+        },
+        {
+          "ask_name": "Reporting on Email Interactions and Team Performance",
+          "ask_description": "Customers are looking for tools that provide insights into email interactions and the performance of their teams.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "Tools that provide reporting and visibility into email interactions and team performance."
+          ],
+          "confidence": "high"
+        },
+        {
+          "ask_name": "Visibility on Ticket Ownership and Status",
+          "ask_description": "Customers want a system that clearly shows who owns tickets and their current status.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "A system that provides visibility on ticket ownership and status."
+          ],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "theme_id": "efffeca7-ec6a-41fb-aec7-515765430eea",
+      "theme_name": "Cost and Value Concerns",
+      "total_signals_with_ask": 5,
+      "ask_groups": [
+        {
+          "ask_name": "Clarification on pricing and package details",
+          "ask_description": "Customers want to understand the pricing structure and what is included in their package.",
+          "signals_supporting": 2,
+          "example_phrasing": [
+            "Wants to understand pricing and what is included in the package.",
+            "Wants to discuss the best case scenario on pricing."
+          ],
+          "confidence": "high"
+        },
+        {
+          "ask_name": "Evaluation of contract options",
+          "ask_description": "Customers are interested in understanding the benefits of longer contract terms.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "What advantages can you offer for a two or three-year contract?"
+          ],
+          "confidence": "medium"
+        },
+        {
+          "ask_name": "Decision-making assurance",
+          "ask_description": "Customers seek reassurance that they are making the right choice in their service provider.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "I want to make sure that I'm making the right decision."
+          ],
+          "confidence": "medium"
+        }
+      ]
+    },
+    {
+      "theme_id": "f9109128-e4b9-412f-9bec-9e4584310191",
+      "theme_name": "User Experience and Setup Challenges",
+      "total_signals_with_ask": 5,
+      "ask_groups": [
+        {
+          "ask_name": "Ease of Use and Workflow Setup",
+          "ask_description": "Customers want a platform that is user-friendly and facilitates easy workflow setup.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "Looking for a platform that is easy to use and set up workflows."
+          ],
+          "confidence": "high"
+        },
+        {
+          "ask_name": "Clarification on AI Features",
+          "ask_description": "Customers are inquiring about the inclusion of AI features in their subscription plan.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "Wants to know if AI features are included in the plan."
+          ],
+          "confidence": "high"
+        },
+        {
+          "ask_name": "Access to Drafts",
+          "ask_description": "Customers are asking about the ability to access and manage their drafts in a dedicated location.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "Is there like a separate folder that I can just, he can just check all my drafts?"
+          ],
+          "confidence": "high"
+        },
+        {
+          "ask_name": "Guidance on Personal Settings",
+          "ask_description": "Customers are seeking assistance with navigating and understanding personal settings.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "Can you take us through the personal settings?"
+          ],
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "theme_id": "b6da0760-6375-4edf-b8f9-5ceda1f153a5",
+      "theme_name": "Support and Communication Gaps",
+      "total_signals_with_ask": 5,
+      "ask_groups": [
+        {
+          "ask_name": "Integration of Communication Channels",
+          "ask_description": "Customers want to integrate various communication channels into their support system.",
+          "signals_supporting": 3,
+          "example_phrasing": [
+            "Looking for options to add WhatsApp to their support system.",
+            "The customer is interested in a platform that integrates phone support natively."
+          ],
+          "confidence": "high"
+        },
+        {
+          "ask_name": "Support for Voice Notes",
+          "ask_description": "Customers are inquiring about the capability to use voice notes in their support interactions.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "They want to know if voice notes can be supported."
+          ],
+          "confidence": "medium"
+        },
+        {
+          "ask_name": "Website Query Categorization",
+          "ask_description": "Customers are looking for ways to categorize queries through a form on their website.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "Is it possible to set up a form on our website to categorize queries?"
+          ],
+          "confidence": "medium"
+        },
+        {
+          "ask_name": "Utilization of Email Capabilities",
+          "ask_description": "Customers are exploring options to switch email services to enhance support capabilities.",
+          "signals_supporting": 1,
+          "example_phrasing": [
+            "Exploring the possibility of switching to Google emails to utilize Hiver's full capabilities."
+          ],
+          "confidence": "medium"
+        }
+      ]
+    }
+  ]
+}

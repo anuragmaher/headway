@@ -1,0 +1,44 @@
+{
+  "transcript_id": "94_273480860530217807",
+  "call_id": "273480860530217807",
+  "title": "Hiver Demo | Ralph <> Rakesh",
+  "started": "2025-11-10T19:50:42+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer is struggling with managing a single shared inbox, leading to confusion and double responses among team members.",
+      "customer_role": "Admin",
+      "context": "Single shared inbox (info@wag-bone.com) managed by three people, with plans to scale as business grows.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer needs a way to systemize email management to prevent team members from forwarding emails unnecessarily.",
+      "customer_role": "Admin",
+      "context": "Current workflow involves forwarding emails to the admin for responses, causing inefficiencies.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is looking for a solution that has a low learning curve for their team to adopt.",
+      "customer_role": "Admin",
+      "context": "Team of about seven people, with two currently managing the inbox and plans to add more.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer requires a way to track email responses and manage workload distribution among team members.",
+      "customer_role": "Admin",
+      "context": "Team of three managing customer inquiries, with plans to scale up.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is interested in automating responses and managing customer satisfaction surveys after ticket closure.",
+      "customer_role": "Admin",
+      "context": "Looking to improve customer engagement and feedback processes.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer needs to manage requests coming from multiple channels, including Instagram messaging, which is currently unsupported.",
+      "customer_role": "Admin",
+      "context": "Currently only managing emails and website chat, with plans to expand to other channels.",
+      "confidence": "high"
+    }
+  ]
+}

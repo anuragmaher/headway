@@ -1,0 +1,32 @@
+{
+  "transcript_id": "54_5832822436037059608",
+  "call_id": "5832822436037059608",
+  "title": "Hiver Demo | Sean <> Cole",
+  "started": "2025-11-06T23:30:49+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer needs a simplistic trouble tracking system for onboarding and offboarding processes that can generate child tickets or tasks from a parent ticket.",
+      "customer_role": "IT Director",
+      "context": "Small company with about 150 end users, transitioning from an MSP to managing their own ticketing system.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer has a strong focus on data security and retention, which is a concern for their ticketing system.",
+      "customer_role": "IT Director",
+      "context": "The company is not handling sensitive data but has a management preference for thorough data security practices.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is looking for a solution that integrates email and form submissions for ticket management.",
+      "customer_role": "IT Director",
+      "context": "The company uses Outlook and wants to streamline ticket submissions through email and potentially a form.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is seeking a service desk solution that can handle ticket management more effectively than their current system.",
+      "customer_role": "IT Director",
+      "context": "The customer is evaluating options for a service desk that can manage tickets better than their existing ITSM solution.",
+      "confidence": "high"
+    }
+  ]
+}

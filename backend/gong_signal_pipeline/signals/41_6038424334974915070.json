@@ -1,0 +1,34 @@
+{
+  "transcript_id": "41_6038424334974915070",
+  "call_id": "6038424334974915070",
+  "title": "Hiver Onboarding <> Kick off",
+  "started": "2025-11-06T16:31:12.408+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer needs a more efficient way to manage and classify contacts without manual intervention.",
+      "suggested_solution": "Automate the classification of contacts based on their email domains and interaction history.",
+      "customer_role": "CSM",
+      "context": "Managing multiple inboxes and contacts for different teams.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is facing limitations in tracking and analyzing email inquiries related to specific tags and sales outcomes.",
+      "suggested_solution": "Enhance analytics capabilities to allow tracking of inquiries and sales conversions by tag.",
+      "customer_role": "CSM",
+      "context": "Need to analyze performance metrics for wine tours and other inquiries.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is experiencing workflow friction due to the need for multiple user logins for shared inboxes.",
+      "customer_role": "CSM",
+      "context": "Managing multiple team inboxes with overlapping responsibilities.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer requires a more user-friendly interface for setting up SLA policies and business hours.",
+      "customer_role": "CSM",
+      "context": "Setting up operational hours for email response times.",
+      "confidence": "medium"
+    }
+  ]
+}

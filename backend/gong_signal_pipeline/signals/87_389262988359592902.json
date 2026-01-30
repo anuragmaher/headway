@@ -1,0 +1,39 @@
+{
+  "transcript_id": "87_389262988359592902",
+  "call_id": "389262988359592902",
+  "title": "Hiver Feedback | Asha <> Yukta",
+  "started": "2025-11-10T18:11:36+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer is looking for a more advanced ticket management solution than their current options.",
+      "customer_role": "Admin",
+      "context": "Evaluating ticket management tools, considering email management as a priority.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer needs a WhatsApp chatbot that can handle Arabic conversations.",
+      "suggested_solution": "Integration of a WhatsApp chatbot with Arabic language support.",
+      "customer_role": "Admin",
+      "context": "Team members predominantly use WhatsApp for communication.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is facing limitations with the current chatbot capabilities, specifically the inability to integrate it with WhatsApp.",
+      "customer_role": "Admin",
+      "context": "Seeking a solution that allows for automated responses via WhatsApp without live chat support.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is looking for integration capabilities with Monday.com and SAP, which are essential for their workflow.",
+      "customer_role": "Admin",
+      "context": "Integration with existing tools is a key requirement for their operations.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is disappointed that forms and customer portal features are not currently supported.",
+      "customer_role": "Admin",
+      "context": "These features are important for their ticket management and customer interaction.",
+      "confidence": "medium"
+    }
+  ]
+}

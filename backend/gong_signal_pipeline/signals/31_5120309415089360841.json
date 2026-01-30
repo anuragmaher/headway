@@ -1,0 +1,38 @@
+{
+  "transcript_id": "31_5120309415089360841",
+  "call_id": "5120309415089360841",
+  "title": "Hiver Demo | Erin <> Rakesh",
+  "started": "2025-11-05T20:30:27+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer support team is overwhelmed by the volume of emails, with around 200 emails received daily, leading to inefficiencies in handling queries.",
+      "customer_ask": "A system that can deflect repetitive tickets automatically.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is no ticketing system in place, making it difficult to track and manage customer queries effectively.",
+      "customer_ask": "A ticketing system to manage customer queries.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "Multiple customer support specialists responding to the same email leads to confusion and inconsistency in customer communication.",
+      "customer_ask": "A way to ensure only one person responds to each email.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The current system does not allow for clear visibility on who is working on which tickets, leading to potential overlaps and missed responses.",
+      "customer_ask": "A system that provides visibility on ticket ownership and status.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The team is using password sharing to access a common inbox, which raises security concerns and complicates tracking of individual contributions.",
+      "customer_ask": "Individual logins for team members to access the shared inbox.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is no effective way to flag and track technical issues reported by customers, leading to delays in addressing these problems.",
+      "customer_ask": "A summary or flagging system for recurring technical issues.",
+      "confidence": "medium"
+    }
+  ]
+}

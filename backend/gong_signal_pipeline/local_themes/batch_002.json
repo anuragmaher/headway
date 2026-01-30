@@ -1,0 +1,280 @@
+{
+  "batch_index": 2,
+  "local_themes": [
+    {
+      "local_theme_id": "batch002_cluster0",
+      "canonical_problem": "A way to ensure only one person responds to each email.",
+      "signal_count": 2,
+      "signal_ids": [
+        "31_5120309415089360841_2",
+        "39_4489065961252873757_0"
+      ],
+      "sample_phrasings": [
+        "A way to ensure only one person responds to each email.",
+        "We want to see how emails get treated and who responded to them.",
+        "Multiple customer support specialists responding to the same email leads to confusion and inconsistency in customer communication.",
+        "It is difficult to track whether emails sent to a single info address have been responded to."
+      ],
+      "sample_customer_asks": [
+        "A way to ensure only one person responds to each email.",
+        "We want to see how emails get treated and who responded to them."
+      ]
+    },
+    {
+      "local_theme_id": "batch002_cluster1",
+      "canonical_problem": "Is phone call integration available?",
+      "signal_count": 2,
+      "signal_ids": [
+        "29_1934531072215400581_2",
+        "35_9113500539911067003_0"
+      ],
+      "sample_phrasings": [
+        "Is phone call integration available?",
+        "How do we integrate some kind of phone… call, text thing into Hiver?",
+        "The customer requires a solution for phone call management, which is currently unsupported.",
+        "The customer needs to integrate phone and SMS capabilities into their existing workflows."
+      ],
+      "sample_customer_asks": [
+        "Is phone call integration available?",
+        "How do we integrate some kind of phone… call, text thing into Hiver?"
+      ]
+    },
+    {
+      "local_theme_id": "batch002_cluster2",
+      "canonical_problem": "Wants to ensure that the product can tie into existing CRM systems effectively.",
+      "signal_count": 5,
+      "signal_ids": [
+        "22_1900022235445877057_1",
+        "23_7551637830443202250_0",
+        "23_7551637830443202250_1",
+        "23_7551637830443202250_2",
+        "24_1772088558163387271_3"
+      ],
+      "sample_phrasings": [
+        "Wants to ensure that the product can tie into existing CRM systems effectively.",
+        "They need a better way to manage and track customer interactions.",
+        "They want to explore solutions that provide consistency and analytics.",
+        "They need to justify the integration of new tools to their CEO.",
+        "The customer is looking for reporting features similar to what they currently use."
+      ],
+      "sample_customer_asks": [
+        "Wants to ensure that the product can tie into existing CRM systems effectively.",
+        "They need a better way to manage and track customer interactions.",
+        "They want to explore solutions that provide consistency and analytics.",
+        "They need to justify the integration of new tools to their CEO.",
+        "The customer is looking for reporting features similar to what they currently use."
+      ]
+    },
+    {
+      "local_theme_id": "batch002_cluster3",
+      "canonical_problem": "The customer would like more visible suggestions or prompts for using AI features.",
+      "signal_count": 3,
+      "signal_ids": [
+        "34_1070454784834090884_0",
+        "34_1070454784834090884_2",
+        "37_5824952077978151925_3"
+      ],
+      "sample_phrasings": [
+        "The customer would like more visible suggestions or prompts for using AI features.",
+        "The customer seeks clearer guidance on how to utilize AI features effectively.",
+        "Can you provide a clearer example of how ask AI works?",
+        "The customer finds the AI features to be hidden and not readily available, leading to underutilization.",
+        "The customer is confused about the AI capabilities and how to effectively use them, leading to frustration."
+      ],
+      "sample_customer_asks": [
+        "The customer would like more visible suggestions or prompts for using AI features.",
+        "The customer seeks clearer guidance on how to utilize AI features effectively.",
+        "Can you provide a clearer example of how ask AI works?"
+      ]
+    },
+    {
+      "local_theme_id": "batch002_cluster4",
+      "canonical_problem": "Can this process be automated to save time?",
+      "signal_count": 2,
+      "signal_ids": [
+        "37_5824952077978151925_1",
+        "37_5824952077978151925_2"
+      ],
+      "sample_phrasings": [
+        "Can this process be automated to save time?",
+        "Is there a way to simplify the tagging process?",
+        "The thank you detector feature is perceived as time-consuming for the customer.",
+        "The AI tagging feature requires manual input of tags for initial learning, which is cumbersome."
+      ],
+      "sample_customer_asks": [
+        "Can this process be automated to save time?",
+        "Is there a way to simplify the tagging process?"
+      ]
+    },
+    {
+      "local_theme_id": "batch002_cluster5",
+      "canonical_problem": "Looking for software to help manage the inbox better and filter out emails that don't need a response.",
+      "signal_count": 7,
+      "signal_ids": [
+        "25_3473473895190872707_0",
+        "25_3473473895190872707_2",
+        "25_3473473895190872707_4",
+        "32_8582046139361477789_1",
+        "33_6393266748416453161_2",
+        "36_5157230611439883967_0",
+        "36_5157230611439883967_1"
+      ],
+      "sample_phrasings": [
+        "Looking for software to help manage the inbox better and filter out emails that don't need a response.",
+        "Wondering if the system can recognize emails with specific keywords or phrases for automation.",
+        "Clarification on how to ensure important emails are not filtered out by automation.",
+        "Automation features to reduce manual sorting.",
+        "Interested in AI functionality to prioritize requests automatically."
+      ],
+      "sample_customer_asks": [
+        "Looking for software to help manage the inbox better and filter out emails that don't need a response.",
+        "Wondering if the system can recognize emails with specific keywords or phrases for automation.",
+        "Clarification on how to ensure important emails are not filtered out by automation.",
+        "Automation features to reduce manual sorting.",
+        "Interested in AI functionality to prioritize requests automatically."
+      ]
+    },
+    {
+      "local_theme_id": "batch002_cluster6",
+      "canonical_problem": "Looking for options to add WhatsApp to their support system.",
+      "signal_count": 2,
+      "signal_ids": [
+        "38_9191075575686333109_0",
+        "38_9191075575686333109_1"
+      ],
+      "sample_phrasings": [
+        "Looking for options to add WhatsApp to their support system.",
+        "Need to be able to initiate messages on WhatsApp.",
+        "The customer is facing difficulties integrating WhatsApp into their current Zendesk setup.",
+        "The customer needs a solution that allows them to initiate WhatsApp messages, which is not supported by the current options."
+      ],
+      "sample_customer_asks": [
+        "Looking for options to add WhatsApp to their support system.",
+        "Need to be able to initiate messages on WhatsApp."
+      ]
+    },
+    {
+      "local_theme_id": "batch002_cluster7",
+      "canonical_problem": "We need a system in place to combine the inboxes for better organization.",
+      "signal_count": 3,
+      "signal_ids": [
+        "27_5608003571102105784_0",
+        "29_1934531072215400581_1",
+        "31_5120309415089360841_4"
+      ],
+      "sample_phrasings": [
+        "We need a system in place to combine the inboxes for better organization.",
+        "Are you open to creating an inbox, which is a common shared inbox?",
+        "Individual logins for team members to access the shared inbox.",
+        "The customer service team is currently managing multiple email inboxes, leading to inefficiencies in handling customer queries.",
+        "The customer does not have a shared inbox for IT support, leading to inefficient email management."
+      ],
+      "sample_customer_asks": [
+        "We need a system in place to combine the inboxes for better organization.",
+        "Are you open to creating an inbox, which is a common shared inbox?",
+        "Individual logins for team members to access the shared inbox."
+      ]
+    },
+    {
+      "local_theme_id": "batch002_cluster8",
+      "canonical_problem": "Can we integrate app communications into the email management system?",
+      "signal_count": 3,
+      "signal_ids": [
+        "27_5608003571102105784_2",
+        "33_6393266748416453161_0",
+        "33_6393266748416453161_1"
+      ],
+      "sample_phrasings": [
+        "Can we integrate app communications into the email management system?",
+        "Looking for a solution that integrates email management and collaboration.",
+        "Need a solution that provides visibility into all email communications.",
+        "There is no current capability to link app communications with the email management system.",
+        "The current email management solution using Outlook and Jira does not facilitate effective collaboration and communication."
+      ],
+      "sample_customer_asks": [
+        "Can we integrate app communications into the email management system?",
+        "Looking for a solution that integrates email management and collaboration.",
+        "Need a solution that provides visibility into all email communications."
+      ]
+    },
+    {
+      "local_theme_id": "batch002_cluster9",
+      "canonical_problem": "The customer wants a solution that can handle email, chat, and phone support effectively.",
+      "signal_count": 2,
+      "signal_ids": [
+        "24_1772088558163387271_1",
+        "24_1772088558163387271_2"
+      ],
+      "sample_phrasings": [
+        "The customer wants a solution that can handle email, chat, and phone support effectively.",
+        "The customer is interested in a platform that integrates phone support natively.",
+        "The customer is looking for a more efficient way to manage support tickets across multiple shared email addresses.",
+        "The customer is concerned about the lack of native phone support in their current platform, which complicates their workflow."
+      ],
+      "sample_customer_asks": [
+        "The customer wants a solution that can handle email, chat, and phone support effectively.",
+        "The customer is interested in a platform that integrates phone support natively."
+      ]
+    },
+    {
+      "local_theme_id": "batch002_cluster10",
+      "canonical_problem": "Interested in understanding how the Netsuite integration works and its capabilities.",
+      "signal_count": 2,
+      "signal_ids": [
+        "25_3473473895190872707_3",
+        "36_5157230611439883967_2"
+      ],
+      "sample_phrasings": [
+        "Interested in understanding how the Netsuite integration works and its capabilities.",
+        "To check if the tool can pull invoice copies directly from Netsuite.",
+        "The integration with Netsuite is limited to pulling data and does not allow for actions to be taken within Netsuite.",
+        "The customer needs a more efficient way to retrieve invoice copies from Netsuite."
+      ],
+      "sample_customer_asks": [
+        "Interested in understanding how the Netsuite integration works and its capabilities.",
+        "To check if the tool can pull invoice copies directly from Netsuite."
+      ]
+    },
+    {
+      "local_theme_id": "batch002_cluster11",
+      "canonical_problem": "We need to offer better service and a better experience to our customers.",
+      "signal_count": 2,
+      "signal_ids": [
+        "32_8582046139361477789_0",
+        "32_8582046139361477789_3"
+      ],
+      "sample_phrasings": [
+        "We need to offer better service and a better experience to our customers.",
+        "A way to track follow-ups and ensure timely updates to customers.",
+        "The customer lacks a ticketing system to track the status of tasks, leading to dropped balls and poor service.",
+        "The customer struggles with managing follow-ups and ensuring timely communication with clients."
+      ],
+      "sample_customer_asks": [
+        "We need to offer better service and a better experience to our customers.",
+        "A way to track follow-ups and ensure timely updates to customers."
+      ]
+    },
+    {
+      "local_theme_id": "batch002_cluster12",
+      "canonical_problem": "A system that can deflect repetitive tickets automatically.",
+      "signal_count": 3,
+      "signal_ids": [
+        "31_5120309415089360841_0",
+        "31_5120309415089360841_1",
+        "31_5120309415089360841_3"
+      ],
+      "sample_phrasings": [
+        "A system that can deflect repetitive tickets automatically.",
+        "A ticketing system to manage customer queries.",
+        "A system that provides visibility on ticket ownership and status.",
+        "The customer support team is overwhelmed by the volume of emails, with around 200 emails received daily, leading to inefficiencies in handling queries.",
+        "There is no ticketing system in place, making it difficult to track and manage customer queries effectively."
+      ],
+      "sample_customer_asks": [
+        "A system that can deflect repetitive tickets automatically.",
+        "A ticketing system to manage customer queries.",
+        "A system that provides visibility on ticket ownership and status."
+      ]
+    }
+  ]
+}

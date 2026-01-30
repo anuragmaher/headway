@@ -1,0 +1,608 @@
+{
+  "call_id": "4935709220599995484",
+  "title": "Hiver Demo: Ilker <> Cole",
+  "started": "2025-11-04T00:03:30+05:30",
+  "duration_seconds": 229,
+  "call_metadata": {
+    "id": "4935709220599995484",
+    "url": "https://us-31545.app.gong.io/call?id=4935709220599995484",
+    "title": "Hiver Demo: Ilker <> Cole",
+    "scheduled": "2025-11-04T00:00:00+05:30",
+    "started": "2025-11-04T00:03:30+05:30",
+    "duration": 229,
+    "primaryUserId": "1712395375262334087",
+    "direction": "Conference",
+    "system": "Zoom",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://us06web.zoom.us/j/2016631400",
+    "isPrivate": false,
+    "calendarEventId": "48q2p11ada5gpjbdc1l6jhpvp6@google.com"
+  },
+  "parties": [
+    {
+      "id": "2398252999499729994",
+      "name": "Ozfield",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "External",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "2706467050584048596",
+      "name": "Io",
+      "speakerId": "2946480331044623015",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "5238300317757828937",
+      "emailAddress": "cole@grexit.com",
+      "name": "Cole Miller",
+      "userId": "1712395375262334087",
+      "speakerId": "2151663548351696578",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "4487630454267311710",
+      "emailAddress": "ilker@ozfield.com",
+      "title": "",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "170785071895",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "43470728327"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Ilker"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1762200866.817
+                },
+                {
+                  "name": "createdate",
+                  "value": 1761942512.705
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1762214400.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "Ozkaymak"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82060741"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Outlook"
+                },
+                {
+                  "name": "phone",
+                  "value": "+17735369272"
+                },
+                {
+                  "name": "mobilephone",
+                  "value": "+1 773-715-9522"
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Product does not meet requirements"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1761942512.705
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "salesqualifiedlead"
+                },
+                {
+                  "name": "email",
+                  "value": "ilker@ozfield.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "+17735369272",
+      "methods": [
+        "Invitee"
+      ]
+    },
+    {
+      "id": "8156438089890334578",
+      "emailAddress": "keerthi.r@grexit.com",
+      "userId": "9117099453457611136",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "4935709220599995484",
+    "transcript": [
+      {
+        "speakerId": "2151663548351696578",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 5,
+            "end": 165,
+            "text": "hello?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2946480331044623015",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 7615,
+            "end": 7835,
+            "text": "Hello?"
+          },
+          {
+            "start": 7855,
+            "end": 8535,
+            "text": "Can you hear me?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2151663548351696578",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 9405,
+            "end": 9555,
+            "text": "Yeah."
+          },
+          {
+            "start": 9655,
+            "end": 10275,
+            "text": "I can hear you."
+          },
+          {
+            "start": 10275,
+            "end": 10795,
+            "text": "Can you hear me?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2946480331044623015",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 16315,
+            "end": 16655,
+            "text": "I can."
+          },
+          {
+            "start": 16755,
+            "end": 17155,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "2151663548351696578",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 18685,
+            "end": 19015,
+            "text": "Perfect."
+          },
+          {
+            "start": 19175,
+            "end": 20115,
+            "text": "Who am I speaking with here?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2946480331044623015",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 20735,
+            "end": 21575,
+            "text": "This is Iker."
+          },
+          {
+            "start": 21675,
+            "end": 24275,
+            "text": "I go by my initials, I o, all the time so."
+          }
+        ]
+      },
+      {
+        "speakerId": "2151663548351696578",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 24655,
+            "end": 26575,
+            "text": "Oh, hey, Iker, how are you?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2946480331044623015",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 28795,
+            "end": 30495,
+            "text": "Good, good."
+          }
+        ]
+      },
+      {
+        "speakerId": "2151663548351696578",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 30495,
+            "end": 32715,
+            "text": "I appreciate you hopping on the call here."
+          },
+          {
+            "start": 32795,
+            "end": 49265,
+            "text": "So just to set a quick agenda, would love to do a quick round of introductions, you know, understand your role and what got you interested in hiver, then we can jump into a product demonstration, and then we'll just save some time at the end for any questions and steps."
+          }
+        ]
+      },
+      {
+        "speakerId": "2946480331044623015",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 50095,
+            "end": 53515,
+            "text": "I only have about 20 25 minutes before my next meeting."
+          },
+          {
+            "start": 53795,
+            "end": 54215,
+            "text": "Okay?"
+          },
+          {
+            "start": 54465,
+            "end": 59415,
+            "text": "I am looking for, I am interested in combining communication."
+          },
+          {
+            "start": 59825,
+            "end": 72405,
+            "text": "So I am looking into missive and hiver, the two competitors and I'm trying to make a decision today or tomorrow to pick a platform and start testing."
+          },
+          {
+            "start": 73585,
+            "end": 74565,
+            "text": "Got it."
+          },
+          {
+            "start": 74605,
+            "end": 87705,
+            "text": "We are an insurance agency, mortgage brokerage, like a small business with six, seven employees total with different business areas, different business names, all same, six, seven people."
+          },
+          {
+            "start": 88955,
+            "end": 91595,
+            "text": "And we have different means of communications."
+          },
+          {
+            "start": 91695,
+            "end": 104935,
+            "text": "It can be the text messages, phone calls, voice over IP with the webhooks available as well… emails, office."
+          }
+        ]
+      },
+      {
+        "speakerId": "2946480331044623015",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 117285,
+            "end": 118495,
+            "text": "Communication platform."
+          },
+          {
+            "start": 118495,
+            "end": 127975,
+            "text": "So we can track like assign, you know, tasks, do stuff like that for our clients, insurance policies on the standard as well."
+          },
+          {
+            "start": 128055,
+            "end": 134175,
+            "text": "So, what I'm looking for is me in the I've seen the mr web demonstration."
+          },
+          {
+            "start": 134655,
+            "end": 138255,
+            "text": "I want to see the competitor as well before I make a decision."
+          }
+        ]
+      },
+      {
+        "speakerId": "2151663548351696578",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 140515,
+            "end": 141035,
+            "text": "Got it."
+          },
+          {
+            "start": 142895,
+            "end": 151735,
+            "text": "So, are you looking to consolidate all those channels under one platform or are you really just looking for more of an email management platform?"
+          },
+          {
+            "start": 152095,
+            "end": 152235,
+            "text": "All?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2946480331044623015",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 152335,
+            "end": 153435,
+            "text": "All under one channel."
+          }
+        ]
+      },
+      {
+        "speakerId": "2151663548351696578",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 154075,
+            "end": 154635,
+            "text": "Got it."
+          },
+          {
+            "start": 154675,
+            "end": 157115,
+            "text": "So that's not something we can offer today."
+          },
+          {
+            "start": 158235,
+            "end": 162575,
+            "text": "We're only able to manage chat and email today as a solution?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2946480331044623015",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 164055,
+            "end": 167995,
+            "text": "Like chat as in whatsapp and telegram or something else?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2151663548351696578",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 168435,
+            "end": 175735,
+            "text": "So like live chat, so we can just do email and live chat today within our outlook solution?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2946480331044623015",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 177235,
+            "end": 177575,
+            "text": "Okay."
+          },
+          {
+            "start": 177615,
+            "end": 183075,
+            "text": "I'm not looking for an outlook solution I'm looking for like an external solution that gets everything together, right?"
+          },
+          {
+            "start": 183155,
+            "end": 183335,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "2151663548351696578",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 183635,
+            "end": 184075,
+            "text": "Yeah."
+          },
+          {
+            "start": 184195,
+            "end": 186375,
+            "text": "So that we're just not going to be able to do that today."
+          },
+          {
+            "start": 186495,
+            "end": 197535,
+            "text": "So we're just transparently just not a fit for what you're looking for, but, I'll keep you posted as the product develops and I'll let you know once we're able to consolidate those other channels."
+          },
+          {
+            "start": 197595,
+            "end": 197795,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2946480331044623015",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 198335,
+            "end": 202315,
+            "text": "Can you then delete my account so I can always get a trial in the future?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2151663548351696578",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 203785,
+            "end": 204035,
+            "text": "Yeah."
+          },
+          {
+            "start": 204135,
+            "end": 205775,
+            "text": "You, you want me to delete the trial?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2946480331044623015",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 206535,
+            "end": 213735,
+            "text": "Delete the trial, delete the account so, I can come in like a new customer in the future when you guys have those features and I can do it."
+          }
+        ]
+      },
+      {
+        "speakerId": "2151663548351696578",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 214215,
+            "end": 215755,
+            "text": "Yeah, yeah."
+          },
+          {
+            "start": 215855,
+            "end": 216355,
+            "text": "100 percent."
+          },
+          {
+            "start": 216435,
+            "end": 217395,
+            "text": "I can definitely do that."
+          }
+        ]
+      },
+      {
+        "speakerId": "2946480331044623015",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 217925,
+            "end": 219395,
+            "text": "But still keep in the loop please?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2151663548351696578",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 219895,
+            "end": 225375,
+            "text": "Yeah, no, I'll definitely keep in the loop but, it was great to meet you and I will talk to you soon."
+          }
+        ]
+      },
+      {
+        "speakerId": "2946480331044623015",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 225865,
+            "end": 226515,
+            "text": "Talk to you soon."
+          },
+          {
+            "start": 226555,
+            "end": 226875,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "2151663548351696578",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 227245,
+            "end": 227525,
+            "text": "Okay."
+          },
+          {
+            "start": 227605,
+            "end": 227805,
+            "text": "Bye."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 25
+}

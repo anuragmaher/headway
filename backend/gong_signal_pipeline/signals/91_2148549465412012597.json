@@ -1,0 +1,26 @@
+{
+  "transcript_id": "91_2148549465412012597",
+  "call_id": "2148549465412012597",
+  "title": "Exploring Hiver for Pratilipi",
+  "started": "2025-11-10T18:35:18+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer needs additional shared mailboxes for different departments but is limited by the current plan's restrictions.",
+      "customer_role": "Admin",
+      "context": "Currently using Hiver with three active mailboxes and requires three more for different teams.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is facing limitations with the number of automations and features available in their current plan.",
+      "customer_role": "Admin",
+      "context": "The customer is considering upgrading to a plan that offers unlimited features and automations as their team grows.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer’s PPS team is unable to see 'due soon' reminders for their emails, which is critical for their support workflow.",
+      "customer_role": "Support Lead",
+      "context": "The PPS team needs timely reminders for resolution and response times to manage their support effectively.",
+      "confidence": "medium"
+    }
+  ]
+}

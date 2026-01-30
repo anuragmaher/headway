@@ -1,0 +1,211 @@
+{
+  "batch_index": 4,
+  "local_themes": [
+    {
+      "local_theme_id": "batch004_cluster0",
+      "canonical_problem": "The customer is looking for a more advanced ticket management solution than their current options.",
+      "signal_count": 6,
+      "signal_ids": [
+        "87_389262988359592902_0",
+        "87_389262988359592902_3",
+        "88_3360790303363631583_5",
+        "96_1192862830170513490_0",
+        "96_1192862830170513490_3",
+        "98_4236783152821893787_3"
+      ],
+      "sample_phrasings": [
+        "The customer is looking for a more advanced ticket management solution than their current options.",
+        "The customer is looking for integration capabilities with Monday.com and SAP, which are essential for their workflow.",
+        "The customer is interested in integrating their backend system with Hiver to pull relevant data for email prioritization.",
+        "The customer needs a ticketing system that integrates directly within Outlook to streamline their workflow and reduce information silos.",
+        "The customer requires integration with Microsoft Dynamics 365 Business Central to enhance their operational efficiency."
+      ]
+    },
+    {
+      "local_theme_id": "batch004_cluster1",
+      "canonical_problem": "The customer seeks a dashboard that summarizes issues per construction site, highlighting problems and customer sentiment.",
+      "signal_count": 2,
+      "signal_ids": [
+        "86_2840736752872732243_3",
+        "88_3360790303363631583_4"
+      ],
+      "sample_phrasings": [
+        "The customer seeks a dashboard that summarizes issues per construction site, highlighting problems and customer sentiment.",
+        "The customer needs a way to summarize long email threads to quickly understand the main issues."
+      ]
+    },
+    {
+      "local_theme_id": "batch004_cluster2",
+      "canonical_problem": "The customer support team forgets to reply to emails, leading to poor customer communication.",
+      "signal_count": 4,
+      "signal_ids": [
+        "86_2840736752872732243_0",
+        "86_2840736752872732243_2",
+        "86_2840736752872732243_4",
+        "93_8895378269642915310_1"
+      ],
+      "sample_phrasings": [
+        "The customer support team forgets to reply to emails, leading to poor customer communication.",
+        "The customer requires a way to automatically tag emails by construction site to improve visibility and management.",
+        "The customer wants to implement a flagging tool quickly to manage email responses effectively.",
+        "The customer needs a way to automate the identification and handling of spam emails to reduce manual effort."
+      ]
+    },
+    {
+      "local_theme_id": "batch004_cluster3",
+      "canonical_problem": "The current system for handling customer support requests is overwhelming and lacks organization, leading to issues slipping through the cracks.",
+      "signal_count": 5,
+      "signal_ids": [
+        "95_5587847006321736629_0",
+        "95_5587847006321736629_1",
+        "95_5587847006321736629_2",
+        "95_5587847006321736629_3",
+        "95_5587847006321736629_4"
+      ],
+      "sample_phrasings": [
+        "The current system for handling customer support requests is overwhelming and lacks organization, leading to issues slipping through the cracks.",
+        "There is no software system to manage and prioritize incoming customer support requests, resulting in a manual and ad hoc process.",
+        "The team needs a central location to track unresolved and resolved customer support requests to ensure timely responses.",
+        "There is a need for a dashboard view to monitor the status of customer support requests and workload distribution among team members.",
+        "The current process for handling phone calls and logging issues is manual, requiring staff to write up descriptions and send emails to track resolutions."
+      ]
+    },
+    {
+      "local_theme_id": "batch004_cluster4",
+      "canonical_problem": "The customer is looking for a solution that has a low learning curve for their team to adopt.",
+      "signal_count": 3,
+      "signal_ids": [
+        "94_273480860530217807_2",
+        "97_1938401446610814653_3",
+        "99_54159193150082527_1"
+      ],
+      "sample_phrasings": [
+        "The customer is looking for a solution that has a low learning curve for their team to adopt.",
+        "The customer is unsure about the compatibility of their current tool (Streak) with the new solution and is concerned about potential workflow disruptions.",
+        "The customer is uncertain about the potential use cases for the product within their organization."
+      ]
+    },
+    {
+      "local_theme_id": "batch004_cluster5",
+      "canonical_problem": "The customer wants a feature that automatically opens a new email for agents after they close a current one.",
+      "signal_count": 2,
+      "signal_ids": [
+        "88_3360790303363631583_3",
+        "95_5587847006321736629_5"
+      ],
+      "sample_phrasings": [
+        "The customer wants a feature that automatically opens a new email for agents after they close a current one.",
+        "The customer is looking for a way to automate the process of adding a BCC email address for logging outgoing emails into their custom CRM."
+      ]
+    },
+    {
+      "local_theme_id": "batch004_cluster6",
+      "canonical_problem": "The customer needs a sentiment analysis tool to identify angry customers and adjust responses accordingly.",
+      "signal_count": 8,
+      "signal_ids": [
+        "86_2840736752872732243_1",
+        "88_3360790303363631583_1",
+        "90_416503973008057754_2",
+        "92_5525045250490226357_0",
+        "92_5525045250490226357_1",
+        "92_5525045250490226357_2",
+        "92_5525045250490226357_3",
+        "96_1192862830170513490_1"
+      ],
+      "sample_phrasings": [
+        "The customer needs a sentiment analysis tool to identify angry customers and adjust responses accordingly.",
+        "The customer requires AI capabilities to track SLA breaches and automate notifications to team leaders.",
+        "The customer requires better automation capabilities, particularly in drafting messages with context and tone of voice for social media interactions.",
+        "The customer needs a chatbot to handle simple inquiries to improve efficiency and reduce the time spent by the team on repetitive tasks.",
+        "The customer is concerned about the complexity of setting up the AI chatbot to handle specific inquiries effectively."
+      ]
+    },
+    {
+      "local_theme_id": "batch004_cluster7",
+      "canonical_problem": "The customer struggles with managing multiple Instagram accounts and ensuring stable connections to avoid missing messages.",
+      "signal_count": 3,
+      "signal_ids": [
+        "90_416503973008057754_0",
+        "90_416503973008057754_3",
+        "94_273480860530217807_5"
+      ],
+      "sample_phrasings": [
+        "The customer struggles with managing multiple Instagram accounts and ensuring stable connections to avoid missing messages.",
+        "The customer needs a centralized platform for managing social media communications, including TikTok, which is currently unavailable.",
+        "The customer needs to manage requests coming from multiple channels, including Instagram messaging, which is currently unsupported."
+      ]
+    },
+    {
+      "local_theme_id": "batch004_cluster8",
+      "canonical_problem": "The customer needs automation to assign emails to the correct department without manual intervention.",
+      "signal_count": 17,
+      "signal_ids": [
+        "88_3360790303363631583_0",
+        "89_1503865447707759680_0",
+        "89_1503865447707759680_1",
+        "89_1503865447707759680_2",
+        "89_1503865447707759680_3",
+        "90_416503973008057754_1",
+        "94_273480860530217807_0",
+        "94_273480860530217807_1",
+        "94_273480860530217807_3",
+        "94_273480860530217807_4",
+        "96_1192862830170513490_2",
+        "97_1938401446610814653_0",
+        "97_1938401446610814653_1",
+        "97_1938401446610814653_4",
+        "98_4236783152821893787_0",
+        "98_4236783152821893787_1",
+        "98_4236783152821893787_2"
+      ],
+      "sample_phrasings": [
+        "The customer needs automation to assign emails to the correct department without manual intervention.",
+        "The customer struggles to manage client inquiries effectively due to a lack of structured workflow and tracking.",
+        "The customer needs a way to categorize and prioritize client emails to ensure timely responses.",
+        "The customer requires a system to escalate unanswered emails to ensure they are addressed in a timely manner.",
+        "The customer is looking for a way to create and use email templates for repetitive inquiries to save time."
+      ]
+    },
+    {
+      "local_theme_id": "batch004_cluster9",
+      "canonical_problem": "The customer needs additional shared mailboxes for different departments but is limited by the current plan's restrictions.",
+      "signal_count": 2,
+      "signal_ids": [
+        "91_2148549465412012597_0",
+        "91_2148549465412012597_1"
+      ],
+      "sample_phrasings": [
+        "The customer needs additional shared mailboxes for different departments but is limited by the current plan's restrictions.",
+        "The customer is facing limitations with the number of automations and features available in their current plan."
+      ]
+    },
+    {
+      "local_theme_id": "batch004_cluster10",
+      "canonical_problem": "The customer needs a WhatsApp chatbot that can handle Arabic conversations.",
+      "signal_count": 3,
+      "signal_ids": [
+        "87_389262988359592902_1",
+        "87_389262988359592902_2",
+        "98_4236783152821893787_4"
+      ],
+      "sample_phrasings": [
+        "The customer needs a WhatsApp chatbot that can handle Arabic conversations.",
+        "The customer is facing limitations with the current chatbot capabilities, specifically the inability to integrate it with WhatsApp.",
+        "The customer is interested in implementing a chat functionality for better communication with drivers, who prefer chat over phone calls."
+      ]
+    },
+    {
+      "local_theme_id": "batch004_cluster11",
+      "canonical_problem": "The customer is missing access to the spam folder, leading to important emails being overlooked.",
+      "signal_count": 2,
+      "signal_ids": [
+        "93_8895378269642915310_0",
+        "93_8895378269642915310_2"
+      ],
+      "sample_phrasings": [
+        "The customer is missing access to the spam folder, leading to important emails being overlooked.",
+        "The customer is concerned about the reliability of spam filtering and wants to ensure that legitimate emails are not marked as spam."
+      ]
+    }
+  ]
+}

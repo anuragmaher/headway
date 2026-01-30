@@ -1,0 +1,38 @@
+{
+  "transcript_id": "69_8319358155378002711",
+  "call_id": "8319358155378002711",
+  "title": "Hiver Demo | Chip <> Cole",
+  "started": "2025-11-07T20:31:00+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer needs a simple system to track AI chatbot interactions and escalate unresolved issues to human agents.",
+      "customer_role": "CEO",
+      "context": "Currently using a complex system with multiple moving parts; aiming to streamline customer support for various user types.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer struggles with differentiating responses based on distinct user populations (adult learners, juvenile learners, court staff).",
+      "customer_role": "Director of Operations",
+      "context": "Handling inquiries from diverse user groups with different needs; currently using a form to categorize users but facing challenges in providing tailored responses.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is concerned about the complexity of setting up conditional logic and conversational triggers in their current system.",
+      "customer_role": "Director of Operations",
+      "context": "Experiencing difficulties in creating effective conversational paths for their chatbot, leading to unresolved customer inquiries.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer anticipates increased customer service challenges as they scale their operations nationally.",
+      "customer_role": "CEO",
+      "context": "Recently invested in scaling the company; expects customer service issues to grow as they expand.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is looking for a generative AI solution that mimics human conversation to improve user experience.",
+      "customer_role": "CEO",
+      "context": "Currently relying on a basic chatbot; needs a more advanced solution to enhance customer interactions.",
+      "confidence": "high"
+    }
+  ]
+}

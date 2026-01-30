@@ -1,0 +1,44 @@
+{
+  "transcript_id": "88_3360790303363631583",
+  "call_id": "3360790303363631583",
+  "title": "Hiver & Rana with Air IQ",
+  "started": "2025-11-10T17:58:04+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer needs automation to assign emails to the correct department without manual intervention.",
+      "customer_role": "Support Lead",
+      "context": "Handling customer emails related to flight cancellations and rescheduling, with multiple departments involved.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer requires AI capabilities to track SLA breaches and automate notifications to team leaders.",
+      "customer_role": "Support Lead",
+      "context": "Managing email responses and ensuring timely follow-ups for customer queries.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is looking for a writing assistant feature to help agents draft emails with fewer grammatical errors.",
+      "customer_role": "Support Lead",
+      "context": "Agents frequently write emails to customers and need assistance to improve clarity and professionalism.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer wants a feature that automatically opens a new email for agents after they close a current one.",
+      "customer_role": "Support Lead",
+      "context": "Agents are handling multiple emails and need a more efficient workflow to manage their tasks.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer needs a way to summarize long email threads to quickly understand the main issues.",
+      "customer_role": "Support Lead",
+      "context": "Dealing with complex customer inquiries that involve multiple back-and-forth emails.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is interested in integrating their backend system with Hiver to pull relevant data for email prioritization.",
+      "customer_role": "Product Lead",
+      "context": "Managing customer inquiries related to travel dates and cancellations that require timely responses.",
+      "confidence": "medium"
+    }
+  ]
+}

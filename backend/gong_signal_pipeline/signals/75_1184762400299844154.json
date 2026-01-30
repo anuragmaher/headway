@@ -1,0 +1,40 @@
+{
+  "transcript_id": "75_1184762400299844154",
+  "call_id": "1184762400299844154",
+  "title": "Conservice Accounting/ Hiver AI",
+  "started": "2025-11-07T23:30:03+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer struggles with manually filling out custom fields based on email signatures, leading to inefficiencies.",
+      "suggested_solution": "AI should automatically extract information from email signatures to populate custom fields.",
+      "customer_role": "CSM",
+      "context": "High volume of emails requiring categorization and custom field population.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is concerned about the accuracy of sentiment analysis, particularly when emails are marked as negative due to unresolved issues.",
+      "customer_role": "CSM",
+      "context": "Sentiment analysis is used to gauge customer interactions, but false negatives occur with unresolved emails.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer needs a way to prevent team members from closing emails that are not fully resolved, which leads to incomplete workflows.",
+      "suggested_solution": "Implement a warning system when attempting to close unresolved emails.",
+      "customer_role": "CSM",
+      "context": "Team members often close emails prematurely, affecting workflow efficiency.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer lacks a historical reporting feature for sentiment changes, making it difficult to track improvements over time.",
+      "customer_role": "CSM",
+      "context": "Desire for monthly reporting on sentiment changes to assess team performance.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer finds that their knowledge base articles are sometimes outdated, which can lead to misinformation.",
+      "customer_role": "CSM",
+      "context": "Knowledge sources are critical for team efficiency, but some articles are not regularly updated.",
+      "confidence": "medium"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "transcript_id": "68_4113860263497002780",
+  "call_id": "4113860263497002780",
+  "title": "Hiver & Nick with MVS Canada Logistics - Ship Your Car With The Experts",
+  "started": "2025-11-07T20:31:44+05:30",
+  "signals": [
+    {
+      "problem_statement": "The AI tagging feature is not functioning as expected, causing frustration in automating workflows.",
+      "customer_role": "Admin",
+      "context": "Using AI features for automations, specifically tagging and extracting information from emails.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is unsure about how to set up multiple shared inboxes and whether they need to duplicate automations for each inbox.",
+      "customer_role": "Admin",
+      "context": "Planning to create multiple email addresses for different functions (quotes, tracking) and seeking clarity on automation setup.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer needs a way to extract order IDs and other identifiers from emails to streamline their workflow.",
+      "suggested_solution": "Extracting phone numbers, VINs, and order IDs into custom fields for easier access.",
+      "customer_role": "Admin",
+      "context": "Managing logistics and tracking shipments, looking for automation to reduce manual searching.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The current UI experience for scrolling through extracted data is cumbersome, leading to inefficiencies.",
+      "customer_role": "Admin",
+      "context": "Working with a large number of order IDs and needing a smoother interface for data extraction.",
+      "confidence": "medium"
+    }
+  ]
+}

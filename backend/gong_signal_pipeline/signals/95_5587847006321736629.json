@@ -1,0 +1,45 @@
+{
+  "transcript_id": "95_5587847006321736629",
+  "call_id": "5587847006321736629",
+  "title": "Hiver Demo | Matthew <> Jeevan",
+  "started": "2025-11-10T19:58:07+05:30",
+  "signals": [
+    {
+      "problem_statement": "The current system for handling customer support requests is overwhelming and lacks organization, leading to issues slipping through the cracks.",
+      "customer_role": "Support Lead",
+      "context": "Transportation department with 6 people handling support for 1,000 kids, using phone and email as primary channels.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is no software system to manage and prioritize incoming customer support requests, resulting in a manual and ad hoc process.",
+      "customer_role": "Support Lead",
+      "context": "Support requests come through various channels, primarily phone and email, with no centralized system.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The team needs a central location to track unresolved and resolved customer support requests to ensure timely responses.",
+      "customer_role": "Support Lead",
+      "context": "The team currently logs into a shared Gmail account to manage support requests.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is a need for a dashboard view to monitor the status of customer support requests and workload distribution among team members.",
+      "customer_role": "Support Lead",
+      "context": "The team is overwhelmed with requests and lacks visibility into the status of inquiries.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The current process for handling phone calls and logging issues is manual, requiring staff to write up descriptions and send emails to track resolutions.",
+      "customer_role": "Support Lead",
+      "context": "Phone calls are resolved without a systematic way to log them into the support system.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is looking for a way to automate the process of adding a BCC email address for logging outgoing emails into their custom CRM.",
+      "suggested_solution": "Automate BCC for outgoing emails.",
+      "customer_role": "Support Lead",
+      "context": "Currently, staff must manually add a BCC email address for CRM logging.",
+      "confidence": "medium"
+    }
+  ]
+}

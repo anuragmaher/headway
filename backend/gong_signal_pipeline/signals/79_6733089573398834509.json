@@ -1,0 +1,38 @@
+{
+  "transcript_id": "79_6733089573398834509",
+  "call_id": "6733089573398834509",
+  "title": "Hiver Demo | Adam <> Cole",
+  "started": "2025-11-08T01:30:25+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer needs to standardize email management processes across their team to improve efficiency and reduce manual handling of emails.",
+      "customer_role": "CSM",
+      "context": "Team of 30-40 people using distribution lists for email management, with plans to expand to 60-70.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is a lack of visibility into email handling and performance metrics, making it difficult to track response times and workload distribution.",
+      "customer_role": "CSM",
+      "context": "Current email management lacks analytics to measure response times and completion rates.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer experiences workflow friction due to inconsistent email sorting and handling methods among team members.",
+      "customer_role": "CSM",
+      "context": "Different team members use various methods to manage their inboxes, leading to confusion and inefficiency.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is looking for AI capabilities to automate email sorting and responses based on specific criteria.",
+      "customer_role": "CSM",
+      "context": "The team is interested in using AI to streamline email management and improve response times.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer needs a solution that integrates with Outlook for email management but is concerned about the lack of calendar integration.",
+      "customer_role": "CSM",
+      "context": "Currently using Outlook for email management and requires calendar functionality.",
+      "confidence": "medium"
+    }
+  ]
+}

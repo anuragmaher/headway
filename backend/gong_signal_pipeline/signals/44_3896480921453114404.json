@@ -1,0 +1,21 @@
+{
+  "transcript_id": "44_3896480921453114404",
+  "call_id": "3896480921453114404",
+  "title": "Hiver & John with Printville",
+  "started": "2025-11-06T19:11:14+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer is concerned about the potential price increase for their subscription and is looking for a way to maintain their current pricing.",
+      "suggested_solution": "A minimal price increase of one dollar per user per month would make the customer happier.",
+      "customer_role": "Admin",
+      "context": "Currently using Hiver with 14 users, primarily for rule-based automation.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer feels they are not utilizing all the features of the current plan and may not need the higher-tier subscription.",
+      "customer_role": "Admin",
+      "context": "Using only basic features of Hiver, indicating a mismatch between their needs and the plan they are on.",
+      "confidence": "medium"
+    }
+  ]
+}

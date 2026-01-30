@@ -1,0 +1,33 @@
+{
+  "transcript_id": "73_5936591522611905187",
+  "call_id": "5936591522611905187",
+  "title": "Hiver & Jesse with Earnest Homes",
+  "started": "2025-11-07T22:32:19+05:30",
+  "signals": [
+    {
+      "problem_statement": "The AI copilot settings change unexpectedly, causing disruptions in its functionality.",
+      "customer_role": "Support Lead",
+      "context": "Using AI copilot feature for customer inquiries, team of 14 people.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The AI copilot does not assist in composing new emails, limiting its utility for creating initial outreach.",
+      "suggested_solution": "Request for the copilot to assist in drafting new emails using knowledge base information.",
+      "customer_role": "Support Lead",
+      "context": "Team needs to create new email drafts for property inquiries.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The pricing for the AI features is perceived as too high given the limited usage of additional features.",
+      "customer_role": "Sales",
+      "context": "Concern over the cost of AI features that are not fully utilized by the team.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is uncertainty about the AI's language preference settings, specifically between American and British English.",
+      "customer_role": "Sales",
+      "context": "Concern about the AI's language output affecting communication consistency.",
+      "confidence": "medium"
+    }
+  ]
+}

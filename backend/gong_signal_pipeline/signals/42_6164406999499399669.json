@@ -1,0 +1,20 @@
+{
+  "transcript_id": "42_6164406999499399669",
+  "call_id": "6164406999499399669",
+  "title": "Gasera <> Hiver : Trial Feedback",
+  "started": "2025-11-06T17:30:23+05:30",
+  "signals": [
+    {
+      "problem_statement": "Team members cannot see emails sent from the support address in their inbox or sent items, leading to confusion about email responses.",
+      "customer_role": "Support Lead",
+      "context": "Shared inbox with multiple team members using the support email address.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "Customer is unsure about where to find shared comments on emails, indicating a lack of clarity in the user interface.",
+      "customer_role": "Support Lead",
+      "context": "Limited testing time with new team members using the tool.",
+      "confidence": "medium"
+    }
+  ]
+}

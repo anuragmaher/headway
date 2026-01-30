@@ -1,0 +1,33 @@
+{
+  "transcript_id": "90_416503973008057754",
+  "call_id": "416503973008057754",
+  "title": "Nora Maria<>Hiver: Introductory Call",
+  "started": "2025-11-10T18:32:05+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer struggles with managing multiple Instagram accounts and ensuring stable connections to avoid missing messages.",
+      "customer_role": "Admin",
+      "context": "Managing 30 Instagram accounts with approximately 750 conversations per month.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer finds it challenging to delegate inbox access to colleagues in their current tool, leading to workflow inefficiencies.",
+      "customer_role": "Admin",
+      "context": "Using a shared inbox for team communication but facing difficulties in assigning and viewing conversations.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer requires better automation capabilities, particularly in drafting messages with context and tone of voice for social media interactions.",
+      "suggested_solution": "Integration of AI to draft messages based on client background information and tone of voice.",
+      "customer_role": "Admin",
+      "context": "Using AI for message drafting but limited by current tool capabilities.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer needs a centralized platform for managing social media communications, including TikTok, which is currently unavailable.",
+      "customer_role": "Admin",
+      "context": "Looking to offer social media campaigns but unable to manage DMs on TikTok.",
+      "confidence": "high"
+    }
+  ]
+}

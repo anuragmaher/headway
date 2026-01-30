@@ -1,0 +1,50 @@
+{
+  "transcript_id": "15_6161945918659751659",
+  "call_id": "6161945918659751659",
+  "title": "Hiver Demo | Asha <> Jeevan",
+  "started": "2025-11-04T17:32:35+05:30",
+  "signals": [
+    {
+      "problem_statement": "The KSA team is struggling to manage a single shared inbox for all employee queries, leading to inefficiencies.",
+      "customer_ask": "We wanted to reduce this because same emails again and 19 people will read it out.",
+      "customer_role": "Operations Manager",
+      "context": "Team of 19 managing a shared inbox for employee queries.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is a lack of a ticketing system to monitor SLAs and team performance for the KSA operations.",
+      "customer_ask": "We wanted to explore how ticketing system works and how we can able to monitor the SLAs and the team performance also through AI automation.",
+      "customer_role": "Operations Manager",
+      "context": "Team of 19 managing a shared inbox for employee queries.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The current email management process does not allow for effective categorization or prioritization of incoming requests.",
+      "customer_ask": "We can create a category, right?",
+      "customer_role": "Operations Manager",
+      "context": "Team of 19 managing a shared inbox for employee queries.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The existing system does not support automation for ticket assignment based on client-specific queries.",
+      "customer_ask": "Will the system pick the keywords which is in the mail body, the client name, and assign it by themselves?",
+      "customer_role": "Operations Manager",
+      "context": "Team of 19 managing a shared inbox for employee queries.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "There is no integration with existing platforms like Monday.com for managing employee requests.",
+      "customer_ask": "Will that be possible? Whatever we are receiving in Monday.com, will that be converted here as a ticket?",
+      "customer_role": "Operations Manager",
+      "context": "Team of 19 managing a shared inbox for employee queries.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The current system lacks a customer portal for employees to submit requests, making it difficult to manage incoming queries efficiently.",
+      "customer_ask": "Is it possible to connect back on Friday for a quick feedback?",
+      "customer_role": "Operations Manager",
+      "context": "Team of 19 managing a shared inbox for employee queries.",
+      "confidence": "high"
+    }
+  ]
+}

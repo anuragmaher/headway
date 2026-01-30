@@ -1,0 +1,44 @@
+{
+  "transcript_id": "43_7358947301194959400",
+  "call_id": "7358947301194959400",
+  "title": "Hiver Sync",
+  "started": "2025-11-06T18:32:42+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer needs a way to assign an email to more than one person to ensure collaborative input on certain tasks.",
+      "customer_role": "CSM",
+      "context": "Team collaboration on emails, needing visibility for multiple team members.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer cannot access the spam folder from their individual inboxes, which is critical for managing new employee communications that may be flagged as spam.",
+      "customer_role": "CSM",
+      "context": "Managing HR communications, ensuring no important emails are missed.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is unable to edit tag names once created, which limits their ability to organize and categorize emails effectively.",
+      "customer_role": "CSM",
+      "context": "Need for better email organization and management.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer requires an automatic reply setup for emails assigned to a part-time employee to inform senders of potential delays in response.",
+      "customer_role": "CSM",
+      "context": "Managing customer expectations for response times based on team availability.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer wants a way to manage spam emails effectively without losing context, as they need to review potentially important emails that are flagged as spam.",
+      "customer_role": "CSM",
+      "context": "Handling HR inquiries and ensuring no important communications are overlooked.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is looking for a way to prioritize certain views in their inbox for better visibility of pending emails.",
+      "customer_role": "CSM",
+      "context": "Managing email workflow efficiently within the team.",
+      "confidence": "medium"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "transcript_id": "39_4489065961252873757",
+  "call_id": "4489065961252873757",
+  "title": "Hiver Demo | Larissa <> Rakesh",
+  "started": "2025-11-06T14:34:30+05:30",
+  "signals": [
+    {
+      "problem_statement": "It is difficult to track whether emails sent to a single info address have been responded to.",
+      "customer_ask": "We want to see how emails get treated and who responded to them.",
+      "customer_role": "Admin",
+      "context": "Museum with a team of about 10 people managing public inquiries via email.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is a need for statistics on the number of questions answered over the year.",
+      "customer_ask": "We want to see statistics over the year, like how many questions we answered.",
+      "customer_role": "Admin",
+      "context": "Museum with a team of about 10 people managing public inquiries via email.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The current email management solution does not provide sufficient visibility into email workload distribution among team members.",
+      "customer_ask": "How is there a possibility to follow up for me as a manager?",
+      "customer_role": "Admin",
+      "context": "Museum with a team of about 10 people managing public inquiries via email.",
+      "confidence": "medium"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "transcript_id": "78_6608624762484707053",
+  "call_id": "6608624762484707053",
+  "title": "Good Vibe Squad <> Hiver pricing",
+  "started": "2025-11-08T01:00:57+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer is facing a significant price increase for a product they do not use extensively, leading to dissatisfaction and a potential cancellation.",
+      "suggested_solution": "Downgrade to a free plan or request a refund for the recent charge.",
+      "customer_role": "Admin",
+      "context": "Currently using Hiver with three users but only one is active; considering downgrading due to low usage.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is experiencing deliverability issues with their current CRM and is exploring alternatives for cold outreach.",
+      "customer_role": "Sales",
+      "context": "Looking for a solution to improve email deliverability for sales outreach, currently using a CRM that is not meeting their needs.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is confused about the pricing structure, specifically being charged for more users than they actively have.",
+      "customer_role": "Admin",
+      "context": "Billing confusion due to a tiered pricing model that charges for a minimum number of users.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is uncertain about the effectiveness of Hiver for outbound sales compared to other dedicated tools.",
+      "customer_role": "Sales",
+      "context": "Evaluating whether to use Hiver for sales processes instead of dedicated cold email software.",
+      "confidence": "medium"
+    }
+  ]
+}

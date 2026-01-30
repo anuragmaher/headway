@@ -1,0 +1,241 @@
+================================================================================
+Call: Hiver Demo
+Date: 2025-11-05T02:02:01+05:30
+================================================================================
+
+Cole Miller (cole@grexit.com):
+  hey, what's up, Ollie?
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Hey, Cole. How's it going?
+
+Cole Miller (cole@grexit.com):
+  How we doing?
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Eating leftover Halloween candy?
+
+Cole Miller (cole@grexit.com):
+  That sounds about right. I got a boatload in my apartment.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Yeah, we bought way too much to get out to trick or treaters. So we just have a ton of it in the kitchen.
+
+Cole Miller (cole@grexit.com):
+  That's the tough part about it, right? You always buy too much and then you end up harming yourself later because you're just eating it for the next three weeks. Yeah.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  I know, and I told my wife if we should get rid of it, she's like, no, it's wasteful now, we're just chipping away at it.
+
+Cole Miller (cole@grexit.com):
+  But no, I appreciate you hopping on though, Ollie. How was the rest of the conference?
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Good, good. Got some leads gave a good talk on Thursday. So, yeah, thanks.
+
+Cole Miller (cole@grexit.com):
+  Love that. Yeah, it was good. It was good. We definitely got some good leads out of it. Got some good conversations. So worked out pretty well. The travel back was a nightmare for me though. I was supposed to fly out Thursday.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  And then flight get canceled also.
+
+Cole Miller (cole@grexit.com):
+  Yeah, flight canceled, stayed another night flight delayed six hours. The next day took 30 hours to fly 40 minutes back to New York City.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Geez. Yeah, one of my coworkers his flight got canceled. He just hopped on amtrak.
+
+Cole Miller (cole@grexit.com):
+  See, I tried to, but it was sold out. I was shocked. I've never seen amtrak sold out my life and I pull off a different website. There's not one ticket available… but, you know, I appreciate you hopping on though. So just to kind of hop into it, I figured, you know, we just run it through a product demonstration here today would love to understand more about that, you know, your workflow kind of like how you're working out of Microsoft today from like a shared inbox email distribution perspective. So maybe just kind of hopping into your day to day Ali, kind of how you're managing emails as a team. I think that will give me a good, you know, baseline to kind of position the demonstration.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Yeah, 100 percent because I want to be respectful of your time. I'll just throw a ton of info at you at once so you can qualify or disqualify. Yeah, I'm not the decision maker. We're probably at least four months away at best from making a decision and we've got a CEO who is like very skeptical… of bringing in like new tools, but I'll give you where we're at. So.
+
+Cole Miller (cole@grexit.com):
+  The.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  way our GTM like org works is there's customer success? Where I sit there's, professional services. There's, sales and professional services. They also kind of manage our support queue. We don't have an actual customer support team, but we are in the process supposedly of like building one out. We don't have Zendesk Salesforce, anything like that. We basically somehow manage out of hubswat as our CRM. So support team coming on board. Eventually, the way we currently do support out of hubswat, it's just a round Robin of the emails that come in. It's like it's ticket generator. But on my side of customer success, I'm going to start building out our scaled CS function. So currently, there's probably like ad of our accounts that'll fall into it. So instead of them having a named CSM, we'll kind of just get generic self service onboarding, tech touch, and then any requests that they have or questions they need to send, they'll go via email, probably into a shared inbox. And as the team gets bigger, it'll start to like round Robin who that goes to, yeah, where we're at now. So there really is no shared inbox. There's just the randomly assigned round Robin of support tickets through hubswat that people email into or engage via the like chat bot in the bottom right corner of our site. But that's sort of where we're at.
+
+Cole Miller (cole@grexit.com):
+  Okay. So this is like very early days but like that's it.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Very early, but like starting the lay of the land of like what? So I'd also love to learn like how exactly does hiver work? But also what are there any other tools that we need in place for this to like pull on top of?
+
+Cole Miller (cole@grexit.com):
+  Yeah, no, for sure. So I can hop into a product demonstration here. Just touch on how we work with like scaled success teams, how they're using hiver today… and just to confirm you are using outlook, right? Yes. Okay. Got it. So taking a look at my screen here, Ali, so, you know, hiver is a customer service slash shared inbox management solution. So you would log into this hiver application with your normal Microsoft sso and it's going to give you access to, you know, this entire platform. And on the left hand side here, you'll see, you know, my personal inbox, so we can bring in your personal email communications. And then below is the shared mailbox or distribution list that you would have from like a scaled success model. So clicking on this customer support shared mailbox, right? When I do it's going to open up some sub views beneath it that helps us manage the intake. So the first is mine, everything that's been assigned to me unassigned and new emails that have hit that mailbox that need to be distributed. And then the team view. So just understanding, hey, like what is everyone on the team working on in real time from the scaled success team? And you can click on their names to see exactly what they're owning and what's outstanding across the group. So sort of like that high level manager viewpoint to understand, you know, what needs to be completed?
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  So, is this kind of, would it be correct in saying this is kind of like a skin that lays on top of outlook in a sense?
+
+Cole Miller (cole@grexit.com):
+  Yep. So we're not like you're like it's a separate application, but we have a read and write integration with Microsoft. Okay? So it's all being updated in real time.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Nice.
+
+Cole Miller (cole@grexit.com):
+  So like going in the unassigned, right? You want unassigned zero that's like the ultimate goal. Yeah. And when you click into these emails, a hiver tab opens up on the right hand side where you can take a couple different actions. So the first is assigning an email. So I'll assign to myself and the team know, I'm going to own this conversation. The next way we can assign it similar to like you're doing Hubspot is that round Robin automation that will equally distribute it amongst the scaled success team. And then if for any reason like you want certain accounts to be routed to certain reps, we can do that like classic, hey, if walmart, com reaches out, let's route it to Ali every single time or like something like that?
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Quick question. I see you are in a browser window. Our team loves using their outlook desktop application. Does this work as a desktop app or is it a browser only app?
+
+Cole Miller (cole@grexit.com):
+  So this would be a browser. We do offer an application for like mobile like all that stuff, but this would be like a like in a browser. Okay? So those are the three ways that you can assign it then you're tracking the status, right? Whether it's open pending or closed, ensuring nothing slips between the cracks. We're working through these to a resolution… adding those tags for organizational purposes, as well as analytical purposes. And then those custom fields. So tracking email priority, maybe shipping type, you know, these are all configurable based on what you're looking to track the information we're looking to view, take action on report on or search on within the hiver platform itself. So just a couple of different ways to slice and dice the data. And then just like the classic, you know, collaborative aspect, being able to collaborate internally with people, leave those notes on the right hand side of the conversation for historical purposes. So you can always go back and refer to it that'll send Ishan a notification, it'll receive it over here. It'll click on it where we can kind of keep having that back and forth once it brings them here. But let's say you need more information. We can leverage our co pilot for drafting replies as well. So we have like an AI co pilot that can streamline responses to essentially just streamline what your team is doing and it can search through like PDFS, word, docs, website, links to sift through the information to help the team just like provide better responses and stuff like that. So, could.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  we take like our library of knowledge articles and dump it in here and it'll craft responses for us.
+
+Cole Miller (cole@grexit.com):
+  Exactly. That is the purpose. So like it just, you know, create this draft here and I can just click insert the draft here and it's going to populate it for either further editing or, you know, you can ship off the response.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Could we pre build templates of like answers to common questions and there's like a library of these template responses we can select from, or would we need the AI to rewrite it each time?
+
+Cole Miller (cole@grexit.com):
+  Yeah. So we have templates as well. So we have this templates library right here and you can kind of just go in, create folders and choose which one you'd like to use.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Cool.
+
+Cole Miller (cole@grexit.com):
+  And then like once you deem this finished, you can kind of send and close that conversation. We can also measure customer satisfaction if we want to engage that client. Nice. And then just like, you know, send and close the conversation… but just want to pause right here. Ali like what are your thoughts on this so far?
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  I like it's definitely better than what we currently have in Hubspot as a company, everyone, even sales. Actually, we all hate Hubspot. So we're all just sort of actively looking for solutions that get us out of Hubspot in some sense like a better CRM, a better way to manage and track, customers who are reaching out to us, whether it's through this like janky, customer support process. We have ultimately, we need something like scaled CS. So this is definitely putting us like in the better direction of having like consistency analytics like a real process rather than just like part of my friend's like shit show free for all that we currently have?
+
+Cole Miller (cole@grexit.com):
+  So,
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  to that end, I'm curious about like the big thing for us is we want to minimize the number of tools we have. Again, our CEO is very skeptical anytime someone proposes bringing on a new tool, so.
+
+Cole Miller (cole@grexit.com):
+  Like,
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  I guess what do you integrate with? How does it integrate? So because we're trying to curate what is the like environment of platforms we end up going with? Like how do we connect with each other? So, I know it connects with outlook, but Salesforce… churn zero, Zendesk, potentially redash… is there a connection to Hubspot? Anything like that?
+
+Cole Miller (cole@grexit.com):
+  Yeah. So Zendesk and oaks like that's typically a competitor of ours, you're.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  like replacing them in a sense, right? Yeah.
+
+Cole Miller (cole@grexit.com):
+  Yeah. But for Hubspot, Salesforce, 100 percent, so we can like pull in information from Salesforce. So, in this right hand panel, it's not enabled in this demo, but there could be client information from Salesforce living over here for your team to easily reference whether it's like, you know, opportunity data, account information, any of those fields that you want to pull in from Hubspot and Salesforce, and then we can also trigger actions out into Salesforce, like creating a case, creating a record, creating a contact, whatever that might be. So we can write into Salesforce, and then also bring in that read information into here as well.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Okay. Nice. And then do you integrate with anything like churn zero or any like customer success CRMS or platforms?
+
+Cole Miller (cole@grexit.com):
+  So, not today out of the box, but this is all open source API. So if there's like something custom, your team would be interested in like that's something our engineering team does for clients, we'll scope out that, you know, specific integration you want and we build it for you.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Got it. And then of course, the big question and the one that I'll be asked anytime I come back with like, hey, check out this tool price. What is the pricing model? What is the price in general? Yeah.
+
+Cole Miller (cole@grexit.com):
+  So, for the pricing, the three plans, growth pro elite, it's a per seat model. So, for what you're doing, I'd have you between like the growth or pro depending… on exactly what you need. But like it comes with these different features that we can get down the ballpark later once, you know, we have like a deeper conversation, but this is like the high level pricing right now.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Got it. And then under growth, what is the customer portal?
+
+Cole Miller (cole@grexit.com):
+  So that is a place where people can log in and submit tickets. So the ability to have an authenticated login for external clients to go in and track their tickets, submit tickets and stuff like that. Nice. Yeah.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  So, yeah, I mean, I like it. It makes sense. Like I get its use case. I see the value in it. Like as I mentioned, we're so early. Yeah. At best, like on a good day, we're like three, four months away from like really dipping our toes into stuff. Now, everyone's just seeing what's out there. So I want to be respectful of your time 100 percent, but I like it, is there a demo environment I could play around in?
+
+Cole Miller (cole@grexit.com):
+  Yeah. So you can just log on the website. We have a,
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  free trial, just go for a free trial. Okay, cool. Yeah, it's just tiger. Com.
+
+Cole Miller (cole@grexit.com):
+  Yeah. And I can send it to you here. Yeah.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  That's right? I got it pulled up. We actually have a new VP of customer success starting?
+
+Cole Miller (cole@grexit.com):
+  Okay.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Because I'm going to be like, hey, check out this thing. I'm going to play.
+
+Cole Miller (cole@grexit.com):
+  So, when would, what kind of makes the most sense for us Ali? Like if there's like a chance for us to do a demonstration with your VP of success or the greater team? Like when would be like a good place for us to have like a touch?
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Honestly, January, big, January February. Like again, this dude's just coming on board for sure.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Like there's a little bit of shifting internally. Yeah. And again, like I've been on your end of the table like, I know it's like that. You got to chase it down like, you know, you need the commitment. Let me play around with the trial.
+
+Cole Miller (cole@grexit.com):
+  Okay. If you.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Want to put on like your calendar, send me an email, follow me on Twitter.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  What's today? The fourth, yesterday, the new Guy starts on the seventeenth. I'll be in Indianapolis. So, if you want to email me on like the nineteenth, I'm like, hey, how's the demo been that'll be the reminder for me and I'll follow up with you based on like I like the demo. I have a couple more questions then we'll take it from there. Again. Want to be respectful of your time. I know it's like chasing down leads like, yeah. So we're a free trial right now.
+
+Cole Miller (cole@grexit.com):
+  Yeah, no, I appreciate that transparency and we could always throw something out like on January. So we have it, but if it, you know, becomes a priority sooner based on, you know, your free trial, we can always, you know, restrike the conversation sooner.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Yeah, yeah. I'll give you that. So, let me, oh my God. This thing is so slow, not hiver. It's my outlook. It's always super slow. I'll take a peek here.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  It's not giving that spinning wheel of death. Let's go off the phone, calendar… outlook… calendar… by… January fifth. Everyone's just coming back off the holiday, but the week of January twelfth, let's.
+
+Cole Miller (cole@grexit.com):
+  see like,
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Tuesdays and Wednesdays are probably best. Okay?
+
+Cole Miller (cole@grexit.com):
+  Your.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Eastern Time zone, right?
+
+Cole Miller (cole@grexit.com):
+  Yes.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  So, Tuesday the thirteenth between like 11 30. Actually, I'll give you a better window. Tuesday the thirteenth. I am wide open from what time is that from one to four? As of now? So, if anything in that window works for you?
+
+Cole Miller (cole@grexit.com):
+  Tuesday, one to four? Yeah, I can do one that's perfect.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Perfect. All.
+
+Cole Miller (cole@grexit.com):
+  Right. Awesome. But I'll follow up with some more information after this. So you have it and then for the,
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  free trial right now, okay?
+
+Cole Miller (cole@grexit.com):
+  Perfect customer.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Service. Which portal would you want to start with? I'm curious about the email portal.
+
+Cole Miller (cole@grexit.com):
+  But yeah, I can follow up with the deck or product roadmap more informationally as we're kind of working towards that January time frame. But if there's any other questions, you know, as you're testing or if anyone else wants to see a demonstration of this prior to that, we can always hop on a call.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Awesome. Dope. And I just signed up for the demo, waiting for my thing to get set my way and we'll take it from.
+
+Cole Miller (cole@grexit.com):
+  there. All right. Perfect. Well, now, good to talk with you brother. I'll talk with you in, the new year and best of luck with the rest of the fiscal.
+
+Aly Massoud (aly.massoud@secondnature.ai):
+  Thanks, man. Have a good one.
