@@ -1,0 +1,36 @@
+{
+  "transcript_id": "27_5608003571102105784",
+  "call_id": "5608003571102105784",
+  "title": "Hiver Demo | Abigail <> Rakesh",
+  "started": "2025-11-05T16:31:18+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer service team is currently managing multiple email inboxes, leading to inefficiencies in handling customer queries.",
+      "customer_ask": "We need a system in place to combine the inboxes for better organization.",
+      "customer_role": "CSM",
+      "context": "Team of 4-5 people managing customer service across multiple email addresses.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "Inquiries from the app are not being tracked effectively, leading to dropped queries.",
+      "customer_ask": "We need a way to track inquiries coming from the app.",
+      "customer_role": "CSM",
+      "context": "Team of 4-5 people managing customer service with inquiries coming from both email and a mobile app.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is no current capability to link app communications with the email management system.",
+      "customer_ask": "Can we integrate app communications into the email management system?",
+      "customer_role": "CSM",
+      "context": "Team of 4-5 people managing customer service with inquiries coming from both email and a mobile app.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is looking for a way to categorize and streamline incoming queries through a form on their website.",
+      "customer_ask": "Is it possible to set up a form on our website to categorize queries?",
+      "customer_role": "CSM",
+      "context": "Team of 4-5 people managing customer service with inquiries coming from both email and a mobile app.",
+      "confidence": "medium"
+    }
+  ]
+}

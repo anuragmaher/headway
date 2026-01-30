@@ -1,0 +1,24 @@
+{
+  "transcript_id": "16_8207084569033141903",
+  "call_id": "8207084569033141903",
+  "title": "Hiver Feedback: Nick<> Yukta",
+  "started": "2025-11-04T19:00:44+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer is not seeing order information after setting up the WooCommerce integration.",
+      "customer_ask": "The customer wants to see order details in the system.",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Team size not specified, using WooCommerce integration.",
+      "suggested_solution": "The customer implied a need for better syncing or immediate visibility of order details."
+    },
+    {
+      "problem_statement": "The customer has not had enough time to test the chat system and its integration with existing workflows.",
+      "customer_ask": "The customer wants to ensure the chat system works smoothly with their existing workflows.",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Team size not specified, currently testing the chat system.",
+      "suggested_solution": "The customer suggested they need to test the workflows before committing to a longer-term plan."
+    }
+  ]
+}

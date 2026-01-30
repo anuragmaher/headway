@@ -1,0 +1,36 @@
+{
+  "transcript_id": "26_1530539738586496814",
+  "call_id": "1530539738586496814",
+  "title": "Hiver Onboarding + Team Training",
+  "started": "2025-11-05T15:31:34+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer is experiencing difficulties with screen sharing during the training session.",
+      "customer_ask": "Can I have, if I hang on one sec?",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Team training session with multiple participants"
+    },
+    {
+      "problem_statement": "The customer is unable to locate the Hiver application after logging in.",
+      "customer_ask": "I can't bloody find it now.",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Team training session with multiple participants"
+    },
+    {
+      "problem_statement": "The customer is unclear about the functionality of the tagging system and its limitations.",
+      "customer_ask": "Can you take us through the personal settings?",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Team training session with multiple participants"
+    },
+    {
+      "problem_statement": "The customer is not aware of the advanced functionalities available in the product.",
+      "customer_ask": "Do we have the AI features from the record?",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Team training session with multiple participants"
+    }
+  ]
+}

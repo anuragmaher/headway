@@ -1,0 +1,32 @@
+{
+  "transcript_id": "86_2840736752872732243",
+  "call_id": "2840736752872732243",
+  "title": "Hiver Demo | Simon <> Rakesh",
+  "started": "2025-11-10T15:01:13+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer support team forgets to reply to angry emails from customers, leading to unresolved issues.",
+      "customer_ask": "A tool that can flag emails where support did not reply or did not reply appropriately.",
+      "suggested_solution": "Implement a flagging tool to manage email responses.",
+      "customer_role": "CSM",
+      "context": "30 people in customer support, managing over 2000 active construction sites.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer lacks a sentiment analysis tool to identify angry customers and adjust responses accordingly.",
+      "customer_ask": "A sentiment analyzer that can indicate when a customer is angry.",
+      "suggested_solution": "A tool that analyzes customer emails to determine sentiment and suggest appropriate responses.",
+      "customer_role": "CSM",
+      "context": "30 people in customer support, managing over 2000 active construction sites.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer needs a way to automatically categorize emails by construction site to improve quality management.",
+      "customer_ask": "A dashboard that shows construction sites and associated emails.",
+      "suggested_solution": "Automatically tag emails by construction site to facilitate easier tracking and management.",
+      "customer_role": "CSM",
+      "context": "30 people in customer support, managing over 2000 active construction sites.",
+      "confidence": "high"
+    }
+  ]
+}

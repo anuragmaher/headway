@@ -1,0 +1,48 @@
+{
+  "transcript_id": "84_8467393708427380958",
+  "call_id": "8467393708427380958",
+  "title": "Hiver <> Ramafilter : Demo",
+  "started": "2025-11-10T13:31:55+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer is facing disorganization and clutter in their current email handling process, leading to missed communications.",
+      "customer_ask": "A centralized platform to handle emails and chat support.",
+      "suggested_solution": "A structured flow that acts as a bridge between the team and customers.",
+      "customer_role": "CSM",
+      "context": "A team of five handling customer support across multiple regions.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer lacks individual email addresses for team members, which complicates email management.",
+      "customer_ask": "To introduce individual email addresses for team members.",
+      "suggested_solution": "Using personal Gmail accounts for company-related inboxes is not ideal.",
+      "customer_role": "CSM",
+      "context": "A team of five handling customer support across multiple regions.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is looking for AI capabilities to automate responses based on keywords to improve response times.",
+      "customer_ask": "AI responses to customer inquiries based on keywords.",
+      "suggested_solution": "AI agents to handle conversations before they reach human agents.",
+      "customer_role": "CSM",
+      "context": "A team of five handling customer support across multiple regions.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer needs to set up SLA policies to manage response times effectively.",
+      "customer_ask": "To understand how to set SLA breaches.",
+      "suggested_solution": "Setting up SLA policies for different emails based on response times.",
+      "customer_role": "CSM",
+      "context": "A team of five handling customer support across multiple regions.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer wants to download analytics reports to track SLA breaches and customer inquiries.",
+      "customer_ask": "To know how to download analytics reports.",
+      "suggested_solution": "Exporting reports to CSV based on different parameters.",
+      "customer_role": "CSM",
+      "context": "A team of five handling customer support across multiple regions.",
+      "confidence": "medium"
+    }
+  ]
+}

@@ -28,6 +28,7 @@ redis>=4.0.0
 # AI Integration
 anthropic>=0.3.0
 openai>=1.0.0
+scikit-learn>=1.0.0
 tenacity>=8.0.0  # Retry logic with exponential backoff
 langfuse>=2.0.0  # Prompt management and observability
 

@@ -1,0 +1,836 @@
+{
+  "call_id": "2529682253429226658",
+  "title": "Hiver<> Piceci Services",
+  "started": "2025-11-07T17:30:36.131+05:30",
+  "duration_seconds": 449,
+  "call_metadata": {
+    "id": "2529682253429226658",
+    "url": "https://us-31545.app.gong.io/call?id=2529682253429226658",
+    "title": "Hiver<> Piceci Services",
+    "scheduled": "2025-11-07T17:30:00+05:30",
+    "started": "2025-11-07T17:30:36.131+05:30",
+    "duration": 449,
+    "primaryUserId": "1219092317799715224",
+    "direction": "Conference",
+    "system": "Google Meet",
+    "scope": "External",
+    "media": "Audio",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://meet.google.com/bzr-chhi-gax",
+    "isPrivate": false,
+    "calendarEventId": "5ib8tu0g66g1q6bd3j1jupje8h@google.com"
+  },
+  "parties": [
+    {
+      "id": "233600121830560570",
+      "emailAddress": "najah.s@piceciservices.tech",
+      "name": "Najah Shams",
+      "title": "Software Engineer | Front-End Enthusiast",
+      "speakerId": "6142099980643702746",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "172583532651",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "43936163853"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Najah"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Software Engineer | Front-End Enthusiast"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1762779417.246
+                },
+                {
+                  "name": "createdate",
+                  "value": 1762441877.816
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1762473600.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "Shams"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "79099341"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "DIRECT_TRAFFIC"
+                },
+                {
+                  "name": "phone",
+                  "value": "+393401355235"
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Product does not meet requirements"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1762441877.816
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "salesqualifiedlead"
+                },
+                {
+                  "name": "email",
+                  "value": "najah.s@piceciservices.tech"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "+393401355235",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "8676652910752347456",
+      "emailAddress": "shalini.b@grexit.com",
+      "name": "Shalini B",
+      "title": "SDR",
+      "userId": "3441789025751080882",
+      "speakerId": "3743938407362668178",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "2529682253429226658",
+    "transcript": [
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2846,
+            "end": 3396,
+            "text": "how are you?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 4156,
+            "end": 4676,
+            "text": "I'm good."
+          },
+          {
+            "start": 4756,
+            "end": 5276,
+            "text": "How are you?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 5616,
+            "end": 6156,
+            "text": "I'm good."
+          },
+          {
+            "start": 6196,
+            "end": 6556,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 14656,
+            "end": 17216,
+            "text": "And I've been working with hiver for over two years now."
+          },
+          {
+            "start": 18016,
+            "end": 21916,
+            "text": "We look after both EMEA as well as APAC."
+          },
+          {
+            "start": 21976,
+            "end": 29036,
+            "text": "So that makes rest of the world territory just wanted to basically understand after reading your email."
+          },
+          {
+            "start": 29256,
+            "end": 36316,
+            "text": "When you say external collaboration, Aja, what exactly did you mean?"
+          },
+          {
+            "start": 36476,
+            "end": 43816,
+            "text": "Like were you talking about people outside of your organization or outside of a specific team that you're evaluating hiver for?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 44736,
+            "end": 52076,
+            "text": "Yeah, actually, we are using the Google workspace for our entire company and our emails are based on that."
+          },
+          {
+            "start": 53736,
+            "end": 56236,
+            "text": "Now we are looking for a shared inbox solution."
+          },
+          {
+            "start": 56236,
+            "end": 61696,
+            "text": "Since the Google workspace per email costs much more per email."
+          },
+          {
+            "start": 62396,
+            "end": 70016,
+            "text": "So external collaborators mainly means the freelancers, we are collaborating with them for different projects."
+          },
+          {
+            "start": 70256,
+            "end": 72436,
+            "text": "So it's basically outside the organization."
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 74106,
+            "end": 74546,
+            "text": "OK."
+          },
+          {
+            "start": 74886,
+            "end": 75586,
+            "text": "All right."
+          },
+          {
+            "start": 75826,
+            "end": 81606,
+            "text": "And so they do not have your domain email id at all, right?"
+          },
+          {
+            "start": 81746,
+            "end": 83306,
+            "text": "They have Gmail email id?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 83586,
+            "end": 84446,
+            "text": "Yes, yes."
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 86206,
+            "end": 86686,
+            "text": "Got it."
+          },
+          {
+            "start": 87306,
+            "end": 89186,
+            "text": "Just, give me a second Aja."
+          },
+          {
+            "start": 89386,
+            "end": 93086,
+            "text": "And what exactly is this team?"
+          },
+          {
+            "start": 93246,
+            "end": 96766,
+            "text": "This is a support team that you're evaluating hiver for?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 97596,
+            "end": 113946,
+            "text": "No, actually, our main requirement is kind of like this, these freelancers… need to communicate with our clients, but they should not be communicated with their Gmail id or something like that."
+          },
+          {
+            "start": 114026,
+            "end": 116546,
+            "text": "We need a shared inbox like a shared email."
+          },
+          {
+            "start": 116766,
+            "end": 121726,
+            "text": "So all of the freelancers must be communicated to the client through that mail id only."
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 123256,
+            "end": 128036,
+            "text": "Through your like for example, for us, it will be."
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 130106,
+            "end": 147986,
+            "text": "So, for example, if, yeah, for example, if there is a mail id, like clients at services dot com, like for example, we have that mail id and the freelancers need to use this mail id to like send message to different clients."
+          },
+          {
+            "start": 148446,
+            "end": 151586,
+            "text": "So it's kind of a shared inbox solution."
+          },
+          {
+            "start": 151726,
+            "end": 160186,
+            "text": "We need it like whenever a client message us, we need to like assign and tag this to the freelancers based on the clients."
+          },
+          {
+            "start": 160806,
+            "end": 174076,
+            "text": "And these freelancers need to reply to that mail with this email id only not with their, and we also need like individual signatures for each freelancer."
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 176826,
+            "end": 180956,
+            "text": "So, all of these freelancers have their Gmail email id, right?"
+          },
+          {
+            "start": 180996,
+            "end": 181776,
+            "text": "Gmail dot com."
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 181976,
+            "end": 182476,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 184506,
+            "end": 184736,
+            "text": "Okay."
+          },
+          {
+            "start": 184796,
+            "end": 187376,
+            "text": "No other email id, right?"
+          },
+          {
+            "start": 187436,
+            "end": 189456,
+            "text": "No, nobody from yahoo."
+          },
+          {
+            "start": 189456,
+            "end": 190416,
+            "text": "Com, or outlook."
+          },
+          {
+            "start": 190416,
+            "end": 192056,
+            "text": "Com or something of that sort."
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 192126,
+            "end": 194266,
+            "text": "Now, I don't think so."
+          },
+          {
+            "start": 194386,
+            "end": 198686,
+            "text": "But if so, it's not possible with hiver, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 200126,
+            "end": 207946,
+            "text": "Yeah, it'll become an issue for like in the current setup that we have, it might actually become an issue."
+          },
+          {
+            "start": 208106,
+            "end": 208306,
+            "text": "And."
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 208306,
+            "end": 209486,
+            "text": "Okay."
+          },
+          {
+            "start": 209566,
+            "end": 212026,
+            "text": "For now, maybe we can just focus on the Gmail itself."
+          },
+          {
+            "start": 212146,
+            "end": 212846,
+            "text": "So, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 213106,
+            "end": 213646,
+            "text": "Got it."
+          },
+          {
+            "start": 213746,
+            "end": 231806,
+            "text": "Because even for the Gmail, if they do not have your company domain id, it'll become very difficult like there is a Gmail limitation and they cannot send email as psaservices tech, they will not be able to do that."
+          },
+          {
+            "start": 232246,
+            "end": 241946,
+            "text": "It's a limitation with Google workspace per SE… because hiver at the moment sits on top of Gmail."
+          },
+          {
+            "start": 243546,
+            "end": 246286,
+            "text": "So, yeah, that is an issue."
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 249086,
+            "end": 249226,
+            "text": "Okay."
+          },
+          {
+            "start": 249366,
+            "end": 257966,
+            "text": "So, you mean for each freelancer needs to have their own mail id with our Google workspace?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 259066,
+            "end": 273546,
+            "text": "Yeah, that's like a bare minimum, they can, I mean, if you're working with constantly with few freelancers, then you can purchase say five licenses, just an idea."
+          },
+          {
+            "start": 274446,
+            "end": 275066,
+            "text": "And."
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 276156,
+            "end": 276346,
+            "text": "Yeah."
+          },
+          {
+            "start": 276506,
+            "end": 280846,
+            "text": "So the Google workspace per licenses cost around dollar 15, right?"
+          },
+          {
+            "start": 280906,
+            "end": 281926,
+            "text": "Per month per user."
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 285626,
+            "end": 285826,
+            "text": "Yeah."
+          },
+          {
+            "start": 288086,
+            "end": 288686,
+            "text": "Okay."
+          },
+          {
+            "start": 288786,
+            "end": 295016,
+            "text": "So hiver is only possible if all the freelancers have their own Gmail id like the workspace one."
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 295996,
+            "end": 307566,
+            "text": "The workspace that you have with which you will create that shared inbox, that domain, like for this case, it will be psaservices tech."
+          },
+          {
+            "start": 308766,
+            "end": 311626,
+            "text": "Are these all it consultants if I may ask?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 311666,
+            "end": 312226,
+            "text": "Yes, yes."
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 313396,
+            "end": 313886,
+            "text": "Got it."
+          },
+          {
+            "start": 314466,
+            "end": 318946,
+            "text": "And you're looking possibly for a freemium account, right?"
+          },
+          {
+            "start": 319026,
+            "end": 319506,
+            "text": "Free plan?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 320626,
+            "end": 320826,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 323046,
+            "end": 323526,
+            "text": "Yeah."
+          },
+          {
+            "start": 323626,
+            "end": 328166,
+            "text": "I mean, it would work for the free plan as well, but they need to have your domain id."
+          },
+          {
+            "start": 328816,
+            "end": 336876,
+            "text": "Otherwise, the Google workspace is going to prohibit and it's like a limitation that hiver can't really control."
+          },
+          {
+            "start": 337076,
+            "end": 338176,
+            "text": "So, yeah, that's the issue."
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 338986,
+            "end": 350976,
+            "text": "Actually, so it's not a solution like I'm looking for, we are actually looking for a solution in order to like remove this Google workspace thing."
+          },
+          {
+            "start": 351596,
+            "end": 359186,
+            "text": "Like we don't need to have each freelancers their Google workspace email id from our organization."
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 360506,
+            "end": 366086,
+            "text": "You don't want your freelancers to have Google id at all?"
+          },
+          {
+            "start": 366166,
+            "end": 368226,
+            "text": "Like you want them to have a separate?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 370166,
+            "end": 370366,
+            "text": "Okay."
+          },
+          {
+            "start": 370446,
+            "end": 370746,
+            "text": "Yeah."
+          },
+          {
+            "start": 370806,
+            "end": 381866,
+            "text": "We don't want them to include in our organization, But we want to like, they need to connect with the clients only with our email id."
+          },
+          {
+            "start": 382006,
+            "end": 387566,
+            "text": "So… like only with one email id."
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 390646,
+            "end": 391046,
+            "text": "All right."
+          },
+          {
+            "start": 391286,
+            "end": 395846,
+            "text": "And so… this is not there at the moment."
+          },
+          {
+            "start": 396426,
+            "end": 400446,
+            "text": "However I can, I have your email address for sure."
+          },
+          {
+            "start": 400666,
+            "end": 420646,
+            "text": "So what I can do is once we have our hiver only available for Gmail users and every other email provider user, then I can reach out to you probably, then we can find some solution, but I'll have to check with my team if this is at all possible."
+          },
+          {
+            "start": 421526,
+            "end": 424986,
+            "text": "Because at the moment, with our Google product, this is not possible."
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 426546,
+            "end": 429706,
+            "text": "Yeah, please check and please let me know in the mail."
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 431126,
+            "end": 431246,
+            "text": "Yeah."
+          },
+          {
+            "start": 431246,
+            "end": 431386,
+            "text": "Sure."
+          },
+          {
+            "start": 431506,
+            "end": 437146,
+            "text": "I'll let you know the moment we have a launch, I can share a product roadmap link as well with you."
+          },
+          {
+            "start": 437406,
+            "end": 441586,
+            "text": "So once it is done, I can cross check and let you know, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 442166,
+            "end": 442866,
+            "text": "Yeah, please."
+          },
+          {
+            "start": 443416,
+            "end": 443856,
+            "text": "Thank you."
+          },
+          {
+            "start": 443856,
+            "end": 445066,
+            "text": "Bye bye."
+          }
+        ]
+      },
+      {
+        "speakerId": "3743938407362668178",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 445066,
+            "end": 445426,
+            "text": "Bye."
+          },
+          {
+            "start": 445466,
+            "end": 446666,
+            "text": "Take care, you."
+          }
+        ]
+      },
+      {
+        "speakerId": "6142099980643702746",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 446676,
+            "end": 446876,
+            "text": "Too."
+          },
+          {
+            "start": 446926,
+            "end": 447066,
+            "text": "Bye."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 35
+}

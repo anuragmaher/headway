@@ -1,0 +1,32 @@
+{
+  "transcript_id": "01_2363083900669717369",
+  "call_id": "2363083900669717369",
+  "title": "Gasera <> Hiver : Demo",
+  "started": "2025-11-03T17:30:21+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer lacks automation tools to manage support emails effectively, leading to manual forwarding and tracking issues.",
+      "customer_ask": "I would need to automate that because now I'm responsible for the support in terms that I'll forward the message to someone in our team.",
+      "confidence": "high",
+      "customer_role": "CSM",
+      "context": "14 team members managing support emails through a shared Google group.",
+      "suggested_solution": "It would be good if I could create templates and just send them."
+    },
+    {
+      "problem_statement": "The customer finds it challenging to track the status of support cases due to the lack of visibility in email assignments.",
+      "customer_ask": "I need some kind of automation to help with the workflow, and to help like see where the case is going.",
+      "confidence": "high",
+      "customer_role": "CSM",
+      "context": "14 team members managing support emails through a shared Google group.",
+      "suggested_solution": "We want the messages to come into the support file so that everyone sees them and stays visible."
+    },
+    {
+      "problem_statement": "The customer is overwhelmed by the volume of repetitive responses required for support inquiries.",
+      "customer_ask": "It would be good if I could create templates and just send them.",
+      "confidence": "high",
+      "customer_role": "CSM",
+      "context": "14 team members managing support emails through a shared Google group.",
+      "suggested_solution": "I can always search and I can start the emails and I can tag them as to do list but... it's starting to I'm at a point that there's so many cases."
+    }
+  ]
+}

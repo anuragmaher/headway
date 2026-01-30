@@ -1,0 +1,32 @@
+{
+  "transcript_id": "17_7558156109571095059",
+  "call_id": "7558156109571095059",
+  "title": "Hiver kick-off",
+  "started": "2025-11-04T19:34:39+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer is unable to effectively manage and prioritize incoming emails due to the limitations of Google Groups, which clogs their inbox with unnecessary stock emails.",
+      "customer_ask": "A better solution to manage incoming emails and prioritize customer inquiries.",
+      "suggested_solution": "Implement a system that allows for archiving or hiding irrelevant emails to improve visibility for urgent customer requests.",
+      "customer_role": "CSM",
+      "context": "Team of five managing multiple client inboxes with high email volume.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer lacks visibility into their team's email response rates and overall performance, making it difficult to assess workload and efficiency.",
+      "customer_ask": "Tools that provide reporting and visibility into email interactions and team performance.",
+      "suggested_solution": "Integrate reporting features that track email responses and workload management.",
+      "customer_role": "CSM",
+      "context": "Team of five managing multiple client inboxes with high email volume.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer struggles with managing out-of-office coverage effectively, leading to confusion about who is handling specific inquiries.",
+      "customer_ask": "A way to manage out-of-office settings that allows for clear visibility of unassigned emails.",
+      "suggested_solution": "Automate the unassignment of emails when a team member is out of the office to ensure coverage is clear.",
+      "customer_role": "CSM",
+      "context": "Team of five managing multiple client inboxes with high email volume.",
+      "confidence": "high"
+    }
+  ]
+}

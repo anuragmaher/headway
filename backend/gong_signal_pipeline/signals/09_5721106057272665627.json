@@ -1,0 +1,36 @@
+{
+  "transcript_id": "09_5721106057272665627",
+  "call_id": "5721106057272665627",
+  "title": "Hiver Demo with Serenity Kids",
+  "started": "2025-11-03T23:31:01+05:30",
+  "signals": [
+    {
+      "problem_statement": "The team lacks visibility on the status of emails and tasks, leading to items slipping through the cracks.",
+      "customer_ask": "We need a way to have a double check that the emails are getting processed in a timely manner.",
+      "customer_role": "Operations Manager",
+      "context": "Growing team managing a high volume of emails related to supply chain and sourcing.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The current email management process is inefficient, causing delays in processing important documents like invoices and reports.",
+      "customer_ask": "We need a system that categorizes where everything is at in the process.",
+      "customer_role": "Operations Manager",
+      "context": "Team is distributing the processing of emails and reports among members.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is no effective way to manage and track the processing of receipts and invoices, leading to potential oversights.",
+      "customer_ask": "We want to categorize and track receipts to ensure none are missed.",
+      "customer_role": "Operations Manager",
+      "context": "Team handles different receipts and needs a way to manage them efficiently.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The team struggles with managing high volumes of emails, leading to confusion and lack of accountability.",
+      "customer_ask": "We need a system that allows us to see who is responsible for each email.",
+      "customer_role": "Operations Manager",
+      "context": "Team is experiencing rapid growth and increased email volume.",
+      "confidence": "high"
+    }
+  ]
+}

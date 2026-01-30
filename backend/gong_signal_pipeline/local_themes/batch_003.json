@@ -1,0 +1,451 @@
+{
+  "batch_index": 3,
+  "local_themes": [
+    {
+      "local_theme_id": "batch003_cluster0",
+      "canonical_problem": "The team is concerned about the learning curve and potential clutter of a new software system.",
+      "signal_count": 3,
+      "signal_ids": [
+        "57_2465563737737913140_6",
+        "60_7353414352892152204_5",
+        "80_5292951530895901561_4"
+      ],
+      "sample_phrasings": [
+        "The team is concerned about the learning curve and potential clutter of a new software system.",
+        "The customer is concerned about the complexity of migrating their existing customer database and ensuring a smooth onboarding process with the new tool.",
+        "The customer is frustrated with the current disjointed system that requires managing multiple tabs and tools."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster1",
+      "canonical_problem": "The customer requires a more efficient way to manage customer inquiries that come through various channels, including email and chat.",
+      "signal_count": 10,
+      "signal_ids": [
+        "55_5498142965980726726_3",
+        "59_880109070710881970_0",
+        "59_880109070710881970_2",
+        "67_2571136605912954864_4",
+        "69_8319358155378002711_0",
+        "69_8319358155378002711_2",
+        "69_8319358155378002711_4",
+        "74_9120382904616406833_4",
+        "83_6891956699798489920_7",
+        "84_8467393708427380958_3"
+      ],
+      "sample_phrasings": [
+        "The customer requires a more efficient way to manage customer inquiries that come through various channels, including email and chat.",
+        "The customer needs a more efficient way to categorize and manage diverse inquiries from patients and companies.",
+        "The customer requires a system that can suggest responses based on previous interactions and knowledge sources without sending automated replies directly.",
+        "The customer is unsure about the integration of chat functionality and its implementation on their website.",
+        "The customer needs a simple system to track AI chatbot interactions and escalate unresolved issues to human agents."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster2",
+      "canonical_problem": "The customer is unsure if they are using Hiver to its full potential and is looking for guidance on best practices.",
+      "signal_count": 6,
+      "signal_ids": [
+        "64_4243852835283383400_4",
+        "65_1799444064847399580_1",
+        "65_1799444064847399580_2",
+        "65_1799444064847399580_4",
+        "78_6608624762484707053_3",
+        "81_4159000703936356841_0"
+      ],
+      "sample_phrasings": [
+        "The customer is unsure if they are using Hiver to its full potential and is looking for guidance on best practices.",
+        "The customer needs to whitelist Hiver in their Microsoft account to allow third-party access, which is currently blocked.",
+        "The customer wants to integrate their existing CRM (Hubspot) with Hiver to track email stages and communication effectively.",
+        "The customer needs to import past emails into Hiver, which requires significant engineering work and is not possible during the trial period.",
+        "The customer is uncertain about the effectiveness of Hiver for outbound sales compared to other dedicated tools."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster3",
+      "canonical_problem": "The customer struggles with managing multiple shared inboxes, leading to workflow inefficiencies.",
+      "signal_count": 18,
+      "signal_ids": [
+        "55_5498142965980726726_0",
+        "55_5498142965980726726_1",
+        "57_2465563737737913140_0",
+        "57_2465563737737913140_2",
+        "57_2465563737737913140_7",
+        "63_7968688745761658790_0",
+        "63_7968688745761658790_1",
+        "63_7968688745761658790_3",
+        "65_1799444064847399580_0",
+        "79_6733089573398834509_1",
+        "79_6733089573398834509_2",
+        "83_6891956699798489920_0",
+        "83_6891956699798489920_1",
+        "83_6891956699798489920_2",
+        "83_6891956699798489920_5",
+        "83_6891956699798489920_6",
+        "84_8467393708427380958_0",
+        "84_8467393708427380958_1"
+      ],
+      "sample_phrasings": [
+        "The customer struggles with managing multiple shared inboxes, leading to workflow inefficiencies.",
+        "The customer experienced confusion with email assignments, leading to emails disappearing from their view.",
+        "The team struggles to track and manage communications from multiple platforms, leading to missed messages and disorganization.",
+        "The team needs a solution that prevents multiple team members from responding to the same inquiry, which can lead to confusion.",
+        "The team needs to consolidate communications from personal inboxes to a shared inbox for better visibility and tracking."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster4",
+      "canonical_problem": "The customer is concerned about the accuracy of sentiment analysis, particularly when emails are marked as negative due to unresolved issues.",
+      "signal_count": 3,
+      "signal_ids": [
+        "75_1184762400299844154_1",
+        "85_8404049517560791372_0",
+        "85_8404049517560791372_1"
+      ],
+      "sample_phrasings": [
+        "The customer is concerned about the accuracy of sentiment analysis, particularly when emails are marked as negative due to unresolved issues.",
+        "The AI sentiment analysis feature does not support Hebrew, limiting its usefulness for the customer.",
+        "The sentiment analysis does not accurately determine positive or negative sentiments based on recognized keywords."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster5",
+      "canonical_problem": "The customer struggles with handling varied phrasing in cancellation requests and other inquiries, making it difficult to automate tagging.",
+      "signal_count": 2,
+      "signal_ids": [
+        "59_880109070710881970_1",
+        "69_8319358155378002711_1"
+      ],
+      "sample_phrasings": [
+        "The customer struggles with handling varied phrasing in cancellation requests and other inquiries, making it difficult to automate tagging.",
+        "The customer struggles with differentiating responses based on distinct user populations (adult learners, juvenile learners, court staff)."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster6",
+      "canonical_problem": "The customer needs a solution that integrates with Outlook for email management but is concerned about the lack of calendar integration.",
+      "signal_count": 3,
+      "signal_ids": [
+        "79_6733089573398834509_4",
+        "83_6891956699798489920_8",
+        "84_8467393708427380958_2"
+      ],
+      "sample_phrasings": [
+        "The customer needs a solution that integrates with Outlook for email management but is concerned about the lack of calendar integration.",
+        "The customer wants to integrate social media messaging (Instagram and Facebook) into their communication workflow, which is currently unsupported.",
+        "The customer needs a solution that can integrate multiple communication channels (email, chat, WhatsApp) into one platform."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster7",
+      "canonical_problem": "The entry-level plan does not support shared inboxes, which is a requirement for the customer's workflow.",
+      "signal_count": 6,
+      "signal_ids": [
+        "56_902598329924121265_0",
+        "56_902598329924121265_1",
+        "67_2571136605912954864_0",
+        "68_4113860263497002780_1",
+        "70_7894666056939405593_0",
+        "77_8167914542088254924_4"
+      ],
+      "sample_phrasings": [
+        "The entry-level plan does not support shared inboxes, which is a requirement for the customer's workflow.",
+        "The customer is exploring alternatives to Hiver due to the limitations of the entry-level plan and the availability of a shared inbox feature in Google Workspace.",
+        "The customer is concerned about the limitations of user licenses when setting up their shared inboxes.",
+        "The customer is unsure about how to set up multiple shared inboxes and whether they need to duplicate automations for each inbox.",
+        "The customer is concerned about the limitations of user licenses and how it affects their ability to manage shared inboxes effectively."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster8",
+      "canonical_problem": "The customer needs a centralized knowledge base to streamline information access for their team.",
+      "signal_count": 5,
+      "signal_ids": [
+        "59_880109070710881970_4",
+        "74_9120382904616406833_0",
+        "74_9120382904616406833_1",
+        "74_9120382904616406833_3",
+        "75_1184762400299844154_4"
+      ],
+      "sample_phrasings": [
+        "The customer needs a centralized knowledge base to streamline information access for their team.",
+        "The customer needs a more efficient way to manage knowledge base articles, including ownership and review processes.",
+        "The customer is looking for a self-service bot for their real estate agents to access knowledge base information easily.",
+        "The customer finds it cumbersome to manage knowledge base articles across multiple platforms without integration.",
+        "The customer finds that their knowledge base articles are sometimes outdated, which can lead to misinformation."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster9",
+      "canonical_problem": "The customer needs a way to track the performance and resolution times of their email interactions.",
+      "signal_count": 7,
+      "signal_ids": [
+        "55_5498142965980726726_2",
+        "57_2465563737737913140_5",
+        "59_880109070710881970_3",
+        "76_560965286115951240_2",
+        "82_4237821098797114805_3",
+        "84_8467393708427380958_4",
+        "84_8467393708427380958_5"
+      ],
+      "sample_phrasings": [
+        "The customer needs a way to track the performance and resolution times of their email interactions.",
+        "The team requires a way to track KPIs related to response times and communication efficiency.",
+        "The customer is looking for a way to track and analyze the quality of responses sent by their team to improve communication.",
+        "The customer wants to automate the tracking of email activity by team members for performance metrics.",
+        "The customer wants to ensure that their team can respond to emails within a specified SLA but is unclear on how to set this up effectively."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster10",
+      "canonical_problem": "The customer needs a simple way to manage multiple brands or teams within the support tool, similar to Zendesk's 'brands' feature.",
+      "signal_count": 3,
+      "signal_ids": [
+        "60_7353414352892152204_4",
+        "80_5292951530895901561_0",
+        "80_5292951530895901561_2"
+      ],
+      "sample_phrasings": [
+        "The customer needs a simple way to manage multiple brands or teams within the support tool, similar to Zendesk's 'brands' feature.",
+        "The customer is managing multiple brands and needs a streamlined communication process to avoid confusion and errors in email routing.",
+        "The customer is concerned about the complexity of setting up email tokens for proper email routing based on brand."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster11",
+      "canonical_problem": "The current AI compose feature is underutilized by team members, limiting its effectiveness.",
+      "signal_count": 2,
+      "signal_ids": [
+        "62_5063150964855671922_1",
+        "73_5936591522611905187_1"
+      ],
+      "sample_phrasings": [
+        "The current AI compose feature is underutilized by team members, limiting its effectiveness.",
+        "The AI copilot does not assist in composing new emails, limiting its utility for creating initial outreach."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster12",
+      "canonical_problem": "The customer needs a way to create a form for pickup requests that can generate an email at the end.",
+      "signal_count": 2,
+      "signal_ids": [
+        "58_5263166639052428378_0",
+        "68_4113860263497002780_2"
+      ],
+      "sample_phrasings": [
+        "The customer needs a way to create a form for pickup requests that can generate an email at the end.",
+        "The customer needs a way to extract order IDs and other identifiers from emails to streamline their workflow."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster13",
+      "canonical_problem": "The customer is struggling to set up AI tagging and the thank you detector feature, which are not functioning as expected.",
+      "signal_count": 3,
+      "signal_ids": [
+        "64_4243852835283383400_0",
+        "68_4113860263497002780_0",
+        "74_9120382904616406833_2"
+      ],
+      "sample_phrasings": [
+        "The customer is struggling to set up AI tagging and the thank you detector feature, which are not functioning as expected.",
+        "The AI tagging feature is not functioning as expected, causing frustration in automating workflows.",
+        "The AI feature for recognizing thank you messages is not functioning as expected."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster14",
+      "canonical_problem": "Zendesk is too expensive and complex for the team's needs, requiring significant technical expertise to configure and manage.",
+      "signal_count": 3,
+      "signal_ids": [
+        "60_7353414352892152204_0",
+        "60_7353414352892152204_2",
+        "81_4159000703936356841_1"
+      ],
+      "sample_phrasings": [
+        "Zendesk is too expensive and complex for the team's needs, requiring significant technical expertise to configure and manage.",
+        "The current setup in Zendesk is not intuitive, making it difficult for the team to manage workflows and access necessary features without constant support.",
+        "The customer is looking for a CRM solution that meets their operational needs as they are re-evaluating their current system, Zendesk."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster15",
+      "canonical_problem": "The customer cannot customize the fields when creating Asana tickets from Hiver, leading to inefficiencies in their workflow.",
+      "signal_count": 2,
+      "signal_ids": [
+        "64_4243852835283383400_1",
+        "64_4243852835283383400_2"
+      ],
+      "sample_phrasings": [
+        "The customer cannot customize the fields when creating Asana tickets from Hiver, leading to inefficiencies in their workflow.",
+        "The customer needs to manually add the SRC number from Asana tasks when creating tickets in Hiver, which is cumbersome."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster16",
+      "canonical_problem": "The team lacks a centralized task management system, leading to inefficiencies in handling tasks from various sources.",
+      "signal_count": 2,
+      "signal_ids": [
+        "62_5063150964855671922_2",
+        "62_5063150964855671922_3"
+      ],
+      "sample_phrasings": [
+        "The team lacks a centralized task management system, leading to inefficiencies in handling tasks from various sources.",
+        "The legal team requires a way to structure incoming requests more effectively to improve task management."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster17",
+      "canonical_problem": "The customer requires AI capabilities as a standard feature rather than an additional cost, as they find it unfair to pay extra for AI functionalities.",
+      "signal_count": 4,
+      "signal_ids": [
+        "60_7353414352892152204_3",
+        "66_8554135351031083585_1",
+        "73_5936591522611905187_2",
+        "85_8404049517560791372_2"
+      ],
+      "sample_phrasings": [
+        "The customer requires AI capabilities as a standard feature rather than an additional cost, as they find it unfair to pay extra for AI functionalities.",
+        "The AI add-on is priced as a full package, which may not be cost-effective for all team members who won't use the features.",
+        "The pricing for the AI features is perceived as too high given the limited usage of additional features.",
+        "The customer is hesitant to upgrade due to the limitations of the current AI capabilities."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster18",
+      "canonical_problem": "The customer is looking for a solution to reduce spam and phishing emails in their inbox.",
+      "signal_count": 21,
+      "signal_ids": [
+        "58_5263166639052428378_1",
+        "63_7968688745761658790_2",
+        "63_7968688745761658790_4",
+        "64_4243852835283383400_3",
+        "67_2571136605912954864_1",
+        "67_2571136605912954864_3",
+        "70_7894666056939405593_1",
+        "70_7894666056939405593_3",
+        "70_7894666056939405593_4",
+        "75_1184762400299844154_0",
+        "76_560965286115951240_0",
+        "77_8167914542088254924_0",
+        "77_8167914542088254924_1",
+        "77_8167914542088254924_3",
+        "79_6733089573398834509_0",
+        "79_6733089573398834509_3",
+        "80_5292951530895901561_1",
+        "82_4237821098797114805_1",
+        "82_4237821098797114805_2",
+        "82_4237821098797114805_4",
+        "82_4237821098797114805_5"
+      ],
+      "sample_phrasings": [
+        "The customer is looking for a solution to reduce spam and phishing emails in their inbox.",
+        "The customer is looking for AI functionalities to help shorten tasks and improve email management efficiency.",
+        "The customer needs a way to categorize and track emails effectively to manage workload and improve response times.",
+        "The customer wants to automate replies for incoming emails to manage response times better, especially for technical issues.",
+        "The customer needs a way to automate the assignment of emails to specific team members based on terminal-related keywords."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster19",
+      "canonical_problem": "The customer wants to ensure that follow-up emails are sent automatically for unresolved issues after a certain period.",
+      "signal_count": 4,
+      "signal_ids": [
+        "67_2571136605912954864_2",
+        "70_7894666056939405593_2",
+        "75_1184762400299844154_2",
+        "77_8167914542088254924_2"
+      ],
+      "sample_phrasings": [
+        "The customer wants to ensure that follow-up emails are sent automatically for unresolved issues after a certain period.",
+        "The customer requires a method to follow up on emails that have not received a response within a specified timeframe.",
+        "The customer needs a way to prevent team members from closing emails that are not fully resolved, which leads to incomplete workflows.",
+        "The customer needs a way to ensure important emails do not get lost and requires reminders for follow-ups on unanswered emails."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster20",
+      "canonical_problem": "Desiree's team needs a way to track client communication sentiment to improve client retention.",
+      "signal_count": 2,
+      "signal_ids": [
+        "66_8554135351031083585_0",
+        "66_8554135351031083585_2"
+      ],
+      "sample_phrasings": [
+        "Desiree's team needs a way to track client communication sentiment to improve client retention.",
+        "Desiree's team requires a way to manage and review negative client interactions effectively."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster21",
+      "canonical_problem": "The customer is concerned about the cost of upgrading their plan, which doubles the monthly fee.",
+      "signal_count": 3,
+      "signal_ids": [
+        "76_560965286115951240_1",
+        "78_6608624762484707053_0",
+        "78_6608624762484707053_2"
+      ],
+      "sample_phrasings": [
+        "The customer is concerned about the cost of upgrading their plan, which doubles the monthly fee.",
+        "The customer is facing a significant price increase for a product they do not use extensively, leading to dissatisfaction and a potential cancellation.",
+        "The customer is confused about the pricing structure, specifically being charged for more users than they actively have."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster22",
+      "canonical_problem": "The customer is interested in having custom statuses for their email management workflow but is limited by the inability to customize default statuses in Hiver.",
+      "signal_count": 2,
+      "signal_ids": [
+        "65_1799444064847399580_3",
+        "72_8303457519254880340_4"
+      ],
+      "sample_phrasings": [
+        "The customer is interested in having custom statuses for their email management workflow but is limited by the inability to customize default statuses in Hiver.",
+        "The customer is looking for a way to customize ticket statuses to better reflect the state of support requests."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster23",
+      "canonical_problem": "The customer is unsure about the analytics capabilities and how they can measure support performance effectively.",
+      "signal_count": 2,
+      "signal_ids": [
+        "72_8303457519254880340_2",
+        "75_1184762400299844154_3"
+      ],
+      "sample_phrasings": [
+        "The customer is unsure about the analytics capabilities and how they can measure support performance effectively.",
+        "The customer lacks a historical reporting feature for sentiment changes, making it difficult to track improvements over time."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster24",
+      "canonical_problem": "The customer needs a shared inbox solution for freelancers to communicate with clients using a single email ID without requiring each freelancer to have a Google Workspace account.",
+      "signal_count": 3,
+      "signal_ids": [
+        "61_2529682253429226658_0",
+        "61_2529682253429226658_1",
+        "61_2529682253429226658_2"
+      ],
+      "sample_phrasings": [
+        "The customer needs a shared inbox solution for freelancers to communicate with clients using a single email ID without requiring each freelancer to have a Google Workspace account.",
+        "The customer is facing limitations with Google Workspace that prevent freelancers from sending emails using the company's domain without having their own Google Workspace accounts.",
+        "The customer is looking for a solution that allows freelancers to communicate with clients without needing to be part of the organization or having Google Workspace accounts."
+      ]
+    },
+    {
+      "local_theme_id": "batch003_cluster25",
+      "canonical_problem": "The customer needs a solution that allows for automation and integration with their internal documentation and workflows without requiring extensive technical support.",
+      "signal_count": 4,
+      "signal_ids": [
+        "60_7353414352892152204_1",
+        "72_8303457519254880340_0",
+        "80_5292951530895901561_3",
+        "83_6891956699798489920_4"
+      ],
+      "sample_phrasings": [
+        "The customer needs a solution that allows for automation and integration with their internal documentation and workflows without requiring extensive technical support.",
+        "The customer needs a support desk solution that is easy for a small team to use without overwhelming complexity.",
+        "The customer is looking for a solution that allows for easy scalability as their business grows.",
+        "The customer needs a simple-to-use solution that non-technical staff can operate without extensive training."
+      ]
+    }
+  ]
+}

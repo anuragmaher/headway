@@ -1,0 +1,32 @@
+{
+  "transcript_id": "47_5712193747321677237",
+  "call_id": "5712193747321677237",
+  "title": "Hiver & Victor with The Casumo Company Limited (AI Addon)",
+  "started": "2025-11-06T20:00:07+05:30",
+  "signals": [
+    {
+      "problem_statement": "The AI tagging feature may not effectively handle multiple languages, which is crucial for the finance department that deals with invoices in different languages.",
+      "customer_ask": "How can we teach Hiver to understand several languages at the same time?",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Finance department handling 30-50 emails daily in multiple languages",
+      "suggested_solution": "Implement AI tagging that can recognize and categorize emails based on different languages."
+    },
+    {
+      "problem_statement": "The current system requires manual intervention to sort emails by language, which is inefficient.",
+      "customer_ask": "Can AI tagging be used for language specificity to automatically assign emails to the right team member?",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Finance department with team members fluent in different languages",
+      "suggested_solution": "Use AI tagging to automatically assign emails based on the language detected."
+    },
+    {
+      "problem_statement": "The team struggles with managing and documenting processes effectively, leading to inefficiencies.",
+      "customer_ask": "How can we centralize our knowledge and processes to make them more accessible?",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Finance department with scattered documentation across different platforms",
+      "suggested_solution": "Utilize the co-pilot feature to consolidate and streamline process documentation."
+    }
+  ]
+}

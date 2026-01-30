@@ -1,0 +1,27 @@
+{
+  "transcript_id": "14_5527371625351364325",
+  "call_id": "5527371625351364325",
+  "title": "Hiver Demo | Talha <> Yukta",
+  "started": "2025-11-04T16:29:03+05:30",
+  "signals": [
+    {
+      "problem_statement": "The Hiver Chrome extension is not usable on iPads, limiting functionality for users who rely on iPads.",
+      "customer_ask": "Find out if there's any plans to improve the iOS app to add iPad support.",
+      "customer_role": "Admin",
+      "context": "Team of four using shared inbox and ticketing system, transitioning from Gmail to Google Workspace.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The mobile app for iPads only offers a mobile view, which is not very usable for the team.",
+      "customer_role": "Admin",
+      "context": "Team of four using shared inbox and ticketing system, transitioning from Gmail to Google Workspace.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The mobile app does not allow users to mark their availability for email auto-assignment.",
+      "customer_role": "Admin",
+      "context": "Team of four using shared inbox and ticketing system, transitioning from Gmail to Google Workspace.",
+      "confidence": "medium"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "transcript_id": "59_880109070710881970",
+  "call_id": "880109070710881970",
+  "title": "Hiver AI & Jon with Docto",
+  "started": "2025-11-07T14:32:22+05:30",
+  "signals": [
+    {
+      "problem_statement": "The current tagging system does not adequately capture the variety of ways customers phrase their inquiries, leading to potential misclassification.",
+      "customer_ask": "We would like a more flexible tagging system that can understand different phrases for similar requests.",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Admin team of about five managing inbound emails for a telehealth medical service."
+    },
+    {
+      "problem_statement": "There is a lack of automation in responding to customer inquiries, requiring manual review of all responses.",
+      "customer_ask": "We need a system that can suggest responses based on previous interactions.",
+      "confidence": "high",
+      "customer_role": "Admin",
+      "context": "Admin team of about five managing inbound emails for a telehealth medical service."
+    },
+    {
+      "problem_statement": "The current system does not provide a way to automatically extract and surface important information like invoice numbers from emails.",
+      "customer_ask": "We would like a feature that can extract specific data from emails and display it prominently.",
+      "confidence": "medium",
+      "customer_role": "Admin",
+      "context": "Admin team of about five managing inbound emails for a telehealth medical service."
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "transcript_id": "03_4349435023058882263",
+  "call_id": "4349435023058882263",
+  "title": "Hiver Demo | Ollie <> Yukta",
+  "started": "2025-11-03T19:30:22+05:30",
+  "signals": [
+    {
+      "problem_statement": "Managing incoming emails through multiple group and individual email addresses is becoming increasingly difficult as the volume of leads grows.",
+      "customer_ask": "We want to better manage the emails that come in on the sales side.",
+      "suggested_solution": "A unified inbox type solution where replies can be sent from individual email addresses while managing group emails.",
+      "customer_role": "Sales",
+      "context": "Team of 10 managing multiple email addresses for sales and customer service.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is a lack of automation in assigning emails to team members based on specific criteria, leading to inefficiencies.",
+      "customer_ask": "We want emails addressed to specific individuals to be automatically assigned to them.",
+      "suggested_solution": "Set up conditions for automatic assignment based on the content of incoming emails.",
+      "customer_role": "Sales",
+      "context": "Team of 10 managing multiple email addresses for sales and customer service.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The current email management process lacks visibility and tracking, making it hard to ensure all emails are addressed.",
+      "customer_ask": "We need a way to track how we are responding to emails and ensure nothing slips through the cracks.",
+      "suggested_solution": "Implement a system that provides visibility into email handling and response tracking.",
+      "customer_role": "Sales",
+      "context": "Team of 10 managing multiple email addresses for sales and customer service.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is no existing feature for AI to act as a support agent, which limits efficiency in handling initial customer inquiries.",
+      "customer_ask": "We are looking for a chatbot functionality that can handle initial responses before escalating to a human.",
+      "suggested_solution": "Develop a feature where AI can draft responses and only escalate to a human if necessary.",
+      "customer_role": "Sales",
+      "context": "Team of 10 managing multiple email addresses for sales and customer service.",
+      "confidence": "medium"
+    }
+  ]
+}

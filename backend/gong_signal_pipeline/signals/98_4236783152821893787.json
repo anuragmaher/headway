@@ -1,0 +1,38 @@
+{
+  "transcript_id": "98_4236783152821893787",
+  "call_id": "4236783152821893787",
+  "title": "Hiver Demo | Stevie <> Rakesh",
+  "started": "2025-11-10T21:05:24+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer is struggling to manage a high volume of emails with a reduced operations team, leading to inefficiencies and workflow challenges.",
+      "customer_role": "Admin",
+      "context": "Trucking and logistics company with a reduced operations team of four handling thousands of emails daily.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer needs a way to control email visibility and access for team members based on their schedules without manual intervention.",
+      "customer_role": "Admin",
+      "context": "Currently managing several hundred email aliases and needing to assign access based on specific days and times.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is looking for a solution to automate email assignment and improve team collaboration without overwhelming team members with unnecessary emails.",
+      "customer_role": "Admin",
+      "context": "The operations team is overwhelmed with emails and needs a more efficient way to manage incoming requests.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer requires a solution that integrates with their existing Outlook setup while providing shared inbox functionality.",
+      "customer_role": "Admin",
+      "context": "The team currently uses Outlook and needs a solution that works seamlessly with it.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is interested in implementing a chat functionality for better communication with drivers, who prefer chat over phone calls.",
+      "customer_role": "Admin",
+      "context": "The logistics team is looking for ways to improve communication with drivers who are less inclined to use phone calls.",
+      "confidence": "medium"
+    }
+  ]
+}

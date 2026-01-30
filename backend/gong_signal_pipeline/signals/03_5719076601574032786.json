@@ -1,0 +1,32 @@
+{
+  "transcript_id": "03_5719076601574032786",
+  "call_id": "5719076601574032786",
+  "title": "Hiver Demo | Justin <> Cole",
+  "started": "2025-12-30T01:29:12+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer struggles to manage a high volume of emails from multiple businesses in a single mailbox, leading to confusion and delays in response times.",
+      "customer_ask": "They need a platform that can categorize emails based on urgency and type.",
+      "suggested_solution": "A system that can automatically categorize emails into separate folders for urgent payment queries, advertisements, and other categories.",
+      "customer_role": "Admin",
+      "context": "The customer manages emails for 13 different businesses across various locations.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer lacks a way to assign specific emails to team members effectively, which hampers workflow.",
+      "customer_ask": "They need a feature that allows for assigning emails to specific team members.",
+      "suggested_solution": "Utilization of AI functionality to assign emails based on content.",
+      "customer_role": "Admin",
+      "context": "The customer has a team of three managing multiple inboxes.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is unable to visualize and track the status of incoming emails effectively, which affects their ability to respond in a timely manner.",
+      "customer_ask": "They want a dashboard that shows the count of different types of emails received.",
+      "suggested_solution": "A dashboard that categorizes emails and shows counts for different types like invoices and marketing emails.",
+      "customer_role": "Admin",
+      "context": "The customer is managing multiple inboxes and needs better oversight.",
+      "confidence": "high"
+    }
+  ]
+}

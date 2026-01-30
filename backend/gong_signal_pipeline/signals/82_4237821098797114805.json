@@ -1,0 +1,36 @@
+{
+  "transcript_id": "82_4237821098797114805",
+  "call_id": "4237821098797114805",
+  "title": "Hiver Onboarding",
+  "started": "2025-11-10T09:31:16+05:30",
+  "signals": [
+    {
+      "problem_statement": "The phone number field in the setup process has a character limit that does not accommodate longer toll-free numbers.",
+      "customer_ask": "A way to input longer phone numbers without restrictions.",
+      "customer_role": "Admin",
+      "context": "Team size not specified, onboarding process.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is unsure about how to set up SLAs that consider only business hours.",
+      "customer_ask": "Clarification on how to set SLAs based on business hours.",
+      "customer_role": "Admin",
+      "context": "Team size not specified, onboarding process.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is looking for a way to automate the tagging of emails based on specific criteria.",
+      "customer_ask": "Automation for tagging emails based on content.",
+      "customer_role": "Admin",
+      "context": "Team size not specified, onboarding process.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer wants to ensure that their team can easily access and use templates for repetitive queries.",
+      "customer_ask": "Help in creating and managing email templates.",
+      "customer_role": "Admin",
+      "context": "Team size not specified, onboarding process.",
+      "confidence": "medium"
+    }
+  ]
+}

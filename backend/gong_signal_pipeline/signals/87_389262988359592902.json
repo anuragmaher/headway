@@ -1,0 +1,39 @@
+{
+  "transcript_id": "87_389262988359592902",
+  "call_id": "389262988359592902",
+  "title": "Hiver Feedback | Asha <> Yukta",
+  "started": "2025-11-10T18:11:36+05:30",
+  "signals": [
+    {
+      "problem_statement": "The current ticket management system is insufficient for the customer's needs.",
+      "customer_ask": "Looking for something more advanced than Lina AI.",
+      "customer_role": "Admin",
+      "context": "Team size not specified, focusing on ticket management and email management.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The product does not support integration with WhatsApp for chatbot functionality.",
+      "customer_ask": "Integration of a WhatsApp chatbot.",
+      "suggested_solution": "Enable WhatsApp chatbot functionality.",
+      "customer_role": "Admin",
+      "context": "Team size not specified, focusing on WhatsApp usage for communication.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The product lacks support for Arabic conversation in the chatbot.",
+      "customer_ask": "Support for Arabic conversation over WhatsApp.",
+      "suggested_solution": "Implement Arabic language support in the chatbot.",
+      "customer_role": "Admin",
+      "context": "Team size not specified, focusing on communication needs in Arabic.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The product does not currently support forms and customer portal features.",
+      "customer_ask": "Inquiry about forms and customer portal support.",
+      "suggested_solution": "Add support for forms and customer portal.",
+      "customer_role": "Admin",
+      "context": "Team size not specified, looking for enhanced customer interaction features.",
+      "confidence": "medium"
+    }
+  ]
+}

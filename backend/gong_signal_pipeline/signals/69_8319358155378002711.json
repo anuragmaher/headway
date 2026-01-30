@@ -1,0 +1,36 @@
+{
+  "transcript_id": "69_8319358155378002711",
+  "call_id": "8319358155378002711",
+  "title": "Hiver Demo | Chip <> Cole",
+  "started": "2025-11-07T20:31:00+05:30",
+  "signals": [
+    {
+      "problem_statement": "The current system lacks a simple way to track customer inquiries and escalate them to a support ticket.",
+      "customer_ask": "We want a simple system to be able to track that and know when someone needs help.",
+      "customer_role": "CEO",
+      "context": "Small team handling customer inquiries related to classes for young adults and juveniles.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The existing AI chatbot does not effectively differentiate between distinct user populations, leading to inappropriate responses.",
+      "customer_ask": "We need to distinguish what kind of user the customer is and answer appropriately.",
+      "customer_role": "Director of Operations",
+      "context": "Multiple user types including adult learners, juvenile learners, and court staff.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The complexity of the current system's trigger paths is causing issues in providing accurate responses.",
+      "customer_ask": "We need to simplify the process of creating conversational triggers.",
+      "customer_role": "Director of Operations",
+      "context": "Struggling with complex trigger paths for different user types.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "There is a need for a generative AI feature to enhance customer interactions, but it is not yet available.",
+      "customer_ask": "We need the generative AI to feel like customers are talking to a person.",
+      "customer_role": "CEO",
+      "context": "Looking for a solution that can handle customer inquiries effectively as they scale.",
+      "confidence": "high"
+    }
+  ]
+}

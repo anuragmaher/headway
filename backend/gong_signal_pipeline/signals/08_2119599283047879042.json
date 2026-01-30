@@ -1,0 +1,43 @@
+{
+  "transcript_id": "08_2119599283047879042",
+  "call_id": "2119599283047879042",
+  "title": "Hiver Demo | ErikaBlair <> Alex",
+  "started": "2025-12-30T20:33:53.636+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer is struggling to manage support questions efficiently within their community, leading to a hectic workflow.",
+      "customer_ask": "I need something to help me and my team organize support questions and answer them efficiently.",
+      "customer_role": "Admin",
+      "context": "Small team with two community administrators, managing support for financial education courses.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer’s team members are facing challenges logging into multiple Outlook accounts for different jobs.",
+      "customer_ask": "This would help them with being able to organize just staying on top of emails.",
+      "customer_role": "Admin",
+      "context": "Small team with part-time members managing multiple email accounts.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is concerned about managing multiple domains and whether they need separate subscriptions for each.",
+      "customer_ask": "Would I need two different subscriptions because those are two different apps?",
+      "customer_role": "Admin",
+      "context": "Managing multiple businesses with different email domains.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is unsure how to effectively utilize the knowledge base feature without sufficient time to create articles.",
+      "customer_ask": "We probably won't be using the knowledge base, but none of us have time to create articles.",
+      "customer_role": "Admin",
+      "context": "Small team with limited resources for content creation.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer is looking for a way to allow a team member to monitor support requests without responding to them.",
+      "customer_ask": "Is there anything like a light seat for someone who can see but not respond?",
+      "customer_role": "Admin",
+      "context": "Small team managing support requests.",
+      "confidence": "medium"
+    }
+  ]
+}

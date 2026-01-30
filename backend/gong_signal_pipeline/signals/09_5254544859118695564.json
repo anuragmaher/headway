@@ -1,0 +1,30 @@
+{
+  "transcript_id": "09_5254544859118695564",
+  "call_id": "5254544859118695564",
+  "title": "Hiver Demo | Justin <> Cole",
+  "started": "2025-12-30T21:33:16+05:30",
+  "signals": [
+    {
+      "problem_statement": "The current help desk solution using Monday.com is messy and not meeting the organization's needs.",
+      "customer_ask": "Looking for a new help desk solution that is relatively simple.",
+      "customer_role": "Admin",
+      "context": "Back office of about 30 people and over 1,200 field workers.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The current system does not allow for robust form capabilities, leading to issues with ticket routing.",
+      "customer_ask": "Need a form that includes dropdowns and conditional elements to ensure correct ticket submission.",
+      "suggested_solution": "Implement conditional forms to reduce human error in ticket submissions.",
+      "customer_role": "Admin",
+      "context": "Back office of about 30 people and over 1,200 field workers.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is a lack of automation in routing tickets based on user input, causing tickets to be sent to the wrong place.",
+      "customer_ask": "Desire for a system that can automatically route tickets based on dropdown selections rather than free text.",
+      "customer_role": "Admin",
+      "context": "Back office of about 30 people and over 1,200 field workers.",
+      "confidence": "high"
+    }
+  ]
+}

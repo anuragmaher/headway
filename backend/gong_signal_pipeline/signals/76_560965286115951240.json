@@ -1,0 +1,40 @@
+{
+  "transcript_id": "76_560965286115951240",
+  "call_id": "560965286115951240",
+  "title": "Hiver & bryson with bkarrenagency.com",
+  "started": "2025-11-08T00:13:25+05:30",
+  "signals": [
+    {
+      "problem_statement": "The shared inbox setup does not allow the executive assistant to filter emails properly, leading to clutter in the inbox.",
+      "customer_ask": "I want my executive assistant to see all the same emails that are coming into my Gmail inbox.",
+      "suggested_solution": "Implement a method to auto-close or filter emails to avoid clutter.",
+      "customer_role": "Admin",
+      "context": "10 people on the team using three shared inboxes.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The current plan limits the number of users and mailboxes, which restricts team access to the product.",
+      "customer_ask": "I don't want to upgrade because it doubles the cost.",
+      "suggested_solution": "Provide a more affordable upgrade option or a way to manage within the current limits.",
+      "customer_role": "Admin",
+      "context": "10 people on the team using three shared inboxes.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is no way to automate the handling of duplicate late payment notices from vendors.",
+      "customer_ask": "Is there a way for these automations to catch duplicate late payment notices?",
+      "suggested_solution": "Develop a feature that can identify and filter out duplicate emails based on subject lines.",
+      "customer_role": "Admin",
+      "context": "10 people on the team using three shared inboxes.",
+      "confidence": "medium"
+    },
+    {
+      "problem_statement": "The customer lacks a straightforward way to export data into Google Sheets for tracking team performance.",
+      "customer_ask": "I'd love to have somebody quickly set it up so that I can just dump that data into a Google sheet automatically.",
+      "suggested_solution": "Create an automated export feature that integrates with Google Sheets.",
+      "customer_role": "Admin",
+      "context": "10 people on the team using three shared inboxes.",
+      "confidence": "high"
+    }
+  ]
+}

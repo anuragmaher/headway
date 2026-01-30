@@ -1,0 +1,36 @@
+{
+  "transcript_id": "77_8167914542088254924",
+  "call_id": "8167914542088254924",
+  "title": "Hiver Trial Kick Off",
+  "started": "2025-11-08T00:32:05+05:30",
+  "signals": [
+    {
+      "problem_statement": "The current shared inbox setup is becoming hard to manage due to the number of project volumes.",
+      "customer_ask": "Are we able to filter tags within an inbox?",
+      "customer_role": "CSM",
+      "context": "Team size not specified, managing multiple projects and high email volume.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "There is a need for automation to manage email assignments and organization more efficiently.",
+      "customer_ask": "Can we set it so that emails are automatically directed to the right shared inbox based on project tags?",
+      "customer_role": "CSM",
+      "context": "Team size not specified, dealing with multiple projects and regulatory communications.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is concerned about losing track of emails that require follow-up.",
+      "customer_ask": "Is there a way to nudge me if I haven't received a response to an email?",
+      "customer_role": "Support Lead",
+      "context": "Team size not specified, managing client communications.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer needs a way to import historical emails into the new system.",
+      "customer_ask": "How do you help customers with that onboarding transition?",
+      "customer_role": "CSM",
+      "context": "Team size not specified, transitioning to a new email management system.",
+      "confidence": "medium"
+    }
+  ]
+}

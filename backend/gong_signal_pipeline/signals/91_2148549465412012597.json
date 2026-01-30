@@ -1,0 +1,24 @@
+{
+  "transcript_id": "91_2148549465412012597",
+  "call_id": "2148549465412012597",
+  "title": "Exploring Hiver for Pratilipi",
+  "started": "2025-11-10T18:35:18+05:30",
+  "signals": [
+    {
+      "problem_statement": "The customer is unable to create additional shared mailboxes due to a limitation in the current plan.",
+      "customer_ask": "We would require like three more shared mailboxes.",
+      "suggested_solution": "Consider upgrading to a plan that allows for more shared mailboxes.",
+      "customer_role": "Admin",
+      "context": "Team size of approximately 30 people across multiple departments.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The default SLA settings for the PPS team are not functioning as expected, specifically the 'due soon' status is not visible.",
+      "customer_ask": "The PPS team needs reminders for what has to go up, when and things of that sort.",
+      "suggested_solution": "The PPS team should reach out to support for assistance.",
+      "customer_role": "Admin",
+      "context": "PPS team requires timely reminders for task management.",
+      "confidence": "medium"
+    }
+  ]
+}

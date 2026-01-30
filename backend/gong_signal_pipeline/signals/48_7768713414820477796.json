@@ -1,0 +1,29 @@
+{
+  "transcript_id": "48_7768713414820477796",
+  "call_id": "7768713414820477796",
+  "title": "Hiver Sandbox Sync",
+  "started": "2025-11-06T20:47:25+05:30",
+  "signals": [
+    {
+      "problem_statement": "The integration between Hiver and Outlook does not support email deletion synchronization.",
+      "customer_ask": "Confirmation on whether deleting an email in Hiver will also delete it in Outlook.",
+      "customer_role": "Admin",
+      "context": "Public institution, evaluating integration with existing systems.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer requires detailed security and technical feasibility information for Hiver's integration with Outlook.",
+      "customer_ask": "Request for documents or information to provide to the IT team regarding security risks and access requirements.",
+      "customer_role": "Admin",
+      "context": "Public institution, needs to comply with thorough IT review processes.",
+      "confidence": "high"
+    },
+    {
+      "problem_statement": "The customer is uncertain about the timeline for accessing the sandbox environment for testing.",
+      "customer_ask": "Request for extended access to the sandbox until the end of the day tomorrow.",
+      "customer_role": "Admin",
+      "context": "Public institution, team needs more time to test the platform.",
+      "confidence": "medium"
+    }
+  ]
+}
