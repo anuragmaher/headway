@@ -1,0 +1,15 @@
+{
+  "transcript_id": "60_8648447214008670157",
+  "call_id": "8648447214008670157",
+  "title": "Hiver <> HORL - AI Tasks Discussion",
+  "started": "2026-01-28T18:31:01+05:30",
+  "signals": [
+    {
+      "Theme": "AI Tasks",
+      "Sub-Theme": "Workflow Automation",
+      "Ask": "We expect the AI tasks to manage our workflows end to end, including extracting order numbers and drafting emails with order status.",
+      "Priority": "High",
+      "Evidence": "To summarize it, it was basically when an email comes in regarding asking information on the lines that, hey, what is the status of my order? The AI agent would pick up that email, pick up the order number from that email, look into your ERP system, pick up the status of what the order number, or rather what the status of that specific order number is, and then draft out an email saying that, hey, this is the like drafted an email for your end user saying that, hey, this is your order number. This is what the status of the order is, and let it be in the draft section for your end user to only see it, review it. If it's good, send it out that's the workflow you're looking to build."
+    }
+  ]
+}
