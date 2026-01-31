@@ -1,0 +1,238 @@
+================================================================================
+Call: Discuss.io <> Hiver
+Date: 2026-01-27T20:05:13+05:30
+================================================================================
+
+Gabriel Souza (gabriel@discuss.io):
+  hello, Raghav. Hey.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Gabriel, how's it going?
+
+Gabriel Souza (gabriel@discuss.io):
+  Just starting busy day right now.
+
+Raghav Shankar (raghav@hiverhq.com):
+  All right, Gabriel, I mean, I'm recovering from a bit of the flu as well. So looks like we're both, on the busy end of things as January comes to an end. Yeah.
+
+Gabriel Souza (gabriel@discuss.io):
+  Yeah, that's true. I'm glad to hear that you recovered from the flu.
+
+Raghav Shankar (raghav@hiverhq.com):
+  All right. Yeah. I'm still working, it seems to be this random flu that's flying across the city in India. It's just, it's a little funny. It's one of those flus where you're not entirely sure if you're sick, but then suddenly you're still coughing or you like start running nose and stuff like that.
+
+Raghav Shankar (raghav@hiverhq.com):
+  But, yeah, Gabriel, all said and done pleasure catching up again, appreciate you being open to move the call to today as well. You know, one of, the three agenda points that we had for today was gonna be workflow understanding and recommendations and suggestions on the backs of knowing that for further optimization, right? So, one of the main things for today that we wanted to do was obviously dive deeper into your workflows, understand what that looks like and effectively going ahead in terms of how do we get this implemented and the commercial of what that looks like if it requires a feature on a higher package. So passing it over to you to give me a more detailed understanding of your current process of functioning and handling emails?
+
+Gabriel Souza (gabriel@discuss.io):
+  Alright. So I'll go ahead and share my screen now so you can see.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah, I'm gonna make sure you have permission. Yeah, you do have permission.
+
+Gabriel Souza (gabriel@discuss.io):
+  Okay. Let me share my screen. Okay? Can you see my screen now?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Just give me one minute. Yeah, your screen's up and running?
+
+Gabriel Souza (gabriel@discuss.io):
+  Go for it. Okay, perfect. So to start here, we basically have right now only one client that we use a shared inbox for and under this team, as you may already have seen, we have four people, I mean, three managers… three sorry coordinators, and me as a manager. So it's mostly them coordinating with this client on these emails. And what I see sometimes is just if one of them tells me to check something specific, I'll just go to the email and check it. Otherwise, I would just actually this sentiment analysis also helps me keep track of how the emails are going. And I think the only, okay. So let's just start first things first. Yeah, we got these emails from this client in this shared inbox on a Gmail email group. So the Gmail email group is called adelphi coordinators I discussed. And I think the only roadblock that we have right now with this process… is that sometimes clients can send the emails directly to the assigned Lc and not loop in the group email. But then when that happens, they would just reply to the client and loop the group email back in. So, but that has not represented a big issue for us so far. So that's one thing. And then when… the emails do land in this shared inbox, they basically check this team folder to go over each and every email and see what email is directed to themselves. So then they can go ahead and, you know, assign to themselves… or is it mark? It's? Actually only visible in this, right? If you have an email here, we'll be able to assign it to someone. But if it's in the team… I'll assign these. Oh, yeah, you can do it from here, right? Oh, sorry. No, yeah, that, that's actually one more roadblock that we have because entity has already reported this to me. Like if you're using this view, I'll assign these, you will have to actually open the email to assign it to someone, but I don't think it, no.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Let me just stop you and give you an option. Can you click on back there? You can do it in bulk, click on the back arrow, this one here and go back to the auto signing view and start using boxes? Oh.
+
+Gabriel Souza (gabriel@discuss.io):
+  This one? Yeah. Okay. You got it. Yeah, I remember this now. Okay. So, yeah, you have to do this… and so when we go back to unassigned, we have to do the same thing, right? Just check this… box and we'll be able to see the option… to assign.
+
+Raghav Shankar (raghav@hiverhq.com):
+  that's right? Yeah. Any view in hiver, as long as you're inside of hiver using the checkbox will give you assignment status change and tagging in bulk.
+
+Gabriel Souza (gabriel@discuss.io):
+  OK. Yeah. Manage tags, change, status labels. OK. So.
+
+Raghav Shankar (raghav@hiverhq.com):
+  OK.
+
+Gabriel Souza (gabriel@discuss.io):
+  All right. So, yeah, that's one thing and then the next one is what they do once the email is assigned, they would just, of course, just keep going with the flow here, just sending replies and everything. And then they haven't used this notes feature a lot lately, but it is helpful. They provided me feedback on this as well. It's definitely helpful especially when they're covering for someone who's out of office and they need to put in notes on the very specific email threads. And, yeah, so that's helpful. So, I think the… main thing… we are trying to kind of improve here is the logics, the automations around email assignments. So, for example, very recently in the last call that we had, I shared with you that.
+
+Gabriel Souza (gabriel@discuss.io):
+  This specific coordinator, Ala, she kind of lost a couple. I mean, she missed a couple of emails that were in the middle of this huge list here for the whole team. And even though she checks, she can check the mind folder because not all emails are automatically assigned. They have to keep checking this unassigned or even the no… the team actually, she will only do that if someone is out. So basically, she has to keep checking this unassigned and just assign the email to herself or another person would do it if it's applicable. So… I think, the only thing that we need is something, that will give us like, I think that the feature for the slas that you mentioned was going to be really helpful because, you know, just for this pain point that I just mentioned, you would already solve it by alerting us if an email has not, has been pending for a given, you know, period of time. Yeah. So I think that's one of the things that would help us the most. And I don't know if there is any other way we can organize… this email assignment task because this is basically like we don't need a lot of automations… because our work here with this shared inbox is really straightforward. We, the… things that we use the most are email assignments. Of course, the notes can be used sometimes but not all the time. And then, yeah… I think the team would also benefit from maybe the Salesforce integration because I don't know there is a way we can also use that in the sense that for example, we have a specific email that… was originally assigned to Ala, and we can somehow assign it to the respective… Salesforce opportunity page so that when someone covers this specific project for Ala, they can easily find the, you know, the related project page in Salesforce. That, that would be helpful for the team as well? Because I heard you guys have an integration of a Salesforce. I don't know exactly how it works, but.
+
+Raghav Shankar (raghav@hiverhq.com):
+  What you're looking for here is basically looking up the Salesforce contact or account record based on the email you receive. And, yeah, sorry, go ahead, yeah.
+
+Gabriel Souza (gabriel@discuss.io):
+  It would actually be just like a very simple task… like just to attach the Salesforce… opportunity link to the respective email thread. So, for example, we have this project and the same project has an opportunity… page in Salesforce in our system. Okay? And there is a way we could assign the respective Salesforce page to this email thread. Somehow, I don't know if that's possible. That is possible. Yeah, it would be helpful as well because sometimes they can get lost in a very long email thread just trying to look for the Salesforce project name. And if the link is already attached here, it will save them time just looking for that page.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Makes sense. Got it. So, can we continue with the workflow piece? I'm just making notes of these three things. And I'll address this once we wrap up the workflow part.
+
+Gabriel Souza (gabriel@discuss.io):
+  Okay. Yeah. And so the next thing is, so… as you could see, we have very long email threads because most of our projects, they last, they can last for months. So we basically concentrate our email communication that we have with clients in one single email thread if not one, sometimes two or a few more if needed, especially if it's different markets. And we separate those markets for, you know, individual email threads. Basically, we can have a lot of emails in a single email thread. So for that reason, we don't move the emails to the closed status because that would put the… email thread into this folder, this closed folder, right? We only did a few tasks. As you can see here, not a lot of them went to the closed folder. So I don't know if it would even make sense for us to do that with, the painting one. I wanted to understand if it would be something that we can explore the nature of these email threads there are, you know, they're ongoing email threads and how we can make use of even this one, do soon track conversations near resolution. So this SLA is the exact same feature that you mentioned last.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Time. Yeah, exactly. And.
+
+Gabriel Souza (gabriel@discuss.io):
+  This is not part of our current.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Package. No, it's not.
+
+Gabriel Souza (gabriel@discuss.io):
+  Okay. Yeah. So then it's over, is it the same for? This is the?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Same SLA, two types of tracking that SLA. So.
+
+Gabriel Souza (gabriel@discuss.io):
+  So,
+
+Raghav Shankar (raghav@hiverhq.com):
+  yeah, both are on, the next package up from what you're on right now, I.
+
+Gabriel Souza (gabriel@discuss.io):
+  Just wanted to understand more a little bit more on this painting one because from my understanding, it just puts the email thread on hold. It does notify the team anyway, when it moves to this status or it… just goes through this folder and the team needs to check it to see that. Okay, I have this many emails in the painting under painted status that's.
+
+Raghav Shankar (raghav@hiverhq.com):
+  actually a good question. So to address the three main things that stood out for us so far, right? One is time based alerts on the projects themselves. We can do either notifications through an automation workflow or we can do notifications based on status that's the suggestions. I'm looking at, the second one that you mentioned was tracking completion of the project and that's where slas come in for giving updates back to the customer. And the third one that we're looking at is the Salesforce integration as a whole piece just to get the opportunity data flowing into the page so the agents can see it when they open it right now. For all three of these, all three of these or rather two of the three of these are functionality that's on the pro package, which is the next package from what you're on and any kind of hiver based alerts, notifications.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Reminders, they are all tied to time based workflows on hiver or time based automations on hiver, which is on our highest package of the elite plan, right? So irrespective of, you know, whether we need better reminders or whether you need a integration with reminders or just even the SLA would integration, we would be looking at an increase on the plan package itself compared to what you're on today. But with that said, once the upgrade, you know, you're comfortable with upgrading and we do go down that route after commercials are sorted out, you would definitely be able to create what you've mentioned or described so far as challenges within the product, right? So out of the box, hiver does not have any reminders or notifications on any email. And these are all have to be set up based on your requirements through an automation or an SLA, right? So that's effectively the direction which in which we are heading. I do have a couple of questions in terms of the workflow that you detailed out for me so far. Now, one thing is you did say the whole project in itself is long and hence you retain the same email thread and you keep going back and forth with the customer on one email chain until it's completed, right? What's your average as far as you're aware, what's your average for completion on a task or a project? When you start something off with a client. I.
+
+Gabriel Souza (gabriel@discuss.io):
+  Would say a very basic project can last for a month. A very complex project can last for, I would say between four… and even… I don't know all the way to eight months.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Okay. All.
+
+Gabriel Souza (gabriel@discuss.io):
+  Right. It's very rare to have a, you know, eight month long project. It did happen sometimes, but I would say the most common would be the average would be like, yeah, one to four months, yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Understood. And during this one to four months, I know this adelphi is just for one client. With the three coordinators on adelphi, how many other departments or teams at disqus, do they interact with apart from the client itself?
+
+Gabriel Souza (gabriel@discuss.io):
+  So, we do have other clients where they are categorized in a, sorry, what was that? No?
+
+Raghav Shankar (raghav@hiverhq.com):
+  I just interrupted you just to make sure my question was a bit more clearer. What I'm trying to find out is with adelphi and this three coordinator team?
+
+Gabriel Souza (gabriel@discuss.io):
+  Once.
+
+Raghav Shankar (raghav@hiverhq.com):
+  they get a request from adelphi and they start an email thread for a project internally at disqus, are there other departments and teams? Allah and the other coordinators need to talk to before they send something to this adelphi client on an email project?
+
+Gabriel Souza (gabriel@discuss.io):
+  Yeah. We do have a process for a project assignment before it actually goes to the other, to the next stage, which is, the, you know, the email introduction with the client and everything but that, that's done outside of Gmail. We use Salesforce for that. So, like I said, I would say, the only moment that, we use Salesforce is to link the project between our platform and Salesforce. And also with the email threads. So it's everything is, you know, we cross check everything against the main project origin, but we… don't use, you know, a lot of, we don't only use Gmail to concentrate ours, you know, private communication, even internal communication with, you know, other, you know, cross team communication. Got it.
+
+Raghav Shankar (raghav@hiverhq.com):
+  So, where does that happen? If you don't mind me asking… that cross team communication. Apart from Gmail. Is there any other platform you do use?
+
+Gabriel Souza (gabriel@discuss.io):
+  Yeah, we use slack. Okay. Mostly, yeah, mostly slack and Google meets got.
+
+Raghav Shankar (raghav@hiverhq.com):
+  It, so async and text based discussions happen on slack dedicated channels. The team goes there puts a message that cross team replies and they take it back to Google put it in the email and send it to the customer. Correct? Yeah. Okay. Makes sense. Understood. And would you also like to have reminders once your team has paused a conversation or a project waiting on a cross team update. So, yeah, sorry, go ahead the.
+
+Gabriel Souza (gabriel@discuss.io):
+  Only instance where it would be applied. I mean, the pain instead of, will be applied would be when a project is over and it's still pending a final confirmation from the client to close out the project?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Like.
+
+Gabriel Souza (gabriel@discuss.io):
+  I said, the project doesn't you know, it's it rarely stops.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Like.
+
+Gabriel Souza (gabriel@discuss.io):
+  it just ends. It just stops when the project is actually over.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Got it. Got.
+
+Gabriel Souza (gabriel@discuss.io):
+  It. Otherwise, we wouldn't need to put it under the pending status. Huh. And I think, the only other instance would be if a client goes unresponsive, huh, we could also put the email in pending.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Okay. And.
+
+Gabriel Souza (gabriel@discuss.io):
+  Yeah. Whenever you have something pending from the client, because we don't it's very rare for us to have something pending for the client. It's actually the other way around, the client has something pending for us.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Makes sense. So, no, that paints a better picture as well. So, Gabriel, in terms of improving this existing workflow and filling the gaps with the commercial angle, we would definitely be looking at either an upgrade to the pro tier or to the highest of the elite tier, one of the two is definitely going to be needed. And the reason why I'm saying that is because only on these two tiers, would you be able to create an integration with Salesforce, obviously, for that visibility on emails of the opportunity and things like that. But also these two are the plans that support the SLA for overall timing tracking for the team resolution tracking.
+
+Gabriel Souza (gabriel@discuss.io):
+  And thirdly it.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Is with the elite plan that you do unlock any kind of internal notifications, whether it's pending from an internal cross team or if it's pending from a client as a whole team, right? And you can even on the elite plan, you can even set up the workflow in a way where if something is pending from the client for more than 48 hours. Hiver can do the follow up for your team as well, you know, send out that first email, follow up, send out a second email of no reply, follow up again. And things like that.
+
+Gabriel Souza (gabriel@discuss.io):
+  Right. And what do you mean? Would that be like an AI response? Or just, I mean.
+
+Raghav Shankar (raghav@hiverhq.com):
+  At this stage, what I would recommend is we keep it a standard templated message saying, hey, client following up on this thread. Our team is waiting an update from you. Could you get back to us when you have a minute? So we'll create one single copy, no modification, no personalization, just a general copy message goes out from the team member or the coordinator to the customer on the chain saying, hey, we're waiting on an update?
+
+Raghav Shankar (raghav@hiverhq.com):
+  It's been two days or three days or one week. Let us know when you have a minute and we regroup, right?
+
+Gabriel Souza (gabriel@discuss.io):
+  I'd.
+
+Raghav Shankar (raghav@hiverhq.com):
+  say, we start with something like that and then once your team is used to it and you get to see outcomes, then we can look at, can we use AI to personalize it, include some additional elements and then go from there, right? But we can, you know, customize it to a good extent as well. But yeah, with that said in terms of the path forward, Gabriel, what I would like to propose with you is two things first is I can work with my team and have the higher plan activated for your account on a trial basis. So that means you get to use the functionality, check out the features, use them, see how they're doing for like a 14 to a 21 day period is what we typically offer. But if you want, I can maximum do one month, you know, best case.
+
+Gabriel Souza (gabriel@discuss.io):
+  Yeah, that's actually something I was going to ask you. That would be fantastic because I just seen this in, you know, in real life. Yeah, it would be really helpful.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Definitely, man. I mean, I know it's not going to be easy having this discussion with your team given the current rate you're paying versus what the next two plans are looking like. And even with incentives, you're just to set the right expectation, the next immediate next plan called the pro tier that unlocks slas, and, you know, additional customizations with the Salesforce integration that's at 65 usd per person per month on a list price. Now, you already have a 20 percent discount on your current subscription. So I can definitely make a case with leadership and make sure you get the same 20 percent discount. But even with that, it's going to be a 52 dollar per user per month cost as opposed to 20 per user per month that you're paying right now, right? So it's effectively doubling what you're currently paying on hiver as a per user cost or commercial cost, right? So with that said, you know, I know that's not going to be an easy conversation given it's only been like what three months since you signed up for hiver or two realistically. So I'm always intended to offer the trial for you. So I'm glad to work with my team. Have that started and everything. The next thing that I'd also like to do with you as well is if you have the process that you detailed to me or mentioned to me in a document or something like that with more details. And here's what I'm looking for, right? So if you have a document on a Google doc or if you could put down step one email comes in from client, step two team checks information piece one which is name of the project, information to stakeholders information, three outcome information for timeline, right? Step three. Once the team checks it, they do cross team collaboration on slack… cross team with design, for example, cross team with talent ops as the second one, right? And then package that step four team sends that information to client step five, 48 hours of no reply from client. Our team follows up if you could, you know, document it in a step by step manner in that exact sense including, you know, anything that might be missed on our discussion today or, you know, might not be relevant in that sense of it any kind of process documentation or a one pager, even just a quick summary of that. If you could send it over that would actually help me work with you in getting that set up once the trial is active for the higher plan. Does that make sense? So that way you and I are talking about this, I'll be involved in helping you set it up.
+
+Raghav Shankar (raghav@hiverhq.com):
+  We do a check in call three weeks into the trial. You can tell me what the outcomes are. Do you want to modify it? Does it make sense? And when I'm enabling the trial, I'll send you the commercial as well. So you have that as a discussion with your leadership team and tell them, hey, I've got a one month trial and if the product does what it's supposed to do or what I've been told it could do with the upgrade, this is what that costing would look like, right? So I can send that information over to you and enable the trial and we can meet as early as next week if you want kick off the trial, set up the automation integration, all of that stuff. And then we can meet third week of February to check in on the outcomes, check in on commercial approvals… on your side.
+
+Gabriel Souza (gabriel@discuss.io):
+  And that way after.
+
+Raghav Shankar (raghav@hiverhq.com):
+  the fourth week, we're ready to have your account transitioned. In terms of the end of February, we can basically have your account upgraded. If everything else aligns by then, so high level, that's the kind of next steps I'm looking at for us based on our discussion today and two weeks back, does that make sense from your perspective in terms of where you're coming from?
+
+Gabriel Souza (gabriel@discuss.io):
+  Yeah, totally. So I'll work on putting together a document to, you know, outline all the steps for the email project, email communication. And I'll try to send this to you by either later this week or early next week… and we can plan a follow up later, okay?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Makes total sense. And I do have to give you a quick heads up that I will be on bto from the tenth to the eighteenth of February. So I'll be out for about a week, second week of February. So if you couldn't have the information or the process in itself sent over to me before the first week of February, then we can have a call Monday Tuesday 910, the second week of February. We can have a call on that. I can have the trial enabled, give you pricing on tentative. Hey, this is what it's going to cost and then help you with initial implementation of the workflows. During my absence, I will make sure my support team has access to your document as well. So because supports 24 seven. So once I've done the implementation with you or given you instructions on how to get it started, my support team can be back up during my pto, help you with any setup questions. How do I change this stuff like that? And then, you know, the last week of February, we can regroup once I'm back, talk about outcomes, talk about commercials, finalize things, and we would effectively be looking at having your account upgraded based on that provided, you know, the timelines make sense and we're at a good place at that point of time.
+
+Gabriel Souza (gabriel@discuss.io):
+  Yeah, that sounds good to me.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Okay, brilliant. Then. All right, Gabriel, perfect. So I think we're good on next steps from here. I did notice we have got another 10 minutes on the calendar. Any other questions? Any other doubts you had about the product like the bulk assign that your team has brought up that you're not sure about?
+
+Gabriel Souza (gabriel@discuss.io):
+  No, I don't think so. I already had a meeting with them. Yeah, all of the roadblocks and everything that we had, they already passed along to me. So yeah, if I have anything else, I'll definitely let you know.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Perfect. All right, Gabriel, so as next steps, what I'm going to do is I'm just going to, you know, send you an email after the call with my scheduler. So you have that meeting link, I'll send you a follow up on the first week of February, maybe next Tuesday, basically just as a reminder for the process document. Once you have it ready, we can plan for the next call to enable the trial and give you commercials and do implementation to get you started. Okay?
+
+Gabriel Souza (gabriel@discuss.io):
+  Perfect. Thank you so much for that, my.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Pleasure. Gabriel. I appreciate you. Thank.
+
+Gabriel Souza (gabriel@discuss.io):
+  you have a good one. Bye bye.
+
+Raghav Shankar (raghav@hiverhq.com):
+  I'm sorry, I had to cough. Yes, have a good day. Pleasure chatting. I look forward.
+
+Gabriel Souza (gabriel@discuss.io):
+  To talking to you. No problem. Thank you. Cheers. Bye, bye, cheers.

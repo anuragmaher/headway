@@ -5,34 +5,11 @@
   "started": "2026-01-31T02:32:39+05:30",
   "signals": [
     {
-      "Theme": "Integration with HubSpot",
-      "Ask": "We need a solution that integrates seamlessly with HubSpot as we are transitioning to it for support.",
+      "Theme": "Integration",
+      "Sub-Theme": "Hubspot Transition",
+      "Ask": "We need a seamless transition from Zendesk to Hubspot for our support model.",
       "Priority": "High",
-      "Evidence": "I think financially it makes sense for us just to add this module in versus having yet another like system."
-    },
-    {
-      "Theme": "Support Team Structure",
-      "Ask": "We require a tool that can support a team structure of multiple agents managing customer queries.",
-      "Priority": "Medium",
-      "Evidence": "We have a whole team both in the US and the U.K."
-    },
-    {
-      "Theme": "Cost-Effectiveness",
-      "Ask": "We are looking for a cost-effective solution that does not add unnecessary complexity.",
-      "Priority": "Medium",
-      "Evidence": "I think financially it makes sense for us just to add this module in."
-    },
-    {
-      "Theme": "User Experience",
-      "Ask": "The solution should maintain a conversational experience for customers, similar to email communication.",
-      "Priority": "Medium",
-      "Evidence": "They don't feel like they're in a ticket in another system like it's just like me and you communicating over email."
-    },
-    {
-      "Theme": "Primary User Involvement",
-      "Ask": "The primary user of the support tool should be involved in the evaluation process.",
-      "Priority": "Low",
-      "Evidence": "Support is a little bit outside my realm. We have someone who like runs the director of client experience and support."
+      "Evidence": "We are most likely going from Zendesk to Hubspot at some point later this year."
     }
   ]
 }

@@ -1,0 +1,1998 @@
+{
+  "call_id": "6760908588671988774",
+  "title": "Hiver Set up",
+  "started": "2026-01-29T15:32:53+05:30",
+  "duration_seconds": 2675,
+  "call_metadata": {
+    "id": "6760908588671988774",
+    "url": "https://us-31545.app.gong.io/call?id=6760908588671988774",
+    "title": "Hiver Set up",
+    "scheduled": "2026-01-29T15:30:00+05:30",
+    "started": "2026-01-29T15:32:53+05:30",
+    "duration": 2675,
+    "primaryUserId": "1219092317799715224",
+    "direction": "Conference",
+    "system": "Zoom",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://us06web.zoom.us/j/86496166094?jst=2",
+    "isPrivate": false,
+    "calendarEventId": "2bfjtoffod6v1eiprvng6h5ag9@google.com"
+  },
+  "parties": [
+    {
+      "id": "545227326786128997",
+      "name": "Prakasu Pandi",
+      "speakerId": "6736191522833352177",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "3111669150531387691",
+      "emailAddress": "manoj@grexit.com",
+      "name": "Manoj Kiran",
+      "userId": "7511681831751652100",
+      "speakerId": "508284211714998244",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "3407892967519622987",
+      "emailAddress": "rakesh@grexit.com",
+      "name": "Rakesh Goyal",
+      "title": "Account Executive ",
+      "userId": "1219092317799715224",
+      "speakerId": "4326589704873757056",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "4434757158340862990",
+      "name": "Geethanjali A",
+      "speakerId": "5676157489870282672",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "4702964314783099837",
+      "emailAddress": "krunal.s@tcl.com",
+      "name": "Krunal Solanki",
+      "title": "Head of Information Technology Department (Manager)",
+      "speakerId": "8687408347645934827",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "193628252207",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "49049549577"
+                },
+                {
+                  "name": "firstname",
+                  "value": "krunal"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Head of Information Technology Department (Manager)"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769684699.373
+                },
+                {
+                  "name": "createdate",
+                  "value": 1768550454.46
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1769472000.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "solanki"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82334087"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "ORGANIC_SEARCH"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Outlook"
+                },
+                {
+                  "name": "phone",
+                  "value": "+91 9148613394"
+                },
+                {
+                  "name": "recent_conversion_date",
+                  "value": 1768551002.02
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Associated with a deal"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1768550454.46
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "opportunity"
+                },
+                {
+                  "name": "email",
+                  "value": "krunal.s@tcl.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "+91 9148613394",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "5031426783096104598",
+      "emailAddress": "vikashlekhwar@tcl.com",
+      "name": "Vikash Lekhwar",
+      "speakerId": "2366073573812476225",
+      "context": [],
+      "affiliation": "External",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "8239002269070489860",
+      "name": "S Notetaker",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Internal",
+      "methods": [
+        "Attendee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "6760908588671988774",
+    "transcript": [
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 300,
+            "end": 880,
+            "text": "hello, everybody."
+          },
+          {
+            "start": 1760,
+            "end": 2460,
+            "text": "I'm Manoj."
+          },
+          {
+            "start": 5040,
+            "end": 6860,
+            "text": "Yeah, hi, Rakesh, I'm Manoj."
+          },
+          {
+            "start": 9120,
+            "end": 9780,
+            "text": "All right."
+          },
+          {
+            "start": 10060,
+            "end": 11360,
+            "text": "Thank you for joining again."
+          },
+          {
+            "start": 12440,
+            "end": 12880,
+            "text": "Manoj."
+          },
+          {
+            "start": 12940,
+            "end": 14180,
+            "text": "Shall we begin with the setup?"
+          },
+          {
+            "start": 15600,
+            "end": 16040,
+            "text": "Yes."
+          },
+          {
+            "start": 17480,
+            "end": 18180,
+            "text": "All right."
+          },
+          {
+            "start": 18360,
+            "end": 18640,
+            "text": "Yeah, we."
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 18640,
+            "end": 21800,
+            "text": "Can actually try Rakesh because the deletion is still on the way."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 23560,
+            "end": 24000,
+            "text": "Okay."
+          },
+          {
+            "start": 24580,
+            "end": 25500,
+            "text": "Let's give it a try."
+          },
+          {
+            "start": 25640,
+            "end": 30980,
+            "text": "Who's going to be the admin person to show the account screen?"
+          },
+          {
+            "start": 30980,
+            "end": 32500,
+            "text": "And we'll help you with them?"
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 32760,
+            "end": 33960,
+            "text": "I will help the screen."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 34300,
+            "end": 34700,
+            "text": "Okay."
+          },
+          {
+            "start": 34740,
+            "end": 35680,
+            "text": "Krunal, go ahead please."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 48370,
+            "end": 48950,
+            "text": "It's visible."
+          },
+          {
+            "start": 50010,
+            "end": 51570,
+            "text": "Yes, we can see that, Manoj."
+          },
+          {
+            "start": 51610,
+            "end": 52530,
+            "text": "Could you please take that up?"
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 56880,
+            "end": 58280,
+            "text": "So, it's app, hyver."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 65010,
+            "end": 66650,
+            "text": "App hyverhq."
+          },
+          {
+            "start": 66650,
+            "end": 67690,
+            "text": "Com, sir."
+          },
+          {
+            "start": 68210,
+            "end": 68690,
+            "text": "Okay."
+          },
+          {
+            "start": 69870,
+            "end": 70350,
+            "text": "HQ?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 80340,
+            "end": 81360,
+            "text": "All right, Manoj."
+          },
+          {
+            "start": 81600,
+            "end": 81940,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 82000,
+            "end": 83780,
+            "text": "Yeah, Krunal, do sign in with Microsoft."
+          },
+          {
+            "start": 85200,
+            "end": 85680,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 85800,
+            "end": 89360,
+            "text": "So, here I will give you the address."
+          },
+          {
+            "start": 91100,
+            "end": 92000,
+            "text": "Let's turn it."
+          },
+          {
+            "start": 93460,
+            "end": 95080,
+            "text": "The second phase."
+          },
+          {
+            "start": 95140,
+            "end": 98900,
+            "text": "We need to give the shared mailbox, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 100480,
+            "end": 100960,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 101280,
+            "end": 101760,
+            "text": "Okay."
+          },
+          {
+            "start": 101980,
+            "end": 102460,
+            "text": "This."
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 102460,
+            "end": 109100,
+            "text": "Is primarily, so this email address that you're going to give it should be the email address for the person who's going to log into it."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 109470,
+            "end": 109890,
+            "text": "Correct?"
+          },
+          {
+            "start": 111970,
+            "end": 112790,
+            "text": "Oh, sorry."
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 120780,
+            "end": 125580,
+            "text": "Who usually logs into it support India, me and my,"
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 125580,
+            "end": 125820,
+            "text": "team?"
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 134960,
+            "end": 138900,
+            "text": "So, Krunal, I presume this is just going to be the setup for the trial."
+          },
+          {
+            "start": 139060,
+            "end": 139540,
+            "text": "Yes."
+          },
+          {
+            "start": 139540,
+            "end": 143840,
+            "text": "Otherwise, when you do the actual thing, it's going to be each individual email addresses, right?"
+          },
+          {
+            "start": 143960,
+            "end": 144320,
+            "text": "Right."
+          },
+          {
+            "start": 144480,
+            "end": 144960,
+            "text": "Yeah."
+          },
+          {
+            "start": 145060,
+            "end": 145500,
+            "text": "Okay."
+          },
+          {
+            "start": 147000,
+            "end": 147480,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 147480,
+            "end": 152900,
+            "text": "That time we'll give the user's personal email address for the, giving the access and everything."
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 154440,
+            "end": 154840,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 198780,
+            "end": 200780,
+            "text": "And I'll give the id of edcc?"
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 203660,
+            "end": 205440,
+            "text": "Edcc, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 227630,
+            "end": 229010,
+            "text": "User account, because."
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 229010,
+            "end": 238320,
+            "text": "It has a password for it… continue… authorize."
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 259420,
+            "end": 260120,
+            "text": "Ah, okay."
+          },
+          {
+            "start": 264380,
+            "end": 272220,
+            "text": "So, your, it admin needs to approve third… party applications for this email address."
+          },
+          {
+            "start": 274180,
+            "end": 274940,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 284080,
+            "end": 285200,
+            "text": "So, is there any specific?"
+          },
+          {
+            "start": 285200,
+            "end": 286740,
+            "text": "I need to mention them?"
+          },
+          {
+            "start": 286740,
+            "end": 289040,
+            "text": "Or I'll just give them a hiver, this one?"
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 290060,
+            "end": 294920,
+            "text": "You can just share them the screenshot, they'll know where to add the hiver application."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 297320,
+            "end": 299400,
+            "text": "And just simply, you know, whitelisted."
+          },
+          {
+            "start": 299540,
+            "end": 302020,
+            "text": "So the, it people would know that for sure."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 372580,
+            "end": 373020,
+            "text": "Okay."
+          },
+          {
+            "start": 373220,
+            "end": 374760,
+            "text": "Let's wait for a few minutes."
+          },
+          {
+            "start": 375080,
+            "end": 377640,
+            "text": "We'll get the access mostly."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 382530,
+            "end": 383030,
+            "text": "Okay."
+          },
+          {
+            "start": 383110,
+            "end": 383830,
+            "text": "All right."
+          },
+          {
+            "start": 384130,
+            "end": 384670,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 384770,
+            "end": 386870,
+            "text": "Krunal, this is going to be the same."
+          },
+          {
+            "start": 387170,
+            "end": 395250,
+            "text": "You know, if the other applications like basically meaning other email addresses that you need."
+          },
+          {
+            "start": 395250,
+            "end": 395770,
+            "text": "So that."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 395770,
+            "end": 401490,
+            "text": "time, what we will do is I'll tell them that we already buy this solution."
+          },
+          {
+            "start": 401870,
+            "end": 402410,
+            "text": "Okay."
+          },
+          {
+            "start": 402650,
+            "end": 408990,
+            "text": "So, for that, I'll give them that you can whitelist on all our India email address domain."
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 410360,
+            "end": 410820,
+            "text": "Okay."
+          },
+          {
+            "start": 410940,
+            "end": 411580,
+            "text": "So, then,"
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 411580,
+            "end": 416900,
+            "text": "from further ahead, we don't require every time to get the permission from there."
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 417080,
+            "end": 418140,
+            "text": "Yeah, yeah, true."
+          },
+          {
+            "start": 418280,
+            "end": 418440,
+            "text": "True."
+          },
+          {
+            "start": 418520,
+            "end": 424180,
+            "text": "That's what even I meant because if other email addresses needs to be created, then we need permissions for everything."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 424360,
+            "end": 424780,
+            "text": "Correct."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 431200,
+            "end": 433640,
+            "text": "Because admin panel is all in Chinese."
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 435760,
+            "end": 436920,
+            "text": "Oh, okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 444180,
+            "end": 448820,
+            "text": "And if I can change the language to English, no, then our HQ team will not understand."
+          }
+        ]
+      },
+      {
+        "speakerId": "508284211714998244",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 454590,
+            "end": 455250,
+            "text": "Understood."
+          },
+          {
+            "start": 455450,
+            "end": 456790,
+            "text": "No, I get it."
+          },
+          {
+            "start": 456850,
+            "end": 457310,
+            "text": "I get it."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 484980,
+            "end": 487080,
+            "text": "Krunal, does your team said in China?"
+          },
+          {
+            "start": 487080,
+            "end": 491080,
+            "text": "That has to like literally approve of this request, the email that you just sent?"
+          },
+          {
+            "start": 491540,
+            "end": 492020,
+            "text": "Yes."
+          },
+          {
+            "start": 493260,
+            "end": 493680,
+            "text": "Okay."
+          },
+          {
+            "start": 494120,
+            "end": 499680,
+            "text": "Because I'm curious, I mean, it must be around six in the evening in China, if I'm not wrong?"
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 499920,
+            "end": 500320,
+            "text": "Yes, yes."
+          },
+          {
+            "start": 500660,
+            "end": 501020,
+            "text": "Would they?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 501020,
+            "end": 502560,
+            "text": "Be online at this point in time?"
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 503020,
+            "end": 504500,
+            "text": "Service team will be there."
+          },
+          {
+            "start": 504880,
+            "end": 505360,
+            "text": "Okay."
+          },
+          {
+            "start": 505420,
+            "end": 510520,
+            "text": "Not in a full strength because they need to support a global team, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 510740,
+            "end": 511240,
+            "text": "Understood."
+          },
+          {
+            "start": 511760,
+            "end": 512120,
+            "text": "They."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 512120,
+            "end": 513840,
+            "text": "need to be there for everything."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 515140,
+            "end": 515440,
+            "text": "Understood."
+          },
+          {
+            "start": 515660,
+            "end": 519300,
+            "text": "Like, do you want to drop them maybe a quick team message or slack?"
+          },
+          {
+            "start": 519300,
+            "end": 520240,
+            "text": "If you use internally?"
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 521460,
+            "end": 525740,
+            "text": "No, the team only connect with the email only."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 526000,
+            "end": 526500,
+            "text": "Okay."
+          },
+          {
+            "start": 526560,
+            "end": 528140,
+            "text": "So, email is the main communication?"
+          },
+          {
+            "start": 528940,
+            "end": 529760,
+            "text": "All right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 563380,
+            "end": 569260,
+            "text": "So, after this, I think we should, good to go with the demo account, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 574260,
+            "end": 574980,
+            "text": "That's right?"
+          },
+          {
+            "start": 575060,
+            "end": 594220,
+            "text": "Once this is approved, then we should be able to set up hiver with your shared email inbox, then you can invite a couple of your test users, and for them also, I mean, because they're going to be whitelisting, so they will also be able to install hiver like get into hiver account for testing, and then it will be easy for us to set it up."
+          },
+          {
+            "start": 594300,
+            "end": 594560,
+            "text": "Yes."
+          },
+          {
+            "start": 595280,
+            "end": 595800,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 595880,
+            "end": 596260,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 596320,
+            "end": 599160,
+            "text": "Just waiting for your, it to approve of it."
+          },
+          {
+            "start": 599240,
+            "end": 603440,
+            "text": "And then it's going to be straightforward process of no more than 10 minutes all in all."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 603860,
+            "end": 604660,
+            "text": "Oh, okay."
+          },
+          {
+            "start": 604740,
+            "end": 604980,
+            "text": "Fine."
+          },
+          {
+            "start": 605980,
+            "end": 606660,
+            "text": "All right."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 615140,
+            "end": 617780,
+            "text": "I'll stop this for."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 617780,
+            "end": 618400,
+            "text": "a minute."
+          },
+          {
+            "start": 618560,
+            "end": 619140,
+            "text": "Okay."
+          },
+          {
+            "start": 622060,
+            "end": 622480,
+            "text": "Yeah."
+          },
+          {
+            "start": 622520,
+            "end": 623020,
+            "text": "Absolutely."
+          },
+          {
+            "start": 623260,
+            "end": 624160,
+            "text": "We're just waiting here."
+          },
+          {
+            "start": 624300,
+            "end": 625980,
+            "text": "Let us know whenever you hear back."
+          },
+          {
+            "start": 626320,
+            "end": 626520,
+            "text": "Sure."
+          },
+          {
+            "start": 626620,
+            "end": 627160,
+            "text": "We'll proceed."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1429870,
+            "end": 1430470,
+            "text": "Hey, Krunal."
+          },
+          {
+            "start": 1430610,
+            "end": 1431350,
+            "text": "Any update?"
+          },
+          {
+            "start": 1433390,
+            "end": 1434870,
+            "text": "Did you hear from them?"
+          },
+          {
+            "start": 1435290,
+            "end": 1435570,
+            "text": "Yeah, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1436950,
+            "end": 1441350,
+            "text": "The main admin is working on it to allow the hiver on our server?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1442030,
+            "end": 1442510,
+            "text": "Okay."
+          },
+          {
+            "start": 1443090,
+            "end": 1443750,
+            "text": "All right."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1445130,
+            "end": 1449090,
+            "text": "Let's just wait once I got the confirmation, I'll share the screen."
+          },
+          {
+            "start": 1449450,
+            "end": 1450830,
+            "text": "Again, we will start."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1451930,
+            "end": 1452410,
+            "text": "Okay."
+          },
+          {
+            "start": 1452990,
+            "end": 1453670,
+            "text": "All right."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1630640,
+            "end": 1631020,
+            "text": "Hello?"
+          },
+          {
+            "start": 1633790,
+            "end": 1634130,
+            "text": "Yeah."
+          },
+          {
+            "start": 1634210,
+            "end": 1634930,
+            "text": "Hi, Krunal."
+          },
+          {
+            "start": 1635150,
+            "end": 1635670,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1635690,
+            "end": 1635870,
+            "text": "Hi."
+          },
+          {
+            "start": 1636030,
+            "end": 1640490,
+            "text": "So we got the permission from HQ."
+          },
+          {
+            "start": 1642250,
+            "end": 1642870,
+            "text": "Okay."
+          },
+          {
+            "start": 1643450,
+            "end": 1646490,
+            "text": "So, again, I'll share the screen."
+          },
+          {
+            "start": 1647110,
+            "end": 1647730,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1652700,
+            "end": 1653100,
+            "text": "Okay."
+          },
+          {
+            "start": 1653780,
+            "end": 1654500,
+            "text": "Is it visible?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1655860,
+            "end": 1657400,
+            "text": "I can see your screen, yes, please."
+          },
+          {
+            "start": 1657660,
+            "end": 1658100,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1658100,
+            "end": 1660920,
+            "text": "Now, again, can I refresh?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1661760,
+            "end": 1662900,
+            "text": "Yes, you can, please?"
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1671660,
+            "end": 1672640,
+            "text": "Perfect."
+          },
+          {
+            "start": 1674320,
+            "end": 1676780,
+            "text": "And can only accept POS post requests."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1713070,
+            "end": 1715530,
+            "text": "This is also from a mail server only."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1715530,
+            "end": 1718550,
+            "text": "Yeah, this looks like an issue with the signing in itself."
+          },
+          {
+            "start": 1718550,
+            "end": 1719070,
+            "text": "Correct?"
+          },
+          {
+            "start": 1720130,
+            "end": 1726230,
+            "text": "Do you want to just share them with the message that this says the endpoint only accepts post request and you have a G."
+          },
+          {
+            "start": 1726230,
+            "end": 1726670,
+            "text": "Yeah."
+          },
+          {
+            "start": 1726670,
+            "end": 1729410,
+            "text": "So maybe this should help them."
+          },
+          {
+            "start": 1729410,
+            "end": 1730950,
+            "text": "Yeah, correct."
+          },
+          {
+            "start": 1745040,
+            "end": 1745960,
+            "text": "Oh, excellent."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1804110,
+            "end": 1804490,
+            "text": "Okay."
+          },
+          {
+            "start": 1804550,
+            "end": 1809230,
+            "text": "Let's wait for more, five, 10 minutes… sure."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 2415810,
+            "end": 2416290,
+            "text": "Sorry, guys."
+          },
+          {
+            "start": 2416390,
+            "end": 2417750,
+            "text": "The team is still working."
+          },
+          {
+            "start": 2418170,
+            "end": 2421190,
+            "text": "Give them five to 10 minutes more."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 2422230,
+            "end": 2422710,
+            "text": "Yeah."
+          },
+          {
+            "start": 2422750,
+            "end": 2427990,
+            "text": "Krunal, I have another meeting at four 30 with another client, but I have a hard stop at 420."
+          },
+          {
+            "start": 2428150,
+            "end": 2431050,
+            "text": "So let's see, let's wait for maybe five, 10 more minutes."
+          },
+          {
+            "start": 2431090,
+            "end": 2436670,
+            "text": "Otherwise we might want to reschedule it because this needs to be done at your end."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2436670,
+            "end": 2441150,
+            "text": "And once that is cleared, I think it's going to be simply straightforward process."
+          },
+          {
+            "start": 2441950,
+            "end": 2444490,
+            "text": "Either, you can do that once it?"
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2444490,
+            "end": 2445070,
+            "text": "Is approved."
+          },
+          {
+            "start": 2445290,
+            "end": 2451490,
+            "text": "Like once it is permitted from our end, then only I need to just refresh this URL, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2451810,
+            "end": 2452290,
+            "text": "Correct."
+          },
+          {
+            "start": 2452430,
+            "end": 2457510,
+            "text": "And what you can then do is maybe I can share with you a quick guide as well?"
+          },
+          {
+            "start": 2457650,
+            "end": 2460590,
+            "text": "Like can you open up a new browser, a new window?"
+          },
+          {
+            "start": 2461150,
+            "end": 2462750,
+            "text": "Let me assist you with that."
+          },
+          {
+            "start": 2464670,
+            "end": 2466150,
+            "text": "Just open up a new window."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2466690,
+            "end": 2468170,
+            "text": "Yeah, it is there."
+          },
+          {
+            "start": 2470050,
+            "end": 2471090,
+            "text": "Just a minute."
+          },
+          {
+            "start": 2471210,
+            "end": 2472130,
+            "text": "I'll share the screen."
+          },
+          {
+            "start": 2472810,
+            "end": 2473370,
+            "text": "Sure."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2474650,
+            "end": 2477250,
+            "text": "I'm still seeing your login screen actually."
+          },
+          {
+            "start": 2477630,
+            "end": 2477890,
+            "text": "Yeah."
+          },
+          {
+            "start": 2478670,
+            "end": 2479230,
+            "text": "Okay."
+          },
+          {
+            "start": 2479290,
+            "end": 2484670,
+            "text": "Type in WWW, dot… help."
+          },
+          {
+            "start": 2484670,
+            "end": 2488540,
+            "text": "Com… hiverhq."
+          },
+          {
+            "start": 2488540,
+            "end": 2489200,
+            "text": "Com."
+          },
+          {
+            "start": 2491940,
+            "end": 2492280,
+            "text": "Okay."
+          },
+          {
+            "start": 2492580,
+            "end": 2498940,
+            "text": "Now, help… hyver, can you remove HQ from here?"
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2500260,
+            "end": 2500880,
+            "text": "Sure."
+          },
+          {
+            "start": 2503020,
+            "end": 2503640,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2506400,
+            "end": 2507560,
+            "text": "Oh, okay."
+          },
+          {
+            "start": 2507640,
+            "end": 2508460,
+            "text": "Just a minute."
+          },
+          {
+            "start": 2508500,
+            "end": 2511800,
+            "text": "Let me quickly share the URL with you."
+          },
+          {
+            "start": 2519460,
+            "end": 2520680,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2530820,
+            "end": 2531200,
+            "text": "Okay."
+          },
+          {
+            "start": 2531280,
+            "end": 2534420,
+            "text": "So, basically, you need to refer to this guide."
+          },
+          {
+            "start": 2534840,
+            "end": 2537500,
+            "text": "I shared on zoom chat."
+          },
+          {
+            "start": 2538040,
+            "end": 2538540,
+            "text": "Okay?"
+          },
+          {
+            "start": 2538540,
+            "end": 2540320,
+            "text": "So just open that up."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2541760,
+            "end": 2542680,
+            "text": "This one, right?"
+          },
+          {
+            "start": 2543120,
+            "end": 2543620,
+            "text": "The."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2543620,
+            "end": 2547160,
+            "text": "Help guide on getting started, correct?"
+          },
+          {
+            "start": 2547640,
+            "end": 2549360,
+            "text": "You can bookmark this for now."
+          },
+          {
+            "start": 2549680,
+            "end": 2551240,
+            "text": "Very easy to set it up."
+          },
+          {
+            "start": 2551520,
+            "end": 2561630,
+            "text": "If you click on the first, you know, page… yeah, just click on setting up hiver Omni and that's what we are doing."
+          },
+          {
+            "start": 2561770,
+            "end": 2562950,
+            "text": "We are doing for outlook."
+          },
+          {
+            "start": 2563010,
+            "end": 2564130,
+            "text": "Can you click on this one?"
+          },
+          {
+            "start": 2564190,
+            "end": 2564430,
+            "text": "Yes."
+          },
+          {
+            "start": 2565350,
+            "end": 2568130,
+            "text": "And here setting up step by step guide, correct?"
+          },
+          {
+            "start": 2569270,
+            "end": 2571910,
+            "text": "Now, all we're doing is we are simply logging in."
+          },
+          {
+            "start": 2572010,
+            "end": 2577670,
+            "text": "So getting started with hiver, Omni, we are on the first step then is the second step on creating a shared inbox."
+          },
+          {
+            "start": 2578250,
+            "end": 2578690,
+            "text": "Okay?"
+          },
+          {
+            "start": 2578690,
+            "end": 2587820,
+            "text": "So if you look at the entire document, it has everything completely giving you the exact information step by step process."
+          },
+          {
+            "start": 2588100,
+            "end": 2589920,
+            "text": "Should there be still any problem?"
+          },
+          {
+            "start": 2590020,
+            "end": 2597740,
+            "text": "You know, problem that we've encountered, what you can do is let me share with you a quick access to our support team."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 2598200,
+            "end": 2598700,
+            "text": "Okay?"
+          },
+          {
+            "start": 2598700,
+            "end": 2599580,
+            "text": "You can start a chat."
+          },
+          {
+            "start": 2599820,
+            "end": 2604920,
+            "text": "You can even invite, ask them to invite me onto the chat or Manoj onto the chat."
+          },
+          {
+            "start": 2605060,
+            "end": 2608200,
+            "text": "Otherwise my technical team should be able to help you set it up as well."
+          },
+          {
+            "start": 2608320,
+            "end": 2613780,
+            "text": "So I am sharing a quick link to start a chat with them."
+          },
+          {
+            "start": 2613780,
+            "end": 2614120,
+            "text": "Also."
+          },
+          {
+            "start": 2614620,
+            "end": 2614940,
+            "text": "Okay?"
+          },
+          {
+            "start": 2614990,
+            "end": 2626050,
+            "text": "Or if you want to book a meeting with us, you can also do so book a quick meeting with my support team and that's the calendar link for them as well."
+          },
+          {
+            "start": 2626430,
+            "end": 2634290,
+            "text": "But yeah, I mean, feel free to let us know once you have any progress from your, it, and then we should be able to assist you further, sure."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2635650,
+            "end": 2642090,
+            "text": "So I'll mark this both the link, please send this."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2644270,
+            "end": 2644650,
+            "text": "Okay."
+          },
+          {
+            "start": 2644810,
+            "end": 2645250,
+            "text": "Yes."
+          },
+          {
+            "start": 2645490,
+            "end": 2647550,
+            "text": "And then you have my calendar anyways."
+          },
+          {
+            "start": 2647830,
+            "end": 2648690,
+            "text": "Yeah, I."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2648690,
+            "end": 2649450,
+            "text": "have your calendar."
+          },
+          {
+            "start": 2650810,
+            "end": 2652170,
+            "text": "All right."
+          },
+          {
+            "start": 2652310,
+            "end": 2652750,
+            "text": "Look."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2652750,
+            "end": 2653910,
+            "text": "Forward to staying in touch."
+          },
+          {
+            "start": 2654110,
+            "end": 2658090,
+            "text": "Keep me posted whenever you hear from your headquarters, whenever, it is approved."
+          },
+          {
+            "start": 2658270,
+            "end": 2660630,
+            "text": "It's a fairly simple process to get started."
+          },
+          {
+            "start": 2660710,
+            "end": 2664190,
+            "text": "Should you still need any help, reach out to our support, which is available?"
+          },
+          {
+            "start": 2664650,
+            "end": 2667270,
+            "text": "Otherwise, I'm just an email away from you guys."
+          }
+        ]
+      },
+      {
+        "speakerId": "8687408347645934827",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2668030,
+            "end": 2668430,
+            "text": "Okay."
+          },
+          {
+            "start": 2668550,
+            "end": 2669170,
+            "text": "No worries."
+          },
+          {
+            "start": 2669570,
+            "end": 2669950,
+            "text": "Thanks for."
+          }
+        ]
+      },
+      {
+        "speakerId": "4326589704873757056",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2669950,
+            "end": 2671070,
+            "text": "The support you're very welcome."
+          },
+          {
+            "start": 2671210,
+            "end": 2672310,
+            "text": "Thank you for your time too."
+          },
+          {
+            "start": 2672390,
+            "end": 2672670,
+            "text": "Goodbye."
+          },
+          {
+            "start": 2673150,
+            "end": 2673870,
+            "text": "Yeah, goodbye."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 89
+}

@@ -1,0 +1,1353 @@
+{
+  "call_id": "7437490983764241204",
+  "title": "Hiver Product Demo: Nelson<> Matthew",
+  "started": "2026-01-29T04:32:54+05:30",
+  "duration_seconds": 731,
+  "call_metadata": {
+    "id": "7437490983764241204",
+    "url": "https://us-31545.app.gong.io/call?id=7437490983764241204",
+    "title": "Hiver Product Demo: Nelson<> Matthew",
+    "scheduled": "2026-01-29T04:30:00+05:30",
+    "started": "2026-01-29T04:32:54+05:30",
+    "duration": 731,
+    "primaryUserId": "2800021235101731226",
+    "direction": "Conference",
+    "system": "Zoom",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://us06web.zoom.us/j/88634535362",
+    "isPrivate": false,
+    "calendarEventId": "qibsogrqnkmkh06bau94vstcn8@google.com"
+  },
+  "parties": [
+    {
+      "id": "1137214590757730926",
+      "emailAddress": "matthew.p@grexit.com",
+      "name": "Matthew P",
+      "title": "Sr. AE",
+      "userId": "2800021235101731226",
+      "speakerId": "4333371293519878699",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "5863969132161696881",
+      "emailAddress": "nelson.catala@pdq.com",
+      "name": "Nelson C.",
+      "title": "Customer Success - Sr Manager",
+      "speakerId": "7836988899307263537",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "190652777588",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "14813516673"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Nelson"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Customer Success - Sr Manager"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769642293.7
+                },
+                {
+                  "name": "createdate",
+                  "value": 1767697485.658
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1769558400.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "C."
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "79522122"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "phone",
+                  "value": "801.857.8675"
+                },
+                {
+                  "name": "mobilephone",
+                  "value": "+18018578675"
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Outbound lead"
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "nelson.catala@pdq.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "801.857.8675",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "7437490983764241204",
+    "transcript": [
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 298,
+            "end": 878,
+            "text": "hey, Nelson."
+          },
+          {
+            "start": 1058,
+            "end": 2198,
+            "text": "This is matt with hiver."
+          },
+          {
+            "start": 2318,
+            "end": 2738,
+            "text": "Can you hear me?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 3138,
+            "end": 4038,
+            "text": "Yeah, I can hear you."
+          },
+          {
+            "start": 4038,
+            "end": 4578,
+            "text": "How's it going, matt?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 4858,
+            "end": 5218,
+            "text": "Good."
+          },
+          {
+            "start": 5258,
+            "end": 5658,
+            "text": "How are you doing?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 6158,
+            "end": 6738,
+            "text": "Very well."
+          },
+          {
+            "start": 6838,
+            "end": 7218,
+            "text": "Doing well."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 8478,
+            "end": 8838,
+            "text": "Awesome."
+          },
+          {
+            "start": 8978,
+            "end": 9998,
+            "text": "Well, appreciate you joining here."
+          },
+          {
+            "start": 10098,
+            "end": 23318,
+            "text": "So the agenda for the call just want to spend the first couple minutes here, learning a little bit more about you, your company, maybe anything of interest on why you decided to, you know, had any interest in taking this meeting?"
+          },
+          {
+            "start": 23498,
+            "end": 27198,
+            "text": "And then from there, I can tell you about hiver and walk through our product."
+          },
+          {
+            "start": 27238,
+            "end": 27818,
+            "text": "Does that sound good?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 28548,
+            "end": 30468,
+            "text": "Yeah, that sounds great for context."
+          },
+          {
+            "start": 30868,
+            "end": 37248,
+            "text": "I think one of your SDRS reached out with a, I think it was like 100 dollar demo offer."
+          },
+          {
+            "start": 39288,
+            "end": 42888,
+            "text": "Anyway, I didn't know much about your product to start with."
+          },
+          {
+            "start": 42948,
+            "end": 44668,
+            "text": "So consider me brand new."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 45528,
+            "end": 45968,
+            "text": "Okay."
+          },
+          {
+            "start": 46008,
+            "end": 46188,
+            "text": "Yeah."
+          },
+          {
+            "start": 46268,
+            "end": 49248,
+            "text": "So essentially, hiver is a help desk solution."
+          },
+          {
+            "start": 51228,
+            "end": 61728,
+            "text": "So, what we do is, you know, typically, we, you know, help companies that are looking for an easy to use help desk solution platform, maybe they're not using anything."
+          },
+          {
+            "start": 61948,
+            "end": 68948,
+            "text": "And then also, we help companies transition over from Zendesk and the other ones as well."
+          },
+          {
+            "start": 70088,
+            "end": 70968,
+            "text": "Got it."
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 71148,
+            "end": 72108,
+            "text": "Very interesting."
+          },
+          {
+            "start": 72408,
+            "end": 74108,
+            "text": "Yeah, we use Zendesk every year."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 74708,
+            "end": 75308,
+            "text": "Okay."
+          },
+          {
+            "start": 75368,
+            "end": 75988,
+            "text": "Got it."
+          },
+          {
+            "start": 75988,
+            "end": 76968,
+            "text": "You use Zendesk perfect."
+          },
+          {
+            "start": 77708,
+            "end": 81168,
+            "text": "So, yeah, hiver essentially would be a replacement for that."
+          },
+          {
+            "start": 84148,
+            "end": 91128,
+            "text": "You know, the main reasons that companies come over to us from Zendesk is that, you know, they find that it's clunky."
+          },
+          {
+            "start": 91268,
+            "end": 93448,
+            "text": "It's hard to use it's."
+          },
+          {
+            "start": 93448,
+            "end": 93828,
+            "text": "Slow."
+          },
+          {
+            "start": 94008,
+            "end": 96128,
+            "text": "It's hard to make adjustments to it."
+          },
+          {
+            "start": 96188,
+            "end": 109528,
+            "text": "Maybe you haven't been able to roll out many of the AI things features that you're looking to have in the business, and it just takes a lot of time to either make these changes or to implement these with Zendesk."
+          },
+          {
+            "start": 111948,
+            "end": 114028,
+            "text": "Does any of that resonate with you at all?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 115108,
+            "end": 115568,
+            "text": "Yeah."
+          },
+          {
+            "start": 117708,
+            "end": 121128,
+            "text": "I used to have a team that reported to me that worked at a Zendesk."
+          },
+          {
+            "start": 122548,
+            "end": 125268,
+            "text": "I think we had a good time using it."
+          },
+          {
+            "start": 125708,
+            "end": 136548,
+            "text": "The actual… setup or configuration was a little bit rigid and yeah, so not everything, but some of this actually resonates."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 137448,
+            "end": 139108,
+            "text": "okay, great."
+          },
+          {
+            "start": 141268,
+            "end": 142608,
+            "text": "And then are you using Gmail?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 143628,
+            "end": 144748,
+            "text": "We use outlook?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 144868,
+            "end": 145568,
+            "text": "Microsoft."
+          },
+          {
+            "start": 145888,
+            "end": 146348,
+            "text": "Okay."
+          },
+          {
+            "start": 146348,
+            "end": 146928,
+            "text": "Microsoft outlook."
+          },
+          {
+            "start": 146988,
+            "end": 147128,
+            "text": "Okay."
+          },
+          {
+            "start": 147208,
+            "end": 147888,
+            "text": "No problem."
+          },
+          {
+            "start": 149148,
+            "end": 149668,
+            "text": "Perfect."
+          },
+          {
+            "start": 149728,
+            "end": 176128,
+            "text": "So, just a little background about hiver before I show you the software been around since 2017, have over 200 employees raised over 30,000,000 dollars in funding international team with over 10,000 companies leveraging our platform across 50 countries, companies ranging from small businesses all the way up to some of the largest companies in the world, companies like capital one, flexport, samsara, just to name a few."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 180188,
+            "end": 186868,
+            "text": "And then do you guys have any like shared email setup like support ad or anything like that you guys are using?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 187268,
+            "end": 187668,
+            "text": "Correct."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 188108,
+            "end": 188508,
+            "text": "Okay."
+          },
+          {
+            "start": 189628,
+            "end": 190028,
+            "text": "Awesome."
+          },
+          {
+            "start": 190108,
+            "end": 191868,
+            "text": "Then, are you guys using chat as well?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 192668,
+            "end": 193068,
+            "text": "Yes."
+          },
+          {
+            "start": 193468,
+            "end": 193868,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 199598,
+            "end": 202078,
+            "text": "So, this is our outlook product."
+          },
+          {
+            "start": 202198,
+            "end": 205798,
+            "text": "You just log in using your Microsoft credentials, single sign on."
+          },
+          {
+            "start": 206018,
+            "end": 210278,
+            "text": "And then basically what you'll see on the left hand side is the different folders."
+          },
+          {
+            "start": 210338,
+            "end": 213438,
+            "text": "These are associated with the shared email addresses you might have."
+          },
+          {
+            "start": 215058,
+            "end": 218278,
+            "text": "And then also down here is the AI chat."
+          },
+          {
+            "start": 219358,
+            "end": 221658,
+            "text": "So it's all conveniently right here."
+          },
+          {
+            "start": 222338,
+            "end": 225498,
+            "text": "You know, you can choose who has access to which emails."
+          },
+          {
+            "start": 228258,
+            "end": 232078,
+            "text": "And then let me just take this one."
+          },
+          {
+            "start": 232218,
+            "end": 234038,
+            "text": "And then we'll just look at the operations."
+          },
+          {
+            "start": 234038,
+            "end": 240978,
+            "text": "One, whenever an email comes in to support operations, it's going to land in that correct folder."
+          },
+          {
+            "start": 241198,
+            "end": 244658,
+            "text": "It's going to notify the people that a new ticket has been submitted."
+          },
+          {
+            "start": 244798,
+            "end": 259008,
+            "text": "So a little bit different with hiver is that once the email is received, it's automatically turned into a ticket and you'll see here is the panel on the right hand side where you can assign it to different people on your team."
+          },
+          {
+            "start": 259168,
+            "end": 262528,
+            "text": "They'll get notified, their status is open pending closed."
+          },
+          {
+            "start": 263128,
+            "end": 265908,
+            "text": "And then there's also tags to categorize them."
+          },
+          {
+            "start": 266408,
+            "end": 270928,
+            "text": "This can all be done via automations as well."
+          },
+          {
+            "start": 271128,
+            "end": 279708,
+            "text": "So as soon as an email comes in, it can get categorized and assigned, and also slas can get applied automatically."
+          },
+          {
+            "start": 282738,
+            "end": 293398,
+            "text": "Got it different custom fields, notes section where you can, I mentioned different people on your team like, hey, can you help with this?"
+          },
+          {
+            "start": 293578,
+            "end": 294918,
+            "text": "They'll get notified here."
+          },
+          {
+            "start": 296298,
+            "end": 299218,
+            "text": "I can reply to the email with a template."
+          },
+          {
+            "start": 299278,
+            "end": 308788,
+            "text": "You can set up templates that can be shared with the team… AI chat gpt in here for convenience."
+          },
+          {
+            "start": 309048,
+            "end": 314208,
+            "text": "And then we also have an AI copilot which can actually draft replies for you."
+          },
+          {
+            "start": 316268,
+            "end": 321068,
+            "text": "It's going to ask a full prompt question for kind of clarifying questions for accuracy."
+          },
+          {
+            "start": 321328,
+            "end": 323968,
+            "text": "And then we'll go ahead and draft a reply for you."
+          },
+          {
+            "start": 324048,
+            "end": 339348,
+            "text": "It can be connected to various sources such as a knowledge base within hiver, any kind of documents, standard operating procedures, notion articles, snippets and many more other sources coming soon."
+          },
+          {
+            "start": 341678,
+            "end": 342038,
+            "text": "Makes sense."
+          },
+          {
+            "start": 342198,
+            "end": 342438,
+            "text": "Yeah."
+          },
+          {
+            "start": 342498,
+            "end": 346618,
+            "text": "Are you seeing any kind of AI responses for the emails that you guys get currently?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 347898,
+            "end": 349798,
+            "text": "That's actually not embedded in Zendesk."
+          },
+          {
+            "start": 349838,
+            "end": 353278,
+            "text": "I don't know if I'm sure, you know, everything has AI these days."
+          },
+          {
+            "start": 354738,
+            "end": 357718,
+            "text": "I don't think we have access to it through our current subscription."
+          },
+          {
+            "start": 358458,
+            "end": 358938,
+            "text": "Okay."
+          },
+          {
+            "start": 359738,
+            "end": 360218,
+            "text": "Yeah."
+          },
+          {
+            "start": 360318,
+            "end": 368318,
+            "text": "Where those that use AI use it kind of either via a slack integration with chatgpt or like its own window in a browser."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 368888,
+            "end": 369428,
+            "text": "Okay."
+          },
+          {
+            "start": 369928,
+            "end": 370288,
+            "text": "Got it."
+          },
+          {
+            "start": 370308,
+            "end": 378788,
+            "text": "Yeah, because, yeah, I mean, like, you know, we probably get like I probably run like five of these, at least five of these meetings a day."
+          },
+          {
+            "start": 378848,
+            "end": 381988,
+            "text": "I'd say 80 percent of them are just inbound."
+          },
+          {
+            "start": 382248,
+            "end": 391628,
+            "text": "And most of the interest right now, all of the interest is around AI and the co pilot and other things that we have as well."
+          },
+          {
+            "start": 393518,
+            "end": 398478,
+            "text": "And there's also the team view, this allows you to easily just see all the open emails across the team."
+          },
+          {
+            "start": 398578,
+            "end": 400378,
+            "text": "I can see 49 open emails."
+          },
+          {
+            "start": 400558,
+            "end": 402798,
+            "text": "I can see calls working on five of them."
+          },
+          {
+            "start": 403178,
+            "end": 404918,
+            "text": "I can see which emails are late."
+          },
+          {
+            "start": 405118,
+            "end": 406478,
+            "text": "I can see what issues they are."
+          },
+          {
+            "start": 406638,
+            "end": 409618,
+            "text": "I can easily take them and assign them to somebody else."
+          },
+          {
+            "start": 413248,
+            "end": 415588,
+            "text": "And then we also got analytics and reporting."
+          },
+          {
+            "start": 417288,
+            "end": 419508,
+            "text": "Is it is the team that you overlook?"
+          },
+          {
+            "start": 419648,
+            "end": 423388,
+            "text": "Are they the ones managing the emails support email?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 425028,
+            "end": 427828,
+            "text": "No support is handled by a different team."
+          },
+          {
+            "start": 429288,
+            "end": 429948,
+            "text": "Oh, okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 431108,
+            "end": 434008,
+            "text": "You manage the csms, correct?"
+          },
+          {
+            "start": 434288,
+            "end": 434768,
+            "text": "Okay."
+          },
+          {
+            "start": 434808,
+            "end": 435128,
+            "text": "Got it."
+          },
+          {
+            "start": 435148,
+            "end": 438668,
+            "text": "So they're more like managing the accounts that you have."
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 439158,
+            "end": 440338,
+            "text": "Managing the actual accounts."
+          },
+          {
+            "start": 440518,
+            "end": 451078,
+            "text": "We do get incoming inquiries for customers, but we get them assigned whenever we actually own something tied to that account rather than a catch all kind of queue."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 452038,
+            "end": 452278,
+            "text": "Right."
+          },
+          {
+            "start": 452398,
+            "end": 452638,
+            "text": "Okay."
+          },
+          {
+            "start": 454818,
+            "end": 455138,
+            "text": "Got it."
+          },
+          {
+            "start": 455178,
+            "end": 463758,
+            "text": "And then, yeah, we have different reporting for the conversations, the workload across the team, the categories."
+          },
+          {
+            "start": 465058,
+            "end": 474798,
+            "text": "We can do customer satisfaction surveys, customer reports, so you can build customer reports for specific tags or specific domains, specific accounts."
+          },
+          {
+            "start": 476238,
+            "end": 478258,
+            "text": "We got dashboards as well."
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 479238,
+            "end": 481158,
+            "text": "Show me your reporting really quick."
+          },
+          {
+            "start": 481238,
+            "end": 483958,
+            "text": "What does that look like or dashboarding?"
+          },
+          {
+            "start": 483958,
+            "end": 484218,
+            "text": "Actually?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 486098,
+            "end": 488618,
+            "text": "This is what the dashboards kind of look like."
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 491408,
+            "end": 496068,
+            "text": "So you can see tickets or conversations by rep, I'm assuming you can customize a little bit more."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 496928,
+            "end": 497848,
+            "text": "Yeah, absolutely."
+          },
+          {
+            "start": 497908,
+            "end": 499168,
+            "text": "Yeah, you can customize this, yep."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 509358,
+            "end": 512158,
+            "text": "Do filters by custom fields tags."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 524528,
+            "end": 526748,
+            "text": "It's all exportable to a CSV file."
+          },
+          {
+            "start": 527328,
+            "end": 535468,
+            "text": "And then we can also do AI powered chat… which would just conveniently come down here."
+          },
+          {
+            "start": 535908,
+            "end": 540348,
+            "text": "If it doesn't get resolved, then it will get passed over to an agent."
+          },
+          {
+            "start": 543868,
+            "end": 547888,
+            "text": "And then for the chat, yeah, for the chat, you can set up different flows."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 554628,
+            "end": 557648,
+            "text": "That, you know, something like this, where the message comes in."
+          },
+          {
+            "start": 557848,
+            "end": 559788,
+            "text": "AI will handle it."
+          },
+          {
+            "start": 559868,
+            "end": 563228,
+            "text": "And if it doesn't get resolved, it'll just get passed right here to hiver."
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 566348,
+            "end": 567448,
+            "text": "I like the flow view."
+          },
+          {
+            "start": 569068,
+            "end": 569508,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 569528,
+            "end": 570428,
+            "text": "Because that's the other one too."
+          },
+          {
+            "start": 570528,
+            "end": 573528,
+            "text": "Bringing over a lot of customers from intercom as well."
+          },
+          {
+            "start": 573548,
+            "end": 574388,
+            "text": "Especially with chat."
+          },
+          {
+            "start": 575548,
+            "end": 580328,
+            "text": "Just one of the big things is that hiver doesn't charge per usage of the AI."
+          },
+          {
+            "start": 580328,
+            "end": 581548,
+            "text": "For now."
+          },
+          {
+            "start": 582668,
+            "end": 593828,
+            "text": "It's all included model and, you know, people like intercom, they're charging per the usage, which is very expensive, can get very expensive depending on how many chats you have."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 598908,
+            "end": 600988,
+            "text": "And then, yeah, that's pretty much it."
+          },
+          {
+            "start": 601048,
+            "end": 602268,
+            "text": "We got 24 seven support."
+          },
+          {
+            "start": 602388,
+            "end": 603608,
+            "text": "We'd help with onboarding."
+          },
+          {
+            "start": 603608,
+            "end": 608048,
+            "text": "And basically, our team has done hundreds of migrations from Zendesk."
+          },
+          {
+            "start": 608488,
+            "end": 612088,
+            "text": "We can migrate the tickets over from Zendesk into hiver."
+          },
+          {
+            "start": 613348,
+            "end": 613808,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 615488,
+            "end": 616328,
+            "text": "That makes sense."
+          },
+          {
+            "start": 617128,
+            "end": 617588,
+            "text": "Okay."
+          },
+          {
+            "start": 617708,
+            "end": 618108,
+            "text": "And."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 618108,
+            "end": 621648,
+            "text": "then, yeah, we also got integrations with Salesforce and Hubspot as well."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 625998,
+            "end": 626778,
+            "text": "Awesome, man."
+          },
+          {
+            "start": 626798,
+            "end": 628218,
+            "text": "Well, appreciate your time."
+          },
+          {
+            "start": 628278,
+            "end": 638198,
+            "text": "I'll email over everything to you if you thought that I know probably isn't the best fit for you and your team here."
+          },
+          {
+            "start": 638318,
+            "end": 646758,
+            "text": "But if you thought that maybe anybody is interested in moving away from Zendesk or could use kind of a help desk like this."
+          },
+          {
+            "start": 648038,
+            "end": 648518,
+            "text": "Yeah."
+          },
+          {
+            "start": 648518,
+            "end": 650578,
+            "text": "Feel free to let me know could."
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 650578,
+            "end": 651578,
+            "text": "You send me the recording."
+          },
+          {
+            "start": 651918,
+            "end": 655698,
+            "text": "I would love to share what you share with me with my revops team."
+          },
+          {
+            "start": 656098,
+            "end": 658238,
+            "text": "I think they would find it interesting."
+          },
+          {
+            "start": 658878,
+            "end": 659318,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 659398,
+            "end": 659998,
+            "text": "Yeah, yeah."
+          },
+          {
+            "start": 660058,
+            "end": 660378,
+            "text": "Absolutely."
+          },
+          {
+            "start": 660578,
+            "end": 662598,
+            "text": "What do you think they'd find interesting?"
+          },
+          {
+            "start": 663118,
+            "end": 663598,
+            "text": "Well."
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 663818,
+            "end": 670118,
+            "text": "We've been using Zendesk for a long time and we've seen several iterations of it as we continue to expand usage."
+          },
+          {
+            "start": 671418,
+            "end": 678988,
+            "text": "We've done multiple acquisitions for other companies and it does take a while for people to get migrated into Zendesk et cetera."
+          },
+          {
+            "start": 679068,
+            "end": 679348,
+            "text": "Et cetera."
+          },
+          {
+            "start": 680728,
+            "end": 691148,
+            "text": "And so, I don't know that we have context into all the tools that are getting built out there that can fulfill a similar use… case."
+          },
+          {
+            "start": 691608,
+            "end": 694068,
+            "text": "So, I think it will be interesting for them to see it."
+          },
+          {
+            "start": 694128,
+            "end": 697128,
+            "text": "If anything, you know, keep it in the back of their minds as we continue to scale."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 697718,
+            "end": 698218,
+            "text": "Definitely."
+          },
+          {
+            "start": 698278,
+            "end": 698458,
+            "text": "Yep."
+          },
+          {
+            "start": 698538,
+            "end": 698858,
+            "text": "Absolutely."
+          },
+          {
+            "start": 698978,
+            "end": 701218,
+            "text": "Well, I'll share everything with you the recording."
+          },
+          {
+            "start": 701998,
+            "end": 704638,
+            "text": "I'll make sure that the gift card gets to you as well."
+          },
+          {
+            "start": 704718,
+            "end": 706318,
+            "text": "Probably take a couple of business days."
+          },
+          {
+            "start": 706378,
+            "end": 709678,
+            "text": "It's going to come via email through a company called giftagram."
+          },
+          {
+            "start": 709918,
+            "end": 711218,
+            "text": "So just keep an eye out for that."
+          },
+          {
+            "start": 711318,
+            "end": 712358,
+            "text": "But yeah, I'll send everything."
+          },
+          {
+            "start": 712358,
+            "end": 718898,
+            "text": "I got all these resources, the Zendesk, how the migration works from Zendesk."
+          },
+          {
+            "start": 718918,
+            "end": 724398,
+            "text": "And yeah, if that team is interested as well, just have them reach out to me and happy to walk them through a demo."
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 725008,
+            "end": 725328,
+            "text": "Okay."
+          },
+          {
+            "start": 725608,
+            "end": 726108,
+            "text": "Sounds good."
+          },
+          {
+            "start": 726148,
+            "end": 726528,
+            "text": "We'll do that."
+          },
+          {
+            "start": 726628,
+            "end": 727268,
+            "text": "Thank you so much."
+          }
+        ]
+      },
+      {
+        "speakerId": "4333371293519878699",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 727268,
+            "end": 727408,
+            "text": "Matt."
+          },
+          {
+            "start": 727468,
+            "end": 728228,
+            "text": "Yeah, thanks, Nelson."
+          },
+          {
+            "start": 728248,
+            "end": 728708,
+            "text": "Have a good one."
+          }
+        ]
+      },
+      {
+        "speakerId": "7836988899307263537",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 728888,
+            "end": 729308,
+            "text": "You too."
+          },
+          {
+            "start": 729668,
+            "end": 729948,
+            "text": "Bye."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 43
+}

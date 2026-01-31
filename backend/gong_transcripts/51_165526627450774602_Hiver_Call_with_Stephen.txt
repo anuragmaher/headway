@@ -1,0 +1,568 @@
+================================================================================
+Call: Hiver Call with Stephen
+Date: 2026-01-28T23:31:14+05:30
+================================================================================
+
+Stephen Maloney (stephen@animationmentor.com):
+  hey, Steven. How you doing? Hey, matt, how you doing man?
+
+Matthew P (matthew.p@grexit.com):
+  Good, good. I also have minaj on the line today. He's one of our solutions engineers at hiver. He's just going to help out as.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Well, that's great. Minaj. Nice to meet you, man. How you doing? How was your holiday this week?
+
+Manoj Kiran (manoj@grexit.com):
+  Oh, nice to meet you as well. Steven. I'm good. Yeah, holidays was nice. Nice. I actually had a vacation last week.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Hey, getting out. Yeah, that's always good man. Live life a little bit.
+
+Matthew P (matthew.p@grexit.com):
+  Cool man. So, yeah, I was going to say Steven, the agenda here from our perspective, right?
+
+Matthew P (matthew.p@grexit.com):
+  We got two main things still outstanding, right? We have the questions you have about the migration, yep, and then the forms, yep. And.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Then the third one which I think is probably solvable was, I think that my trial has been suspended which is cool. I also wanted to move forward with like the actual account these days and I don't know how it's easiest to do that and that might dovetail into the migration conversation. Does it, do we want to have it in another place? I don't need any information out of the trial account that we had up to date, if it's easier to start fresh if you recall, matt, like we have two kind of Google orgs and we set up that trial in, I'm going to say Google org B, like I want to bring it into Google org a now. And so like I've got a new shared inbox that we can connect up to there. I just can't convert it when I try and say like upgrading to do a paid account. It's throwing me a 200 there. And I wonder if it's because I'm trying between the two different orgs or maybe there's something else afoot.
+
+Matthew P (matthew.p@grexit.com):
+  yeah. So first of all, yeah, we reopened, that trial for you as well.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Oh,
+
+Matthew P (matthew.p@grexit.com):
+  okay. Yeah, that was just the lapse just because, you know.
+
+Stephen Maloney (stephen@animationmentor.com):
+  We, I mean, we all went on holidays. We came back and like here, we're back trying to get it going again. So that's cool.
+
+Matthew P (matthew.p@grexit.com):
+  Exactly. So, yeah, no problem. We open that back up but yeah, we can absolutely get you started on a new instance and that's the one that we can use for the, you know, the official account, right? So, so I've either way that that's super easy. We could, we could get that. We could get you signed up on a new one as well. A new brand new instance. I,
+
+Stephen Maloney (stephen@animationmentor.com):
+  guess, the real question then, is around the migration. And my question on the migration, I gave you guys a set of the excel file that we have, you know, from Zendesk. Part of my question, is there an incremental or should we hold off until a cutover period? Cause if I have you guys upload it right now, right? We're going to have several weeks worth of new tickets that are coming in. Do you guys recommend us only doing it in one fell swoop calling a drop dead date? And then you guys come over and import everything so that's the preferred way to do it. It?
+
+Matthew P (matthew.p@grexit.com):
+  Is it is the preferred way? And then also, I, we spoke to our team as well if you were to do it incrementally but again, we do recommend doing it in, you know, having a cutoff date and doing it once. They told us that it wouldn't overlap either way. So, like if you the tickets, right? If you were to upload the same data twice, those wouldn't overlap.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. So, it is like idempotent, if we did do it later, it's fine. So we could do one. And if I gave you another cause I just have limited controls in Zendesk as to what I can export. There's like a hey go, month by month or there's like the full XML. And if I do the full XML, I do, I can't opt for the date ranges in any way. So, and your documentation recommended the full XML cause that gets you user tickets, orgs and all the things you need, which makes sense from a migration standpoint. But then, you know, I'm like, well, I can't select the date range. So it's like I can't you know, if I pulled that two days ago and then we launched two weeks from now. I can't just do the next, you know, two week period or anything? Okay?
+
+Matthew P (matthew.p@grexit.com):
+  Yeah, exactly. So, yeah, if we need to do it to do it in increments, then that's not going to.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Overlap, okay. Well, then, I think, what would make me feel better is seeing the data, right? Like, I don't know how long of a period it'll take and see and migrate it. And, you know, you guys got the confidence that I don't have in that area. If you guys reassure me like, no, no, we do this all the time. We're ingesting Zendesk convert people all the time and, you know, no sweat, just give it. We're solid trust you all with that. But, you know, until I see it kind of in the flesh, I'm like, all right, let's see what we need to do for that. So, curious your thoughts there?
+
+Matthew P (matthew.p@grexit.com):
+  Yeah. So, so you want to see the, you want to see like a sample of the, you want to see the Zendesk information, in a hiver instance, as you're saying, yeah.
+
+Stephen Maloney (stephen@animationmentor.com):
+  I mean, I don't know if you guys have a chance to unpack that and look at what it is. I don't know if there's anything special with our data set. There definitely is some custom fields and stuff like that. So, when you get in there, I'm not sure if there's stuff that we can or can't bring forward or what it would come through, you know, until I see it like that, I'm like this information is actually really critical. Can we get this or not? I don't know if we could just do a small subset of the information and do that in our test environment or?
+
+Matthew P (matthew.p@grexit.com):
+  You know, yeah. And, and were, you were able to look at, the help article that we sent you, right? For the imports?
+
+Stephen Maloney (stephen@animationmentor.com):
+  I did most of that help article. Like at least the one that I got sent was like, hey, this is where you export the report from Zendesk. This is where you do it, send it to our support team, our support team, will we'll take it from there? It was kind of the gist of that article that I got, let me know if, I missed any of them. So, yeah.
+
+Manoj Kiran (manoj@grexit.com):
+  So, Steven, I guess you wouldn't have seen what we are actually doing on the backend in that help article. If I'm not wrong, it's just the steps that you follow in Zendesk?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah, which makes sense to send to the end user, right? We don't need to know all the secret sauce that's happening back there, but.
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. So, a subset of the data in your trial account, so that.
+
+Stephen Maloney (stephen@animationmentor.com):
+  yeah. So we can see like, you know, categories or things or whatnot, and like if I can get buy off it, like, okay, this is what they need for historical reasons to find tickets and users and stuff, you know, that'd give us a, you know, a good amount of faith for people to cut over.
+
+Matthew P (matthew.p@grexit.com):
+  Okay. Yeah. Absolutely. I'll talk with my team on that. I think… that the migration piece is, yeah, we're fairly confident on it. Like you said, we've done this hundreds of times. So, I think that the data piece is fine. And I'll talk to our team here if they're willing to do it.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Does it also create accounts for like agents that have replied on tickets in there, right? I mean, there's a conversation between an end user and an agent there's, an email both between them. Is it going to create just the end user's account? And what would that agent's you know, communication look like in that email or will that actually show up? I'm not sure if my question's clear.
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. Stephen. So when we are actually importing the conversation, the entire thread is there, right? Okay. And regards to the accounts, it's basically like for agents, if you mean the agents who are going to be part of your hiver account. Yeah. Then, yes, as they log in, they will see the entire conversations on their end as well within the shared mailbox.
+
+Stephen Maloney (stephen@animationmentor.com):
+  So, the conversation though is between maybe a different person that's no longer in the company, right? And an end user, right? And so that person who's no longer with the company, is that still going to show up in the thread with their details and all the stuff that we would expect it to.
+
+Manoj Kiran (manoj@grexit.com):
+  Oh, yes. Yes. So, we are not going to alter anything in the data that you have given. Okay. Right? Because again, we do not have the permission to actually edit the email addresses or, yeah, that makes sense. Yeah.
+
+Stephen Maloney (stephen@animationmentor.com):
+  So, it will be setting up some sort of an account for that user and they, okay?
+
+Manoj Kiran (manoj@grexit.com):
+  Yep. We, again, by setting up the account, we mean, so let's okay. Let's say that we three are part of your shared mailbox, right? And that is a conversation between a user and an end user. And this agent is actually not part of your org right now. We are not going to create an account for that person. It's just that the conversation is going to sing amongst us and we will be able to see who has handled the conversation. Okay?
+
+Stephen Maloney (stephen@animationmentor.com):
+  So, it's basically just like a view layer on top of that historic stuff. Okay. Yeah. Is it possible to do a historic sample out of the stuff that I've sent you before and just do a subset of that in our account?
+
+Matthew P (matthew.p@grexit.com):
+  Might be, I'll have to find out on that one. Yeah, we.
+
+Manoj Kiran (manoj@grexit.com):
+  have to bring in the engineering team for that. If we can just do it like a week's data or something, if we can extract that. And Stephen, are there chances? Okay. So I just throwing my question out there. So are there chances that you might tell us that you don't need this data moving forward on the import or no?
+
+Stephen Maloney (stephen@animationmentor.com):
+  My concern is the latter, right? So there's a, okay.
+
+Manoj Kiran (manoj@grexit.com):
+  What?
+
+Stephen Maloney (stephen@animationmentor.com):
+  I would here's, what my concern is with it, right? So, we've given a data set, it certainly has custom fields and information on that data set. Is all of that going to be represented in hiver? When you migrate it, all those various custom fields that came from different Zendesk accounts. So certainly, I get, you know, the subject's going to be there. The, you know, body's going to be there the, you know, to parties that are actually a part of it. That makes sense that they're going to be there. I wanted to see like how a historic agent who's like deprecated in Zendesk might appear in hiver, you know, because the conversation was let's say like let's say I used to work for us. I was talking to matt who is a student, right? And so our conversation is back and forth back and forth. Manoj. You actually do still work for the company, you know, what does my account look like? The deprecated agent who used to talk with matt back and forth in the day, right? Because you're going to need to now handle that between them.
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. Got it.
+
+Matthew P (matthew.p@grexit.com):
+  And this may.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Be a, it's a small thing like I think we can move on from there. I'm curious to see how it goes there. What I'm mostly concerned is you migrate the data and I hear from, it is like, hey, this historic field, this custom field that is like what is their browser OS version? Are all those various custom fields going to be added in hiver? Or do I need to create them in hiver so that you can map to them during the import process? Yeah. In some way, is it the former versus the latter, in which case, like I can do an audit of what fields and stuff exist that I want you guys to map to, but I don't know what that migration process looks like or if it's like no custom fields will just get created on the fly as part of the migration.
+
+Manoj Kiran (manoj@grexit.com):
+  Got it. Stephen. Yeah, I'll check that with the team tomorrow. Okay? And I'll get back to you.
+
+Matthew P (matthew.p@grexit.com):
+  Okay. Yeah, we'll check.
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah, we'll do that on priority and see like if we do the import like subset of data when it can be done. And in this case, do you want this to happen in the test account or do you want to start fresh and do the import right there?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah. I mean, I kind of lean to what you guys would recommend. I would feel more comfortable if I see a subset of data somewhere before we go live with it, right? If that's easier for us to do, like now, if you guys push back and say like, yeah, but let's just do it one time and do it for real. I could hear that position. Okay. Yeah.
+
+Matthew P (matthew.p@grexit.com):
+  Yeah. I mean, I'll speak with our, yeah, the people here will handle the data there. So, okay. So we have an understanding of the data. I'll definitely get you an answer either later today or tomorrow about what we think would be best for that and what's possible. And then I just wanted to move on to the second piece here if that's all right. The forms?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah, the,
+
+Matthew P (matthew.p@grexit.com):
+  good old forms. So basically, we have a couple options for you with the forms, right? So I'll just say that two days ago, we met with the CEO, CTO, a lot of the heads of the product and engineering team here, and we understand that one of the things that we're running into right now is a lot of Zendesk customers are using the forms and it's something that the conditional forms we don't have. They did let us know that we are going to have something by, let me just make sure I got this right here by the end of this quarter. So we expect to have something by the end of the quarter. What we're proposing for you is we have a bit of a workaround for you in the meantime, and that is with using type forms, and potentially a zapier combination, which would then bring these forms directly into hiver hiver's then via AI and automations, would categorize these forms and send them to the right inbox. But basically, I'm going to pass this over to Manoj here. He can just kind of just walk you through it. Yeah, we had talked.
+
+Stephen Maloney (stephen@animationmentor.com):
+  about that with Steven and I recognize you guys are in the interim period and trying to make it worse. Our work up until then. Do you have a prototype of any type forms and stuff that we could see that's kind of where we left it, you know, before our Christmas holiday in December when we last spoke?
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. Just give me a second. Steven. Let me share my screen.
+
+Manoj Kiran (manoj@grexit.com):
+  So this is just a simple type form that I have, right? And you had dynamic fields based on dropdowns, right?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah. In a couple instances.
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. So let's say billing inquiry say, okay, and then based on your, you know, choice, you choose whatever it is. And what happens is what I've done here is I have connected this form through zapier, because… type form is not allowing me to directly connect it to Gmail. I have to go through zapier. So when it comes in as new entry, then I trigger an email with the data… the form id in the subject line, output and form response in the body. And once that is done, it goes to whatever shad mailbox that you put in over here once your account is created. And these are like some of the dummy forms and dummy data that we tested out with. Okay?
+
+Matthew P (matthew.p@grexit.com):
+  So, would.
+
+Stephen Maloney (stephen@animationmentor.com):
+  you guys, I mean, we also use zapier, just, would this live on you guys instance then, and you guys will maintain anything any, you know, forms that go missing or skew. In the meantime, we'd have to get on the horn with you guys to follow up and fix.
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. So the setup, yes, pretty much, we will take care of it. We'll help you with the setup, the product.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Is, or do you recommend that? Like I just create a type form and in our zapier go through and set up the following things and you guys can help us with that?
+
+Matthew P (matthew.p@grexit.com):
+  Yeah, that was my understanding. Okay. So.
+
+Stephen Maloney (stephen@animationmentor.com):
+  What would that next step look like? Then? I mean, I can go and create accounts for there. Would you guys be able to get on a call and work through some of that stuff? I know it's probably late for you in India. Manoj. I'm sorry, is it, Manoj? How do you pronounce your name?
+
+Manoj Kiran (manoj@grexit.com):
+  Manoj?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Manoj. Sorry.
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah, that's right.
+
+Stephen Maloney (stephen@animationmentor.com):
+  So, you know, I'm happy to. Yeah, what would be the next steps there?
+
+Matthew P (matthew.p@grexit.com):
+  Yeah. So again, I can talk again with, yeah… go for it, Manoj.
+
+Manoj Kiran (manoj@grexit.com):
+  No, I just need some more information now, Stephen. So, can you give us screen grabs of like, you know, what your forms look like or something?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah. I mean, they're publicly visible. I can send you the link.
+
+Matthew P (matthew.p@grexit.com):
+  Perfect.
+
+Manoj Kiran (manoj@grexit.com):
+  Awesome. That will work. Let me.
+
+Stephen Maloney (stephen@animationmentor.com):
+  bring that up right now. So they're pretty simple. There's nothing earth shattering in here, right? Let me drop it into the zoom chat.
+
+Manoj Kiran (manoj@grexit.com):
+  Because yeah, Stephen, because, you know, you would have seen our customer portal right now where we have the fields and everything.
+
+Manoj Kiran (manoj@grexit.com):
+  But if we're just able to make the dynamic, then you know, we don't need to go through the type form or the zapier workaround itself.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Sorry, say that again?
+
+Manoj Kiran (manoj@grexit.com):
+  So, you have seen our customer portal, right? Yes. Yeah. So right now, since we do not have dynamic fields, like once you select the drop down, the question changes?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah, since.
+
+Manoj Kiran (manoj@grexit.com):
+  we do not have that, we are going through this route. This is the only other option we have, but, you know, this forms is something that our team had asked for so that they can check out what kind of fields to bring in and everything. But if we bring that out in the custom portal?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah. I mean, once the product launches, certainly, we'll look to cut over and see if it fits our needs and try and do it like, I recognize this is only a band aid patch in the meantime, but it sounds like we should take that up on our end and create a type form account and loop it into our zapier and run with it there. Yeah. Do you have any, I haven't used type form? I haven't used anything else there? Any recommendations before getting started there? Or have you all, you know, can I get any time from you guys on that end?
+
+Manoj Kiran (manoj@grexit.com):
+  We can definitely help you out. And to be honest, I stopped like, I… don't know. I did type forms just two weeks back. I started like two weeks back.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. So you're just a chapter ahead of me in the book. I got you.
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. And it's nothing complicated. Stephen, to be honest, you basically start creating a form and start adding in your content… just a second. Okay?
+
+Matthew P (matthew.p@grexit.com):
+  Yeah. And it was actually proposed by our CTO. So, you know, again, we will loop in whoever is necessary here to help with it. And then also I.
+
+Stephen Maloney (stephen@animationmentor.com):
+  mean, I'll be honest, like what I also might do is like we've used forms for other things. We use gravity forms in a lot of our, you know, collection things. If this is really the route that we're doing, if we're owning this portion of the pipe, which it sounds like it is, you know, we might go that route and set up some of those pages in gravity forms. And then, you know, just really quickly, yeah.
+
+Matthew P (matthew.p@grexit.com):
+  You know, zap.
+
+Stephen Maloney (stephen@animationmentor.com):
+  It over to the places that we need. But maybe I'll do that setup portion of it, and then we can review the zapier portion of stuff next. Okay?
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. Sure. Okay. Steven, just as I was telling, these are all the options that you have like with the typeform and you simply have to choose like first if you want the contact information that will be your first. And then you simply have to keep adding content on what kind of questions, multiple choice or yes or no drop downs and everything. And you can simply branch it… right? So, okay, let me… see if I have a multiple choice.
+
+Manoj Kiran (manoj@grexit.com):
+  I branch it, like if I select a, then go to the other section. Okay? So it's a simple if, and then statement afterwards when you do the branching. So these will be your like dynamic fields. So choose the first option, then go to this questionnaire, choose the second option, then go to this questionnaire?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. I think we could probably pause on forms. It sounded like what I might circle back with you is just verifying that the zapier endpoints are in place to send it to the right Google area on how we want to do that. I think we can set up some form information and get it collected into zapier. If we're using that as the middleware, getting it from zapier, then to hiver, we'll touch base on.
+
+Matthew P (matthew.p@grexit.com):
+  Okay, great. And then, yeah, you know, obviously we're going to work with you on pricing, give you a little price break just for, you know, having to deal with the inconvenience or any additional costs that come with this as well. So there's that too.
+
+Stephen Maloney (stephen@animationmentor.com):
+  And, yeah. And so you had indicated you reactivated our trial, is that correct? Let me go back over to that board?
+
+Matthew P (matthew.p@grexit.com):
+  Just go ahead and refresh it.
+
+Stephen Maloney (stephen@animationmentor.com):
+  And if I wanted to switch back over to our main org, though, is there, how would we go about doing that?
+
+Matthew P (matthew.p@grexit.com):
+  So it would be a brand new hiver instance, right?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah. Well, is that the recommendation? I think probably?
+
+Matthew P (matthew.p@grexit.com):
+  Yeah. So basically, we would just go ahead and delete this one and then just have you use the other, the main org one to start a new trial instance. Okay. Do.
+
+Stephen Maloney (stephen@animationmentor.com):
+  You want me just to kick that off on my end then? Is that the easier way?
+
+Matthew P (matthew.p@grexit.com):
+  We can actually let's I think it's best, Manoj. Probably if we have our team delete it and then let you know to go ahead and sign up. So, yeah. So we'll do that. So after this call, I'm going to have our team delete this one. Okay? And then I'll let you know via email once it's deleted. And then from that point log into the main email that you want to use and then download start another trial. Okay? And when.
+
+Stephen Maloney (stephen@animationmentor.com):
+  you say log in, I'll log in with my email even though that's not going to be the primary inbox that's used.
+
+Manoj Kiran (manoj@grexit.com):
+  Correct. Okay. And Stephen, if you are, you know, if you're ready to set up a new account right now, I can go ahead and delete the trial, matt, if that's.
+
+Matthew P (matthew.p@grexit.com):
+  oh, you can, okay, great. Let's just do that.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Then perfect. Go ahead and delete that trial.
+
+Matthew P (matthew.p@grexit.com):
+  Then Manoj, do you need the trial? Do you have it or do you want me to slack it to you?
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. So the trial is.
+
+Matthew P (matthew.p@grexit.com):
+  I just slack it to you.
+
+Manoj Kiran (manoj@grexit.com):
+  We double five one, five, eight, right?
+
+Matthew P (matthew.p@grexit.com):
+  Yeah, three five, five, one, five, eight. Yeah. And.
+
+Manoj Kiran (manoj@grexit.com):
+  you have the am support hiver as the chat mailbox, which is productinfo at animationmentor. Com?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Correct. And that can go away. That's part.
+
+Manoj Kiran (manoj@grexit.com):
+  Of the trial, right? Yep. And Stephen, may, I know which is the other email address? Yeah.
+
+Stephen Maloney (stephen@animationmentor.com):
+  It's going to be the main one or my email address. It's just going to be Stephen at animationmentor. Com. Then it's going to be help at animationmentor. Com. It's going to be the inbox.
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. No, I'm just… okay. So, you haven't created a new trial, right?
+
+Stephen Maloney (stephen@animationmentor.com):
+  I have not.
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. Got it. And shall we go ahead and create a new trial right now?
+
+Stephen Maloney (stephen@animationmentor.com):
+  I think that'd be great.
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. Let me just delete this.
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. Soon, I'm gonna delete this account? Okay?
+
+Manoj Kiran (manoj@grexit.com):
+  Okay.
+
+Manoj Kiran (manoj@grexit.com):
+  Stephen, can you now try signing up for a new trial with your email address with your actual address?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah.
+
+Stephen Maloney (stephen@animationmentor.com):
+  I'm just kind of going through the forms now. Okay. I think I completed there. It's asking me to install the extension, which I think I've already got. I think that means that hopefully something got submitted.
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. So, you just go back to your Gmail account, which is Stephen at animationmentor. Com, and just refresh your Gmail… once.
+
+Stephen Maloney (stephen@animationmentor.com):
+  You have the option to log into hiver, let's see if that pulls it, start your free trial.
+
+Stephen Maloney (stephen@animationmentor.com):
+  This is fun. It's asking me for the phone number. If I add it without the country code of one, it says that a country code is required. If I add the country code, it says that my thing is too long.
+
+Manoj Kiran (manoj@grexit.com):
+  You can just do the dropdown and select the country code. You don't yeah.
+
+Matthew P (matthew.p@grexit.com):
+  Okay. Yeah. And that phone number is just, we're not going to use. It doesn't matter. Yeah.
+
+Stephen Maloney (stephen@animationmentor.com):
+  I'm sure. It doesn't but like I'm just trying to proceed to the form.
+
+Stephen Maloney (stephen@animationmentor.com):
+  All right. Am I doing this, right? Should I be setting up with my email or with the shared… inbox email? Your?
+
+Matthew P (matthew.p@grexit.com):
+  Email, and then we're going to connect the shared inbox.
+
+Manoj Kiran (manoj@grexit.com):
+  I think the first spot is done, Stephen, just.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Give me a second. Yeah, I think I'm further along, yeah.
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. So I think, let me just double check. Yeah.
+
+Matthew P (matthew.p@grexit.com):
+  Let's just take a look here.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah. So just, I'm sharing my screen. It looks like actually I've got this inbox already, which I probably don't want to be honest. Yeah, you don't yeah. Yeah. So I'm just going to delete that Guy, okay?
+
+Matthew P (matthew.p@grexit.com):
+  You can delete the other one too.
+
+Stephen Maloney (stephen@animationmentor.com):
+  It's going to want to pull my email. I don't want it to pull my email and do something else.
+
+Manoj Kiran (manoj@grexit.com):
+  No. So I want to connect like it first. We're going to ask you for the name of the shared mailbox, right? Can you click on create again?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. We'll create.
+
+Manoj Kiran (manoj@grexit.com):
+  Email. Yeah, just name it, and is this another Gmail account?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yes, it's going to be a Google group. It's going to be a Google group.
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. Group, fine. Just click on next, connect a Google group. So, okay, just go here. Yeah, enter the group's email address… that's it next. I'll skip that for now… that's done. Okay, great.
+
+Stephen Maloney (stephen@animationmentor.com):
+  I'm back over here.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. I've got seven days in there. I've named it am support. I don't have any inboxes in there right now just as a test. If I go to help at.
+
+Matthew P (matthew.p@grexit.com):
+  What's the email again? Help at animationmentor. Com? Yep.
+
+Stephen Maloney (stephen@animationmentor.com):
+  I do see one from me in here at that point.
+
+Manoj Kiran (manoj@grexit.com):
+  Okay, perfect. I.
+
+Stephen Maloney (stephen@animationmentor.com):
+  think that's going to be there. If I want to sign it, I can sign it to myself. I'm the only one in here right now. I don't think there's any tags.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. I think we're back in there. So… it sounds like, okay, so we've moved hiver account from the trial. I've now got the real one set up with the endpoint that we want. We are still going to want multiple forms that funnel in here. I am going to want multiple different email aliases that are going to support in here, but I think we're going to control all that different routing on our end because there'll be support at and bursar at and customer service at, and all those emails will filter into the general help at.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. And then I'm probably going to put in some automations to route those to various views for different team members. Does that sound like a reasonable approach? Yep? Absolutely. Okay. Matt, I got yours as well. Okay?
+
+Matthew P (matthew.p@grexit.com):
+  Cool. Yeah, I just wanted to double check here that it was coming from other domains as well. Okay?
+
+Stephen Maloney (stephen@animationmentor.com):
+  I'm going to send one back to you, just confirm that you can get my reply, okay? And.
+
+Matthew P (matthew.p@grexit.com):
+  then, yeah, basically, you know, obviously we got what we want to do as far as next steps here. Do you have, does… 10 30 tomorrow work for you for another quick meeting? I want to just get the feedback from our team. I also want to loop in Jeevan real quick to speak with you on what our team thinks is possible.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah. I do have a meeting at 10 that tends to run just a little bit long, so we could do 10 30, but I might be five, 10 minutes late or I could be right? I could be right on time too, but, OK, yeah, no, Kevin, no.
+
+Matthew P (matthew.p@grexit.com):
+  Problem. Yeah, because basically, I just want to, I'm going to take everything you asked for today to our team and get their feedback and then loop in Jeevan as well. Jeevan's kind of… the best at coordinating and what's the best possibilities and outcomes we can get, do?
+
+Stephen Maloney (stephen@animationmentor.com):
+  You guys have any recommendations on views and agents? I'm going to say agents, but our staff members are, you know, our users on our end that being able to set those up and being able to set up routing to various views? Is that's probably how I'm going to do it, you know, based on which form that we're going to submit and that's going to get zapped over here. And I'm hoping there's some associated metadata to know it came from form a, BC or D, right? And then get route to view one, two, three or four as appropriate? Does that sound reasonable?
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. So, Stephen, once we do the automation to tag them and categorize them, we just create views using filters and those views are going to be automatically populated based on the conditions that we have set.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Our views tip. Is that typically just done with tags? Is that how views are mostly?
+
+Manoj Kiran (manoj@grexit.com):
+  It's tags, custom fields, everything? Okay. So once we have the custom?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Fields in?
+
+Matthew P (matthew.p@grexit.com):
+  You.
+
+Manoj Kiran (manoj@grexit.com):
+  can do it based on the custom field as well?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Can I create custom fields? Yes?
+
+Manoj Kiran (manoj@grexit.com):
+  Yes, you can shard in boxes… select the mailbox and.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Is it helpful if I create a number of custom fields based on some of the data that I expect we're going to import?
+
+Manoj Kiran (manoj@grexit.com):
+  Yes, you can. I don't think that could be a problem, you can.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Would that help our mapping? Or would that complicate the you?
+
+Matthew P (matthew.p@grexit.com):
+  Know, mapping?
+
+Manoj Kiran (manoj@grexit.com):
+  I don't think it's going to complicate anything, but, yeah, you can create them. And if let's say if the team feels that, you know, the data itself is going to populate those custom fields, we can take that. We can take care of that from the back end. Is.
+
+Stephen Maloney (stephen@animationmentor.com):
+  There a way to make custom fields in bulk or anything?
+
+Manoj Kiran (manoj@grexit.com):
+  Oh, no, you have to make them one by one. Okay?
+
+Stephen Maloney (stephen@animationmentor.com):
+  That's fine. I mean we can go through it. I mean, we got the order of hundreds. It's not crazy, but, okay. And then the automations typically based on custom field are based on tag to route things to different views.
+
+Manoj Kiran (manoj@grexit.com):
+  So automation can do a bunch of things. So again, for the first incoming email, our priority is to tag them and then move in between the mailboxes and get them assigned post that you can have a bunch of more automations like based on creation time of the email or if you want to send an automated response for specific emails… and then you have, and then we have AI tasks and AI custom like extracts. So AI tagging is basically, you train the AI, add those tags manually to 10 or so emails. So the AI learns from it and going forward, the emails will be auto tagged even without any conditions, okay?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Is there anything I can do to start training that as it is?
+
+Manoj Kiran (manoj@grexit.com):
+  First, we need to create tags, okay? And then once you create the tags, you come here, configure, add the tags and then add them to few emails manually.
+
+Stephen Maloney (stephen@animationmentor.com):
+  But they're going to need it for it to properly be trained though it needs to have an email that's kind of cause it's going to, I'm sure it's going to search for whatever other content within it. So I can't just tag it. Willy. Nilly. I need to tag it to something that's legit.
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. Okay.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. That's also something that we can do as things, you know, I can tell people the first two weeks after launch, like just tag everything and it'll start to get smarter over time?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. Well, maybe we're about set up for now. So you did look like you sent another call for tomorrow. Yeah. Matt, is there anything else that I can prepare for that to make that more helpful for us? Yeah.
+
+Matthew P (matthew.p@grexit.com):
+  Not that comes to mind. If anything does after I share, the next steps here with my team, I'll shoot you an email to let you know, but yeah, just wanted to give Jeevan the opportunity as well to, once we talk to our team today and tomorrow to iterate the best next steps here. And then can you remind me how many people was this was going to be for?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah, it's probably around like, you know, I think it.
+
+Matthew P (matthew.p@grexit.com):
+  Was probably around like, okay, that's what I thought. Okay?
+
+Matthew P (matthew.p@grexit.com):
+  Great. So, yeah, let me take all the feedback and, you know, next steps that you want to do with our team. And then, yeah, we'll we can go over all that on the call tomorrow. If anything else comes up in the meantime, I'll shoot you an email.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. Sounds good. Thanks, matt. Thanks, Manoj. Appreciate you guys the time today. Yeah.
+
+Matthew P (matthew.p@grexit.com):
+  Thanks, Jeevan. Thank you for being patient and working with us through this. Yeah.
+
+Stephen Maloney (stephen@animationmentor.com):
+  I mean, so I'll also go back to my team. It sounds like we'll have to handle the custom forms. Well, yeah, I'll be honest, we're probably more likely to use our existing form fields because, you know, we're probably going to then put it on our public site and use our branding and theming and all of that, which is already kind of implicit and that's a little simpler than jumping through, you know, type forms or something. But the handshake that goes from zapier to whatever we need to do for hiver, maybe we can get you guys eyeballs on that just before we go live and make sure that's looking on the level.
+
+Matthew P (matthew.p@grexit.com):
+  Okay. Yep. Sounds.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Like a plan sound reasonable?
+
+Matthew P (matthew.p@grexit.com):
+  Definitely all.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Right. Appreciate it guys.
+
+Matthew P (matthew.p@grexit.com):
+  Thanks. Bye. Take it easy. Thank you.

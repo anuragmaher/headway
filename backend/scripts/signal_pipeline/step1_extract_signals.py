@@ -3,7 +3,7 @@
 Stage 1: Signal Extraction (per transcript).
 
 Reads .txt (and optional .json) from input dir, extracts product signals via one LLM call
-per transcript, writes signals to pipeline_output_dir/signals/.
+per transcript using prompts/step1_extract_signals.txt, writes signals to pipeline_output_dir/signals/.
 """
 
 import argparse
@@ -20,11 +20,30 @@ sys.path.insert(0, str(BACKEND_DIR))
 from openai import OpenAI
 
 from app.core.config import Settings
-from app.services.langfuse_prompt_service import get_signal_extraction_prompt
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROMPT_PATH = SCRIPT_DIR / "prompts" / "step1_extract_signals.txt"
 
 # Max chars to send to the model (leave room for prompt + response)
 MAX_TRANSCRIPT_CHARS = 60000
+
+# Appended so the model doesn't echo placeholder text from the instructions
+_EXTRACTION_SUFFIX = (
+    "\n\n---\nExtract real signals from the transcript above only. "
+    "Do not return the example placeholder text from the instructions."
+)
+
+
+def load_prompt_template() -> str:
+    if not PROMPT_PATH.exists():
+        raise FileNotFoundError(f"Prompt not found: {PROMPT_PATH}")
+    return PROMPT_PATH.read_text(encoding="utf-8")
+
+
+def _build_user_message(template: str, transcript_text: str) -> str:
+    """Fill prompt template with transcript and append extraction nudge."""
+    content = template.replace("{{TRANSCRIPT_TEXT}}", transcript_text or "")
+    return content + _EXTRACTION_SUFFIX
 
 
 def parse_filename(base: str) -> tuple[str, str]:
@@ -159,7 +178,7 @@ def _messages_to_openai_format(messages: list) -> list[dict]:
 
 
 def _parse_asks_response(raw: str) -> list[dict]:
-    """Parse LLM response: array of {Theme, Ask, Priority, Evidence}. Accepts top-level array or object with a list value."""
+    """Parse LLM response: array of {Theme, Sub-Theme, Ask, Priority, Evidence}. Accepts top-level array, object with list value, or single signal object."""
     try:
         out = json.loads(raw)
     except json.JSONDecodeError:
@@ -172,21 +191,29 @@ def _parse_asks_response(raw: str) -> list[dict]:
                 items = out[key]
                 break
         else:
-            # First key whose value is a list
-            items = next((v for v in out.values() if isinstance(v, list)), [])
+            # Single signal object (Theme/Ask keys) or dict with list value
+            first_list = next((v for v in out.values() if isinstance(v, list)), None)
+            if first_list is not None:
+                items = first_list
+            elif "Theme" in out or "Ask" in out or "theme" in out or "ask" in out:
+                items = [out]
+            else:
+                items = []
     else:
         return []
     result = []
     for item in items:
         if not isinstance(item, dict):
             continue
-        # Normalize keys (prompt uses Theme, Ask, Priority, Evidence)
+        # Normalize keys (prompt uses Theme, Sub-Theme, Ask, Priority, Evidence)
         theme = item.get("Theme") or item.get("theme") or ""
+        sub_theme = item.get("Sub-Theme") or item.get("sub_theme") or item.get("subtheme") or ""
         ask = item.get("Ask") or item.get("ask") or ""
         priority = item.get("Priority") or item.get("priority") or "Medium"
         evidence = item.get("Evidence") or item.get("evidence") or ""
         result.append({
             "Theme": theme,
+            "Sub-Theme": sub_theme,
             "Ask": ask,
             "Priority": priority,
             "Evidence": evidence,
@@ -208,6 +235,9 @@ def extract_signals_for_transcript(
         max_tokens=4000,
     )
     raw = response.choices[0].message.content or "[]"
+    print("--- OpenAI raw response ---")
+    print(raw)
+    print("--- end raw response ---")
     return _parse_asks_response(raw)
 
 
@@ -219,6 +249,7 @@ def main() -> None:
     parser.add_argument("--model", type=str, default="gpt-4o-mini", help="OpenAI model for extraction")
     parser.add_argument("--incremental", action="store_true", help="Only process transcripts not in processed_transcripts.json; append to all_signals; update manifest")
     parser.add_argument("--manifest", type=str, default=None, help="Path to processed_transcripts.json (default: output_dir/signals/processed_transcripts.json)")
+    parser.add_argument("--transcript", type=str, default=None, help="Process only this transcript file (e.g. backend/gong_transcripts/06_xxx.txt)")
     args = parser.parse_args()
 
     input_dir = Path(args.input_dir)
@@ -226,7 +257,18 @@ def main() -> None:
     signals_dir = output_dir / "signals"
     signals_dir.mkdir(parents=True, exist_ok=True)
 
-    if not input_dir.is_dir():
+    if args.transcript:
+        txt_path = Path(args.transcript).resolve()
+        if not txt_path.is_file():
+            print(f"Error: transcript file not found: {txt_path}")
+            sys.exit(1)
+        if txt_path.suffix.lower() != ".txt":
+            print(f"Error: transcript must be a .txt file: {txt_path}")
+            sys.exit(1)
+        input_dir = txt_path.parent
+        txt_files = [txt_path]
+        print(f"Single transcript: {txt_path.name}")
+    elif not input_dir.is_dir():
         print(f"Error: input dir not found: {input_dir}")
         sys.exit(1)
 
@@ -234,25 +276,24 @@ def main() -> None:
     if not settings.OPENAI_API_KEY:
         print("Error: OPENAI_API_KEY not set")
         sys.exit(1)
-    if not settings.LANGFUSE_SECRET_KEY or not settings.LANGFUSE_PUBLIC_KEY:
-        print("Error: Langfuse not configured. Set LANGFUSE_SECRET_KEY and LANGFUSE_PUBLIC_KEY (Signal prompt is loaded from Langfuse).")
-        sys.exit(1)
 
     client = OpenAI(api_key=settings.OPENAI_API_KEY)
+    prompt_template = load_prompt_template()
 
-    if args.incremental:
-        limit = args.limit or 50
-        processed_ids = get_processed_ids(signals_dir)
-        txt_files = find_txt_files_incremental(input_dir, processed_ids, limit)
-        if not txt_files:
-            print(f"No new transcripts (all {len(processed_ids)} already processed).")
-            sys.exit(0)
-        print(f"Incremental: {len(txt_files)} new transcripts (limit={limit}, already processed={len(processed_ids)})")
-    else:
-        txt_files = find_txt_files(input_dir, args.limit)
-        if not txt_files:
-            print(f"No .txt files in {input_dir}")
-            sys.exit(0)
+    if not args.transcript:
+        if args.incremental:
+            limit = args.limit or 50
+            processed_ids = get_processed_ids(signals_dir)
+            txt_files = find_txt_files_incremental(input_dir, processed_ids, limit)
+            if not txt_files:
+                print(f"No new transcripts (all {len(processed_ids)} already processed).")
+                sys.exit(0)
+            print(f"Incremental: {len(txt_files)} new transcripts (limit={limit}, already processed={len(processed_ids)})")
+        else:
+            txt_files = find_txt_files(input_dir, args.limit)
+            if not txt_files:
+                print(f"No .txt files in {input_dir}")
+                sys.exit(0)
 
     all_records: list[dict] = []
     for i, txt_path in enumerate(txt_files, 1):
@@ -261,7 +302,8 @@ def main() -> None:
         print(f"[{i}/{len(txt_files)}] {transcript_id}")
 
         text, meta = load_transcript_and_metadata(txt_path, input_dir)
-        messages = get_signal_extraction_prompt(text)
+        user_content = _build_user_message(prompt_template, text)
+        messages = [{"role": "user", "content": user_content}]
         signals = extract_signals_for_transcript(client, messages, args.model)
 
         record = {
@@ -269,7 +311,7 @@ def main() -> None:
             "call_id": meta["call_id"],
             "title": meta["title"],
             "started": meta["started"],
-            "signals": signals,  # Langfuse format: Theme, Ask, Priority, Evidence
+            "signals": signals,  # Theme, Ask, Priority, Evidence
         }
         all_records.append(record)
 
@@ -278,8 +320,8 @@ def main() -> None:
         with open(per_file, "w", encoding="utf-8") as f:
             json.dump(record, f, indent=2, ensure_ascii=False, default=str)
 
-    if args.incremental:
-        # Append to existing all_signals
+    if args.incremental or args.transcript:
+        # Append to existing all_signals (incremental or single --transcript)
         all_path = signals_dir / "all_signals.json"
         existing: list[dict] = []
         if all_path.exists():
@@ -288,12 +330,16 @@ def main() -> None:
                 existing = data.get("transcripts", [])
             except Exception:
                 pass
+        # For single transcript: replace existing entry for same transcript_id if present
+        if args.transcript and all_records:
+            new_id = all_records[0]["transcript_id"]
+            existing = [r for r in existing if r.get("transcript_id") != new_id]
         combined = existing + all_records
         with open(all_path, "w", encoding="utf-8") as f:
             json.dump({"transcripts": combined}, f, indent=2, ensure_ascii=False, default=str)
         # Update processed manifest
         new_ids = [r["transcript_id"] for r in all_records]
-        processed_ids_updated = get_processed_ids(signals_dir) + new_ids
+        processed_ids_updated = list(dict.fromkeys(get_processed_ids(signals_dir) + new_ids))
         manifest_path = Path(args.manifest) if args.manifest else (signals_dir / PROCESSED_MANIFEST_NAME)
         with open(manifest_path, "w", encoding="utf-8") as f:
             json.dump({

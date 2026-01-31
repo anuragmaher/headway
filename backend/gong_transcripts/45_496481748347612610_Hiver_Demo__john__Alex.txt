@@ -1,0 +1,202 @@
+================================================================================
+Call: Hiver Demo | john <> Alex
+Date: 2026-01-29T03:00:58+05:30
+================================================================================
+
+John Scribante (js@rpmviking.com):
+  hello? Hi, John. Hey, I invited a couple of other of my staff members to join us if that's all right?
+
+Alex Krumm (alexander.k@grexit.com):
+  Of course.
+
+John Scribante (js@rpmviking.com):
+  All right. So just, and Karen and Klaire don't know anything about why they're on this call. But Karen, this is a potential replacement for helpscout. And so I wanted to get a demo and learn and Alex was nice enough to set up a call here for us this afternoon to learn about their offerings and how it is better than helpscout. I guess, right? Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  Well, we are all excited for it. So, thanks, Alex. I love it, and… I've heard of neighborly. So I used to, I have 12 years of experience in like contact center and help center software… previous company. We're working on AI, voice agents, spoke with a few people over there, but I was just curious how RPM viking like operates, is it, are… you like a kind of a franchisee model where like you own a locality?
+
+John Scribante (js@rpmviking.com):
+  Yeah. So neighborly's got, I don't know 20 different brands, you know, from dryer, vent, cleaning and window washing, and gardening, to property management. And we're the property management, there's, 500 locations of the property management, and we operate as a franchise. So we, I'm the broker, the owner of the company and… you know, so independently owned. But under the franchise umbrella to, you know, we primarily get marketing resources and best practices, but we make our own policies and rules and operational practices. And that, so perfect.
+
+Alex Krumm (alexander.k@grexit.com):
+  That was my understanding as well. But, you know, I don't work there. So, okay. And then in terms of how are you using helpscout today? Is it primary primarily email management or are there other channels that you're feeding in there? No?
+
+John Scribante (js@rpmviking.com):
+  We have shared three… or four shared inboxes. We do have the chat bot on the website, but I don't we don't get any traffic off of that, I don't know why, but nobody seems to utilize it so… great.
+
+Alex Krumm (alexander.k@grexit.com):
+  Well, let me show you what we're working on. I think, are you guys on Google suite or are you a Microsoft team?
+
+John Scribante (js@rpmviking.com):
+  We're Microsoft sharepoint, perfect.
+
+Alex Krumm (alexander.k@grexit.com):
+  We have two different products which is why I asked you. So hiver is a B to B help desk platform specifically designed for shared inbox interactions. So think somebody's writing to support at or any other alias, being able to have full visibility of who's writing in, who is this assigned to? And then any other conversations that are kind of going along alongside. So we're a web based product. And then in the left hand rail, we're going to see the two inboxes finance and support. We technically can have multiple domains pointed at a single inbox, should that be beneficial? But most people segment by domain. Now when an email comes in, it'll start in the unassigned section. So here Tony stark thinks he made a mistake on his billing. I would come in and the workflow would be to assign it to myself or I could get a grouping of these assigned to me. Then these will be in my inbox… on the right hand rail. We're going to have kind of all the traditional help desk categorizations… whether it's tagging, we support AI based or custom like attribute based tagging, so like keyword, and then custom fields in terms of like kind of like a subcategory or disposition on the conversation or like a revisit date, things like that. Then when I come in here to reply to Tony, I have a full email template library.
+
+Alex Krumm (alexander.k@grexit.com):
+  And I have a AI assistant that can, that will write emails for me and you can upload your own documents whether it's like a PDF or free form that it'll use. So I'm going to come in here and say it's going to make recommendations on what it should say. One be direct. We've essentially built our own rag system and right now we have like chat gbt five point two plugged into it to generate these replies.
+
+Alex Krumm (alexander.k@grexit.com):
+  So pretty straightforward, I've written the email. I can send it and mark it closed, send it and mark it pending. The key thing about pending would typically mean that we want to be able to revisit this conversation. So imagine you're working with a flooring vendor and it's someone that you have to follow up with a lot to get him or her to perform the work. I would consider dropping it in pending and maybe have follow up date. This way I can create what we call a view of like all conversations that it's like an advanced filter of.
+
+John Scribante (js@rpmviking.com):
+  Like I mean, so far, what you've explained was helpscout. I mean, everything that you just explained including the filters and all that is help scout. So maybe we should move past just the general functionality because I think we all understand how these systems work into some of the more advanced capabilities or things that are significantly different than what we're using at help scout, is that fair?
+
+Alex Krumm (alexander.k@grexit.com):
+  Sure. I would say so just in terms of the types of interactions that you're having, is it mostly with like I'm assuming there's like three groups there's, renters, property owners, and contractors, is that fair?
+
+John Scribante (js@rpmviking.com):
+  Yeah, I think so. Yep, great.
+
+Alex Krumm (alexander.k@grexit.com):
+  So when somebody reaches out to us, we could essentially run… every single conversation through a workflow. So coming to support automations.
+
+Alex Krumm (alexander.k@grexit.com):
+  So this is like if this, then that logic, when a new conversation comes in, it contains any of the following, we can then auto assign it to certain users, amend tags, update various statuses, and… so on and so forth. Like automatically send replies if it's missing key information, let people know your standard response, things like that.
+
+Alex Krumm (alexander.k@grexit.com):
+  And, but I think just in terms of email only like this is going to be pretty similar to help scout, just our AI offering is fully integrated and it's you know, included in the price instead of like additional consumption. Okay. Yeah. I guess what's not?
+
+Klaire Punongbayan:
+  You go, Claire, maybe Alex, yeah, maybe Alex, my question is what does your AI do aside from those? Because it's kind of really similar to help scout for what I'm seeing right here, you're.
+
+John Scribante (js@rpmviking.com):
+  saying beyond like the auto drafting of emails? What does AI, how's.
+
+Klaire Punongbayan:
+  it, what does AI do? Yeah?
+
+Alex Krumm (alexander.k@grexit.com):
+  Right now, in this product, it can summarize conversations. So, if there's a long thread and you're catching up quickly, and… then the composer right now has various knowledge sources in terms of what AI can do… yeah in the near future. So, we also have a product in Gmail, which is why I asked at the beginning of the call, this product has some more of our advanced AI features which we are bringing to the outlook product. In the next, I would say 62 days. It's supposed to be end of this quarter where we have AI tagging to be able to automatically tag conversations that you'll train the AI tagging on. So like maintenance requests versus something else. And then I'll come in like select emails that meet this maintenance request. So it'll learn and automatically tag and triage… so that's one piece. Then we have AI quality assurance where every single email that we write out is going to be scored based on like a six point criteria… and you're able to come in here and like set various settings in terms of like what does tone mean and things of that nature? We're seeing the most interest in clarity and completeness from our current customers.
+
+Alex Krumm (alexander.k@grexit.com):
+  And then, you know, auto closing tickets when people write, thank you and things like that. Yeah.
+
+John Scribante (js@rpmviking.com):
+  Okay. All right. So, all… right. I don't know ladies. Do you have any other questions on this?
+
+Karen:
+  I do for helpscout. I don't think they have this function where we can do auto reply, but hiver does that, right? Like we can, if there is an email that was sent by a tenant and then hiver gets to respond to them, acknowledging that we receive an email or something. Hiver offers that, correct?
+
+John Scribante (js@rpmviking.com):
+  There's an auto reply in helpscout.
+
+Karen:
+  Oh, I.
+
+John Scribante (js@rpmviking.com):
+  mean, you're talking? Just an auto acknowledgement, like we got your message. We'll be in touch soon.
+
+Karen:
+  That's correct, John, same like quo app.
+
+John Scribante (js@rpmviking.com):
+  Yeah, no. Oh, okay. I just don't have it turned on for your inbox. I see it's turned on for maintenance. Got it. It might be on yours for after hours, but so.
+
+Karen:
+  It's just basically the same.
+
+John Scribante (js@rpmviking.com):
+  Well, that's what I'm trying to figure out. I mean, it's a little less expensive, but I'm not sure we're gaining enough to make a switch.
+
+Klaire Punongbayan:
+  Knowledge, I guess.
+
+Alex Krumm (alexander.k@grexit.com):
+  What at helpscout? Are you looking to improve upon? Well?
+
+John Scribante (js@rpmviking.com):
+  It's a little difficult… to get… messages out of there. I mean, it's not, it's a ticketing system. It's not really an email system. And so it's you know, it's a little clumsy, you know, and, you… know, I don't know Karen, do you have any comments on it or Klaire?
+
+Klaire Punongbayan:
+  I'm thinking I'm curious about the knowledge base part. And then is it integrated with AI? Like, when we create workflow, I'm not sure if that's the term on your, in your case, yeah. When we say knowledge, is it something that is integrated with the AI or?
+
+Alex Krumm (alexander.k@grexit.com):
+  It is so, The AI composer will use knowledge based sources. So we have our a knowledge base that is included in this whether internal or external. So when you like bring on new people and then you can just upload other documents here that the AI will use to as like a basis of writing emails.
+
+Klaire Punongbayan:
+  Understood. And then for external sources, we can use other like platform or software set from notion you have like any preferred list of software that you accept, right?
+
+Alex Krumm (alexander.k@grexit.com):
+  Now, it's just notion. We have Google drive coming online shortly. And then we're talking about like confluence and other tools.
+
+Klaire Punongbayan:
+  All right. Understood. And I just would like to make sure I understand it, right? This integrates the, how to call that one, the response, the AI response as well. Just in case we create auto reply, workflow, things like that. Because what we're struggling in terms of the helpscout, Alex, is those simple question that we could just simply automate like instead of us composing our own email though we all, we always have auto or save replies. We all have templates, but I think it would be the AI, I'm thinking of an AI tool… that will help us automatically closed the ticket that is also integrated with our process and with our policies like attached to like policy in Minneapolis, things like that as specifically.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yes, I know exactly what you mean. So.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, I'm sorry, I'm just looking at my feature map currently of what's about to be available and… it's not going to be in the Omni product to start, but essentially, you want like an AI co pilot that writes that's going to tee up all the emails. So when you come in for the day, like when you go into an email, there's going to be an automatic suggestion of what we should say back to him.
+
+Klaire Punongbayan:
+  Yep, could be like we can create like a workflow that if that's just for scheduling things like that. If that's specific on the property, they just would like to check our website. That can be just automatically sent.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah… we could do some things with scheduling like if somebody wrote in and had the word scheduling or, you know, if there was like a form.
+
+Klaire Punongbayan:
+  Or something, yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  We could auto tag it, send them the email with like the scheduling link, but you could do that in helpscout too.
+
+Klaire Punongbayan:
+  Well, the tagging, things like, that was created by John, I believe so. And then the other staff member, but when it comes to replying the auto reply and it's specifically to like in a specific question from prospects like prospects and then tenants clients. I don't think that we do have an option that on helpscout, we have to manually reply, we have saved replies but we have to manually reply.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. We could do automation. We,
+
+John Scribante (js@rpmviking.com):
+  could do auto.
+
+Alex Krumm (alexander.k@grexit.com):
+  Replies, essentially, we'd want to just like scan for certain keywords or phrases and then trigger a reply. We could then leave that as open so the person receives a reply, but then you could come review it manually.
+
+Klaire Punongbayan:
+  And then, and can you show me where do you go to? Just to couple check it? Yeah, that should be on… automations. Okay? Understood. So.
+
+Alex Krumm (alexander.k@grexit.com):
+  I'm going to say it contains a certain keyword, then let's add a tag. All right. Send a reply.
+
+Klaire Punongbayan:
+  And add an action. All right. I got you. I got what you're saying. There we go, that answers my question, Don.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, but.
+
+John Scribante (js@rpmviking.com):
+  I think.
+
+Alex Krumm (alexander.k@grexit.com):
+  Right now, we like the parody. There's a lot of parody to helpscout. Helpscout's been in the space for a long time.
+
+Klaire Punongbayan:
+  I agree.
+
+Alex Krumm (alexander.k@grexit.com):
+  They, yeah, when I started at a different company, we were competing against them and that was like back in 2015, this product, that world that you're looking at now is only two years old and 80 percent of our development is currently being applied here. So this is kind of like the future of our company.
+
+Klaire Punongbayan:
+  All right, understood.
+
+John Scribante (js@rpmviking.com):
+  All right. Well, why don't, we just stay in touch. I'm not sure. I see enough here to unwind what we got. I think having something a little more… revolutionary, maybe not revolutionary, but a bigger gap between where we are and where you are. I think would make some sense. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  I think you need AI agents to auto reply to these people.
+
+John Scribante (js@rpmviking.com):
+  Exactly. And I'm sure that's probably not too far away. I mean, it wasn't more than a year or two ago that nobody even knew what the hell the stuff was. And now, you know, so, all right.
+
+John Scribante (js@rpmviking.com):
+  Well, Alex, let's just stay in touch, Claire, Karen. Why don't we stay on the line? And I want to review some of the help scout stuff then, but Alex maybe reach out to us in about six months or maybe as soon as you get some significant updates, let us know because we are looking for an easier, more robust tool than what we have.
+
+Alex Krumm (alexander.k@grexit.com):
+  Absolutely. Okay.
+
+John Scribante (js@rpmviking.com):
+  Well, I will, Claire, Karen, I'll just call you on our line.
+
+Klaire Punongbayan:
+  Okay. Thank you, Alex. Thank you, Alex. Thank you for your time. Appreciate you. See you guys.

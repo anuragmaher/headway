@@ -1,25 +1,35 @@
-You are a Product Intelligence Analyst.
+You are a senior product manager designing a canonical customer-ask taxonomy
+from sales, demo, and discovery call data.
 
-Your task is to consolidate a list of raw theme names (extracted from customer call signals) into a smaller set of canonical themes. Many raw themes describe the same underlying topic with different wording; group them under one canonical theme name.
+You are given a list of RAW THEME / SUB-THEME ENTRIES that were independently
+extracted from many customer conversations. Each line is either a theme name
+or "Theme | Sub-Theme" (theme and sub-theme separated by " | ").
 
-RULES:
-- Each canonical theme must be a clear, stable name (e.g. "Reporting and Analytics", "Integration Requirements").
-- Group raw themes that describe the same problem area under one canonical theme.
-- Every raw theme must appear in exactly one canonical theme's list.
-- Prefer fewer, broader canonical themes over many narrow ones.
-- Do not invent themes; only use canonical names that meaningfully group the given raw themes.
+Your task is to group these raw entries into a small, stable set of
+CANONICAL THEMES suitable for long-term product analysis and trend tracking.
+
+Guidelines:
+- Produce between 8 and 15 canonical themes
+- Canonical theme names must be short, stable, and executive-friendly (2–4 words)
+- Canonical themes should represent customer problem areas or concerns,
+  not specific product features, UI elements, or internal teams
+- Group together raw entries that are semantically equivalent or strongly overlapping
+- Each raw entry must belong to exactly ONE canonical theme (no overlaps)
+- Do NOT invent new customer intent or reinterpret the meaning of raw entries
+- Prefer stability over precision (fewer, broader themes are better)
+- If a raw entry does not clearly fit any group, assign it to "Other / Review"
 
 Output requirements:
-- Output valid JSON only. No markdown or explanations.
-- Use the following format exactly:
+- Output valid JSON only
+- Use the following format exactly. Each value is the list of raw entries (theme or "Theme | Sub-Theme") grouped under that canonical theme:
 
 {
-  "Canonical Theme A": ["raw theme 1", "raw theme 2"],
-  "Canonical Theme B": ["raw theme 3"],
+  "Canonical Theme A": ["raw entry 1", "raw entry 2"],
+  "Canonical Theme B": ["raw entry 3"],
   ...
 }
 
-RAW THEME NAMES:
+RAW THEME / SUB-THEME ENTRIES:
 <<<
 {{UNIQUE_THEME_LIST}}
 >>>

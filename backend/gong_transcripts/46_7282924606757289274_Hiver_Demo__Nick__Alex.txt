@@ -1,0 +1,319 @@
+================================================================================
+Call: Hiver Demo | Nick <> Alex
+Date: 2026-01-29T01:59:40+05:30
+================================================================================
+
+Sriram Nagarajan:
+  hello? Hello. Hi. We have a couple more people joining us. I think I'm on Sriram, the county's going to be joining us too, and I think there should be maybe a Dan and a Ben. I don't know if they were trying to get in.
+
+Alex Krumm (alexander.k@grexit.com):
+  They haven't been trying to get in yet, but I saw them on the invite. Does that make you Nick?
+
+Sriram Nagarajan:
+  Yeah, it does. Nice to meet you. Nice to meet you. I'm Christiane and I'm Brianne… and.
+
+Sriram Nagarajan:
+  she's held up. Oh, thank you. She's held up. She may have, I just think I also invited him.
+
+Sriram Nagarajan:
+  So you.
+
+Alex Krumm (alexander.k@grexit.com):
+  know, trexquant we can, I'll dance here. My thought for today, do a quick round of mutual introductions, understand kind of what brings trexquant to the table today?
+
+Alex Krumm (alexander.k@grexit.com):
+  In terms of what you're looking to solve for, we can go into a demo of hiver, you know, talk use cases pretty flexible. I've been in this space for the last 11 years. So like help desk, contact center as a service. So, very like and hiver as a business or like a B to B AI powered help desk solution, been around for seven years and serve over 3,000 businesses. So a little bit about us. Well, yeah.
+
+Sriram Nagarajan:
+  So, I'll give you an introduction. I'm Nick, I'm the director of office management. I started off as a sysadmin here here in two years. Basically, the idea was that we didn't really have a ticketing system for it internal employee requests. I wouldn't have a way of tracking it beyond like a shared inbox and really kind of looking up solutions. We do use the Google suite for email. Hiver was recommended as something that embeds into or works with the Google suite and Gmail, very simple or easily based on the quick testing. I did, it looks like it. I mean, it seems like it works pretty well with, it seems pretty easy to use. I wanted to get a quick demo of like, you know, the features. I know SRI, if you want to introduce yourself, I know you had some questions like about like analytics reports and things like that. Yeah, sure. Sriram nagarajan, I work as a cybersecurity engineer here. I think there were other features that we were looking as part of help this tool to. I would say that they are auxiliary in nature but would love to know some of the things we discussed where change control, if that's something that hiver can help us with. I guess that's the main thing, right? I know we talked about the human resources management perspective that's a little kind of out of scope for this conversation here. But yeah, I think like as we go through the tool, understand the workflows, I might jump in here and there and ask specific questions, but I think the main focus should still be help desk and how we can handle user requests.
+
+Alex Krumm (alexander.k@grexit.com):
+  Absolutely. And in terms of like kind of your itsm point, I don't think we fully resolve that in like the traditional way but I can show you how we think about it. Great. So to jump in, I'm in a Google Chrome demo account. What this looks like is I have my normal inbox with traditional emails coming directly to me. And then all of these ones with rich text are emails that are actually in the shared inbox that are assigned to me. So we really want to create a lot of visibility in terms of work that you own in a singular spot. Just take a quarter step backwards. Hiver is a Google Chrome extension. We essentially are creating a ticketing platform within Google Chrome. And this is really based off of a shared inbox experience. So any Google group or domain that is shared, we can point here… all emails will show up as an unassigned email until you know, it's owned by someone. And then we'll show that experience and then unassigned emails. Before I even click into one. You know, we're going to have sentiment analysis run. We can have an SLA timer going as well as various tags and we have like a full AI tagging engine in order to help categorize conversations, you know, before you have to like click into them.
+
+Alex Krumm (alexander.k@grexit.com):
+  So if we go into an email, we're going to see, you know, Karen has written in about a VPN issue… over here, I would come, you know, assign it to myself. If there's any other custom attributes that I'd want to kind of associate with this ticket, we have various dropdown fields or free text fields. Then for internal conversations, we could see all of various emails that Karen's written in. And in this demo account, we have multiple inboxes. So like healthcare support, et cetera. And I don't have access to healthcare in my account just to give you an idea of permissioning. And then we also have a connected app ecosystem where we can showcase data from Jira or other tools. And in this case, I'm like creating a ticket in Jira. So if it's more like a device management issue, I think that's harder to categorize in hiver versus like you want to create like a static ticket to go, you know, check out like a modem somewhere in the building.
+
+Sriram Nagarajan:
+  Yeah, we use, I noticed slack is one of the apps that's supported and we use slack internally. So could you go over how slack would look at what basically a user can send a slack message that opens a ticket, or how does that work?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. Right now, it's more about like collaborating on a ticket with slack. So I could, you know, at mention my colleague… and this message would push to slack to let him know that there's like an assignment for him.
+
+Sriram Nagarajan:
+  Oh, okay. And I'll just give him the link to the email basically or to the ticket yep.
+
+Alex Krumm (alexander.k@grexit.com):
+  Exactly.
+
+Alex Krumm (alexander.k@grexit.com):
+  And then kind of, you know, interacting with people. So when I'm interacting with Karen, I have a full email template library that pops out here and is managed down here.
+
+Alex Krumm (alexander.k@grexit.com):
+  And then I have an AI assistant. So this is like the draft reply, it will make recommendations in terms of what we should say. I'm going to say to be direct… and we have an internal knowledge base within the system so you can write internal knowledge articles or just upload documentation. It's going to use that documentation to create the draft.
+
+Alex Krumm (alexander.k@grexit.com):
+  Pretty straightforward.
+
+Alex Krumm (alexander.k@grexit.com):
+  This is a very long response for a short ticket. And then when I am finished with an email, I could just go send and close. So now, you know, we're sending the email marking it complete conditionally and if Karen writes back, it'll reopen the same email and it will be assigned to whoever this is assigned to and that'll show up in like the mind folder.
+
+Alex Krumm (alexander.k@grexit.com):
+  And then finally, for like collaboration with the team, we could like reassign tickets, create shared drafts or I could drill in here and see all the other emails that are open that my coworkers have and I could start working, you know, hold this first or drill into someone who's out of office and just reassign these to someone else.
+
+Sriram Nagarajan:
+  So,
+
+Alex Krumm (alexander.k@grexit.com):
+  I'll pause there. Yeah.
+
+Sriram Nagarajan:
+  The finance that was on the left side, it's a category of tickets that's coming in, right? And then you're able to automatically apply based on certain criteria as to what the category would be.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. So the finance inbox is like an email domain. So like finance at hiver. Com?
+
+Sriram Nagarajan:
+  Okay. So we can't have like let's say support at hiver. Com and based on the context of an email, you are unable to move it to the right inboxes rather we need a dedicated email group or like Google group for each of these, right?
+
+Alex Krumm (alexander.k@grexit.com):
+  So we can actually point multiple Google groups into a singular inbox. And then we have something called a view which is like a conditional query of like show me all conversations that, you know, contain the following criteria. So like based on tags or custom attributes. So the payment methods of custom attribute, silly example. But then I can save this view. So these are going to be like all saved views and I could star it… and, you know, like maybe I only work on approval requests… then I would live out of this view… instead of, you know, the unassigned or something else. Got it.
+
+Sriram Nagarajan:
+  Like the way you're seeing this is like we would have one that's for us three. Yeah. And then you'll have one for you and Christian, right? So it's a two different, yeah, and the trial demo, I pointed like I pointed to help desk for like us three. And then I did have a us, I think it's like us office management. Yeah, just me and Christian are in and then I have access to both, but she can't see help desk and you guys can't see the office manager one. So you can separate them. That's why it is like it goes up just like that. Yeah. Okay. It shows up in your inbox. Yeah, underneath a similar, it brings a Gmail though, which is pretty neat. So we wouldn't like switch to like a system, an email account. Nope you respond right from your right from your email. Yeah. And.
+
+Alex Krumm (alexander.k@grexit.com):
+  There's since this is like a Google protocol within… like your account, you can essentially like verify to send as if I click this, there's a pop out on a different screen that Google's letting you know that we're sending a verification email to demonstration at hiverhelpdesk. Com. And then once I'm verified, I can send on behalf of.
+
+Sriram Nagarajan:
+  That inbox.
+
+Alex Krumm (alexander.k@grexit.com):
+  And then in the general settings, you can manage signatures and this is per domain. So it's like I could have my, you know, sandbox at hiverhelpdesk signature or a different signature for, you know, my other email. So what I'm trying to say is that there's a lot of flexibility if you want to send from your personal email address within the shared inbox or send from the alias of the group. Got it.
+
+Sriram Nagarajan:
+  How would an approval workflow work here? So if there is a ticket that's coming in that needs the user manager approval or like an internal approval that we would like to establish within the team, how would we go about that?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. So each inbox, I just clicked too quickly but each inbox has its own settings. And within this… we'll have our approval workflow.
+
+Alex Krumm (alexander.k@grexit.com):
+  And it's very simple. It's saying like you essentially drop a ticket into the approval workflow, say who the approver is, you know, or you can make like a conditional list of orders.
+
+Sriram Nagarajan:
+  And this approval is just within the team, right? Who is going to be a hiver user or like a helpdesk person? Yes. But if it's like a manager approval, we would need to use email communication for that to get that approval.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, you would… at this time, yes… got.
+
+Sriram Nagarajan:
+  It… I know Nick mentioned analytics. I kind of like think it's a good time. So we have all these tickets coming. If you want to create a dashboard or report for our leadership to kind of let them know. These are the tickets that are coming in. This is our SLA to resolve them. What is our option then? Yeah.
+
+Sriram Nagarajan:
+  I am just clicking too quickly.
+
+Alex Krumm (alexander.k@grexit.com):
+  So our analytics are really about workload and performance. I have no idea why this is loading.
+
+Alex Krumm (alexander.k@grexit.com):
+  My VPN has been messing… with my things today.
+
+Sriram Nagarajan:
+  There we go. So analytics.
+
+Alex Krumm (alexander.k@grexit.com):
+  Are about workload. So, how many emails have come in? So this is open net new within this period and ones that have been fully resolved. We have a period selector. It's just Omni like the bi tool that we've white labeled in here. Then we're measuring that over performance. So first response time, assigned time, general response time, and then total resolution times. And then all of this is over the users. So here I could drill into Yukta see how many conversations she was assigned, how many emails she sent, and then drill into any of these elements and… getting to the emails themselves. Then we have full SLA reports. So every single email that comes in, whether a net new email or reopened to a thread can trigger the SLA… kind of the same concepts, first response time or sorry, first response violations, resolution violations, first response compliance and total resolution compliance.
+
+Alex Krumm (alexander.k@grexit.com):
+  And then depending on like other things that you may or may not need, we have like an AI quality assurance on every single email that goes out. If it's internal, maybe you don't need this, but… we're rating each individual on like seven different metrics, you can toggle these on and off but typically people like clarity and completeness.
+
+Sriram Nagarajan:
+  Yeah, since this is meant for internal, I don't think we're going to have the rating to be honest.
+
+Alex Krumm (alexander.k@grexit.com):
+  Perfect. But it's.
+
+Sriram Nagarajan:
+  nice to know it has that feature. It's like what do you want? Yeah, you get it too.
+
+Alex Krumm (alexander.k@grexit.com):
+  Very clear. It looks like Ben is here. And then we also then can create custom reports based on any of these building blocks. So, first response time or resolution time or conversations by person… and then kind of use this to create custom dashboards.
+
+Sriram Nagarajan:
+  So, I know that there is a knowledge guide that we can build out ourselves. I don't know if we plan on using that, but could you show like an example of a populated one and what it looks like? Yep. So this.
+
+Alex Krumm (alexander.k@grexit.com):
+  Is an external facing one we could set up, you know, the internal one as well. It's a very straightforward knowledge base. So, you know, multiple nestings… swamp.
+
+Sriram Nagarajan:
+  I know we currently use confluence kind of as a knowledge base and I see that you guys work with Jira but not confluence. Do you know if that's planning to be added in the future maybe?
+
+Alex Krumm (alexander.k@grexit.com):
+  I don't think we're planning on adding confluence in the near term, but how… are you all using it? Is it like just like Jira?
+
+Sriram Nagarajan:
+  It's Jira and confluence are both owned by atlassian. So Jira is more of the workflow tool and confluence is more of like you can use it like a, we use it kind of like a wiki… documentation, how to's on things across the firm. So we.
+
+Alex Krumm (alexander.k@grexit.com):
+  don't have that integration set up yet just to give you with our AI agent for like knowledge sources. Right now, we have connect, we have a connection to notion we're building out Google drive this quarter and then we'll be adding like additional ones like confluence. I can't imagine confluence would be that hard since we already have Jira and Trello, both owned by, you know, atlassian.
+
+Sriram Nagarajan:
+  You know, so I know that for the end user submitting a ticket, basically, it's just going to look like them sending an email. There's no platform they need to log in or anything like that. Now, I… think… is that, I mean, that is the intent that's the intent, right? Like I guess if a user, like there's no ticket number assigned to them where they can follow up with. Is that a feature of the system? Like the, I mean, how would a user track the progress of their ticket without just like looking at their last email?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. So within the knowledge base, we can have a user portal login.
+
+Sriram Nagarajan:
+  Yeah, I don't think that's something that we would want a user portal. I was just curious if that's the only way the user could see the tickets. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  That's the only way a user could see their tickets is that or we could send an auto response to them. So it lives in their inbox. They would have like an email acknowledgement… but that wouldn't really solve for the like what's going on with my ticket right now? Question?
+
+Sriram Nagarajan:
+  Got it. Okay. And then when a ticket is closed and there's say that there's no update from the person that closed it, do they get a notice that the ticket has been closed even though there's no updates. Does that show as to the user? So, no.
+
+Alex Krumm (alexander.k@grexit.com):
+  It doesn't but we could set up an automation for you or with you that pretty much says upon some sort of action. So… it's more like if this, then that logic where trigger events happen. So we could say, like when status is updated, if the condition equals closed.
+
+Alex Krumm (alexander.k@grexit.com):
+  Then I could create an action of… send a reply.
+
+Sriram Nagarajan:
+  Got it. Okay. That makes sense. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  So, pretty straightforward. But this workflow engine is kind of one of the big differentiators of what we can do with hiver. So it's like if we start adding tags or changing custom fields, that can trigger the workflow engine to take action on the ticket, whether it's auto, sending an email asking for more information or doing something else internally… got it.
+
+Sriram Nagarajan:
+  Okay. So let's just say a ticket comes in and we need someone who's not set up with hiver to make a change on their end or say, you know, so another person who's not on hiver is needed for whatever reason. Is there a way to kind of include them in the ticket? Because it comes in an email, like we have multiple recipients on a ticket thread, like just like a regular email yep.
+
+Alex Krumm (alexander.k@grexit.com):
+  So, you could definitely just add them to the email.
+
+Sriram Nagarajan:
+  Okay. And both of it, would the system would combine it all into one when like for tracking purposes, right? Exactly. Okay?
+
+Alex Krumm (alexander.k@grexit.com):
+  The key id for our system is the subject line, okay?
+
+Sriram Nagarajan:
+  The experience from our phones, would it be different from what we're seeing here if we use Gmail from our phones?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yes, it would. So we actually have a hiver phone application because… specifically, the shared inbox won't show up on your phone… within the Gmail app?
+
+Sriram Nagarajan:
+  Is there something that you're able to show us in a demo now or going to take some time to set it up? So it's a separate app. Yeah, and you log into your Gmail account through the app?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. So essentially you just log into like the hiver account, it should be.
+
+Alex Krumm (alexander.k@grexit.com):
+  So it's pretty simple. It's probably a terrible experience, but you're going to have like all of your normal emails. And the big thing is we have this little notification bell in the top corner. When I click on that, I'll get you'll see like all the ad mentions and things that are assigned to you. So my support team is telling me about people that are in live trials currently… and kind of the requests that they have and?
+
+Sriram Nagarajan:
+  What you're showing to me is an iPhone app, iPhone, right? Yes. And you're using Gmail app on that?
+
+Alex Krumm (alexander.k@grexit.com):
+  So this is the hiver app. Okay? Yeah, because we can't overlay… into the Gmail phone app.
+
+Sriram Nagarajan:
+  That's what I was thinking. Okay?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. We also have an android app as well.
+
+Sriram Nagarajan:
+  To be honest, when I've used ticketing systems at other companies, I had no mobile access to the tickets. So it's not necessarily like, I guess because you can still respond to emails. So if you're not using the app and you get an email through a ticket, it'll still show up in your inbox, correct? Alex?
+
+Alex Krumm (alexander.k@grexit.com):
+  If it's addressed to your email address, yes, if it's addressed to the shared inbox, no, okay.
+
+Sriram Nagarajan:
+  Even though I might be on that like in that Google, because the shared inbox, I think is using Google groups. So say, like help desk I'm in that group… would that show up then?
+
+Alex Krumm (alexander.k@grexit.com):
+  It would still technically show up. Okay? But the kind of the idea with hiver is that you no longer receive those, the help desk email directly to your phone or to your.
+
+Sriram Nagarajan:
+  Gmail. But,
+
+Alex Krumm (alexander.k@grexit.com):
+  it's going to the shared inbox instead.
+
+Sriram Nagarajan:
+  Okay. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  And that's only just to not duplicate notifications and work for you.
+
+Sriram Nagarajan:
+  That makes sense. I think like when you're out and when you don't have your laptop, like it's good to know there's a mobile version. Yeah, you can quickly respond to it saying, can you take a look at this or? Yeah, no, the fact that it's capable. I just, it would be nice if it was within Gmail itself, but obviously, because it kind of separates it. Yeah. Oh, yeah, that's true. Okay. But that's good that you guys support that in some capacity. I did play around with the demo a lot. So, I think I'm okay on questions. I don't know if anyone else has any questions about the product or like submitting tickets or… I know like Brandon, you mentioned that maybe you and your team might have a use for it, not necessarily maybe for tracking issues or tracking responses. Yeah, I was trying to think of different use cases. I think it would be too complicated to put everything in compliance in there, but there's certain workflows that are like kind of offshoots that we could kind of consider. The one that came to mind immediately was, would be our data vendor request, but we are switched to Jira for that workflow. So that doesn't make sense, but I don't think there's actually some other ones, but then the issue would be if they send it to compliance or if there's a designated email. Yeah, the one cross department I think comes up to mind SRI mentioned is like when a new person is hired, it goes from HR and then Brianne, you create their email and then I create, you know, we create their research tool, access and other access. So it's like a handoff. Can that be supported too? Alex?
+
+Alex Krumm (alexander.k@grexit.com):
+  We could move them between inboxes. Yes. If you have access to all the inboxes, you could reassign it or simply remove it from the current inbox. Like in the top, right? I'll show you what that looks like and then just assign it, you know, reply to that next shared inbox would be one way. I guess maybe from an approval workflow, you could also have reminders, sure.
+
+Sriram Nagarajan:
+  Yeah, we do use onboarding, I bet. Yeah, if you have like a single inbox, it's just there's like multiple people that kind of need to do different steps. So like something would come in, it would be assigned to me. I have certain actions I need to do and then assigned to Nick for his action. Like is that, yeah, we all have access to the same shared group. I think that should work, right? Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  Definitely, you could move access and then you could also have like these custom fields where like the dropdown of the current status. So it's like, you know, have.
+
+Ben Morof (ben.morof@trexquant.com):
+  you guys, hi, I'm sorry, I was late. Hi, matt. Hi, there, have you guys talked about the slack integration? Because this is pretty tied to email and some of us are very tied to email, but some are not. So some are more tied to slack doing things in slack. So, have you covered that part or is that not in scope right now?
+
+Sriram Nagarajan:
+  We mentioned it, Alex, if you want to reiterate, we told us about how slack works with, oh.
+
+Ben Morof (ben.morof@trexquant.com):
+  Good. As long as you covered it. I'm okay with that. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  It's really just like pushing a notification to slack, okay? From your hybrid like essentially giving you more visibility and that you're getting notifications.
+
+Sriram Nagarajan:
+  Okay. Sorry, go on. Go on. Oh, in the email, there's a section on the right that we can add notes and then you can tag coworkers and then that will send them a slack notification that, you know, so, and so mentioned you in a comment or the field and that gives you a notification that, you know, action is required on your end? I guess.
+
+Ben Morof (ben.morof@trexquant.com):
+  Will it draw from slack into it just like it does from email?
+
+Alex Krumm (alexander.k@grexit.com):
+  Not yet, but we're doing, we're releasing that, which should be end of this quarter. But, you know, it's something that's actively being developed and it's going to be another inbox on the left. It'll just be like slack like we have like phone or chat. Cool. Okay. Thanks.
+
+Sriram Nagarajan:
+  Do we have one more minute or? Yeah, I was just like, which was your recent feature upgrade? Alex? And what's I know we talked about slack. I'm just curious what's the most requested feature upgrade from customers to you?
+
+Alex Krumm (alexander.k@grexit.com):
+  It's pretty wide. I would say like the number one ask right now or being able to do additional triggers like.
+
+Sriram Nagarajan:
+  So, if you want to, I've.
+
+Alex Krumm (alexander.k@grexit.com):
+  been in this space for a minute and worked at other companies.
+
+Sriram Nagarajan:
+  Our, the biggest.
+
+Alex Krumm (alexander.k@grexit.com):
+  Gap in our system currently is within like the automation engine being able to say like I want to take an action to post, you know, throw a webhook to a third party system with like some sort of Json payload other than like the custom integrations that are already provisioned.
+
+Alex Krumm (alexander.k@grexit.com):
+  So that would be like the largest ask.
+
+Sriram Nagarajan:
+  Where would you say hiver is in the product life cycle? Do you feel like you have a stable product where you're actively working on features to improve? Or you still feel like you're trying to get that underlying working model still established? Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  Super stable product. So, this product's been in market seven years. We have over 3,000 businesses that use it, tens of thousands of end users.
+
+Sriram Nagarajan:
+  Yeah, great. Do you have any concerns about the app and how it a lot like the authentication with the app? I think we will discuss more of that later.
+
+Sriram Nagarajan:
+  I still need to understand it a little bit. Yeah, Alex, I think we're getting kicked out of the meeting room. Thank you for your time. I, yeah, we'll discuss this internally and then go about next steps. I know someone called me. I forget her name about maybe sending the trial. Yeah, but I think you've answered most of our questions now, but we'll follow up shortly.
+
+Alex Krumm (alexander.k@grexit.com):
+  Okay, great. Well, appreciate everyone's time today.
+
+Sriram Nagarajan:
+  All right. Thanks, Alex. Thank you.

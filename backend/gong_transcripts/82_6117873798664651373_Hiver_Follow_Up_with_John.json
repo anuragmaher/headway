@@ -1,0 +1,640 @@
+{
+  "call_id": "6117873798664651373",
+  "title": "Hiver Follow Up with John",
+  "started": "2026-01-27T21:30:37+05:30",
+  "duration_seconds": 181,
+  "call_metadata": {
+    "id": "6117873798664651373",
+    "url": "https://us-31545.app.gong.io/call?id=6117873798664651373",
+    "title": "Hiver Follow Up with John",
+    "scheduled": "2026-01-27T21:30:00+05:30",
+    "started": "2026-01-27T21:30:37+05:30",
+    "duration": 181,
+    "primaryUserId": "2800021235101731226",
+    "direction": "Conference",
+    "system": "Zoom",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://us06web.zoom.us/j/84436002834?jst=3",
+    "isPrivate": false,
+    "calendarEventId": "6jlkofbkrca57uj9nclld2h9cs@google.com"
+  },
+  "parties": [
+    {
+      "id": "5935261436904885531",
+      "emailAddress": "jfrancis@securityscorecard.com",
+      "name": "John Francis",
+      "title": "Principal Product Manager",
+      "speakerId": "757607216804847335",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "185990067051",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "21424420421"
+                },
+                {
+                  "name": "firstname",
+                  "value": "John"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Principal Product Manager"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769021136.225
+                },
+                {
+                  "name": "createdate",
+                  "value": 1767639853.204
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1767657600.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "Francis"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "79522122"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "PAID_SEARCH"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "phone",
+                  "value": "+18006821707"
+                },
+                {
+                  "name": "recent_conversion_date",
+                  "value": 1767978323.088
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Associated with a deal"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1767639853.204
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "opportunity"
+                },
+                {
+                  "name": "email",
+                  "value": "jfrancis@securityscorecard.io"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "+18006821707",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "7544971508519899482",
+      "emailAddress": "matthew.p@grexit.com",
+      "name": "Matthew P",
+      "title": "Sr. AE",
+      "userId": "2800021235101731226",
+      "speakerId": "6205407648318218815",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "5175827385348517649",
+      "emailAddress": "jeevan@hiverhq.com",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Invitee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "6117873798664651373",
+    "transcript": [
+      {
+        "speakerId": "757607216804847335",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 11234,
+            "end": 13014,
+            "text": "hey, Matthew, how's it going?"
+          },
+          {
+            "start": 13114,
+            "end": 13474,
+            "text": "Hey?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6205407648318218815",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 13474,
+            "end": 14154,
+            "text": "John, good."
+          },
+          {
+            "start": 14214,
+            "end": 14614,
+            "text": "How you doing?"
+          }
+        ]
+      },
+      {
+        "speakerId": "757607216804847335",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 15174,
+            "end": 15794,
+            "text": "Good, good."
+          },
+          {
+            "start": 16014,
+            "end": 17174,
+            "text": "What's up?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6205407648318218815",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 18454,
+            "end": 22174,
+            "text": "Yeah, just wanted to follow up with you, see how it's going, see if you had any questions."
+          }
+        ]
+      },
+      {
+        "speakerId": "757607216804847335",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 24314,
+            "end": 25254,
+            "text": "No, all good."
+          },
+          {
+            "start": 25474,
+            "end": 30994,
+            "text": "We're doing a POC, I think you must have seen a bunch of new accounts got created or at least a few."
+          }
+        ]
+      },
+      {
+        "speakerId": "6205407648318218815",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 31504,
+            "end": 33804,
+            "text": "I saw you added people to your account, yes?"
+          }
+        ]
+      },
+      {
+        "speakerId": "757607216804847335",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 34064,
+            "end": 34524,
+            "text": "Yeah."
+          },
+          {
+            "start": 34544,
+            "end": 36924,
+            "text": "So we're just going through the testing phase."
+          },
+          {
+            "start": 37264,
+            "end": 39084,
+            "text": "I want them to."
+          },
+          {
+            "start": 39544,
+            "end": 43404,
+            "text": "So like we just kicked off the testing today."
+          },
+          {
+            "start": 44464,
+            "end": 51504,
+            "text": "They're going to be at it probably for a week or two, and then we'll make a final decision."
+          },
+          {
+            "start": 51744,
+            "end": 60584,
+            "text": "One thing I'm probably going to need some help with not immediately, but within the next week or so is just having someone I can talk to about the API."
+          },
+          {
+            "start": 61004,
+            "end": 66504,
+            "text": "I'll come, I'm specifically looking to pull out some metrics that we can expand from there."
+          },
+          {
+            "start": 67564,
+            "end": 71224,
+            "text": "So, you know, like if you could line that up that'd be great."
+          },
+          {
+            "start": 71324,
+            "end": 80864,
+            "text": "I mean, I could read through the API guide, but I'd really like, I want to short circuit the amount of effort we put into developing anything as part of that."
+          }
+        ]
+      },
+      {
+        "speakerId": "6205407648318218815",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 81144,
+            "end": 81664,
+            "text": "Okay."
+          },
+          {
+            "start": 81764,
+            "end": 82504,
+            "text": "Yep got it."
+          },
+          {
+            "start": 82564,
+            "end": 85604,
+            "text": "So, want to talk to somebody about the API?"
+          }
+        ]
+      },
+      {
+        "speakerId": "757607216804847335",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 86124,
+            "end": 86644,
+            "text": "Yep."
+          }
+        ]
+      },
+      {
+        "speakerId": "6205407648318218815",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 88924,
+            "end": 89444,
+            "text": "Great."
+          },
+          {
+            "start": 90004,
+            "end": 90804,
+            "text": "I can help with."
+          },
+          {
+            "start": 90904,
+            "end": 93544,
+            "text": "I can help get that scheduled for you."
+          },
+          {
+            "start": 94184,
+            "end": 96784,
+            "text": "And then, yeah, your team's testing it out here."
+          },
+          {
+            "start": 97664,
+            "end": 101584,
+            "text": "You think like maybe sometime next week?"
+          },
+          {
+            "start": 101644,
+            "end": 103404,
+            "text": "Is that for the API conversation?"
+          },
+          {
+            "start": 104234,
+            "end": 105134,
+            "text": "Yeah, or do you want to?"
+          }
+        ]
+      },
+      {
+        "speakerId": "757607216804847335",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 105134,
+            "end": 105234,
+            "text": "Wait."
+          },
+          {
+            "start": 105234,
+            "end": 105534,
+            "text": "Yeah, that's fine."
+          },
+          {
+            "start": 105574,
+            "end": 107094,
+            "text": "No, sometime next week is fine."
+          }
+        ]
+      },
+      {
+        "speakerId": "6205407648318218815",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 107514,
+            "end": 107994,
+            "text": "All right."
+          },
+          {
+            "start": 107994,
+            "end": 108274,
+            "text": "Awesome."
+          },
+          {
+            "start": 109214,
+            "end": 109534,
+            "text": "Perfect."
+          },
+          {
+            "start": 109654,
+            "end": 110474,
+            "text": "Yeah, I'll get that."
+          },
+          {
+            "start": 110494,
+            "end": 116574,
+            "text": "We'll get that scheduled for you here and then just want to put a follow up on the calendar for us again?"
+          },
+          {
+            "start": 117574,
+            "end": 124474,
+            "text": "Maybe I can, do you want to do like Wednesday of next week, same time as today?"
+          }
+        ]
+      },
+      {
+        "speakerId": "757607216804847335",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 125914,
+            "end": 127434,
+            "text": "Can we do Monday or Tuesday?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6205407648318218815",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 128134,
+            "end": 128894,
+            "text": "Yeah, we could do."
+          },
+          {
+            "start": 129034,
+            "end": 130854,
+            "text": "I can't do Tuesday but I can do Monday."
+          }
+        ]
+      },
+      {
+        "speakerId": "757607216804847335",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 132274,
+            "end": 132634,
+            "text": "Okay."
+          },
+          {
+            "start": 132694,
+            "end": 132874,
+            "text": "Yeah."
+          },
+          {
+            "start": 133554,
+            "end": 134554,
+            "text": "What time do you have?"
+          },
+          {
+            "start": 134774,
+            "end": 135474,
+            "text": "What's your free time?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6205407648318218815",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 135894,
+            "end": 143914,
+            "text": "Let's see it's eight o'clock… we could do the same time as today or a little bit later up to you."
+          }
+        ]
+      },
+      {
+        "speakerId": "757607216804847335",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 145254,
+            "end": 146914,
+            "text": "Yeah, I think that should work for me for now."
+          },
+          {
+            "start": 146994,
+            "end": 147914,
+            "text": "Just send the invite."
+          }
+        ]
+      },
+      {
+        "speakerId": "6205407648318218815",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 148294,
+            "end": 148574,
+            "text": "All right."
+          },
+          {
+            "start": 148594,
+            "end": 148794,
+            "text": "Cool."
+          },
+          {
+            "start": 148914,
+            "end": 149294,
+            "text": "I'll do that."
+          },
+          {
+            "start": 149494,
+            "end": 150034,
+            "text": "And then, yeah."
+          },
+          {
+            "start": 150174,
+            "end": 154434,
+            "text": "Well, maybe I can get the API person to join that call as well."
+          }
+        ]
+      },
+      {
+        "speakerId": "757607216804847335",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 154994,
+            "end": 155314,
+            "text": "Okay."
+          },
+          {
+            "start": 155394,
+            "end": 155914,
+            "text": "Sounds good."
+          },
+          {
+            "start": 155954,
+            "end": 156354,
+            "text": "That'd be great."
+          },
+          {
+            "start": 156514,
+            "end": 156754,
+            "text": "All."
+          }
+        ]
+      },
+      {
+        "speakerId": "6205407648318218815",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 156754,
+            "end": 156894,
+            "text": "Right."
+          },
+          {
+            "start": 156914,
+            "end": 162994,
+            "text": "I'll go ahead and extend your trial here too, and then can you remind me how many people do you think this could be for potentially?"
+          }
+        ]
+      },
+      {
+        "speakerId": "757607216804847335",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 164234,
+            "end": 165914,
+            "text": "I think we said 20."
+          },
+          {
+            "start": 166454,
+            "end": 166814,
+            "text": "Okay."
+          },
+          {
+            "start": 166974,
+            "end": 174734,
+            "text": "And I have, I think five or, yeah… I mean, it'll be probably for about 20 people, okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6205407648318218815",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 175054,
+            "end": 175414,
+            "text": "Okay."
+          },
+          {
+            "start": 175474,
+            "end": 176054,
+            "text": "Sounds good."
+          },
+          {
+            "start": 176134,
+            "end": 176794,
+            "text": "Well, thanks, John."
+          },
+          {
+            "start": 176854,
+            "end": 178134,
+            "text": "Let me know if you have any questions in the meantime."
+          }
+        ]
+      },
+      {
+        "speakerId": "757607216804847335",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 178534,
+            "end": 179154,
+            "text": "Sounds good."
+          },
+          {
+            "start": 179214,
+            "end": 179714,
+            "text": "Thanks a lot."
+          },
+          {
+            "start": 179934,
+            "end": 180414,
+            "text": "Thanks bye."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 22
+}

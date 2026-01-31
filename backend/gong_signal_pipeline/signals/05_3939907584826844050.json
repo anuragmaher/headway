@@ -5,34 +5,11 @@
   "started": "2026-01-30T22:31:37+05:30",
   "signals": [
     {
-      "Theme": "Status Tracking",
-      "Ask": "Need clear visibility on email status, including open, pending, and closed.",
+      "Theme": "Status Customization",
+      "Sub-Theme": "Custom Statuses",
+      "Ask": "We need the ability to set custom statuses for emails beyond the standard options.",
       "Priority": "High",
-      "Evidence": "How do I know what's assigned? How do I know what's unassigned? What status is my email in?"
-    },
-    {
-      "Theme": "Customizability",
-      "Ask": "Require the ability to customize email statuses.",
-      "Priority": "High",
-      "Evidence": "Can they set other statuses? Can we custom that Cole?"
-    },
-    {
-      "Theme": "Tagging System",
-      "Ask": "Need the ability to create personal and private tags in addition to shared tags.",
-      "Priority": "Medium",
-      "Evidence": "Does that include like private tags as well?"
-    },
-    {
-      "Theme": "Search Functionality",
-      "Ask": "Require advanced search capabilities with multiple filters and saved views.",
-      "Priority": "Medium",
-      "Evidence": "And you can put multiple filters on to find it, right?"
-    },
-    {
-      "Theme": "User Availability",
-      "Ask": "Need a clear method for tracking user availability status.",
-      "Priority": "Medium",
-      "Evidence": "How do you know if somebody's online or not?"
+      "Evidence": "And can they set other statuses? Can we custom that Cole? So, no, these are standard statuses."
     }
   ]
 }

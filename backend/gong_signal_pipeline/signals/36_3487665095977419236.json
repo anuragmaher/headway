@@ -6,33 +6,10 @@
   "signals": [
     {
       "Theme": "Information Accuracy",
-      "Ask": "The AI must consistently provide accurate information from the knowledge base.",
+      "Sub-Theme": "Knowledge Base Consistency",
+      "Ask": "Ensure that the information provided by Hiver AI is always accurate and consistent with the knowledge base.",
       "Priority": "High",
-      "Evidence": "I just want the accuracy to be fixed."
-    },
-    {
-      "Theme": "Information Relevance",
-      "Ask": "The AI should avoid providing unnecessary information in its responses.",
-      "Priority": "High",
-      "Evidence": "Sometimes it does give like it gives the right answer and then it gives other information that I didn't need."
-    },
-    {
-      "Theme": "Testing Efficiency",
-      "Ask": "We need the AI to work effectively without requiring extensive testing from our team.",
-      "Priority": "High",
-      "Evidence": "We feel like we're doing a lot of testing and we kind of just need it to work."
-    },
-    {
-      "Theme": "Feature Implementation",
-      "Ask": "We want to implement features that allow us to fine-tune the AI's responses ourselves.",
-      "Priority": "Medium",
-      "Evidence": "When you're done, you can teach me how to do it myself."
-    },
-    {
-      "Theme": "Knowledge Base Access",
-      "Ask": "We need to share our knowledge base documents for testing and fine-tuning.",
-      "Priority": "Medium",
-      "Evidence": "I can email this to you and then I'll CC Jordan on it."
+      "Evidence": "The goal is just to make sure that the information it provides is accurate. So, because generally the idea that Jordan wanted is that in the event that we have new people coming, they can't question the information that hiver AI provides because it will always be correct."
     }
   ]
 }

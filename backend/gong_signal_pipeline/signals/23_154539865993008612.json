@@ -6,33 +6,10 @@
   "signals": [
     {
       "Theme": "Customer Support",
-      "Ask": "We require a faster customer support response time, ideally within hours, not days.",
+      "Sub-Theme": "Response Rate",
+      "Ask": "We expect a faster response rate from customer support, ideally within minutes.",
       "Priority": "High",
-      "Evidence": "The customer mentioned that support usually takes at least 48 hours to reply."
-    },
-    {
-      "Theme": "System Reliability",
-      "Ask": "We need assurance of high system uptime and reliability.",
-      "Priority": "High",
-      "Evidence": "The customer expressed dissatisfaction with their current platform's frequent downtimes."
-    },
-    {
-      "Theme": "Integration Capabilities",
-      "Ask": "We need confirmation that the platform can integrate with third-party services like Zapier and Jira.",
-      "Priority": "Medium",
-      "Evidence": "The customer stated they need a way to integrate with Circle and mentioned using Jira."
-    },
-    {
-      "Theme": "Pricing Structure",
-      "Ask": "We are looking for a more competitive pricing model compared to our current solution.",
-      "Priority": "Medium",
-      "Evidence": "The customer expressed they are not happy with the pricing of their current solution."
-    },
-    {
-      "Theme": "Implementation Timeline",
-      "Ask": "We aim to make a decision by the end of next week and switch in February.",
-      "Priority": "High",
-      "Evidence": "The customer indicated a timeline for decision-making and implementation."
+      "Evidence": "First and foremost is the customer support response rate like whenever we have an issue, it usually takes at least 48 hours for someone to reply even for the first time."
     }
   ]
 }

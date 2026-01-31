@@ -5,34 +5,11 @@
   "started": "2026-01-30T19:30:48+05:30",
   "signals": [
     {
-      "Theme": "Billing Flexibility",
-      "Ask": "We want the option for monthly billing instead of annual.",
+      "Theme": "Billing Issue",
+      "Sub-Theme": "Unexpected Charge",
+      "Ask": "We expect not to be charged the full year during the trial period.",
       "Priority": "High",
-      "Evidence": "We want to do if it's possible the monthly billing."
-    },
-    {
-      "Theme": "Trial Period Issues",
-      "Ask": "We need a refund for the annual charge incurred during the trial period.",
-      "Priority": "High",
-      "Evidence": "We got charged the full amount without... the trial period was supposed to end today."
-    },
-    {
-      "Theme": "User Onboarding",
-      "Ask": "We require a demo session for our entire customer service and sales team.",
-      "Priority": "Medium",
-      "Evidence": "I just want them to actually feel okay... I wouldn't just want to like hang on to this and let Freshdesk go."
-    },
-    {
-      "Theme": "System Setup",
-      "Ask": "We need additional time to set up the email routing before fully transitioning.",
-      "Priority": "Medium",
-      "Evidence": "I wanted to get everything sorted before, you know, we actually did the thing, right?"
-    },
-    {
-      "Theme": "Product Interest",
-      "Ask": "We are interested in adopting Hiver as our ticketing system.",
-      "Priority": "High",
-      "Evidence": "We actually want to have Hiver as our ticketing system."
+      "Evidence": "The trial period was supposed to end today. It's just, we got charged the full amount without, you know?"
     }
   ]
 }

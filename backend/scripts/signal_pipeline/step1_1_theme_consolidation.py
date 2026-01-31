@@ -2,8 +2,8 @@
 """
 Stage 1.1: Theme consolidation from all signals.
 
-Reads all_signals.json, collects distinct Theme values from every signal,
-sends them to an LLM to produce a canonical theme → raw themes mapping.
+Reads all_signals.json, collects distinct Theme and Sub-Theme pairs from every signal,
+sends them to an LLM to produce a canonical theme → raw theme/sub-theme mapping.
 Writes theme_consolidation.json to pipeline_output_dir/signals/.
 """
 
@@ -26,19 +26,24 @@ PROMPT_PATH = SCRIPT_DIR / "prompts" / "step1_1_theme_consolidation.txt"
 OUTPUT_FILENAME = "theme_consolidation.json"
 
 
-def get_distinct_themes(signals_dir: Path) -> list[str]:
-    """Load all_signals.json and return sorted unique Theme values from all signals."""
+THEME_SUB_SEP = " | "
+
+
+def get_distinct_theme_subtheme_entries(signals_dir: Path) -> list[str]:
+    """Load all_signals.json and return sorted unique Theme and Theme|Sub-Theme entries from all signals."""
     all_path = signals_dir / "all_signals.json"
     if not all_path.exists():
         return []
     data = json.loads(all_path.read_text(encoding="utf-8"))
-    themes: set[str] = set()
+    entries: set[str] = set()
     for rec in data.get("transcripts", []):
         for sig in rec.get("signals", []):
             theme = (sig.get("Theme") or sig.get("theme") or "").strip()
+            sub = (sig.get("Sub-Theme") or sig.get("sub_theme") or sig.get("subtheme") or "").strip()
             if theme:
-                themes.add(theme)
-    return sorted(themes)
+                entry = f"{theme}{THEME_SUB_SEP}{sub}" if sub else theme
+                entries.add(entry)
+    return sorted(entries)
 
 
 def load_prompt_template() -> str:
@@ -49,13 +54,13 @@ def load_prompt_template() -> str:
 
 def consolidate_themes(
     client: OpenAI,
-    unique_theme_list: list[str],
+    unique_entries: list[str],
     model: str = "gpt-4o-mini",
 ) -> dict[str, list[str]]:
-    """Call LLM with theme consolidation prompt; return canonical_theme -> [raw themes]."""
-    if not unique_theme_list:
+    """Call LLM with theme consolidation prompt; return canonical_theme -> [raw theme/sub-theme entries]."""
+    if not unique_entries:
         return {}
-    theme_list_text = "\n".join(unique_theme_list)
+    theme_list_text = "\n".join(unique_entries)
     template = load_prompt_template()
     user_content = template.replace("{{UNIQUE_THEME_LIST}}", theme_list_text)
 
@@ -114,9 +119,9 @@ def main() -> None:
     signals_dir = output_dir / "signals"
     signals_dir.mkdir(parents=True, exist_ok=True)
 
-    unique_themes = get_distinct_themes(signals_dir)
-    if not unique_themes:
-        print("No distinct themes found in signals (all_signals.json missing or empty).")
+    unique_entries = get_distinct_theme_subtheme_entries(signals_dir)
+    if not unique_entries:
+        print("No distinct theme/sub-theme entries found in signals (all_signals.json missing or empty).")
         sys.exit(1)
 
     settings = Settings()
@@ -125,8 +130,8 @@ def main() -> None:
         sys.exit(1)
 
     client = OpenAI(api_key=settings.OPENAI_API_KEY)
-    print(f"Consolidating {len(unique_themes)} distinct themes...")
-    consolidated = consolidate_themes(client, unique_themes, args.model)
+    print(f"Consolidating {len(unique_entries)} distinct theme/sub-theme entries...")
+    consolidated = consolidate_themes(client, unique_entries, args.model)
     themes_with_ids = add_ids(consolidated)
     output = {"themes": themes_with_ids}
 

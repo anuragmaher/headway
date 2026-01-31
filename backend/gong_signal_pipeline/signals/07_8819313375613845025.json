@@ -5,34 +5,11 @@
   "started": "2026-01-30T22:00:42+05:30",
   "signals": [
     {
-      "Theme": "Email Management",
-      "Ask": "The platform must separate email and chat correspondence in the inbox.",
+      "Theme": "Inbox Organization",
+      "Sub-Theme": "Email and Chat Separation",
+      "Ask": "We need the ability to separate email and chat correspondence in our shared inbox to improve organization and efficiency.",
       "Priority": "High",
-      "Evidence": "It doesn't separate those in an inbox, making it next to impossible to organize."
-    },
-    {
-      "Theme": "Contact Management",
-      "Ask": "The solution should allow grouping of contacts under a single company umbrella.",
-      "Priority": "High",
-      "Evidence": "It doesn't have the ability to lump contacts into a company."
-    },
-    {
-      "Theme": "Integration Requirements",
-      "Ask": "There must be a direct integration from the sales CRM into the support CRM.",
-      "Priority": "High",
-      "Evidence": "There's no direct integration from our sales CRM into our support CRM."
-    },
-    {
-      "Theme": "Analytics Needs",
-      "Ask": "The system should provide analytics on average reply times throughout email threads.",
-      "Priority": "Medium",
-      "Evidence": "I would love to be able to see average reply time not just to first response but to even like in a thread."
-    },
-    {
-      "Theme": "Trial and Evaluation",
-      "Ask": "A trial period for the solution is necessary before making a final decision.",
-      "Priority": "High",
-      "Evidence": "I would really love to... get back to you by the end of next week if we are interested in doing like a trial period."
+      "Evidence": "It's such a silly thing, but it doesn't separate those in an inbox. So if you're in a shared inbox, all emails and chats are just kind of like lumped into one communication funnel, which makes it next to impossible to organize yourself as an employee."
     }
   ]
 }

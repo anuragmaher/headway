@@ -6,33 +6,10 @@
   "signals": [
     {
       "Theme": "AI Automation",
-      "Ask": "We need an AI solution to automatically read and respond to customer emails.",
+      "Sub-Theme": "Email Response",
+      "Ask": "We need something with AI that can take the task to answer customer emails automatically without human intervention.",
       "Priority": "High",
-      "Evidence": "We need something automatized that... we cannot do that now."
-    },
-    {
-      "Theme": "Human Intervention",
-      "Ask": "We are open to some human intervention for complex queries.",
-      "Priority": "Medium",
-      "Evidence": "We know that the AI has to learn and understand the messages we receive so that it can answer correctly."
-    },
-    {
-      "Theme": "Cost Efficiency",
-      "Ask": "We want to minimize costs and prefer a plan for two users.",
-      "Priority": "High",
-      "Evidence": "Our idea is to spend the less money possible."
-    },
-    {
-      "Theme": "Decision Timeline",
-      "Ask": "We aim to make a decision by next week after evaluating other options.",
-      "Priority": "High",
-      "Evidence": "I think on Wednesday, I can have all that information and take the decision."
-    },
-    {
-      "Theme": "Language Support",
-      "Ask": "The platform must support responses in Spanish.",
-      "Priority": "Medium",
-      "Evidence": "Does it have the option in Spanish?"
+      "Evidence": "We don't have the resources and we need something with AI that can take the task to answer them."
     }
   ]
 }

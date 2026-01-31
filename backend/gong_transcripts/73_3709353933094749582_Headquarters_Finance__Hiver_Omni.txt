@@ -1,0 +1,196 @@
+================================================================================
+Call: Headquarters (Finance) <> Hiver Omni
+Date: 2026-01-28T00:32:02+05:30
+================================================================================
+
+Raghav Shankar (raghav@hiverhq.com):
+  hey, Fernanda, Dusan, fiv, how's everybody doing? Hi, all?
+
+Adam Harless (adam@headquarters.co):
+  Good. How are you all?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Good. Thanks for checking in. We've got Ali has chopped in. I think we had a few more people on the invite. Do we know from the headquarters side, if there's going to be Adam who's going to be joining us? And Marco, I think are the two other people?
+
+Adam Harless (adam@headquarters.co):
+  Yes, Adam should be joining. I'll reach out. Got it. Okay?
+
+Raghav Shankar (raghav@hiverhq.com):
+  As is the team these days, we've got enough number of new takers, if not one extra 10 people. Crazy funny time to be alive in which, yeah, we'll give the rest of the team a couple of minutes to trickle in. We'll kick off with a quick round of introduction. And the primary agenda is to understand how the finance team functions in terms of as of today, on front requirements, things like that. So it's going to be more of a scoping and a workflow discovery call for today's, session.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Okay. Adam's in the waiting room. I think that should be good to… kick us off couple of minutes. Hey, Adam.
+
+Adam Harless (adam@headquarters.co):
+  Sorry about that. I had a customer call go long. I apologize. Okay.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Good to go. Adam, is that full house? We're only missing Marco at this point?
+
+Adam Harless (adam@headquarters.co):
+  Marco's on vacation actually. So I just left him. So that way he'll be able to see our note taker but he won't be able to join all.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Right. Perfect. Yep. So to kick us off, Adam, setting the agenda right at the top two main things I wanted to chat about today. Obviously after a round of introductions, I wanted to hear how the priorities needs and requirements for the finance team function has evolved over the last six months since we spoke about them, understand a bit more of the workflow in detail current state.
+
+Raghav Shankar (raghav@hiverhq.com):
+  And if there are any future state requirements that you'd like to achieve with hiver. So today is going to be more of a workflow review and a scoping call. If we could call it that. What I do after the call is prepare based on our discussion, a list of can dos and future state planned items from the hiver perspective and schedule us for a time in the future where we could have a discussion around kicking off a pilot commercials, things like that, if it makes sense.
+
+Adam Harless (adam@headquarters.co):
+  Yeah, sure. So as we've mentioned in the past, we use both hiver and front internally. We use front with our Ar team specifically because they are in a first party role. So they're working as if they're employees for that company. And so what that means is unlike with Dushan's team, they need to have that domain and they need to send from that domain. So that's.
+
+Raghav Shankar (raghav@hiverhq.com):
+  why?
+
+Adam Harless (adam@headquarters.co):
+  That team, we've never considered hiver because at the time that we've talked in the past that wasn't a service. And so it just wasn't it didn't there was no reason to have a conversation because the future wasn't there. As far as their day to day, you know, they are sending 50 plus emails a day. Probably it goes into a proprietary Ar dashboard that we've built which, you know, connects through a pretty standard API which I imagine that hiver probably already has or does have an API so that'd be similar. But, and we're able to track, you know, outcomes the notes, you know, sender receiver date… time. I mean, all the standard information which that piece was not concerning about hiver because I know we can do exports of hiver's results too. So I'm confident you could do that piece. So it's simply that domain piece. And we do not have flexibility on the Ar team like it has to come from those addresses. So it's a pretty table stakes to consider it of.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Course. So the first confirmation I do want to give you is that the outlook product that we were discussing back in may June, last year. We've now since evolved the product and its roadmap. And we're now calling it hiver Omni in the sense of we're building a web based platform that's email provider agnostic, right down to the level of you can connect hiver to an outlook account, a Gmail account, and even skip the single sign on as a whole and just use an email id password to set up the login perspective for users and for mailboxes as we call it, right? So to your point, I believe you were catering to about 15 high value clients with the Ar team based on my notes from last time.
+
+Adam Harless (adam@headquarters.co):
+  Yeah, we were about 15 team members… and then, yeah, and Filip here is one of the managers of Ar, so he'll probably have some, he may have more technical questions or be able to answer although fair, I think set up a lot of it. So both of them will be able to address maybe more on the technical pieces of it. But yeah, got it at a high level. Yeah, all.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Right. Understood now, another thing that I would want to find out is also that if once we move past the whole getting the outside email addresses and outside domain based email addresses configured and set up on hiver, what does a typical sort of workflow look like in terms of internal process? Like are you going to be updating fields? Is it just about getting a reply sent out?
+
+Adam Harless (adam@headquarters.co):
+  I mean, when you say, sorry, updating fields, I mean we have statuses, we have automations that are set up. So if it comes from certain addresses or certain keywords, it can be urgency. There's slas. So, you know, we'll know if we responded within a certain amount of time… all of that is currently… in use. Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Got it. And another thing that I do want to find out is last time you had mentioned interest in a dialpad integration for the Ar team specifically. Is that still going to be like a must have or is that more for good to have at this stage?
+
+Adam Harless (adam@headquarters.co):
+  It is nice to have, but they both now connect into our dashboard. So honestly, it's a little less important but good to have Filip could address that question better than I can actually for sure in general.
+
+Filip Gacic (filip@headquarters.co):
+  Yes. Yeah. Probably I'm thinking the answer is not a must have, but… I'm going to have to think a little bit more about it. And in terms of the fields question, Adam, just to sort of piggyback on what you said, the… Raghav, if I'm understanding correctly, you're asking about the fields that we would let's say, potentially use such as like the name of the subject, that might be a dynamic one in the emails or like contact information? Is that what you're asking or is it like something else? Oh.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah. So what I'm looking to find out is more on the operational side of it, like what kind of categories do you track? Do you have workflows built on? Hey, if I select option a, it has to send a reminder, option B sends out a prioritization, you know, re, tags that email things like that.
+
+Filip Gacic (filip@headquarters.co):
+  We would probably want to develop that a little bit more further as it is right now simply because we haven't been using it in like its fullest potential, but we definitely could and would want to work on that more in the future got.
+
+Raghav Shankar (raghav@hiverhq.com):
+  It, so as it exists, you do have categories that you run on emails that would classify the email based on client? Yeah, yeah.
+
+Filip Gacic (filip@headquarters.co):
+  We're using in front, typically what we're using majority of instances is the tagging system. So the tags are for us specifically used to sort of classify stuff to mark stuff, but we, but yeah, we would also, we do have some small number of like macros and automation, stuff like that we would want to go develop a little bit further.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Got, it. Makes sense. Now, one more leading question from the notes I have from the last conversation was email visibility that we were chatting about where as far as I understand, it stood at a place where individual Ar, employees or team members would only need visibility to the potential clients that they're working with and should not have access across the board to all of the clients that your team services as a whole. Is that still more like again more of a must have good to have?
+
+Adam Harless (adam@headquarters.co):
+  That's it. I'm sorry or Filip, you got it.
+
+Filip Gacic (filip@headquarters.co):
+  Yeah. I'm not really sure what you've discussed previously. I don't want to say that it is a must in terms of it have like it depends. We would want to have both roles that would have visibility into all of the inboxes and all of the clients. But we would also, you know, possibly want to have users that would be limited to view only and use only inboxes from a specific client. So, yeah, hope that answers the question.
+
+Raghav Shankar (raghav@hiverhq.com):
+  It does Filip. So essentially leaders supervisors, folks that are responsible for everything common access, individual contributors, basically have three clients. I just need to see the three clients emails that I'm working on.
+
+Filip Gacic (filip@headquarters.co):
+  Correct. Yes, all.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Right. Perfect. Okay. And with that said, I did want to dive a little more into your existing flow as it is today, Filip. So could you give me a little bit of understanding in terms of what a typical end to end flow looks like for one of your clients in terms… of just processing and handling an incoming query from them?
+
+Filip Gacic (filip@headquarters.co):
+  We're doing outbound? Sorry?
+
+Adam Harless (adam@headquarters.co):
+  Yeah… you can go, Filip? Yeah.
+
+Filip Gacic (filip@headquarters.co):
+  So we mostly, I mean, I'm… trying to figure exactly out how to say this but, we… do both outbound and inbound communication. We also… like… we do not have like a specific sop in place when it comes to like tracking and identifying… KPI based on the emails sent out and stuff like that, but we would definitely want to think about developing that too. Ultimately… we're not using like the standard typical ticketing system as if like, you know, there is an open ticket communication. Once it's resolved, you close, it never reopens again. Stuff like that, not necessarily because a lot of times, you know, customers that we're dealing with tend to use one single email thread for future communication for like a year or even more. So, so it's not like we don't really, we're trying to figure out exactly how that would fit into all of the error processes as well.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Understood. All right. I think with that said, it might make more sense for me to maybe do a little bit of show and tell show you the platform as it exists today, just to get your gears turning in that sense of thought process. So, let me know when you can see my screen. And I'm just gonna give you a quick overview in terms of the general product functionalities on that front and you can let me know if you want to focus on anything in particular or talk about anything in terms of a feature functionality standpoint. Just give me one minute. I'm trying to get my, yeah, there we go. So that's the right sandbox. Yeah. All right. Let me know when you can see my screen.
+
+Filip Gacic (filip@headquarters.co):
+  Yeah. Yep. It's there. All right. Thank.
+
+Raghav Shankar (raghav@hiverhq.com):
+  You, so, Filip, this is the hiver Omni platform that I was talking about which pretty much exists as a standalone platform in itself. It's gonna be web based. You get a URL, go there, log in with your sso or your email address, password, and you'll have access to the whole interface. Now in terms of getting started, obviously, you could have different mailboxes as we're calling it, which is basically a client's email address or communication address, and use that to control visibility of emails and set up in client… or per inbox, as we call it all. Right now, to your point, I'm an admin across the board. So I've got access to like every single in your case client that we're servicing as a business. But at an individual contributor level, we'll say, okay sales as client one, Sonali Raghav only work on them. You just need to see emails inside of that. And for them, everything else just kind of disappears and they won't have access or visibility to those starting with that perspective. Continuing from a standard ticketing expectation point, you've got different views which would classify and group emails depending on the different stages that you are at handling them. A common view where you get every new email that needs to be picked up, individual views per agent that are dynamic, only shows them emails that they're currently working on a team view per client or per inbox, that gives you a full list of hey, people in the team conversations each of them are working on with categorization. We also call it tagging. So with the relevant tags included there as well continuing from there in terms of conversational level access and permissions and functions that you can do, you've got an entire panel on the right side that will house all of your everyday operational stuff, right? Ownership, changes, status, updates, categories for tags. And you can also customize these as well. So you can have custom dropdown fields, custom database fields that could potentially give you additional means of improving on your workflows in terms of deadlines, turnaround times, things like that. When it comes to internal collaborations and activity tracking, you've got an entire audit trail or activity log as well that is per ticket. So on an individual ticket basis. You get to see the list of changes, actions who's doing it within the team with the date and timestamp. And for collaboration internally, a simple at team member and you can effectively have that internal dialogue back and forth as you would expect everything that happens on the hiver panel. On the right side is fully private, only visible to your designated team members accessing that particular inbox for everybody else outside of it, that's just going to be the typical email conversation, email exchange back and forth. You've got all the usual stuff that you'd expect. So reply, all forward options. You can configure preset templates, so that becomes easier to use when you want to like send out quick replies and easy requests for standard information. Additionally, you could also like, you know, go in, have like bccc, all your text editing formatting options. All of that is available there as well. And you could also do a share draft which is similar to what you might have with front as well where you basically type out a draft, put it in a shared more so the team can see it, give your inputs corrections. And then you can send it out. So this way no more internal forwards for getting things clarified. And when it comes to the AI side of it, we've also got a compose assistant here that is AI powered, that helps you basically fix grammar, improve writing, make it short, expand it all of that stuff there as well. Additionally, what you can also do here is use the send and update the email to a certain status or schedule it so that it gets sent at a certain time. And so that would typically be the standard sort of expectations that you might have coming from front. Another option we've got here is every email thread you see within a hiver inbox is also going to have an AI summarizer right at the top. And what that basically does is gives you quick bullet points that summarizes the entire thread that's happened so far. So when you're passing the email between people, ownership or statuses. You do get to quickly see. All right, these are the things we've done so far. These are the things that are pending and effectively get that quick, hey transfer to me. What do I need to do now to continue handling it? Apart from that? We've also got your expectations in terms of everyday stuff handled with hiver as well. So when you want to, for instance compose a brand new email from scratch, you do have the ability to choose your preferred domain or client and then pump that out as an email conversation. Templates are also available when you're composing stuff. So for your outbounding needs, I feel that should have you covered talking a bit about the advanced stuff here. You do also have all the macro capabilities when it comes to automations, where you can pretty much set up your rules that are based on triggers like email being received, inbound email being sent, outbound mailbox reply. If you're waiting on a client reply that's a trigger. When you add a status that's a trigger, a tag or a category could also be a trigger. It's just not enabled on my sandbox for some reason. But that's also a trigger. We've got standard boolean sort of expectations in the macro builder as well. So inclusion exclusion all through the email from subject body reply to as well. All of that would be available for you in terms of macro actions, current state. We can assign directly to people individually. You could configure this. So it becomes a template of reply that goes out probably for somebody reaches inbound. Yes. Sorry.
+
+Adam Harless (adam@headquarters.co):
+  Let's say it's from if we have a list of emails. So if like ferris got like 100 emails, is there any ways you could put in like a from, and then like a CSV?
+
+Raghav Shankar (raghav@hiverhq.com):
+  We don't have CSV, but we can help you with a copy paste or take care of it from the backend. If that's easier. Okay. Yes. Well, that's good. Yeah.
+
+Adam Harless (adam@headquarters.co):
+  Yeah. I guess that's still either way makes our life easier. Doesn't really, that's fine.
+
+Raghav Shankar (raghav@hiverhq.com):
+  So we're more than happy to support you throughout the onboarding implementation phase when we decide to kick things off. So we'd love to, you know, take on these smaller little pieces of makes my work easier and have that get sorted and set up for the team when we're ready. So yeah. So going by what a typical Ar team would do, automated replies are possible ground Robin between a smaller group of people within the team based on a certain type or category of email is also possible. And you can also set up reminders on hiver, both bell alerts within the product and also email alerts that hit your inbox directly with the relevant information you'd like to see. All right. So in terms of both tracking and handling your everyday process internally, we've got you covered. Same goes for looking at optimizing it in the future in terms of reminders for team members, template replies and stuff like that. Too. Now when it comes to slas, we've got you covered there as well. So response times, resolution time based policies can be configured. You can run separate timers for inbound and outbound conversations and be more granular by just saying, hey, category one two, it's always outbound. I want to make sure response happens within 24 hours when we get a reply, run it during business hours. So all your typical text check boxes there will be ticked off as well with the slas. Csat is also something that we have. So in case you do want to have a small little survey type of link included on your emails just to gather feedback on the experience with your team. It's also something you could customize and include on your reply emails. And lastly, these are these additional custom fields that I mentioned. So you no longer have to restrict yourself to just tag one tag two tag three, you could effectively look at a dropdown with a bunch of options you pre fill, let your agents select an option based on what type of email, how they want to handle it. And that way build on top of your existing categorization mechanism as a whole… aliases. Obviously. So if you do get incoming emails from multiple client domains and you want to put that into a single inbox. That's also going to be possible there. Now, AI is another part of the whole aspect of hiver. We've got something called an ask AI, which is one of the things we've launched on Omni. And this is going to be more of a reply writing assistant if I can call it that. Where basically you give it your sops process docs, things like that. And based on those, AI will track an incoming email, analyze it and give you suggestions specific to that scenario and that client. Because you're handling multiple clients, I feel like ask AI could take a bit of that burden when it comes to checking. Hey, does this company have a refund policy? What's their return policy? Things like that too from an agent level, customization, obviously ways where you can create smaller email views as we call it. We're talking about specific types of emails funneling into one place while still having that three sixth T across the board whenever you need it. So from a supervisor angle, you can completely track everything you need at the same time at an agent level or at a prioritization level. If certain types or categories of emails are relevant, you can definitely pump that into a separate space and quickly access that with one click. Now, I do know that a lot of your data flows externally for your reporting. With that. Said, there are also pre built reports and information you can track directly on hiver. If not to Adam's point, we can definitely explore getting that data outside of hiver using API and talk about what that looks like as well. So a quick 30 second kind of overview that's the new platform that we've got here on hiver. Only, I'm gonna take a pause, pass it back to Filip and Adam, see if there's any quick questions that jumped top of mind in?
+
+Adam Harless (adam@headquarters.co):
+  Terms of capabilities. I think one thing would be good if you could either just send me the link or if you have like a one sheeter on the API. So I can just have our developers check like which fields come over, kind of like how it works, because I think this group is probably not necessarily. I think we need a developer to check that part… although I guess Farron and Philip will probably know what fields matter, but I think that would be helpful.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Get that done. Is.
+
+Adam Harless (adam@headquarters.co):
+  there any limitation to automations? Are there like the number of rules or can… a box have 20 automation? Like what is there any, what's, the framework there? Of course.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah. So just like with front and just like with hiver on Gmail, the tier based limits would apply. So depending on, you know, a growth plan versus a pro, you're gonna have like 20 rules here, 30 rules there, topmost plan, obviously unlimited. Same would apply for number of SLA rules, the level of reporting, you can get out of the system as a whole package.
+
+Adam Harless (adam@headquarters.co):
+  Okay. And then like I'm gonna butcher this, but like local versus global rules and automations, is how straightforward? Is that if we have a rule for fairs box and then we have a rule that works for duchamp fair and Philips boxes? Like is that pretty straightforward? Maybe just confirm, maybe just strap right there, I.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Think I hear what you're going for. So at this point, we've got the rules locked in at the mailbox level. So you make one for dosan's inbox or mailbox, you're gonna have to basically recreate that for Fernandez and Phillips when the time comes if you want to do it. But with that said universal rules and a bunch of universal settings, you configure once and then select which inbox it needs to apply to. Is something that the team has already scoped out and is working on. We're going to be progressively launching it with the first meaningful update probably aimed for mid to end of Q1 where from space, I might be able to showcase a prototype or get you on like an early access on what that looks like. Okay? And.
+
+Adam Harless (adam@headquarters.co):
+  This is live. What you've just shared or this is coming?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah. So what I've shown you so far is life. And if you're interested, what I'd like to do is basically set time for like I said, another detailed follow up call here a bit more in terms of rfps or comparisons on your must haves specifically, right? Yeah, that way I can make sure that I'm setting you up on the right pilot, do a little bit of tweaking? So you kick off with like a meaningful pilot experience, can we?
+
+Adam Harless (adam@headquarters.co):
+  Do this? Can you send, the API even if it's just a link to something just so, I can give it to our developer… and I can grab some time with him to see if he may see it and be like, okay, got it. No don't worry about it or he may be like, I need to talk to someone and I think we should see what he says because that integration into the dashboard would be a requirement. And so I think getting his input would be helpful to know. I think before we commit to any next steps, I think I just need to get him involved. And so that's probably the best like next thing and I can commit to you that I can talk to him by the end of the week and then give you a next step is talk to this group or next step is talk to him and then we can kind of figure out next steps and I should be able to get a hold of him before, you know, we have our monthly town hall tomorrow or Thursday.
+
+Adam Harless (adam@headquarters.co):
+  So the next couple of days are kind of full. But by Friday, I should have some time to talk to him. And then, yeah, because yeah, I think we just need his input before I say anything about next steps.
+
+Raghav Shankar (raghav@hiverhq.com):
+  No, 100 percent 100 percent Adam, I'm completely aligned with you there. So from the hiver side of things, what I'll do as next steps is first give you a link to the platform in itself. You can sign up for a free account. Let me know when you can like just explore by yourself. The second thing is I'll talk to my product engineering team, get a list of API call possibilities. What's included? What's not included just as a starting point for your team to review. And, you know, we'll plan to maybe circle back the first week of feb, if not, you know, after that compare notes, see what's needed. And then we can is the.
+
+Adam Harless (adam@headquarters.co):
+  pricing the same or is this a different pricing tiers than the product that Dushan's team is on? Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  So from a pricing perspective, I'm open to being flexible, obviously, right? Because you've got an existing relationship with hiver on the Gmail side of it, the pricing will differ obviously because it's a different platform as opposed to this version of hiver. And so, yeah. So what I want to leave you with at the commercial standpoint right now is we're open to being flexible and we can work on a price point that makes the most sense for your team especially considering transitioning away that's.
+
+Adam Harless (adam@headquarters.co):
+  fair. Okay. That's fair. Okay. So yeah, let's do that. I'll wait for the input from you. And then my commitment is by Monday to get back to you with this is the plan a or B direction and we'll go from there perfect.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Just one last bit of information team. In terms of your front contract. Does that have like an annual renewal?
+
+Adam Harless (adam@headquarters.co):
+  We are… we're we can, we've been on it longer than a year. So I know we're able to exit. I don't it's a non concern as far as that goes.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Timeline wise, Q2, Q3.
+
+Adam Harless (adam@headquarters.co):
+  Oh, no, no. I mean, we can exit it at any time. Oh, cool. That makes sense. Yeah, we have flexibility with it at this point. We've been with them for a long time. So, yeah… we have flexibility. So, and I think just to be transparent, I think what we would start it with like one account. And then, of course, you know, before we move the whole thing.
+
+Adam Harless (adam@headquarters.co):
+  So then we have to just figure out, you know, part of it is when our developers have time to connect and how much work it is. So that's why I kind of need that input. So that's I think until I have that conversation, a lot of this is kind of like black box to me and I'm just out of my league. So I will talk to the Guy who's a little smarter than me and then I can help makes.
+
+Raghav Shankar (raghav@hiverhq.com):
+  sense, Adam. So, yeah. So we'll play it by the ear for the time being. You're going to be expecting to receive the product link for you to check it out and the API documentation link from me from a timeline perspective, I'm going to try to get information over to you latest by Friday in terms of what exists. And based on that, you know, we can talk to the developers next. I'll get a person from the product team as well validate that, then progressively work on next steps. Okay? Sounds good. Anything else for today folks?
+
+Adam Harless (adam@headquarters.co):
+  Still up there while you have a chance… he answered the email. So, all right. All right.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Sweet folks. Thanks for hopping on. Looking forward to talking to you all pretty soon. Take.
+
+Adam Harless (adam@headquarters.co):
+  Care talk soon. Bye bye.

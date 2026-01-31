@@ -1,0 +1,394 @@
+================================================================================
+Call: Hiver Demo | Julius <> Alex
+Date: 2026-01-29T03:32:15+05:30
+================================================================================
+
+Alex Krumm (alexander.k@grexit.com):
+  hey, Julius, I'm Alex.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Hey, Alex. How are you doing?
+
+Alex Krumm (alexander.k@grexit.com):
+  I'm doing pretty good. How about yourself? I'm.
+
+Julius Beard (julius.beard@awc-inc.com):
+  doing well. I got a little cold but I'm surviving that's. Good. Are.
+
+Alex Krumm (alexander.k@grexit.com):
+  you in part of the country that got wallowed by the storm?
+
+Julius Beard (julius.beard@awc-inc.com):
+  No, we just got the hysteria and none of the craziness I'm in Louisiana. So pretty far south. So we got cold, but we were spared. How about you?
+
+Alex Krumm (alexander.k@grexit.com):
+  That's good. I'm up in New York City. Yeah, we got some snow, but my biggest learning was New York City has the most plow trucks in the country.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Oh, yeah. Yeah. They're ready.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Nice.
+
+Alex Krumm (alexander.k@grexit.com):
+  Tax dollar at work.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Yeah, I heard, I just saw an article. I don't know if it was true. I heard that we actually de, iced some of our roads, but the saline brine was not, I guess salty enough. So it froze anyway. We don't know what we're doing when it comes to cold temperatures down here. So, yeah, not as prepared.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, but good problem to have, you know, stay warm, right?
+
+Alex Krumm (alexander.k@grexit.com):
+  But yeah, would love to hear kind of what's going on at awc and, you know, how we might be able to work.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Together. Yeah, I'll tell you what kind of generated this? So we're around 700 employees. We're a sales organization focused on factory and industrial automation, spread across 36 Ish locations, kind of all across the gulf coast, but expanding in every direction. And we've got branches doing a lot of sales and customer interaction. There's about 130 individuals in the, what we call inside sales department. There's probably another 120 Ish on the outside sales team. And then mixed in into that sales process is probably 50 engineers or application engineers, sales support individuals. This started out, our ops and sales ops teams are looking into improving some of our processes. And that started out as them asking it, hey, how many rfqs are we handling? How many quotes are we generating? What's our turnaround time on that? We're not doing a great job of recording that. We're recording some of that when it makes it to the ERP. But on the front side of that process, not only not capturing those metrics but not uniformly handling them, not always doing a great job of managing them. All those kind of things. We're doing it. If we've got 36 branches, we're probably doing it 36 different ways. The intent being we want to streamline and standardize and pick some tools to kind of assist with that. We typically develop anything internally. So that was the first task is, hey, can you all develop a system? And I said, hey, we're great at developing things, but there's probably people that have already tackled this problem integrated into the systems we're using. I'm more keen on adopting something and integrating it if we're going to do it or if it doesn't need to be integrated, let it stand on its own. So kind of the core metrics we're looking at right off the bat are how many rfqs are we getting, right? So all of them coming in or the majority coming in via email, mostly to shared mailboxes or some distribution groups, but we'll standardize that. And then you've got teams that are kind of just responding to calls, responding to calls, my phone's ringing, responding to emails and generating quotes in our ERP. Obviously, we'd love to link the two. But starting out, just capturing those metrics would be huge. So what is our, just, what is the, what is the rate of ingestion? You know, how many are we getting? And then how long does it take to acknowledge those and turn that into a quote that's really the key ask, right? And managing that experience in a better way would be great to add on top of it, but that's really the starting point just to keep it simple.
+
+Alex Krumm (alexander.k@grexit.com):
+  Okay. And does like every sales request come from like an RFI or RFP or is it for?
+
+Julius Beard (julius.beard@awc-inc.com):
+  The most part, they do. So they may be established customers that are working with an inside person or potentially an outside person. But most of them will come through this funnel. So the other thing we can do is we're okay with some change associated with this effort. So saying that, hey, if we were used to be doing it this way, this is now the approved method. So send all of your stuff here and let's start working it in this system.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, it's pretty interesting. I'm working with, a global manufacturer, a global group that manufactures like a building material for like manufacturing and industrial facilities. And they came to us saying like, hey, we have these sales. They call them like essentially, they call them isrs, like in like they're like essentially sales or customer service people that receive like purchase requests or some sort of RFP, then, you know, salesperson fills out RFP, but management still wants visibility into, you know, how long is the turnaround time on responding to these? What does like, you know, what rating the reps? So we have like a quality assurance tool internally to, you know, see like, you know, clarity completeness, you can kind of tell on and off.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Yeah, we, some of that would be applicable. Really, we're at the just the core and starting to measure it in our business, when, if we can provide a quote, if we can turn that around pretty quickly, if the prices are going to be competitive, we'll usually win. So if we can increase that, our ability to first understand it, but then turn that and compress that we'll win more business. And so it's pretty simple there.
+
+Alex Krumm (alexander.k@grexit.com):
+  So you're just saying if we can communicate more effectively and faster, yeah, the flywheel is going to work better.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Yeah. And if we, you know, I think first once we start capturing, then we'll have greater ambitions, right? If we can provide more accurate and timely and complete. Obviously all those things are better start to measure it, start to tie it to again integration looking further down the road, if we see this team or this individual or this group is always, you know, their margins are always higher. Well, are they doing something differently, right? And that would require a little bit of analysis and integration? But that's where we're that's a little further down the road. So that's what we're looking at. We're looking everything's on the table. We're looking at front. You guys came up quite a bit as well. So any comparisons there are helpful, the, I will tell you some of the, and I'm doing some googling. So take this with a grain of salt. But that was one of the differences that kept coming up or apparently was coming up was that hiver, was less integrated or less able to customize and integrate via API or otherwise than some of the other solutions. And I forget if it was hiver, but I think it was maybe we're Microsoft. We are office 365 and that's 365. I feel like you guys were focused more on the Gmail or Google side. So that's my full transparency that's everything I know about it.
+
+Alex Krumm (alexander.k@grexit.com):
+  No, that's awesome. You've done your homework. So hiver seven years old started as the Gmail product. Obviously, we have a lot of interest from both sides. So, two years ago built what we call Omni which is like a Microsoft product. Omni is becoming more of a product that is a direct competitor with front used to kind of when the Gmail business and then front would win all Microsoft plus things that require deep integration because there's this standalone app, you know, our company is like, hey, we, why are we leaving all this money on the table? So yeah, the long and short of it is we've built something for the Microsoft suite very similar to front. We're behind them in terms of like level of complexity on integrations and things of that. But where we make up for it is level of service of like what you'd receive and.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Commercial.
+
+Alex Krumm (alexander.k@grexit.com):
+  Price point.
+
+Julius Beard (julius.beard@awc-inc.com):
+  So,
+
+Alex Krumm (alexander.k@grexit.com):
+  that's the like front probably going to offer you licenses closer to like over 100 dollars per person. So, right.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Yeah. Well, that's a huge factor, right? And, and the other thing I forgot to tell you and not intentionally, but it plays into the conversation, we are evaluating ERP right now and so that's kind of a cloud hanging over us. We will shift to, a cloud based ERP, but we are like needs assessment. So, part of my caution, to sales op management that was pushing this was, hey, this might be inclusive if we're looking at sap. If we're looking at some of the big tier one erps, some of this may be included. I don't think it'll do it. Well. I think something purpose built probably still has a space at best that is 18 to 24 months away. So, at shortest, 18 months, I'm fine with doing something for a year, learning a lot, potentially carrying it into that next phase or abandoning, it, if it, you know, if it's replaced. So that was the other caveat I had. I don't think it changes the interim very much but.
+
+Alex Krumm (alexander.k@grexit.com):
+  No, it actually almost positions us in a little better place because we have 80 percent of our development working on the new Omni product. So we have a hair over 70 developers.
+
+Alex Krumm (alexander.k@grexit.com):
+  And I'll give you a kind of a quick harper tour of what this looks like. Yeah. And have you already demoed front?
+
+Julius Beard (julius.beard@awc-inc.com):
+  I've looked at it. Yeah. So I've looked at front. I'm probably going to pull in one other just to have three because that seems like a number I should have, but you guys are kind of the two things the two that keep coming up, and seem to be the industry leads.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, I'd say it's us too, and then it's like, do you go classic ticketing or do you go CRM?
+
+Julius Beard (julius.beard@awc-inc.com):
+  Yeah. And CRM, we grew up as a mom and pop organization and our salespeople will murder us if we introduce too heavy of a CRM. So I love that you guys play in this space of it's like CRM lightish but it's like some of the better things but not just the heavy sales force. Like you're going to hit your job side. So, yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, exactly. So this is a pretty basic demo environment, but the whole concept is you could have shared inboxes by location by, you know, alias, whatever makes sense and how you want to, you know, distribute access, each inbox kind of functions as its own, you know, kind of group for settings, automations, tags, et cetera. So kind of if I started here to finance… you know, we'll have all open conversations that have not been assigned yet before I click in, you know, here, Tony stark, we can have auto tagging that's amended based on keywords and AI shortly as well as slas. The whole concept of the SLA is being able to show like, you know, if something is being missed automatically notify other people, take action through automations et cetera. So I'll start with the mind section. Sorry, I've been a busy day. I'm just going to delete this. So, Tony stark wrote in about an invoice, if he wrote in about an RFP request or something specific, we could use that automatically tag it. And then you'd have full reporting on the number of conversations related to those… as a rep, I could tag it RFP or something else. And then I also have custom attributes down here. So, you know, a due date, a stage of the conversation, something else… then within connected apps. So we have over 100 apps that we integrate with from, you know, CRMS to like Jira, Trello, Monday, com, things that you want to create a task or something else in a different system. We do support that… also to Netsuite, but I… put like an asterisk there because… probably depends on exactly what you want to see in Netsuite. Yeah. Then, you know, yeah, but email management system, you know, full template library. Probably the most interesting thing I have here is the AI assistant.
+
+Julius Beard (julius.beard@awc-inc.com):
+  So pretend.
+
+Alex Krumm (alexander.k@grexit.com):
+  I just pop it open. It can draft a reply automatically… within our system. It's going to ask like, okay here's kind of our recommendations and what this reply could include.
+
+Alex Krumm (alexander.k@grexit.com):
+  And it can refer to internal knowledge based sources. So like we've essentially set up like a simple rag system where,
+
+Julius Beard (julius.beard@awc-inc.com):
+  you know.
+
+Alex Krumm (alexander.k@grexit.com):
+  This is chat gpt five two that you're interacting with then it'll look into our knowledge based solution as well as like any uploaded articles that you've added to like the system and use that to write this.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Okay. Nice. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  So, let's say I'm like a entry level sales rep like, okay, let me actually share this as a draft and now reassign it to my manager. You can do things like that or, you know, at mention your manager here.
+
+Alex Krumm (alexander.k@grexit.com):
+  As well as like internal notes and things and that all of this like history of the conversation will live in one spot.
+
+Julius Beard (julius.beard@awc-inc.com):
+  That you mentioned kind of the auto tagging, I'm assuming auto routing. So you're in the mind space right now, if we've got within the sales team, we may have like one segment that works on the automation components, one that works on process or whatever based on some criteria in the subject message of any kind of ruling. We could say route to this if you pick up these tags or whatever. Okay?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. We could do like an assign among based on criteria. Okay?
+
+Julius Beard (julius.beard@awc-inc.com):
+  Okay. Gotcha.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. And if it ends up in like the unassigned still, like if I like threw a certain tag on this, it would trigger the workflow to do the assign among. Okay.
+
+Julius Beard (julius.beard@awc-inc.com):
+  And, you're working in the web app? Is there a desktop? Is there a mobile?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yep. There's a web and mobile app. There's. Not like a desktop app.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Okay. So all web based, do you mix like do you find that, your users live? Like I, we're such like, a legacy where Microsoft or outlook, they love outlook. They love their personal space. Do you feel people using both? Do they tend to go to one or the other eventually? Or what are your thoughts there?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. So we've kind of forced you to use ours for the shared inboxes. Even though it's assigned to this person, it's assigned in the shared inbox. Like in the, my personal email, it wouldn't live there, but I could also wire up my personal outlook here.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Okay. The.
+
+Alex Krumm (alexander.k@grexit.com):
+  Limitation though is like, I don't have all the folders that, you know, your team's using in outlook.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Okay. Yeah, because we've got some crazy people that create a folder for every recipient or sender they ever have. I don't know what's wrong with those people, but we've got some of them.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, you're telling me legacy sales team. I can only imagine what these people are doing. Yeah.
+
+Julius Beard (julius.beard@awc-inc.com):
+  It's scary. So, for those crazy folks, they'd probably leave their personal one open over here still, and then just manage this work stream over here.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, exactly. Okay.
+
+Julius Beard (julius.beard@awc-inc.com):
+  But if they're reasonable, they could use one and the same if they wanted to live in the same spot. Okay?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, they could consolidate into one spot if they wanted to. Okay?
+
+Julius Beard (julius.beard@awc-inc.com):
+  Gotcha. All right. What's next?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. I would say next, just the quick analytics… what's happening? So we're measuring workload and performance. So we're white labeling a tool called Omni. Okay, I've heard of it. Just a bi tool. Yeah. So workload, how many conversations have come in to this specific inbox? You'd have a large drop down of inboxes and group by would be something we're coming out with soon. So open active conversations net new in this period fully resolved and this is measured over response time, assigned time, general response time and total resolution time. We can then drill down on a per user basis. So being able to see each person's response times to everything that's occurring in the shared inbox. And it's drillable.
+
+Alex Krumm (alexander.k@grexit.com):
+  I could drill into this, but what you really want to see would be like show me a number of rfps by sales rep or something. Yeah.
+
+Julius Beard (julius.beard@awc-inc.com):
+  So I'm thinking so, just thinking about what we get right now, let's say 80 percent is legit, a request, right? But there might be some mixed in like order status or other things. So presumably, we'd want to tag rfqs as such, right? So, we can filter by them. And then also, I need to know when it goes from an RFQ to a quote, right? So how would you address that? Would that be a tag, a workflow or how would you combine that level of knowledge? So we could report on it?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. And a quote would be, I'm just replying back to the RFI or RFP?
+
+Julius Beard (julius.beard@awc-inc.com):
+  In effect, but they could quote like it may be that the quote is sent via the ERP. So we get the RFQ. I go. Okay, John. Thanks for your request. I've generated quote number one two three and maybe they drag it and attach it to their reply, but, I need to now know that this has gone from an ingested RFQ to a quoted RFQ, right? And I need to know that when that trigger happens, so I can record the time between the two. Is that feasible?
+
+Alex Krumm (alexander.k@grexit.com):
+  It is feasible. I'm trying to think of the best way to do it. So kind of the way that we think about it is on a per inbox basis. We have like automations and this is like if this, then that logic, so it could be conversation in or out. So I would say like we have the one that we want to record. So it's like subject or body contains… you know, RFI… something else. So.
+
+Julius Beard (julius.beard@awc-inc.com):
+  That would, that would tag the inbounds. So now we've got our count.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, exactly. Okay. So, I'm just going to tag it filling.
+
+Alex Krumm (alexander.k@grexit.com):
+  But I don't have.
+
+Alex Krumm (alexander.k@grexit.com):
+  So this is going to be the limitation right now that we're solving for very shortly. Sorry, I'm just toggling over to my Gmail product.
+
+Alex Krumm (alexander.k@grexit.com):
+  A little richer, but essentially what we could say, you know, like the inbound conversation comes in, you know, we tag it.
+
+Alex Krumm (alexander.k@grexit.com):
+  We'll have the conditional logic in between both. But then what I could do is an AI extract task where… I could extract things from the body of the email such as the time.
+
+Alex Krumm (alexander.k@grexit.com):
+  I was trying to get my character limit. So essentially, we can have an AI extract and… then,
+
+Alex Krumm (alexander.k@grexit.com):
+  so we can have AI extract this information… and then we can also have the AI post… as an action to a custom field on the right? Okay?
+
+Julius Beard (julius.beard@awc-inc.com):
+  So, this is so parse that, parse the reply. Yeah. Okay.
+
+Alex Krumm (alexander.k@grexit.com):
+  Parse the reply, update custom fields. And then we'd store all that data. But as you can see, like we're not quite there in this product, how?
+
+Julius Beard (julius.beard@awc-inc.com):
+  Far out, do you have any sense of timing there? I know that's really hard to say.
+
+Alex Krumm (alexander.k@grexit.com):
+  It's supposed to be this quarter. All right?
+
+Julius Beard (julius.beard@awc-inc.com):
+  Gotcha. Yeah. Once that, is there, do you have, you got, Q1 should be ready?
+
+Alex Krumm (alexander.k@grexit.com):
+  It's going to be ready. End of this quarter is.
+
+Julius Beard (julius.beard@awc-inc.com):
+  The.
+
+Alex Krumm (alexander.k@grexit.com):
+  plan for all of this, so.
+
+Julius Beard (julius.beard@awc-inc.com):
+  We'll can we then extract that information in the custom reports, right? So can our reports use custom fields? Okay? So we can report on that. Okay. Gotcha. All right. Let's see if I have other questions there. I think that's the book of them. What does, so, what I'm thinking is, I've got two teams that I would use as kind of pilot groups here, two small groups, kind of representing both sides of our business.
+
+Julius Beard (julius.beard@awc-inc.com):
+  What do you guys typically, how do you handle that? Can we do, a 30 day pilot and kind of verify it and work through it or what is your standard process there?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. Usually it's a two week free pilot. We could bump it out a little longer. Potentially. We also offer like month to month agreements if you really wanted to kick tires for a while. Okay? But that's typically how we look at it. We do like a full set. If you're working like on like a pilot basis, you'll it's like myself, a sales manager and a solutions engineer who will help set you up.
+
+Alex Krumm (alexander.k@grexit.com):
+  And you also have full access to our technical support team who's available over chat. It takes one minute to get in contact with them and they'll hop on a quick zoom as… needed. That's like our trialing motion. If you were going to bring on like 100 people, 100 plus seats, you know, we would typically assign, you know, like real implementation resources to work with you throughout the whole process and named customer success manager and account manager, kind of all the jazz.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Okay. But.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, we could definitely get, we would get you set up on an initial trial like no?
+
+Julius Beard (julius.beard@awc-inc.com):
+  Problem. But yeah, makes sense. Yeah. What would your pricing look like, for all of this? Is that all your published pricing that you had over there?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. How many people would realistically need access to those? So.
+
+Julius Beard (julius.beard@awc-inc.com):
+  It, the intent is, to roll this out to the entire sales organization. So, our first group would be inside sales. So there's 100 in that department. There's 130. There could be that's the other thing I wanted to ask about is you may loop an app engineer into the process, right? So we may get a squarely request and, they might say this is an obsolete product. Let me pull in this Guy to make sure there's a, you know, viable replacement. Would that be a named user? Could we just, I mentioned somebody else in the org, they would get an email. They could reply. It would come in the thread. How would you handle that?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, we could essentially just like reply to them in the thread or forward it to them. The forward is going to break the thread. You could reply to them in thread saying like, hey, I'm looping in an app engineer to our conversation and then, you know, potentially make a one off out of the inbox as well like, but… then the threads kind of split, you could link the conversations, but I think it depends on the use case, but there's a couple of ways we could think about it.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Okay. So, yeah, I would say probably just starting out just to keep it simple. It'd be 130, but I would start with like I said, I've got two groups, two Texas based groups, so Dallas and Houston that I would take, these two different sales teams and use. So probably under 30 users to start with, do a pilot just to make sure that the solution works, and that also our organization works with the solution. And then we would roll out to probably the next 100 inside sales reps.
+
+Alex Krumm (alexander.k@grexit.com):
+  Okay. So the Dallas and you said Fort Worth?
+
+Julius Beard (julius.beard@awc-inc.com):
+  Dallas and Houston. So.
+
+Alex Krumm (alexander.k@grexit.com):
+  The Dallas and Houston teams is 130 people or is that like that?
+
+Julius Beard (julius.beard@awc-inc.com):
+  Would be my small pilot group. So I'd take probably 30 people total out of those areas. And then if we rolled out to the entire sales organization from inside sales, it'd be 130 total. So 100 more. Okay. Yeah, like pricing.
+
+Alex Krumm (alexander.k@grexit.com):
+  Wise like we're… it really depends on like when you would be making the switch, but we would like at a at scale depending on exactly what you need. We'd probably be closer… to like 50. Like… this is a little. I wouldn't want to chat with somebody before I gave you hard and fast pricing, you know, to the CIO.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Ballpark? Is fine. At this point. I'm just looking for, you know, estimates. So I won't hold you to anything here. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  I would estimate it around 65 dollars per user per month. Okay, potential to be lower than that. Okay?
+
+Julius Beard (julius.beard@awc-inc.com):
+  And that would include basically all the features. You showed me everything we need. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  That would include everything. So essentially, I'd be, we'd be offering you like the elite feature set at.
+
+Julius Beard (julius.beard@awc-inc.com):
+  The pro.
+
+Alex Krumm (alexander.k@grexit.com):
+  Pricing.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Gotcha. Okay. All right. What, what else should I be thinking about or considering or looking into, or any other differentiators here? We didn't talk much about integrations. I know you guys are lighter there. How is that on your roadmap? Is it something you can do lightly? Now? What, what are your thoughts?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, we can do custom integrations. So we have over 100 existing integrations. Like within the system. It's really like what do you want to integrate with? And at the 100 user level, like we definitely consider building something. Okay?
+
+Julius Beard (julius.beard@awc-inc.com):
+  So, it'd be something that we'd work with you on what I'm thinking is just starting simply like let's say I get an RFQ or a request for like an update on a quote, like if we could do even a click lookup or something back to our ERP, maybe an API call, lookup things like that just to give them a little bit more information, stuff like that.
+
+Alex Krumm (alexander.k@grexit.com):
+  That's exactly what we do with like Salesforce and Netsuite and all these other systems. Okay? So just being that, yeah, it's a quick lookup based on email or whatever other key id that we have, and then it's a click into the record?
+
+Julius Beard (julius.beard@awc-inc.com):
+  Okay. All right. Anything else… I?
+
+Alex Krumm (alexander.k@grexit.com):
+  Guess from like a security standpoint, do you use like single sign on or anything else? We?
+
+Julius Beard (julius.beard@awc-inc.com):
+  Do, yeah. So we're like I said, we're Microsoft based. So we're azure intra… pretty standard single sign on. We would, every automation we can offer is ideal. So, you know, automated user provisioning stuff like that would be great. We can manage it otherwise. But, yeah. Okay. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  With azure, I don't think we have that automated from the user permissioning yet, but.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Okay. Yeah. And you can handle, you can handle shared mailboxes, in exchange online. What if we've got just like a distribution group or other ways like that. Again, our intent is to standardize. So, if shared mailboxes is the way to go, that's what we'll do, but how do you guys integrate otherwise?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, distribution groups are absolutely fine. Too. Okay. Essentially, you're just pulling, we're still like mimicking everything that's happening in outlook. So you're just pointing these emails into our system. Yeah, like we're still sending through Microsoft's protocol. Okay? So.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Do they live, they would live still in our shared mailbox, or would they live in your environment? How's that work?
+
+Alex Krumm (alexander.k@grexit.com):
+  They'd live in both. Okay. That's the, yeah, and from like a information security perspective, like we meet all like the requirements, soc two type two, iso 27, zero, zero one, you know, GDPR… all that jazz gotcha.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Gotcha. Okay. Yeah, this is helpful. I think this gives me enough, to gather my thoughts. Let me think through it. I'll do some more digging and maybe come back and I'm sure I'll have more questions for you. My intent is to, I don't want to, I don't want to own this project fully. So, I've got an admin that I'll hand this off to and then some sales leads that will pick it up, but let me kind of show them all the options. And then I'll I'm sure they'll have questions as well. So, absolutely, would it.
+
+Alex Krumm (alexander.k@grexit.com):
+  Make sense to set up like a follow up like a week or two from now?
+
+Julius Beard (julius.beard@awc-inc.com):
+  Yeah. If you want to, let me see. That should give me enough time to chat with some folks.
+
+Julius Beard (julius.beard@awc-inc.com):
+  It would have to be, I'm out a bit next week. It would have to be late next week or the following week.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, I'd say either or two weeks out. I'm out on Wednesday, but my wife's getting acl surgery, so super fun.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Yeah. Sounds like it. I can do Friday the sixth. I'm pretty open, what's your schedule look like?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. We could, your Central Time could do any time between like nine to noon or?
+
+Julius Beard (julius.beard@awc-inc.com):
+  I could. Do you want to do like nine 30? Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  That'd be great.
+
+Alex Krumm (alexander.k@grexit.com):
+  I'll throw my sales manager on too, so you can, he's been in the business seven years, yeah?
+
+Julius Beard (julius.beard@awc-inc.com):
+  Right. So he, he's.
+
+Alex Krumm (alexander.k@grexit.com):
+  got a lot. I've only been here a few months but have been in this market industry for 11 years. Good deal.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Good deal. Yeah, but cool. All right. Well, I appreciate it. I'll come by with some questions.
+
+Alex Krumm (alexander.k@grexit.com):
+  Sounds like a plan. I'll have to go snoop out how your salespeople are operating from Afar.
+
+Julius Beard (julius.beard@awc-inc.com):
+  Yeah. We'll figure it out. Well, good deal. Thanks for your time. I'll be in touch.
+
+Alex Krumm (alexander.k@grexit.com):
+  Cool. Take care Julius. Yeah.

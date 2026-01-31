@@ -6,33 +6,10 @@
   "signals": [
     {
       "Theme": "Message Storage",
-      "Ask": "How does Hiver store messages and organize them per client?",
+      "Sub-Theme": "Email Organization",
+      "Ask": "I need to understand how Hiver stores and organizes messages per client.",
       "Priority": "High",
-      "Evidence": "My question is how does hiver store the messages that's my, that's the big thing I cannot determine how they store the messages, how we would organize it per client."
-    },
-    {
-      "Theme": "Client Communication",
-      "Ask": "We need a solution that allows clients to communicate via email without using Basecamp.",
-      "Priority": "High",
-      "Evidence": "Our clients prefer just to email us versus go through basecamp."
-    },
-    {
-      "Theme": "Team Access",
-      "Ask": "We need to determine how many team members will need access to Hiver.",
-      "Priority": "Medium",
-      "Evidence": "I don't know... we'll have to figure out how many people would actually have to have access to it."
-    },
-    {
-      "Theme": "Tagging System",
-      "Ask": "Can we tag messages based on clients for better organization?",
-      "Priority": "Medium",
-      "Evidence": "Is there a way to tag each message based on a client?"
-    },
-    {
-      "Theme": "Email Management",
-      "Ask": "We want to ensure that all messages are accessible to the team to prevent any from getting lost.",
-      "Priority": "High",
-      "Evidence": "I just don't want messages to get lost."
+      "Evidence": "My question is how does Hiver store the messages that's my, that's the big thing I cannot, you know, determine how they store the messages, how we would organize it per client, that type of thing?"
     }
   ]
 }

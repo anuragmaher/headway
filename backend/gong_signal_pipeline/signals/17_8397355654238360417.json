@@ -6,33 +6,10 @@
   "signals": [
     {
       "Theme": "Invoice Management",
-      "Ask": "We need a solution to automate the management of our accounts payables emails.",
+      "Sub-Theme": "Manual Process",
+      "Ask": "We need a solution to automate the management of accounts payables emails to reduce manual effort and errors.",
       "Priority": "High",
-      "Evidence": "We do not have any solution... everything is outside the system as we speak today."
-    },
-    {
-      "Theme": "Integration with ERP",
-      "Ask": "We require integration with our existing Microsoft ERP for processing invoices.",
-      "Priority": "High",
-      "Evidence": "I don't even know whether that solution exists today."
-    },
-    {
-      "Theme": "Team Size Consideration",
-      "Ask": "We need to evaluate if the solution is suitable for our small team of two people.",
-      "Priority": "Medium",
-      "Evidence": "I personally may not really recommend you looking at a solution because you probably are much better at a phase where you are able to manage."
-    },
-    {
-      "Theme": "Task Visibility",
-      "Ask": "We need a way to ensure that no emails are missed or left untagged.",
-      "Priority": "Medium",
-      "Evidence": "What if they only miss to tag something and it just remains untagged."
-    },
-    {
-      "Theme": "Freemium Option",
-      "Ask": "We would like to explore a freemium plan to test the solution before committing.",
-      "Priority": "Low",
-      "Evidence": "You can have one payable inbox invite two people... without even incurring any cost."
+      "Evidence": "The question is where we are trying to find a solution, where my payables are managed in a weekly basis. I would say I process around 100 or 200 invoices. So, yep. And everything is outside the system as we speak today."
     }
   ]
 }

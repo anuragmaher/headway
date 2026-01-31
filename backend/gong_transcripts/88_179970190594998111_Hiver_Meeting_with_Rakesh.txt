@@ -1,0 +1,514 @@
+================================================================================
+Call: Hiver Meeting with Rakesh
+Date: 2026-01-27T17:16:38+05:30
+================================================================================
+
+Rakesh Goyal (rakesh@grexit.com):
+  hey, Mike.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Mike, you seem to be on mute. Okay. Yeah, I can now hear you. How are you doing?
+
+Mike:
+  Hi. How are you? Good. I'm good.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Lovely. Thank you for joining me. I've got my colleague Manoj on the call as well. Notice that we would want to help you set up your hiver trial so that we can go ahead with the testing part and everything you mentioned.
+
+Mike:
+  Sorry, one second here, your… sorry, one second. Let me just switch to different WI fi. Okay?
+
+Rakesh Goyal (rakesh@grexit.com):
+  Can you hear me okay now, I mean, is that better? Is that my WI fi? Let me just check that. Give me a minute. Hello. Can you hear me now? Very well? Loud and clear? Am I audible? Can you hear me well?
+
+Mike:
+  Yeah, I can hear you now. Yeah, I think it could be the video feed giving us latency or something. I just changed WI fi. It should be okay now.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Sure. Thank you. All right. Yeah. Notice your email that it wasn't a good time last year towards the end of it. We wanted to try that back. And now that we are connected, we'll help you set up your hiver account. Yeah, which is why I've got Manoj from the onboarding team, so we can help you set up your account with seven, eight users, and then four, five shared inboxes all in all on basis of your use cases, Mike. So yeah, I mean, to begin with, do you want to tell me what are these different teams and how are we managing the emails? And then accordingly, we'll help you with the setup.
+
+Mike:
+  Okay. Just so I start off, I'm a software developer. I kind of work separate from all these teams, but I'm in the office and I'm kind of connected with them quite tightly. So I know what they're doing. So they.
+
+Rakesh Goyal (rakesh@grexit.com):
+  have.
+
+Mike:
+  at least, I mean, I said four inboxes, but really they have like six or seven or eight inboxes, right? So one of the main ones are like info, VMS, info, CDX, info, myvehicle, I think, right? So for each inbox, there's at least three to five people connected to it. When an email comes in. They generally, you know, they do kind of workarounds in G suite where like they reply to an email and then BCC, everyone else in the team to let them know they have dealt with it, which is not ideal. We get quite a lot of emails. We also get a lot of automated emails from our own system. So they need to be ideally filtered out. You know, they don't really require attention. So we just want to kind of figure out which emails we can filter out, which are actually requiring action and which ones don't require action.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Got it. So these emails come from their own domain, which is VMS. Ie.
+
+Mike:
+  Yeah, CDX. Ie, myvehicle. Ie. Okay. Let.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Me make a note of it. So we filter these emails so that we don't have to action on these ones. All right, very clear. So you said info at the rate inboxes are there, then you've got seven to 10 people managing these multiple inboxes. Yeah. Other than that, how do they currently work on this? I mean, do they all log in into info inbox and then reply to the emails? Keep people in CC and BCC or do you use a solution today? No?
+
+Mike:
+  So we have a G suite. I'm not really sure about the setup but all the info inboxes… the collaborative inboxes, I think they're aliases to like my boss's email or something like that. And they are in some ways given access to not directly my boss's email, but to the aliases or something like this. So when it comes in, they can reply from their own email. They can reply from their own email or they can reply from the collaborative inbox.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Very clear. Yeah, that should be okay. I mean hiver is designed to work in a way that we set up… info at the rate shared inboxes right from within Gmail, individual inboxes and people don't need to keep BCC or CC. The rest of the team. I know as long as I'm working on an email, my colleague can be a part of the same inbox and see the cache has already worked on it. So it does not create any clutter in the personal inbox as well. So your boss will have a full transparency on how many emails have been coming into your info inbox for VMS or other mailboxes and how many of them have been worked upon, what these category of emails are, so on and so forth. And we can then look at certain automation workflows as well, which says filtering emails that are not even needed to be worked upon, or certainly filter those emails which need to go to Mike versus Rick cash. So all of that can be done as well. Anything else in particular you want to see in the action? Like do you have slas, which says, hey, how long you have to respond to these emails for the first time? And you close the tickets in these many hours?
+
+Mike:
+  There are some slas, however, I don't know them. So let's just say they're loose at the moment. Let's just go with that. There are some, but I just don't know the numbers, you know, some things get delayed anyway. So it sounds like you can have.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Slas, we can always go ahead and help you with the standard SLA setup and tell you where do we go ahead and tweak that? You can further talk to your team and edit the slas later as well. Should not be a problem. And for now, what we can do is maybe just assist you with a setup on your account. Do you mind sharing your screen? And on basis of it, we'll assist you with the account setup.
+
+Mike:
+  Okay. And the one thing is me as a developer, I don't have access to collaborative inboxes.
+
+Mike:
+  So I don't know if this is going to work here because I can't connect… to them if you get me.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Okay. So you're saying you don't have access to any of the info inboxes?
+
+Mike:
+  Well, my colleagues would be, I was hoping that you would show me today how things work with like a demo inbox or something like that. And then I can go back to the team and explain how it would work and then set up a trial because I personally don't have an access to those, no worries.
+
+Rakesh Goyal (rakesh@grexit.com):
+  We do get you a demo inbox by default. So we'll help you with the setup on the demo inbox. Manoj. I think we can do that on demo inbox and show Mike that in order to set up these shared inboxes, this is where you need to go and then, you know, set up your info inbox, but we can always help you set up with the demo inbox for now.
+
+Mike:
+  Yeah. Okay. No problem. Yeah, because I have the hiver thing here, but again, I don't have access to the other one. So, I can share.
+
+Manoj Kiran (manoj@grexit.com):
+  Hi, Mike, Manoj here, hi.
+
+Mike:
+  Hi. How are you? Thank you. Do you want me to share my screen or is that not necessary at the moment?
+
+Manoj Kiran (manoj@grexit.com):
+  Yes, yes, please. Can you share yours?
+
+Mike:
+  Yeah. Okay.
+
+Mike:
+  All right. Whip us out. Okay? So that's the hiver here?
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. There you go. So you're logged into your email address, right? Yeah.
+
+Mike:
+  Sorry. Do I select all of these? Yeah.
+
+Manoj Kiran (manoj@grexit.com):
+  I'm actually not seeing the other screen. So you're signing into hiver, right?
+
+Mike:
+  Oh, sorry. Yes, I'm signing into hiver. Yeah. So I'll just and presumably.
+
+Manoj Kiran (manoj@grexit.com):
+  You're talking about the Google permissions?
+
+Mike:
+  Yeah, yeah.
+
+Manoj Kiran (manoj@grexit.com):
+  You can, you can go ahead and select them all. It's a basic find and procedure with Google, so.
+
+Mike:
+  Yeah, that's done now. Okay. So now,
+
+Manoj Kiran (manoj@grexit.com):
+  yeah, we don't have to create it right now because, okay. Where's the closing option? Can I just do just type in info? And next?
+
+Manoj Kiran (manoj@grexit.com):
+  No click on, no click on explore demo inbox. Yeah. Okay. Now, you can put in your company details. Oh, sorry.
+
+Mike:
+  Where's my phone?
+
+Mike:
+  I'll just put in. It doesn't matter at the moment. Is it the phone number?
+
+Rakesh Goyal (rakesh@grexit.com):
+  Yeah, it's just for your reference. I mean, for our reference, should I need to get in touch with you? I mean, that's fine.
+
+Mike:
+  Yeah. Okay. I don't remember the hold on one second, the phone number to the company here? Okay?
+
+Mike:
+  Strange one. Let me copy. I.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Think you need to select the prefix for ireland first, and I believe that'll let you just add the number as well. So, yeah.
+
+Mike:
+  Yeah, cool. All right. I could just change this later. That's fine. Okay?
+
+Rakesh Goyal (rakesh@grexit.com):
+  Email next? Okay?
+
+Manoj Kiran (manoj@grexit.com):
+  That's it. Mike. So on the left, do you see your demo inbox with a bunch of preset emails and everything? Yeah. So this is something that we provide. You can play out on the mailbox, you can showcase it to your team, how a shared mailbox looks and everything. So similarly, once you have the info mailboxes, you're going to see the info mailboxes on the left hand panel.
+
+Rakesh Goyal (rakesh@grexit.com):
+  And respective.
+
+Manoj Kiran (manoj@grexit.com):
+  Team members will only see that particular inbox. Okay? Like if you're part of info one, you're just going to see info one, you're not going to see the other mailboxes.
+
+Mike:
+  Okay. Yeah. And,
+
+Manoj Kiran (manoj@grexit.com):
+  every mailbox is going to have these default sections… unassigned, mine, team, all views, tags, Right? And unassigned is for your new emails. Mine is for the emails assigned to you. Yep, team section is where you're going to see who's working on what, and these views relates to the status of the emails as well. Okay. So if you open any email from there on the list… so you're going to see the hiver, right? Panel where it has assignments, status, tags, custom fields and et cetera. Okay. So this is where you manage the email that's coming into the mailbox, so you're not actually ccing or forwarding anything. Yep. I.
+
+Rakesh Goyal (rakesh@grexit.com):
+  believe… though actual layout of the email is a little different. I mean, do you want to just maybe do a no split here? Because there's a limited space on Gmail.
+
+Mike:
+  Yeah, I can imagine. Yeah. Okay.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Yeah, it's better. This is much cleaner and better like you open the email, look at the email account, what it is about. And this is the first response. Now, who do you need to like? Who does need to work on this email? You do have the ownership, Now that you do not have the team added? I'll let Manoj go ahead and tell you where you can add the team and of course, add your info inboxes because this is more of a demo exploration. So over to you, Manoj. I mean, probably just take, yeah.
+
+Manoj Kiran (manoj@grexit.com):
+  So, Mike, on the top, right, do you see the hiver icon? Yeah, can you click on it and select admin panel? Yep. So this is your admin dashboard. Yep, you'll be creating your multiple mailboxes adding users, setting up your advanced options like automations and everything. So on the left where Rakesh has marked users and roles. Yep. So you click on it and you… invite your colleagues here, you can set their roles as well if you want them to be admin, mailbox, admin or anything.
+
+Mike:
+  Oh, okay. I'll just try one here. Yeah.
+
+Rakesh Goyal (rakesh@grexit.com):
+  And once you add all your users, Mike, and we create info inbox as a test inbox for these users, you then get an option to add them into the info inbox as well, right? For now, they're just added to the hiver demo.
+
+Mike:
+  Inbox. Yeah, that's right. Yeah. Okay. So save.
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. And,
+
+Rakesh Goyal (rakesh@grexit.com):
+  all Graham needs to do is just simply install hiver extension and that's pretty much it. He doesn't have to. They don't have to go through this entire setup. It's between you and me that the administrator has to do that. And if you invite them as the administrator, they can also see, you know, the option to create inboxes, add more users also.
+
+Mike:
+  Okay.
+
+Manoj Kiran (manoj@grexit.com):
+  Over to you, Manoj. Yeah. Now, on the left, do you see shared inboxes? Yeah. Okay. So create shared inbox. So these info at email addresses, Mike, all these are standalone Gmail accounts or Google groups. Okay. Yeah. Now, I am, that is a question. So, are they Google groups or a standalone Gmail account?
+
+Mike:
+  No, no. So, they are standalone Gmail accounts, as far as I know. Yeah, some of them, some of them may be aliases to, I think I said, like I said, my boss's email, but we'll have to figure that one out. I'm not exactly sure on the setup, but I, they should be individual inboxes, as far as I know, like individual accounts. Sorry. Yeah… if they're not, then we will have to make them live because I would imagine it doesn't work with aliases?
+
+Manoj Kiran (manoj@grexit.com):
+  No, no. So, it's nothing like that. I just want to see basically when you click on create shared mailbox. Yeah, the one step in the authentication is that whether you have to select if it's a standalone Gmail account or a Google group, both work perfectly fine.
+
+Mike:
+  Right. Yeah, definitely not Google groups that's for sure.
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. Awesome. So, you know, for the authentication part, we need the email address and the password, and that's just a one time thing. So once you have credentials during setup, you just have to do create shared inbox.
+
+Mike:
+  And then just add the users to the inbox. Yeah.
+
+Manoj Kiran (manoj@grexit.com):
+  Enter the email address, the name of the mailbox and authenticate it once using the password, and then you add the users to the shared mailbox. That's.
+
+Mike:
+  fine. Yeah, that's kind of pretty straightforward to you. I wanted to ask you. So one of the features is round Robin. So would that be somewhere in the automations or? Yeah.
+
+Manoj Kiran (manoj@grexit.com):
+  So click on the demo mailbox. Yeah, you see these on the left. These are all your advanced settings. The first thing round Robin is the auto assignment. So this is your round Robin feature. So you enable, and then all the incoming emails will start getting assigned to the users. One by one. Yeah, you can exclude users, set up limitations per user, right? And once you're an admin, you can also control their availability, like when they log in, they log in or you can just allow the users to control their availability.
+
+Mike:
+  Okay. That's great. Yeah. What is custom fields?
+
+Manoj Kiran (manoj@grexit.com):
+  If you remember on the hiver, right? Panel, you saw the status and the tags, right? Like in status, we have three default ones, open pending and closed, and tags are basically categories that you attach to an email, like what kind of email it is or whatever details you want to add to the email. Now custom fields is going to allow you to add additional information to your email.
+
+Mike:
+  So it's like metadata, is it?
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah, kind of, so you have four kinds of custom fields that you can use a date, text number and a dropdown. So you define what kind of data you want to collect on an email.
+
+Mike:
+  So,
+
+Manoj Kiran (manoj@grexit.com):
+  since these are info mailboxes, you might have different subcategories on the main category, right? You list them as dropdowns. And if you have different levels of priority in the emails, you can have them as a dropdown. And then you can mention the follow up dates in the date field. Any kind of important note that you want to leave on the email, you can have it in a text field. All of that is there. Okay?
+
+Mike:
+  And can you automatically label emails based on the subject pattern or email contents? Yes?
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. That's great. You can do that in automations. So, if you click on automation, we have a wide variety of features… and Mike just one more thing. So, for the text field in the custom fields feature, we also have AI extract. So if you want to extract an information from the body or the subject of the email and display it in the text field automatically, you can leave the prompt to the AI, train the AI and manage the custom field with.
+
+Mike:
+  The AI?
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. That's good. So, these are some dummy automations that we already have in the demo mailbox. It's basically like you're building a flow, you can create automation based on email conversations based on any status action based on updating a custom field as well. Okay?
+
+Mike:
+  Okay. Let's go aliases to an actual email, if you.
+
+Manoj Kiran (manoj@grexit.com):
+  Have aliases. So let's say that one of your info boxes already has alias in Google workspace. You can just mention those aliases over here.
+
+Mike:
+  Okay. So that's just basically like a label?
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah, you're letting the system know that this is also part of the mailbox. So don't miss out the emails by any chance, and you can also set up automations based on these aliases.
+
+Mike:
+  Oh, okay. It's like for catching capturing into specific inboxes, if it's aliases, okay? And then integrations.
+
+Manoj Kiran (manoj@grexit.com):
+  So, we have that on the apps. Yeah.
+
+Mike:
+  Yeah, we'll be using slack, so we can integrate that with slack. Okay?
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. So using slack, you can get notifications in specific channels that you, okay?
+
+Mike:
+  Yeah, that's good… approvals.
+
+Mike:
+  Is there some kind of automation that needs to be?
+
+Manoj Kiran (manoj@grexit.com):
+  Not really. So, these are kind of like flows, right? You can have them, you know, have like a refund request email in your info mailbox, and then you can maybe activate the flow on who should approve the refund?
+
+Mike:
+  Oh, okay. Yeah. Right.
+
+Manoj Kiran (manoj@grexit.com):
+  You can have different hierarchies, like for person a, approved, then it goes to person B, and then it's an accepted state. And then the team who's handling the refund will check the approval flow check if they're accepted, and then they'll go forward with the refund something like that. Okay. Customer satisfaction snippets.
+
+Mike:
+  Okay. This is just like surveys sent out.
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah, and,
+
+Mike:
+  okay. And they're attached at the bottom of the email or is it just sent?
+
+Manoj Kiran (manoj@grexit.com):
+  Out bottom of the email bottom.
+
+Mike:
+  Of the email, okay, customer portal, I would imagine that's all the emails… coming in, is it, does it, build that customer database automatically or is this something that we set up here?
+
+Manoj Kiran (manoj@grexit.com):
+  You set up the portal, you share it with the customers and customers instead of using Gmail or any other emailing tool to raise a ticket, they just use the portal to raise a ticket with you guys.
+
+Mike:
+  Right. But the portal is that using our domain or how does it work?
+
+Manoj Kiran (manoj@grexit.com):
+  You can connect it to your domain.
+
+Mike:
+  Okay. And it's just like a sort of like an interface, like a web page sort of.
+
+Manoj Kiran (manoj@grexit.com):
+  Thing? Yes. So, whenever the customer, you know, raises a ticket, it again comes in as an email to your shared mailbox, you can differentiate using the portal email address, but, yeah, it again comes into your unassigned section, and then you take over from that. Okay? And sharing… okay?
+
+Mike:
+  And these are the slas you were talking about here. Earlier. So, let's say I set an SLA on this one. For example. Does that, does that send like automatic reminders or anything like this? How does it work if it hasn't been assigned or answered in a while?
+
+Manoj Kiran (manoj@grexit.com):
+  So, you have, so we provide you with two SLA status. One is overdue and one is due soon. Now, both of these statuses can be applied either on all of the emails, incoming emails or emails with specific tags, like if you want separate SLA for high priority emails, you set up an automation to add a high priority tag and run an SLA based on it. Now. Okay. And it calculates two different timings for overdue as well as due soon, it calculates the first response time and the resolution time.
+
+Mike:
+  Okay. That's good. Yeah.
+
+Manoj Kiran (manoj@grexit.com):
+  Now, once it triggers, like once it goes above the day, you know, the time limit, the… by default, the assignee and the assigner that's who's working on the email and the admin who's assigned the email will get notified and you can also select multiple other people to get notified.
+
+Mike:
+  Okay. And the notifications, do they come in as a form of email and in here? Or they?
+
+Manoj Kiran (manoj@grexit.com):
+  Come in the bell icon, you can enable desktop notifications for that. Okay. So you get a banner pop up on your screen whenever an SLA or the assignment triggers?
+
+Mike:
+  Okay. So that's yeah, that's what you were saying earlier. You cannot use the AI to target them. I think that's great. And then this, that's the same thing. Is it? Yeah.
+
+Manoj Kiran (manoj@grexit.com):
+  So, AI agents, we have tagging sentiment analysis to read the tone of the email. And then copilot, you have the ask AI. So you feed in knowledge sources like documents, PDFS that you have, you can train the copilot based on it. And basically, yeah. So click on copilot. So then you first enable the copilot on the right. Yeah, and AI compose also can be enabled.
+
+Mike:
+  All right. Yeah, I see it. Yes, I just upload documents here. Yeah. Okay. So that creates a knowledge base. And then I suppose the AI can suggest responses then to emails?
+
+Manoj Kiran (manoj@grexit.com):
+  Yes. So you can simply ask it to draft a reply and it's going to read through your knowledge sources and then draft your response, a couple of things. Mike. So these are external knowledge documents like snippets documents, PDFS and everything. But we also provide a feature knowledge base on the left. You can create your own knowledge base using hiver, Like have an internal knowledge base of all your process documents, everything.
+
+Mike:
+  All right. Yeah. All right. Yes. I have to say email provider.
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah, it's basically a different sign in and you manage everything and you can also connect this to your domain.
+
+Mike:
+  Oh, okay. Great. Yeah. Okay. That's good. Yeah, I like that.
+
+Manoj Kiran (manoj@grexit.com):
+  And with the articles that you add and everything, you can link this knowledge base to the copilot AI.
+
+Rakesh Goyal (rakesh@grexit.com):
+  So whenever.
+
+Manoj Kiran (manoj@grexit.com):
+  An email comes in, you ask it to draft a response, it's going to basically read through all your knowledge sources and draft your response.
+
+Mike:
+  Okay. That's great. Yeah. And I'm sorry, one thing, the last one shared label.
+
+Manoj Kiran (manoj@grexit.com):
+  I wouldn't recommend on shared labels if you're using shared mailbox concept. I guess this is not going to be part of the shared mailbox, it's completely a different feature.
+
+Mike:
+  Okay. What would the use case for it?
+
+Manoj Kiran (manoj@grexit.com):
+  So, let's say it's just some work between you and your colleague and you guys label these emails using a specific Gmail label like add it to a Gmail folder.
+
+Rakesh Goyal (rakesh@grexit.com):
+  So, yeah, let me take this up. Manoj. So Mike, this is basically management of your private inbox emails. Let's say, you know, anything comes into Mike at the written box, but you want to share it with your boss, so you can create a label that can be shared between Mike and his boss. And when you add a label, the same email gets reflected into your boss's top inbox as well. So this has got nothing to do with the shared email inbox such as, but these are private emails, sharing amongst the teammates.
+
+Mike:
+  Okay. I get it. Yeah. Okay. That's that's good. Yeah.
+
+Rakesh Goyal (rakesh@grexit.com):
+  It's like how you use the Gmail label functionalities, you could just use hybrid labels as well, but that's more to do with the management of your private email inbox.
+
+Mike:
+  Okay. And what else do I want to add? I think that's really it. So let's see this developer API. So does that basically, it's like, do you have an API, for this? And then we can create our custom stuff and that will interact with the hiver. Is it?
+
+Rakesh Goyal (rakesh@grexit.com):
+  Yeah, Manoj over to you?
+
+Mike:
+  Hello. Yeah. Sorry, I was just saying the developer API. So do most of the features that I see here in hiver, do they have their own API that we can use to do some custom solutions on our backend? Using our backend to connect with hiver or what's the API for?
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. So yeah… we do have an API to read through the emails, maybe perform few actions like update the status of the email, open the email, add the data from the email, right? I can share you the developer document for that post a call. Yeah, that'd be handy. Yeah, but are you looking for anything specific?
+
+Mike:
+  No, not really. I'm curious. But, yeah, the thing is… we have a nine eight. I don't know if, you know that it's like an inbox listener tool. We download emails from one of the inboxes and we upload them to our system, and we do perform certain actions on those emails, right? And now it doesn't integrate with G suite at the moment. But what we would like at some point is that when we perform an action in our system that the email in this, let's say shared inbox gets marked as red or something like that, you know, so that'd be very.
+
+Manoj Kiran (manoj@grexit.com):
+  Handy. Okay. Yeah. So if.
+
+Rakesh Goyal (rakesh@grexit.com):
+  it's a,
+
+Manoj Kiran (manoj@grexit.com):
+  minimal action like you know, as you mentioned, as soon as you update something in your system, you want to update the status of the email in the system like the default statuses. I mean, I think that should be possible with the apis that we have right now, I'll share the documents. You can explore it and anything further, we can have a conversation based on it.
+
+Mike:
+  Yeah, that's good. Yeah, I don't think I have any other questions. I will have more questions but that will be when it comes to pricing et cetera. But that'd be with my boss possibly, well, maybe you would know some basic questions that my boss will definitely ask is. So the pricing is 25 dollars per user per month.
+
+Rakesh Goyal (rakesh@grexit.com):
+  That's the starting pricing. Yeah, we start at 25 dollars per login.
+
+Mike:
+  Per login. Okay. Now… let's say every user is there like a limit on the amount of shared inboxes? Does it scale? Like let's say if I add another shared inbox, does it cost more per user or how does it work?
+
+Rakesh Goyal (rakesh@grexit.com):
+  Sure. Absolutely. Could you take me to the settings page? Let me explain the pricing for.
+
+Mike:
+  you. Yeah.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Okay. Just click on upgrade plan. You don't have to do that though, but yeah. Okay. Now it starts at 25, you connect your 10 up to users like you have 10 different users who are going to be part of multiple inboxes, and these users can be overlapped. Also, right? I mean, two users can be a part of three inboxes, but this package lets you create two inboxes. And these two inboxes could be info at the rate xyz domain, your company domain, or support at the rate your company domain. And then you have got all the other functionalities, you get AI compose, AI summarizer, and all of that. This inbox, the 65 dollar plan inbox lets you create up to five boxes. So I would like to understand how many mailboxes you're looking at.
+
+Mike:
+  At the very least, it's probably going to be five, but one of them is not really that active. So maybe four, at minimum, I would say.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Okay. All right. So, yeah. Then in that case, we're looking at this plan. And it does give you a lot of other bells and whistles, like automatic tagging, sentiment analysis, extraction of important data out of the emails, let you know, hey, this is the customer cancellation request or this is, you know, some evaluation request. There's something to do with the financing. And then you have SLA's policies then you've got csat and everything. So mostly, this is going to be a plan that you will be looking at. And as, and when I speak to your boss, we'll be open to see if this is going to be, you know, if I would have some sort of discounts or promotional offers running, I can have a quick chat with him as well.
+
+Mike:
+  Okay. Yeah, that's great. He will definitely ask you about a discount because he was already complaining about 25 per user, but he will have to swallow the hard pill I suppose. But yeah, he'll probably ask you if you have any deals on the.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Problem before we even get into it. Mike, I want to first of all, make sure that we invite the users. We test the solution of.
+
+Mike:
+  Course, we.
+
+Rakesh Goyal (rakesh@grexit.com):
+  see if this is a value and then, you know, it becomes easier for us and everybody, you know, I would definitely ask your boss, hey, if there is a budget or when are we looking to make a decision? And on the basis of it, I can make sure that this works for them.
+
+Rakesh Goyal (rakesh@grexit.com):
+  But before that, we want to make sure that this is a tool of your choice, and that would only depend upon while we add the users to your account. We test the platform. We come up with more questions. If there is a training needed for the team, when are you looking to add users to your account? And when are you going to be training them? Like onboarding them on hivertest?
+
+Mike:
+  I'm hoping to add them to the well, create the shared inboxes for at least two services today, for VMS, and for CDX. These are the two main ones. Got it. So for now, even this plan would work.
+
+Rakesh Goyal (rakesh@grexit.com):
+  So you'll be adding more people to the inboxes for testing?
+
+Mike:
+  Yes. So yeah, definitely. Yeah, yeah, that'd be, I think at least three or four per inbox. So let's say you have two shared inboxes. It's going to be like eight users or seven, something like that users. Sure. All right. I would have to use it. Yeah, no worries. So, yeah, I will be definitely trying to do this today. So, yeah.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Can we reconnect on Thursday and then go over the setup while the entire users are added. And then we also bring users onto the call, try and understand their exact workflows everyday basis. And we give them a quick training as well.
+
+Mike:
+  I don't know if that would be feasible now with the whole team on zoom call, because we are very busy especially with the phones in here, the phones are crazy. Okay. But it would definitely be me and maybe one or two other members when we hit the whole team. But my question is, so if I were to… yeah, if I were to start setting this up, so you have restarted the trial period on my user now, is it?
+
+Rakesh Goyal (rakesh@grexit.com):
+  Yes. Okay. Let me just quickly check the account at the back end. Give me one minute, please… just going to be looking at the account details. Okay? We started off and your account is set to expire on third of February. So you've got, yeah, you've got seven more days to go.
+
+Mike:
+  Okay. Yeah.
+
+Rakesh Goyal (rakesh@grexit.com):
+  All right. And I recommend we reconnect again on Thursday. Maybe we'll just go over the exact setup you bring one or two users, the main heavy users on the different inboxes. And also if possible, Mike, you might want to just bring your boss as well. Should we want to just have a quick discussion on what the onboarding would look like after we test it thoroughly or should you want to just hold until we like thoroughly test it and then go back to your boss. I'm happy either way to support your use cases and your evaluation.
+
+Mike:
+  Yeah, that'd be fine. Yeah. And would there be possible extensions on the trial just in case? Seven days is not enough because I'm saying this because we are starting a hybrid literally just next week and I won't have as much contact with the team here, but I would let you know in advance if that's needed, if that's okay with you. Yeah.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Absolutely open to have this. I mean, I'm flexible in terms of, you know, extending your trial should not be a problem, but provided we add the users, and then we start the test and only, then it makes sense, right? Otherwise, let's say, you know, if you don't do anything on the test account, and then you come back and say, hey, we can be extended for another 10 days. Doesn't make really difference because then probably we are just not even starting. So let's just start the testing and let me know whenever you are ready for further extension and I get to speak to your teammates. I'm happy to do the extension as well. So, yeah.
+
+Mike:
+  Okay, grand.
+
+Mike:
+  Yeah, yeah, I think that's all. So thank you guys for your time. I really enjoyed the presentation. It was very thorough, lovely. And I'll be speaking to you on Thursday then. Yeah, will you send me invites? I?
+
+Rakesh Goyal (rakesh@grexit.com):
+  Am doing it right now. I'll call it hiver, placeholder feedback meeting and then I'll give you the invite access to bring in your colleague as well onto the meeting. Yeah, and does the same time work for you just for 15, 20 minutes?
+
+Mike:
+  Yeah, I think just close to 12 that should be fine. Yeah. Sorry, close to, yeah, 1,145. Yeah, that's fine. Yeah. Okay. Something like that. Cool. So.
+
+Rakesh Goyal (rakesh@grexit.com):
+  I have sent you an invite. Give me a minute. All right. Should be right there in your inbox, if you could please check that.
+
+Mike:
+  Yeah. So that's demo, no, that was 18 minutes ago. Sorry?
+
+Rakesh Goyal (rakesh@grexit.com):
+  It's a hiver placeholder feedback meeting.
+
+Mike:
+  And then, and there it is. Yeah, we may.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Not really need entire 30 minutes. Just wanted to keep some time as buffer as well. Just feel free to edit it, invite your users by then. You'll invite the more teammates, create shared inboxes. And also, the best part is you've got the exact help document right there. If you click here again, Excuse me, you have the help center, And this is a help document, this exact knowledge base that we were referring to. So this is a knowledge base that supports our customers. You can just type in anything, right? How to create a shared inbox, how to add users, how to create mailbox automations, so you can search for anything that you require, and you can just maybe refer to the get started guide. Everything is right there. Should you come across any more questions, our team technical team is available 24 to seven. Feel free to start a chat with us or just simply write back to me. Me being the first point of contact. Mike will be just an email away. Get back to you at the earliest and we are anyways connecting on Thursday to take things further.
+
+Mike:
+  Lovely. Yeah. Okay. Thank you very much guys for your time and yeah, we'll be in touch on Thursday, definitely.
+
+Rakesh Goyal (rakesh@grexit.com):
+  Yep, we'll talk to you soon again. You take care. Bye.
+
+Mike:
+  Thank you. Thanks, Mike. Thank you, Mike.

@@ -33,7 +33,7 @@ These files are the input for Step 1.
 
 **Script:** `scripts/signal_pipeline/step1_extract_signals.py`
 
-**Input:** `gong_transcripts/*.txt` (and optional `*.json` for metadata)
+**Input:** `gong_transcripts/*.txt` (and optional `*.json` for metadata), prompt: `scripts/signal_pipeline/prompts/step1_extract_signals.txt`
 
 **Output:** `gong_signal_pipeline/signals/all_signals.json`  
 (Also: `{transcript_id}.json` per transcript, `processed_transcripts.json`)
@@ -48,7 +48,7 @@ python3 scripts/signal_pipeline/step1_extract_signals.py --input-dir gong_transc
 
 **Script:** `scripts/signal_pipeline/step1_1_theme_consolidation.py`
 
-**Input:** `gong_signal_pipeline/signals/all_signals.json`
+**Input:** `gong_signal_pipeline/signals/all_signals.json`, prompt: `scripts/signal_pipeline/prompts/step1_1_theme_consolidation.txt`
 
 **Output:** `gong_signal_pipeline/signals/theme_consolidation.json`
 

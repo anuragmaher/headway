@@ -5,52 +5,11 @@
   "started": "2026-01-29T22:04:21+05:30",
   "signals": [
     {
-      "Theme": "Contact Module Enhancements",
-      "Ask": "The contact module must allow for the assignment of account representatives to ensure proper client servicing.",
+      "Theme": "Contact Module",
+      "Sub-Theme": "Account Rep Assignment",
+      "Ask": "We need the contact module to automatically assign an account rep to each account.",
       "Priority": "High",
-      "Evidence": "The contact module not being able to assign an account rep is the issue."
-    },
-    {
-      "Theme": "Custom Objects Integration",
-      "Ask": "We need a solution to integrate custom objects with our existing Google Sheets mapping.",
-      "Priority": "High",
-      "Evidence": "Our objects are static, and we need to either tie into the Google sheet or provide a script."
-    },
-    {
-      "Theme": "Migration Capabilities",
-      "Ask": "We require clear documentation on what can and cannot be migrated from Zendesk to Hiver.",
-      "Priority": "High",
-      "Evidence": "It would be helpful to have some documentation on what parts of it can be migrated, what parts cannot be migrated."
-    },
-    {
-      "Theme": "AI Chat Use Case",
-      "Ask": "We need to explore AI chat capabilities as a priority for our customer onboarding.",
-      "Priority": "Medium",
-      "Evidence": "They have a use case for AI chat also."
-    },
-    {
-      "Theme": "Email and Ticket Integration",
-      "Ask": "We need an integrated setup to manage both phone calls and emails in one place.",
-      "Priority": "Medium",
-      "Evidence": "Their biggest issue right now is they're spending so much time figuring out this phone call and email connection."
-    },
-    {
-      "Theme": "WhatsApp Channel Request",
-      "Ask": "There is a request for WhatsApp as a communication channel in Omni.",
-      "Priority": "Medium",
-      "Evidence": "Valis group is looking for WhatsApp as a channel in Omni."
-    },
-    {
-      "Theme": "Knowledge Base Migration",
-      "Ask": "We need a solution for migrating knowledge bases from third-party systems to Hiver.",
-      "Priority": "Medium",
-      "Evidence": "We need to figure out how to migrate from their WordPress site."
-    },
-    {
-      "Theme": "Automation Workflow",
-      "Ask": "We need to ensure that automation workflows are available in Omni to match HIG capabilities.",
-      "Priority": "High",
-      "Evidence": "The primary thing automation is something we need."
+      "Evidence": "If the contact module had everything, they don't even need custom objects, but the contact module, not being able to assign an account rep that's the issue."
     }
   ]
 }

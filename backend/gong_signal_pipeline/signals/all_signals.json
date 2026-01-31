@@ -1,1455 +1,1502 @@
 {
   "transcripts": [
     {
-      "transcript_id": "01_7443434986408884609",
-      "call_id": "7443434986408884609",
-      "title": "Hiver Demo Logicbroker<> Cole",
-      "started": "2026-01-31T02:32:39+05:30",
+      "transcript_id": "01_113674299977064327",
+      "call_id": "113674299977064327",
+      "title": "Hiver Demo | Rain <> Alex",
+      "started": "2026-01-27T01:01:48+05:30",
       "signals": [
         {
-          "Theme": "Integration with HubSpot",
-          "Ask": "We need a solution that integrates seamlessly with HubSpot as we are transitioning to it for support.",
+          "Theme": "Email Visibility",
+          "Sub-Theme": "Assigned Emails",
+          "Ask": "We need a tool that provides easy visibility of emails assigned to specific individuals.",
           "Priority": "High",
-          "Evidence": "I think financially it makes sense for us just to add this module in versus having yet another like system."
-        },
-        {
-          "Theme": "Support Team Structure",
-          "Ask": "We require a tool that can support a team structure of multiple agents managing customer queries.",
-          "Priority": "Medium",
-          "Evidence": "We have a whole team both in the US and the U.K."
-        },
-        {
-          "Theme": "Cost-Effectiveness",
-          "Ask": "We are looking for a cost-effective solution that does not add unnecessary complexity.",
-          "Priority": "Medium",
-          "Evidence": "I think financially it makes sense for us just to add this module in."
-        },
-        {
-          "Theme": "User Experience",
-          "Ask": "The solution should maintain a conversational experience for customers, similar to email communication.",
-          "Priority": "Medium",
-          "Evidence": "They don't feel like they're in a ticket in another system like it's just like me and you communicating over email."
-        },
-        {
-          "Theme": "Primary User Involvement",
-          "Ask": "The primary user of the support tool should be involved in the evaluation process.",
-          "Priority": "Low",
-          "Evidence": "Support is a little bit outside my realm. We have someone who like runs the director of client experience and support."
+          "Evidence": "His priority is that he wants like a visibility of those emails being assigned to him because right now we're just using this card. And honestly, we have like a 1,000 emails not being deleted in the inbox. And like the starred ones are just like hard to find."
         }
       ]
     },
     {
-      "transcript_id": "02_2988006631121274012",
-      "call_id": "2988006631121274012",
-      "title": "Hiver Introduction with Digital.AI",
-      "started": "2026-01-31T01:01:25+05:30",
+      "transcript_id": "02_3711224057354889089",
+      "call_id": "3711224057354889089",
+      "title": "Hiver Demo | Roberta <> Cole",
+      "started": "2026-01-27T00:59:57+05:30",
       "signals": [
-        {
-          "Theme": "Integration with Zendesk",
-          "Ask": "Hiver must integrate seamlessly with Zendesk.",
-          "Priority": "High",
-          "Evidence": "We're pretty invested in Zendesk now."
-        },
-        {
-          "Theme": "AI Capabilities",
-          "Ask": "The platform should offer advanced AI features for ticket summarization and response suggestions.",
-          "Priority": "High",
-          "Evidence": "We have a tool called maven that does ticket summarization and suggests a response."
-        },
-        {
-          "Theme": "Investment in Current Tools",
-          "Ask": "Any new solution must justify the transition from existing tools like Maven and Zendesk.",
-          "Priority": "Medium",
-          "Evidence": "We've been debating whether or not we want to continue with maven or start using Zendesk's AI tool."
-        },
-        {
-          "Theme": "User Experience",
-          "Ask": "The platform should be easy to use compared to current solutions.",
-          "Priority": "Medium",
-          "Evidence": "We have customers that come over from Zendesk for it being hard to use."
-        },
-        {
-          "Theme": "Customer Support Focus",
-          "Ask": "The solution should align with a customer service and support focus.",
-          "Priority": "Low",
-          "Evidence": "We're going more towards like the customer service, customer support type."
-        }
-      ]
-    },
-    {
-      "transcript_id": "03_8526023725426238724",
-      "call_id": "8526023725426238724",
-      "title": "Hiver Demo | Heidi <> Cole",
-      "started": "2026-01-31T00:59:18+05:30",
-      "signals": [
-        {
-          "Theme": "Task Management",
-          "Ask": "We need a system that can process client requests like a help desk ticket.",
-          "Priority": "High",
-          "Evidence": "I want to change the concept of our interactions with our clients... it actually is processed like a help desk ticket."
-        },
-        {
-          "Theme": "Integration Requirements",
-          "Ask": "Integration with Microsoft Teams is important for our internal communication.",
-          "Priority": "High",
-          "Evidence": "Could Hiver draw from Teams messages to generate tasks like it does from email?"
-        },
-        {
-          "Theme": "Response Time",
-          "Ask": "We require customizable response times for urgent tasks, ideally within 15 minutes.",
-          "Priority": "Medium",
-          "Evidence": "Can you change that to say within 15 minutes? It needs to be like – a."
-        },
-        {
-          "Theme": "Centralized Task Tracking",
-          "Ask": "We need a centralized location to track completed tasks and associated documents.",
-          "Priority": "Medium",
-          "Evidence": "Is there a spot where, like –, so the document will just be sitting within the message?"
-        },
-        {
-          "Theme": "Help Desk Functionality",
-          "Ask": "We are looking for additional help desk functionalities beyond email management.",
-          "Priority": "Medium",
-          "Evidence": "I was hoping for more in addition to that functionality sort of a help desk type like task ticketing."
-        }
-      ]
-    },
-    {
-      "transcript_id": "04_6529268741727685536",
-      "call_id": "6529268741727685536",
-      "title": "Hiver Demo | Mark <> Alex",
-      "started": "2026-01-30T23:01:46.302+05:30",
-      "signals": [
-        {
-          "Theme": "Warranty Tracking",
-          "Ask": "We need a better way to track our warranty process for products sold.",
-          "Priority": "High",
-          "Evidence": "We just need a better way to track our warranty process with products that we sell."
-        },
-        {
-          "Theme": "Integration Requirements",
-          "Ask": "The system must integrate with Shopify to track ticket statuses and resolutions.",
-          "Priority": "High",
-          "Evidence": "Integration... whether or not there's open APIs to maybe connect to Shopify."
-        },
-        {
-          "Theme": "Communication Channels",
-          "Ask": "We require support for voice communication as the primary contact method.",
-          "Priority": "High",
-          "Evidence": "Our main one that people communicate issues with us is via voice."
-        },
-        {
-          "Theme": "Push-Pull Functionality",
-          "Ask": "We need the ability to push order statuses and notes back to Shopify.",
-          "Priority": "Medium",
-          "Evidence": "We need to push the status of this order or even notes back to Shopify."
-        },
-        {
-          "Theme": "Scalability",
-          "Ask": "The system should be scalable to accommodate future team growth.",
-          "Priority": "Medium",
-          "Evidence": "I want to set up a system that will be conducive to scale."
-        }
-      ]
-    },
-    {
-      "transcript_id": "05_3939907584826844050",
-      "call_id": "3939907584826844050",
-      "title": "Hiver Demo",
-      "started": "2026-01-30T22:31:37+05:30",
-      "signals": [
-        {
-          "Theme": "Status Tracking",
-          "Ask": "Need clear visibility on email status, including open, pending, and closed.",
-          "Priority": "High",
-          "Evidence": "How do I know what's assigned? How do I know what's unassigned? What status is my email in?"
-        },
-        {
-          "Theme": "Customizability",
-          "Ask": "Require the ability to customize email statuses.",
-          "Priority": "High",
-          "Evidence": "Can they set other statuses? Can we custom that Cole?"
-        },
-        {
-          "Theme": "Tagging System",
-          "Ask": "Need the ability to create personal and private tags in addition to shared tags.",
-          "Priority": "Medium",
-          "Evidence": "Does that include like private tags as well?"
-        },
-        {
-          "Theme": "Search Functionality",
-          "Ask": "Require advanced search capabilities with multiple filters and saved views.",
-          "Priority": "Medium",
-          "Evidence": "And you can put multiple filters on to find it, right?"
-        },
-        {
-          "Theme": "User Availability",
-          "Ask": "Need a clear method for tracking user availability status.",
-          "Priority": "Medium",
-          "Evidence": "How do you know if somebody's online or not?"
-        }
-      ]
-    },
-    {
-      "transcript_id": "06_2649086709896496298",
-      "call_id": "2649086709896496298",
-      "title": "Hiver Follow Up with Digi",
-      "started": "2026-01-30T22:30:52+05:30",
-      "signals": [
-        {
-          "Theme": "AI Response Accuracy",
-          "Ask": "The AI must provide accurate responses based on uploaded training materials.",
-          "Priority": "High",
-          "Evidence": "Hiver gave us this information on the right, which… was incorrect. Basically all of it was incorrect."
-        },
-        {
-          "Theme": "Customer-Facing AI",
-          "Ask": "We want a customer-facing AI experience to handle level one support cases.",
-          "Priority": "High",
-          "Evidence": "Ultimately, we want a customer facing AI experience that's going to make it easier for us to eliminate… more cases at level one."
-        },
-        {
-          "Theme": "Integration with Netsuite",
-          "Ask": "Hiver must integrate seamlessly with Netsuite for case management.",
-          "Priority": "High",
-          "Evidence": "We don't want to introduce another source of truth and source of record for any formal emails with customers."
-        },
-        {
-          "Theme": "Knowledge Base Utilization",
-          "Ask": "The AI should suggest relevant knowledge base articles during customer interactions.",
-          "Priority": "Medium",
-          "Evidence": "I would want copilot to not just build the answer himself."
-        },
-        {
-          "Theme": "Long-Term Support",
-          "Ask": "We need assurance that ongoing adjustments to the AI will not be a recurring burden.",
-          "Priority": "Medium",
-          "Evidence": "I just wonder how this looks long term or will we have to continue to, you know, meet with you guys to tweak every time we roll out a new product line."
-        },
-        {
-          "Theme": "Analytics Requirements",
-          "Ask": "We require detailed analytics on AI interactions and case resolutions.",
-          "Priority": "Medium",
-          "Evidence": "I would want to be able to have analytics on how many questions do we get a day, a week, a month, a quarter?"
-        }
-      ]
-    },
-    {
-      "transcript_id": "07_8819313375613845025",
-      "call_id": "8819313375613845025",
-      "title": "Hiver Demo | Katie <> Cole",
-      "started": "2026-01-30T22:00:42+05:30",
-      "signals": [
-        {
-          "Theme": "Email Management",
-          "Ask": "The platform must separate email and chat correspondence in the inbox.",
-          "Priority": "High",
-          "Evidence": "It doesn't separate those in an inbox, making it next to impossible to organize."
-        },
-        {
-          "Theme": "Contact Management",
-          "Ask": "The solution should allow grouping of contacts under a single company umbrella.",
-          "Priority": "High",
-          "Evidence": "It doesn't have the ability to lump contacts into a company."
-        },
-        {
-          "Theme": "Integration Requirements",
-          "Ask": "There must be a direct integration from the sales CRM into the support CRM.",
-          "Priority": "High",
-          "Evidence": "There's no direct integration from our sales CRM into our support CRM."
-        },
-        {
-          "Theme": "Analytics Needs",
-          "Ask": "The system should provide analytics on average reply times throughout email threads.",
-          "Priority": "Medium",
-          "Evidence": "I would love to be able to see average reply time not just to first response but to even like in a thread."
-        },
-        {
-          "Theme": "Trial and Evaluation",
-          "Ask": "A trial period for the solution is necessary before making a final decision.",
-          "Priority": "High",
-          "Evidence": "I would really love to... get back to you by the end of next week if we are interested in doing like a trial period."
-        }
-      ]
-    },
-    {
-      "transcript_id": "08_5780117691363567709",
-      "call_id": "5780117691363567709",
-      "title": "Noble Schools <> Hiver AI",
-      "started": "2026-01-30T21:39:18+05:30",
-      "signals": [
-        {
-          "Theme": "Pricing Assurance",
-          "Ask": "Guarantee no price increases until contract expiry.",
-          "Priority": "High",
-          "Evidence": "You're good till the contract renews, obviously because we signed it up in advance."
-        },
-        {
-          "Theme": "AI Functionality Testing",
-          "Ask": "Desire to test AI features before full implementation.",
-          "Priority": "High",
-          "Evidence": "I think you're on the right track with getting the documents there."
-        },
-        {
-          "Theme": "Customization Needs",
-          "Ask": "Require customization options for AI responses and workflows.",
-          "Priority": "Medium",
-          "Evidence": "You can either upload documents as they are copy paste snippets or best responses that you want for like specific scenarios."
-        },
-        {
-          "Theme": "Feedback Mechanism",
-          "Ask": "Need a robust feedback loop for AI performance improvement.",
-          "Priority": "Medium",
-          "Evidence": "Every agent that interacts with it can keep giving that feedback loop."
-        },
-        {
-          "Theme": "Sentiment Tracking",
-          "Ask": "Interest in tracking sentiment on incoming emails.",
-          "Priority": "Low",
-          "Evidence": "You can tweak it based on prompts."
-        }
-      ]
-    },
-    {
-      "transcript_id": "09_8550599579641206013",
-      "call_id": "8550599579641206013",
-      "title": "The Economist (Legal) <> Hiver",
-      "started": "2026-01-30T21:00:46+05:30",
-      "signals": [
-        {
-          "Theme": "Email Management",
-          "Ask": "We need a more efficient way to manage our busy legal contracts inbox.",
-          "Priority": "High",
-          "Evidence": "It's a very busy inbox with a lot of requests coming in."
-        },
-        {
-          "Theme": "Search Functionality",
-          "Ask": "The system must provide a reliable search capability across all emails, including closed matters.",
-          "Priority": "High",
-          "Evidence": "The search is at the moment inexistent. We cannot find things."
-        },
-        {
-          "Theme": "Task Assignment",
-          "Ask": "We require clear visibility on task assignments to ensure accountability.",
-          "Priority": "Medium",
-          "Evidence": "How would the system know which one is my task? Which one is Sarah's task?"
-        },
-        {
-          "Theme": "Historical Data Access",
-          "Ask": "We need access to all historical emails and attachments for context in ongoing matters.",
-          "Priority": "High",
-          "Evidence": "We need everything. Yeah, completely."
-        },
-        {
-          "Theme": "Analytics and Reporting",
-          "Ask": "The system should provide analytics on email volume and handling times.",
-          "Priority": "Medium",
-          "Evidence": "Does the system give any analytics? Like for example, how many matters closed last year?"
-        }
-      ]
-    },
-    {
-      "transcript_id": "10_8871955693361679774",
-      "call_id": "8871955693361679774",
-      "title": "Hiver Demo | Susan <> Yukta",
-      "started": "2026-01-30T20:30:08+05:30",
-      "signals": [
-        {
-          "Theme": "Message Storage",
-          "Ask": "How does Hiver store messages and organize them per client?",
-          "Priority": "High",
-          "Evidence": "My question is how does hiver store the messages that's my, that's the big thing I cannot determine how they store the messages, how we would organize it per client."
-        },
-        {
-          "Theme": "Client Communication",
-          "Ask": "We need a solution that allows clients to communicate via email without using Basecamp.",
-          "Priority": "High",
-          "Evidence": "Our clients prefer just to email us versus go through basecamp."
-        },
-        {
-          "Theme": "Team Access",
-          "Ask": "We need to determine how many team members will need access to Hiver.",
-          "Priority": "Medium",
-          "Evidence": "I don't know... we'll have to figure out how many people would actually have to have access to it."
-        },
-        {
-          "Theme": "Tagging System",
-          "Ask": "Can we tag messages based on clients for better organization?",
-          "Priority": "Medium",
-          "Evidence": "Is there a way to tag each message based on a client?"
-        },
-        {
-          "Theme": "Email Management",
-          "Ask": "We want to ensure that all messages are accessible to the team to prevent any from getting lost.",
-          "Priority": "High",
-          "Evidence": "I just don't want messages to get lost."
-        }
-      ]
-    },
-    {
-      "transcript_id": "11_4974492429145276632",
-      "call_id": "4974492429145276632",
-      "title": "Hiver Demo KPR<> Cole",
-      "started": "2026-01-30T19:30:48+05:30",
-      "signals": [
-        {
-          "Theme": "Billing Flexibility",
-          "Ask": "We want the option for monthly billing instead of annual.",
-          "Priority": "High",
-          "Evidence": "We want to do if it's possible the monthly billing."
-        },
-        {
-          "Theme": "Trial Period Issues",
-          "Ask": "We need a refund for the annual charge incurred during the trial period.",
-          "Priority": "High",
-          "Evidence": "We got charged the full amount without... the trial period was supposed to end today."
-        },
-        {
-          "Theme": "User Onboarding",
-          "Ask": "We require a demo session for our entire customer service and sales team.",
-          "Priority": "Medium",
-          "Evidence": "I just want them to actually feel okay... I wouldn't just want to like hang on to this and let Freshdesk go."
-        },
-        {
-          "Theme": "System Setup",
-          "Ask": "We need additional time to set up the email routing before fully transitioning.",
-          "Priority": "Medium",
-          "Evidence": "I wanted to get everything sorted before, you know, we actually did the thing, right?"
-        },
-        {
-          "Theme": "Product Interest",
-          "Ask": "We are interested in adopting Hiver as our ticketing system.",
-          "Priority": "High",
-          "Evidence": "We actually want to have Hiver as our ticketing system."
-        }
-      ]
-    },
-    {
-      "transcript_id": "12_7691254619955540694",
-      "call_id": "7691254619955540694",
-      "title": "Hiver Demo | Carolina <> Rakesh",
-      "started": "2026-01-30T19:30:00+05:30",
-      "signals": [
-        {
-          "Theme": "Email Management",
-          "Ask": "We need a solution primarily focused on email management for our reservations team.",
-          "Priority": "High",
-          "Evidence": "We want to find a better solution that is, you know, its main purpose is that like Hiver."
-        },
-        {
-          "Theme": "Scalability",
-          "Ask": "The chosen platform must be scalable to accommodate future growth from 15 to potentially 25 users.",
-          "Priority": "High",
-          "Evidence": "We also want to make sure that we can then, you know, move up or ensure that the plan that we pick makes sense for our future."
-        },
-        {
-          "Theme": "Reporting and Visibility",
-          "Ask": "We require improved reporting capabilities and visibility on team workload and email assignments.",
-          "Priority": "High",
-          "Evidence": "They also want to have a bit more visibility on who's working on what, and have a better auto assignment as well."
-        },
-        {
-          "Theme": "Implementation Timeline",
-          "Ask": "We aim to decommission Dynamics by the end of February and want to start onboarding the new tool as soon as possible.",
-          "Priority": "High",
-          "Evidence": "We want to move reasonably quickly to avoid that gap between decommissioning one platform and onboarding to the next."
-        },
-        {
-          "Theme": "Support and Onboarding",
-          "Ask": "We expect comprehensive onboarding and support included in the subscription without additional costs.",
-          "Priority": "High",
-          "Evidence": "I assume you don't have any sort of one-off implementation fees."
-        },
         {
           "Theme": "Data Storage",
-          "Ask": "There should be no limitations on data storage for email management.",
-          "Priority": "Medium",
-          "Evidence": "There is as such no limitation on data storage as long as your Outlook is processing those emails."
-        },
-        {
-          "Theme": "Integration Flexibility",
-          "Ask": "We want to ensure future integration capabilities with other platforms if needed.",
-          "Priority": "Medium",
-          "Evidence": "If we want to consider in future, is it just the ones you have that I can find on the website?"
-        },
-        {
-          "Theme": "Customization of Reports",
-          "Ask": "We need the ability to create custom reports based on our specific needs.",
-          "Priority": "Medium",
-          "Evidence": "Can we create our own version of reports or is that only a specific plan?"
-        },
-        {
-          "Theme": "Customer Satisfaction Features",
-          "Ask": "We would like to have customer satisfaction features included if possible.",
-          "Priority": "Low",
-          "Evidence": "If it's included in the plan we end up selecting, then it's always nice to have."
+          "Sub-Theme": "Regional Data Hosting",
+          "Ask": "We need the capability to store player data in specific regions to comply with GDPR and other regulations.",
+          "Priority": "High",
+          "Evidence": "Tickets in Europe should be retained, the data in a data center in Europe versus North America, for example, and vice versa."
         }
       ]
     },
     {
-      "transcript_id": "13_4128860863449126501",
-      "call_id": "4128860863449126501",
-      "title": "Hiver Trial Check in <> Solar Guys Pro",
-      "started": "2026-01-30T18:35:42.172+05:30",
+      "transcript_id": "03_2617143474253486856",
+      "call_id": "2617143474253486856",
+      "title": "Hiver Meeting with StoreForce",
+      "started": "2026-01-27T00:31:34+05:30",
       "signals": [
         {
-          "Theme": "Trial Extension",
-          "Ask": "Extend the trial period by two to three days.",
+          "Theme": "AI Features",
+          "Sub-Theme": "AI Copilot and Tagging",
+          "Ask": "We want to use AI for drafting replies and tagging before it reaches an agent.",
           "Priority": "High",
-          "Evidence": "I did want him to have a feel for it for like two or three days."
-        },
-        {
-          "Theme": "Tagging Functionality",
-          "Ask": "Enable tagging and assigning without opening each email.",
-          "Priority": "Medium",
-          "Evidence": "I expected to be able to tag and assign without having to go into the mail itself."
-        },
-        {
-          "Theme": "Team Feedback",
-          "Ask": "Gather team feedback on the tool's effectiveness by Tuesday.",
-          "Priority": "Medium",
-          "Evidence": "I want to get the team's feedback in by Tuesday as well just to hear their thoughts."
-        },
-        {
-          "Theme": "Management Decision",
-          "Ask": "Make a decision on adopting the tool based on trial feedback.",
-          "Priority": "High",
-          "Evidence": "If we feel like it is working for us and it is helping declutter, then I would say, we would take on hiver almost immediately."
-        },
-        {
-          "Theme": "Admin Access",
-          "Ask": "Provide admin access to the CEO for better tool exploration.",
-          "Priority": "Medium",
-          "Evidence": "I wanted him to actually access the tool and to see if it's actually making a difference."
+          "Evidence": "I love this AI feature in Zendesk, it's not like this. I like that the agent has the ability to go back and forth in Zendesk. It just reads everything and it spits something out there's, no additional interaction. So, I love it like this. So we want to use the AI for this, but we also want to use the AI before it even reaches an agent before a ticket is created."
         }
       ]
     },
     {
-      "transcript_id": "14_4301563870442953162",
-      "call_id": "4301563870442953162",
-      "title": "Hiver Demo | Angeles <> Rakesh",
-      "started": "2026-01-30T18:01:33+05:30",
+      "transcript_id": "04_7661386211809349443",
+      "call_id": "7661386211809349443",
+      "title": "ShopHarbour <> Hiver",
+      "started": "2026-01-27T00:29:10+05:30",
       "signals": [
         {
-          "Theme": "AI Automation",
-          "Ask": "We need an AI solution to automatically read and respond to customer emails.",
+          "Theme": "Automation Setup",
+          "Sub-Theme": "Personal to Shared Mailbox",
+          "Ask": "We want the ability to automatically move emails from personal inboxes to shared mailboxes without manual intervention.",
           "Priority": "High",
-          "Evidence": "We need something automatized that... we cannot do that now."
-        },
-        {
-          "Theme": "Human Intervention",
-          "Ask": "We are open to some human intervention for complex queries.",
-          "Priority": "Medium",
-          "Evidence": "We know that the AI has to learn and understand the messages we receive so that it can answer correctly."
-        },
-        {
-          "Theme": "Cost Efficiency",
-          "Ask": "We want to minimize costs and prefer a plan for two users.",
-          "Priority": "High",
-          "Evidence": "Our idea is to spend the less money possible."
-        },
-        {
-          "Theme": "Decision Timeline",
-          "Ask": "We aim to make a decision by next week after evaluating other options.",
-          "Priority": "High",
-          "Evidence": "I think on Wednesday, I can have all that information and take the decision."
-        },
-        {
-          "Theme": "Language Support",
-          "Ask": "The platform must support responses in Spanish.",
-          "Priority": "Medium",
-          "Evidence": "Does it have the option in Spanish?"
+          "Evidence": "There was some interest in if an email lands in your personal mailbox without an automation, you want to push it to the hiver, shared mailbox. Is that still an ask from your side? Yeah, I?"
         }
       ]
     },
     {
-      "transcript_id": "15_2491420792861576716",
-      "call_id": "2491420792861576716",
-      "title": "Hiver Feedback <> Dr Paw Paw",
-      "started": "2026-01-30T16:59:57+05:30",
+      "transcript_id": "05_2752398069336499060",
+      "call_id": "2752398069336499060",
+      "title": "Colonial Electric | Hiver Bi-Weekly",
+      "started": "2026-01-27T00:01:29+05:30",
       "signals": [
         {
-          "Theme": "Visibility Issues",
-          "Ask": "We need better visibility of emails that are closed.",
+          "Theme": "AI Integration",
+          "Sub-Theme": "Email Functionality",
+          "Ask": "We need to utilize AI with our email to improve quality control and visibility.",
           "Priority": "High",
-          "Evidence": "We've ended up with less visibility now because a lot of the emails are going into assigned and then they're being closed."
-        },
+          "Evidence": "I think having it with our email… I think is an absolute must. And so far it's definitely brought attention to some of our quality control issues."
+        }
+      ]
+    },
+    {
+      "transcript_id": "06_5755790460528470967",
+      "call_id": "5755790460528470967",
+      "title": "Hiver<>SalesRabbit: Intro",
+      "started": "2026-01-26T22:00:17+05:30",
+      "signals": [
         {
-          "Theme": "SLA Concerns",
-          "Ask": "The current SLAs do not work for our logistics email.",
+          "Theme": "Voice Integration",
+          "Sub-Theme": "Primary Contact Method",
+          "Ask": "We need a robust voice solution integrated into the platform as voice is our primary method of contact.",
           "Priority": "High",
-          "Evidence": "The SLAs don't really work for us because of the way the logistics email is."
-        },
+          "Evidence": "The biggest thing, that keeps us in the voice world is because of that, we do have multi channel or Omni channel, right? We have, we have, you know, all four common channels, right? But voice is still our predominant channel for customers today."
+        }
+      ]
+    },
+    {
+      "transcript_id": "07_3659167064649677375",
+      "call_id": "3659167064649677375",
+      "title": "Hiver Demo: Roger <> Alex",
+      "started": "2026-01-26T21:32:05+05:30",
+      "signals": [
         {
-          "Theme": "User Experience",
-          "Ask": "The conversation view is not functioning effectively for our needs.",
+          "Theme": "Sign-in Process",
+          "Sub-Theme": "Account and Inbox Confusion",
+          "Ask": "I expect a clearer sign-in process that distinguishes between account and inbox options upfront.",
+          "Priority": "High",
+          "Evidence": "I had a little bit of a hard time getting signed in the other day. I signed it wrong. It's confusing when you sign in like which one is your account, and which one is the inbox."
+        }
+      ]
+    },
+    {
+      "transcript_id": "08_1888777207104989365",
+      "call_id": "1888777207104989365",
+      "title": "Hiver Demo | Angie De <> Alex",
+      "started": "2026-01-26T20:33:08+05:30",
+      "signals": [
+        {
+          "Theme": "Shared Inbox",
+          "Sub-Theme": "HR Admin Efficiency",
+          "Ask": "We need a system to simplify and manage the HR admin inbox to reduce errors and duplications.",
+          "Priority": "High",
+          "Evidence": "It's just not done in a practical enough way, that there's duplications all the time. They make mistakes all the time. There's errors like always."
+        }
+      ]
+    },
+    {
+      "transcript_id": "09_2224093275013510738",
+      "call_id": "2224093275013510738",
+      "title": "Hiver Demo | Robert <> Cole",
+      "started": "2026-01-26T20:03:55+05:30",
+      "signals": [
+        {
+          "Theme": "Knowledge Base",
+          "Sub-Theme": "Integration with existing articles",
+          "Ask": "We need the ability to integrate our existing 900 articles into your knowledge base system for a seamless transition.",
           "Priority": "Medium",
-          "Evidence": "The conversation view is just not working for us."
-        },
-        {
-          "Theme": "Team Size Suitability",
-          "Ask": "Our small team size makes the platform more burdensome rather than helpful.",
-          "Priority": "High",
-          "Evidence": "I feel like it's not really... it's just making it even more work for the team."
-        },
+          "Evidence": "I think for a trial, it might be a bit easier cause we have about, I think 900 articles… but yeah, that's another thing that maybe, yeah, we would move the knowledge base as well to you guys, if that would be, you know, more commercially interesting for us to do it under one system as opposed to multiple different ones?"
+        }
+      ]
+    },
+    {
+      "transcript_id": "100_6665942681643828406",
+      "call_id": "6665942681643828406",
+      "title": "Hiver Onboarding",
+      "started": "2026-01-19T16:31:30+05:30",
+      "signals": [
         {
           "Theme": "Email Management",
-          "Ask": "We require a straightforward way to manage email filters and tags.",
-          "Priority": "Medium",
-          "Evidence": "I know it sets up all these filters and tags in the background."
+          "Sub-Theme": "Shared Inbox Functionality",
+          "Ask": "We need the ability to manage both personal and shared inboxes seamlessly without moving emails manually.",
+          "Priority": "High",
+          "Evidence": "Hiver is supposed to help you do the info emails but not the personal emails, personal inbox management is your personal inbox."
         }
       ]
     },
     {
-      "transcript_id": "16_9009624146504835055",
-      "call_id": "9009624146504835055",
-      "title": "Zaneen <> Hiver : Plan upgrade",
-      "started": "2026-01-30T16:38:50+05:30",
-      "signals": []
-    },
-    {
-      "transcript_id": "17_8397355654238360417",
-      "call_id": "8397355654238360417",
-      "title": "Blackbuck <> Hiver : Demo",
-      "started": "2026-01-30T15:50:54+05:30",
+      "transcript_id": "10_1487658447530611449",
+      "call_id": "1487658447530611449",
+      "title": "Hiver Demo | Future Frontiers <> Jeevan",
+      "started": "2026-01-26T19:31:15+05:30",
       "signals": [
         {
-          "Theme": "Invoice Management",
-          "Ask": "We need a solution to automate the management of our accounts payables emails.",
+          "Theme": "Shared Inbox",
+          "Sub-Theme": "Complexity",
+          "Ask": "We want a simpler way to assign emails without using the shared inbox feature.",
           "Priority": "High",
-          "Evidence": "We do not have any solution... everything is outside the system as we speak today."
-        },
-        {
-          "Theme": "Integration with ERP",
-          "Ask": "We require integration with our existing Microsoft ERP for processing invoices.",
-          "Priority": "High",
-          "Evidence": "I don't even know whether that solution exists today."
-        },
-        {
-          "Theme": "Team Size Consideration",
-          "Ask": "We need to evaluate if the solution is suitable for our small team of two people.",
-          "Priority": "Medium",
-          "Evidence": "I personally may not really recommend you looking at a solution because you probably are much better at a phase where you are able to manage."
-        },
-        {
-          "Theme": "Task Visibility",
-          "Ask": "We need a way to ensure that no emails are missed or left untagged.",
-          "Priority": "Medium",
-          "Evidence": "What if they only miss to tag something and it just remains untagged."
-        },
-        {
-          "Theme": "Freemium Option",
-          "Ask": "We would like to explore a freemium plan to test the solution before committing.",
-          "Priority": "Low",
-          "Evidence": "You can have one payable inbox invite two people... without even incurring any cost."
+          "Evidence": "I feel like it's very, this software is actually really complicated considering we only want to do something really small…"
         }
       ]
     },
     {
-      "transcript_id": "18_3504233987095097424",
-      "call_id": "3504233987095097424",
-      "title": "Hiver Meeting with Rakesh",
-      "started": "2026-01-30T15:01:10+05:30",
+      "transcript_id": "11_4715358631207289932",
+      "call_id": "4715358631207289932",
+      "title": "Hiver Shopify Integration & AI <> Dr Paw Paw",
+      "started": "2026-01-26T19:01:26+05:30",
       "signals": [
         {
-          "Theme": "User Experience",
-          "Ask": "The UX for the warehouse system must be user-friendly.",
+          "Theme": "Performance",
+          "Sub-Theme": "System Slowdown",
+          "Ask": "We expect the system to run smoothly without causing delays or freezing when drafting emails or using other applications.",
           "Priority": "High",
-          "Evidence": "The UX graphic for the warehouse is not user friendly."
-        },
-        {
-          "Theme": "Communication",
-          "Ask": "Internal communication between office and warehouse must be improved.",
-          "Priority": "High",
-          "Evidence": "Our main problem is communication between the office and the warehouse."
-        },
-        {
-          "Theme": "Support System",
-          "Ask": "A solution for managing customer support tickets is required.",
-          "Priority": "High",
-          "Evidence": "We were looking for a system that could handle ticketing."
-        },
-        {
-          "Theme": "Billing Integration",
-          "Ask": "The solution must integrate with billing and invoicing tools.",
-          "Priority": "Medium",
-          "Evidence": "We need a billing software for invoicing."
-        },
-        {
-          "Theme": "Language Support",
-          "Ask": "The system should support Italian language for email templates and tags.",
-          "Priority": "Medium",
-          "Evidence": "Can you set up a prayer written email in Italian?"
-        },
-        {
-          "Theme": "Mobile Access",
-          "Ask": "A mobile app for managing support tickets is necessary.",
-          "Priority": "Medium",
-          "Evidence": "You have a mobile app?"
-        },
-        {
-          "Theme": "Trial Period",
-          "Ask": "A trial period of at least one week is required to test the solution.",
-          "Priority": "High",
-          "Evidence": "We can test the demo for one max, two weeks."
+          "Evidence": "The whole computer freezes. If you're in another application and you're trying to do something, then it just freezes."
         }
       ]
     },
     {
-      "transcript_id": "19_849228496864012524",
-      "call_id": "849228496864012524",
-      "title": "Hiver Demo | Huseni <> Yukta",
-      "started": "2026-01-30T15:00:20+05:30",
+      "transcript_id": "12_584171158031307896",
+      "call_id": "584171158031307896",
+      "title": "Hiver Demo | Lina <> Matthew",
+      "started": "2026-01-24T03:03:53+05:30",
       "signals": [
         {
-          "Theme": "Knowledge Base Creation",
-          "Ask": "The system must allow for easy creation and management of an internal knowledge base.",
+          "Theme": "Free Trial",
+          "Sub-Theme": "Access Issues",
+          "Ask": "I expect to have seamless access to the free trial without technical issues.",
           "Priority": "High",
-          "Evidence": "I just want to create a system where we can respond very quickly to the emails."
-        },
+          "Evidence": "I'm having trouble getting access to the free trial of hiver. I've downloaded the Chrome extension, but I'm running into like an it issue, not an it issue, but like I'm not able to log in."
+        }
+      ]
+    },
+    {
+      "transcript_id": "13_7543442387659559123",
+      "call_id": "7543442387659559123",
+      "title": "Hiver Demo | Jason <> Alex",
+      "started": "2026-01-24T02:02:21+05:30",
+      "signals": [
+        {
+          "Theme": "Survey Flexibility",
+          "Sub-Theme": "Modify Customer Ratings",
+          "Ask": "We need the ability for users to modify their survey ratings after submission, especially if they made a mistake.",
+          "Priority": "Medium",
+          "Evidence": "Sometimes a user will give a wrong rating or they'll give a rating with the misunderstanding that they were rating us and not like somebody we had to escalate to."
+        }
+      ]
+    },
+    {
+      "transcript_id": "14_1099646396612374266",
+      "call_id": "1099646396612374266",
+      "title": "Hiver Sync | Scott <> Cole",
+      "started": "2026-01-24T02:00:34+05:30",
+      "signals": [
+        {
+          "Theme": "Pricing Model",
+          "Sub-Theme": "Flexible Pricing",
+          "Ask": "We need a pricing model that accommodates 11 users with minimal features at a lower cost.",
+          "Priority": "High",
+          "Evidence": "I might be able to spend 2000 dollars a year, but… I don't see that sort of solution because of the amount of people that we have, you know, we don't need anything but like tagging shared inboxes and 11 or 12 seats that's it. And there's no package that exists that does that honestly."
+        }
+      ]
+    },
+    {
+      "transcript_id": "15_3729624758327324245",
+      "call_id": "3729624758327324245",
+      "title": "Hiver Demo | Kwontified Client <> Matthew",
+      "started": "2026-01-24T01:02:17+05:30",
+      "signals": [
+        {
+          "Theme": "AI Integration",
+          "Sub-Theme": "Customizable AI",
+          "Ask": "We prefer to use Claude or Gemini for AI. Is that interchangeable or can it be integrated with other LLMs?",
+          "Priority": "Medium",
+          "Evidence": "Well, the AI part, is… that customizable at all? Like let's say we, you know, prefer to use Claude or gemini. Is that interchangeable or can it be integrated with?"
+        }
+      ]
+    },
+    {
+      "transcript_id": "16_5955850787349652746",
+      "call_id": "5955850787349652746",
+      "title": "Hiver Introduction with Human Signal",
+      "started": "2026-01-24T00:01:37+05:30",
+      "signals": [
+        {
+          "Theme": "Form Intake",
+          "Sub-Theme": "Transition to Hiver",
+          "Ask": "We need a form intake system similar to Zendesk for a smooth transition to Hiver.",
+          "Priority": "High",
+          "Evidence": "That is a bit of a sticking point right now on the transition to hiver, it's probably priority number one this year for our product team."
+        }
+      ]
+    },
+    {
+      "transcript_id": "17_6082051746028066610",
+      "call_id": "6082051746028066610",
+      "title": "Hiver Demo | Chronicle Heritage",
+      "started": "2026-01-23T23:31:56+05:30",
+      "signals": [
+        {
+          "Theme": "Security Approval",
+          "Sub-Theme": "Microsoft SSO Blocker",
+          "Ask": "Ensure Hiver is approved on our Microsoft admin console to avoid any security blockers.",
+          "Priority": "High",
+          "Evidence": "It's just that sometimes third party applications are blocked through their sso model, and that's what we use because we try to keep it as secure as possible."
+        }
+      ]
+    },
+    {
+      "transcript_id": "18_2647005837511241417",
+      "call_id": "2647005837511241417",
+      "title": "Hiver Demo | Andrey <> Matthew",
+      "started": "2026-01-23T23:31:11+05:30",
+      "signals": [
         {
           "Theme": "Email Management",
-          "Ask": "The tool should enable quick responses to customer emails by integrating with our existing email system.",
+          "Sub-Theme": "Response Time Tracking",
+          "Ask": "We need to measure and establish our response time and ensure we are not out of this frame.",
           "Priority": "High",
-          "Evidence": "I wanted a tool which helps us initially at least for the ticketing purpose."
-        },
-        {
-          "Theme": "Automation Features",
-          "Ask": "The system must support automation to filter and close non-actionable emails.",
-          "Priority": "Medium",
-          "Evidence": "There are a couple of emails which does not require our like mostly someone like notification."
-        },
-        {
-          "Theme": "User Licensing",
-          "Ask": "We need to start with a minimum of two user licenses for the tool.",
-          "Priority": "High",
-          "Evidence": "Initially, we'll go ahead with the two."
-        },
-        {
-          "Theme": "Integration with Other Tools",
-          "Ask": "The tool should integrate seamlessly with our existing Gmail setup without forwarding emails to a separate server.",
-          "Priority": "High",
-          "Evidence": "I can't like because all the sent messages also, I can't have a track."
+          "Evidence": "We were losing track of the conversations and some of them were just rolling out of the plate and we were let's say like some to some people, we were giving them less than 24 hours."
         }
       ]
     },
     {
-      "transcript_id": "20_4569254532515925919",
-      "call_id": "4569254532515925919",
-      "title": "Hiver Demo | Daniel <> Cole",
-      "started": "2026-01-30T02:00:33+05:30",
+      "transcript_id": "19_5746768965274777324",
+      "call_id": "5746768965274777324",
+      "title": "Hiver & John with JOMO Pool Service",
+      "started": "2026-01-23T21:57:37+05:30",
       "signals": [
         {
-          "Theme": "Email Assignability",
-          "Ask": "We need a solution that allows team members to assign email threads to themselves or others within Gmail.",
+          "Theme": "Pricing",
+          "Sub-Theme": "Seat cost increase",
+          "Ask": "We need a more affordable pricing model for adding a small number of seats.",
           "Priority": "High",
-          "Evidence": "I want every single person on my team to continue to work within their workflows, which is Gmail, and to be able to assign threads to themselves or to different people."
-        },
-        {
-          "Theme": "Security Compliance",
-          "Ask": "We require assurance that sensitive customer data will be securely handled and not exposed.",
-          "Priority": "High",
-          "Evidence": "I do want to like double click into security features... we're a mortgage company and we're taking mortgage applications."
-        },
-        {
-          "Theme": "Short-term Functionality",
-          "Ask": "We are looking for a lightweight solution to improve our email management without needing advanced analytics immediately.",
-          "Priority": "Medium",
-          "Evidence": "In the short term, we may eventually want to install a full service platform... but what we want to do is install a Gmail tool."
-        },
-        {
-          "Theme": "Integration with AI",
-          "Ask": "We want the ability to integrate AI for drafting and editing emails based on our communication guidelines.",
-          "Priority": "Medium",
-          "Evidence": "We should throw everything into like a chat gpt type instance that is like programmed with our communication guidelines."
-        },
-        {
-          "Theme": "Trial and Pricing Clarity",
-          "Ask": "We need clear information on pricing and the ability to trial the product before making a commitment.",
-          "Priority": "Medium",
-          "Evidence": "I just want to proactively get it, you know? ... I do want to move forward relatively quickly."
+          "Evidence": "And to add more seats, basically, what it looks like is we have to go to… the next level? Nearly, you know, 100 percent, I'm sorry, 400 percent increase. And I just, that's too much for us."
         }
       ]
     },
     {
-      "transcript_id": "21_5054136097359948351",
-      "call_id": "5054136097359948351",
-      "title": "VSLC | Hiver - Workflow & automations review",
-      "started": "2026-01-30T01:58:38.085+05:30",
+      "transcript_id": "20_2087821096926055262",
+      "call_id": "2087821096926055262",
+      "title": "Hiver Demo Greenspace Health<> Cole",
+      "started": "2026-01-23T21:01:19+05:30",
       "signals": [
         {
-          "Theme": "Automation Optimization",
-          "Ask": "We need to optimize Julian's inbox for automations to handle repetitive tasks.",
-          "Priority": "High",
-          "Evidence": "We really want to optimize Julian's inbox for automations because he does have a lot of repetitive tasks."
-        },
+          "Theme": "Support Integration",
+          "Sub-Theme": "Intercom Contract",
+          "Ask": "We need to consider Hiver once our current Intercom contract is nearing expiration.",
+          "Priority": "Medium",
+          "Evidence": "It sounds like you just signed a contract with intercom. So I don't think now would be the best time to, you know, continue this conversation."
+        }
+      ]
+    },
+    {
+      "transcript_id": "21_2546157994919629231",
+      "call_id": "2546157994919629231",
+      "title": "Hiver Demo | Justin <> Rakesh",
+      "started": "2026-01-23T20:31:40+05:30",
+      "signals": [
         {
           "Theme": "Email Management",
-          "Ask": "We require a better way to manage emails across shared inboxes to avoid confusion.",
+          "Sub-Theme": "Shared Inbox",
+          "Ask": "We need a system to manage shared inboxes efficiently to prevent missed requests and deadlines.",
           "Priority": "High",
-          "Evidence": "We all kind of access it just to make sure that if one person has reached out just to follow the threads that are going on."
-        },
-        {
-          "Theme": "Automation Functionality",
-          "Ask": "We need to ensure that follow-up automations do not send duplicate emails.",
-          "Priority": "High",
-          "Evidence": "Both the auto replies went out at the same time, which was not our intention."
-        },
-        {
-          "Theme": "User Access",
-          "Ask": "Julian needs to work out of his personal email to manage shared inboxes effectively.",
-          "Priority": "Medium",
-          "Evidence": "Julian should have the same view that you're seeing... he needs to start working out of assigned to me."
-        },
-        {
-          "Theme": "Group Email Setup",
-          "Ask": "We need to create a Google group for the afu inbox to streamline email management.",
-          "Priority": "Medium",
-          "Evidence": "If we're hiring this third person and they're also going to work out of the same inbox, we will actually need to separate you from that afu inbox."
+          "Evidence": "The number of missed requests, missed deadlines missed. You know, hey, what's my status here's? My purchase order, please put this into production. That number is getting higher and we need something to reel that in and stop that from happening because you can't lose business like that, right?"
         }
       ]
     },
     {
-      "transcript_id": "22_6717161078281142353",
-      "call_id": "6717161078281142353",
-      "title": "Asset Plan | Hiver - Elite upgrade next steps",
-      "started": "2026-01-30T01:33:51.927+05:30",
+      "transcript_id": "22_8006860585736791637",
+      "call_id": "8006860585736791637",
+      "title": "Hiver Product Demo: Shanice <> Yukta",
+      "started": "2026-01-23T20:18:31+05:30",
       "signals": [
         {
-          "Theme": "Contract Flexibility",
-          "Ask": "We prefer a month-to-month contract but are open to an annual contract with monthly payments.",
+          "Theme": "AI Tagging",
+          "Sub-Theme": "Automated Tag Application",
+          "Ask": "I expect AI to automatically apply tags after initial manual tagging to streamline email organization.",
           "Priority": "High",
-          "Evidence": "we would prefer a monthly month to month contract, but we understand that you guys have your way of working internally"
-        },
-        {
-          "Theme": "Pricing Concerns",
-          "Ask": "We need a discount if we agree to the annual contract at $55 per user.",
-          "Priority": "High",
-          "Evidence": "we would expect a discount in case we do that"
-        },
-        {
-          "Theme": "Budget Constraints",
-          "Ask": "Our budget for this tool is set below $45 per user.",
-          "Priority": "High",
-          "Evidence": "we actually set something below 45… already good enough"
-        },
-        {
-          "Theme": "Negotiation Avoidance",
-          "Ask": "We want to avoid involving a third-party negotiator in this process.",
-          "Priority": "Medium",
-          "Evidence": "I would love to avoid to, for them to get it getting like get on board with this negotiation"
-        },
-        {
-          "Theme": "AI Feature Timing",
-          "Ask": "We would like to compartmentalize the AI features discussion for a later date.",
-          "Priority": "Medium",
-          "Evidence": "we can move really fast right now and sign the annual contract. And in three months for now, we can discuss about upgrading AI"
+          "Evidence": "So AI is going to automatically then start applying those tags for you, so we can set that up."
         }
       ]
     },
     {
-      "transcript_id": "23_154539865993008612",
-      "call_id": "154539865993008612",
-      "title": "Hiver Demo |  <> Matthew",
-      "started": "2026-01-30T00:36:03+05:30",
+      "transcript_id": "23_7407101764994818831",
+      "call_id": "7407101764994818831",
+      "title": "Cargobot <> Hiver (scoping & workflow)",
+      "started": "2026-01-23T19:32:04+05:30",
       "signals": [
         {
-          "Theme": "Customer Support",
-          "Ask": "We require a faster customer support response time, ideally within hours, not days.",
+          "Theme": "Email Management",
+          "Sub-Theme": "Cross-team collaboration",
+          "Ask": "We need a way to collaborate and work together on emails without having to extract it and take it into spreadsheets and other documents.",
           "Priority": "High",
-          "Evidence": "The customer mentioned that support usually takes at least 48 hours to reply."
-        },
-        {
-          "Theme": "System Reliability",
-          "Ask": "We need assurance of high system uptime and reliability.",
-          "Priority": "High",
-          "Evidence": "The customer expressed dissatisfaction with their current platform's frequent downtimes."
-        },
-        {
-          "Theme": "Integration Capabilities",
-          "Ask": "We need confirmation that the platform can integrate with third-party services like Zapier and Jira.",
-          "Priority": "Medium",
-          "Evidence": "The customer stated they need a way to integrate with Circle and mentioned using Jira."
-        },
-        {
-          "Theme": "Pricing Structure",
-          "Ask": "We are looking for a more competitive pricing model compared to our current solution.",
-          "Priority": "Medium",
-          "Evidence": "The customer expressed they are not happy with the pricing of their current solution."
-        },
-        {
-          "Theme": "Implementation Timeline",
-          "Ask": "We aim to make a decision by the end of next week and switch in February.",
-          "Priority": "High",
-          "Evidence": "The customer indicated a timeline for decision-making and implementation."
+          "Evidence": "So to boil it down, it's pretty much look sometimes as I mentioned, sometimes if all of the documentation and all of the information comes in correctly, then there's a chance that we don't have to interact with anybody, right? So the administration team and the finance team can do it all themselves. But a lot of the times I would say maybe the majority of times there needs to be, a cross team collaboration in order to like take something to completion."
         }
       ]
     },
     {
-      "transcript_id": "24_5904561082351516692",
-      "call_id": "5904561082351516692",
-      "title": "Hiver Demo | Marcella <> Alex",
-      "started": "2026-01-30T00:29:59.445+05:30",
+      "transcript_id": "24_5093419614128261659",
+      "call_id": "5093419614128261659",
+      "title": "Hiver AI Tasks and Automation",
+      "started": "2026-01-23T18:30:31+05:30",
       "signals": [
         {
-          "Theme": "Integration Requirements",
-          "Ask": "We need integration with Shopify and Gmail.",
+          "Theme": "AI Integration",
+          "Sub-Theme": "Order Management",
+          "Ask": "We need AI to automate the categorization and response to L1 and L2 queries based on order status and customer requests.",
           "Priority": "High",
-          "Evidence": "It would definitely be integration with Shopify."
-        },
-        {
-          "Theme": "Budget Constraints",
-          "Ask": "The solution must be more budget-friendly than our current provider, Gorgias.",
-          "Priority": "High",
-          "Evidence": "Honestly, it's just overpriced for the quality of the system."
-        },
-        {
-          "Theme": "User Experience",
-          "Ask": "The platform should be simple and easy to navigate.",
-          "Priority": "Medium",
-          "Evidence": "Honestly, I like the simplicity of the platform."
-        },
-        {
-          "Theme": "Trial and Subscription",
-          "Ask": "We want the option to try the service for a month before committing to an annual subscription.",
-          "Priority": "Medium",
-          "Evidence": "Can we do that? Try it out for a month and then lock into an annual subscription?"
-        },
-        {
-          "Theme": "Support Availability",
-          "Ask": "24/7 technical support is a critical requirement.",
-          "Priority": "High",
-          "Evidence": "Some of the other platforms I was looking at, they don't have 24 seven support."
+          "Evidence": "We want to deflect all of those. We want to make sure that these are categorized and we have templatized answers for those."
         }
       ]
     },
     {
-      "transcript_id": "25_4394026137809671431",
-      "call_id": "4394026137809671431",
-      "title": "Hiver Demo Park Street Companies<> Cole",
-      "started": "2026-01-30T00:01:20+05:30",
-      "signals": [
-        {
-          "Theme": "Ticketing Structure",
-          "Ask": "We need a ticketing platform feature to streamline external communication workflows.",
-          "Priority": "High",
-          "Evidence": "We're looking to streamline processes, standardize a lot of our workflows when it comes to external communication."
-        },
-        {
-          "Theme": "Integration Capabilities",
-          "Ask": "We require integration with a customer portal for routing inquiries to the appropriate team.",
-          "Priority": "High",
-          "Evidence": "We definitely want a system in which we could integrate a customer portal."
-        },
-        {
-          "Theme": "Custom Fields and Analytics",
-          "Ask": "We need the ability to create custom fields and generate analytics based on those fields.",
-          "Priority": "Medium",
-          "Evidence": "Custom field analytics is one that we would be looking to add."
-        },
-        {
-          "Theme": "Knowledge Base Limitations",
-          "Ask": "We need multiple knowledge bases for different departments, not just one.",
-          "Priority": "Medium",
-          "Evidence": "We have different knowledge bases... for us right now, we're functioning with both knowledge bases externally."
-        },
-        {
-          "Theme": "Evaluation Timeline",
-          "Ask": "We will take most of Q1 for evaluation before presenting findings to the executive team.",
-          "Priority": "High",
-          "Evidence": "We'll probably take the most of Q1 in terms of evaluation and just seeing what is out there."
-        }
-      ]
-    },
-    {
-      "transcript_id": "26_7130953663325973683",
-      "call_id": "7130953663325973683",
-      "title": "Hiver Call with Stephen",
-      "started": "2026-01-30T00:00:46+05:30",
-      "signals": [
-        {
-          "Theme": "Form Setup",
-          "Ask": "We need to have our forms set up before proceeding with the migration.",
-          "Priority": "High",
-          "Evidence": "I think we need that set up before anything else is ready."
-        },
-        {
-          "Theme": "Custom Fields Mapping",
-          "Ask": "I will create all the custom fields in Hiver prior to migration.",
-          "Priority": "High",
-          "Evidence": "So then I should go ahead, and create all the custom fields because those won't be here."
-        },
-        {
-          "Theme": "Migration Timing",
-          "Ask": "We prefer to kick off the migration on a Wednesday night to avoid disruption during peak times.",
-          "Priority": "Medium",
-          "Evidence": "Our student deadlines is actually on the weekend... midweek Wednesday, Thursday, Friday is actually a little bit calmer."
-        },
-        {
-          "Theme": "Ticket Status Handling",
-          "Ask": "We want open and pending tickets to be prioritized during the migration.",
-          "Priority": "High",
-          "Evidence": "Those are the ones that we actually want over there first."
-        },
-        {
-          "Theme": "User Account Creation",
-          "Ask": "All agent accounts must be created prior to the migration.",
-          "Priority": "High",
-          "Evidence": "You'll have to add them as users first."
-        }
-      ]
-    },
-    {
-      "transcript_id": "27_6451836096103035003",
-      "call_id": "6451836096103035003",
-      "title": "AGM Benefits | Hiver - February Renewal",
-      "started": "2026-01-30T00:00:25.57+05:30",
-      "signals": [
-        {
-          "Theme": "Contract Flexibility",
-          "Ask": "We prefer not to commit to a two-year contract due to internal changes.",
-          "Priority": "High",
-          "Evidence": "I don't think we're going to be looking for a two year contract."
-        },
-        {
-          "Theme": "Pricing Concerns",
-          "Ask": "We need a lower price point than $65 per person to secure approval.",
-          "Priority": "High",
-          "Evidence": "Is there any wiggle room in the 65…"
-        },
-        {
-          "Theme": "User Management",
-          "Ask": "We need to delete a couple of users before the renewal to fit within the user tier.",
-          "Priority": "Medium",
-          "Evidence": "We currently have 23 full time employees. So a couple of users do need to be deleted."
-        },
-        {
-          "Theme": "Email Confirmation",
-          "Ask": "Please send a detailed email breakdown of the renewal options.",
-          "Priority": "Medium",
-          "Evidence": "Can you do me a favor and send this to me in an email?"
-        },
-        {
-          "Theme": "Future Functionality Discussion",
-          "Ask": "We want to schedule a follow-up call to discuss new functionalities after the renewal.",
-          "Priority": "Low",
-          "Evidence": "We would love to set up some time for later... to walk you through some of the additional functionality."
-        }
-      ]
-    },
-    {
-      "transcript_id": "28_5093689226826083303",
-      "call_id": "5093689226826083303",
-      "title": "Persefoni | Hiver - Workflow review",
-      "started": "2026-01-29T23:31:47.321+05:30",
+      "transcript_id": "25_6521057880254029238",
+      "call_id": "6521057880254029238",
+      "title": "Hiver Product Demo: Sam <> Yukta",
+      "started": "2026-01-23T17:46:49+05:30",
       "signals": [
         {
           "Theme": "Email Automation",
-          "Ask": "We need automatic email routing when a colleague is out of office.",
-          "Priority": "High",
-          "Evidence": "We want the emails to automatically route to the other person on the team when one of them goes out of the office."
-        },
-        {
-          "Theme": "Shared Drafts",
-          "Ask": "Shared drafts should be visible in the shared drafts folder.",
+          "Sub-Theme": "Survey Follow-up",
+          "Ask": "We want to automate survey follow-up emails based on specific tags.",
           "Priority": "Medium",
-          "Evidence": "Shared drafts are not showing up in my shared drafts folder."
-        },
-        {
-          "Theme": "CSAT Integration",
-          "Ask": "We are interested in integrating CSAT functionality into our workflow.",
-          "Priority": "Medium",
-          "Evidence": "I'm curious to learn about CSAT; it sounds like you can crack CSAT in here as well."
-        },
-        {
-          "Theme": "Automation Templates",
-          "Ask": "We would like the ability to create templates for automations.",
-          "Priority": "Low",
-          "Evidence": "It would be a cool feature if you could templatize your automations."
-        },
-        {
-          "Theme": "Custom Domain Routing",
-          "Ask": "We need to categorize customers for specific routing based on their email domains.",
-          "Priority": "High",
-          "Evidence": "We need to bucket customers into different categories for routing."
+          "Evidence": "We would want to send an email out... if it said survey, then it would get tagged and then it would send out an automatic email."
         }
       ]
     },
     {
-      "transcript_id": "29_8034874000023170582",
-      "call_id": "8034874000023170582",
-      "title": "Hiver Demo | Esther <> Alex",
-      "started": "2026-01-29T23:31:05+05:30",
-      "signals": [
-        {
-          "Theme": "HIPAA Compliance",
-          "Ask": "We require a HIPAA compliant email management solution.",
-          "Priority": "High",
-          "Evidence": "we are looking for something for email management that is hipaa compliant."
-        },
-        {
-          "Theme": "Shared Inbox Solution",
-          "Ask": "We need a shared inbox solution for internal communication and stakeholder interactions.",
-          "Priority": "High",
-          "Evidence": "we're looking for a shared inbox solution for that specifically."
-        },
-        {
-          "Theme": "Rapid Deployment",
-          "Ask": "We need the solution to be set up quickly due to an overloaded back office.",
-          "Priority": "High",
-          "Evidence": "we are looking to get working ASAP."
-        },
-        {
-          "Theme": "User Access",
-          "Ask": "We want multiple accounts to share the same email threads.",
-          "Priority": "Medium",
-          "Evidence": "we just want to have multiple accounts, be able to share the same sort of like threads."
-        },
-        {
-          "Theme": "Integration with EMRs",
-          "Ask": "We need the ability to connect with EMRs in the future.",
-          "Priority": "Medium",
-          "Evidence": "Is this connect directly to emrs?"
-        },
-        {
-          "Theme": "Cost Clarity",
-          "Ask": "We need clarity on any additional costs associated with the BAA and the enterprise plan.",
-          "Priority": "Medium",
-          "Evidence": "Is there any additional costs associated with signing a baa besides you said it was, we would have to be on the enterprise plan?"
-        },
-        {
-          "Theme": "Trial and Onboarding",
-          "Ask": "We want to understand the onboarding process and if a free trial is available.",
-          "Priority": "Medium",
-          "Evidence": "Is there any like free trial involved or anything like that?"
-        }
-      ]
-    },
-    {
-      "transcript_id": "30_925115531672804953",
-      "call_id": "925115531672804953",
-      "title": "Hiver Demo | Angeline <> Cole",
-      "started": "2026-01-29T23:01:06+05:30",
-      "signals": [
-        {
-          "Theme": "Shared Inbox Management",
-          "Ask": "We need better ways to manage a shared inbox to avoid chaos when clients respond.",
-          "Priority": "High",
-          "Evidence": "I'd love to see that… not happen. So, you know, like when somebody communicates that it comes back to them specifically."
-        },
-        {
-          "Theme": "Reporting and Analytics",
-          "Ask": "We require metrics on first response time, resolution time, and the number of emails assigned and closed.",
-          "Priority": "High",
-          "Evidence": "These are ones that I'd want to see first response and resolution time, but also how many emails are assigned and closed is a big one."
-        },
-        {
-          "Theme": "Integration with Zoho",
-          "Ask": "We need integration with Zoho to view related information in Gmail.",
-          "Priority": "Medium",
-          "Evidence": "I believe you guys integrate with Zoho. Is that true?"
-        },
-        {
-          "Theme": "Trial Period",
-          "Ask": "A longer trial period than seven days is necessary to evaluate the solution effectively.",
-          "Priority": "Medium",
-          "Evidence": "Seven days? Seems like a short time to see if you like it or get metrics."
-        },
-        {
-          "Theme": "Customer Service Transition",
-          "Ask": "We are not ready to transition from Zoho to Hiver immediately and want to explore other options.",
-          "Priority": "Low",
-          "Evidence": "We're not jumping to anything. So I don't want to schedule any – anything… next, just curious about costs though."
-        }
-      ]
-    },
-    {
-      "transcript_id": "31_6254868650905196403",
-      "call_id": "6254868650905196403",
-      "title": "Hiver Demo | Nate & <> Alex",
-      "started": "2026-01-29T22:31:31+05:30",
-      "signals": [
-        {
-          "Theme": "User Management",
-          "Ask": "I need my own account as the admin instead of using a shared inbox.",
-          "Priority": "High",
-          "Evidence": "It would be best if I have my own account overall as the admin rather than use one of those shared inboxes as the admin."
-        },
-        {
-          "Theme": "Email Sync",
-          "Ask": "I want to understand how email synchronization works to avoid duplicate responses.",
-          "Priority": "High",
-          "Evidence": "I would like to understand a little better. How does the sync work?"
-        },
-        {
-          "Theme": "Spam Management",
-          "Ask": "I need a way to manage spam emails effectively within the shared inbox.",
-          "Priority": "Medium",
-          "Evidence": "I noticed that every once in a while, we do get relevant emails landing into spam."
-        },
-        {
-          "Theme": "Plan Clarity",
-          "Ask": "I need clarity on the differences between the free and paid plans.",
-          "Priority": "Medium",
-          "Evidence": "I'm not quite sure what I signed up for and what's the difference between each plan."
-        },
-        {
-          "Theme": "Mobile Access",
-          "Ask": "I need to know how to set up mobile access for managing shared inboxes.",
-          "Priority": "Medium",
-          "Evidence": "Can you help me out if it can be used on mobile or what I should set up?"
-        }
-      ]
-    },
-    {
-      "transcript_id": "32_1411919807219866879",
-      "call_id": "1411919807219866879",
-      "title": "Hiver Product Demo: Sammie<> Matthew",
-      "started": "2026-01-29T22:31:08+05:30",
+      "transcript_id": "26_4129125879769270309",
+      "call_id": "4129125879769270309",
+      "title": "Hiver Feedback and Next Steps <> Reschedule",
+      "started": "2026-01-23T13:30:59+05:30",
       "signals": [
         {
           "Theme": "Email Management",
-          "Ask": "We need a tool that allows us to assign incoming emails to specific team members.",
+          "Sub-Theme": "Unified Interface",
+          "Ask": "We need a system that allows us to manage different email addresses within a single interface to avoid jumping between multiple windows.",
           "Priority": "High",
-          "Evidence": "I was hoping to find something where it could, you know, auto assign that to jess or to Alex or whoever."
-        },
-        {
-          "Theme": "Automation Features",
-          "Ask": "The solution should support automation based on subject lines to streamline email handling.",
-          "Priority": "High",
-          "Evidence": "I realized that there's probably like either programmable codable components to it and or at least at the very least the start of AI inside of, you know, we get the same a lot."
-        },
-        {
-          "Theme": "User Onboarding",
-          "Ask": "We require personalized onboarding support to set up the system effectively.",
-          "Priority": "Medium",
-          "Evidence": "If you do pro for at least five users, you are going to get a personalized onboarding support."
-        },
-        {
-          "Theme": "Reporting and Analytics",
-          "Ask": "We need reporting features to track team response rates and workload management.",
-          "Priority": "Medium",
-          "Evidence": "I remember reading on your guys site about the… app, helping me track my team's like response rate."
-        },
-        {
-          "Theme": "Cost Flexibility",
-          "Ask": "We need flexible pricing options as we scale our team size.",
-          "Priority": "Medium",
-          "Evidence": "If we were on the pro plan and we do end up adding the extra two individuals probably within the next two months."
+          "Evidence": "Currently, now we're doing it manually. So maybe you can just quickly show him how that is done automatically. So it's not something we need to manage the platform, manages that."
         }
       ]
     },
     {
-      "transcript_id": "33_1167783351013256810",
-      "call_id": "1167783351013256810",
+      "transcript_id": "27_6356360796450114329",
+      "call_id": "6356360796450114329",
+      "title": "Hiver Demo | Rabin <> Yukta",
+      "started": "2026-01-23T12:35:39+05:30",
+      "signals": [
+        {
+          "Theme": "Data Export",
+          "Sub-Theme": "Legal Compliance",
+          "Ask": "We need the ability to export data for legal compliance and court submissions.",
+          "Priority": "High",
+          "Evidence": "Because the data, we are the company facing a lot of legal, some legal issues with it. So if court is asking if the honorable court is asking the proof of the compensation. These are the things supposed to provide with the backend information and the front end information to submit a quote."
+        }
+      ]
+    },
+    {
+      "transcript_id": "28_7576382539080142878",
+      "call_id": "7576382539080142878",
+      "title": "Hiver Demo Murguia<> Cole",
+      "started": "2026-01-23T04:32:00+05:30",
+      "signals": [
+        {
+          "Theme": "Email Integration",
+          "Sub-Theme": "Gmail Overlay",
+          "Ask": "We need a tool integrated into Gmail that helps with customer service and AI functionalities.",
+          "Priority": "High",
+          "Evidence": "So you're looking for something that's integrated into Gmail, right? Overlays into Gmail that helps with like customer service, AI and things of that nature."
+        }
+      ]
+    },
+    {
+      "transcript_id": "29_138044469863808563",
+      "call_id": "138044469863808563",
+      "title": "Hiver Demo | Patricia <> Alex",
+      "started": "2026-01-23T02:32:44+05:30",
+      "signals": [
+        {
+          "Theme": "Tagging Integration",
+          "Sub-Theme": "Recreate Tags in Hiver",
+          "Ask": "We need to recreate our existing Gmail tagging structure in Hiver for routing purposes.",
+          "Priority": "High",
+          "Evidence": "So, you, your labels today in Gmail have to be redone as tags in Hiver in order for routing purposes."
+        }
+      ]
+    },
+    {
+      "transcript_id": "30_6109508866409053974",
+      "call_id": "6109508866409053974",
+      "title": "Rentor.com | Hiver - Pricing + Workflow",
+      "started": "2026-01-23T01:44:56.239+05:30",
+      "signals": [
+        {
+          "Theme": "Pricing",
+          "Sub-Theme": "Flexible Plans",
+          "Ask": "We need more flexible pricing plans that can accommodate our seasonal business fluctuations.",
+          "Priority": "High",
+          "Evidence": "Our business is highly seasonal, and the current pricing structure doesn't fit well with our needs."
+        }
+      ]
+    },
+    {
+      "transcript_id": "31_5198693765551927691",
+      "call_id": "5198693765551927691",
+      "title": "Hiver Demo | Paola <> Alex",
+      "started": "2026-01-23T00:32:51+05:30",
+      "signals": [
+        {
+          "Theme": "Security",
+          "Sub-Theme": "Data Privacy",
+          "Ask": "We need assurance that the solution is secure and does not use open AI tools that compromise data privacy.",
+          "Priority": "High",
+          "Evidence": "For us, of course, it's important that it is secure and, you know, there's a lot of tools out there that are just like using open AI. So for us, it would be hard, we are a small company, but we were recently acquired by a big company that has a lot of, you know, due diligence and security concerns."
+        }
+      ]
+    },
+    {
+      "transcript_id": "32_2475253460075444349",
+      "call_id": "2475253460075444349",
+      "title": "Ontario Tech University <> Hiver : Demo",
+      "started": "2026-01-23T00:30:31+05:30",
+      "signals": [
+        {
+          "Theme": "AI Integration",
+          "Sub-Theme": "Hubspot Integration",
+          "Ask": "We need the chat feature to integrate with Hubspot to access applicant profiles and CRM data during conversations.",
+          "Priority": "High",
+          "Evidence": "I think that would be like a make or break for us because we use Hubspot for everything for like our CRM and that is like a lot of the time they'll come in and they'll have questions about like their applicant status or something and we need their profile like readily available."
+        }
+      ]
+    },
+    {
+      "transcript_id": "33_6095409386840885709",
+      "call_id": "6095409386840885709",
+      "title": "Hiver Demo | Adlai <> Alex",
+      "started": "2026-01-23T00:05:02+05:30",
+      "signals": [
+        {
+          "Theme": "HIPAA Compliance",
+          "Sub-Theme": "Cost for Small Business",
+          "Ask": "We need HIPAA compliance at a cost that fits our small business budget.",
+          "Priority": "High",
+          "Evidence": "I've asked support regarding hipaa compliance and it is only available for the enterprise users, which is 100 dollars, and that basically, I mean, I'm going to be upfront with you that's really not going to be too… much of a budget for us."
+        }
+      ]
+    },
+    {
+      "transcript_id": "34_842069866218594494",
+      "call_id": "842069866218594494",
+      "title": "Hiver Demo | Gary <> Matthew",
+      "started": "2026-01-22T23:31:34+05:30",
+      "signals": [
+        {
+          "Theme": "Call Management",
+          "Sub-Theme": "Phone call triage",
+          "Ask": "We need a better process flow to manage and triage incoming phone calls effectively.",
+          "Priority": "High",
+          "Evidence": "I'm just noticing that we're really spending an inordinate amount of time on phones with kind of erroneous conversations and, or we need to make sure we're capturing the important information, the call ins."
+        }
+      ]
+    },
+    {
+      "transcript_id": "35_4393055857244937388",
+      "call_id": "4393055857244937388",
+      "title": "Hiver Demo | Ben <> Alex",
+      "started": "2026-01-22T22:36:26+05:30",
+      "signals": [
+        {
+          "Theme": "Pricing Model",
+          "Sub-Theme": "Unexpected Cost Increases",
+          "Ask": "We need a clear and stable pricing model without unexpected increases.",
+          "Priority": "High",
+          "Evidence": "I tried to go with four different MSP companies... they said, yeah, by the way we're exercising our contract rights, we're increasing the price and there was no flat minimum."
+        }
+      ]
+    },
+    {
+      "transcript_id": "36_3083264483367128328",
+      "call_id": "3083264483367128328",
+      "title": "Hiver Product Demo: Kevin<> Matthew",
+      "started": "2026-01-22T22:32:04+05:30",
+      "signals": [
+        {
+          "Theme": "Email Access",
+          "Sub-Theme": "Shared Inbox Password",
+          "Ask": "I need access to the shared inbox email to proceed with the setup.",
+          "Priority": "High",
+          "Evidence": "No, that's from the, one of the managers, they have access to the admin console. Would I need that information? I think then someone else should be the ones running this demo, because I don't think they would give me access to that."
+        }
+      ]
+    },
+    {
+      "transcript_id": "37_1289687791315754817",
+      "call_id": "1289687791315754817",
       "title": "Weekly Sales Review",
-      "started": "2026-01-29T22:04:21+05:30",
+      "started": "2026-01-22T22:01:03+05:30",
       "signals": [
         {
-          "Theme": "Contact Module Enhancements",
-          "Ask": "The contact module must allow for the assignment of account representatives to ensure proper client servicing.",
+          "Theme": "AI Integration",
+          "Sub-Theme": "Create to Quote from Email",
+          "Ask": "We need the ability to create a quote directly from an email received.",
           "Priority": "High",
-          "Evidence": "The contact module not being able to assign an account rep is the issue."
-        },
-        {
-          "Theme": "Custom Objects Integration",
-          "Ask": "We need a solution to integrate custom objects with our existing Google Sheets mapping.",
-          "Priority": "High",
-          "Evidence": "Our objects are static, and we need to either tie into the Google sheet or provide a script."
-        },
-        {
-          "Theme": "Migration Capabilities",
-          "Ask": "We require clear documentation on what can and cannot be migrated from Zendesk to Hiver.",
-          "Priority": "High",
-          "Evidence": "It would be helpful to have some documentation on what parts of it can be migrated, what parts cannot be migrated."
-        },
-        {
-          "Theme": "AI Chat Use Case",
-          "Ask": "We need to explore AI chat capabilities as a priority for our customer onboarding.",
-          "Priority": "Medium",
-          "Evidence": "They have a use case for AI chat also."
-        },
-        {
-          "Theme": "Email and Ticket Integration",
-          "Ask": "We need an integrated setup to manage both phone calls and emails in one place.",
-          "Priority": "Medium",
-          "Evidence": "Their biggest issue right now is they're spending so much time figuring out this phone call and email connection."
-        },
-        {
-          "Theme": "WhatsApp Channel Request",
-          "Ask": "There is a request for WhatsApp as a communication channel in Omni.",
-          "Priority": "Medium",
-          "Evidence": "Valis group is looking for WhatsApp as a channel in Omni."
-        },
-        {
-          "Theme": "Knowledge Base Migration",
-          "Ask": "We need a solution for migrating knowledge bases from third-party systems to Hiver.",
-          "Priority": "Medium",
-          "Evidence": "We need to figure out how to migrate from their WordPress site."
-        },
-        {
-          "Theme": "Automation Workflow",
-          "Ask": "We need to ensure that automation workflows are available in Omni to match HIG capabilities.",
-          "Priority": "High",
-          "Evidence": "The primary thing automation is something we need."
+          "Evidence": "We've seen three people ask for create to quote from email in the last three days, which is wild."
         }
       ]
     },
     {
-      "transcript_id": "34_6286022736974980540",
-      "call_id": "6286022736974980540",
+      "transcript_id": "38_7751981210817989260",
+      "call_id": "7751981210817989260",
+      "title": "Hiver Demo: Manny <> Alex",
+      "started": "2026-01-22T21:31:46+05:30",
+      "signals": [
+        {
+          "Theme": "Chat Integration",
+          "Sub-Theme": "Customizability",
+          "Ask": "We need the chat solution to be fully customizable to our specific needs.",
+          "Priority": "High",
+          "Evidence": "Is this customizable to kind of, what we would need? This is?"
+        }
+      ]
+    },
+    {
+      "transcript_id": "39_2929594980253037313",
+      "call_id": "2929594980253037313",
+      "title": "Hiver<>Bluevine Capital Inc: Intro",
+      "started": "2026-01-22T21:31:43+05:30",
+      "signals": [
+        {
+          "Theme": "AI Utilization",
+          "Sub-Theme": "Operational Efficiency",
+          "Ask": "We want to explore AI solutions to improve operational efficiency, especially in customer support.",
+          "Priority": "High",
+          "Evidence": "I think we're probably lacking there a bit or at least something that I want to push. I think from what I saw on your website, for example, it's like might be, you know, right now, we only have like pre made bots right? For customer support chats and stuff like that. And we're not really utilizing AI there."
+        }
+      ]
+    },
+    {
+      "transcript_id": "40_4561350572484966890",
+      "call_id": "4561350572484966890",
+      "title": "Hiver <> Hip - ClickUp w/ Hiver Permalinks for Access/Visibility for non Hiver users",
+      "started": "2026-01-22T21:02:33.891+05:30",
+      "signals": [
+        {
+          "Theme": "ClickUp Integration",
+          "Sub-Theme": "Automated Task Creation",
+          "Ask": "We need the ability to automatically create ClickUp tasks from emails to improve workflow efficiency.",
+          "Priority": "High",
+          "Evidence": "The problem is whether they use the ClickUp widget or go into ClickUp. It's still a manual process. And so we don't get great adoption of them actually doing that."
+        }
+      ]
+    },
+    {
+      "transcript_id": "41_7701648272911773069",
+      "call_id": "7701648272911773069",
+      "title": "PSR <> Hiver AI regroup",
+      "started": "2026-01-22T20:01:15+05:30",
+      "signals": [
+        {
+          "Theme": "Pricing",
+          "Sub-Theme": "AI Package Cost",
+          "Ask": "We need a clear understanding of the pricing structure for AI features and whether we can opt out of AI to maintain current pricing.",
+          "Priority": "High",
+          "Evidence": "Being honest with you, I think hiver can add value as I said, but, in AI, but, I think we need to wait because we like, you know, things are going to evolve hiver, copilot, we need to evolve. So being 100 percent honest with you nowadays, doubling the price to have this feature for us. It's something not good."
+        }
+      ]
+    },
+    {
+      "transcript_id": "42_8242061446390138998",
+      "call_id": "8242061446390138998",
+      "title": "Hiver Demo | Francesco <> Rakesh",
+      "started": "2026-01-22T19:00:16+05:30",
+      "signals": [
+        {
+          "Theme": "Interface Compatibility",
+          "Sub-Theme": "Outlook Integration",
+          "Ask": "We need the ability to work from Outlook with the same features as Hiver.",
+          "Priority": "High",
+          "Evidence": "Is it possible to have the demo from outlook web? So instead of the platform, hey, josh, just because we'd like to simulate, we'd like to be as close as possible to what CK is doing right now?"
+        }
+      ]
+    },
+    {
+      "transcript_id": "43_3785062996898600263",
+      "call_id": "3785062996898600263",
+      "title": "Loyo Group <> Hiver : Connect",
+      "started": "2026-01-22T17:00:25+05:30",
+      "signals": [
+        {
+          "Theme": "Label Management",
+          "Sub-Theme": "Remove Blue Labels",
+          "Ask": "I want the ability to remove or hide blue labels from my inbox as they clutter my view and are not relevant to me.",
+          "Priority": "High",
+          "Evidence": "Just for me, it clutters my inbox with information for me. It's not relevant where it comes from. I can see already where it's coming from by the name."
+        }
+      ]
+    },
+    {
+      "transcript_id": "44_1349719854817525104",
+      "call_id": "1349719854817525104",
+      "title": "Hiver <> YUSO - AI for email replies",
+      "started": "2026-01-22T16:02:02+05:30",
+      "signals": [
+        {
+          "Theme": "AI Integration",
+          "Sub-Theme": "Knowledge Base Utilization",
+          "Ask": "We want AI to effectively utilize our existing knowledge base, starting with validated public information, and expand as we gain trust in its capabilities.",
+          "Priority": "High",
+          "Evidence": "We will start with a very limited set which are just the public question facts and answers and questions that are on our public website because we know that's also fully validated. And we want already to see how powerful AI is our hybrid is in, does it already find the right answer in that?"
+        }
+      ]
+    },
+    {
+      "transcript_id": "45_3989100815385167076",
+      "call_id": "3989100815385167076",
+      "title": "Hiver Demo | Mrinal  <> Rakesh",
+      "started": "2026-01-22T15:33:19+05:30",
+      "signals": [
+        {
+          "Theme": "AI Automation",
+          "Sub-Theme": "Email Response",
+          "Ask": "We need an AI agent that can automatically respond to 70% of customer queries through API integration without human intervention.",
+          "Priority": "High",
+          "Evidence": "That's what I was telling you from the beginning itself, that there's no point making an agent sitting and go searching AWB number on shiprocket and then sending those that same status to the customer when the customer can see itself by mentioning the AWB number or order number on that API, understood?"
+        }
+      ]
+    },
+    {
+      "transcript_id": "46_1087960100346813360",
+      "call_id": "1087960100346813360",
+      "title": "Tisso <> Hiver",
+      "started": "2026-01-22T15:30:23+05:30",
+      "signals": [
+        {
+          "Theme": "Email Automation",
+          "Sub-Theme": "Order Segmentation",
+          "Ask": "We need a good way to automate, tag, and assign emails to the right person based on order notifications and therapist orders.",
+          "Priority": "High",
+          "Evidence": "We need to find a good way to automate and tag it and assign it to the right person. I think that's our main little issue we have."
+        }
+      ]
+    },
+    {
+      "transcript_id": "47_6408879359998889802",
+      "call_id": "6408879359998889802",
+      "title": "Hiver Demo | Amy <> Yukta",
+      "started": "2026-01-22T13:29:47+05:30",
+      "signals": [
+        {
+          "Theme": "Integration",
+          "Sub-Theme": "WhatsApp Handling",
+          "Ask": "We need a shared interface for WhatsApp to manage messages more efficiently.",
+          "Priority": "Medium",
+          "Evidence": "Right now, it's our team leader who's handling all the WhatsApp messages. But sometimes if he's too busy, he will just forward the message to one of us and then we have to answer for him. But it's a lot of back and forth like forwarding. So it would be easier if we could just have a shared interface for WhatsApp."
+        }
+      ]
+    },
+    {
+      "transcript_id": "48_5661640177508987905",
+      "call_id": "5661640177508987905",
+      "title": "Hiver Demo | Peter <> Cole",
+      "started": "2026-01-22T05:31:20+05:30",
+      "signals": [
+        {
+          "Theme": "Communication",
+          "Sub-Theme": "24/7 Availability",
+          "Ask": "We need to improve communication with patients to ensure 24/7 availability via chat, text, email, or phone calls.",
+          "Priority": "High",
+          "Evidence": "I would like to try to improve communication with patients is just making sure that we can communicate 24 hours a day, seven days a week via chat, text, email, or phone calls."
+        }
+      ]
+    },
+    {
+      "transcript_id": "49_1014683444196100969",
+      "call_id": "1014683444196100969",
+      "title": "Hiver Demo | Horacio <> Matthew",
+      "started": "2026-01-22T05:00:29+05:30",
+      "signals": [
+        {
+          "Theme": "Ticketing System",
+          "Sub-Theme": "Email Response",
+          "Ask": "I need the ticketing system to automatically send email updates to users when the status changes.",
+          "Priority": "High",
+          "Evidence": "I need to be able to, whatever status I put in the ticket, you get a reply that way. You know, you know, that I'm working on it, you know, that I'm claiming it, you know, that I, you're not being ignored."
+        }
+      ]
+    },
+    {
+      "transcript_id": "50_341650998644687767",
+      "call_id": "341650998644687767",
+      "title": "BCX Insurance | Hiver - Workflow review",
+      "started": "2026-01-22T03:00:49.48+05:30",
+      "signals": [
+        {
+          "Theme": "Pricing Model",
+          "Sub-Theme": "Bucketed User Model",
+          "Ask": "We need a more flexible pricing model that doesn't require purchasing additional user seats in large increments.",
+          "Priority": "High",
+          "Evidence": "If you want to add the eleventh user, you're going to purchase the bucket for the next five, 11 to 15."
+        }
+      ]
+    },
+    {
+      "transcript_id": "51_5945073944421046167",
+      "call_id": "5945073944421046167",
+      "title": "Excellent Real Estate Group, Inc <> Hiver",
+      "started": "2026-01-22T01:34:11+05:30",
+      "signals": [
+        {
+          "Theme": "Pricing",
+          "Sub-Theme": "Cost of Service",
+          "Ask": "The service should be priced fairly and not exceed $7,000 a year for six users.",
+          "Priority": "High",
+          "Evidence": "I'm not going to pay 100 dollars, a user, 100 dollars a user for six users. I am not doing that, you know, great. But it's not worth 600 dollars a month, almost 7,000 dollars a year."
+        }
+      ]
+    },
+    {
+      "transcript_id": "52_5130744100353479568",
+      "call_id": "5130744100353479568",
+      "title": "Hiver Introduction with Accuride Inernational",
+      "started": "2026-01-22T01:32:04.171+05:30",
+      "signals": [
+        {
+          "Theme": "Email Integration",
+          "Sub-Theme": "Lotus Notes Compatibility",
+          "Ask": "We need Hiver to integrate with Lotus Notes to consider adopting it.",
+          "Priority": "High",
+          "Evidence": "It was an instant no with the email platform that we use. So I never got to see anything that's why when, you know, I received the ping about it like, okay, guess, maybe now they support it."
+        }
+      ]
+    },
+    {
+      "transcript_id": "53_5339109119606905611",
+      "call_id": "5339109119606905611",
+      "title": "AFS | Hiver kick off",
+      "started": "2026-01-22T00:30:59+05:30",
+      "signals": [
+        {
+          "Theme": "Email Attachments",
+          "Sub-Theme": "Attachment Errors",
+          "Ask": "We expect to be able to add attachments to emails without encountering errors.",
+          "Priority": "High",
+          "Evidence": "Every time I try to add an attachment to send to anybody, it stays invalid and I can't send anything."
+        }
+      ]
+    },
+    {
+      "transcript_id": "54_5959549569604523714",
+      "call_id": "5959549569604523714",
+      "title": "Hiver Requirements Review",
+      "started": "2026-01-22T00:00:47+05:30",
+      "signals": [
+        {
+          "Theme": "Search Functionality",
+          "Sub-Theme": "Document Management",
+          "Ask": "We need the ability to search and find documents within emails without downloading them to our computers.",
+          "Priority": "High",
+          "Evidence": "But what the theory is if something's in your email box, that you can tag it right where you can find it in the search. And so the idea is if you can search and find it, you don't need to download it to your computer."
+        }
+      ]
+    },
+    {
+      "transcript_id": "55_8310478040888912873",
+      "call_id": "8310478040888912873",
+      "title": "Vently<>Hiver: Intro Call",
+      "started": "2026-01-21T23:31:39+05:30",
+      "signals": [
+        {
+          "Theme": "Email Management",
+          "Sub-Theme": "Missed Emails",
+          "Ask": "We need a solution to prevent missed emails, especially for deadlines and client deliverables.",
+          "Priority": "High",
+          "Evidence": "Yeah, the biggest thing is just like missed emails because we're not always monitoring like the shared one."
+        }
+      ]
+    },
+    {
+      "transcript_id": "56_9199714855509473782",
+      "call_id": "9199714855509473782",
+      "title": "Hiver Demo | Bianca <> Alex",
+      "started": "2026-01-21T23:31:21+05:30",
+      "signals": [
+        {
+          "Theme": "Account Management",
+          "Sub-Theme": "Multiple Google Accounts",
+          "Ask": "We need a system that allows us to manage multiple Gmail workspaces with individual logins and centralized access.",
+          "Priority": "High",
+          "Evidence": "Right now, we are opening up every Gmail workspaces, we're sharing passwords to get in. Would love to have a system where each individual has their own login, have all those workspaces in a like kind of like outlook where you can have multiple email addresses within like a centralized place."
+        }
+      ]
+    },
+    {
+      "transcript_id": "57_6341609175330272984",
+      "call_id": "6341609175330272984",
+      "title": "Hiver Onboarding Kickoff Call with Pavithra Sundar",
+      "started": "2026-01-21T23:16:24.99+05:30",
+      "signals": [
+        {
+          "Theme": "Domain Switch",
+          "Sub-Theme": "Email Domain Transition",
+          "Ask": "We need a seamless process to switch email domains without losing functionality or requiring a new account setup.",
+          "Priority": "High",
+          "Evidence": "There is a probability in like three or four months, they would like need to switch the domain. Most likely, how is that going to work?"
+        }
+      ]
+    },
+    {
+      "transcript_id": "58_6274305514231728455",
+      "call_id": "6274305514231728455",
+      "title": "Meet with Sonali | Hiver (Adam Harless)",
+      "started": "2026-01-21T23:00:24.736+05:30",
+      "signals": [
+        {
+          "Theme": "Automation",
+          "Sub-Theme": "Email Assignment",
+          "Ask": "We need a way to automate email assignment based on workload to improve efficiency.",
+          "Priority": "High",
+          "Evidence": "Right now, like on that side, it's manual because we have the team. And then the team is like organized on different, like sections or like locations in the us like from the states."
+        }
+      ]
+    },
+    {
+      "transcript_id": "59_5826131780612749030",
+      "call_id": "5826131780612749030",
+      "title": "Hiver AI <> WhiteArrow",
+      "started": "2026-01-21T22:15:35+05:30",
+      "signals": [
+        {
+          "Theme": "Tagging System",
+          "Sub-Theme": "Adaptive Tagging",
+          "Ask": "We need the tagging system to adapt and change based on the conversation flow, not just the initial email.",
+          "Priority": "High",
+          "Evidence": "The initial email is a customer asking for a quote. So, let's say I add the smart tagging, the AI tagging and it would say quote, but then the customer sends us the tender. So now it's not a quote. It's a load to enter. And in a week or two, the customer is asking for information on where the load is. So the tagging will change to etas or so will they change?"
+        }
+      ]
+    },
+    {
+      "transcript_id": "60_5407670113724320637",
+      "call_id": "5407670113724320637",
+      "title": "Hiver Demo | joe <> Alex",
+      "started": "2026-01-21T22:05:04.102+05:30",
+      "signals": [
+        {
+          "Theme": "Email Management",
+          "Sub-Theme": "Shared Inbox",
+          "Ask": "I need a solution to manage inbound emails and oversee if emails were opened and processed.",
+          "Priority": "High",
+          "Evidence": "That's why I need something to help me manage the inbound. And then also, so I can oversee, did we actually open the email? Was it processed stuff like that?"
+        }
+      ]
+    },
+    {
+      "transcript_id": "61_2082795139548640353",
+      "call_id": "2082795139548640353",
+      "title": "Hiver Demo : Pawel <> Cole",
+      "started": "2026-01-21T22:01:00+05:30",
+      "signals": [
+        {
+          "Theme": "Email Management",
+          "Sub-Theme": "Multiple Inboxes",
+          "Ask": "I want to be able to be logged into my own email, my main email and I want to be able to see and manage multiple inboxes from my main view.",
+          "Priority": "High",
+          "Evidence": "The main need like the most urgent need that we need no matter what is, I want to be able to be logged into my own email, my main email and I want to be able to see and manage multiple inboxes."
+        }
+      ]
+    },
+    {
+      "transcript_id": "62_3036148842631328310",
+      "call_id": "3036148842631328310",
+      "title": "Exploring Hiver for ITS Logistics",
+      "started": "2026-01-21T21:23:14+05:30",
+      "signals": [
+        {
+          "Theme": "Email Management",
+          "Sub-Theme": "Response Time",
+          "Ask": "We need a solution to improve email management, response time, and ensure emails are replied to.",
+          "Priority": "High",
+          "Evidence": "They're having some issues with email management, response time and emails not being replied at all."
+        }
+      ]
+    },
+    {
+      "transcript_id": "63_5096362794739728615",
+      "call_id": "5096362794739728615",
+      "title": "Hiver Demo | Vaishnavy <> Alex",
+      "started": "2026-01-21T20:01:59+05:30",
+      "signals": [
+        {
+          "Theme": "Automation",
+          "Sub-Theme": "Complex Account Management",
+          "Ask": "We need more automations and a way to manage stakeholders at a really complex account.",
+          "Priority": "High",
+          "Evidence": "I think truly looking for some more automations and a way to manage stakeholders at a really complex account."
+        }
+      ]
+    },
+    {
+      "transcript_id": "64_877959386429179562",
+      "call_id": "877959386429179562",
+      "title": "Hiver <> Picnic Technologies - Slack Integration",
+      "started": "2026-01-21T20:01:23+05:30",
+      "signals": [
+        {
+          "Theme": "Slack Integration",
+          "Sub-Theme": "Two-way Sync",
+          "Ask": "We need a two-way sync between Hiver and Slack to ensure seamless communication and visibility on email threads.",
+          "Priority": "High",
+          "Evidence": "A better solution would be to have a two-way sync here. Otherwise, the team will have to switch to Slack, continue the conversation there, and then come back to Hiver and close the loop."
+        }
+      ]
+    },
+    {
+      "transcript_id": "65_2695425702527378227",
+      "call_id": "2695425702527378227",
+      "title": "Hiver Trial Feedback <> Dr Paw Paw",
+      "started": "2026-01-21T20:00:30+05:30",
+      "signals": [
+        {
+          "Theme": "SLA Issues",
+          "Sub-Theme": "Outbound Emails",
+          "Ask": "Ensure SLAs do not trigger for outbound emails sent from our logistics team.",
+          "Priority": "High",
+          "Evidence": "It's saying the SLA is due to what's over June now, but Sarah's part of the logistics look."
+        }
+      ]
+    },
+    {
+      "transcript_id": "66_8889353542854619073",
+      "call_id": "8889353542854619073",
+      "title": "Hiver <> Yardlink",
+      "started": "2026-01-21T16:32:07+05:30",
+      "signals": [
+        {
+          "Theme": "Custom Status",
+          "Sub-Theme": "Quoted Status",
+          "Ask": "We need a custom status like 'Quoted' between open and pending to track quotes more effectively.",
+          "Priority": "High",
+          "Evidence": "Ideally what you were looking for is like a custom status. So in between open and pending, you would want to have another status like that's Quoted."
+        }
+      ]
+    },
+    {
+      "transcript_id": "67_8867070846807083488",
+      "call_id": "8867070846807083488",
+      "title": "Hiver Onboarding <> Omni Set up",
+      "started": "2026-01-21T16:01:32+05:30",
+      "signals": [
+        {
+          "Theme": "Integration",
+          "Sub-Theme": "Knowledge Base",
+          "Ask": "We need the ability to integrate with Google Docs for our knowledge base, allowing us to add entire folders and monitor them for relevant content.",
+          "Priority": "High",
+          "Evidence": "Is it only notion? That got this feature or the other apps? Google docs, I guess, Google? Docs you said, then you have got the options to download. I mean, upload those documents right from here. So those could be the custom ones, yeah. Yeah, but this is only one at a time, right? I mean, we can add a whole let's say an entire folder and just say watch this folder and see if there's anything in there that's relevant."
+        }
+      ]
+    },
+    {
+      "transcript_id": "68_4615209453433614564",
+      "call_id": "4615209453433614564",
+      "title": "Hiver Demo | Jillanne <> Matthew",
+      "started": "2026-01-21T04:02:14+05:30",
+      "signals": [
+        {
+          "Theme": "AI Accuracy",
+          "Sub-Theme": "Inaccurate AI Replies",
+          "Ask": "We need AI that provides accurate replies to customer inquiries.",
+          "Priority": "High",
+          "Evidence": "We've been trying to use some of helpscout's built in AI that they have not loving the replies that it's coming up with. They're just not very accurate."
+        }
+      ]
+    },
+    {
+      "transcript_id": "69_3216979097288633448",
+      "call_id": "3216979097288633448",
+      "title": "Hiver Trial Kick Off",
+      "started": "2026-01-21T02:30:05+05:30",
+      "signals": [
+        {
+          "Theme": "Email Authentication",
+          "Sub-Theme": "Google Group Authentication",
+          "Ask": "Ensure that all group emails are properly authenticated and accessible to designated members.",
+          "Priority": "High",
+          "Evidence": "It looks like the accounts payable one's not authenticated. Is that one definitely? That's a group email. Yeah, it's a group and are you on that one as well? Are you a member or manager of that?"
+        }
+      ]
+    },
+    {
+      "transcript_id": "70_5820310903453040987",
+      "call_id": "5820310903453040987",
+      "title": "Hiver & Gabriel with Discuss",
+      "started": "2026-01-21T01:01:14+05:30",
+      "signals": [
+        {
+          "Theme": "Email Status",
+          "Sub-Theme": "Read/Unread Confusion",
+          "Ask": "Ensure that emails are not marked as read unless manually opened by the user.",
+          "Priority": "High",
+          "Evidence": "Alaa reported to me that she didn't catch a couple of emails for the past couple of days because they were already marked as read."
+        }
+      ]
+    },
+    {
+      "transcript_id": "71_4624730707298264356",
+      "call_id": "4624730707298264356",
+      "title": "Hiver Demo | Art <> Matthew",
+      "started": "2026-01-21T00:32:45+05:30",
+      "signals": [
+        {
+          "Theme": "App Performance",
+          "Sub-Theme": "Mobile App Speed",
+          "Ask": "I expect the mobile app to be as responsive as the Gmail app.",
+          "Priority": "Medium",
+          "Evidence": "It's not like horribly slow. It's like much slower than regular Gmail. Like it's less responsive."
+        }
+      ]
+    },
+    {
+      "transcript_id": "72_8663885298732490429",
+      "call_id": "8663885298732490429",
+      "title": "Hiver<>Securly Inc: Intro Call",
+      "started": "2026-01-21T00:01:28+05:30",
+      "signals": [
+        {
+          "Theme": "Product Differentiation",
+          "Sub-Theme": "Comparison with Zendesk",
+          "Ask": "Provide the main differentiators between Hiver and Zendesk in your email.",
+          "Priority": "Medium",
+          "Evidence": "Yeah. And, in your email to me, if you could put like the main differentiators to Zendesk in it because knowing that's what we use and then I can send that onto him."
+        }
+      ]
+    },
+    {
+      "transcript_id": "73_1591000138360586179",
+      "call_id": "1591000138360586179",
+      "title": "Hiver Demo | David <> Alex",
+      "started": "2026-01-21T00:00:55+05:30",
+      "signals": [
+        {
+          "Theme": "Automation",
+          "Sub-Theme": "Pricing and Procurement",
+          "Ask": "We need the ability to automate the core bulk of requests, especially for pricing and procurement, to handle large volumes without hiring additional staff.",
+          "Priority": "High",
+          "Evidence": "It's the ability to automate for that core bulk, very similar, 80 percent of requests that come in regardless of the client, the ability to automate as much of that process as possible and the ability to have flex to have flex in our system."
+        }
+      ]
+    },
+    {
+      "transcript_id": "74_8754819031767746288",
+      "call_id": "8754819031767746288",
       "title": "Hiver Sync",
-      "started": "2026-01-29T20:32:26+05:30",
+      "started": "2026-01-20T23:31:02+05:30",
       "signals": [
         {
-          "Theme": "AI Tool Requirements",
-          "Ask": "We need AI tools to automate ticket qualification and suggest answers to clients.",
+          "Theme": "Pricing",
+          "Sub-Theme": "Cost per user",
+          "Ask": "We need a more affordable pricing option that fits within our budget.",
           "Priority": "High",
-          "Evidence": "We are looking for some AI tools that we need to use in tickets qualifying maybe to suggest some answers to the clients."
-        },
-        {
-          "Theme": "Integration with Existing Systems",
-          "Ask": "The solution must integrate with our existing systems like Jira and Salesforce.",
-          "Priority": "High",
-          "Evidence": "It sounded like Jira Salesforce are like kind of the two main ones you also use."
-        },
-        {
-          "Theme": "Language Support",
-          "Ask": "The tool should accommodate language differences among our team and clients.",
-          "Priority": "Medium",
-          "Evidence": "Our RD office is in Minsk... the first language would be Russian and then our clients would be in Spanish and we're communicated in English."
-        },
-        {
-          "Theme": "Proposal Request",
-          "Ask": "Please provide a detailed proposal that includes tiered pricing and licensing options.",
-          "Priority": "High",
-          "Evidence": "I'd like to see a proposal that includes like, you know, everything that you showed us."
-        },
-        {
-          "Theme": "Testing and Flexibility",
-          "Ask": "We prefer a month-to-month plan initially to test the tool before committing to an annual contract.",
-          "Priority": "High",
-          "Evidence": "I think the monthly one could work for us at the beginning."
+          "Evidence": "Unfortunately, due to the cost being the main reason we won't be able to go ahead with you all as of now."
         }
       ]
     },
     {
-      "transcript_id": "35_605002875932874797",
-      "call_id": "605002875932874797",
-      "title": "Hiver Sync",
-      "started": "2026-01-29T20:29:29+05:30",
+      "transcript_id": "75_8411831052347429451",
+      "call_id": "8411831052347429451",
+      "title": "Hiver Custom Object Mapping",
+      "started": "2026-01-20T22:59:53+05:30",
       "signals": [
         {
-          "Theme": "Data Migration",
-          "Ask": "We need to understand the timeline for migrating ticket history from Zendesk to Hiver.",
+          "Theme": "Shared Inbox",
+          "Sub-Theme": "Visibility and Analytics",
+          "Ask": "We need a shared mailbox to track client interactions and provide analytics for better visibility and understanding of client needs.",
           "Priority": "High",
-          "Evidence": "If we can understand that, we can give you a more clear cut timeline."
-        },
-        {
-          "Theme": "Historical Data",
-          "Ask": "We want to determine how far back we should retrieve ticket history for migration.",
-          "Priority": "High",
-          "Evidence": "I'm gonna find out from the team, how far they want to go back."
-        },
-        {
-          "Theme": "Client Onboarding",
-          "Ask": "We need to tie new client domains with the respective client care representatives.",
-          "Priority": "High",
-          "Evidence": "We have to be able to tie that domain with the client care rep."
-        },
-        {
-          "Theme": "Dynamic Sheet Access",
-          "Ask": "We need to connect a live sheet for automatic updates of client information.",
-          "Priority": "High",
-          "Evidence": "Because they would need that."
-        },
-        {
-          "Theme": "Knowledge Base Integration",
-          "Ask": "We want to integrate our existing knowledge base with Hiver's system.",
-          "Priority": "Medium",
-          "Evidence": "We would want it to go to Hiver, sure, or that customer portal that you guys have."
-        },
-        {
-          "Theme": "Email Privacy",
-          "Ask": "We need assurance that private emails will not be visible to other users in Hiver.",
-          "Priority": "Medium",
-          "Evidence": "I wanted to just confirm that... if somebody emails them directly, that's private."
+          "Evidence": "You would still want to create the shared mailbox for it to be the catch for the conversations for analytics and all that stuff."
         }
       ]
     },
     {
-      "transcript_id": "36_3487665095977419236",
-      "call_id": "3487665095977419236",
-      "title": "Pelican <> Hiver AI",
-      "started": "2026-01-29T19:00:47.817+05:30",
+      "transcript_id": "76_7641424439134682605",
+      "call_id": "7641424439134682605",
+      "title": "Hiver Demo | Daniel <> Cole",
+      "started": "2026-01-20T22:31:18+05:30",
       "signals": [
         {
-          "Theme": "Information Accuracy",
-          "Ask": "The AI must consistently provide accurate information from the knowledge base.",
+          "Theme": "Outlook Integration",
+          "Sub-Theme": "Shared Inboxes",
+          "Ask": "We need a solution that supports Outlook for managing shared inboxes.",
           "Priority": "High",
-          "Evidence": "I just want the accuracy to be fixed."
-        },
-        {
-          "Theme": "Information Relevance",
-          "Ask": "The AI should avoid providing unnecessary information in its responses.",
-          "Priority": "High",
-          "Evidence": "Sometimes it does give like it gives the right answer and then it gives other information that I didn't need."
-        },
-        {
-          "Theme": "Testing Efficiency",
-          "Ask": "We need the AI to work effectively without requiring extensive testing from our team.",
-          "Priority": "High",
-          "Evidence": "We feel like we're doing a lot of testing and we kind of just need it to work."
-        },
-        {
-          "Theme": "Feature Implementation",
-          "Ask": "We want to implement features that allow us to fine-tune the AI's responses ourselves.",
-          "Priority": "Medium",
-          "Evidence": "When you're done, you can teach me how to do it myself."
-        },
-        {
-          "Theme": "Knowledge Base Access",
-          "Ask": "We need to share our knowledge base documents for testing and fine-tuning.",
-          "Priority": "Medium",
-          "Evidence": "I can email this to you and then I'll CC Jordan on it."
+          "Evidence": "Our IT director looked at Hiver a year or two ago, and he said Hiver was an immediate no because they were Gmail centric. Is that still the case?"
         }
       ]
     },
     {
-      "transcript_id": "37_7705766988241736936",
-      "call_id": "7705766988241736936",
-      "title": "Hiver Placeholder / Feedback Meeting",
-      "started": "2026-01-29T17:18:10+05:30",
+      "transcript_id": "77_755110470745318505",
+      "call_id": "755110470745318505",
+      "title": "Iterable | Hiver - Renewal",
+      "started": "2026-01-20T22:31:01.024+05:30",
       "signals": [
         {
-          "Theme": "Trial Extension",
-          "Ask": "Extend the trial period to February 8th.",
+          "Theme": "Pricing Model",
+          "Sub-Theme": "Tiered Pricing Requirement",
+          "Ask": "We need flexibility in user count as we currently have 14 users and do not require 15.",
           "Priority": "High",
-          "Evidence": "We were not able to connect the two inboxes yet, but we are hoping to do this by end of today or maybe tomorrow."
-        },
+          "Evidence": "I think right now we only have 14 and you mentioned the new plan, we have to start at a 15 user base."
+        }
+      ]
+    },
+    {
+      "transcript_id": "78_6278181404971582583",
+      "call_id": "6278181404971582583",
+      "title": "Hiver Product Demo/Trial Setup: Ashley<> Matthew",
+      "started": "2026-01-20T22:01:21+05:30",
+      "signals": [
         {
-          "Theme": "Training Support",
-          "Ask": "Provide training for team members to effectively use the tool.",
+          "Theme": "AI Integration",
+          "Sub-Theme": "Domain-specific Responses",
+          "Ask": "We need the AI to provide specific answers based on the email domain to ensure correct responses for different client programs.",
+          "Priority": "High",
+          "Evidence": "We need to be able to identify that, you know, it came from this email domain. So this is their payment timing as an example."
+        }
+      ]
+    },
+    {
+      "transcript_id": "79_263815501789502510",
+      "call_id": "263815501789502510",
+      "title": "Hiver Demo | Rose <> Cole",
+      "started": "2026-01-20T21:31:31+05:30",
+      "signals": [
+        {
+          "Theme": "Browser Compatibility",
+          "Sub-Theme": "Chromium Requirement",
+          "Ask": "Ensure Hiver works on all major browsers, not just Chromium-based ones.",
+          "Priority": "High",
+          "Evidence": "Apparently I, I've been setting everything up through my safari, but it looks like I need to be starting to set everything up through Google Chrome, if that seems like it's easier."
+        }
+      ]
+    },
+    {
+      "transcript_id": "80_7773616476513160064",
+      "call_id": "7773616476513160064",
+      "title": "Hiver Trial Setup/Questions with John",
+      "started": "2026-01-20T21:31:16+05:30",
+      "signals": [
+        {
+          "Theme": "Slack Integration",
+          "Sub-Theme": "Notification Context",
+          "Ask": "I want the Slack integration to provide full context in notifications, not just alerts.",
+          "Priority": "High",
+          "Evidence": "I'd rather just do the thing like just leverage what's there because I don't want to like create an alert that basically says, hey, there's a problem but not provide any context to the problem."
+        }
+      ]
+    },
+    {
+      "transcript_id": "81_8391365494549470910",
+      "call_id": "8391365494549470910",
+      "title": "Noble Schools <> Hiver",
+      "started": "2026-01-20T21:30:22+05:30",
+      "signals": [
+        {
+          "Theme": "SLA Tracking",
+          "Sub-Theme": "Email Response Time",
+          "Ask": "We need the system to track every email response to ensure compliance with our 48-hour company-wide SLA.",
+          "Priority": "High",
+          "Evidence": "I don't think it's capturing all of our SLA, as we like our company wide SLA, which is that every email that's received has a 48 hour full business day response time."
+        }
+      ]
+    },
+    {
+      "transcript_id": "82_8412740574963384283",
+      "call_id": "8412740574963384283",
+      "title": "Hiver | AFS trial kickoff",
+      "started": "2026-01-20T21:03:03+05:30",
+      "signals": [
+        {
+          "Theme": "Admin Access",
+          "Sub-Theme": "Permission Approval",
+          "Ask": "We need a streamlined process for admin approval to avoid delays in setup.",
+          "Priority": "High",
+          "Evidence": "The only thing is, I don't think Tommy's on this call and he is the only one who has access or admin access right now."
+        }
+      ]
+    },
+    {
+      "transcript_id": "83_6825426549092728742",
+      "call_id": "6825426549092728742",
+      "title": "Hiver Demo | john <> Alex",
+      "started": "2026-01-20T20:31:20+05:30",
+      "signals": [
+        {
+          "Theme": "Email Assignment",
+          "Sub-Theme": "Automatic Assignment",
+          "Ask": "We need the ability to automatically assign emails based on keywords in the subject line.",
+          "Priority": "High",
+          "Evidence": "I would like to be able to assign, you know, have some rules that assign automatically based on some keywords in the subject line."
+        }
+      ]
+    },
+    {
+      "transcript_id": "84_2974916515073254246",
+      "call_id": "2974916515073254246",
+      "title": "Hiver Demo: David <> Cole",
+      "started": "2026-01-20T20:29:34+05:30",
+      "signals": [
+        {
+          "Theme": "Email Search",
+          "Sub-Theme": "Historical Emails",
+          "Ask": "I need to be able to search all my historical emails by reference number, customer name, or email.",
+          "Priority": "High",
+          "Evidence": "I want to be able to search all my historical emails to be able to find anything that has that reference number, right? That's one example. Or I want to be able to search by a customer name."
+        }
+      ]
+    },
+    {
+      "transcript_id": "85_7521158571682856558",
+      "call_id": "7521158571682856558",
+      "title": "Canlift <> Hiver (Troubleshooting SM)",
+      "started": "2026-01-20T19:58:42.524+05:30",
+      "signals": [
+        {
+          "Theme": "Label Migration",
+          "Sub-Theme": "Gmail to Hiver",
+          "Ask": "We need a way to migrate existing Gmail labels to Hiver to maintain our email organization.",
+          "Priority": "High",
+          "Evidence": "Once they come over to Hiver, we've lost those labels. So we've lost the organization. So, is there a way to fix that?"
+        }
+      ]
+    },
+    {
+      "transcript_id": "86_7988737626292762351",
+      "call_id": "7988737626292762351",
+      "title": "Hiver Catch-up <> Next Steps",
+      "started": "2026-01-20T18:17:52+05:30",
+      "signals": [
+        {
+          "Theme": "Shared Inbox",
+          "Sub-Theme": "Incorrect Setup",
+          "Ask": "We need a properly configured shared inbox to move forward with the evaluation.",
+          "Priority": "High",
+          "Evidence": "I have installed hiver… however, probably we… couldn't… do it well because… you told me that we need a shared inbox, and our it guys have given us a supposedly… shared inbox, but I think it is not what we wanted and we couldn't move forward honestly."
+        }
+      ]
+    },
+    {
+      "transcript_id": "87_993716661141324191",
+      "call_id": "993716661141324191",
+      "title": "Hiver Demo | Mendy <> Yukta",
+      "started": "2026-01-20T18:01:43+05:30",
+      "signals": [
+        {
+          "Theme": "Email Management",
+          "Sub-Theme": "Centralized Inbox",
+          "Ask": "We need a centralized place for email management to ensure visibility and collaboration among team members.",
+          "Priority": "High",
+          "Evidence": "We lose visibility. We don't know what exactly happening or where are we in terms of the onboarding process."
+        }
+      ]
+    },
+    {
+      "transcript_id": "88_7239960926781683344",
+      "call_id": "7239960926781683344",
+      "title": "Hiver Demo | Manuel <> Yukta",
+      "started": "2026-01-20T16:31:25+05:30",
+      "signals": [
+        {
+          "Theme": "Draft Sharing",
+          "Sub-Theme": "Automatic Sharing",
+          "Ask": "We need the ability to automatically share drafts without manual intervention.",
+          "Priority": "High",
+          "Evidence": "One of the features that we're looking for... is the sharing draft feature... we wanted to understand if that can be done automatically... because we would need that for the workflow that we're trying to implement."
+        }
+      ]
+    },
+    {
+      "transcript_id": "89_4682583914968491288",
+      "call_id": "4682583914968491288",
+      "title": "Mubi <> Hiver : Demo",
+      "started": "2026-01-20T15:33:00+05:30",
+      "signals": [
+        {
+          "Theme": "Product Demo",
+          "Sub-Theme": "Need for Tutorials",
+          "Ask": "We need to see a product demo or some tutorials about how to actually use the product correctly.",
+          "Priority": "High",
+          "Evidence": "Let me know. We need to see a product demo or some tutorials about how to actually use the product correctly."
+        }
+      ]
+    },
+    {
+      "transcript_id": "90_891541995576885643",
+      "call_id": "891541995576885643",
+      "title": "Hiver Demo | Lenjemy <> Yukta",
+      "started": "2026-01-20T15:32:41+05:30",
+      "signals": [
+        {
+          "Theme": "Shared Inbox",
+          "Sub-Theme": "Centralized Communication",
+          "Ask": "We need a shared inbox solution to centralize client communication in Gmail so that any team member can view conversation history and current status of emails.",
+          "Priority": "High",
+          "Evidence": "One of the most important thing which is non negotiable for the, what we wanted to know is the centralization of client communication."
+        }
+      ]
+    },
+    {
+      "transcript_id": "91_6641573314310257690",
+      "call_id": "6641573314310257690",
+      "title": "Hiver Demo | Josh <> Yukta",
+      "started": "2026-01-20T14:38:17+05:30",
+      "signals": [
+        {
+          "Theme": "Automation",
+          "Sub-Theme": "Email Replies",
+          "Ask": "We need a system to automate email replies and send reminders.",
+          "Priority": "High",
+          "Evidence": "If we can have… a shared inbox, and then also a system to track the status of the project based on the email interaction as well as automate some email reply, and then maybe automate a lot of the email requests, or reminders send email reminders and requests, as well as track the status of the project, that would be great."
+        }
+      ]
+    },
+    {
+      "transcript_id": "92_8426342443586700027",
+      "call_id": "8426342443586700027",
+      "title": "Hiver Demo | Lindsay <> Alex",
+      "started": "2026-01-20T01:00:38+05:30",
+      "signals": [
+        {
+          "Theme": "Email Management",
+          "Sub-Theme": "Auto-closing Notifications",
+          "Ask": "We need a way to automatically close notification emails to reduce clutter and save time.",
+          "Priority": "High",
+          "Evidence": "There's a couple emails that are just like sending us an email that someone placed an order? So that's just like wasting our time and space. So, is there a way to flag that? So it doesn't happen."
+        }
+      ]
+    },
+    {
+      "transcript_id": "93_6500128928993864063",
+      "call_id": "6500128928993864063",
+      "title": "Hiver Demo | David <> Jeevan",
+      "started": "2026-01-19T22:31:09+05:30",
+      "signals": [
+        {
+          "Theme": "AI Integration",
+          "Sub-Theme": "AI-driven scheduling",
+          "Ask": "I want to build an AI-driven scheduling system to manage caregiver schedules and communications.",
+          "Priority": "High",
+          "Evidence": "I'm hoping to do is to build an AI driven scheduling system and communication system for my admin team to use to really go out to caregivers and say, all right, we need to know what your week looks like coming up and what your availability is."
+        }
+      ]
+    },
+    {
+      "transcript_id": "94_6508058863700207280",
+      "call_id": "6508058863700207280",
+      "title": "AFS | Hiver Kick Off",
+      "started": "2026-01-19T21:30:43+05:30",
+      "signals": [
+        {
+          "Theme": "Salesforce Integration",
+          "Sub-Theme": "Notes Sync",
+          "Ask": "We expect notes to sync with Salesforce via your API.",
+          "Priority": "High",
+          "Evidence": "Do your notes push into Salesforce with your API? They do not. Okay. Yeah. Just curious."
+        }
+      ]
+    },
+    {
+      "transcript_id": "95_1652459537425685876",
+      "call_id": "1652459537425685876",
+      "title": "Hiver Demo | Alejandra <> Jeevan",
+      "started": "2026-01-19T20:31:00+05:30",
+      "signals": [
+        {
+          "Theme": "AI Triage",
+          "Sub-Theme": "Ticket Prioritization",
+          "Ask": "We want to clarify tickets by priority or by similar issues, but we can't do it in Zoho.",
+          "Priority": "High",
+          "Evidence": "The main reason we want to clarify tickets by priority or by similar issues, but we can't do it in Zoho because we didn't find any special… maybe stuff for this project."
+        }
+      ]
+    },
+    {
+      "transcript_id": "96_6604874090656009325",
+      "call_id": "6604874090656009325",
+      "title": "Hiver Trial Setup <> Dr Paw Paw",
+      "started": "2026-01-19T20:01:12+05:30",
+      "signals": [
+        {
+          "Theme": "Screen Sharing",
+          "Sub-Theme": "Browser Access",
+          "Ask": "Ensure that screen sharing permissions are granted in the browser to facilitate smooth setup and training sessions.",
           "Priority": "Medium",
-          "Evidence": "Not everyone is that great at computers."
-        },
+          "Evidence": "It wouldn't let me share for some reason, please grant browser access. What does that mean?"
+        }
+      ]
+    },
+    {
+      "transcript_id": "97_6847037050485608243",
+      "call_id": "6847037050485608243",
+      "title": "K-Flex | Hiver requirements review",
+      "started": "2026-01-19T19:33:08+05:30",
+      "signals": [
         {
-          "Theme": "Pricing Flexibility",
-          "Ask": "Negotiate pricing to accommodate budget constraints.",
+          "Theme": "Automation",
+          "Sub-Theme": "AIQA Parameters",
+          "Ask": "We need the ability to set up automation based on the parameters within the AIQA.",
           "Priority": "High",
-          "Evidence": "If we can come to some agreement on the price that'd be great."
-        },
+          "Evidence": "Automation is, which is not present right now, right? So you cannot set up an automation based on the parameters within the aiqa?"
+        }
+      ]
+    },
+    {
+      "transcript_id": "98_4045156548696338978",
+      "call_id": "4045156548696338978",
+      "title": "Hiver Onboarding",
+      "started": "2026-01-19T19:02:27+05:30",
+      "signals": [
         {
-          "Theme": "Real Inbox Connection",
-          "Ask": "Connect real inboxes for proper testing before full adoption.",
+          "Theme": "User Management",
+          "Sub-Theme": "Cost Concerns",
+          "Ask": "I don't want to pay for three people.",
           "Priority": "High",
-          "Evidence": "We actually need to connect the real inboxes to actually allow them to use it properly to test."
-        },
+          "Evidence": "But then, are we going to pay for Brenda? Because I just want to pay for two people? I don't want to pay for three people."
+        }
+      ]
+    },
+    {
+      "transcript_id": "99_1672223396181821849",
+      "call_id": "1672223396181821849",
+      "title": "Hiver Demo | Daniel <> Yukta",
+      "started": "2026-01-19T18:03:04+05:30",
+      "signals": [
         {
-          "Theme": "Feedback Mechanism",
-          "Ask": "Establish a process for gathering team feedback during the trial.",
-          "Priority": "Medium",
-          "Evidence": "If you have questions from the team as well, feel free to bring them on to the meeting."
+          "Theme": "Pricing",
+          "Sub-Theme": "Cost concerns",
+          "Ask": "We need a more affordable pricing option, possibly with a few free seats, as the current cost is high for our needs.",
+          "Priority": "High",
+          "Evidence": "Paying 150 dollars a month is a lot for us for… and two or three people are going to need very limited access."
         }
       ]
     }

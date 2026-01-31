@@ -1,0 +1,526 @@
+================================================================================
+Call: Hiver <> Canlift Equipment
+Date: 2026-01-27T21:58:58.697+05:30
+================================================================================
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  disco.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  good morning. Good morning, everyone.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Good morning, Ryan. Nice to see you again.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  You too. How are you?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  I'm doing good. How's everyone doing?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Good. We've got a couple of people with me in the boardroom and there's a handful of the team joining remotely. So we've sort of got everybody I think, or almost everybody that uses hiver on the call. If everyone's remote, just stay on mute unless you need to jump in with a question or raise your hand in the call me, but otherwise, we'll just go… through the presentation and as issues come up, just jump in.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Perfect. Are we waiting for anyone else? I see almost everyone's here and we have all the as well. I'm assuming the ones who didn't join online are part of the conference room. So I think we can get things started. So thank you everyone for joining the call as… you know, today is going to be more on the training side of things, trying to understand how hiver is going to fit for canlift and what challenges you're currently facing. And a very quick introduction about me. I'm Pavithra and I'm going to be a customer success manager for canlift moving forward. My focus here is to understand the current challenges that you're facing when after you started using… hiver inside your Gmail, right? Ryan did bring it to our notice about how sometimes it was decluttered. There was shared inbox email showing up in your personal inbox, very minute things and very minute challenges that is affecting your day to day. And from a configuration point of things, what I did was, I did a very quick check on the background and I noticed that there's a whole lot of things that we can do. But I'd like to tie it to your current business use case, understand what you guys are using hiver for on a day to day basis. I see there are three shared mailboxes right now, which is the rentals services, and accounting, and we have three, four and five users in each. So I'd like to understand for shared mailbox just through what you're currently doing and what the challenges are, what you'd like hiver to do and how I can simplify things. So that would be the first half of our call and the second half, I would share my screen and show you some of the best practices and try to see if I can give you any quick help from my end so that you can start using it from after this call. So that's the agenda I have for today's, call. And if you guys have anything in mind, please feel free to just go ahead and raise… your hand or just stop me whenever you have a doubt, I'll be happy to clarify. Yeah, yeah.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Sounds good. And everyone, on the Google meet just so you know, if you've used it before the bottom of the screen is a little hand.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  If you click it, it'll notify me that you have a question or you can also type in the chat. Anyway, here's my here's, our sort of admin panel for hiver. So, yes, we have three, three shared email addresses. Now, they're not the same in the back end of Google. So Google workplace, the first one, the bottom on accounting that's an actual email inbox. So we can we what we were doing before and with the accounting team, the five people, they were all logging into that inbox and sort of taking control of different email threads manually. But things are getting missed or things are just getting mass filed as like do later or signing each individual was put into a folder to assign to a different staff. So we've kept that as an inbox. It's not an alias. It's still an inbox that exists but nobody's logging into it anymore. The finance team all have hiver and they're using it that way. Now, the challenge we had with that account is that we had a setting enabled that I didn't realize existed which was it was duplicating all the emails into their inbox. I forget where that setting is, but I turned it off… yes.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  I did go through the recording, Ryan, so I'm aware of the setting, the one that you spoke with Raghav.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  I think so. Yeah.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Yeah, you got it. Yes… from inbox on reassignment.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Right now, there's another one that would copy it to the inbox anyway. That's that's sorted out. Now, everything's clean now. So the other two are for the other two departments, the rent team and the service team. Those are both in Google workplace. Those are just email groups. And so they've they.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Just sort of it's.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  an alias that goes to a group of people and those are all they're all set up now. I think the same. The only difference again, the back end is that accounting is a separate applause. So all of the users, all the different departments are receiving emails and assigning, the goal is to assign a thread to one person or change ownership as the thread goes. And that's really it, they also send from, they always send from the email that the email address that it went to. And so they've all set up their multiple email signatures and multiple sender name, usernames in their individual settings. So, I think everything's sort of tuned the way it needs to be for now. But there's other ways we could fine tune it and leverage some automation. But I don't know if you want to go through any settings and talk about them or if we want to go around the room and talk about problems first. So.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  What I'd like to focus here is I'd like to go through the three shared in inboxes that you have. If you can continue sharing your screen and take me through the current state of how the assignment and how the team handles the open pending and the closed stages, and all of this, how they see the inbox on a day to day basis. So that from there, I will be able to build the configuration. It will make sense for us to, you know, okay, what are the different types of emails that you're currently receiving inside rentals? Now? How can we categorize this as shared labels or tags? I noticed that for rentals, you currently have tags in different names set up. So I'd like to understand more on how those tags are used. This will be on your Gmail on the left side. Can you click on your Gmail inbox?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  I mean here. Yeah, that's right. I'm not part of these groups.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Okay. Will anybody who's part of the inbox, be able to share their screen and take us through the shared inbox? Yeah.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Let's do that. Maybe Luca, could you jump into the Google?
+
+Charlene Dujon-Joseph (charlene.dujon-joseph@canlift.ca):
+  Yeah, not.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  With the rental sharing books, sure.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  We'll start there, Luca's with me. He's gonna log into the Google meet, share his screen. Just give us one sec here. Yeah.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  And aryan, as part of next steps, what we'll do is I will set up a separate meeting with you and on an admin level, we will get into the details of configuring whatever we are discussing today. All right? So today we'll brainstorm just get more ideas that utilize the time to ensure I cover all the basic and the necessary features that needs to be enabled for you guys. All right? And then we'll have a separate discussion and set them up. Sounds good?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Yeah, sounds good. So share your inbox, which is.
+
+Charlene Dujon-Joseph (charlene.dujon-joseph@canlift.ca):
+  Okay. I need to host any opening. Yeah.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Luca's just getting in here. He's going to show is this is the rentals inbox?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Let me just get this over here.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Perfect. Let's… click on rental on the left side, the shared mailbox view. Perfect. Yeah.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  So, just to back up a bit there, go back to your inbox, Luca, seeing… rental emails in here.
+
+Charlene Dujon-Joseph (charlene.dujon-joseph@canlift.ca):
+  Sometimes, yeah, like not all like some things get filtered out and some things come like it. I guess it just depends. Yeah.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  So this is probably.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  But,
+
+Charlene Dujon-Joseph (charlene.dujon-joseph@canlift.ca):
+  but, I never go to that inbox just because we've missed sometimes emails that's why I always go to the rentals where it's like unassigned, but it's.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  just creating clutter because it's getting you're getting copies of emails in your inbox or that should be separate private, yeah, from the rentals shared. I.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  One minute around. So I see why that's happening in the rentals inbox settings. We do not have the option enabled. So there's an option under advanced settings that says remove conversation from inbox on reassignment. So, why Luca is seeing this right now is at any part of the given time, he would have been either assigned it or he would have just responded to it as part of the CC. But once he reassigned, it's supposed to disappear from his inbox. So that option is not enabled. I just go ahead and enable it on the back end for you to save time and Ryan, that's happening for me too in accounting as well? So.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  When an email is assigned to a user, does it copy to their inbox, and can we prevent that?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Can you repeat your question, Ryan, when?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  If, if you're in a hiver, shared email and it's a sign it becomes assigned to you, does it, then copy that thread to your personal inbox because we don't want that.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  You do not want the shared inbox. Okay. How about, would you be able to open any one of this email? Probably the no answer called routing email. I'd… like to see why it's showing in this inbox so that I can double down on the setting, and then we can disable it. Yeah.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  So, sorry, which email do you want?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  The one from Ryan, this one… yeah, that's the one Luka rentals or Alex rentals, whichever is part of the shared inbox.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  So, anyone that has the rentals label, oh, yeah, from your inbox though? Oh, yeah. Just that one like this one. Yeah. All right. Yeah. So this email thread… came in to rentals canlip, but now it's showing up in his personal inbox because it's assigned to him. We want to keep this personal inbox completely separate from hiver.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  All right, right.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  So, the only time you would look at the rentals at canlift emails would be through the hiver folder on the left. If you want to mine to expand the rentals, oh, sorry to the left here. OK. So this is the only time you should see rentals at. And then if you click mine, those are the ones that are assigned to you. Yeah. OK. Do you understand what I'm saying? So we want to separate their personal inbox from the rentals, hiver, the shared inbox, essentially, but.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Say, in this case, the email that Luca opened right in that, if it is addressed to Luca's, personal inbox id as well as the rentals, we can expect it to show it on their personal inbox. But other than that right now, logically the ones that are addressed to rentals will come inside unassigned. And if it's assigned to Luca, it will show inside mine.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  OK. So go back to your inbox, maybe those are sent to you and rentals. Yeah.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  To see the activities here? Yeah, click on that, let's see the.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Original… email it? Yeah. Okay. So that was sent to rentals in Paul and Moscow. Okay. So that makes sense. Paul probably forwarded it to Luca. Yeah, personally.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Let's look at the hiver activity on the right side. Can you see the small hiver icon? Yeah. Can you click on that one? Yes. Thank you. Just scroll down a little bit. You'll see notes and activities.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Yeah, this.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  One, I was assigned to Luca based on response. So on this particular email we have in rentals shared inbox, we have a setting turned on right? Last time when you were discussing with Raghav, we turned on a setting where say, if Luca now just goes to reply all and replies, it will automatically assign to him. So we have that turned on. So now that is why it is showing up in his personal inbox. Now as next steps, say, for example, Luca has stopped responding. And now Ryan is taking over this email. So what he's going to do is on the right side, Luca, can you go to your name? Yeah, on the right side, if you click on it now, if you just click on, Ryan, just assign it to somebody else here.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  All right. Let's say, Alex?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Let's do Alex, okay. Here, we can make sure this email doesn't show up in his inbox anymore after this step is done. Do you think that will work? So as long as it's with him, it will show up in his primary inbox. But after it's done, after his tasks are completed in that particular email, it goes, it gets removed out of his inbox. Would that logic work? I'm.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  not sure. So, do you guys, I don't think we ever want it to go in your inbox, but I see, I think what happened in this case is, he replied from his personal email. So that's so I have a different scenario right here that I got Terry. Stevie was the one who was corresponding with Terry. It's only to service or to support and it's in my inbox, just my personal. Yeah, I'm sure. Exactly. Okay. Let's look at that one after joining me so we can… yeah.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  We can go through those emails. Let's go through them together so that I will be able to, you know, get right settings enabled for all the three inboxes and we can get this fixed. So right now, I have two requirements. One, we do not want shared inbox emails showing up in their personal inbox, that's option one, option two, after inactivity say I've completed it and assigned it to somebody else. It should definitely not show up in my inbox, right? Right? Next one. And I had someone say that they were not part of the email chain at all, but it still showed up in their inbox. Can we go through that example now?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Yeah. So Lindsay's here, she's part of the service at sharepoint.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Sure.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  So this message here from Terry?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Okay… daddy sent you support.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  She's driving.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  No, you can call it. It just, it's off on you click down here. Yeah. So, okay. This is a completely different situation. So, Terry's emailing a group that he shouldn't be emailing… support at canlift support at canlift that forwards. So you're honest. Yeah, it's do.
+
+Kathya Guerrero (kathya.guerrero@canlift.ca):
+  You?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Understand the pun? Yeah. So this isn't an Ivor issue… support doesn't go to Ivor. We're not using Ivor. We don't need Ivor for support. He shouldn't be using support, but why did it show up to the inbox? He said that incorrectly? Yeah, you basically sent it to you. You didn't say it also went to service, which then it wasn't confusing at all. Yeah. So.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  So, this is showing up in Lindsay's personal… inbox and she's not part of the email. And Stephen is the one that's done the activity. The.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Issue… is this, there's another email group that isn't part of Ivor and that's where he emailed email support at canliff, which goes to service at rentals, at a bunch of accounts. And.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  So,
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Ivor doesn't realize that, which makes sense. So, it's a, it's an internal that's a separate issue. Is there, are there any other examples of emails going to your inbox? That should have gone to Ivor? Only, well, not that I can see right here. My inbox is pretty clean. How about this here? Start with me from here. I'll be there. Yeah.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Yeah, that's just a question, Jeff and I, yeah. So I think that's the issue is unrelated to hybrid. What about the Microsoft Power? BI? Is it supposed to go to my personal inbox or just the service inbox? I got it. Yeah, I always get those. So look at who it's going to, all right? It's going to drop down. See. Oh, okay. Yeah. Oh, there we go. And I think it goes both, right? It goes to me and the service. No, no, no. It says it individually. I think everybody see anyone subscribe to that report? Yeah. Okay. So… yes… right. Go on. I was gonna suggest maybe anyone on the accounting team having issues around this with emails showing up in their inbox, I should, I think Christine.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Yeah. So my mind is just if I have been, if I have responded to one in accounting or if I've been assigned to one, right?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  So, I think we just changed the settings that should prevent that. Perfect. Okay. All right. You're going to do that, right? If you haven't already, those two settings, okay?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Yes. Yeah. So.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  I.
+
+Kathya Guerrero (kathya.guerrero@canlift.ca):
+  have a question. Whenever I want to look or search for some, like for an email in the I'm sorry, I can't share. So if somebody can help me share the screen, that'll be great. Whenever I search for something like for an email in my inbox, all of the hiver emails come like our feed there like come there as well. So, is there a way to just separate like in my inbox to just have my inbox emails? And then whenever I go to accounting and hiver like in the same in the hybrid section, and I look, for the search bar that I can get there like all, the accounting one ones, but separating my inbox with the accounting one. And for like if I want to search for a specific email.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  We can filter it out and we.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  inside rentals, in the search bar itself, we can filter there's. A filter option right there. What I'll do is this is what I was thinking as the next 15 minutes for the call, let me take you through my current account setup. I want to show you how different shared inboxes looks like how we can, you know, navigate with hiver on it. All right? So this way you'll understand what hiver can do. And from there, I would request you to, you know, ask more questions and I'll make sure to address the search option as well. From there. I'd like to hear from you guys on what we, what you'd like your inbox to do. And then we'll take it from there. Yeah.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Okay, perfect.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  I'm just gonna do it with my live customer success inbox.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Just give me a quick yes. If my screen is visible.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Perfect. So as you can see, I'm currently on my personal inbox, and I'm also part of three shared mailboxes, my accounts team, my primary customer success team and my support team. All right now, this is how the UI looks like. And here say, for example, I am not part of this particular thread, say I did not respond to this and I don't want, I'm just part of I was once assigned and then later that's it, I moved it to somebody else. And now I don't want it to appear on my inbox. That option is available. I will have the option to remove it from my inbox, that I will make sure I think we addressed it already. And… I will make sure it's enabled for all the three shared mailboxes. Next. The other request of just saying, see, this is addressed only to me. It's not part of the shared inbox. So this is only to me and that's why it's still here. Now, from your requirement of not having any of the shared mailboxes in your inbox, I'm going to go back to my support team and see if it's a workable solution. And I'll get back to you on that. Now, from a search point of view… say same canlift. Like you mentioned, when I do canlift, I'm able to see the private ones as well as this. I feel like this comes in handy when you're trying to, since not all of the emails would be addressed to you. I'd say use this to your benefit because I'm going to see, okay, this one's part of the inbox, this is addressed to me to be able to filter that out and just have a full data here. But now, if you'd like to filter it out, this is where you go ahead. You can select any time and go to the advanced search here… and then give more specific details so that you'll be able to filter the kind of search that you would like. Does that answer your question? Yeah, yes.
+
+Kathya Guerrero (kathya.guerrero@canlift.ca):
+  So unless I do it manually with like every email, there's no way for me to just have my like my inbox emails, removing all the hiver ones from my personal inbox, like there's no way to just disconnect hiver from my personal inbox, if I just want to look for something. And sometimes it's tedious to look for an email. And we look at very like for example, if I want to know something about Lindsay, all of her emails that are in accounting are going to be populating in the search bar, and they're like hundreds and hundreds of emails, but probably I just want to look for something specific that it's not, that doesn't have to deal with the accounting email or with her service part. So there's no way to just search without… having like the hiver thing.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Can you exclude a label when you search?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Exclude a label? So I think if I'm able to address the second request of, you know, not showing up any of your shared emails in your primary inbox, that should address the search as well. If it's removed from your primary inbox, and if you're just going to go here and search with just Ryan, I'm only supposed to see what's not part of the shared inbox. I don't think that's true. Again, I'll have to change the feasibility of removing it so that if that's possible, we'll have to identify if this can be done too, right?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Yeah, we haven't changed the setting or figured out if that's possible yet. Okay?
+
+Charlene Dujon-Joseph (charlene.dujon-joseph@canlift.ca):
+  Okay. Well.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Let's see if we can get that done. That'd be helpful. Anything else? Any other issues for anyone?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Okay. If we're good to go, I'll move to the next one which is going to be, yes, yes, of course.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Yes, I.
+
+Charlene Dujon-Joseph (charlene.dujon-joseph@canlift.ca):
+  Just have one question when you're in your inbox and you have your little, the yellow faces, the yellow, the red, the green that's showing open pending, how do we get that?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Absolutely question. Let me take this one. So these small icons, these are AI sentiments. And if you think, let me explain the logic. And if you think it's going to be helpful for the team to go ahead and enable it, I'll be happy to do that for you guys. So this is based on the conversation.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  So, this is based on the conversation, the sentiment of the conversation, the AI reads through the sentiment and then it analyzes and we also have the option to correct and say, for example, it's actually positive. I'd be able to just go ahead and change it saying the customer is positive and then it starts learning from there. So this comes in handy when you're handling multiple emails at the time and you'd like to prioritize this is focused based on the email content. Now, say, for example, based on time, if you'd like to understand which comes first, which comes last. And things like that, let me open my team view. Actually. Let me go to our support inbox. And here we have these icons enabled. So this is again, one focus that I wanted to do with Ryan which is set up your business hours and first resolution time, business hours is Monday to Friday. We operate nine am to five PM CST when we set that up irrespective of what the time… of the email is, when it comes inside your inbox, these first response time will consider your business hours to break that down. First response time is say, for example, this email came in at four, it came in four minutes ago. And we have a setup saying the first response should be dropped within two hours from the time it's set up. So that's where this comes in handy from an agent point of view, from a user point of view, how this will be helpful for us is as you can see, it's three color coded the first color. The resolution time again is where first response is. I have to go here, drop a reply. And then the first response will be done. And then the clock stops ticking. It still waits for the vendor or the customer to respond to us. Now. And then again, it puts the first response time back on me saying, hey, you still have two more hours to complete this email, send out that email. So that's where the logic of first response works. And resolution is say, for example, from a business point of view, you would like all of the queries and emails that come inside your inbox to be resolved within 48 hours. That's your business standard. If you set that, that's when the resolution time comes in the gray is where it's starting, you still have time. The orange is where it's getting closer to the deadline. And red is where you've crossed it. So you've crossed the deadline. This will help us identify the different kinds of emails and how long it takes for us to resolve it and to be able to break it down further. And also help in organizing how these are viewed. Any questions? I know that either was quite a lot. So.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  So that just automatically like once we have the business hours?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Set up, does?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  It automatically let.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Me show you quickly how I do not have my… admin panel, but I'll take you through that when we switch back to screen sharing from your end. But yes, once we set up the business hours, it will consider, it will also help us even setting up auto responders, say you work only from nine a. M to five PM. And any email that comes after five P. M, you just would like to set out that business expectation saying, hey, we are operating between. So and so hours we'll get back to you as soon as we are inside our business hours. If you'd like to set up that auto responder business hours will be helpful. So, I think this conversation is what I wanted to have with you to understand how would you like to operate and set your expectations in terms of the three inboxes so that we can set the business hours, first response time, resolution time if you'd prefer. But first response time would be really helpful for all of you to get started with. Because whenever we come in like right now we'll just like, okay, Abraham has nine emails and for that, he has one that's just, it's overdue already. This one's okay. And, but the sentiment here is bad. So to be able to prioritize that will come in handy. All.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Right. So, do we said, are we setting slas? Is that what you're looking for some, how many hours that's.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  right. It could be internal to begin with for you guys to just start getting on, we, with these handy equipments to just prioritize address emails, send out the responses. And after that, if you're looking to expand it on a business point of view and set the service level agreements on how you respond to your communicators, we can phase it out like that as well. Okay?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Do you have time, should we try and set up slas on one of these accounts? Or how?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Do you want to, if you don't mind, I'd like to continue and take you through a few more features and just let the team know about the other things that they can do it and then set up call. We can, sit down on another quick 30 minutes and then we'll complete that. Okay. All right. Before I continue, does anybody else have any questions on the first response resolution time and the business hours side? Okay. I'm… assuming we're gonna good to go there, let's go back to our email. In fact. So this is where the sentiment came in picture. And right after this, I'd like to take you through this particular feature. Now, say, for example, you're currently in your support unassigned. So we have round Robin turned on. So that any email that comes in it automatically gets assigned to the people on shift. So say, there are three people right now on shift, and they just take that on round Robin fashion, it just gets assigned to them. So now let's go here and say, for example, you would like to the first five emails that this one when you're back from a long… you know, long break and you have multiple emails in your inbox, and now you're just splitting work among yourselves. The bulk action will be very helpful for you guys. So just say the first five you go here assigned to and you'll find the list of users in that particular shared inbox. You can do this and in rentals, I noticed you currently have tags. So you can also add tags right from here and also change status. Now for the status part, is that's going to be the third part? It… is going to cover the views that you currently on have on the left side, anything that is on that is tagged to you and it is an open stage will show up here under mine. All right now. Say, for example, I move this to pending.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  All views, you can go to, all views start pending and you can have five at a time overdue. Maybe, yeah, I have these three views now.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  So that email has now moved from here from mind open and it's come to my pending view. So these are all the pending emails that everybody is handling. If I want to filter it out. I just go here and I just say only… I filter this view and I have it for myself, right?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  So when you switch an email from open to pending, it moves from mine to the pending. The shared pending folder. Is that right?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  That's yes, it goes to the shared pending folder. But if you would like to, from a user point of view, if you just like to say,
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  I'm able to create a view for that. So now, so… instead of all pending, I'll just remove this one and I'll just have Pavitra spending. Great.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  How did you create that view? Let?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Me go back again? Let me do it again. So go… to all views. So these are all the default views. You'll see a couple of them and you can click on plus create view, just select your name… and then you can either choose which stage for me. I'm just going to do pending here. You can choose tags right now, the rental. So you'd like to just see X vendor. I'd like to see all the emails that is pending with X vendor. So I just filter it out like that. You… can filter it by sentiment as well. These are the drop down options right now. We don't we haven't set that up, but I want to take it slow and save as just create it. You have the option to have this as a very private view or as team when you're working together, say you're handling on a bunch of refund requests and you'd like to just filter these refund, you create a refund tag and then filter the view. And then you have all the 100 emails as a view. So to be able to customize that view and work out of it will be very helpful from your point of view. And.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  When, when a email thread status is changed to close, does it disappear or where does it go? Is it just hidden from, unless you had a view to show closed, is it, where do they go? There? They go close? Let me.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Show you so same example.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  When it's and it goes to closed, if you would like to have closed as a view, you can have it and this will show all the closed emails.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Or you create a filter out of it and then have just the specific closed emails but it disappears from your inbox, it disappears from your mind, but it is always stored. If you have it as a tag, say, for example, AI, add on as a tag, all of your unresolved emails which is open and pending will show up here. Let's say, let's do this one. Open. Pending emails will all show up here and all of the closed emails will show up here, all conversations irrespective so it's stored inside the shared mailbox, and you have the flexibility to create the kind of views that you would like to see when you're working out of the inbox. Now, when we said SLA was the overdue ones will start showing up here. So that's… what we're going to do and assign to me. View comes in place where if you're part of all the three inboxes, I noticed right now, everybody is part of just one inbox. But say, if you're working out of two, two to three shared mailboxes, all of them start up your appearing here and you'll be able to see, okay, this is part of customer success. Inbox. Actually, all of them is from success. I don't have any support emails open, but Pavithra, customer success, the tags that we have created will all show here tags is nothing but shared labels categories… all of that we have… now next one.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Just couple of more items here. Now, when you click on reply all, so this is the status when we were talking about, you also have the options right here. So I'd recommend, you know, if you're it just saves clicks and it'll be easy for you when you start using it right here, just say send in pending. And after you click on, it will just send out the email and move the status to pending. And now it's out of your main inbox, it's moved to that pending inbox folder. So that's how you'll be able to just declutter your inbox and just keep them in different folders so that you can prioritize and work accordingly so that's one thing that I wanted to mention. Yeah.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  And adding to that… these are few options that will also come in handy. The shared draft is one of my favorite, say, for example, thanks meeting… you. And then I click on shared draft… right now. I want Raghav to verify if this is good to go. So I'm just trying to say, Raghav verify.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Add.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  what will happen is Raghav will now receive a notification just like this. Hi, Raghav verify. So when he clicks on that, he will be taken to that particular email with that draft that I.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Where is my email?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Thank you.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  There we go. He will be able to view this. He can edit from his end and then just send it from… the list of inboxes that we have. And then with his signature or he can just say, good to go and then you can send it out. So when you work internally, when you're trying to collaborate across shared mailboxes or within the shared mailboxes, this will definitely come in handy. It's just a draft option. But now this is more like everybody working out of the shared inbox will be able to view that draft.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Yeah.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  The next one… send later, similar to the option that you usually have in Gmail. But here you can save it as shared draft and then give it like say send later after 12 hours, so that you give the time for the other person to verify this. And then it is automatically scheduled to send it out email templates. You have the option to create just scanned responses for yourself or as a team when you're sending out first responses, say, like an acknowledgement is something that you usually send out or you have sops that you have, and things like that. You can use either the email template or if you would like to store information as a knowledge base that also is available. So there are two options that you can use… and.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  AI compose. These are just like I let it ask. And then we have a ask AI here, summarize… conversation.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Which just reads through and gives you or even better, you will have a summarize conversation option right here. Start following comes in place where say, for example, you're not part of that email communication, but you would like to receive updates whenever there's activity, whenever the customer or the vendor responds, or when you send out when the other person involved sends a response, that's where you click on start following summarize conversation again. If the thread is running longer and you just like to understand what's happening. Just go through the summarizer and also lets you save it as a note so that the next time you come back to the email, you don't have to go through it again. All over again. Just save it as a note right here, share conversation. Say when you're working on an email and you would like to share it in your internal tool or just send it across somewhere as a reference link, or you'd like to store it somewhere, you can just copy these options and use it to share. These are very quick hacks on how you can use it on a day to day basis. And this is something that I will also work with Ryan. I'll explain how this works. And if you guys think it will work, we can do it for all three sharing boxes, which is the follow up date.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  So right here, say, for example, I sent out the response to Ryan. I'm done and I'm now going to move it to closed because the task here is done. I'll have to come back in three days and only have to follow up. So what I'll do is I'll just set the follow up date and move it to closed so that this goes out of my mind folder. And after three days exactly on January, what will happen is?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  I will receive a notification like this inside my inbox to my personal inbox saying… this is the link. The status is closed. This is your, you need to follow up on this. So now, when I click on it.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Thank you.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  I'm not going to close it.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  That's fine. We get it. Yeah.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  But yes. So it will take me to that particular email… so that's how that logic works. I will stop here and I'd like to just hear from you guys on what your thoughts are. We can align on next steps. And I'd like to get in into detail on the setup. You know, I was showing these tags, the custom fields, the drop, downs, right? So from the type of communication and the day to day activities that you guys do across the three shared inboxes, I'd like to configure it accordingly. So over to you, Ryan and everyone on your thoughts and we'll set the next steps?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Yeah, I've enabled the AI sentiment analysis on all three inboxes. So let's see how that plays out. So you guys will see that the other piece was slas, should we try and set up slas? Like do you guys have slas from the rental desk that you have for your goal to reply to an email within three minutes?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Three hours? No, we just do that in a great way. I'd like to see how it looks. So why don't we set one up?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Do it if you would like it to consider the business hours we'll have to set up business hours first and then come back and set up SLA after.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Like… like… the automated response, we get like a late email, right? Yeah. So should we?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  How do you think we should set this up? We'll.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  have to set up the business hours first and then we'll come and set up the SLA, if you would like it to stay within the business hours. Actually, I'd suggest that, yeah, business hour templates, we.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  did it already while we're on the call?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Perfect. Let's go to the shared inbox, choose… the one SLA, create SLA, policy, name, rental, SLA.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  On all conversation, no tags, consider only business hours. We will have to select the business hours for this particular shared mailbox, let's go to settings. Can we go to settings right below SLA? Leave… there we go set business hours? Perfect.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Okay. Perfect.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  So, during business hours overdue would be what? Over 30 minutes? Yeah, it's obviously 30 minutes… not resolved within what an hour? Two hours? Yeah, probably an hour.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Resolved here means the status needs to be closed inside the email. So in case you say the icon RT in red, it just means the status is not updated. So just make sure once.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Sorry, I lost you. Sorry?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  About that. I just took myself a minute. Yeah. So say you have completed the necessary resolution, you have sent out the response, just make sure you immediately either use send and close as the option or change the status to closed manually so that we stay within this resolution time. Okay?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Yeah. All right. Do we typically have more than one SLA status besides overdue? What do you recommend?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  This should do. Yes. So, yeah… yeah, this should work for now. More than one would come in place where say we're looking to track shared label or tags specific slas. So say, if can lift reaches out to me, all communications from can lift needs to be addressed within one hour. If I have to be very specific like that, that's where we do that.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Same thing for service, 30 minutes, 60 minutes to resolve completely. Yeah, to respond 30 minutes. Honestly, I would do maybe an hour or two hours an hour to respond. Two hours. I mean, an hour to respond is kind of tight, but it's kind of long, but, I think two hours to resolve is probably too short.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Yeah. If you're talking about from the start, I was gonna say, if you're talking from start to finish, then I don't think eight hours. I, yeah, I would say I would give it the business day. Yeah. I mean, if not, we're just setting ourselves up for failure. I think you should respond to them. Yeah, we could respond to the, yeah, that makes sense, respond to the email within 30 minutes, but I wouldn't put a close on the service because, some calls get dragged over to the next day. They're just going to show up a whole lot more resolved other for the accounting Christine.
+
+Christine DeSousa (christine.desousa@canlift.ca):
+  I don't know. Charlene. What do you think they're.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  not a dispersion, but I'd.
+
+Christine DeSousa (christine.desousa@canlift.ca):
+  say one business day, yeah.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  To.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  respond or to resolve? I'm.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  going to respond within one business day? Yeah. Well.
+
+Christine DeSousa (christine.desousa@canlift.ca):
+  Maybe, yeah, maybe respond within like three hours, but res, resolve one business day. I don't know.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  We'll try that. We could tweak it. You guys see how it plays out, but at least you understand how those work and how it impacts the inbox. Okay? Anything else that Pavitra showed us that you guys think you could leverage there is, you know, some custom fields, things like that?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  The follow up date or the drop down? Would you like to just have emails categorized into priority, low, medium and high? That's a very good start? Yeah.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Would that be a custom field? I have?
+
+Christine DeSousa (christine.desousa@canlift.ca):
+  One here. So I have one where we want to like forward an email right away. So like a rule, like when an email comes in from a specific vendor, I want it forwarded to like our service team or a parts team. Okay?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  So, where does it come to right now? It comes into?
+
+Christine DeSousa (christine.desousa@canlift.ca):
+  Accounting.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  okay. Yeah. And you're like that? Yeah?
+
+Christine DeSousa (christine.desousa@canlift.ca):
+  Imported to, yeah, our parts department. Okay?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Okay. Let me just finish this quickly. Yeah.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Christine, I'm making a note of this one. I, I'll take this offline. And I'll legend. Okay. I'll need a few more details about who sends these emails, what type of emails and how we need it to be forwarded?
+
+Christine DeSousa (christine.desousa@canlift.ca):
+  I mean, we've got tons of different vendors, but we could just do one to just get the ball rolling just to figure it out but, or test it out, but.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  To my understanding, I think there are three shared inboxes are handled by three different people. Am I understanding that right?
+
+Christine DeSousa (christine.desousa@canlift.ca):
+  Correct how.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  about we set up individual calls for shared mailbox and then take it from there, 30 minutes, catch up with each one of you. I'll share my calendly with you. You can choose your convenient time and then we'll focus on each inbox and keep it very.
+
+Christine DeSousa (christine.desousa@canlift.ca):
+  You don't have to add these specific rules for each of us. Yeah. Okay. That works.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Yeah, I.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  think we're running out of time here anyway, but I think we made a fair bit of progress. So let's see how the new settings impact things and the new features we've learned about. I think the big one that's on your plate is paventra's the making sure emails don't land in the personal inboxes, which as far as I know global setting that's disabled. So, yeah, I think that's… this setting which is off now. So I think it's sorted out. But if not, let us know what you need to do.
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  And then, yeah, I think it makes sense to have a few follow up calls with each department, then I'll join again. Well, I should join because I'm the admin and then hopefully we can get this working the way everyone needs it to… perfect.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Sounds good. Thank you so much for running down the next steps for me, right? And I'm also aligned, I will get back to you by end of this week on my action items, and I'll also share my calendly with you so that you can share it across with the team and everybody can set up their individual calls with me. Okay?
+
+Ryan Fitzgibbon (ryan@canlift.ca):
+  Great. Thanks. Appreciate the call. Thank.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  You. Thank you so much, everyone. I.
+
+Christine DeSousa (christine.desousa@canlift.ca):
+  hope to.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  see you all soon again bye.

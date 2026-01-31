@@ -1,0 +1,742 @@
+================================================================================
+Call: Hiver Trial Check in <> Solar Guys Pro
+Date: 2026-01-28T20:15:41.319+05:30
+================================================================================
+
+Yukta Jain (yukta.j@grexit.com):
+  hi, Shanice. How are you?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Hi. How are you?
+
+Yukta Jain (yukta.j@grexit.com):
+  Doing well. Thank you. Awesome. Shall we get started with the discussion?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Yeah, sure.
+
+Yukta Jain (yukta.j@grexit.com):
+  Perfect. Great. Firstly. Thank you for sharing the use case and the scenario that was really helpful in terms of understanding, you know, what exactly we can explore with the tool in order to, you know, declutter your inbox today. So, appreciate that I have also invited Manoj here with us. Who is our sales engineer at hiver. I think he would be the best person to, you know, sort of guide us through the use case and understand how exactly we can sort of play around and achieve what we are actually looking for? So he'll be taking over today. In the meantime, Shanice. Do you have any other agenda for today before we get started with this? Anything that you would like to discuss?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  No. All good on my end? Okay?
+
+Yukta Jain (yukta.j@grexit.com):
+  Perfect. Then Manoj over to you. In the meantime, Shanice, if you could share your screen, I think we can then get started.
+
+Manojkiran Sugumar:
+  Sure. Hi, hi, Shanice. How are you? Hi?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Manoj. Good. How are you?
+
+Manojkiran Sugumar:
+  I'm good. Thanks for asking.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  That's good. Okay.
+
+Manojkiran Sugumar:
+  So, yeah, I read through your email, your requirements and everything, right? So, I also saw that you have created a few tags, right?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Yeah, I tried… now.
+
+Manojkiran Sugumar:
+  Again, so tags are going to be the primary source of categorizing your emails… right? So you have mentioned that you're going to have by intent and then you need to route those emails to the respective team members, right? Correct? So, in this case, I presume everybody is going to be part of orders that… yes, right? And orders that is going to have the finance team, the ops team and everybody.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Not every single department, just the finance department, customer support. And, yeah, myself ops industry.
+
+Manojkiran Sugumar:
+  Okay. So it's going to be finance, customer support?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Yeah… sorry, utka, no.
+
+Yukta Jain (yukta.j@grexit.com):
+  Worries, I just wanted to confirm like we mentioned there were like in total four users, right? So could you also explain how many people do we have in each department? All?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Three? Sure. So in customer support, we have two in finance, we have one, and then in management, we have two. So five in total, including myself?
+
+Yukta Jain (yukta.j@grexit.com):
+  Got it. Okay?
+
+Manojkiran Sugumar:
+  Okay. So, five users. Okay. Got it. So, utka, I presume we don't need the assign amongst because I think it's one person from each team. So if so, so, you, so Shanice, correct me if I'm wrong. So if an email is tagged, it's.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  not one person in each team, Manoj in the customer support team, there's two.
+
+Manojkiran Sugumar:
+  There is two, what?
+
+Yukta Jain (yukta.j@grexit.com):
+  There are two in finance, and then operations is one, right?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  No, no, no. Let me go over it. Again. There's two in customer support, one in finance and two in management operations. Yeah.
+
+Yukta Jain (yukta.j@grexit.com):
+  So basically, we need assign among Manoj for two.
+
+Manojkiran Sugumar:
+  Of these assign amongst will be for management and the customer support. Yes?
+
+Yukta Jain (yukta.j@grexit.com):
+  For operational support?
+
+Manojkiran Sugumar:
+  Yes, for operations. Okay. So final only final. Okay. So everything that's going to be tagged as finance goes to one person. Yes, everything that's going to be tagged as customer support should be assigned amongst two people.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Yes.
+
+Manojkiran Sugumar:
+  Right. Okay. Got it. So… Shanice can, Manoj, what tags have you created right now?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Sure. Sorry, please guide me. I don't know. I don't want to make a mistake. Yeah. Just.
+
+Manojkiran Sugumar:
+  Click on orders, click on orders.
+
+Yukta Jain (yukta.j@grexit.com):
+  Yeah. Okay.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Here. Okay. So I created tags per vendor, most of the common vendors that we use. And then I also created a tag. I don't know if it was a good idea. You guys can tell me, but I also created a tag based on what we're looking for from the email. So, for example, tracking. So whenever we get a tracking number or a shipment number, I created a tag for that. I created one. When we send the pop, I created one. When there's a query with the order, I created one for an invoice that's received, and then a general or other. So that's basically for, yeah, any like general emails that we don't know what to do with it. And then the rest of them are vendor tags.
+
+Manojkiran Sugumar:
+  Okay. So it's big battery, eco flow, eco body.
+
+Manojkiran Sugumar:
+  Okay. Got it. Okay. A couple of questions here. So, when you say big battery or eco flow, how do you identify these emails?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  So usually, I'm selling it as well. So usually they would be like anchor, for example, right? Anchor, it would be in the email content, the name of them or it would be somewhere in the body of the email, but she would definitely find the name somewhere in the body of subject line or in the email.
+
+Manojkiran Sugumar:
+  Okay. So all of these tags that you have mentioned it's going to be somewhere in the email like in the body of the email or the subject line.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Yes, for the vendors, for the others, I think I did something I don't remember exactly, but I think I did something where I see include a few words that would link that tag to the email body or content. So, like for example, when I got the invoice, I remember, I set it up with like statement or quote, I used a few words that would relate it to the invoice. When I created that tag.
+
+Manojkiran Sugumar:
+  Okay. Got it. Okay.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  This works. So.
+
+Manojkiran Sugumar:
+  What I was… about to suggest is we can use the tags and the custom fields as a combination, right? And then set up automations based on these keywords. Okay? So, for example… let's say this invoice tag… right? So invoice tags or invoice related emails goes to the finance team, right?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Sorry. Can you repeat that? Manoj? Any?
+
+Manojkiran Sugumar:
+  Emails that is invoice related, it goes to the finance team member, right?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  It depends because it could also ideally, it needs to go to the finance team member so they can process it. But customer support sometimes also is checking the invoice emails. If there's a query, and if the invoice needs to be amended as an example. So, for example, if a vendor sends through an invoice, and they made a correction from an order, so they added an additional skew to that invoice, then customer support would also need to see the invoice. But ideal case scenario, you can, if you need to flag it to one person or one department, you can filter it through to finance. Okay. So.
+
+Manojkiran Sugumar:
+  Okay. But… right now, the scenarios, it can be sent to the… customer support team as well. And how do you differentiate that? Yeah.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  So, like I was telling you because so currently, like no one takes control of this mailbox. Currently, no one is on a day to day going through each and every email that is sitting in this inbox, it's just there it's… yeah, currently, the workflow is no one takes control of it. All that anyone does is if they need to go if they need something. So, for example, if customer support needs to check if there's a query, if finance needs to process the payment, all anyone does is when they're working, it's like we just search the order number like this four eight, nine eight, and they look at all the emails linked to that order number and they'll go through it, but no one really goes through each new like each email or there's no owner for the email that sort of filters it through to the team. Okay. Got it.
+
+Manojkiran Sugumar:
+  Got it.
+
+Manojkiran Sugumar:
+  So, Shanice before, you know, before getting on the call, me and Yukta were discussing like, right? So we can have all your intents that is invoice tracking, order query or anything as tags, right? These are going to be a primary tags and this is what we are going to first. This first set of automations are going to be based on these tags. Okay? So emails coming in has, so, and so keywords tag it as order query. Emails coming in has tracking. Yeah, has tracking information or tracking number mentioned in anywhere in the body of the email, add a tag called tracking, right? So this is one, once we add… then comes the correct function or the team that's supposed to handle these email queries. Now, these functionalities can be set up as custom fields in hyvo. So, can… you open the email? Any email? OK?
+
+Manojkiran Sugumar:
+  On the right panel, can you expand the right panel?
+
+Manojkiran Sugumar:
+  OK. Oh, so you already have a custom field called order number, right?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Yeah. And I created that last, yeah.
+
+Manojkiran Sugumar:
+  OK. Do you want the order number to be extracted? If the email has an order number? I mean, yeah.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Every email, ideally, most emails should have an order number. So, yeah, I mean, it can be extracted.
+
+Manojkiran Sugumar:
+  OK. Now, the thing is we have something called AI extract. You could simply train the AI and that will automatically pull in the order number and display it in the custom field. You don't have to manually type it.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  OK. Yeah, we can use that option.
+
+Manojkiran Sugumar:
+  Yeah, that works. So, OK, that can be one of your custom fields. Now, can you click on the hiver icon on the top, right?
+
+Manojkiran Sugumar:
+  The hiver, the other one, the other one on above that?
+
+Manojkiran Sugumar:
+  No, towards the left of it, I saw hiver settings. It's fine. You were there previously Shanice. Do you see the small yellow hiver icon towards the left of hiver setup? Yeah. No, yeah. Yes. Yeah. That one. Yeah, there you go admin. Panel.
+
+Manojkiran Sugumar:
+  And then let's click on shared inboxes on the left.
+
+Manojkiran Sugumar:
+  Is it not loading?
+
+Manojkiran Sugumar:
+  Can we refresh and try again, shailesh, if?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  All right.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Let me also just close a few tabs. Let me stop sharing and share again as well. Give me a moment. Yeah, yeah, sure.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  I'm just opening it completely again.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Can you see my screen Manoj? Yes.
+
+Manojkiran Sugumar:
+  Yes, I can, and I see that hiver is yet to.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Load Gmail is still loading. Yeah.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  It's always, when I share my screen, I've been having this issue in most of the calls with this kind of eye.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  And I think it's something to do with Google as soon as I hop off the call though… it's fine.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Yeah, but I don't see my Chrome extension loaded.
+
+Manojkiran Sugumar:
+  Yeah. Let's do one thing. You can stop sharing. I'll just guide you through the steps, see if you are able to follow.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Yeah, sure. Let's try that. Let me, let me, okay, it's recording here my AI as well. So that's fine. Yeah, you can guide me through. I'm going to also try and refresh and let's see if we can do this.
+
+Manojkiran Sugumar:
+  Yeah. Sure. So first thing after you refresh, once you have hiver extension… on, please go back to the settings.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Yeah, it's loading. Now. Okay. Right. Same with you.
+
+Manojkiran Sugumar:
+  Yeah. Once you go back into the admin panel, go into shared inboxes. Yeah. And then let's go to let's click on your mailbox first… and then you're going to see a bunch of advanced options like auto assignment settings and everything, right? Do you see that?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  So, do I go to the Chinese at solar guys or do I go to the odyssey mail?
+
+Manojkiran Sugumar:
+  The oddest one? The oddest one? Yeah, because.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Under shared inbox, I also have my email and it says five users as a shared inbox. I'm not sure why.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  I can show you that quickly.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Can you see it? Yeah. Okay. So.
+
+Manojkiran Sugumar:
+  That's the demo inbox, Shanice. That is something that we provide with a bunch of dummy emails. You don't have to worry about it. We can actually delete it if it's causing any confusion.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Okay. That's fine. Yeah.
+
+Manojkiran Sugumar:
+  Yeah, right. You can go to, so these are all your advanced actions. So this is where you're going to set up the automations custom fields and everything. So, do you see custom fields? Can you click on it? Yeah. Now, first about the order number, does it have a standard format?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Four digit check, four digit number only? Okay.
+
+Manojkiran Sugumar:
+  And do you have examples of that? Yeah, I do, okay. Thing is when we set up the order number to be extracted using AI, we need to give in a detailed prompt like how the order id looks like and examples of the order number? Okay. So what you have to do is click on, just disable this custom field order number.
+
+Manojkiran Sugumar:
+  Click on, add custom field… choose text.
+
+Manojkiran Sugumar:
+  Then put the field name as order number or order id. Okay? At the very last, do you see AI extract? Yeah, click on it, select the checkbox. Yeah. Now, given a prompt like how the order id looks like and everything?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Anything else you think I should add? Sorry, anything else you think I should add? Except this prompt? Yeah.
+
+Manojkiran Sugumar:
+  Give it a example. Give an example, right? How the order id looks like?
+
+Manojkiran Sugumar:
+  Is that fine?
+
+Manojkiran Sugumar:
+  That's good. And can you click on test on recent conversations?
+
+Manojkiran Sugumar:
+  Okay. So, these emails might have the order id, right? Yeah. Okay. Can you do test all?
+
+Manojkiran Sugumar:
+  Just making sure that the air is trained. Well, so.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  I don't think I have nine zero six fours in order? And then these have no results form.
+
+Manojkiran Sugumar:
+  Okay. But whatever has been triggered, it's correct. Right? Yes. Okay. Perfect. That's good. And scroll down.
+
+Manojkiran Sugumar:
+  All good. Yeah, let's go up. Scroll all the way up. Go back… go back. Yeah, no, on the screen on the screen, do you see back? Yeah. Okay. Scroll down.
+
+Manojkiran Sugumar:
+  It's still not letting me to, can you run on test again?
+
+Manojkiran Sugumar:
+  Test a few of them, which has the already like the third email, the first email, yeah, the,
+
+Manojkiran Sugumar:
+  first email has something hashtag and,
+
+Manojkiran Sugumar:
+  scroll down again and scroll down all the way to the bottom. That should be a save option.
+
+Manojkiran Sugumar:
+  And click on filter right? Next to test. All Chinese. OK. No need. You can close this.
+
+Manojkiran Sugumar:
+  Run test on all again now?
+
+Manojkiran Sugumar:
+  Scroll up?
+
+Manojkiran Sugumar:
+  Up, scroll up. Yeah. Okay. Now.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  The prompt?
+
+Manojkiran Sugumar:
+  Is tested now, can we go back?
+
+Manojkiran Sugumar:
+  Okay. It's all a number, maybe you scroll down?
+
+Manojkiran Sugumar:
+  Select on the prompt, like just click on the prompt and then.
+
+Manojkiran Sugumar:
+  It's not letting you save the field. I'll check that on the back end Chinese, but can we go back now? But you get the point right on the order id, how it's going to be filled?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Yeah. I do get it.
+
+Manojkiran Sugumar:
+  Yeah. Now, the next thing, yeah, you can just click on leave. Next thing is, can you click on drop down?
+
+Manojkiran Sugumar:
+  Here you decide which team it's going to go into?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Let's do.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Description for the agents?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  What do I do for value field? Okay? So, these are.
+
+Manojkiran Sugumar:
+  going to be mentioned as teams because customer support is going to be one of the teams, right? Yes. Yeah. So, you don't have to put the field name as customer support… at the top, like the first one, it should be like team and then below that on the field value, you do customer support finance ops, all of that.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  So, this is not the function though, right? So that would have to change.
+
+Manojkiran Sugumar:
+  The first thing is you're tagging it as the intent and next thing using the intent, we set up another automation to add the custom field.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  I, what type of description then? Would I set? Because every department or every function has a different role?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Okay.
+
+Manojkiran Sugumar:
+  No.
+
+Manojkiran Sugumar:
+  Can we do this thing? Shailesh? Can we make… the main functionalities as tags and the intent as the drop down?
+
+Manojkiran Sugumar:
+  So that, you know, when an email comes in by using the keywords, I'm.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  not following, I'm not following Manoj?
+
+Manojkiran Sugumar:
+  Okay. So initially, it was like, you know, we had to put the intent as the tags… that is invoice, tracking order query and everything. Yeah. But you did mention that invoice can be sent to finance. It can also be sent to customer support, right? And similarly, each team can have different set of emails. So, what I was thinking is, can we have the tags as the team that is finance CS, ops management? Yeah, we automatically tag these emails based on keywords, yeah… we can do that and then have the custom field drop down as the intent, which is tracking invoice, etc. Let.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Me.
+
+Manojkiran Sugumar:
+  Yeah. I was just thinking.
+
+Yukta Jain (yukta.j@grexit.com):
+  If we create functions as tags also then again, like one email could be, okay?
+
+Manojkiran Sugumar:
+  Then you're.
+
+Yukta Jain (yukta.j@grexit.com):
+  saying that, then we can apply multiple tags if.
+
+Manojkiran Sugumar:
+  Yeah, operations.
+
+Yukta Jain (yukta.j@grexit.com):
+  And finance related. Yeah.
+
+Manojkiran Sugumar:
+  That would mean like both the teams are working on it, right? So, because in custom fields, we cannot have that differentiation. So I thought we can have the teams itself as tags so that if finance is working, it let it be the finance tag. But if finance and operations are working on it, both the tags will be present and it will be easier for Shanice and the team to see who all is working. So… I just,
+
+Yukta Jain (yukta.j@grexit.com):
+  wanted to understand Shanice, like at a time, one person would be working on like one team is going to be working on an email, or there could be like multiple team members would be replying at the same time to the email.
+
+Manojkiran Sugumar:
+  I think in terms of.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Response, it would usually be one team which is usually customer support in terms of visibility.
+
+Manojkiran Sugumar:
+  Or,
+
+Shanice Chetty (shanice@solarguyspro.com):
+  to get everyone in the loop, it might be more than one team? Yeah.
+
+Manojkiran Sugumar:
+  So basically.
+
+Yukta Jain (yukta.j@grexit.com):
+  When the email comes in at a time, there is only one team that's going to work on. So if the email comes in, which is in regards to invoice, it'll either go to support or it'll either go to operations, one of these right at a time.
+
+Manojkiran Sugumar:
+  And not both.
+
+Yukta Jain (yukta.j@grexit.com):
+  Of them are both are gonna work together on that email, correct? So, what we can do instead here is we can keep the custom field as a manual field to fill. What this will do essentially is as soon as an email comes in, it gets tagged automatically for you. For example, an email is about invoice. The tag gets applied invoice. You look at that email and,
+
+Manojkiran Sugumar:
+  accordingly.
+
+Yukta Jain (yukta.j@grexit.com):
+  Then you can assign or you can fill the custom field based on whether this has to be picked, by the support team, operations team or finance team. Once that custom field is applied, then we can create an automation wherein if it's, if the operations custom field is applied, then it can route it between the two people who are working on working within operations.
+
+Manojkiran Sugumar:
+  Because.
+
+Yukta Jain (yukta.j@grexit.com):
+  what I think is creating tags for each type of query is gonna be a little messy because then how many custom fields are you gonna create in regards to tags? So I think then the custom field should be manual wherein you can then decide which department it has to go to. So you will have that organizing organized view as well as to currently working on it's. Assigned to, customer support agent is gonna work on it once they have worked on that email. And if they have to pass it to let's say finance, they can just change the custom field, assign it to finance and then accordingly pass it to the right person as well.
+
+Manojkiran Sugumar:
+  I think.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  That could definitely be an option that we could try out. Yeah.
+
+Manojkiran Sugumar:
+  So, I think.
+
+Yukta Jain (yukta.j@grexit.com):
+  Manoj, this, is, this would be rather easier to sort of play with rather than, you know, shifting tags and custom fields here because I don't think we need multiple functions as tags to be assigned on one email because at a time, only one team is gonna work and with multiple tags, it might just create more confusion as to who is actually working or, who is. So, yeah.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  I think so also, but.
+
+Yukta Jain (yukta.j@grexit.com):
+  Yeah, yeah, I'm so.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Sorry, though, guys, I have another call in the next four minutes that I have to join.
+
+Yukta Jain (yukta.j@grexit.com):
+  No worries. What you can do is you can just save this for now. I think this custom is already created. So you can just save this here. And I think tags are also created. So what we can do, we can just quickly create one automation here. Shanice. Can you click on the automations there?
+
+Manojkiran Sugumar:
+  So, yeah.
+
+Yukta Jain (yukta.j@grexit.com):
+  Okay. Can you, what are these automations about invoice and tracking? Yes?
+
+Manojkiran Sugumar:
+  I.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  think this was where I was talking about.
+
+Manojkiran Sugumar:
+  Yeah.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Another?
+
+Yukta Jain (yukta.j@grexit.com):
+  One is about track. Okay, cool. We can just create one automation. Can you click on create automation on top? So this, we will name it as.
+
+Yukta Jain (yukta.j@grexit.com):
+  Name this as assignment.
+
+Manojkiran Sugumar:
+  Per team?
+
+Yukta Jain (yukta.j@grexit.com):
+  Something like that.
+
+Manojkiran Sugumar:
+  Right.
+
+Yukta Jain (yukta.j@grexit.com):
+  So, as soon as so now we only need one automation actually. So we will click on the trigger. Just, can you click on that drop down there? New conversation is received and scroll down.
+
+Manojkiran Sugumar:
+  And click.
+
+Yukta Jain (yukta.j@grexit.com):
+  On team is updated, the custom field that we just created right now and add step.
+
+Manojkiran Sugumar:
+  We will.
+
+Yukta Jain (yukta.j@grexit.com):
+  Not create the, do this for finance. We'll just do it for the other two functions. Since these are the teams who have multiple people and… we'll select team here in… the custom field and select value which will be support and then add step… which we can use and only here and put the other field operations or? No, I guess we'll have to create separate information for the other team. No. So we, no, no, we can skip this. Shanice. We don't have to do this. You can delete this condition, just… hover over the purple. Yeah, just delete it, add step click.
+
+Manojkiran Sugumar:
+  On add step action.
+
+Manojkiran Sugumar:
+  Thank you… among the second.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Option.
+
+Manojkiran Sugumar:
+  And here you.
+
+Yukta Jain (yukta.j@grexit.com):
+  Select both the people who are working within support. So now emails are going to get routed between these two people. Once you update the custom field as support, right? So that's going to happen automatically for, you can save and enable this on top, right? And likewise, we'll create another one for the operations team.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Now leave odds because it's just me. I see that Abdul didn't even accept the invites at the moment. So.
+
+Yukta Jain (yukta.j@grexit.com):
+  Okay. So.
+
+Manojkiran Sugumar:
+  We can replicate.
+
+Yukta Jain (yukta.j@grexit.com):
+  This same thing for the other team as well. And in the AI section there, right? On top of automations, I'll just take two more minutes here. Can you click on configure within AI tagging?
+
+Yukta Jain (yukta.j@grexit.com):
+  Yeah. So we have added these tags here. So AI is going to train itself. You can add more tags also if you have created more, so that AI is going to train itself on this as to what sort of emails you're applying these tags on. It's, going to automatically start applying those tags. So we'll just look at one email and see how this is now looking within the just, yeah.
+
+Manojkiran Sugumar:
+  Just another thing on the AI tagging, Shanice. So if you can add like let's take an example of anchor. Like if you can add this tag to 10 other emails manually, right? That will train the AI better, it will know like what sort of email adding it as a tag. So, if you notice there is zero out of 10 emails for each of these tags, right? Yeah, because.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  I haven't gotten a chance. Yeah, I haven't manually like added the text to the others, but I said that I'd do I'll do that today? I'll go through them and try to.
+
+Manojkiran Sugumar:
+  Yeah, just get an email per tag and that will help the AI to get the grasp. Okay, perfect. Cool. So, I think.
+
+Yukta Jain (yukta.j@grexit.com):
+  If you just cross this Shanice and come to the main Gmail.
+
+Manojkiran Sugumar:
+  You.
+
+Yukta Jain (yukta.j@grexit.com):
+  will now we have created the pro, the workflow wherein any email that comes in, if you go into any email in the shared inbox, the first step that's gonna automatically is gonna happen for you is hiver will apply the right tag automatically, which will tell you, what email is this about? After looking at what this email is about, you will be able to add the custom field based on which department it has to go to. Once you update the custom field, it's gonna automatically assign it to the right person within the team. So we will, we have created one automation for that auto assignment. Likewise, we can create two more for other teams and this will help you sort of be, have more clutter more decluttered view of, you know, looking at these emails, and then we can see if this is helping you in terms of achieving some sort of, you know, efficiency going forward.
+
+Manojkiran Sugumar:
+  Okay. Sure. Then from my.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  side, I'll make sure to manually do that tagging on the other vendors. Please do that.
+
+Yukta Jain (yukta.j@grexit.com):
+  It's only then it's gonna happen automatically for you. So we require at least team 10 emails to be tagged, right? So that from there onwards AI can do that for you.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Okay. I'll do that today, you have.
+
+Yukta Jain (yukta.j@grexit.com):
+  Another call. So I'll let you go. Is it okay if we connect back on Friday around the same time?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Friday? I'd have to do a little bit earlier. I probably have to Friday. I can do eight a. M on Friday est. Eight.
+
+Manojkiran Sugumar:
+  A.
+
+Yukta Jain (yukta.j@grexit.com):
+  M right now, what time is it for you? Okay?
+
+Manojkiran Sugumar:
+  So,
+
+Shanice Chetty (shanice@solarguyspro.com):
+  est, time for me now? Okay? For me, let's not talk est for me. Now, it is.
+
+Manojkiran Sugumar:
+  In south?
+
+Yukta Jain (yukta.j@grexit.com):
+  Africa, right? So, yeah, that's the time that you're following a little early for me? Can we do nine a. M on Friday? If that works? I?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Have a team meeting at nine and sometimes it goes off nine to 10.
+
+Yukta Jain (yukta.j@grexit.com):
+  10 a. M. I.
+
+Manojkiran Sugumar:
+  won't be able to.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  do any time after that on Friday after 10, Friday eight?
+
+Yukta Jain (yukta.j@grexit.com):
+  30 works.
+
+Manojkiran Sugumar:
+  For you… I can do eight.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  15 est. Okay.
+
+Manojkiran Sugumar:
+  Let's do eight?
+
+Yukta Jain (yukta.j@grexit.com):
+  15, then I will share the invite with you. And then we can connect on Friday.
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Okay. All right. Thank you guys. So much for your help. No.
+
+Yukta Jain (yukta.j@grexit.com):
+  Worries at all? Thank you, Manoj for hopping on. Okay?
+
+Shanice Chetty (shanice@solarguyspro.com):
+  Bye.
+
+Manojkiran Sugumar:
+  Please?
+
+Manojkiran Sugumar:
+  Make sure that this is payouts at the rate. Okay. Fair enough. Now, can you take me to the payouts inbox? Should I delete this or? No, you just delete this one. This is a confusion only the demo inbox.
+
+Manojkiran Sugumar:
+  Okay. Take me again to the shared inbox, and just delete the demo inbox first of all.
+
+Manojkiran Sugumar:
+  Delete it. Now, you take me inside the payout inbox, just go back again to the shared inboxes. Click… here. Okay. Now, one thing that I do want to make sure is that first of all, if you could take me to the users here, all right. Can you scroll down? Do you see the options here for users? Okay? These are the users, right? So you have invited yourself, you have invited the payouts at the rate inbox as well. All right now, can you take me to the users? First of all, I want to make sure that you are the admin user and not the payout email. Okay? You are the member. Can you make sure that you keep yourself as an admin supervisor? Okay? You're the admin here. And now, we'll be inviting the other people as well. Just just make sure that you are admin, fair enough. Apart from that. Now, can you go back to your Gmail account? Email. Now, cross this one… on the highway settings… switch accounts?
+
+Manojkiran Sugumar:
+  Could you… please join this?
+
+Manojkiran Sugumar:
+  You are inside the payouts and can you go into the settings again?
+
+Manojkiran Sugumar:
+  Yes, please shared inboxes. Now, you have access to the payouts and… what you might want to do is just simply remove this payouts as a user. Just click here and delete the user because we would never need to log in into payouts at the rate inbox. We would always log into individual Gmail account and manage payout as a shared email inbox. So just simply remove this user as payouts. We don't need this as a user actually. Okay. So you are the owner, of the account, you are the admin, and you have invited your colleague airboss to manage your shared email inbox, which is payouts at the rate inbox. All you do is airboss and you will log into your Gmail and simply log in into hiver. I mean, just a one time activity to install extension, and you should guys be able to find the payouts emails in the main screen. If you come back to your main screen, you should see your top emails in the top inbox. If you close this admin panel, yeah… these are your private emails and these are your payout emails. Now, from here, onward, can you open the payout inbox for me? This confirmation. Now, this is a, this is a confirmation with regards to, okay, a setup on the payouts. Okay. Fair enough. Yeah, you don't have to come here and just go back to the Gmail inbox. Close it.
+
+Manojkiran Sugumar:
+  Email. And what I would do is I will also send you a test email to make sure that everything starts to work as per our choice. So give me one minute. Let me also send you an email inbox.
+
+Manojkiran Sugumar:
+  Can you also take me to the users and controls?
+
+Manojkiran Sugumar:
+  And admin panel?
+
+Manojkiran Sugumar:
+  To the personal settings, I wanted you to go to the admin. Yes. And then users?
+
+Manojkiran Sugumar:
+  Ensure you remove this as a payout user, just… delete this user. Yeah… and all right, just say the rectification of account I will set up?
+
+Manojkiran Sugumar:
+  Submit and appboss is invited to the payout inbox. This is fine. Let's again go to the inbox here. Payouts. Let's set up a quick approval flow, or you go to the approvals. Any email that needs your approval, you can set up a flow, just simply turn this on and create a flow. I'll assist you with that, which means just create one and say whatever flow, right? I mean, what all emails need your approval flow? So you could just name this flow?
+
+Manojkiran Sugumar:
+  Yeah. So where do you get the emails to be approved as a flow versus your colleagues? So maybe you could just differentiate on the basis of the flow name only then your team will be able to see that, hey, this is the flow that has to be approved by, you know, mama.
+
+Manojkiran Sugumar:
+  Okay. Then you select yourself as the first approver and… or you could also do your colleague, whoever does that and then create a flow. So it's an upload. But you might want to just make sure that this flow name is a little more, you know, easier, to remember like would that be okay for your team, to say, hey, this is an approval flow for upload or you want to make it a little more prominent. Yeah… that's… good. Then, it makes a lot of sense here. Now, all right… now, if there are another flow that needs to be there for payment upload, like a payment flow, yeah, payout approval. Yeah… payout request and who is going to be the approver on the payouts? Just yourself? I believe. Yeah. Okay. Great. And then you do the great. Now, these are the approval flows created already. Again, if you go to the auto assignment, when… you have the entire team and you turn it on, all your payouts, email will get assigned to the teammates who are available online so that they can start to work on the emails within assigned to them. And you don't have to manually assign emails. So you can turn them on and you can always give them the availability access. Whenever they are online or offline. They can always make sure that they toggle it off and on right on the top screen here. So if you click here, you would get to see immediately an option to just keep yourself online or away. So you just save this for now and let's… just go ahead and quickly create all of these. Now, when you receive these emails, do you want to sort it under certain categories? Like, hey, this is about maybe… documentation or this is about approvals or this is a rejected case. This is a financing, this is a delivery done or a sale closed. All of this can be done either through the labels which is tagging system in hiver and you can do all of that in hiver, AI, meaning you don't have to keep doing the tags every day or time. All you do is just once when you create it. Okay. Can you click again? Just one more time for me?
+
+Manojkiran Sugumar:
+  Okay. Let's just quickly refresh it. It's fine because we're anyway, setting it up for, you can close it here.
+
+Manojkiran Sugumar:
+  Okay. In the bottom here, do you get an option to simply close it?
+
+Manojkiran Sugumar:
+  Is it the right thing to talk to your doctor? Sure. Okay. Now, go back to the settings again… admin panel, current boxes?
+
+Manojkiran Sugumar:
+  Yeah, it's in box. So all the advanced settings are going to be right here. And for the response, you said if we could do 15 minutes or 20 minutes response, let's set up an SLA, you give it and you say this is general SLA or whatever you want to be right now?
+
+Manojkiran Sugumar:
+  What should be the first response to these emails when they land in the auto inbox? How long are you? Okay to wait? 15 minutes, 20 minutes, 30 minutes? Okay. Fair enough. And this resolution is actually very subjective. Like, are you okay to wait for 24 hours or 48 hours?
+
+Manojkiran Sugumar:
+  You don't know, right? How long it might take because some customers may take long for documentation. So it is time to just set up the first response time. And one thing to consider is let's say, if you receive emails out of nine to five, do you want to consider the business hours so that you can run the reports appropriately?
+
+Manojkiran Sugumar:
+  We can do that. Number two, we can always make sure that the SLA's are not impacted. If an email comes into your evening hours or late evening, like after the business hours. Okay? Let's create this policy, click on, create here first of all, and go to the settings page at the bottom here.
+
+Manojkiran Sugumar:
+  Can you scroll it down a little more? There are settings at the bottom of the screen below the SLA. Okay, you scroll this one, scroll it, scroll down. Okay? Create business hour, template, create now and create… give it a name and just say general business hours.
+
+Manojkiran Sugumar:
+  And now, just drag and drop your business hours. Like, is that five or 96? Whatever it is?
+
+Manojkiran Sugumar:
+  I told her all of that. Okay? So this is nine to five 30. Okay. Nine to six. All right. No… this is nine to six 30. All right. So you scroll it up and make it six here. It's six 30.
+
+Manojkiran Sugumar:
+  Now, delete this one also.
+
+Manojkiran Sugumar:
+  Now, let's just save this. You get an option to save here at the bottom. Okay, save it and you… again go back to the shared inboxes, payouts… inbox, and… under settings. Then you scroll down to the settings, apply… it, select the business hours that we just created. Save it, go back to slas… edit the SLA… and apply, consider the business hours. Now, you receive emails that you can work in 30 minutes. If it is outside the business hours, you can always send an autoresponder like, hey, thank you for contacting. We are, we have, we are working on your request and we will get back to you so you can click on autoresponder and according to the business hours, when you turn this on first of all, yeah… according to the business hours, you can always say all the emails received outside the business hours, you can reply them with a quick reminder or whatever email template you want to say, hello, thank you for contacting or if you have any template, you can just type in here, paste it. Okay?
+
+Manojkiran Sugumar:
+  Okay. For that, I would say just save it, but don't enable it so that it doesn't go back to your customers. I mean, just simply disable it from the top screen, just scroll up and make sure you disable it. But you can always come to the autoresponder and make the changes to the email template.
+
+Manojkiran Sugumar:
+  No problem. Alright. I don't have customers. Okay. No worries. Just wanted to cross check. Are you getting late by any chance? Because, I realized that we are already 20 minutes out of the meeting hours. Do you want to reschedule a meeting tomorrow? And we go over the complete setup? And then I do a quick training for you and then you bring your team as well. Yeah, if you are okay, we can keep going. Okay. Very clear. Yeah, I'm fine. I just wanted to make sure that you don't have a hard stop. No problem. Okay. We'll spend another couple of minutes.
+
+Manojkiran Sugumar:
+  Then apart from that, we did the, you know, slas, we did the autoresponders. Now, when you receive emails into your payouts inbox, do you want to set up certain workflow automations? Like any approval rate emails to get assigned to any cancellation, emails should get assigned to somebody else. Do you have any such, you know, approvals? I mean, you know, automation workflows, where you can automatically assign emails to the people in your team or automatically tag the emails or maybe there are certain confirmation emails that you just want to close, you don't want to work on them?
+
+Manojkiran Sugumar:
+  So, I want some emails to be prioritized. Alright, definitely. Yeah, let me sure, we can help you prioritize those emails. First of all, let's go ahead and create certain labels and tags for those emails. Before that, can you cross this admin panel and take me to the main inbox screen? Alright, tags up from here?
+
+Manojkiran Sugumar:
+  Payouts. Yeah. Can you? Okay? Now, you see there are multiple tags that you've already created, right? Checking dealer check. And then you have new on Trello, paid payment snag today. Tomorrow. All of these are the different labels and tags that you've already connected on hiver. Are there any more such emails where you say these are no action needed? Emails? These are urgent emails.
+
+Manojkiran Sugumar:
+  Basically.
+
+Manojkiran Sugumar:
+  Basically paid payment. This can be after basically. Okay, let's… say, yeah, sure. Edit the tag checking. Hello, dealer check, brown. Yeah. Okay. You want, I don't need to, you call for them. What is this new? I mean, is this like a tag for you? Yeah. So these… are anyways in the unassigned. So new are the ones which are anyways there for your incoming. I mean you don't have to use a tag for it. Absolutely. It's just going to be a confusion. I have my colleague Manoj who can actually help you a lot with the tagging option so that it can help you categorize emails and help you with the automation workflows as well. He comes from the onboarding space onboarding beyond 500 teams, been with hybrid for seven years. Manoj. Can you please help us with the tagging and prioritizing emails and then allocating on workflow as well. Yes… he's with me on the call. Hey, Manoj. Can you hear me? You seem to be on mute just… a second. Yeah.

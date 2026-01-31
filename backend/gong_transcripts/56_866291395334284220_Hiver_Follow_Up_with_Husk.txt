@@ -1,0 +1,211 @@
+================================================================================
+Call: Hiver Follow Up with Husk
+Date: 2026-01-28T21:56:07+05:30
+================================================================================
+
+Suraj (suraj.s@grexit.com):
+  yep. Yep.
+
+Suraj (suraj.s@grexit.com):
+  Because similar… information or slightly different information as well, right? So might get an overlap.
+
+Matthew P (matthew.p@grexit.com):
+  Hey, Derek. How you doing?
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Hey, good morning, everyone.
+
+Matthew P (matthew.p@grexit.com):
+  Pretty good. How about yourself? Doing good, doing good. Appreciate everybody joining here. Awesome. Let's see. I got some people on my end. We got you guys, got some people. Is this everybody on the husk end here?
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Yes.
+
+Matthew P (matthew.p@grexit.com):
+  Awesome. Well, perfect. So, yeah. So the agenda for the call here first and foremost, you know, I obviously want to get some feedback from the trial here. It seems that hiver is a good fit. Of course, we have this one thing outstanding with, when it comes to the AI co pilot being able to generate responses that are domain specific, right? Yeah, awesome. Well, we'll tackle that first. So I brought on Suraj here, who's part of our AI product team to kind of explain how you could set that up within hiver to accomplish that.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Okay. Yeah. And I mean, if it's helpful, I can share my screen if we want to go through and just like actually set it up on our account. Does that work? Sure. Okay, great. Let me just share my screen here.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  All right. So I'm in that admin panel, yeah.
+
+Suraj (suraj.s@grexit.com):
+  So you can just go to hiver, AI in the sidebar. Yeah.
+
+Suraj (suraj.s@grexit.com):
+  Cool. And you can go to co pilot… yeah, and knowledge sources. So you can upload as many files that you want. So you can just go to documents and upload your files.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Okay. Yeah. So we did upload the first one here. So this is the one that I had sent to Matthew as well. So it's in there.
+
+Suraj (suraj.s@grexit.com):
+  Okay, perfect. Perfect. So, have you tried asking a few questions? How was the response like?
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  So I think what we're trying to figure out is, so we have it uploaded in there.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  But what we're trying to figure out is how to actually, I guess have the system draft an email response based on this based on the domain. So if you don't have all the background on kind of what we're looking for, we have one main support inbox that we have multiple clients, reach out to the questions that we get are very client specific and program specific.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  They all have different rules. So we do, we have a reimbursement program for them. So for instance, one group might reimburse 500 dollars. One might do 400 dollars. So what we want is to say, okay, if you reach out from this domain reference, this faq document, which will have the max amount when it's coming up with the response.
+
+Suraj (suraj.s@grexit.com):
+  Sure. Cool. I'll just share my screen and I'll walk you through a few things and that should sort of give you a little bit of clarity on.
+
+Suraj (suraj.s@grexit.com):
+  Is my screen visible?
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Yeah, yes. Okay.
+
+Suraj (suraj.s@grexit.com):
+  Perfect. So, the way hiver AI works right now is let's say, let's imagine this is like a long running document in 15, 20 30 pages that's here, right? So in this, what our AI does is it sort of divides these things into smaller pieces, right? Let's say this is let's say this is piece one. Then this is piece two. This is piece three, right? And let's say you're asking a question, it's going to find out it's going to do something which is like a relevant search across these three pieces, and then let's say if it finds let's say this is the first match or this has the most number of keywords that are matching your query, right?
+
+Suraj (suraj.s@grexit.com):
+  Let's say, how does my reimbursement program look like? How much am I getting a reimbursement for X y Z? And it's going to go here and it's going to sort of answer the question, come back and then answer the question, right? I looked at the document that was shared the problem. And I think the way and let's say if you want to improve the accuracy of this document and make it a lot better, one small suggestion would be to sort of have it as a domain specific thing right now. So for example, let's say you have your domain one here, domain two here and put everything that you want with this domain here. So that AI will just match it with the domain and then come back here and sort of fix that up. So, because otherwise, it's just going to look for the best match, figure out that. Okay, this is matching to the query that has been asked and then it's going to answer the questions that way. So structuring the document is one of the, it gives you a very good number of number in terms of the accuracy that you're looking out for.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  So your recommendation then would be to create one document for all of our clients versus having a separate document for each client? Okay?
+
+Suraj (suraj.s@grexit.com):
+  Yeah, or I would say different types of clients. Let's say you have very similar types of clients that are using a certain way. So you can just put that up as a document and just reference it in a fakie format that should work.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Okay. All right. That's helpful. So then… so, okay. So we'll have to go in and we'll have to create those documents. We have some for some clients, but I think we'll need to go back and do some for other ones and create kind of a more standard full client document. So then once we have that in there, I guess, so how do we go about enabling the actual, you know, drafting of the responses? Yeah.
+
+Suraj (suraj.s@grexit.com):
+  Sure. So, let's say you have your documents, you've uploaded them here so you can just go back to your shared mailbox. I think this is the admin panel. You can just open up a shared mailbox here. Yeah, you can go to the emails directly to the emails.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Oh, in the emails, yeah.
+
+Suraj (suraj.s@grexit.com):
+  All right. You can just open up any email?
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Well, that's making me sign in again?
+
+Suraj (suraj.s@grexit.com):
+  No, no problem.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  We did this before… Derek, right? I'm not sure why it's not.
+
+Derek Paterson (dpaterson@huskwellness.com):
+  Yeah, we did log in, correct?
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Yeah.
+
+Derek Paterson (dpaterson@huskwellness.com):
+  Okay. So, will we need to connect it again?
+
+Manoj Kiran (manoj@grexit.com):
+  No guys. Just a second. So, Patrick, can you close this window once? Why is it asking… Matthew? The trial is still active, right?
+
+Matthew P (matthew.p@grexit.com):
+  Yeah, it's still active? Which email is this? Oh, I think you're in the support email that's why? Yeah, Patrick, you need to log into your personal. Oh, okay. Okay.
+
+Matthew P (matthew.p@grexit.com):
+  And it's going to populate here?
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Yeah. Sorry, where is the, this?
+
+Matthew P (matthew.p@grexit.com):
+  Is there?
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  It is okay. Great.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  All right. So, you just want me to open up one of these? Yeah. Okay.
+
+Suraj (suraj.s@grexit.com):
+  Right. And you can just click on the hiver logo that we have just below the husk. Yeah, that should open up your side panel and you can see an icon with stars sparkles just below the screen, just below this sidebar. Yeah, just at the, oh.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  At the bottom. Got it.
+
+Matthew P (matthew.p@grexit.com):
+  Sparkly thing, yeah.
+
+Suraj (suraj.s@grexit.com):
+  Yeah. And you can just draft a reply to this?
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Okay. So, one, two three, and tell me, okay?
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Okay. So, you would say four to refer to relevant knowledge sources, right? Correct. Yeah. Okay. I see. So if I hit that, then it's… probably not going to come up with an answer based on this because he's asking about the specifics of his individual request, okay?
+
+Suraj (suraj.s@grexit.com):
+  Right. So, if it's not there in your knowledge source, it might not get an answer… and.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Okay. All right. So… all right. So that makes sense. I think then. So… what we'll need to do is get, we need to, get our training documents updated then, which is going to take a little bit of time and then we can actually start testing this. I think so. I guess Matthew my question to you is just given that this is the feature that we were really most looking to utilize hiver for. Is it possible to extend the trial for another week so that we can go in, get these training documents uploaded and kind of start working with it and make sure that it does everything we need. I mean, as far as the like issue tracking and assigning to different people that's all fairly straightforward. And, you know, I think we can use that and we were able to use that. I'm more worried about the AI responses though and just kind of making sure that does everything that we need. Is that possible on your end? Yeah?
+
+Matthew P (matthew.p@grexit.com):
+  Yeah, absolutely. And, you know, obviously with AI, you know, AI, we're having all these AI conversations with all of our prospects and customers. So, yeah, we're happy to work through this as, you know, this is a newer initiative across many companies here. So definitely, let me just pull up my calendar here.
+
+Suraj (suraj.s@grexit.com):
+  And Patrick, it would be great if you could also share some queries, we can. So we have internally built a simulator to sort of test all these question answers and we can do that for you. So if you can share a couple of queries, the relevant, the right answer for that, we can just test how close are we? Yeah.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  And is that something that I should upload like within the document? So if we say like let's… just say that the question is, you know, when can I expect reimbursement? And we just type in the answer into that document, have it listed? You know, like you said, one, two three broken out by client and domain name, just putting those in that document themselves?
+
+Suraj (suraj.s@grexit.com):
+  Yeah, that work that would work? Yeah. Okay. Yeah. Or you can just share it with us over email as well. We can test it out, see if it's actually accurate or not. And then come back to you with suggestions or more improvements. We can do that. Okay. Yeah.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  I can let me put it in on my calendar. I'll put through just some example ones for you guys. I'll send it to the entire chain tomorrow.
+
+Suraj (suraj.s@grexit.com):
+  And.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  then, yeah, we should be able to work with that and I think if it's just a matter of putting them in the knowledge source and then having the AI refer to that knowledge source, I mean, Andrew, you and I can work on putting together kind of the most common questions that we see come in. I mean, I know there's a handful that we get every day. So that should be fairly easy at least to start. And we can always build that out kind of more and more as, we get more comfortable with the tool.
+
+Suraj (suraj.s@grexit.com):
+  Sure. And, and by the way, we are also, we are also launching a feature very soon that's going to… a categorize a lot of your emails. Okay. Matthew, do you want me to show that?
+
+Matthew P (matthew.p@grexit.com):
+  Sure. Yeah, that'd be great.
+
+Suraj (suraj.s@grexit.com):
+  Sure. Okay, great. So let me just share my screen. So this is coming in the next probably like one or two weeks. So I'm just going to walk you through the design that's there. So let's say, so what we, sorry?
+
+Matthew P (matthew.p@grexit.com):
+  Ash, we can't see your screen.
+
+Suraj (suraj.s@grexit.com):
+  Oh, my bad. Yeah, perfect. Right. So what we've been bringing in next is something called AI topics. So with AI topics… classify your emails into different buckets. So let's say you get a lot of emails like account, access, payment, refunds, using the product, technical issues. So in your case, it'll be different domains that it's classified into and you can actually go and see all the subtopics associated with it. And you can also look at all the common issues and generate a mail for that as well. So let's say there's a common issue that you want to send to. So you can just save the email and AI will automatically use that to generate a response for you and you can look at the conversations. You can look at the negative sentiment, a lot of these things there as well. Cool.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Yeah. I think that'll help Ashley probably especially on your end with just categorizing where the questions are coming in from people.
+
+Suraj (suraj.s@grexit.com):
+  Yeah, I love that. Yeah. So this is coming in the next probably like one or two weeks for all our customers. Okay? Cool.
+
+Matthew P (matthew.p@grexit.com):
+  Awesome with the same time and I'll go ahead and extend your trial so we can keep testing it. And with the same time next week either Tuesday or Wednesday work for you?
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  It works for me, Ashley. It looks like you're available at 11 30 next Wednesday. Yeah, that's fine. And Derek, I don't think you need to join and Andrew, you can if you're available, but I think Ashley and I can probably handle the next meeting but, yeah, matt, that should work on our end.
+
+Matthew P (matthew.p@grexit.com):
+  Okay, perfect. Well, I'll go ahead and send you an invite for then we'll extend the trial as well. And then, yeah, feel free to just email me any feedback or questions that you have. I can loop in Suraj and our AI team here as well as we help you set this up.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  Awesome. Really appreciate you guys jumping on today. I'm excited to get it fully up and running. I know it's going to take a little bit of work on our end, but I appreciate your help today and extending the trial and everything for us.
+
+Matthew P (matthew.p@grexit.com):
+  Yeah, yeah, absolutely. Perfect. Well, we'll talk next week and we'll go from there. Thanks so much.
+
+Patrick O'Gorman (pogorman@huskwellness.com):
+  All right. Sounds good. Thanks everyone.
+
+Matthew P (matthew.p@grexit.com):
+  Thanks, everyone. Bye.

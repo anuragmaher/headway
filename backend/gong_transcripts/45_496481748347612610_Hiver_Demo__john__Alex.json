@@ -1,0 +1,1583 @@
+{
+  "call_id": "496481748347612610",
+  "title": "Hiver Demo | john <> Alex",
+  "started": "2026-01-29T03:00:58+05:30",
+  "duration_seconds": 1180,
+  "call_metadata": {
+    "id": "496481748347612610",
+    "url": "https://us-31545.app.gong.io/call?id=496481748347612610",
+    "title": "Hiver Demo | john <> Alex",
+    "scheduled": "2026-01-29T03:00:00+05:30",
+    "started": "2026-01-29T03:00:58+05:30",
+    "duration": 1180,
+    "primaryUserId": "1259980819651044985",
+    "direction": "Conference",
+    "system": "Zoom",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://us06web.zoom.us/j/87271371057",
+    "isPrivate": false,
+    "calendarEventId": "8ejhk4dne2s38b1sk8udfle40k@google.com"
+  },
+  "parties": [
+    {
+      "id": "3082996687948148174",
+      "emailAddress": "alexander.k@grexit.com",
+      "name": "Alex Krumm",
+      "userId": "1259980819651044985",
+      "speakerId": "6177825341492798675",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "3748787062615612645",
+      "name": "Klaire Punongbayan",
+      "speakerId": "7617215620448372779",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "5416352702204319200",
+      "emailAddress": "js@rpmviking.com",
+      "name": "John Scribante",
+      "title": "Broker/Principal Owner",
+      "speakerId": "7768624599428588938",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "196752760184",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "49897783597"
+                },
+                {
+                  "name": "firstname",
+                  "value": "John"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Broker/Principal Owner"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769702518.772
+                },
+                {
+                  "name": "createdate",
+                  "value": 1769615348.858
+                },
+                {
+                  "name": "lastname",
+                  "value": "Scribante"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "85521415"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "PAID_SEARCH"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Outlook"
+                },
+                {
+                  "name": "phone",
+                  "value": "+16127139466"
+                },
+                {
+                  "name": "mobilephone",
+                  "value": "+19208609347"
+                },
+                {
+                  "name": "recent_conversion_date",
+                  "value": 1769615386.008
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "IN_PROGRESS"
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "salesqualifiedlead"
+                },
+                {
+                  "name": "email",
+                  "value": "js@rpmviking.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "+16127139466",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "6847925834683063095",
+      "name": "Karen",
+      "speakerId": "2575069995962128564",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "496481748347612610",
+    "transcript": [
+      {
+        "speakerId": "7768624599428588938",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 296,
+            "end": 416,
+            "text": "hello?"
+          },
+          {
+            "start": 1336,
+            "end": 2116,
+            "text": "Hi, John."
+          },
+          {
+            "start": 3116,
+            "end": 8896,
+            "text": "Hey, I invited a couple of other of my staff members to join us if that's all right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 9416,
+            "end": 10136,
+            "text": "Of course."
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 10736,
+            "end": 11496,
+            "text": "All right."
+          },
+          {
+            "start": 11816,
+            "end": 17316,
+            "text": "So just, and Karen and Klaire don't know anything about why they're on this call."
+          },
+          {
+            "start": 17436,
+            "end": 24676,
+            "text": "But Karen, this is a potential replacement for helpscout."
+          },
+          {
+            "start": 25256,
+            "end": 40866,
+            "text": "And so I wanted to get a demo and learn and Alex was nice enough to set up a call here for us this afternoon to learn about their offerings and how it is better than helpscout."
+          },
+          {
+            "start": 40926,
+            "end": 42506,
+            "text": "I guess, right?"
+          },
+          {
+            "start": 42866,
+            "end": 43466,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 45346,
+            "end": 47826,
+            "text": "Well, we are all excited for it."
+          },
+          {
+            "start": 47906,
+            "end": 49266,
+            "text": "So, thanks, Alex."
+          },
+          {
+            "start": 50266,
+            "end": 55826,
+            "text": "I love it, and… I've heard of neighborly."
+          },
+          {
+            "start": 55866,
+            "end": 65266,
+            "text": "So I used to, I have 12 years of experience in like contact center and help center software… previous company."
+          },
+          {
+            "start": 65406,
+            "end": 82646,
+            "text": "We're working on AI, voice agents, spoke with a few people over there, but I was just curious how RPM viking like operates, is it, are… you like a kind of a franchisee model where like you own a locality?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 83246,
+            "end": 83866,
+            "text": "Yeah."
+          },
+          {
+            "start": 84006,
+            "end": 97106,
+            "text": "So neighborly's got, I don't know 20 different brands, you know, from dryer, vent, cleaning and window washing, and gardening, to property management."
+          },
+          {
+            "start": 97266,
+            "end": 105286,
+            "text": "And we're the property management, there's, 500 locations of the property management, and we operate as a franchise."
+          },
+          {
+            "start": 105666,
+            "end": 113446,
+            "text": "So we, I'm the broker, the owner of the company and… you know, so independently owned."
+          },
+          {
+            "start": 113546,
+            "end": 125906,
+            "text": "But under the franchise umbrella to, you know, we primarily get marketing resources and best practices, but we make our own policies and rules and operational practices."
+          },
+          {
+            "start": 125906,
+            "end": 128226,
+            "text": "And that, so perfect."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 130046,
+            "end": 132226,
+            "text": "That was my understanding as well."
+          },
+          {
+            "start": 132366,
+            "end": 136306,
+            "text": "But, you know, I don't work there."
+          },
+          {
+            "start": 136386,
+            "end": 137866,
+            "text": "So, okay."
+          },
+          {
+            "start": 138556,
+            "end": 141596,
+            "text": "And then in terms of how are you using helpscout today?"
+          },
+          {
+            "start": 141736,
+            "end": 146496,
+            "text": "Is it primary primarily email management or are there other channels that you're feeding in there?"
+          },
+          {
+            "start": 146536,
+            "end": 146656,
+            "text": "No?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 146736,
+            "end": 152016,
+            "text": "We have shared three… or four shared inboxes."
+          },
+          {
+            "start": 152776,
+            "end": 166836,
+            "text": "We do have the chat bot on the website, but I don't we don't get any traffic off of that, I don't know why, but nobody seems to utilize it so… great."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 167676,
+            "end": 169816,
+            "text": "Well, let me show you what we're working on."
+          },
+          {
+            "start": 170236,
+            "end": 174716,
+            "text": "I think, are you guys on Google suite or are you a Microsoft team?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 175096,
+            "end": 178556,
+            "text": "We're Microsoft sharepoint, perfect."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 179936,
+            "end": 182256,
+            "text": "We have two different products which is why I asked you."
+          },
+          {
+            "start": 185456,
+            "end": 193416,
+            "text": "So hiver is a B to B help desk platform specifically designed for shared inbox interactions."
+          },
+          {
+            "start": 194336,
+            "end": 204416,
+            "text": "So think somebody's writing to support at or any other alias, being able to have full visibility of who's writing in, who is this assigned to?"
+          },
+          {
+            "start": 204596,
+            "end": 208456,
+            "text": "And then any other conversations that are kind of going along alongside."
+          },
+          {
+            "start": 210176,
+            "end": 212176,
+            "text": "So we're a web based product."
+          },
+          {
+            "start": 212916,
+            "end": 217076,
+            "text": "And then in the left hand rail, we're going to see the two inboxes finance and support."
+          },
+          {
+            "start": 218496,
+            "end": 224296,
+            "text": "We technically can have multiple domains pointed at a single inbox, should that be beneficial?"
+          },
+          {
+            "start": 224536,
+            "end": 227636,
+            "text": "But most people segment by domain."
+          },
+          {
+            "start": 230636,
+            "end": 235336,
+            "text": "Now when an email comes in, it'll start in the unassigned section."
+          },
+          {
+            "start": 235976,
+            "end": 240316,
+            "text": "So here Tony stark thinks he made a mistake on his billing."
+          },
+          {
+            "start": 241596,
+            "end": 248256,
+            "text": "I would come in and the workflow would be to assign it to myself or I could get a grouping of these assigned to me."
+          },
+          {
+            "start": 250576,
+            "end": 256206,
+            "text": "Then these will be in my inbox… on the right hand rail."
+          },
+          {
+            "start": 256326,
+            "end": 281706,
+            "text": "We're going to have kind of all the traditional help desk categorizations… whether it's tagging, we support AI based or custom like attribute based tagging, so like keyword, and then custom fields in terms of like kind of like a subcategory or disposition on the conversation or like a revisit date, things like that."
+          },
+          {
+            "start": 285116,
+            "end": 290336,
+            "text": "Then when I come in here to reply to Tony, I have a full email template library."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 295276,
+            "end": 310396,
+            "text": "And I have a AI assistant that can, that will write emails for me and you can upload your own documents whether it's like a PDF or free form that it'll use."
+          },
+          {
+            "start": 310616,
+            "end": 315476,
+            "text": "So I'm going to come in here and say it's going to make recommendations on what it should say."
+          },
+          {
+            "start": 315596,
+            "end": 316996,
+            "text": "One be direct."
+          },
+          {
+            "start": 319616,
+            "end": 328536,
+            "text": "We've essentially built our own rag system and right now we have like chat gbt five point two plugged into it to generate these replies."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 336196,
+            "end": 338576,
+            "text": "So pretty straightforward, I've written the email."
+          },
+          {
+            "start": 339896,
+            "end": 344356,
+            "text": "I can send it and mark it closed, send it and mark it pending."
+          },
+          {
+            "start": 346536,
+            "end": 351076,
+            "text": "The key thing about pending would typically mean that we want to be able to revisit this conversation."
+          },
+          {
+            "start": 351916,
+            "end": 362176,
+            "text": "So imagine you're working with a flooring vendor and it's someone that you have to follow up with a lot to get him or her to perform the work."
+          },
+          {
+            "start": 363266,
+            "end": 366986,
+            "text": "I would consider dropping it in pending and maybe have follow up date."
+          },
+          {
+            "start": 367826,
+            "end": 377526,
+            "text": "This way I can create what we call a view of like all conversations that it's like an advanced filter of."
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 377526,
+            "end": 381786,
+            "text": "Like I mean, so far, what you've explained was helpscout."
+          },
+          {
+            "start": 382456,
+            "end": 387356,
+            "text": "I mean, everything that you just explained including the filters and all that is help scout."
+          },
+          {
+            "start": 387556,
+            "end": 401936,
+            "text": "So maybe we should move past just the general functionality because I think we all understand how these systems work into some of the more advanced capabilities or things that are significantly different than what we're using at help scout, is that fair?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 404336,
+            "end": 404736,
+            "text": "Sure."
+          },
+          {
+            "start": 406536,
+            "end": 422516,
+            "text": "I would say so just in terms of the types of interactions that you're having, is it mostly with like I'm assuming there's like three groups there's, renters, property owners, and contractors, is that fair?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 423196,
+            "end": 424736,
+            "text": "Yeah, I think so."
+          },
+          {
+            "start": 427216,
+            "end": 429456,
+            "text": "Yep, great."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 430146,
+            "end": 439386,
+            "text": "So when somebody reaches out to us, we could essentially run… every single conversation through a workflow."
+          },
+          {
+            "start": 442146,
+            "end": 443946,
+            "text": "So coming to support automations."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 451986,
+            "end": 467366,
+            "text": "So this is like if this, then that logic, when a new conversation comes in, it contains any of the following, we can then auto assign it to certain users, amend tags, update various statuses, and… so on and so forth."
+          },
+          {
+            "start": 467406,
+            "end": 475646,
+            "text": "Like automatically send replies if it's missing key information, let people know your standard response, things like that."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 479076,
+            "end": 495196,
+            "text": "And, but I think just in terms of email only like this is going to be pretty similar to help scout, just our AI offering is fully integrated and it's you know, included in the price instead of like additional consumption."
+          },
+          {
+            "start": 497696,
+            "end": 498156,
+            "text": "Okay."
+          },
+          {
+            "start": 499596,
+            "end": 500196,
+            "text": "Yeah."
+          },
+          {
+            "start": 501196,
+            "end": 502456,
+            "text": "I guess what's not?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7617215620448372779",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 503536,
+            "end": 512896,
+            "text": "You go, Claire, maybe Alex, yeah, maybe Alex, my question is what does your AI do aside from those?"
+          },
+          {
+            "start": 514036,
+            "end": 519896,
+            "text": "Because it's kind of really similar to help scout for what I'm seeing right here, you're."
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 519896,
+            "end": 521996,
+            "text": "saying beyond like the auto drafting of emails?"
+          },
+          {
+            "start": 522216,
+            "end": 524156,
+            "text": "What does AI, how's."
+          }
+        ]
+      },
+      {
+        "speakerId": "7617215620448372779",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 524156,
+            "end": 525216,
+            "text": "it, what does AI do?"
+          },
+          {
+            "start": 525356,
+            "end": 525796,
+            "text": "Yeah?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 527506,
+            "end": 533606,
+            "text": "Right now, in this product, it can summarize conversations."
+          },
+          {
+            "start": 533726,
+            "end": 549666,
+            "text": "So, if there's a long thread and you're catching up quickly, and… then the composer right now has various knowledge sources in terms of what AI can do… yeah in the near future."
+          },
+          {
+            "start": 549806,
+            "end": 560796,
+            "text": "So, we also have a product in Gmail, which is why I asked at the beginning of the call, this product has some more of our advanced AI features which we are bringing to the outlook product."
+          },
+          {
+            "start": 560796,
+            "end": 563936,
+            "text": "In the next, I would say 62 days."
+          },
+          {
+            "start": 564036,
+            "end": 575616,
+            "text": "It's supposed to be end of this quarter where we have AI tagging to be able to automatically tag conversations that you'll train the AI tagging on."
+          },
+          {
+            "start": 575756,
+            "end": 579856,
+            "text": "So like maintenance requests versus something else."
+          },
+          {
+            "start": 583326,
+            "end": 587226,
+            "text": "And then I'll come in like select emails that meet this maintenance request."
+          },
+          {
+            "start": 587326,
+            "end": 594116,
+            "text": "So it'll learn and automatically tag and triage… so that's one piece."
+          },
+          {
+            "start": 594836,
+            "end": 613836,
+            "text": "Then we have AI quality assurance where every single email that we write out is going to be scored based on like a six point criteria… and you're able to come in here and like set various settings in terms of like what does tone mean and things of that nature?"
+          },
+          {
+            "start": 614836,
+            "end": 620356,
+            "text": "We're seeing the most interest in clarity and completeness from our current customers."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 625876,
+            "end": 630576,
+            "text": "And then, you know, auto closing tickets when people write, thank you and things like that."
+          },
+          {
+            "start": 631496,
+            "end": 632016,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 635236,
+            "end": 635716,
+            "text": "Okay."
+          },
+          {
+            "start": 635836,
+            "end": 636516,
+            "text": "All right."
+          },
+          {
+            "start": 636576,
+            "end": 639516,
+            "text": "So, all… right."
+          },
+          {
+            "start": 639556,
+            "end": 641816,
+            "text": "I don't know ladies."
+          },
+          {
+            "start": 641936,
+            "end": 643656,
+            "text": "Do you have any other questions on this?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2575069995962128564",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 646136,
+            "end": 647996,
+            "text": "I do for helpscout."
+          },
+          {
+            "start": 648096,
+            "end": 654916,
+            "text": "I don't think they have this function where we can do auto reply, but hiver does that, right?"
+          },
+          {
+            "start": 655476,
+            "end": 667086,
+            "text": "Like we can, if there is an email that was sent by a tenant and then hiver gets to respond to them, acknowledging that we receive an email or something."
+          },
+          {
+            "start": 667606,
+            "end": 669006,
+            "text": "Hiver offers that, correct?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 669326,
+            "end": 671226,
+            "text": "There's an auto reply in helpscout."
+          }
+        ]
+      },
+      {
+        "speakerId": "2575069995962128564",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 671626,
+            "end": 673886,
+            "text": "Oh, I."
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 673886,
+            "end": 674626,
+            "text": "mean, you're talking?"
+          },
+          {
+            "start": 674626,
+            "end": 677366,
+            "text": "Just an auto acknowledgement, like we got your message."
+          },
+          {
+            "start": 677446,
+            "end": 678306,
+            "text": "We'll be in touch soon."
+          }
+        ]
+      },
+      {
+        "speakerId": "2575069995962128564",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 678866,
+            "end": 680926,
+            "text": "That's correct, John, same like quo app."
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 681446,
+            "end": 682186,
+            "text": "Yeah, no."
+          },
+          {
+            "start": 683106,
+            "end": 684146,
+            "text": "Oh, okay."
+          },
+          {
+            "start": 684306,
+            "end": 686446,
+            "text": "I just don't have it turned on for your inbox."
+          },
+          {
+            "start": 687066,
+            "end": 688466,
+            "text": "I see it's turned on for maintenance."
+          },
+          {
+            "start": 689566,
+            "end": 690206,
+            "text": "Got it."
+          },
+          {
+            "start": 690636,
+            "end": 694716,
+            "text": "It might be on yours for after hours, but so."
+          }
+        ]
+      },
+      {
+        "speakerId": "2575069995962128564",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 694756,
+            "end": 696216,
+            "text": "It's just basically the same."
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 697036,
+            "end": 698736,
+            "text": "Well, that's what I'm trying to figure out."
+          },
+          {
+            "start": 698896,
+            "end": 706916,
+            "text": "I mean, it's a little less expensive, but I'm not sure we're gaining enough to make a switch."
+          }
+        ]
+      },
+      {
+        "speakerId": "7617215620448372779",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 709076,
+            "end": 710336,
+            "text": "Knowledge, I guess."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 711876,
+            "end": 712816,
+            "text": "What at helpscout?"
+          },
+          {
+            "start": 712816,
+            "end": 714416,
+            "text": "Are you looking to improve upon?"
+          },
+          {
+            "start": 714696,
+            "end": 715216,
+            "text": "Well?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 715256,
+            "end": 724026,
+            "text": "It's a little difficult… to get… messages out of there."
+          },
+          {
+            "start": 724266,
+            "end": 726966,
+            "text": "I mean, it's not, it's a ticketing system."
+          },
+          {
+            "start": 727106,
+            "end": 728406,
+            "text": "It's not really an email system."
+          },
+          {
+            "start": 728926,
+            "end": 740966,
+            "text": "And so it's you know, it's a little clumsy, you know, and, you… know, I don't know Karen, do you have any comments on it or Klaire?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7617215620448372779",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 742246,
+            "end": 746486,
+            "text": "I'm thinking I'm curious about the knowledge base part."
+          },
+          {
+            "start": 747476,
+            "end": 750796,
+            "text": "And then is it integrated with AI?"
+          },
+          {
+            "start": 751136,
+            "end": 759896,
+            "text": "Like, when we create workflow, I'm not sure if that's the term on your, in your case, yeah."
+          },
+          {
+            "start": 759956,
+            "end": 764856,
+            "text": "When we say knowledge, is it something that is integrated with the AI or?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 766176,
+            "end": 774576,
+            "text": "It is so, The AI composer will use knowledge based sources."
+          },
+          {
+            "start": 774936,
+            "end": 779896,
+            "text": "So we have our a knowledge base that is included in this whether internal or external."
+          },
+          {
+            "start": 780116,
+            "end": 788436,
+            "text": "So when you like bring on new people and then you can just upload other documents here that the AI will use to as like a basis of writing emails."
+          }
+        ]
+      },
+      {
+        "speakerId": "7617215620448372779",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 789716,
+            "end": 790296,
+            "text": "Understood."
+          },
+          {
+            "start": 790416,
+            "end": 805186,
+            "text": "And then for external sources, we can use other like platform or software set from notion you have like any preferred list of software that you accept, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 805186,
+            "end": 806486,
+            "text": "Now, it's just notion."
+          },
+          {
+            "start": 806646,
+            "end": 810886,
+            "text": "We have Google drive coming online shortly."
+          },
+          {
+            "start": 811186,
+            "end": 814666,
+            "text": "And then we're talking about like confluence and other tools."
+          }
+        ]
+      },
+      {
+        "speakerId": "7617215620448372779",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 815366,
+            "end": 816226,
+            "text": "All right."
+          },
+          {
+            "start": 816566,
+            "end": 817166,
+            "text": "Understood."
+          },
+          {
+            "start": 817246,
+            "end": 820146,
+            "text": "And I just would like to make sure I understand it, right?"
+          },
+          {
+            "start": 820306,
+            "end": 828506,
+            "text": "This integrates the, how to call that one, the response, the AI response as well."
+          },
+          {
+            "start": 829066,
+            "end": 833646,
+            "text": "Just in case we create auto reply, workflow, things like that."
+          },
+          {
+            "start": 833866,
+            "end": 850766,
+            "text": "Because what we're struggling in terms of the helpscout, Alex, is those simple question that we could just simply automate like instead of us composing our own email though we all, we always have auto or save replies."
+          },
+          {
+            "start": 851086,
+            "end": 877696,
+            "text": "We all have templates, but I think it would be the AI, I'm thinking of an AI tool… that will help us automatically closed the ticket that is also integrated with our process and with our policies like attached to like policy in Minneapolis, things like that as specifically."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 879956,
+            "end": 882396,
+            "text": "Yes, I know exactly what you mean."
+          },
+          {
+            "start": 882736,
+            "end": 883336,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 891316,
+            "end": 912636,
+            "text": "Yeah, I'm sorry, I'm just looking at my feature map currently of what's about to be available and… it's not going to be in the Omni product to start, but essentially, you want like an AI co pilot that writes that's going to tee up all the emails."
+          },
+          {
+            "start": 912976,
+            "end": 922696,
+            "text": "So when you come in for the day, like when you go into an email, there's going to be an automatic suggestion of what we should say back to him."
+          }
+        ]
+      },
+      {
+        "speakerId": "7617215620448372779",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 923456,
+            "end": 930596,
+            "text": "Yep, could be like we can create like a workflow that if that's just for scheduling things like that."
+          },
+          {
+            "start": 930696,
+            "end": 935876,
+            "text": "If that's specific on the property, they just would like to check our website."
+          },
+          {
+            "start": 935876,
+            "end": 939036,
+            "text": "That can be just automatically sent."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 940836,
+            "end": 950596,
+            "text": "Yeah… we could do some things with scheduling like if somebody wrote in and had the word scheduling or, you know, if there was like a form."
+          }
+        ]
+      },
+      {
+        "speakerId": "7617215620448372779",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 950596,
+            "end": 952156,
+            "text": "Or something, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 952256,
+            "end": 958416,
+            "text": "We could auto tag it, send them the email with like the scheduling link, but you could do that in helpscout too."
+          }
+        ]
+      },
+      {
+        "speakerId": "7617215620448372779",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 960996,
+            "end": 966196,
+            "text": "Well, the tagging, things like, that was created by John, I believe so."
+          },
+          {
+            "start": 966336,
+            "end": 981636,
+            "text": "And then the other staff member, but when it comes to replying the auto reply and it's specifically to like in a specific question from prospects like prospects and then tenants clients."
+          },
+          {
+            "start": 982696,
+            "end": 992256,
+            "text": "I don't think that we do have an option that on helpscout, we have to manually reply, we have saved replies but we have to manually reply."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 996786,
+            "end": 997166,
+            "text": "Yeah."
+          },
+          {
+            "start": 997186,
+            "end": 998206,
+            "text": "We could do automation."
+          },
+          {
+            "start": 998326,
+            "end": 998846,
+            "text": "We,"
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 998846,
+            "end": 1000086,
+            "text": "could do auto."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1000086,
+            "end": 1007146,
+            "text": "Replies, essentially, we'd want to just like scan for certain keywords or phrases and then trigger a reply."
+          },
+          {
+            "start": 1008346,
+            "end": 1015246,
+            "text": "We could then leave that as open so the person receives a reply, but then you could come review it manually."
+          }
+        ]
+      },
+      {
+        "speakerId": "7617215620448372779",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1017006,
+            "end": 1020846,
+            "text": "And then, and can you show me where do you go to?"
+          },
+          {
+            "start": 1020846,
+            "end": 1023406,
+            "text": "Just to couple check it?"
+          },
+          {
+            "start": 1024476,
+            "end": 1030136,
+            "text": "Yeah, that should be on… automations."
+          },
+          {
+            "start": 1030136,
+            "end": 1030776,
+            "text": "Okay?"
+          },
+          {
+            "start": 1030956,
+            "end": 1031576,
+            "text": "Understood."
+          },
+          {
+            "start": 1034836,
+            "end": 1035176,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1038656,
+            "end": 1043676,
+            "text": "I'm going to say it contains a certain keyword, then let's add a tag."
+          },
+          {
+            "start": 1044996,
+            "end": 1045596,
+            "text": "All right."
+          },
+          {
+            "start": 1045696,
+            "end": 1046616,
+            "text": "Send a reply."
+          }
+        ]
+      },
+      {
+        "speakerId": "7617215620448372779",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1046976,
+            "end": 1047816,
+            "text": "And add an action."
+          },
+          {
+            "start": 1048316,
+            "end": 1048936,
+            "text": "All right."
+          },
+          {
+            "start": 1048936,
+            "end": 1049616,
+            "text": "I got you."
+          },
+          {
+            "start": 1049716,
+            "end": 1050676,
+            "text": "I got what you're saying."
+          },
+          {
+            "start": 1051436,
+            "end": 1053736,
+            "text": "There we go, that answers my question, Don."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1056286,
+            "end": 1057486,
+            "text": "Yeah, but."
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1057486,
+            "end": 1057986,
+            "text": "I think."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1059926,
+            "end": 1062626,
+            "text": "Right now, we like the parody."
+          },
+          {
+            "start": 1063606,
+            "end": 1065806,
+            "text": "There's a lot of parody to helpscout."
+          },
+          {
+            "start": 1067166,
+            "end": 1070446,
+            "text": "Helpscout's been in the space for a long time."
+          }
+        ]
+      },
+      {
+        "speakerId": "7617215620448372779",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1070826,
+            "end": 1071566,
+            "text": "I agree."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1074366,
+            "end": 1092266,
+            "text": "They, yeah, when I started at a different company, we were competing against them and that was like back in 2015, this product, that world that you're looking at now is only two years old and 80 percent of our development is currently being applied here."
+          },
+          {
+            "start": 1092626,
+            "end": 1094966,
+            "text": "So this is kind of like the future of our company."
+          }
+        ]
+      },
+      {
+        "speakerId": "7617215620448372779",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1095946,
+            "end": 1097266,
+            "text": "All right, understood."
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1097846,
+            "end": 1098546,
+            "text": "All right."
+          },
+          {
+            "start": 1098586,
+            "end": 1101826,
+            "text": "Well, why don't, we just stay in touch."
+          },
+          {
+            "start": 1102246,
+            "end": 1103186,
+            "text": "I'm not sure."
+          },
+          {
+            "start": 1103186,
+            "end": 1107486,
+            "text": "I see enough here to unwind what we got."
+          },
+          {
+            "start": 1107886,
+            "end": 1118876,
+            "text": "I think having something a little more… revolutionary, maybe not revolutionary, but a bigger gap between where we are and where you are."
+          },
+          {
+            "start": 1118956,
+            "end": 1120336,
+            "text": "I think would make some sense."
+          },
+          {
+            "start": 1122096,
+            "end": 1122536,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1122676,
+            "end": 1128096,
+            "text": "I think you need AI agents to auto reply to these people."
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1128156,
+            "end": 1128516,
+            "text": "Exactly."
+          },
+          {
+            "start": 1128556,
+            "end": 1131716,
+            "text": "And I'm sure that's probably not too far away."
+          },
+          {
+            "start": 1131856,
+            "end": 1136556,
+            "text": "I mean, it wasn't more than a year or two ago that nobody even knew what the hell the stuff was."
+          },
+          {
+            "start": 1136676,
+            "end": 1139716,
+            "text": "And now, you know, so, all right."
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1139756,
+            "end": 1143696,
+            "text": "Well, Alex, let's just stay in touch, Claire, Karen."
+          },
+          {
+            "start": 1143816,
+            "end": 1144896,
+            "text": "Why don't we stay on the line?"
+          },
+          {
+            "start": 1144996,
+            "end": 1163696,
+            "text": "And I want to review some of the help scout stuff then, but Alex maybe reach out to us in about six months or maybe as soon as you get some significant updates, let us know because we are looking for an easier, more robust tool than what we have."
+          }
+        ]
+      },
+      {
+        "speakerId": "6177825341492798675",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1165896,
+            "end": 1166296,
+            "text": "Absolutely."
+          },
+          {
+            "start": 1167196,
+            "end": 1167656,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "7768624599428588938",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1168076,
+            "end": 1171276,
+            "text": "Well, I will, Claire, Karen, I'll just call you on our line."
+          }
+        ]
+      },
+      {
+        "speakerId": "7617215620448372779",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1172196,
+            "end": 1172576,
+            "text": "Okay."
+          },
+          {
+            "start": 1172996,
+            "end": 1173736,
+            "text": "Thank you, Alex."
+          },
+          {
+            "start": 1174016,
+            "end": 1174776,
+            "text": "Thank you, Alex."
+          },
+          {
+            "start": 1175176,
+            "end": 1176156,
+            "text": "Thank you for your time."
+          },
+          {
+            "start": 1176416,
+            "end": 1177016,
+            "text": "Appreciate you."
+          },
+          {
+            "start": 1177456,
+            "end": 1178216,
+            "text": "See you guys."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 65
+}

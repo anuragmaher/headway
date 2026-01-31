@@ -5,34 +5,11 @@
   "started": "2026-01-29T23:31:47.321+05:30",
   "signals": [
     {
-      "Theme": "Email Automation",
-      "Ask": "We need automatic email routing when a colleague is out of office.",
-      "Priority": "High",
-      "Evidence": "We want the emails to automatically route to the other person on the team when one of them goes out of the office."
-    },
-    {
       "Theme": "Shared Drafts",
-      "Ask": "Shared drafts should be visible in the shared drafts folder.",
+      "Sub-Theme": "Visibility Issue",
+      "Ask": "Ensure shared drafts are visible in the shared drafts folder.",
       "Priority": "Medium",
       "Evidence": "Shared drafts are not showing up in my shared drafts folder."
-    },
-    {
-      "Theme": "CSAT Integration",
-      "Ask": "We are interested in integrating CSAT functionality into our workflow.",
-      "Priority": "Medium",
-      "Evidence": "I'm curious to learn about CSAT; it sounds like you can crack CSAT in here as well."
-    },
-    {
-      "Theme": "Automation Templates",
-      "Ask": "We would like the ability to create templates for automations.",
-      "Priority": "Low",
-      "Evidence": "It would be a cool feature if you could templatize your automations."
-    },
-    {
-      "Theme": "Custom Domain Routing",
-      "Ask": "We need to categorize customers for specific routing based on their email domains.",
-      "Priority": "High",
-      "Evidence": "We need to bucket customers into different categories for routing."
     }
   ]
 }

@@ -1,0 +1,5579 @@
+{
+  "call_id": "9195611161667914598",
+  "title": "ProSport Asset<>Hiver",
+  "started": "2026-01-27T22:30:16+05:30",
+  "duration_seconds": 3632,
+  "call_metadata": {
+    "id": "9195611161667914598",
+    "url": "https://us-31545.app.gong.io/call?id=9195611161667914598",
+    "title": "ProSport Asset<>Hiver",
+    "scheduled": "2026-01-27T22:30:00+05:30",
+    "started": "2026-01-27T22:30:16+05:30",
+    "duration": 3632,
+    "primaryUserId": "2800021235101731226",
+    "direction": "Conference",
+    "system": "Zoom",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://us06web.zoom.us/j/82572709983?jst=2",
+    "isPrivate": false,
+    "calendarEventId": "671gn26jbhrc315hbtpoduimoh@google.com"
+  },
+  "parties": [
+    {
+      "id": "775614038570320459",
+      "name": "Cristian S",
+      "speakerId": "4070394527657246867",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "1473764337168547199",
+      "emailAddress": "eric@grexit.com",
+      "name": "Eric L",
+      "userId": "6240945478615555161",
+      "speakerId": "535319342585416945",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "2726100217940136288",
+      "name": "S Notetaker",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Internal",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "2754929476750817494",
+      "name": "Read.Ai Meeting Notes",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "4937603350474244619",
+      "name": "AlinZ",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "5331490149239545818",
+      "name": "Brett Cunnningham- Prosport",
+      "speakerId": "3180559415786853186",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "5626688137251949057",
+      "emailAddress": "matthew.p@grexit.com",
+      "name": "Matthew P",
+      "title": "Sr. AE",
+      "userId": "2800021235101731226",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "6400608516813622943",
+      "emailAddress": "calin.m@prosportinc.com",
+      "name": "Calin Magherusan",
+      "title": "",
+      "speakerId": "7659724264067026559",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "187139424573",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "44068012890"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Calin"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "841193560"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Outlook"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769023429.002
+                },
+                {
+                  "name": "createdate",
+                  "value": 1766424711.711
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1766424711.711
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "calin.m@prosportinc.com"
+                },
+                {
+                  "name": "lastname",
+                  "value": "Magherusan"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "6460685385644400059",
+      "emailAddress": "gage.burton@prosportinc.com",
+      "name": "Gage Burton",
+      "title": "Executive Vice President",
+      "speakerId": "3235379149350556379",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "173787072581",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "44068012890"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Gage"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Executive Vice President"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769023428.331
+                },
+                {
+                  "name": "createdate",
+                  "value": 1762779230.499
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1764547200.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "Burton"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "79522122"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "DIRECT_TRAFFIC"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Outlook"
+                },
+                {
+                  "name": "phone",
+                  "value": "+16303300733"
+                },
+                {
+                  "name": "mobilephone",
+                  "value": "630-330-0733"
+                },
+                {
+                  "name": "recent_conversion_date",
+                  "value": 1764864371.793
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Deal Closed"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1762779230.499
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "customer"
+                },
+                {
+                  "name": "email",
+                  "value": "gage.burton@prosportinc.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "+16303300733",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "6504556355990668550",
+      "emailAddress": "alex@grexit.com",
+      "name": "Alex German",
+      "userId": "2921335877697149101",
+      "speakerId": "8872162095861512660",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "6551726848322075748",
+      "name": "Julian",
+      "speakerId": "1618519560606330753",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "7146271447629100554",
+      "name": "Anca Echim",
+      "speakerId": "1703639854900252903",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "8412423848781354412",
+      "name": "Manny",
+      "speakerId": "7781355430657321842",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "8416811313410183666",
+      "name": "Dan S",
+      "speakerId": "6643827150910832497",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "8737854440441840106",
+      "name": "16308354624",
+      "speakerId": "9070139258318200609",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "8680023411815817445",
+      "emailAddress": "brett.cunningham@prosportinc.com",
+      "title": "",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "184125502571",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "44068012890"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Brett"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "33861608"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Outlook"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769023433.076
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Duplicate Prospect"
+                },
+                {
+                  "name": "createdate",
+                  "value": 1765478931.739
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1765478931.739
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "brett.cunningham@prosportinc.com"
+                },
+                {
+                  "name": "lastname",
+                  "value": "Cunningham"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "9195611161667914598",
+    "transcript": [
+      {
+        "speakerId": "6643827150910832497",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 7622,
+            "end": 8422,
+            "text": "hey,"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 11042,
+            "end": 11602,
+            "text": "what's up?"
+          },
+          {
+            "start": 11602,
+            "end": 17482,
+            "text": "Everyone letting in the rest of the group, all right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 25122,
+            "end": 25802,
+            "text": "How's it going?"
+          },
+          {
+            "start": 25882,
+            "end": 26022,
+            "text": "Brett?"
+          },
+          {
+            "start": 27962,
+            "end": 28362,
+            "text": "Hello?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 29282,
+            "end": 30002,
+            "text": "Good, Eric."
+          },
+          {
+            "start": 30042,
+            "end": 30602,
+            "text": "How are you?"
+          },
+          {
+            "start": 30642,
+            "end": 31282,
+            "text": "Hi, anca?"
+          },
+          {
+            "start": 32202,
+            "end": 32602,
+            "text": "Hey?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 35372,
+            "end": 42892,
+            "text": "I am doing well… survived this brutal cold spell that we had."
+          },
+          {
+            "start": 43412,
+            "end": 45512,
+            "text": "I'm sure you guys had it pretty bad, huh?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 45792,
+            "end": 46372,
+            "text": "You're in Colorado?"
+          },
+          {
+            "start": 46392,
+            "end": 47472,
+            "text": "If I'm not mistaken, right?"
+          },
+          {
+            "start": 47572,
+            "end": 47772,
+            "text": "Eric?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 48192,
+            "end": 49412,
+            "text": "Yeah, I'm in Colorado."
+          },
+          {
+            "start": 49412,
+            "end": 57912,
+            "text": "It was in the negatives which is pretty cold… and I'm a San Diego boy."
+          },
+          {
+            "start": 58012,
+            "end": 62112,
+            "text": "So it's… especially cold for me."
+          },
+          {
+            "start": 64162,
+            "end": 64962,
+            "text": "All right."
+          },
+          {
+            "start": 65042,
+            "end": 69022,
+            "text": "Let me see who else we got coming in here, so."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 69022,
+            "end": 76942,
+            "text": "We have Lenny, we have anca from our side, I think would be more people joining soon, Julian, Christian, Dan."
+          },
+          {
+            "start": 79022,
+            "end": 80322,
+            "text": "Yeah, Julian is here."
+          },
+          {
+            "start": 80482,
+            "end": 81502,
+            "text": "Can you hear me guys?"
+          },
+          {
+            "start": 82102,
+            "end": 83222,
+            "text": "Yes, we hear you Julian."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 83382,
+            "end": 84222,
+            "text": "We can hear you, Julian."
+          },
+          {
+            "start": 85622,
+            "end": 86562,
+            "text": "Let me see."
+          },
+          {
+            "start": 86622,
+            "end": 87222,
+            "text": "Can you guys hear me?"
+          },
+          {
+            "start": 87882,
+            "end": 88282,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 89522,
+            "end": 92692,
+            "text": "We hear you, Dan… and,"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 92692,
+            "end": 95392,
+            "text": "Brett, was Gage joining this one?"
+          },
+          {
+            "start": 95972,
+            "end": 96732,
+            "text": "He was optional."
+          },
+          {
+            "start": 96892,
+            "end": 97392,
+            "text": "I didn't know."
+          },
+          {
+            "start": 97692,
+            "end": 98372,
+            "text": "Oh, right."
+          },
+          {
+            "start": 98492,
+            "end": 99492,
+            "text": "Anca, he just heard me."
+          },
+          {
+            "start": 103342,
+            "end": 103962,
+            "text": "All right."
+          },
+          {
+            "start": 104002,
+            "end": 106402,
+            "text": "We got quite a big group here."
+          },
+          {
+            "start": 107082,
+            "end": 111022,
+            "text": "Are we waiting on anyone else on your side?"
+          },
+          {
+            "start": 111442,
+            "end": 112022,
+            "text": "I think."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 112022,
+            "end": 112982,
+            "text": "We've got everybody on."
+          },
+          {
+            "start": 113062,
+            "end": 115822,
+            "text": "I don't know if Gage is joining, but I got everybody."
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 115822,
+            "end": 116542,
+            "text": "From that side, Gage."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 116542,
+            "end": 116802,
+            "text": "Is here?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 117462,
+            "end": 118262,
+            "text": "Gage is joining?"
+          },
+          {
+            "start": 118782,
+            "end": 120222,
+            "text": "His ears were burning."
+          },
+          {
+            "start": 120262,
+            "end": 122142,
+            "text": "He heard his name and he jumped right in."
+          },
+          {
+            "start": 124252,
+            "end": 125052,
+            "text": "Okay, cool."
+          },
+          {
+            "start": 125152,
+            "end": 125392,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 125392,
+            "end": 133832,
+            "text": "One more time since we got Eric over here, Brett and Gage, what's the feedback after two, three weeks, whatever so far?"
+          },
+          {
+            "start": 133832,
+            "end": 135832,
+            "text": "You guys been working on?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 136512,
+            "end": 138412,
+            "text": "Yeah, it's been, really good."
+          },
+          {
+            "start": 138892,
+            "end": 141572,
+            "text": "You know, there is like a learning curve to it, right?"
+          },
+          {
+            "start": 141772,
+            "end": 149092,
+            "text": "Some process changed that internally we have to adopt, but overall, things are flowing through really well."
+          },
+          {
+            "start": 149192,
+            "end": 155432,
+            "text": "We had some fixes that we did before you guys, you know, we felt comfortable with you guys coming over to it."
+          },
+          {
+            "start": 155492,
+            "end": 165752,
+            "text": "So, to this point, very happy and we're missing less and, you know, responding quicker, I think is my overall feedback to it."
+          },
+          {
+            "start": 165812,
+            "end": 166312,
+            "text": "Yeah."
+          },
+          {
+            "start": 166372,
+            "end": 167952,
+            "text": "And I think more organized I."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 167952,
+            "end": 172832,
+            "text": "Think it takes away from especially just thinking about how you guys operate on the asset side."
+          },
+          {
+            "start": 172832,
+            "end": 173192,
+            "text": "Right now."
+          },
+          {
+            "start": 173312,
+            "end": 184232,
+            "text": "It takes away from every single person doing the same thing 10 times when one person could just do it."
+          },
+          {
+            "start": 184652,
+            "end": 189572,
+            "text": "So it will help the efficiency of the workflow on a day to day basis."
+          },
+          {
+            "start": 189732,
+            "end": 202012,
+            "text": "And when you're getting a distribution list email to like proone and it needs Manny's attention versus Anka's attention, we could flag Manny in it, say Manny, look at this or vice versa."
+          },
+          {
+            "start": 202072,
+            "end": 204492,
+            "text": "That way it's not cluttering everyone's workspace."
+          },
+          {
+            "start": 204612,
+            "end": 211762,
+            "text": "And it's making it, it's opening up some time for some people that would normally be staring at different emails."
+          },
+          {
+            "start": 212322,
+            "end": 214962,
+            "text": "So we're enjoying it so far."
+          },
+          {
+            "start": 215642,
+            "end": 216122,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 216182,
+            "end": 225362,
+            "text": "And you said Eric, if I'm not mistaken in the really beginning of our conversation, arrive logistics is one of your customers, or did I got that right or no?"
+          },
+          {
+            "start": 225642,
+            "end": 226122,
+            "text": "You?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 226122,
+            "end": 226582,
+            "text": "Got that, right."
+          },
+          {
+            "start": 226662,
+            "end": 228282,
+            "text": "They are a customer, correct?"
+          },
+          {
+            "start": 228402,
+            "end": 233012,
+            "text": "We actually have quite a number of other logistics companies."
+          },
+          {
+            "start": 233152,
+            "end": 237072,
+            "text": "I personally support at least three or four other logistics."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 237072,
+            "end": 237172,
+            "text": "Companies."
+          },
+          {
+            "start": 237172,
+            "end": 239132,
+            "text": "Can you share some of those names with us?"
+          },
+          {
+            "start": 239192,
+            "end": 254622,
+            "text": "Because arrive is one of our top five customers and kind of like to give an idea of how many others are out there using your product just to give us more confidence on, I mean, the team because it's the first time they listened to this, hey."
+          }
+        ]
+      },
+      {
+        "speakerId": "8872162095861512660",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 254762,
+            "end": 255042,
+            "text": "Yeah."
+          },
+          {
+            "start": 255102,
+            "end": 255982,
+            "text": "Just jumping in here."
+          },
+          {
+            "start": 256042,
+            "end": 256722,
+            "text": "I'm Alex Kerman."
+          },
+          {
+            "start": 256802,
+            "end": 260822,
+            "text": "I'm one of the revenue leaders here, the revenue leader here at hiver."
+          },
+          {
+            "start": 260982,
+            "end": 271512,
+            "text": "I just want to introduce myself and thank you for the opportunity just from a logistics standpoint and kind of the space as a whole, we are one of the preferred vendors in the space."
+          },
+          {
+            "start": 272072,
+            "end": 277952,
+            "text": "Flexport relies on hiver as their leading best in class solution for all their operations."
+          },
+          {
+            "start": 278312,
+            "end": 280712,
+            "text": "And they are one of our five largest customers."
+          },
+          {
+            "start": 281052,
+            "end": 294172,
+            "text": "Arrive is another, we attend the trimble F iii conference in chattanooga on a yearly basis and present on stage, there's many other brand names in the space."
+          },
+          {
+            "start": 294312,
+            "end": 305322,
+            "text": "And again, just due to the email heavy strength… of our platform, we fit very well into that vertical."
+          },
+          {
+            "start": 305962,
+            "end": 306782,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 307582,
+            "end": 309502,
+            "text": "Yeah, we can start the presentation."
+          },
+          {
+            "start": 309822,
+            "end": 319022,
+            "text": "I mean, that was the only thing that I wanted to clarify before I'll get to later on some questions, but we can start with everything."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 320092,
+            "end": 320232,
+            "text": "Sure."
+          },
+          {
+            "start": 320592,
+            "end": 322292,
+            "text": "And I appreciate everyone joining."
+          },
+          {
+            "start": 322492,
+            "end": 325892,
+            "text": "So, I'm going to introduce myself since there's a lot of new faces."
+          },
+          {
+            "start": 326132,
+            "end": 326992,
+            "text": "My name is Eric Lafon."
+          },
+          {
+            "start": 327532,
+            "end": 330612,
+            "text": "I'm customer success manager here at hiver."
+          },
+          {
+            "start": 330832,
+            "end": 332192,
+            "text": "Been here about a year and a half."
+          },
+          {
+            "start": 332992,
+            "end": 335012,
+            "text": "Been in the software space for decades."
+          },
+          {
+            "start": 335232,
+            "end": 340372,
+            "text": "I've supported a lot of customers and actually worked at lytics drivecam for three years."
+          },
+          {
+            "start": 340532,
+            "end": 345932,
+            "text": "So I've also been in freight and distribution for a number of years."
+          },
+          {
+            "start": 347792,
+            "end": 348812,
+            "text": "Alex just introduced himself."
+          },
+          {
+            "start": 349152,
+            "end": 352772,
+            "text": "We also have matt who's a part of the account team."
+          },
+          {
+            "start": 353412,
+            "end": 355172,
+            "text": "So you're well supported here."
+          },
+          {
+            "start": 356052,
+            "end": 356772,
+            "text": "Purpose of today."
+          },
+          {
+            "start": 356952,
+            "end": 358232,
+            "text": "Really, I want to do two things."
+          },
+          {
+            "start": 358332,
+            "end": 373932,
+            "text": "I wanted to give a high level walkthrough of the platform, really the main foundational pieces, what you could expect to see as your team gets in there and then take a little bit of time to understand how the asset team works."
+          },
+          {
+            "start": 374612,
+            "end": 383242,
+            "text": "I've been working with Brett and Gage on the other side of the house, but I want to understand a little bit more in terms of the workflows specifically for the asset team."
+          },
+          {
+            "start": 383342,
+            "end": 384342,
+            "text": "I'm sure they're slightly different."
+          },
+          {
+            "start": 384702,
+            "end": 386702,
+            "text": "So those are my main two objectives."
+          },
+          {
+            "start": 386922,
+            "end": 392402,
+            "text": "Obviously help answer any questions from you and the team as we look to try to get this team in there."
+          },
+          {
+            "start": 392822,
+            "end": 398002,
+            "text": "Anything that I missed or anything that you guys specifically want to cover in addition to that?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 400102,
+            "end": 401442,
+            "text": "No, I think we're good to start."
+          },
+          {
+            "start": 401742,
+            "end": 417072,
+            "text": "Give us a rundown on everything top to bottom, what to expect and kind of like everybody to have an understanding of what hiver does and how things will simplify and get better on our side to save some time which everybody's looking for."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 418152,
+            "end": 418632,
+            "text": "Perfect."
+          },
+          {
+            "start": 418892,
+            "end": 419252,
+            "text": "All right."
+          },
+          {
+            "start": 419332,
+            "end": 420332,
+            "text": "So I'm going to share my screen."
+          },
+          {
+            "start": 420612,
+            "end": 421752,
+            "text": "Someone give me a heads up."
+          },
+          {
+            "start": 421812,
+            "end": 424512,
+            "text": "I'm pretty sure this is sharing, but all right."
+          },
+          {
+            "start": 424612,
+            "end": 425472,
+            "text": "We're good to go."
+          },
+          {
+            "start": 425832,
+            "end": 426452,
+            "text": "All right."
+          },
+          {
+            "start": 426532,
+            "end": 429012,
+            "text": "So this is our hiver Omni platform."
+          },
+          {
+            "start": 429292,
+            "end": 433692,
+            "text": "So this is what you would be logging into just to give us kind of the lay of the land here."
+          },
+          {
+            "start": 433912,
+            "end": 438312,
+            "text": "You can connect and highly recommend it to connect your personal space."
+          },
+          {
+            "start": 438532,
+            "end": 443192,
+            "text": "I know Gage and Brett have been working out of this for the last month or so."
+          },
+          {
+            "start": 443452,
+            "end": 450792,
+            "text": "So at the top here, you'll see both your personal inbox, but then below, we'll have our, what we call our shared inboxes, right?"
+          },
+          {
+            "start": 450872,
+            "end": 460932,
+            "text": "So we can connect those distribution lists or other types of groups that you have, and have those as what we call inboxes here on the left hand panel, you have a few things."
+          },
+          {
+            "start": 461012,
+            "end": 462192,
+            "text": "So our conversation view."
+          },
+          {
+            "start": 462232,
+            "end": 468192,
+            "text": "So this is all our personal inbox or any shared inbox that we're associated to, right?"
+          },
+          {
+            "start": 468272,
+            "end": 472232,
+            "text": "So if I'm a part of that, I'll have access here notifications."
+          },
+          {
+            "start": 472952,
+            "end": 476612,
+            "text": "So within hiver, you can collaborate across the team."
+          },
+          {
+            "start": 476692,
+            "end": 481312,
+            "text": "So I could do something like at mention Brett to ask him a question."
+          },
+          {
+            "start": 481392,
+            "end": 482612,
+            "text": "I'll show you what that looks like."
+          },
+          {
+            "start": 482832,
+            "end": 486952,
+            "text": "Those notifications all pop here for ease of visibility."
+          },
+          {
+            "start": 487212,
+            "end": 489972,
+            "text": "So I can understand what I've been tagged on."
+          },
+          {
+            "start": 490092,
+            "end": 493672,
+            "text": "Take a look at those emails, respond, collaborate with my team."
+          },
+          {
+            "start": 495052,
+            "end": 496172,
+            "text": "Another big benefit."
+          },
+          {
+            "start": 496292,
+            "end": 498792,
+            "text": "I know the current team is using this are email templates."
+          },
+          {
+            "start": 499312,
+            "end": 510532,
+            "text": "Anything that you do send out frequently or even a handful of times, we can templatize those and then easily pull those up when we're responding or sending out emails from that shared mailbox, right?"
+          },
+          {
+            "start": 510612,
+            "end": 518472,
+            "text": "So from a time perspective, this is a huge time saver to be able to just shoot off any canned response that we frequently use."
+          },
+          {
+            "start": 519692,
+            "end": 522892,
+            "text": "Another benefit of hiver is analytics, right?"
+          },
+          {
+            "start": 522992,
+            "end": 524332,
+            "text": "What's our first response time?"
+          },
+          {
+            "start": 524812,
+            "end": 525932,
+            "text": "What's our volume?"
+          },
+          {
+            "start": 526772,
+            "end": 541412,
+            "text": "We can dive into the nitty gritty details based on maybe certain categories that we have through tags responders, certain… users, any sort of filtering mechanisms that we want to set up."
+          },
+          {
+            "start": 541532,
+            "end": 551472,
+            "text": "My computer is really slow right now with the screen share, but you do have the ability to then look at reports on that and understand how the team is performing."
+          },
+          {
+            "start": 552532,
+            "end": 559152,
+            "text": "And then I'll show I won't go into all detail, but I'll show from an admin perspective, what are some of the things that you can do?"
+          },
+          {
+            "start": 559492,
+            "end": 561372,
+            "text": "So again, what is hiver solving for?"
+          },
+          {
+            "start": 561472,
+            "end": 561712,
+            "text": "Really?"
+          },
+          {
+            "start": 561932,
+            "end": 565772,
+            "text": "The main things are visibility, right?"
+          },
+          {
+            "start": 565832,
+            "end": 567852,
+            "text": "So I'm going to go into one of these shared mailboxes."
+          },
+          {
+            "start": 567852,
+            "end": 579292,
+            "text": "Now is we can see all those emails that are coming into this distribution list or mailbox and we can start to do things like assign, right?"
+          },
+          {
+            "start": 579372,
+            "end": 585392,
+            "text": "So by default, those emails are going to come into an unassigned bucket, right?"
+          },
+          {
+            "start": 585452,
+            "end": 588312,
+            "text": "You can see here, the assignee is none, right?"
+          },
+          {
+            "start": 588372,
+            "end": 591552,
+            "text": "So depending on how the assets team is going to operate, right?"
+          },
+          {
+            "start": 591612,
+            "end": 592512,
+            "text": "We can do a few things."
+          },
+          {
+            "start": 592572,
+            "end": 595612,
+            "text": "We can do things like round Robin assignment, right?"
+          },
+          {
+            "start": 595712,
+            "end": 603712,
+            "text": "So if anyone can work on anything, you can just simply have it assigned across the team evenly distributed."
+          },
+          {
+            "start": 604232,
+            "end": 609612,
+            "text": "You can have it come in as an unassigned, and you can manually assign it, right?"
+          },
+          {
+            "start": 609652,
+            "end": 612292,
+            "text": "So if you want to manually triage it, you can do that."
+          },
+          {
+            "start": 612912,
+            "end": 617572,
+            "text": "We obviously want to move more in the direction of automation as much as we can."
+          },
+          {
+            "start": 618092,
+            "end": 631372,
+            "text": "And then the last thing we can do is we can set up automations on the backend to do things like if it comes from a certain sender, let's automatically assign it to calend or if there's certain keywords, right?"
+          },
+          {
+            "start": 631452,
+            "end": 634752,
+            "text": "Let's say someone handles, I don't know like billing related issues."
+          },
+          {
+            "start": 634972,
+            "end": 637652,
+            "text": "We can use those keywords to automate assignments."
+          },
+          {
+            "start": 638032,
+            "end": 660122,
+            "text": "So there's a number of ways I think to Brett's point earlier where we can have these and have the backend doing things that automatically move it to the appropriate person, get it to those hands more quickly and improve the visibility and efficiency across the team, right?"
+          },
+          {
+            "start": 660222,
+            "end": 663082,
+            "text": "So those are the big goals that we're solving for here."
+          },
+          {
+            "start": 663422,
+            "end": 665342,
+            "text": "I'm going to take a quick pause."
+          },
+          {
+            "start": 665642,
+            "end": 667682,
+            "text": "I'm going to dive into more details here."
+          },
+          {
+            "start": 667822,
+            "end": 670282,
+            "text": "But any questions so far?"
+          },
+          {
+            "start": 673052,
+            "end": 681012,
+            "text": "And don't be shy, this is, you know, you guys can ask away if there's certain things you're unsure of or want more insight on."
+          },
+          {
+            "start": 681112,
+            "end": 684932,
+            "text": "I'm going to dive a little bit deeper, but let me know if there's anything so far."
+          }
+        ]
+      },
+      {
+        "speakerId": "7781355430657321842",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 687132,
+            "end": 688252,
+            "text": "It is Manny here."
+          },
+          {
+            "start": 688312,
+            "end": 689792,
+            "text": "This is just web based."
+          },
+          {
+            "start": 690012,
+            "end": 692952,
+            "text": "So this would we need to open it on a browser?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 693712,
+            "end": 694192,
+            "text": "Correct."
+          },
+          {
+            "start": 694292,
+            "end": 702092,
+            "text": "This is a web based browser that you would log into and then you can connect both your personal inbox, and then those shared mailboxes."
+          },
+          {
+            "start": 702372,
+            "end": 702852,
+            "text": "Okay."
+          },
+          {
+            "start": 705792,
+            "end": 706612,
+            "text": "Good question."
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 706952,
+            "end": 722672,
+            "text": "It's kind of like an overlay for outlook is how you can kind of think about it, Manny, like, so it lays over top of our outlook inboxes and gives us ability to move things and tag things, but it still operates off of our outlook inboxes."
+          },
+          {
+            "start": 722692,
+            "end": 725312,
+            "text": "So you'll the outlook inboxes still exist."
+          },
+          {
+            "start": 725672,
+            "end": 733172,
+            "text": "It's just that all the information is funneled into here and a little bit easier to kind of digest and move around, okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7781355430657321842",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 734642,
+            "end": 735242,
+            "text": "I understand."
+          },
+          {
+            "start": 735442,
+            "end": 748182,
+            "text": "I'm just, I was just asking you because I have like my browser, I have like a ton of things open and it's just trying to look for like what will be the easiest way to like figure out how the process would work on it?"
+          },
+          {
+            "start": 748242,
+            "end": 750222,
+            "text": "But yeah, that was just a question I had for now."
+          }
+        ]
+      },
+      {
+        "speakerId": "6643827150910832497",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 751082,
+            "end": 753002,
+            "text": "So this is Dan, I do have a question."
+          },
+          {
+            "start": 753122,
+            "end": 759302,
+            "text": "So, okay, I understand that part that the hiver is, it will be connected with outlook."
+          },
+          {
+            "start": 759342,
+            "end": 767142,
+            "text": "So when you're going to start dealing with these emails in hiver, will that be clear the outlook as well?"
+          },
+          {
+            "start": 767142,
+            "end": 767962,
+            "text": "When you move the emails?"
+          },
+          {
+            "start": 768422,
+            "end": 770142,
+            "text": "No, no."
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 770902,
+            "end": 783542,
+            "text": "No, outlook will be almost like a like you can think of it as like a sandbox, so it will stay unupdated or untouched in the outlook inboxes, but it will move in hiver."
+          },
+          {
+            "start": 783922,
+            "end": 784262,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6643827150910832497",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 786492,
+            "end": 792692,
+            "text": "So, no matter what you do in hiver, it will not directly make the changes in outlook, correct?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 793592,
+            "end": 796052,
+            "text": "Well, I mean, you could still see activity, right?"
+          },
+          {
+            "start": 796132,
+            "end": 808332,
+            "text": "So if you respond to an email, technically, you'll still be able to see that in outlook as a response, but it won't move or delete things by unassigning or moving them to close status."
+          },
+          {
+            "start": 808952,
+            "end": 811412,
+            "text": "So the, you know, Eric will talk about it."
+          },
+          {
+            "start": 811472,
+            "end": 817692,
+            "text": "But instead of like, you know, how we archive emails, it's more of like a status change in hiver."
+          },
+          {
+            "start": 817812,
+            "end": 827062,
+            "text": "So when you close something in hiver, which would be like archiving in outlook, the low, the email won't physically move anywhere in outlook."
+          },
+          {
+            "start": 827142,
+            "end": 828142,
+            "text": "It'll stay there."
+          },
+          {
+            "start": 828282,
+            "end": 829422,
+            "text": "Does that answer it?"
+          },
+          {
+            "start": 829582,
+            "end": 829882,
+            "text": "You?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6643827150910832497",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 829882,
+            "end": 832602,
+            "text": "Have to go back and clear manually, on outlook."
+          },
+          {
+            "start": 832662,
+            "end": 832862,
+            "text": "Okay."
+          },
+          {
+            "start": 832982,
+            "end": 833462,
+            "text": "Well."
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 833562,
+            "end": 840522,
+            "text": "No, because in the end of the day, we'll never touch like we should never touch outlook again, necessarily, like you'll never have to."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 840782,
+            "end": 842622,
+            "text": "Outlook is just pushing the information."
+          },
+          {
+            "start": 842662,
+            "end": 850442,
+            "text": "So this new platform, basically, outlook is not going to be used because everything is going to be moved on hiver, correct?"
+          },
+          {
+            "start": 851292,
+            "end": 853252,
+            "text": "We'll get to more later right now."
+          },
+          {
+            "start": 854312,
+            "end": 854752,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 854872,
+            "end": 857992,
+            "text": "Let me, I'll show you how the inbox interacts."
+          },
+          {
+            "start": 858332,
+            "end": 860872,
+            "text": "I think that'll help clarify some of the questions you have."
+          },
+          {
+            "start": 861012,
+            "end": 861652,
+            "text": "But great question."
+          },
+          {
+            "start": 861972,
+            "end": 863452,
+            "text": "Let me move into now."
+          },
+          {
+            "start": 863692,
+            "end": 866872,
+            "text": "I'm going to move into the share again shared inboxes."
+          },
+          {
+            "start": 866872,
+            "end": 870592,
+            "text": "So if you're connecting a distribution list, for example, this will show."
+          },
+          {
+            "start": 870692,
+            "end": 874552,
+            "text": "So the first thing to mention is you'll have something called assigned to me."
+          },
+          {
+            "start": 874632,
+            "end": 877872,
+            "text": "So some of you might be in multiple shared inboxes, right?"
+          },
+          {
+            "start": 877952,
+            "end": 880872,
+            "text": "So you might get assigned from different inboxes."
+          },
+          {
+            "start": 881412,
+            "end": 885892,
+            "text": "This is going to collate all those emails and show you everything that's relevant to you."
+          },
+          {
+            "start": 885912,
+            "end": 889232,
+            "text": "Where you're listed here as the assignee, right?"
+          },
+          {
+            "start": 889312,
+            "end": 893272,
+            "text": "So if I'm an end user, all I want to focus on is what's assigned to me."
+          },
+          {
+            "start": 893532,
+            "end": 896612,
+            "text": "I can see that list here and work through these emails."
+          },
+          {
+            "start": 897092,
+            "end": 898632,
+            "text": "Now from a team perspective."
+          },
+          {
+            "start": 899012,
+            "end": 901972,
+            "text": "Let's look at this support inbox, right?"
+          },
+          {
+            "start": 902072,
+            "end": 904492,
+            "text": "So you see a few different views here."
+          },
+          {
+            "start": 904632,
+            "end": 907292,
+            "text": "So I'm going to concentrate first on the unassigned."
+          },
+          {
+            "start": 907992,
+            "end": 917352,
+            "text": "So by default emails that are coming to this, I don't know what the email list is for you guys, but let's say assets at pro sports, right?"
+          },
+          {
+            "start": 917412,
+            "end": 920752,
+            "text": "By default, they're going to land in this unassigned, right?"
+          },
+          {
+            "start": 920872,
+            "end": 927332,
+            "text": "Unless we have some sort of automation triggered, you'll notice here on the right hand panel, we don't have anyone assigned to this."
+          },
+          {
+            "start": 927392,
+            "end": 928992,
+            "text": "This is an email that's come in."
+          },
+          {
+            "start": 929252,
+            "end": 930432,
+            "text": "There's no ownership."
+          },
+          {
+            "start": 930852,
+            "end": 934132,
+            "text": "So as I mentioned, right, we can manually assign this."
+          },
+          {
+            "start": 934292,
+            "end": 938152,
+            "text": "So if I come in here and I say this is for Ryan, I can assign it."
+          },
+          {
+            "start": 938832,
+            "end": 939392,
+            "text": "What did you notice?"
+          },
+          {
+            "start": 939612,
+            "end": 939852,
+            "text": "It's?"
+          },
+          {
+            "start": 939852,
+            "end": 945092,
+            "text": "Moved it out of this unassigned and it's actually moved it into this mine."
+          },
+          {
+            "start": 945392,
+            "end": 947672,
+            "text": "So again, same concept of this assigned to me."
+          },
+          {
+            "start": 947832,
+            "end": 952852,
+            "text": "This is everything that's assigned to me in this specific mailbox, right?"
+          },
+          {
+            "start": 952932,
+            "end": 961432,
+            "text": "So if I'm an end user, I'm probably mostly going to focus on these mine and this is what has been assigned to me."
+          },
+          {
+            "start": 961792,
+            "end": 964232,
+            "text": "Again, you can manually assign those."
+          },
+          {
+            "start": 964452,
+            "end": 966732,
+            "text": "You can round Robin, assign those."
+          },
+          {
+            "start": 967292,
+            "end": 969512,
+            "text": "And then you can create automation rules."
+          },
+          {
+            "start": 969772,
+            "end": 976152,
+            "text": "So if it's a billing related that goes to Manny, it's going to skip this unassigned."
+          },
+          {
+            "start": 976252,
+            "end": 978612,
+            "text": "So you don't have to manually triage it anymore."
+          },
+          {
+            "start": 978972,
+            "end": 987432,
+            "text": "It's going to know based off that rule we create, automatically assign this to Manny because Manny handles all of our invoice related questions, right?"
+          },
+          {
+            "start": 990302,
+            "end": 997622,
+            "text": "Once it's assigned to, you can then work out of this mine folder from a high level team perspective."
+          },
+          {
+            "start": 997842,
+            "end": 999942,
+            "text": "Let's say I'm a team lead or supervisor."
+          },
+          {
+            "start": 1000832,
+            "end": 1005072,
+            "text": "I can see across the team, those emails, right?"
+          },
+          {
+            "start": 1005172,
+            "end": 1008192,
+            "text": "So I can see all the emails that are assigned across my team."
+          },
+          {
+            "start": 1008372,
+            "end": 1012992,
+            "text": "I can see what Susan is working on, what Suhas is working on."
+          },
+          {
+            "start": 1013092,
+            "end": 1020612,
+            "text": "So although it lives all in that same mailbox, we now have ownership and assignment, I can still come in here and support."
+          },
+          {
+            "start": 1020812,
+            "end": 1022212,
+            "text": "Let's say Suhas was out today."
+          },
+          {
+            "start": 1022772,
+            "end": 1031572,
+            "text": "I could still come in here and I could still access these emails, respond if I needed to even reassign if I needed to, right?"
+          },
+          {
+            "start": 1031712,
+            "end": 1035332,
+            "text": "So from a team perspective, we have that full visibility across the team."
+          },
+          {
+            "start": 1036372,
+            "end": 1039112,
+            "text": "Two last things I want to show is tags."
+          },
+          {
+            "start": 1039592,
+            "end": 1042092,
+            "text": "So think of these simply as categories, right?"
+          },
+          {
+            "start": 1042172,
+            "end": 1047472,
+            "text": "We can create tags within hiver to label and categorize types of work."
+          },
+          {
+            "start": 1047592,
+            "end": 1061252,
+            "text": "So whether this is a shipping related email, this is an invoice, whatever those categories are, the benefit of this, there's a few a, we can use those tags to power workflows."
+          },
+          {
+            "start": 1061472,
+            "end": 1067852,
+            "text": "So I've mentioned if an email is tagged a certain way, maybe automatically assign it to a member."
+          },
+          {
+            "start": 1068482,
+            "end": 1075902,
+            "text": "The other thing that we can do is in our analytics, we can look up and get metrics around these tags."
+          },
+          {
+            "start": 1076202,
+            "end": 1081882,
+            "text": "So if I want to see volume of how many invoice related emails did we get last quarter?"
+          },
+          {
+            "start": 1082462,
+            "end": 1083262,
+            "text": "I can do that."
+          },
+          {
+            "start": 1083382,
+            "end": 1093662,
+            "text": "If I want to see even more specific what's our first response time for those invoice related questions, I can drill down, use that as a filter and get more insight."
+          },
+          {
+            "start": 1093962,
+            "end": 1099242,
+            "text": "So this helps with understanding, you know, what's going on across the team, where there may be some gaps."
+          },
+          {
+            "start": 1099442,
+            "end": 1101262,
+            "text": "Why do we struggle with these invoice questions?"
+          },
+          {
+            "start": 1101582,
+            "end": 1102662,
+            "text": "Why are there so many?"
+          },
+          {
+            "start": 1103122,
+            "end": 1106422,
+            "text": "Do we need to add a second member of that team, right?"
+          },
+          {
+            "start": 1106482,
+            "end": 1111462,
+            "text": "Those sort of business related questions we can start to understand as we use those categories."
+          },
+          {
+            "start": 1112512,
+            "end": 1115332,
+            "text": "And again, those are named as tags within hiver."
+          },
+          {
+            "start": 1115752,
+            "end": 1120972,
+            "text": "And then the last thing to call out here is we can create customized views, right?"
+          },
+          {
+            "start": 1121072,
+            "end": 1127012,
+            "text": "So if I want to come in here and I want to add filters by certain tags, right?"
+          },
+          {
+            "start": 1127052,
+            "end": 1137202,
+            "text": "So maybe I care about this tag and this tag or certain statuses, assignees, I can filter those views and then I can save those here."
+          },
+          {
+            "start": 1137302,
+            "end": 1144522,
+            "text": "So these are all custom views based on certain filters that we want to automatically just come in here and see, right?"
+          },
+          {
+            "start": 1146202,
+            "end": 1151312,
+            "text": "So from a views perspective, a lot of visibility just depending on what's important to you."
+          },
+          {
+            "start": 1151592,
+            "end": 1157112,
+            "text": "And then the last thing I'll call out here, Brett mentioned to it is hiver has the concept of statuses."
+          },
+          {
+            "start": 1157152,
+            "end": 1159112,
+            "text": "So emails will land here as open."
+          },
+          {
+            "start": 1159852,
+            "end": 1175852,
+            "text": "We have pending, which is usually like if we're waiting for an external user to respond, usually like a customer, we can mark that as pending moves it a little bit out of visibility and then closed is essentially like you're archived, right?"
+          },
+          {
+            "start": 1175932,
+            "end": 1177512,
+            "text": "It would move it out of our open emails."
+          },
+          {
+            "start": 1178342,
+            "end": 1179482,
+            "text": "It doesn't delete it."
+          },
+          {
+            "start": 1179582,
+            "end": 1186042,
+            "text": "I still have access but you'll see here, I have all of our closed emails which we can still filter through in search."
+          },
+          {
+            "start": 1187622,
+            "end": 1193522,
+            "text": "So I'll pause there from a views perspective, what kind of questions do we have?"
+          },
+          {
+            "start": 1194612,
+            "end": 1194992,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1194992,
+            "end": 1198212,
+            "text": "You just said earlier on the one that was the closed one."
+          },
+          {
+            "start": 1198412,
+            "end": 1203312,
+            "text": "So for example, you close it by mistake or maybe it was a thread that you're looking for something."
+          },
+          {
+            "start": 1203432,
+            "end": 1208192,
+            "text": "So let's say it was like 10 back and forth and somebody by mistake, closed that one."
+          },
+          {
+            "start": 1210132,
+            "end": 1218992,
+            "text": "Are you able just to search for that load… number or the number just to see that correct?"
+          },
+          {
+            "start": 1219052,
+            "end": 1220292,
+            "text": "How do you do that just on the search?"
+          },
+          {
+            "start": 1220292,
+            "end": 1222032,
+            "text": "And you're going to paste the load number?"
+          },
+          {
+            "start": 1222152,
+            "end": 1222612,
+            "text": "Yep."
+          },
+          {
+            "start": 1222612,
+            "end": 1222892,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1222892,
+            "end": 1249632,
+            "text": "From a search capability, very in depth search capabilities, I know Gage and Brad are using this, I think with load numbers as a reference, but you can see here in terms of what I can look at, I can specify maybe certain mailboxes to search, I can specify from and to an assignee status or even tags, and then you can search by keywords, right?"
+          },
+          {
+            "start": 1249692,
+            "end": 1250052,
+            "text": "One."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1250052,
+            "end": 1250292,
+            "text": "More time."
+          },
+          {
+            "start": 1250392,
+            "end": 1252372,
+            "text": "What's the difference in between tag and flag?"
+          },
+          {
+            "start": 1253412,
+            "end": 1255492,
+            "text": "So make sure we understand that tag and flag?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1257662,
+            "end": 1258442,
+            "text": "Where's the flag?"
+          },
+          {
+            "start": 1258602,
+            "end": 1259022,
+            "text": "Oh?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1259062,
+            "end": 1259702,
+            "text": "This is the status."
+          },
+          {
+            "start": 1259702,
+            "end": 1262722,
+            "text": "I said, what's the meaning in between tag and flag internally?"
+          },
+          {
+            "start": 1263102,
+            "end": 1264942,
+            "text": "How hiver, consider those two words?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1266182,
+            "end": 1268522,
+            "text": "So flag is not a term that we use."
+          },
+          {
+            "start": 1268582,
+            "end": 1270702,
+            "text": "There's a flag here, but this is for the status."
+          },
+          {
+            "start": 1270902,
+            "end": 1273002,
+            "text": "So that's that open pending closed."
+          },
+          {
+            "start": 1273502,
+            "end": 1278242,
+            "text": "There's no flag, but there is a tag which think of tag as labels, right?"
+          },
+          {
+            "start": 1278322,
+            "end": 1279502,
+            "text": "It's essentially the same thing."
+          },
+          {
+            "start": 1280322,
+            "end": 1282522,
+            "text": "And then I can search here by keywords."
+          },
+          {
+            "start": 1282682,
+            "end": 1292402,
+            "text": "So I know Gage and Brett are using this, I think for load number, but I could search by that number and it would pull all the emails that have that load number listed."
+          },
+          {
+            "start": 1292622,
+            "end": 1300622,
+            "text": "I obviously don't have an example here, but that search capability, you can find all of those emails with those keywords, okay?"
+          },
+          {
+            "start": 1300882,
+            "end": 1301362,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1301362,
+            "end": 1304962,
+            "text": "An email comes on an unassignment or unassigned folder."
+          },
+          {
+            "start": 1305282,
+            "end": 1307942,
+            "text": "Basically, you tag a person, you don't flag it, right?"
+          },
+          {
+            "start": 1308022,
+            "end": 1311902,
+            "text": "So you tag Manny for example, or Callan, is that the right way to say it?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1312692,
+            "end": 1316812,
+            "text": "So just so we're all on the same page in terms of nomenclature, that would be assignment."
+          },
+          {
+            "start": 1317152,
+            "end": 1319932,
+            "text": "So we would assign it here to the person."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1320112,
+            "end": 1321292,
+            "text": "Oh, so assignment?"
+          },
+          {
+            "start": 1321432,
+            "end": 1322632,
+            "text": "Okay, assignment, correct?"
+          },
+          {
+            "start": 1322732,
+            "end": 1323052,
+            "text": "I'm sorry."
+          },
+          {
+            "start": 1323232,
+            "end": 1323932,
+            "text": "Yeah, no."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1323952,
+            "end": 1324212,
+            "text": "It's okay."
+          },
+          {
+            "start": 1324332,
+            "end": 1326172,
+            "text": "And then tag think of as labels."
+          },
+          {
+            "start": 1326272,
+            "end": 1328972,
+            "text": "So assigning is ownership of the email."
+          },
+          {
+            "start": 1329452,
+            "end": 1332532,
+            "text": "And then tag is like how we would label that."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1335262,
+            "end": 1335562,
+            "text": "Okay."
+          },
+          {
+            "start": 1335902,
+            "end": 1337242,
+            "text": "Because right now we have folders."
+          },
+          {
+            "start": 1337282,
+            "end": 1341662,
+            "text": "So basically tag is going to be like a folder basically where those emails will move."
+          },
+          {
+            "start": 1342182,
+            "end": 1344342,
+            "text": "That's why I want to understand, correct?"
+          },
+          {
+            "start": 1344502,
+            "end": 1351272,
+            "text": "Basically where that email will belong in, what folder in what tag basically correct?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1351632,
+            "end": 1356072,
+            "text": "The big thing is with the tags is like you do for one, you do for all."
+          },
+          {
+            "start": 1356432,
+            "end": 1365132,
+            "text": "So instead of everyone getting on pro one, getting the same email across to 10 people who received the email at the same time."
+          },
+          {
+            "start": 1365192,
+            "end": 1369992,
+            "text": "If Manny touches it and assigns it to himself, everyone will see it."
+          },
+          {
+            "start": 1370492,
+            "end": 1375732,
+            "text": "If Manny decides to close it and say that it's done on the right hand panel."
+          },
+          {
+            "start": 1375832,
+            "end": 1377372,
+            "text": "I know we didn't even get into this yet."
+          },
+          {
+            "start": 1377392,
+            "end": 1387812,
+            "text": "But the right hand panel on the bottom, it's going to show the activity status changes and like internal notes of what happened with that email."
+          },
+          {
+            "start": 1387932,
+            "end": 1389312,
+            "text": "So if Manny closed it."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1389312,
+            "end": 1393112,
+            "text": "All right, that's a very good point if you can touch a little bit for the team to understand."
+          },
+          {
+            "start": 1393272,
+            "end": 1399552,
+            "text": "So basically, these are the internal notes that we're doing on the right side basically on the bottom on the right corner."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1400192,
+            "end": 1401272,
+            "text": "Okay, correct."
+          },
+          {
+            "start": 1401412,
+            "end": 1407272,
+            "text": "And good segue that's the next section I'm going to show is how do we interact in the email?"
+          },
+          {
+            "start": 1407552,
+            "end": 1412152,
+            "text": "Any last questions on the views before I show what this looks like on the right hand panel?"
+          },
+          {
+            "start": 1415202,
+            "end": 1415682,
+            "text": "All right."
+          },
+          {
+            "start": 1415942,
+            "end": 1419702,
+            "text": "So now that let's say, you know, I'm looking at mine, what's been assigned to me?"
+          },
+          {
+            "start": 1420262,
+            "end": 1421482,
+            "text": "I click on the email."
+          },
+          {
+            "start": 1421662,
+            "end": 1422322,
+            "text": "What do you see?"
+          },
+          {
+            "start": 1422462,
+            "end": 1426722,
+            "text": "So now we have a right hand panel with a lot of valuable information, right?"
+          },
+          {
+            "start": 1426782,
+            "end": 1430222,
+            "text": "So first, it's going to show me what inbox this is a part of you'll."
+          },
+          {
+            "start": 1430222,
+            "end": 1430682,
+            "text": "Notice here."
+          },
+          {
+            "start": 1430682,
+            "end": 1433122,
+            "text": "I have a little icon that says first response due."
+          },
+          {
+            "start": 1433222,
+            "end": 1439272,
+            "text": "So something that you can create, not mandatory, but we have something called service level agreements."
+          },
+          {
+            "start": 1439592,
+            "end": 1448072,
+            "text": "You can create policies within the shared mailbox settings with an expectation of let's say what your first response time will be."
+          },
+          {
+            "start": 1448432,
+            "end": 1456052,
+            "text": "So if you have an expectation that your team should get to an email within 30 minutes, I can set that policy on the back end."
+          },
+          {
+            "start": 1456212,
+            "end": 1464592,
+            "text": "And then now as these emails come through, you'll see we have an indicator that's warning that this has gone over that 30 minute limit, right?"
+          },
+          {
+            "start": 1464632,
+            "end": 1465932,
+            "text": "So again, not a requirement."
+          },
+          {
+            "start": 1466132,
+            "end": 1475572,
+            "text": "But a lot of teams use this to understand and alert the teams in order to get to those emails in the, you know, the timely fashion that they expect to get to it."
+          },
+          {
+            "start": 1476952,
+            "end": 1479352,
+            "text": "The next piece here is the assignment piece."
+          },
+          {
+            "start": 1479452,
+            "end": 1484732,
+            "text": "So this is a critical piece of hiver is we can now assign ownership within one mailbox."
+          },
+          {
+            "start": 1484972,
+            "end": 1490912,
+            "text": "So, you know, if this should go to Rakesh because he's owning this, I can assign that to Rakesh."
+          },
+          {
+            "start": 1491092,
+            "end": 1502452,
+            "text": "Like I've said a number of times, we can also automate this process who gets assigned to certain emails, statuses, very simple open pending and closed these views."
+          },
+          {
+            "start": 1502712,
+            "end": 1506632,
+            "text": "These unassigned in mine are only going to show emails that are marked as open."
+          },
+          {
+            "start": 1506892,
+            "end": 1515332,
+            "text": "That doesn't mean they disappear, but this is really showing everything that we deem as active and open pending is kind of in between state."
+          },
+          {
+            "start": 1515472,
+            "end": 1517432,
+            "text": "We might be waiting on a response."
+          },
+          {
+            "start": 1517792,
+            "end": 1519712,
+            "text": "We don't need it to be highly visible."
+          },
+          {
+            "start": 1520032,
+            "end": 1522072,
+            "text": "There is a view here for pending."
+          },
+          {
+            "start": 1522752,
+            "end": 1525332,
+            "text": "So you can notice, I can see all of our pending views."
+          },
+          {
+            "start": 1526112,
+            "end": 1528692,
+            "text": "And then the last one here is closed."
+          },
+          {
+            "start": 1528952,
+            "end": 1532252,
+            "text": "So this is, you know, we have fully resolved this."
+          },
+          {
+            "start": 1532412,
+            "end": 1533712,
+            "text": "We're marking this as closed."
+          },
+          {
+            "start": 1534132,
+            "end": 1538212,
+            "text": "Again, we'll drop off of this, but it will be in that closed view."
+          },
+          {
+            "start": 1538272,
+            "end": 1539432,
+            "text": "So we can still access it."
+          },
+          {
+            "start": 1539812,
+            "end": 1547012,
+            "text": "Important note, if this customer responds to a closed email, it'll reopen it and be visible again."
+          },
+          {
+            "start": 1547172,
+            "end": 1553842,
+            "text": "So any response will reopen that email and shed it to light… tags."
+          },
+          {
+            "start": 1553842,
+            "end": 1555182,
+            "text": "Again, think of these as categories."
+          },
+          {
+            "start": 1555582,
+            "end": 1560482,
+            "text": "So we can start understanding these different ways that we want to categorize."
+          },
+          {
+            "start": 1560582,
+            "end": 1567862,
+            "text": "And essentially, we can create folders where we can see all the emails, where they're associated to Amazon and tags."
+          },
+          {
+            "start": 1567862,
+            "end": 1568822,
+            "text": "We can also automate."
+          },
+          {
+            "start": 1569562,
+            "end": 1571202,
+            "text": "So that could be based off the sender."
+          },
+          {
+            "start": 1571222,
+            "end": 1573782,
+            "text": "If Amazon sends us automatically tag it."
+          },
+          {
+            "start": 1573782,
+            "end": 1581182,
+            "text": "Amazon, if it has certain keywords automatically tag it, highly recommend we automate as much of that as possible."
+          },
+          {
+            "start": 1581422,
+            "end": 1583522,
+            "text": "Your team then doesn't even have to think about it."
+          },
+          {
+            "start": 1583622,
+            "end": 1586342,
+            "text": "The system's automatically doing that behind the scenes."
+          },
+          {
+            "start": 1587712,
+            "end": 1591012,
+            "text": "You can create things like custom fields, right?"
+          },
+          {
+            "start": 1591112,
+            "end": 1596592,
+            "text": "So if there's additional things that you want to metrics that you want to capture, you can create dropdowns."
+          },
+          {
+            "start": 1596592,
+            "end": 1602672,
+            "text": "So in this case, this is like a urgency level optional, but we do see a lot of teams leverage this."
+          },
+          {
+            "start": 1603392,
+            "end": 1606112,
+            "text": "And then another important thing here."
+          },
+          {
+            "start": 1606172,
+            "end": 1613772,
+            "text": "The last one that I want to note is everything within the email that is done is timestamped, right?"
+          },
+          {
+            "start": 1613892,
+            "end": 1622032,
+            "text": "So if I look at this activity stream, I can see an SLA policy, Susan assigned it to themselves, right?"
+          },
+          {
+            "start": 1622112,
+            "end": 1624832,
+            "text": "So I can see the entire history of what's happened to this."
+          },
+          {
+            "start": 1624932,
+            "end": 1628532,
+            "text": "So anyone coming to this email can see what's happened."
+          },
+          {
+            "start": 1628952,
+            "end": 1633272,
+            "text": "I can add notes and I can even collaborate with my team members."
+          },
+          {
+            "start": 1633452,
+            "end": 1641252,
+            "text": "So let's say I need Rakesh to chime in, please take a look and respond, right?"
+          },
+          {
+            "start": 1641332,
+            "end": 1645112,
+            "text": "I can add attachments and I can save this."
+          },
+          {
+            "start": 1645252,
+            "end": 1648052,
+            "text": "And as I mentioned, Rakesh will now get one of those notifications."
+          },
+          {
+            "start": 1648332,
+            "end": 1649192,
+            "text": "Seeing this."
+          },
+          {
+            "start": 1649352,
+            "end": 1654902,
+            "text": "They can then come in and interact reply and it's all documented, right?"
+          },
+          {
+            "start": 1654982,
+            "end": 1657542,
+            "text": "You don't have to leave it into chat or forward emails."
+          },
+          {
+            "start": 1657982,
+            "end": 1663622,
+            "text": "It all remains here timestamped and visible to anyone that's coming into this email, which is super important."
+          },
+          {
+            "start": 1663842,
+            "end": 1665322,
+            "text": "I can see the whole history."
+          },
+          {
+            "start": 1665502,
+            "end": 1666742,
+            "text": "I can see the collaboration."
+          },
+          {
+            "start": 1667502,
+            "end": 1672542,
+            "text": "There's nothing hidden behind a chat or, you know, external conversations which."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1672542,
+            "end": 1674382,
+            "text": "is a great thing that I saw from the beginning."
+          },
+          {
+            "start": 1674442,
+            "end": 1676002,
+            "text": "The value of these notes internally."
+          },
+          {
+            "start": 1676422,
+            "end": 1684842,
+            "text": "Sometimes you don't want to disclose something or you want to just have some internal conversation, everybody would know versus going outside on teams."
+          },
+          {
+            "start": 1685102,
+            "end": 1687482,
+            "text": "I see it didn't see it after hours."
+          },
+          {
+            "start": 1687722,
+            "end": 1691922,
+            "text": "It's right there on the right side, you can see who did what or who said what."
+          },
+          {
+            "start": 1692082,
+            "end": 1693602,
+            "text": "So you can keep the same trend."
+          },
+          {
+            "start": 1693742,
+            "end": 1694782,
+            "text": "It's, very organized."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1696302,
+            "end": 1701392,
+            "text": "And then one thing to mention is, you know, there might still be times where you have teams conversations, right?"
+          },
+          {
+            "start": 1701392,
+            "end": 1708272,
+            "text": "But you can then document what was maybe we spoke on teams and we decided this was the action item, right?"
+          },
+          {
+            "start": 1708392,
+            "end": 1709412,
+            "text": "We can leave a note."
+          },
+          {
+            "start": 1709552,
+            "end": 1716052,
+            "text": "And then again, if I'm working this email, there's no, you know, hidden information that I'm not aware of."
+          },
+          {
+            "start": 1716072,
+            "end": 1719952,
+            "text": "Everyone should be able to come in here and know what's been happening with this email."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1725732,
+            "end": 1726212,
+            "text": "All right."
+          },
+          {
+            "start": 1726992,
+            "end": 1730232,
+            "text": "Any questions on the right hand panel?"
+          },
+          {
+            "start": 1730372,
+            "end": 1734232,
+            "text": "So assignments, statuses, tags again, labels."
+          },
+          {
+            "start": 1734772,
+            "end": 1742652,
+            "text": "And then the biggest piece I think is that collaboration piece, being able to leave notes and just seeing the full history of what's happened with this email."
+          }
+        ]
+      },
+      {
+        "speakerId": "4070394527657246867",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1743452,
+            "end": 1746112,
+            "text": "One question really quick, Christian here."
+          },
+          {
+            "start": 1746232,
+            "end": 1753492,
+            "text": "So in the grand scheme of things, I understand how the manual assignment works, how does the auto assignment work?"
+          },
+          {
+            "start": 1753672,
+            "end": 1755452,
+            "text": "Is that, where the AI kicks in?"
+          },
+          {
+            "start": 1756072,
+            "end": 1762382,
+            "text": "How do we train our partners to targets or the specific context?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1762962,
+            "end": 1766702,
+            "text": "So, there's like a bunch of different ways we can do it based on senders too."
+          },
+          {
+            "start": 1766882,
+            "end": 1771182,
+            "text": "Like let's say, you know, for instance, like Anka deals with Hazen transport, right?"
+          },
+          {
+            "start": 1771462,
+            "end": 1777642,
+            "text": "If she wants every email from Hazen to automatically be assigned to her, we can use the at domain Hazen."
+          },
+          {
+            "start": 1778362,
+            "end": 1780562,
+            "text": "And then we could assign it like that."
+          },
+          {
+            "start": 1780662,
+            "end": 1791382,
+            "text": "Right now, we are not doing any auto assignment on the logistics side, just because we are still trying to figure out where it fits, but there's a ton of different ways you can do it."
+          },
+          {
+            "start": 1791382,
+            "end": 1796522,
+            "text": "You can do auto assigning just off of keywords in the thing, right?"
+          },
+          {
+            "start": 1796662,
+            "end": 1805912,
+            "text": "So like let's say it says pod and like our proof of delivery or something like that in there, we can auto tag, we can auto assign it to paperwork team."
+          },
+          {
+            "start": 1806092,
+            "end": 1811492,
+            "text": "You know, things like that are down the road as far as the beginning states of it."
+          },
+          {
+            "start": 1811612,
+            "end": 1817712,
+            "text": "Like we haven't used it yet just because we're trying to figure out kind of the workflow and where it will help us."
+          },
+          {
+            "start": 1817872,
+            "end": 1818772,
+            "text": "But, yeah, so."
+          }
+        ]
+      },
+      {
+        "speakerId": "4070394527657246867",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1818772,
+            "end": 1820732,
+            "text": "This will get built along."
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1820732,
+            "end": 1821572,
+            "text": "The way, yeah, it's by us."
+          }
+        ]
+      },
+      {
+        "speakerId": "4070394527657246867",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1822232,
+            "end": 1822672,
+            "text": "Right."
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1822872,
+            "end": 1825652,
+            "text": "We can do, we can make kind of whatever we want, right?"
+          },
+          {
+            "start": 1825752,
+            "end": 1826032,
+            "text": "Christian?"
+          },
+          {
+            "start": 1826112,
+            "end": 1838752,
+            "text": "Yeah, like you can, there's a lot of power behind it that we aren't even touching the surface of on our side yet, but you might see like, hey, I know that every email that comes from this person or this customer needs to come to me."
+          },
+          {
+            "start": 1838812,
+            "end": 1848892,
+            "text": "The only word of caution is that if you do set that rule up, it's going to happen every time whether you're there or not, it will get assigned to you, right?"
+          },
+          {
+            "start": 1849012,
+            "end": 1871972,
+            "text": "So if you auto assign yourself every email that comes from a certain person or brokerage or customer, just know that your after hours team won't have visibility to it when you're not there right now, we can put there's certain things that we can do with your work times like how we can put your schedule in here too to go around it."
+          },
+          {
+            "start": 1872032,
+            "end": 1874492,
+            "text": "But it's just that's just how you have to think about it."
+          },
+          {
+            "start": 1875232,
+            "end": 1877452,
+            "text": "There's a ton of stuff we can do right now."
+          },
+          {
+            "start": 1877492,
+            "end": 1882752,
+            "text": "We're not using it on the logistics side yet because we're trying to figure out how workflow is going to actually need it."
+          },
+          {
+            "start": 1882832,
+            "end": 1895662,
+            "text": "And when we see fit, Eric and his team will be able to kind of make those adjustments to it, you know, but if there's any questions too, their team's been really great on working with us like, you know, I'm like, hey, like, can we do this?"
+          },
+          {
+            "start": 1895662,
+            "end": 1896642,
+            "text": "Maybe?"
+          },
+          {
+            "start": 1896642,
+            "end": 1897702,
+            "text": "You know what I mean?"
+          },
+          {
+            "start": 1897702,
+            "end": 1898442,
+            "text": "Let's figure it out."
+          },
+          {
+            "start": 1898442,
+            "end": 1900422,
+            "text": "It's getting a call and we figure it out."
+          },
+          {
+            "start": 1900422,
+            "end": 1900762,
+            "text": "So."
+          },
+          {
+            "start": 1900762,
+            "end": 1901442,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1901442,
+            "end": 1901782,
+            "text": "Yeah."
+          },
+          {
+            "start": 1901782,
+            "end": 1906582,
+            "text": "And, and you know, I don't want to go too far in the weeds since there's a high level call."
+          },
+          {
+            "start": 1906582,
+            "end": 1914602,
+            "text": "But just to show you like how quick and easy you can do, this is an automation rule which any admin would be able to set up."
+          },
+          {
+            "start": 1915122,
+            "end": 1933262,
+            "text": "And it's as simple as when a new conversation comes in, if the body or subject I could do subject as well contains the keywords or you saw me earlier, I did, it comes from a certain domain, automatically assign it to Rakesh or automatically apply a certain tag, right?"
+          },
+          {
+            "start": 1933262,
+            "end": 1940862,
+            "text": "So, very simple if then scenario, I would need to understand, your workflow and process a little bit better to guide you."
+          },
+          {
+            "start": 1940862,
+            "end": 1945122,
+            "text": "But just from a high level perspective, very easy to accomplish that."
+          },
+          {
+            "start": 1945822,
+            "end": 1949102,
+            "text": "There's also auto assignment which is more the round Robin fashion."
+          },
+          {
+            "start": 1949102,
+            "end": 1954222,
+            "text": "So all that to say there's a number of ways that we can make your lives easier by automate."
+          },
+          {
+            "start": 1954222,
+            "end": 1954582,
+            "text": "This."
+          },
+          {
+            "start": 1954582,
+            "end": 1957142,
+            "text": "We would obviously figure out what makes the most sense."
+          },
+          {
+            "start": 1958892,
+            "end": 1959392,
+            "text": "Right now."
+          },
+          {
+            "start": 1959392,
+            "end": 1965172,
+            "text": "They're doing manual assignment for the most part with the goal of moving, let's figure out the right automation rules."
+          },
+          {
+            "start": 1965172,
+            "end": 1965892,
+            "text": "So for."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1965892,
+            "end": 1975892,
+            "text": "example, maybe to answer simple to you, Christian, for example, in the morning, an email comes to pro one, which is going to be a distro, which is right now a distro, right?"
+          },
+          {
+            "start": 1976112,
+            "end": 1976972,
+            "text": "Group."
+          },
+          {
+            "start": 1976972,
+            "end": 1981372,
+            "text": "You're going to assign yourself or somebody's going to assign that email to you."
+          },
+          {
+            "start": 1981372,
+            "end": 1990272,
+            "text": "Going forward into that unassigned folder, would not come any other email because everything is going to come to you."
+          },
+          {
+            "start": 1990272,
+            "end": 1998072,
+            "text": "But my question is going to be right now, Eric to you and Brad, if Christian is out to lunch for an hour, what's going to happen?"
+          },
+          {
+            "start": 1998072,
+            "end": 2003252,
+            "text": "If you're going to put yourself on, do not disturb or just out of the office or whatever?"
+          },
+          {
+            "start": 2003252,
+            "end": 2013732,
+            "text": "Is that going to automatically assign that email to the initially unassigned as long as you're not there supposed to kick in the group, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2017132,
+            "end": 2019872,
+            "text": "Sorry, you said, if it's assigned it?"
+          },
+          {
+            "start": 2020352,
+            "end": 2021312,
+            "text": "Sorry, no."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2021312,
+            "end": 2032992,
+            "text": "It's if you, if he turns off his ability on the bottom left, if he says like available for email and turns it off, will, and we get a new email."
+          },
+          {
+            "start": 2032992,
+            "end": 2036612,
+            "text": "Will it auto assign still to that person?"
+          },
+          {
+            "start": 2036612,
+            "end": 2038212,
+            "text": "Or will it kick it back to unassigned?"
+          },
+          {
+            "start": 2038212,
+            "end": 2039172,
+            "text": "It'll?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2039172,
+            "end": 2040432,
+            "text": "Kick it to unassigned."
+          },
+          {
+            "start": 2040432,
+            "end": 2042192,
+            "text": "In that instance that's."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2042192,
+            "end": 2042532,
+            "text": "awesome."
+          },
+          {
+            "start": 2042532,
+            "end": 2043372,
+            "text": "Yep."
+          },
+          {
+            "start": 2043902,
+            "end": 2045802,
+            "text": "So you just, you're going to follow that path."
+          },
+          {
+            "start": 2045802,
+            "end": 2051282,
+            "text": "You should be able, to be seeing those emails as a company."
+          },
+          {
+            "start": 2051282,
+            "end": 2057002,
+            "text": "What I'm saying, if I'm out, I'm going to put myself being out, the group would get those emails correct."
+          },
+          {
+            "start": 2058762,
+            "end": 2059242,
+            "text": "In this."
+          },
+          {
+            "start": 2059242,
+            "end": 2064702,
+            "text": "I initially worked on in the morning that were assigned to me basically, yeah."
+          },
+          {
+            "start": 2064702,
+            "end": 2065422,
+            "text": "And."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2065422,
+            "end": 2094352,
+            "text": "again, don't want to go too far, in the nitty gritty details because we can, we'll need to, you know, understand a little bit better, your workflows but I know what Brett and Gage have been doing on some of these is when you send these emails out, you can mark them as unassigned and close it in case there is a response out about after hours, it would land in an assigned versus like owned by a certain person so that the after hours team can view that, right?"
+          },
+          {
+            "start": 2094352,
+            "end": 2100092,
+            "text": "So there's ways just depending on the way that your team operates, that we can make sure that we accommodate for all."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2100092,
+            "end": 2100272,
+            "text": "That."
+          },
+          {
+            "start": 2100272,
+            "end": 2102632,
+            "text": "Can you assign more than one person there's?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2104132,
+            "end": 2105452,
+            "text": "Only singular assignment."
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2106702,
+            "end": 2107002,
+            "text": "Okay."
+          },
+          {
+            "start": 2107002,
+            "end": 2110022,
+            "text": "You can flag multiple in the note on the side."
+          },
+          {
+            "start": 2110022,
+            "end": 2112262,
+            "text": "Let's say if you're asking like, right?"
+          },
+          {
+            "start": 2112262,
+            "end": 2120172,
+            "text": "Like a truck breaks down, you're asking safety, you're asking, you know, you're you want to link you into, you know what I mean?"
+          },
+          {
+            "start": 2120172,
+            "end": 2122112,
+            "text": "Hey, guys, there's a big problem here, right?"
+          },
+          {
+            "start": 2122112,
+            "end": 2129092,
+            "text": "Like you can tag a, you know, as many people as you want, to kind of see that notation on the side."
+          },
+          {
+            "start": 2129092,
+            "end": 2141372,
+            "text": "The, the main idea of keeping like the notes on the side guys is like, you know, we all, we've all been there where you come in, let's say, you know, after like at seven a M and you're like what happened to this load?"
+          },
+          {
+            "start": 2141372,
+            "end": 2145312,
+            "text": "You know, during the after hours side, right?"
+          },
+          {
+            "start": 2145932,
+            "end": 2152932,
+            "text": "And you've got to scroll through teams messages or scroll through messages on, you know, wherever it is and try to figure it out."
+          },
+          {
+            "start": 2152932,
+            "end": 2156992,
+            "text": "Well, if we keep it all on the email chain, then everyone can see it clear as day."
+          },
+          {
+            "start": 2156992,
+            "end": 2158452,
+            "text": "This is what's going on with this load."
+          },
+          {
+            "start": 2158452,
+            "end": 2163652,
+            "text": "This is a problem, you know, without the customer seeing any of that correspondence."
+          },
+          {
+            "start": 2163652,
+            "end": 2170432,
+            "text": "So this should replace a lot of the team's messages that go back and forth and keep it all in one place."
+          },
+          {
+            "start": 2170432,
+            "end": 2176332,
+            "text": "So it's one unified, you know, document basically, so to say, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2176332,
+            "end": 2179752,
+            "text": "And, and I've seen some teams that are like let's say the night shift is leaving."
+          },
+          {
+            "start": 2179752,
+            "end": 2187432,
+            "text": "They might add a note of be like, hey, this happened, just be aware this might come in the morning or something like that to update, maybe the next person, right?"
+          },
+          {
+            "start": 2187432,
+            "end": 2189272,
+            "text": "So there's a lot you can do with this documentation."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2191372,
+            "end": 2197312,
+            "text": "Can you explain in the bottom of those emails what means frt, bulk action needed?"
+          },
+          {
+            "start": 2197372,
+            "end": 2201072,
+            "text": "Sometimes I see different names on the left side, move to the left, right there, right?"
+          },
+          {
+            "start": 2201072,
+            "end": 2201272,
+            "text": "There."
+          },
+          {
+            "start": 2201332,
+            "end": 2203372,
+            "text": "Sometimes I see assigned people."
+          },
+          {
+            "start": 2203492,
+            "end": 2205392,
+            "text": "How do you see who's assigned to?"
+          },
+          {
+            "start": 2205392,
+            "end": 2205612,
+            "text": "Who?"
+          },
+          {
+            "start": 2205672,
+            "end": 2208992,
+            "text": "Sometimes I see names on the bottom or can you explain a little bit?"
+          },
+          {
+            "start": 2208992,
+            "end": 2209532,
+            "text": "What is that?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2210312,
+            "end": 2213712,
+            "text": "So this is that first response time right here that I mentioned."
+          },
+          {
+            "start": 2214272,
+            "end": 2215892,
+            "text": "So these are service level agreements."
+          },
+          {
+            "start": 2216172,
+            "end": 2225752,
+            "text": "So again, if you have an expectation for the team to get to an email, the first response within 30 minutes, I can set a policy on the back end in admin."
+          },
+          {
+            "start": 2226632,
+            "end": 2232032,
+            "text": "And then anything that breaches that window will get this tag, a first response time breach."
+          },
+          {
+            "start": 2232212,
+            "end": 2233512,
+            "text": "So that's what this is."
+          },
+          {
+            "start": 2233612,
+            "end": 2235272,
+            "text": "It's just an additional tag for visibility."
+          },
+          {
+            "start": 2235752,
+            "end": 2242792,
+            "text": "And obviously, I'd want to prioritize any of those that are already over that window in terms of assignment."
+          },
+          {
+            "start": 2243352,
+            "end": 2244432,
+            "text": "It doesn't show."
+          },
+          {
+            "start": 2245952,
+            "end": 2247352,
+            "text": "So unassigned."
+          },
+          {
+            "start": 2247412,
+            "end": 2249392,
+            "text": "Obviously, these have no assignment, right?"
+          },
+          {
+            "start": 2249552,
+            "end": 2254752,
+            "text": "So there's not going to show anything that's assigned to yourself will show it under mine."
+          },
+          {
+            "start": 2255502,
+            "end": 2258642,
+            "text": "And then from a team perspective, I would want to go to that team view."
+          },
+          {
+            "start": 2258642,
+            "end": 2264662,
+            "text": "And I can see across the team, all the emails that are assigned to all your different team members."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2265722,
+            "end": 2266242,
+            "text": "Okay."
+          },
+          {
+            "start": 2266502,
+            "end": 2279432,
+            "text": "So my understanding like you mentioned last time Eric, end of the day, you basically, if you are assigned to, let's say 10 emails throughout the day, 20 100 can be whatever doesn't matter."
+          },
+          {
+            "start": 2279432,
+            "end": 2279832,
+            "text": "The number."
+          },
+          {
+            "start": 2280212,
+            "end": 2286112,
+            "text": "Basically you have the ability to unassign yourself from all of those."
+          },
+          {
+            "start": 2286112,
+            "end": 2294552,
+            "text": "And going forward is going to fly to the inbox where everybody's going to work out all right for the rest of the night."
+          },
+          {
+            "start": 2295092,
+            "end": 2296652,
+            "text": "You have to do it manually."
+          },
+          {
+            "start": 2296872,
+            "end": 2297732,
+            "text": "How do you do that?"
+          },
+          {
+            "start": 2297852,
+            "end": 2298292,
+            "text": "If?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2298292,
+            "end": 2300132,
+            "text": "That's the workflow that you want to do?"
+          },
+          {
+            "start": 2300252,
+            "end": 2301472,
+            "text": "Yes, you can."
+          },
+          {
+            "start": 2301632,
+            "end": 2304672,
+            "text": "And we can discuss specifically to your team."
+          },
+          {
+            "start": 2304672,
+            "end": 2306172,
+            "text": "How we'd want to set that up."
+          },
+          {
+            "start": 2306592,
+            "end": 2313912,
+            "text": "It's simply as easy as unassigning the email there from who's assigned and you'll notice it moved it out of mine."
+          },
+          {
+            "start": 2314132,
+            "end": 2315792,
+            "text": "And now it's in this unassigned bucket."
+          },
+          {
+            "start": 2316052,
+            "end": 2322512,
+            "text": "So whoever is coming in on the next shift, for example, have visibility, maybe they pick it up then or assigned to themselves."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2323412,
+            "end": 2330612,
+            "text": "But tomorrow morning, you can search by that load number and see what happened even if you're not assigned, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2331222,
+            "end": 2338662,
+            "text": "Correct, full visibility across the team, even if you're not assigned, there's still full visibility for every email within this."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2339282,
+            "end": 2339802,
+            "text": "Okay."
+          },
+          {
+            "start": 2340022,
+            "end": 2340542,
+            "text": "I'm."
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2340542,
+            "end": 2340902,
+            "text": "not sure."
+          },
+          {
+            "start": 2340962,
+            "end": 2343462,
+            "text": "So, instead of, yeah, I'm not sure."
+          },
+          {
+            "start": 2343922,
+            "end": 2361492,
+            "text": "Yeah, I was just going to say, so, the good thing, is that like you can type in, let's say it's a po number, you will be able to see it across every shared inbox that exists in prosport, as long as you are assigned to have access to it, right?"
+          },
+          {
+            "start": 2361732,
+            "end": 2362172,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2362172,
+            "end": 2363092,
+            "text": "No more, can I hijack?"
+          },
+          {
+            "start": 2363232,
+            "end": 2363692,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2363952,
+            "end": 2364292,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2365552,
+            "end": 2372072,
+            "text": "I was trying to find an example if Gage wants to just show what they're doing for the load numbers."
+          },
+          {
+            "start": 2372232,
+            "end": 2372872,
+            "text": "I think that'll help."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2373512,
+            "end": 2376552,
+            "text": "So, essentially, if I need to search this load number?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2377152,
+            "end": 2379552,
+            "text": "We're not seeing yours, we're not seeing yours."
+          },
+          {
+            "start": 2379652,
+            "end": 2380912,
+            "text": "Oh, lame."
+          },
+          {
+            "start": 2382072,
+            "end": 2382532,
+            "text": "Okay."
+          },
+          {
+            "start": 2382612,
+            "end": 2383132,
+            "text": "There we go."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2383822,
+            "end": 2384382,
+            "text": "Now, we got it."
+          },
+          {
+            "start": 2384382,
+            "end": 2392702,
+            "text": "So, if I am in a group inbox, and I get an email on this one load number and I need, okay, where?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2392862,
+            "end": 2393802,
+            "text": "Where."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2393802,
+            "end": 2395122,
+            "text": "am I missing something here?"
+          },
+          {
+            "start": 2395182,
+            "end": 2405562,
+            "text": "I could take the load number and search the conversation and it's going to pull up every single conversation that I'm a part of on the shared inboxes."
+          },
+          {
+            "start": 2405782,
+            "end": 2408742,
+            "text": "So this one is in dispatch team."
+          },
+          {
+            "start": 2409772,
+            "end": 2411472,
+            "text": "This one is in Lg."
+          },
+          {
+            "start": 2411992,
+            "end": 2413132,
+            "text": "This one's in accounting."
+          },
+          {
+            "start": 2413852,
+            "end": 2417572,
+            "text": "So any inbox I have visibility to, I could find the email."
+          },
+          {
+            "start": 2417612,
+            "end": 2424492,
+            "text": "So say someone in accounting is looking for a lump of receipt that they can't find, but we internally tag it with our load number."
+          },
+          {
+            "start": 2425202,
+            "end": 2428922,
+            "text": "The accounting person is going to be able to search and going to be able to find."
+          },
+          {
+            "start": 2429262,
+            "end": 2429622,
+            "text": "Okay."
+          },
+          {
+            "start": 2429722,
+            "end": 2431642,
+            "text": "Well, pod, in this case, I need the pod."
+          },
+          {
+            "start": 2432002,
+            "end": 2435262,
+            "text": "I don't need to ask three other people for a pod."
+          },
+          {
+            "start": 2435542,
+            "end": 2440522,
+            "text": "All I need to go do is search the emails and it will pull up the pod from that inbox."
+          },
+          {
+            "start": 2442062,
+            "end": 2445382,
+            "text": "So it'll give visibility to the things you need visibility to."
+          },
+          {
+            "start": 2446282,
+            "end": 2454752,
+            "text": "And then, you know, when you're working, on something like these emails are assigned to me and I'm managing these ones."
+          },
+          {
+            "start": 2454852,
+            "end": 2462572,
+            "text": "The biggest thing is when I'm done at the end of the day, I'm unassigning myself and unassigned to none."
+          },
+          {
+            "start": 2462952,
+            "end": 2478812,
+            "text": "And when I'm leaving my desk to make sure they go into the unassigned bin… but also to kind of a real time context, we have this load from apex that our team, my team is not on this email."
+          },
+          {
+            "start": 2479902,
+            "end": 2482102,
+            "text": "These are all asset emails that are on here."
+          },
+          {
+            "start": 2482522,
+            "end": 2496962,
+            "text": "So what I could easily do is add this to a shared workspace for apex and it's without me replying to the customer and saying adding another email, adding another email because we know we have to do that."
+          },
+          {
+            "start": 2497462,
+            "end": 2503142,
+            "text": "I literally just made this email visible to everyone who works on apex."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2503982,
+            "end": 2504722,
+            "text": "Oh, wow."
+          },
+          {
+            "start": 2504782,
+            "end": 2505622,
+            "text": "This is very nice."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2505802,
+            "end": 2513462,
+            "text": "And then from here, internally, I've been flagging things and we know we work with apex on both asset and brokerage."
+          },
+          {
+            "start": 2514282,
+            "end": 2517022,
+            "text": "So when does my team need to engage in an email?"
+          },
+          {
+            "start": 2517222,
+            "end": 2521282,
+            "text": "I'm labeling them as asset, apex brokered."
+          },
+          {
+            "start": 2521702,
+            "end": 2527102,
+            "text": "When there's an asset load, my team's just ignoring the email and we're flagging it."
+          },
+          {
+            "start": 2527402,
+            "end": 2534542,
+            "text": "But once we get into the shared workspace, we could also say Anka, I have like I could tag, I could tag."
+          },
+          {
+            "start": 2534582,
+            "end": 2536982,
+            "text": "I'm going to tag Brett because or Andre."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2538762,
+            "end": 2540122,
+            "text": "Needs."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2540122,
+            "end": 2544482,
+            "text": "Status updates on this every two hours."
+          },
+          {
+            "start": 2545182,
+            "end": 2551562,
+            "text": "So when Andre knows when he's in, we don't have an after hours email to add to anything anymore."
+          },
+          {
+            "start": 2551782,
+            "end": 2554322,
+            "text": "After hours can see the same thing you can see."
+          },
+          {
+            "start": 2554722,
+            "end": 2559582,
+            "text": "So all of the internal notes are going to be right on the side on the dialogue context internally."
+          },
+          {
+            "start": 2560262,
+            "end": 2571852,
+            "text": "And then after hours is going to know that we need tracking updates every two hours on this email and you're going to tag them and it's in real time and it's without making it look messy to Eunice over here."
+          },
+          {
+            "start": 2572292,
+            "end": 2578272,
+            "text": "And Eunice doesn't need 50 emails adding someone else adding after hours, telling someone to do something."
+          },
+          {
+            "start": 2578952,
+            "end": 2581212,
+            "text": "We could then just respond to the customer."
+          },
+          {
+            "start": 2581872,
+            "end": 2583912,
+            "text": "I already gave her the gave him the pro."
+          },
+          {
+            "start": 2584032,
+            "end": 2587612,
+            "text": "But if I needed to say something, we could just reply from here."
+          },
+          {
+            "start": 2588272,
+            "end": 2594332,
+            "text": "It's now coming from apex or your personal and all these other emails."
+          },
+          {
+            "start": 2594412,
+            "end": 2597352,
+            "text": "Like if anca really needs this email, you could keep her on there."
+          },
+          {
+            "start": 2597472,
+            "end": 2604912,
+            "text": "But if she doesn't I can remove here, but she still has visibility from this group view instead of her personal inbox."
+          },
+          {
+            "start": 2605692,
+            "end": 2606212,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2609632,
+            "end": 2615432,
+            "text": "My next question would be about the, so you don't see the calendar invites."
+          },
+          {
+            "start": 2615612,
+            "end": 2620972,
+            "text": "You don't see the agenda for the day calls meetings, how are you going to handle that side?"
+          },
+          {
+            "start": 2621272,
+            "end": 2621572,
+            "text": "The?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2621572,
+            "end": 2624412,
+            "text": "Biggest thing is managing my calendar from teams."
+          },
+          {
+            "start": 2624512,
+            "end": 2629332,
+            "text": "So if you have teams desktop app that's where we've been managing our calendars."
+          },
+          {
+            "start": 2629692,
+            "end": 2634862,
+            "text": "So if I have this call or whatever call it's going to be, I manage it."
+          },
+          {
+            "start": 2634922,
+            "end": 2635402,
+            "text": "I."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2635402,
+            "end": 2636362,
+            "text": "Asked this one before."
+          },
+          {
+            "start": 2636522,
+            "end": 2641082,
+            "text": "And the next one would be, the mobile app."
+          },
+          {
+            "start": 2641742,
+            "end": 2643322,
+            "text": "How friendly is that one?"
+          },
+          {
+            "start": 2643382,
+            "end": 2643702,
+            "text": "Eric?"
+          },
+          {
+            "start": 2643822,
+            "end": 2651422,
+            "text": "Because right now everybody uses the, I mean everybody, I mean, some of us are using the we're living on the email."
+          },
+          {
+            "start": 2651502,
+            "end": 2652482,
+            "text": "It's only for seven, right?"
+          },
+          {
+            "start": 2652542,
+            "end": 2654102,
+            "text": "So we're using the outlook."
+          },
+          {
+            "start": 2654282,
+            "end": 2658902,
+            "text": "How friendly is your app compared with the outlook?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2661732,
+            "end": 2662452,
+            "text": "Gage or Brett?"
+          },
+          {
+            "start": 2662512,
+            "end": 2663512,
+            "text": "Are you using that at all?"
+          },
+          {
+            "start": 2663832,
+            "end": 2664272,
+            "text": "I'm."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2664272,
+            "end": 2667412,
+            "text": "using the app and it pulls everything I need."
+          },
+          {
+            "start": 2667612,
+            "end": 2671792,
+            "text": "It's when it's loading, it makes you have a strobe light effect."
+          },
+          {
+            "start": 2671792,
+            "end": 2673412,
+            "text": "Is my only critique on that."
+          },
+          {
+            "start": 2673472,
+            "end": 2674552,
+            "text": "Just full honesty."
+          },
+          {
+            "start": 2674952,
+            "end": 2677212,
+            "text": "It just keeps flashing while it's loading."
+          },
+          {
+            "start": 2677372,
+            "end": 2678012,
+            "text": "It works."
+          },
+          {
+            "start": 2678192,
+            "end": 2678832,
+            "text": "It's functional."
+          },
+          {
+            "start": 2678992,
+            "end": 2680072,
+            "text": "You could see all the notes."
+          },
+          {
+            "start": 2680472,
+            "end": 2681892,
+            "text": "You could see all this stuff."
+          },
+          {
+            "start": 2681932,
+            "end": 2683652,
+            "text": "If you have to internally tag someone."
+          },
+          {
+            "start": 2685882,
+            "end": 2687162,
+            "text": "It just takes a handful, can."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2687162,
+            "end": 2688362,
+            "text": "You reply from your phone."
+          },
+          {
+            "start": 2688482,
+            "end": 2689702,
+            "text": "Can you reply to emails?"
+          },
+          {
+            "start": 2689922,
+            "end": 2690442,
+            "text": "Can you?"
+          },
+          {
+            "start": 2690482,
+            "end": 2690882,
+            "text": "Yes?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2690962,
+            "end": 2691642,
+            "text": "And it gives us."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2691722,
+            "end": 2693282,
+            "text": "You don't do much."
+          },
+          {
+            "start": 2693342,
+            "end": 2698602,
+            "text": "I mean, it's just move the emails over not to be, you know, clock tomorrow morning."
+          },
+          {
+            "start": 2698742,
+            "end": 2700802,
+            "text": "So, sometimes you have to move hands on emails."
+          },
+          {
+            "start": 2700802,
+            "end": 2702282,
+            "text": "Probably during the evening."
+          },
+          {
+            "start": 2702302,
+            "end": 2704082,
+            "text": "I'm not talking about an operation."
+          },
+          {
+            "start": 2704282,
+            "end": 2705182,
+            "text": "It's just regular emails."
+          },
+          {
+            "start": 2705482,
+            "end": 2705882,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2705982,
+            "end": 2718482,
+            "text": "So, like this, regular emails, if I wanted to be here and I needed a move like, this email and this email, I see from this email, this is an ops and Lg, this one's in the."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2718482,
+            "end": 2719602,
+            "text": "airways, this is what I wanted to get."
+          },
+          {
+            "start": 2719602,
+            "end": 2721282,
+            "text": "So, you see, this is what I wanted to ask."
+          },
+          {
+            "start": 2721362,
+            "end": 2721882,
+            "text": "So, what is that?"
+          },
+          {
+            "start": 2721882,
+            "end": 2722582,
+            "text": "Ops and Lg?"
+          },
+          {
+            "start": 2722722,
+            "end": 2723642,
+            "text": "Is it where the inbox?"
+          },
+          {
+            "start": 2723782,
+            "end": 2725042,
+            "text": "I mean, the email is?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2725402,
+            "end": 2727402,
+            "text": "That's the shared inbox."
+          },
+          {
+            "start": 2727582,
+            "end": 2734002,
+            "text": "So, what this customer did was they cc'd me personally, ops and Lg."
+          },
+          {
+            "start": 2734742,
+            "end": 2735242,
+            "text": "I see."
+          },
+          {
+            "start": 2735342,
+            "end": 2736742,
+            "text": "So this is all the time on."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2736742,
+            "end": 2743162,
+            "text": "The bottom of the emails, you see, how many groups he basically tagged on that or flagged or whatever, correct?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2743222,
+            "end": 2744842,
+            "text": "Then how many workspaces is in?"
+          },
+          {
+            "start": 2744922,
+            "end": 2750622,
+            "text": "So, since I have access to everything like this one is spots ops and dispatch team."
+          },
+          {
+            "start": 2751122,
+            "end": 2751562,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2751602,
+            "end": 2754422,
+            "text": "I mean, that can be done internally in between us."
+          },
+          {
+            "start": 2754862,
+            "end": 2759722,
+            "text": "Not to, I mean, what other questions to Eric, will have at this point?"
+          },
+          {
+            "start": 2759802,
+            "end": 2763432,
+            "text": "I think I maximized mine, no."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2763452,
+            "end": 2763752,
+            "text": "That's okay."
+          },
+          {
+            "start": 2763792,
+            "end": 2769872,
+            "text": "And just to set the, you know, stage, this is really to give you a good understanding of what's possible."
+          },
+          {
+            "start": 2770112,
+            "end": 2774312,
+            "text": "We'll obviously work together, and get real specific with your workflows."
+          },
+          {
+            "start": 2774472,
+            "end": 2776132,
+            "text": "We'll iron out those questions you have."
+          },
+          {
+            "start": 2776492,
+            "end": 2778132,
+            "text": "How do we handle this scenario?"
+          },
+          {
+            "start": 2778432,
+            "end": 2779312,
+            "text": "What do we do for that?"
+          },
+          {
+            "start": 2779452,
+            "end": 2780692,
+            "text": "How do we set up this automation?"
+          },
+          {
+            "start": 2780932,
+            "end": 2785292,
+            "text": "So we'll definitely dive in and make sure that the team is set up properly."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 2785392,
+            "end": 2793052,
+            "text": "But from a kind of a high level perspective, are there any glaring questions that anyone on the team still has?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1618519560606330753",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 2795012,
+            "end": 2796792,
+            "text": "Yes, I do, Julian here."
+          },
+          {
+            "start": 2797832,
+            "end": 2803592,
+            "text": "Let's say me and Christian are managing the inbox for?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 2803592,
+            "end": 2804192,
+            "text": "Tomorrow?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1618519560606330753",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 2805372,
+            "end": 2811532,
+            "text": "Wednesday, an email comes in and can you talk a little bit about the collision alert feature?"
+          },
+          {
+            "start": 2812232,
+            "end": 2816732,
+            "text": "Cause I've worked with the helpscout and it looks like it's something like what they're doing?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 2819912,
+            "end": 2820972,
+            "text": "Good question."
+          },
+          {
+            "start": 2821452,
+            "end": 2828112,
+            "text": "I will have to actually double check something on my side with Omni."
+          },
+          {
+            "start": 2828312,
+            "end": 2831652,
+            "text": "I forget off the top of my head with collision alerts."
+          },
+          {
+            "start": 2832592,
+            "end": 2835852,
+            "text": "There should be one, but let me double check and get back to you."
+          },
+          {
+            "start": 2835892,
+            "end": 2837692,
+            "text": "I don't want to mislead you with the wrong answer."
+          },
+          {
+            "start": 2838332,
+            "end": 2838612,
+            "text": "I would."
+          }
+        ]
+      },
+      {
+        "speakerId": "1618519560606330753",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2838612,
+            "end": 2850192,
+            "text": "Add something to that asterix because with what helpscout used to have is that collision alert, but also, you could see who's inside the email and you could see who's replying."
+          },
+          {
+            "start": 2850192,
+            "end": 2855252,
+            "text": "Because if let's say me and Christian are managing it, we should not be talking to each other."
+          },
+          {
+            "start": 2855292,
+            "end": 2860632,
+            "text": "We should be working in a workflow to be assigning the emails to the correct person."
+          },
+          {
+            "start": 2861112,
+            "end": 2867512,
+            "text": "So that way if I see he's opening something and he's looking at it, that means I don't need to go into it."
+          },
+          {
+            "start": 2867592,
+            "end": 2868472,
+            "text": "I can be more efficient."
+          },
+          {
+            "start": 2868572,
+            "end": 2871992,
+            "text": "I can jump on the next one without having to say, hey, I'm going to assign this."
+          },
+          {
+            "start": 2872092,
+            "end": 2873172,
+            "text": "You're going to assign this?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2875232,
+            "end": 2875712,
+            "text": "Understood."
+          },
+          {
+            "start": 2875772,
+            "end": 2876812,
+            "text": "Yeah, completely understand."
+          },
+          {
+            "start": 2878172,
+            "end": 2883672,
+            "text": "Let me again with Omni, it's not coming to me at the top of my head right now."
+          },
+          {
+            "start": 2883812,
+            "end": 2888212,
+            "text": "So let me confirm what the expectation is right now and I'll get back to you."
+          }
+        ]
+      },
+      {
+        "speakerId": "1618519560606330753",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2889122,
+            "end": 2892662,
+            "text": "And one more point I want to touch, let's say, me and Christian were working."
+          },
+          {
+            "start": 2893782,
+            "end": 2899742,
+            "text": "The easy part is to assign the email to if it's one load, one broker."
+          },
+          {
+            "start": 2899962,
+            "end": 2900202,
+            "text": "Okay."
+          },
+          {
+            "start": 2900262,
+            "end": 2901522,
+            "text": "We assign it to Christina."
+          },
+          {
+            "start": 2901702,
+            "end": 2902482,
+            "text": "We move it on."
+          },
+          {
+            "start": 2902542,
+            "end": 2903462,
+            "text": "She deals with it."
+          },
+          {
+            "start": 2904202,
+            "end": 2910362,
+            "text": "Everybody's happy, but let's say an email comes and they request an update and the load is for Christina."
+          },
+          {
+            "start": 2910582,
+            "end": 2910902,
+            "text": "Okay."
+          },
+          {
+            "start": 2910982,
+            "end": 2926142,
+            "text": "We tag Christina, but then there is another reply that, and now there is an extra load number request that is not Christina's so does that mean that the person assigned can see that new reply with another load number attached?"
+          },
+          {
+            "start": 2926142,
+            "end": 2935342,
+            "text": "Or we're going to see it on the inbox because we already assigned it to her and she's the owner, she has to actually tag the other person and add it, right?"
+          },
+          {
+            "start": 2936062,
+            "end": 2936582,
+            "text": "And."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2936582,
+            "end": 2940582,
+            "text": "would that other person be a part of that same team in mailbox?"
+          },
+          {
+            "start": 2940702,
+            "end": 2940942,
+            "text": "Yes."
+          },
+          {
+            "start": 2941022,
+            "end": 2941582,
+            "text": "Yeah."
+          },
+          {
+            "start": 2942252,
+            "end": 2950112,
+            "text": "So would, if it is, so, like for example, if it's assigned to Kathleen right now because I see there's an email there, it would remain in."
+          },
+          {
+            "start": 2950112,
+            "end": 2952252,
+            "text": "Kathleen's assigned to, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1618519560606330753",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2952752,
+            "end": 2953232,
+            "text": "Okay."
+          },
+          {
+            "start": 2953612,
+            "end": 2954092,
+            "text": "We."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2954092,
+            "end": 2957392,
+            "text": "would have to figure out what makes the most sense in this term, right?"
+          },
+          {
+            "start": 2957492,
+            "end": 2962192,
+            "text": "Kathleen could either reassign it or if she's still working on it, keep it assigned."
+          },
+          {
+            "start": 2962192,
+            "end": 2964992,
+            "text": "But add a note to that other team member."
+          },
+          {
+            "start": 2965252,
+            "end": 2968372,
+            "text": "I think we need to explore what makes the most sense."
+          },
+          {
+            "start": 2968612,
+            "end": 2975592,
+            "text": "So there's a few different ways that we could assign or handle it just depending on kind of the intricacies of the handoff and the interaction."
+          }
+        ]
+      },
+      {
+        "speakerId": "3180559415786853186",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2976272,
+            "end": 2977172,
+            "text": "Go ahead."
+          },
+          {
+            "start": 2978252,
+            "end": 2986832,
+            "text": "How we're currently dealing with that is that when we are responding to an email, we're not having any indefinite assignments on our side."
+          },
+          {
+            "start": 2987092,
+            "end": 2989432,
+            "text": "So we are assigning someone something."
+          },
+          {
+            "start": 2989432,
+            "end": 2994652,
+            "text": "But after they respond to it, we're hitting the reply."
+          },
+          {
+            "start": 2995032,
+            "end": 2999832,
+            "text": "When you reply, you can hit send and close, send close and unassign."
+          },
+          {
+            "start": 3000392,
+            "end": 3004172,
+            "text": "So that the next email from that would go into the unassigned box."
+          },
+          {
+            "start": 3004432,
+            "end": 3007672,
+            "text": "That's what we're doing with every single email that comes through."
+          },
+          {
+            "start": 3007752,
+            "end": 3013092,
+            "text": "We're actually working with Eric on automation that, that's the automatic default on our side."
+          },
+          {
+            "start": 3013092,
+            "end": 3019132,
+            "text": "Because yes, we might want some specific team member to respond to it this time."
+          },
+          {
+            "start": 3019132,
+            "end": 3022232,
+            "text": "But the next time it might be someone completely different."
+          },
+          {
+            "start": 3022412,
+            "end": 3028692,
+            "text": "So we're not like indefinitely assigning things and that's kind of the human aspect of it, right?"
+          },
+          {
+            "start": 3028792,
+            "end": 3037152,
+            "text": "So like if you are assigned something and, you know, that there's going to be stuff that comes in the future that you might not need to respond to."
+          },
+          {
+            "start": 3037232,
+            "end": 3044552,
+            "text": "You should be like unassigning and closing after you send your piece, right?"
+          },
+          {
+            "start": 3044652,
+            "end": 3058422,
+            "text": "So if they're asking for a generalized update where's this driver you type in Miami, Florida, eta… you know, then you hit sign like unassigned and close as you send it."
+          },
+          {
+            "start": 3058522,
+            "end": 3063922,
+            "text": "And then that will go back into the pro one unassigned box for like that scenario."
+          },
+          {
+            "start": 3064562,
+            "end": 3066462,
+            "text": "And that's what we're doing with every email."
+          },
+          {
+            "start": 3066562,
+            "end": 3072142,
+            "text": "So we're only assigning it to people because they might be the single person that needs to respond to it this time."
+          },
+          {
+            "start": 3072322,
+            "end": 3086022,
+            "text": "The only time where we're assigning something that it stays with us is let's say there's an accident or let's say there's a huge rejection issue and I want to handle it like Brad himself wants to handle it."
+          },
+          {
+            "start": 3086042,
+            "end": 3087702,
+            "text": "I don't want any other hands in the cookie jar."
+          },
+          {
+            "start": 3087962,
+            "end": 3091102,
+            "text": "I'm going to handle this from, you know, soup to nuts, right?"
+          },
+          {
+            "start": 3091222,
+            "end": 3094302,
+            "text": "I'm going to, I'm, going to keep that assigned to me."
+          },
+          {
+            "start": 3094442,
+            "end": 3106102,
+            "text": "And that's the only case scenario where it's staying assigned to me like prolonged so that I think that's how we've been dealing with it currently, you guys might find something else."
+          },
+          {
+            "start": 3106122,
+            "end": 3108662,
+            "text": "You guys might, you know, your workflow is different obviously."
+          },
+          {
+            "start": 3108882,
+            "end": 3110902,
+            "text": "So it might be different on your side."
+          },
+          {
+            "start": 3111062,
+            "end": 3116822,
+            "text": "But if you need anything, you know, there… they can work with you guys on how to do that."
+          },
+          {
+            "start": 3116882,
+            "end": 3123542,
+            "text": "Just like how we want our default to be sign close like unassigned and close your guys's, might be something else."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3124392,
+            "end": 3128152,
+            "text": "I've honestly even seen tags being used for that."
+          },
+          {
+            "start": 3128312,
+            "end": 3135872,
+            "text": "Like if you have a tag of like a secondary person because it does basically create that folder that you can then just go in, right?"
+          },
+          {
+            "start": 3135972,
+            "end": 3139072,
+            "text": "So all this to say is we can solve for it."
+          },
+          {
+            "start": 3139132,
+            "end": 3142452,
+            "text": "It's just a matter of like what makes the most sense, which avenue to go?"
+          },
+          {
+            "start": 3142632,
+            "end": 3143932,
+            "text": "And we'll discuss all that."
+          },
+          {
+            "start": 3144032,
+            "end": 3149772,
+            "text": "But we can definitely figure out what's the best seamless way to handle those situations."
+          },
+          {
+            "start": 3150352,
+            "end": 3150672,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3150792,
+            "end": 3159652,
+            "text": "One nice thing too is like if I'm assigned to email or like Brett sends me a chat, this notification thing is going to tell you."
+          },
+          {
+            "start": 3159672,
+            "end": 3167532,
+            "text": "Okay, you were assigned to this email load number X and it will take you directly to that thread and that email that you were working on."
+          },
+          {
+            "start": 3168192,
+            "end": 3182272,
+            "text": "But when to Brett's point, I didn't unassign this for myself because I knew this email would die with me if it was going to reopen or it's a continued conversation I would send close and unassigned."
+          }
+        ]
+      },
+      {
+        "speakerId": "1618519560606330753",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3188092,
+            "end": 3188452,
+            "text": "Okay."
+          },
+          {
+            "start": 3188492,
+            "end": 3194812,
+            "text": "Because my understanding was that you could actually assign multiple people, you can tag multiple people but you can only assign it to one person."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3195612,
+            "end": 3199412,
+            "text": "You could tag as many people as you would like."
+          },
+          {
+            "start": 3199452,
+            "end": 3202632,
+            "text": "And by tag, I mean, well, let me get out of my personal inbox."
+          },
+          {
+            "start": 3203132,
+            "end": 3212732,
+            "text": "But by tag, I mean, like in the notes on the side, I… could tag Andre, I could tag Brett."
+          },
+          {
+            "start": 3212952,
+            "end": 3215042,
+            "text": "I could tag Derek."
+          },
+          {
+            "start": 3215182,
+            "end": 3217082,
+            "text": "I could tag whoever else."
+          },
+          {
+            "start": 3217082,
+            "end": 3226162,
+            "text": "I need to bring visibility here and it will send them the alert up here on the left and it will draw them to this email chain."
+          },
+          {
+            "start": 3226302,
+            "end": 3238632,
+            "text": "So whatever you need to do, like if you need like you need someone else to look at the email, but you still want it assigned to yourself, you could do that, but you could tag whoever."
+          },
+          {
+            "start": 3238632,
+            "end": 3242592,
+            "text": "You could tag 100 people if you wanted to in there."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3243012,
+            "end": 3247212,
+            "text": "Basically, you don't have to say, hey, Julian, please follow up on this."
+          },
+          {
+            "start": 3247592,
+            "end": 3254712,
+            "text": "You tag that person internally, and Julian is going to take care of that problem and you're out if I'm understanding correctly?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3256832,
+            "end": 3257232,
+            "text": "Yeah."
+          },
+          {
+            "start": 3257252,
+            "end": 3266452,
+            "text": "And in that case, if I was like tagging this to Brett, I would probably say take care of this and maybe assign it to him."
+          },
+          {
+            "start": 3267812,
+            "end": 3277112,
+            "text": "But I am like from, because of how we're broken up on the logistics side where we have customer distribution list, I am managing the apex folder."
+          },
+          {
+            "start": 3277672,
+            "end": 3280952,
+            "text": "So anything that's coming into apex, I am managing."
+          },
+          {
+            "start": 3281332,
+            "end": 3285792,
+            "text": "So I'm not going to, it just depends on your workflows to answer to that."
+          },
+          {
+            "start": 3286132,
+            "end": 3297192,
+            "text": "If this was pro one, and we need emails from CH robinson to be tagged to someone, we add the CH robinson tag here."
+          },
+          {
+            "start": 3297952,
+            "end": 3305612,
+            "text": "And then we could assign it to Manny or whoever needs to respond to it or whoever is actively working on it."
+          },
+          {
+            "start": 3305712,
+            "end": 3312272,
+            "text": "And then say you need Dan to look at something, you could tag Dan in here in the notes and say, Dan, please look at this and respond."
+          }
+        ]
+      },
+      {
+        "speakerId": "1618519560606330753",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3317042,
+            "end": 3321022,
+            "text": "But if I look to the left and I see mine, it's going to be only me."
+          },
+          {
+            "start": 3321102,
+            "end": 3324082,
+            "text": "It's not going to be all the other people that are assigned, right?"
+          },
+          {
+            "start": 3324182,
+            "end": 3331722,
+            "text": "Because if I'm only tagged on that thread or on that email, it's not going to show up on the left side on mine because it's not mine."
+          },
+          {
+            "start": 3331782,
+            "end": 3332402,
+            "text": "I'm not the owner."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3332882,
+            "end": 3334042,
+            "text": "On yours."
+          },
+          {
+            "start": 3334182,
+            "end": 3334602,
+            "text": "No."
+          },
+          {
+            "start": 3334802,
+            "end": 3343122,
+            "text": "So, but if like ops, you could see, so the team there's three unassigned emails and then the team has four emails that they're working on."
+          }
+        ]
+      },
+      {
+        "speakerId": "1618519560606330753",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3343712,
+            "end": 3345192,
+            "text": "Oh, but I can see the tags, right?"
+          },
+          {
+            "start": 3345312,
+            "end": 3345732,
+            "text": "You?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3345732,
+            "end": 3346872,
+            "text": "Can see what they're working on."
+          },
+          {
+            "start": 3346892,
+            "end": 3348372,
+            "text": "You're going to have visibility over everything?"
+          },
+          {
+            "start": 3348712,
+            "end": 3349152,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3349172,
+            "end": 3350932,
+            "text": "You never lose visibility."
+          },
+          {
+            "start": 3351452,
+            "end": 3358452,
+            "text": "So if I could see everything that Eddie did, I could see everything that Laura did in this thread here."
+          },
+          {
+            "start": 3358552,
+            "end": 3364212,
+            "text": "And if they need me, they'll tag me and it could still be assigned to them and you could see it."
+          }
+        ]
+      },
+      {
+        "speakerId": "1618519560606330753",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3365182,
+            "end": 3365482,
+            "text": "Okay."
+          },
+          {
+            "start": 3365562,
+            "end": 3365982,
+            "text": "That works."
+          },
+          {
+            "start": 3366182,
+            "end": 3366282,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3366362,
+            "end": 3368662,
+            "text": "Full visibility to everything."
+          },
+          {
+            "start": 3368822,
+            "end": 3369542,
+            "text": "Nothing disappears."
+          },
+          {
+            "start": 3369882,
+            "end": 3371042,
+            "text": "Everyone still has access."
+          },
+          {
+            "start": 3371302,
+            "end": 3373002,
+            "text": "It's just a matter of how it's stored, right?"
+          },
+          {
+            "start": 3373102,
+            "end": 3377242,
+            "text": "Mine there's a separate view, unassigned team view tags."
+          },
+          {
+            "start": 3377602,
+            "end": 3379062,
+            "text": "You can see the categories, right?"
+          },
+          {
+            "start": 3379122,
+            "end": 3383262,
+            "text": "So everything that's the main, you know, thing that we're solving for here."
+          },
+          {
+            "start": 3383422,
+            "end": 3388662,
+            "text": "It's full visibility, full ownership, full collaboration, all within here."
+          },
+          {
+            "start": 3388742,
+            "end": 3390322,
+            "text": "The same place I think."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3390322,
+            "end": 3391402,
+            "text": "For today was great."
+          },
+          {
+            "start": 3391442,
+            "end": 3408682,
+            "text": "So we can everybody understand a little bit and ask a few more other questions and definitely will be more internal in between us with Brett and Gage to work together in the next day or so jump on another call and kind of like ask all the questions to them and keep Eric out."
+          },
+          {
+            "start": 3408942,
+            "end": 3417752,
+            "text": "And then basically we're going to be able to figure out everything on our own and come up with a due date."
+          },
+          {
+            "start": 3417972,
+            "end": 3427092,
+            "text": "And when we're ready for this movement and see how we can get everything set up before because everything is about the setup."
+          },
+          {
+            "start": 3427332,
+            "end": 3431292,
+            "text": "I mean, without that, I mean, you're kind of like dying over here."
+          },
+          {
+            "start": 3431372,
+            "end": 3433652,
+            "text": "I mean, you have to have the right setups and then get."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3435632,
+            "end": 3439882,
+            "text": "into action and things that you would normally kind of like."
+          },
+          {
+            "start": 3439902,
+            "end": 3449802,
+            "text": "If you get a load list like, you know, anca is working on a west Chicago truck that needs to make its way to Nebraska for Kellogg's pickup, but she might not get this email."
+          },
+          {
+            "start": 3449902,
+            "end": 3453102,
+            "text": "You could then notify her, say, hey go and look at this email."
+          },
+          {
+            "start": 3453202,
+            "end": 3454042,
+            "text": "Maybe you want this load."
+          },
+          {
+            "start": 3454582,
+            "end": 3464442,
+            "text": "So there's things that we could do internally that we are currently doing externally or possibly missing as a revenue opportunity to put the truck assigned to something."
+          },
+          {
+            "start": 3464642,
+            "end": 3473142,
+            "text": "So there's different sharing methods internally here on how we could communicate in addition to teams, in addition to adding more things."
+          },
+          {
+            "start": 3473602,
+            "end": 3476702,
+            "text": "It's alongside the email that we need to communicate about."
+          },
+          {
+            "start": 3478182,
+            "end": 3478622,
+            "text": "And."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3478622,
+            "end": 3479182,
+            "text": "Guys."
+          },
+          {
+            "start": 3479382,
+            "end": 3481182,
+            "text": "Sorry, I do have to jump in two minutes."
+          },
+          {
+            "start": 3481202,
+            "end": 3483202,
+            "text": "I just want to make sure we kind of round this home."
+          },
+          {
+            "start": 3483802,
+            "end": 3494912,
+            "text": "It sounds like Kellen, you know, the goal of the team is to meet internally, start to figure out how the assets team would want to set up should we get something on the books?"
+          },
+          {
+            "start": 3495132,
+            "end": 3498212,
+            "text": "You know, I obviously want to give you guys enough time to discuss internally."
+          },
+          {
+            "start": 3498672,
+            "end": 3500612,
+            "text": "What do you think from a timeline perspective?"
+          },
+          {
+            "start": 3500892,
+            "end": 3501792,
+            "text": "Do you think we?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3501792,
+            "end": 3515012,
+            "text": "Can schedule one in another two weeks and we're going to work internally kind of like with everybody and get an understanding more over things because it's just the first visit, the first meeting."
+          },
+          {
+            "start": 3515132,
+            "end": 3518712,
+            "text": "So definitely it's a new information to some of us."
+          },
+          {
+            "start": 3518812,
+            "end": 3520992,
+            "text": "I mean, mine is probably the third one now."
+          },
+          {
+            "start": 3521232,
+            "end": 3526352,
+            "text": "So I'm a little bit more familiar with things, but definitely would be more questions internally."
+          },
+          {
+            "start": 3526952,
+            "end": 3539332,
+            "text": "And after that, I think we can have another conversation in two weeks and then come up with probably a due date after that in the following week or in two weeks after whatever everybody's more comfortable."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 3539652,
+            "end": 3544912,
+            "text": "We want to make sure we can definitely save time, which I see we can."
+          },
+          {
+            "start": 3545052,
+            "end": 3548492,
+            "text": "And definitely we can do better, which I also see."
+          },
+          {
+            "start": 3548572,
+            "end": 3551972,
+            "text": "So it's on us as a company to see the same what I see."
+          },
+          {
+            "start": 3552712,
+            "end": 3553152,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 3553252,
+            "end": 3555632,
+            "text": "Do we want to get something on the calendar right now?"
+          },
+          {
+            "start": 3555632,
+            "end": 3556312,
+            "text": "Since we're here?"
+          },
+          {
+            "start": 3556512,
+            "end": 3557292,
+            "text": "Yeah, we can put."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 3557292,
+            "end": 3557992,
+            "text": "It for two weeks."
+          },
+          {
+            "start": 3557992,
+            "end": 3558692,
+            "text": "We can put it for February."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 3558692,
+            "end": 3561802,
+            "text": "Night, is there some day that works better for you all?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 3561982,
+            "end": 3562302,
+            "text": "Yeah."
+          },
+          {
+            "start": 3562362,
+            "end": 3563802,
+            "text": "Tuesday is fine for the same time."
+          },
+          {
+            "start": 3564402,
+            "end": 3567502,
+            "text": "You can do 10 o'clock you can do 11 o'clock whatever works for you."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 3568152,
+            "end": 3569152,
+            "text": "Tuesday same time works."
+          },
+          {
+            "start": 3569252,
+            "end": 3571752,
+            "text": "So I will send that calendar invite for Tuesday."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3571752,
+            "end": 3572192,
+            "text": "The tenth."
+          },
+          {
+            "start": 3572352,
+            "end": 3577912,
+            "text": "You guys will have some internal discussions, start to figure out kind of plan how you'd want to move those in."
+          },
+          {
+            "start": 3578472,
+            "end": 3582592,
+            "text": "Obviously, you know, part of what I'll be here is supporting understanding the workflows."
+          },
+          {
+            "start": 3582952,
+            "end": 3588492,
+            "text": "You know, a lot of great questions on this call around specifics that's what we'll cover, how do we handle the scenario?"
+          },
+          {
+            "start": 3588812,
+            "end": 3589772,
+            "text": "Do we automate this?"
+          },
+          {
+            "start": 3590072,
+            "end": 3591352,
+            "text": "How do we move this, right?"
+          },
+          {
+            "start": 3591392,
+            "end": 3593832,
+            "text": "So we'll make sure that the team feels fully comfortable."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 3593932,
+            "end": 3601432,
+            "text": "Since Brad and Gage are working with these problems already for us, it's going to be just using them for the rest, right?"
+          },
+          {
+            "start": 3601512,
+            "end": 3602612,
+            "text": "So we're going to be fine."
+          },
+          {
+            "start": 3602672,
+            "end": 3613352,
+            "text": "I guess we're going to abuse them too and come just with what we cannot or they're going to come to you for those questions that are going to be basically some of our answers, cool."
+          },
+          {
+            "start": 3613452,
+            "end": 3613872,
+            "text": "We're."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 3613872,
+            "end": 3614652,
+            "text": "here to support."
+          },
+          {
+            "start": 3614852,
+            "end": 3617212,
+            "text": "So I'll shoot an invite for the tenth."
+          },
+          {
+            "start": 3617592,
+            "end": 3623912,
+            "text": "Obviously, if you guys have questions that bubble up as you have internal discussions before that, feel free to reach out."
+          },
+          {
+            "start": 3623912,
+            "end": 3625432,
+            "text": "And I'm here to support."
+          }
+        ]
+      },
+      {
+        "speakerId": "7659724264067026559",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 3625672,
+            "end": 3626132,
+            "text": "Will do."
+          },
+          {
+            "start": 3626252,
+            "end": 3627072,
+            "text": "Thank you so much, Eric."
+          },
+          {
+            "start": 3627152,
+            "end": 3627812,
+            "text": "We appreciate you."
+          },
+          {
+            "start": 3627912,
+            "end": 3628352,
+            "text": "All right."
+          },
+          {
+            "start": 3628372,
+            "end": 3628852,
+            "text": "Thank you all."
+          }
+        ]
+      },
+      {
+        "speakerId": "3235379149350556379",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3628892,
+            "end": 3629232,
+            "text": "Thank you."
+          },
+          {
+            "start": 3629232,
+            "end": 3629652,
+            "text": "All right."
+          }
+        ]
+      },
+      {
+        "speakerId": "535319342585416945",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3629892,
+            "end": 3630192,
+            "text": "Everyone."
+          },
+          {
+            "start": 3630292,
+            "end": 3630492,
+            "text": "Thanks."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 147
+}

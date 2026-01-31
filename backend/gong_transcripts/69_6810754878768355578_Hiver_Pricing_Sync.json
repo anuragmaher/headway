@@ -1,0 +1,857 @@
+{
+  "call_id": "6810754878768355578",
+  "title": "Hiver Pricing Sync",
+  "started": "2026-01-28T02:02:47+05:30",
+  "duration_seconds": 263,
+  "call_metadata": {
+    "id": "6810754878768355578",
+    "url": "https://us-31545.app.gong.io/call?id=6810754878768355578",
+    "title": "Hiver Pricing Sync",
+    "scheduled": "2026-01-28T02:00:00+05:30",
+    "started": "2026-01-28T02:02:47+05:30",
+    "duration": 263,
+    "primaryUserId": "1712395375262334087",
+    "direction": "Conference",
+    "system": "Zoom",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://us06web.zoom.us/j/81447684395",
+    "isPrivate": false,
+    "calendarEventId": "k29onse88hn2ef6hcsbvbdvvmo@google.com"
+  },
+  "parties": [
+    {
+      "id": "5000836941907544641",
+      "emailAddress": "hannahwray@wunderpower.com",
+      "name": "Hannah Wray",
+      "title": "Lead Director, Development",
+      "speakerId": "6833885735642026296",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "189911407674",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "48706539843"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Hannah"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Lead Director, Development"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769129296.917
+                },
+                {
+                  "name": "createdate",
+                  "value": 1767452391.138
+                },
+                {
+                  "name": "lastname",
+                  "value": "Wray"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "1576925413"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "ORGANIC_SEARCH"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "phone",
+                  "value": "19038064544"
+                },
+                {
+                  "name": "mobilephone",
+                  "value": "19038064544"
+                },
+                {
+                  "name": "recent_conversion_date",
+                  "value": 1767452482.254
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Associated with a deal"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1767452391.138
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "opportunity"
+                },
+                {
+                  "name": "email",
+                  "value": "hannahwray@wundercapital.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "19038064544",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "5569561210632215711",
+      "emailAddress": "cole@grexit.com",
+      "name": "Cole Miller",
+      "userId": "1712395375262334087",
+      "speakerId": "4061630945117678096",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "2918036517536667988",
+      "emailAddress": "elladouglas@wunderpower.com",
+      "title": "Senior Project Manager",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "192374075932",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "48706539843"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "1576925413"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Senior Project Manager"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769085158.43
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Duplicate Prospect"
+                },
+                {
+                  "name": "createdate",
+                  "value": 1768323147.29
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1768323147.29
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "elladouglas@wunderpower.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    },
+    {
+      "id": "7499835433957016492",
+      "emailAddress": "dandoss@wunderpower.com",
+      "title": "Renewable Energy Professional",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "192374075931",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "48706539843"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "1576925413"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Renewable Energy Professional"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769085149.648
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Duplicate Prospect"
+                },
+                {
+                  "name": "createdate",
+                  "value": 1768323147.29
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1768323147.29
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "dandoss@wunderpower.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "6810754878768355578",
+    "transcript": [
+      {
+        "speakerId": "4061630945117678096",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 300,
+            "end": 560,
+            "text": "hey, Cole."
+          },
+          {
+            "start": 1340,
+            "end": 2400,
+            "text": "Hey, what's up, Hannah?"
+          },
+          {
+            "start": 2520,
+            "end": 2840,
+            "text": "How are you?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6833885735642026296",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3240,
+            "end": 3900,
+            "text": "I'm good."
+          },
+          {
+            "start": 3980,
+            "end": 4560,
+            "text": "How are you doing?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4061630945117678096",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 6320,
+            "end": 6860,
+            "text": "I'm good."
+          },
+          {
+            "start": 8760,
+            "end": 10340,
+            "text": "Appreciate you hopping on here."
+          },
+          {
+            "start": 10440,
+            "end": 12240,
+            "text": "Will you be the only one jumping on today?"
+          },
+          {
+            "start": 12860,
+            "end": 13960,
+            "text": "Yes, yes, I will."
+          },
+          {
+            "start": 15320,
+            "end": 17260,
+            "text": "So, yeah, I know we wanted to touch base."
+          },
+          {
+            "start": 18720,
+            "end": 19160,
+            "text": "Happy."
+          },
+          {
+            "start": 19160,
+            "end": 23540,
+            "text": "We're able to get an understanding of the slack integration and that we're able to accomplish it."
+          },
+          {
+            "start": 23660,
+            "end": 29400,
+            "text": "So our team is ready to roll on that if hiver is the vendor you do wanna move forward with."
+          },
+          {
+            "start": 29960,
+            "end": 32080,
+            "text": "So I guess just kind of feedback on your side."
+          },
+          {
+            "start": 32260,
+            "end": 35000,
+            "text": "Is that where the team stands today or what are you thinking?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6833885735642026296",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 35580,
+            "end": 36020,
+            "text": "Yeah."
+          },
+          {
+            "start": 36100,
+            "end": 39260,
+            "text": "So I wanted to understand a little bit about how that's gonna work."
+          },
+          {
+            "start": 39480,
+            "end": 43980,
+            "text": "So, is, well, yeah, maybe just let me ask that question."
+          },
+          {
+            "start": 44080,
+            "end": 44800,
+            "text": "How will that work?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4061630945117678096",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 46910,
+            "end": 47350,
+            "text": "Yeah."
+          },
+          {
+            "start": 47450,
+            "end": 51590,
+            "text": "So essentially, I will introduce you to our engineering team post signup."
+          },
+          {
+            "start": 51910,
+            "end": 52310,
+            "text": "Okay."
+          },
+          {
+            "start": 52610,
+            "end": 54310,
+            "text": "They're gonna meet with you to scope out."
+          },
+          {
+            "start": 54410,
+            "end": 61550,
+            "text": "So I sent them that exact example that you sent me and they said we're able to do it and essentially, they're just gonna build it for you based on what you sent me."
+          }
+        ]
+      },
+      {
+        "speakerId": "6833885735642026296",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 62210,
+            "end": 62610,
+            "text": "Okay."
+          },
+          {
+            "start": 62730,
+            "end": 70630,
+            "text": "So we had talked previously about how those project names we have more than like the 43 or whatever that you guys are limited to."
+          },
+          {
+            "start": 70730,
+            "end": 81130,
+            "text": "So we would send, you know, maybe like a spreadsheet of those project names, add those as tags and then map those to specific project channels that we have in slack."
+          },
+          {
+            "start": 82460,
+            "end": 83740,
+            "text": "Is that how that would work?"
+          },
+          {
+            "start": 83920,
+            "end": 84300,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4061630945117678096",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 85180,
+            "end": 85600,
+            "text": "Exactly."
+          },
+          {
+            "start": 85920,
+            "end": 88940,
+            "text": "So we would use those to help us map those to those specific channels."
+          },
+          {
+            "start": 89460,
+            "end": 92720,
+            "text": "So we're sending the proper notifications to the proper slack channels."
+          }
+        ]
+      },
+      {
+        "speakerId": "6833885735642026296",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 93200,
+            "end": 93640,
+            "text": "Okay."
+          },
+          {
+            "start": 93700,
+            "end": 94320,
+            "text": "Got it."
+          },
+          {
+            "start": 94360,
+            "end": 94600,
+            "text": "All right."
+          },
+          {
+            "start": 94640,
+            "end": 96460,
+            "text": "Well, let me run that back to the team."
+          },
+          {
+            "start": 96620,
+            "end": 99720,
+            "text": "I know you're wanting this done by the end of the month."
+          },
+          {
+            "start": 99800,
+            "end": 101420,
+            "text": "So let me run that back."
+          },
+          {
+            "start": 101560,
+            "end": 110540,
+            "text": "And then I think if that all sounds good to everyone, then I can be in touch with you before the end of the month for sure."
+          }
+        ]
+      },
+      {
+        "speakerId": "4061630945117678096",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 111530,
+            "end": 111930,
+            "text": "Okay."
+          },
+          {
+            "start": 111990,
+            "end": 112230,
+            "text": "Cool."
+          },
+          {
+            "start": 112310,
+            "end": 113990,
+            "text": "And that would be for the 20 users, right?"
+          },
+          {
+            "start": 114110,
+            "end": 117090,
+            "text": "The 20 user proposal I sent over for the 40 percent discount?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6833885735642026296",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 117670,
+            "end": 118870,
+            "text": "20 users."
+          },
+          {
+            "start": 119050,
+            "end": 126670,
+            "text": "Yeah, some of the other teams around our org are considering being added… but as of right now, I think 20?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4061630945117678096",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 127490,
+            "end": 127850,
+            "text": "Okay."
+          },
+          {
+            "start": 127930,
+            "end": 132050,
+            "text": "And just based on how like, you know, that integration should work, like, do you see that?"
+          },
+          {
+            "start": 132050,
+            "end": 134150,
+            "text": "Like do you see the team green lighting, this?"
+          },
+          {
+            "start": 134190,
+            "end": 136150,
+            "text": "Do you see any like stoppers from this point?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6833885735642026296",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 137840,
+            "end": 156940,
+            "text": "I think the only concern that could come up is that, you know, the other option we're evaluating that feature is native and I think the only concern would be that because this isn't native, it might be clunky to start, but that's the only thing I can think of off the top of my head."
+          }
+        ]
+      },
+      {
+        "speakerId": "4061630945117678096",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 157840,
+            "end": 158320,
+            "text": "Okay."
+          },
+          {
+            "start": 158380,
+            "end": 158800,
+            "text": "Got it."
+          },
+          {
+            "start": 158840,
+            "end": 160500,
+            "text": "And what is the other solution just curious?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6833885735642026296",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 161560,
+            "end": 162040,
+            "text": "Gmelius?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4061630945117678096",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 163260,
+            "end": 163980,
+            "text": "Gmelius."
+          },
+          {
+            "start": 164040,
+            "end": 164420,
+            "text": "Got it."
+          },
+          {
+            "start": 164440,
+            "end": 164640,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "6833885735642026296",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 166480,
+            "end": 168400,
+            "text": "You got any dirt you want to dig up?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4061630945117678096",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 169580,
+            "end": 176500,
+            "text": "The main dirt I would just say is just we're, we just provide like a lot of like partnership on the front end."
+          },
+          {
+            "start": 176560,
+            "end": 182380,
+            "text": "Like, I think where we're really going to differentiate is one, we have over 100 engineers working on the product."
+          },
+          {
+            "start": 182580,
+            "end": 193070,
+            "text": "You're going to have a dedicated CSM, you know, complete representative within our company who's going to help, you know, build all this out with, you implement, you know, take any customer requests, whatever it might be."
+          },
+          {
+            "start": 193770,
+            "end": 198870,
+            "text": "And then also just our level of support, 24 seven, three six, five, technical support."
+          },
+          {
+            "start": 199070,
+            "end": 203150,
+            "text": "I think there's like 20 people at gmelius and we're 300 strong."
+          },
+          {
+            "start": 203350,
+            "end": 206730,
+            "text": "So just different, you know, different size, okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6833885735642026296",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 206810,
+            "end": 207610,
+            "text": "Got it."
+          },
+          {
+            "start": 207670,
+            "end": 209130,
+            "text": "Yeah, I can see that."
+          },
+          {
+            "start": 209270,
+            "end": 209650,
+            "text": "Cool."
+          },
+          {
+            "start": 210490,
+            "end": 210870,
+            "text": "Okay."
+          },
+          {
+            "start": 210910,
+            "end": 213270,
+            "text": "Well, yeah, go ahead, no."
+          }
+        ]
+      },
+      {
+        "speakerId": "4061630945117678096",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 213350,
+            "end": 217090,
+            "text": "But I can, I'll also follow up with some of this additional information as well."
+          },
+          {
+            "start": 218720,
+            "end": 220900,
+            "text": "Would it be cool to schedule some time?"
+          },
+          {
+            "start": 220940,
+            "end": 223320,
+            "text": "Let's say, same time as Friday just to debrief."
+          }
+        ]
+      },
+      {
+        "speakerId": "6833885735642026296",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 224620,
+            "end": 226700,
+            "text": "Yes, let me check my calendar."
+          },
+          {
+            "start": 228700,
+            "end": 231020,
+            "text": "Yes, let's do same time on Friday."
+          }
+        ]
+      },
+      {
+        "speakerId": "4061630945117678096",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 231480,
+            "end": 232320,
+            "text": "Okay, perfect."
+          },
+          {
+            "start": 233040,
+            "end": 237320,
+            "text": "But no, I appreciate the time, Hannah, let me know if there's any other questions in the meantime and."
+          }
+        ]
+      },
+      {
+        "speakerId": "6833885735642026296",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 246110,
+            "end": 246910,
+            "text": "I think I lost you."
+          },
+          {
+            "start": 246930,
+            "end": 247390,
+            "text": "Are you still there?"
+          },
+          {
+            "start": 248430,
+            "end": 248710,
+            "text": "Oh?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4061630945117678096",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 248770,
+            "end": 249190,
+            "text": "Yeah, sorry."
+          },
+          {
+            "start": 249330,
+            "end": 257070,
+            "text": "No, I was just saying, let me know if there's any other further questions from the team in the meantime, but looking forward to catching up with you on Friday."
+          }
+        ]
+      },
+      {
+        "speakerId": "6833885735642026296",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 257770,
+            "end": 258050,
+            "text": "Wonderful."
+          },
+          {
+            "start": 258210,
+            "end": 258530,
+            "text": "All right."
+          },
+          {
+            "start": 258630,
+            "end": 259270,
+            "text": "Talk to you Friday."
+          }
+        ]
+      },
+      {
+        "speakerId": "4061630945117678096",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 259630,
+            "end": 260010,
+            "text": "All right."
+          },
+          {
+            "start": 260030,
+            "end": 261010,
+            "text": "Take care bye."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 24
+}

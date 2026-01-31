@@ -5,34 +5,11 @@
   "started": "2026-01-31T00:59:18+05:30",
   "signals": [
     {
-      "Theme": "Task Management",
-      "Ask": "We need a system that can process client requests like a help desk ticket.",
+      "Theme": "Integration",
+      "Sub-Theme": "Microsoft Teams",
+      "Ask": "We need integration with Microsoft Teams to generate tasks from Teams messages.",
       "Priority": "High",
-      "Evidence": "I want to change the concept of our interactions with our clients... it actually is processed like a help desk ticket."
-    },
-    {
-      "Theme": "Integration Requirements",
-      "Ask": "Integration with Microsoft Teams is important for our internal communication.",
-      "Priority": "High",
-      "Evidence": "Could Hiver draw from Teams messages to generate tasks like it does from email?"
-    },
-    {
-      "Theme": "Response Time",
-      "Ask": "We require customizable response times for urgent tasks, ideally within 15 minutes.",
-      "Priority": "Medium",
-      "Evidence": "Can you change that to say within 15 minutes? It needs to be like – a."
-    },
-    {
-      "Theme": "Centralized Task Tracking",
-      "Ask": "We need a centralized location to track completed tasks and associated documents.",
-      "Priority": "Medium",
-      "Evidence": "Is there a spot where, like –, so the document will just be sitting within the message?"
-    },
-    {
-      "Theme": "Help Desk Functionality",
-      "Ask": "We are looking for additional help desk functionalities beyond email management.",
-      "Priority": "Medium",
-      "Evidence": "I was hoping for more in addition to that functionality sort of a help desk type like task ticketing."
+      "Evidence": "Could hiver draw from teams messages to generate tasks like it does from email?"
     }
   ]
 }

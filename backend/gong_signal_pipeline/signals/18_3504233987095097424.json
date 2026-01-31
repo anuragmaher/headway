@@ -5,46 +5,11 @@
   "started": "2026-01-30T15:01:10+05:30",
   "signals": [
     {
-      "Theme": "User Experience",
-      "Ask": "The UX for the warehouse system must be user-friendly.",
-      "Priority": "High",
-      "Evidence": "The UX graphic for the warehouse is not user friendly."
-    },
-    {
       "Theme": "Communication",
-      "Ask": "Internal communication between office and warehouse must be improved.",
+      "Sub-Theme": "Internal corporate communication",
+      "Ask": "We need a solution that ensures seamless internal communication between the office and warehouse to prevent message loss.",
       "Priority": "High",
-      "Evidence": "Our main problem is communication between the office and the warehouse."
-    },
-    {
-      "Theme": "Support System",
-      "Ask": "A solution for managing customer support tickets is required.",
-      "Priority": "High",
-      "Evidence": "We were looking for a system that could handle ticketing."
-    },
-    {
-      "Theme": "Billing Integration",
-      "Ask": "The solution must integrate with billing and invoicing tools.",
-      "Priority": "Medium",
-      "Evidence": "We need a billing software for invoicing."
-    },
-    {
-      "Theme": "Language Support",
-      "Ask": "The system should support Italian language for email templates and tags.",
-      "Priority": "Medium",
-      "Evidence": "Can you set up a prayer written email in Italian?"
-    },
-    {
-      "Theme": "Mobile Access",
-      "Ask": "A mobile app for managing support tickets is necessary.",
-      "Priority": "Medium",
-      "Evidence": "You have a mobile app?"
-    },
-    {
-      "Theme": "Trial Period",
-      "Ask": "A trial period of at least one week is required to test the solution.",
-      "Priority": "High",
-      "Evidence": "We can test the demo for one max, two weeks."
+      "Evidence": "Our main problem is communication between the office and the warehouse, so that we don't miss any messages… without look or odoo. The problem persists."
     }
   ]
 }

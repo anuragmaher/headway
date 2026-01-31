@@ -5,34 +5,11 @@
   "started": "2026-01-30T21:39:18+05:30",
   "signals": [
     {
-      "Theme": "Pricing Assurance",
-      "Ask": "Guarantee no price increases until contract expiry.",
-      "Priority": "High",
-      "Evidence": "You're good till the contract renews, obviously because we signed it up in advance."
-    },
-    {
-      "Theme": "AI Functionality Testing",
-      "Ask": "Desire to test AI features before full implementation.",
-      "Priority": "High",
-      "Evidence": "I think you're on the right track with getting the documents there."
-    },
-    {
-      "Theme": "Customization Needs",
-      "Ask": "Require customization options for AI responses and workflows.",
+      "Theme": "AI Copilot",
+      "Sub-Theme": "Document Integration",
+      "Ask": "We need the ability to integrate with more document management systems like ClickUp, Confluence, and Google Drive.",
       "Priority": "Medium",
-      "Evidence": "You can either upload documents as they are copy paste snippets or best responses that you want for like specific scenarios."
-    },
-    {
-      "Theme": "Feedback Mechanism",
-      "Ask": "Need a robust feedback loop for AI performance improvement.",
-      "Priority": "Medium",
-      "Evidence": "Every agent that interacts with it can keep giving that feedback loop."
-    },
-    {
-      "Theme": "Sentiment Tracking",
-      "Ask": "Interest in tracking sentiment on incoming emails.",
-      "Priority": "Low",
-      "Evidence": "You can tweak it based on prompts."
+      "Evidence": "We're working on ClickUp, Confluence, and Google Drive as the immediate items for the rest of this quarter."
     }
   ]
 }

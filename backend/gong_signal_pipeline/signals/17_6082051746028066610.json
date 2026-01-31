@@ -1,0 +1,15 @@
+{
+  "transcript_id": "17_6082051746028066610",
+  "call_id": "6082051746028066610",
+  "title": "Hiver Demo | Chronicle Heritage",
+  "started": "2026-01-23T23:31:56+05:30",
+  "signals": [
+    {
+      "Theme": "Security Approval",
+      "Sub-Theme": "Microsoft SSO Blocker",
+      "Ask": "Ensure Hiver is approved on our Microsoft admin console to avoid any security blockers.",
+      "Priority": "High",
+      "Evidence": "It's just that sometimes third party applications are blocked through their sso model, and that's what we use because we try to keep it as secure as possible."
+    }
+  ]
+}
