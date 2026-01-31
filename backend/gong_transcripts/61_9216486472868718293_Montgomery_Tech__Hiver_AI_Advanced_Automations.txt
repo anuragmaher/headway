@@ -1,0 +1,403 @@
+================================================================================
+Call: Montgomery Tech <> Hiver (AI, Advanced Automations)
+Date: 2025-11-13T00:02:44+05:30
+================================================================================
+
+Raghav Shankar (raghav@hiverhq.com):
+  hey, what's up, sir?
+
+Udita P (udita.p@grexit.com):
+  Hey, hey, what's up?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Hey, what's happening? I just wrapped up jumping straight into this one.
+
+Udita P (udita.p@grexit.com):
+  Yeah, I kind of imagine. Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Hello. Hey, arfad. How's it going?
+
+Udita P (udita.p@grexit.com):
+  I believe he's on mute.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  I'm sorry, I was muted. How are you guys doing? I'm doing good.
+
+Raghav Shankar (raghav@hiverhq.com):
+  All good, arfad, like I promised, I've got udita on the call for today. So, arfad, you know, we did have a bit of discussion internally, right on, just like kicking us off with the automation piece as a whole, right?
+
+Raghav Shankar (raghav@hiverhq.com):
+  We did have a bit of discussion internally. And for now, as it stands, we've pretty much had this reliant on, you know, the existing triggers that we spoke about on the last call, right? Just basically, it's based on external reply or change in status or change in tag or things like that. So I was wondering if you've had a chance to look at it from a different lens or had a discussion with the team to see if there's another way we can solve for this.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Currently, like my workaround has been using that AI feature just to get the negative sentiment emails. But yeah, like our workflow is kind of, you know, the way it is right now, we don't have an exact… workflow that like option on hiver that we can solve for it. I've just kind of been looking at the ones that kind of show up as with the negative sentiment and then trying to follow up with the engineer. But ideally, I want when a customer sends us an email on, you know, pre assigned emails to have a time elapse since they send that email to, when we send the response. So I want that as an option within hiver, that would be the best fix I think for what we need because, you know, SLA is good for that first response, but it doesn't really address the second or the third response. So that's kind of what I'm getting at.
+
+Raghav Shankar (raghav@hiverhq.com):
+  That makes sense. And one thing I did want to check with you though was, and udita feel free to jump in. One thing I did want to check though. Arfat, was in terms of SLA, considering you don't change the status, first response. SLA is one thing, but there's also an overdue SLA, I'm guessing because of the small… controls.
+
+Udita P (udita.p@grexit.com):
+  You have Raghav, I'm assuming they're using the overdue based on the, I looked at their account. So they're not using the due soon. They're using the overdue SLA.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Oh, I'm sorry, I meant the resolution time SLA, my bad, I always get the names mixed up a bit. So, arfat, in terms of the resolution time being a marker for the change in status as well. Is that also something you've explored and haven't, had a great success with?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  No. So the resolution kind of like it's not the same for each instance. So we don't like I have a resolution overdue timer, but it's not something that really aligns with what we need. Like each email is unique. So one email, I could close out within a couple of hours, and then there could be some that just sit in my mailbox for a month or even more. So there's a bit of variation there. The constant would be the first response. So we want that to always be two hours. So that is very helpful for SLA, you know, just the first response part resolution we don't use. Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  For sure. Sorry, udita, so, arfat, I was effectively looking at the resolution time SLA, as an alternative to the time elapsed since automation condition, right? And, you know, here's how I'm thinking about it. I'm just thinking out loud with you. But essentially, what you typically need is after an email is sent by your agent, you want the agent to be notified at X amount of time, and that's going to be standard across the board, right? For all the emails from what I'm hearing like if any email is replied by the agent, but it's not like the customer doesn't write back in 24 hours, 48 hours. You want an alert to go out?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  No, no, no, we have that, that's an option already on hiver. But what I'm asking for is when the customer replies, if my agent doesn't respond within 24 hours?
+
+Udita P (udita.p@grexit.com):
+  That is something that in fact can be done. Arfat, would you be comfortable sharing your screen?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah, definitely.
+
+Udita P (udita.p@grexit.com):
+  Thank you. And Raghav, sorry to jump.
+
+Raghav Shankar (raghav@hiverhq.com):
+  In there. Sorry about that.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  All right. Okay.
+
+Udita P (udita.p@grexit.com):
+  I just want to see some of your settings so that we can look at it?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah, definitely.
+
+Udita P (udita.p@grexit.com):
+  So, this is, yeah, this is the slas, right? Slas, you mentioned that it's perfectly fine. Great. Now, next, what we look at is, can you click on automations that's the fifth from the top? Yes, thank you on the top, right? Create automation. I just want to see what all is available. Yeah, in the dropdown, let's look at. Okay. Now, the condition that you have said is that your agent has sent a reply and not heard back from the customer or has he received a reply and he?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Hasn't responded. So, assuming that the customer, yeah. So he hasn't responded to the customer. Yeah.
+
+Udita P (udita.p@grexit.com):
+  So that would be external reply is received from anyone?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Right. That's what I thought. Yeah.
+
+Udita P (udita.p@grexit.com):
+  Could you click on that add step now if condition… okay, select condition, let's scroll down. Yeah, time passed since.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Now.
+
+Udita P (udita.p@grexit.com):
+  And now, click on the dropdown. Okay? So based on my understanding with Raghav, you guys are not changing the status. So if you just stay open throughout, correct?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yes. We're not updating it. Yeah.
+
+Udita P (udita.p@grexit.com):
+  So what I would recommend in that case is that to go ahead and change the tag because that is now hiver needs a logical way to keep track, right? So how do we keep track? So once you have replied, go ahead and change the tag, it could be, you know, a tag like response done or something of that sort. So that is also one of the things you can do. Otherwise, of course, you know, typically, we would recommend this status change. So now time passed where there has been no change in the tags and how much time has passed? We can say maybe 48 hours or 24 hours?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah. We'll try 24 just to test it.
+
+Udita P (udita.p@grexit.com):
+  And would you want to consider only in business hours? Yeah. Okay. Fantastic. So now that, is there any other condition that you want to consider here as well?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  No, not really. It's just the outgoing email. So, yeah, this should be it.
+
+Udita P (udita.p@grexit.com):
+  Got it. So if that is the case, then you can go ahead and add step.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Okay.
+
+Udita P (udita.p@grexit.com):
+  Add step and in action… you can select action. You can maybe notify it, just scroll down a little bit, yeah, send notification. So you can go ahead and notify to the assignee and also to the manager. You can assign it to yourself to anyone else in your team and so on. So that is something that can be done and also send email would mean if you click on it a default. Yeah. So this is by default an email that has been drafted by hiver and this is going to be sent to both the assignee and anyone else such as yourself that's been mentioned here selected for sending the notification. So in case you miss the notification, you still get that email. Alternatively, you can keep this unchecked as well. So that's entirely up to you. So that is one thing that you can do. Now, for this to work, we need to make sure that there's a set of tags as well because we are saying that 24 hours have passed and no change in tags has happened, which means we want to make sure that you have, you know, tags are being changed. So when an email response is sent, then make sure that they change the tag. So what can the tag change be, it can be replied or reply sent or something of that sort. You know. So the tag is changed. So you don't get this notification.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Gotcha. So that tag change has to be manual though.
+
+Udita P (udita.p@grexit.com):
+  Yeah, that has to be manual. Yeah. So once you reply, you manually change the tag so that you get this response, sorry, you get this notification if the automation is triggered.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  So, if the agent doesn't update the tag, then it doesn't really apply, right?
+
+Udita P (udita.p@grexit.com):
+  That's right? In that case, that's yeah, that then automation will not trigger. I mean, so if the agent does not apply the tag, then the automation will trigger because it means that they've not responded, what I'm suggesting, and this automation, what we've done is that when the manual reply is sent, then go ahead and add that tag. Does that make sense? Ari?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah. So when the reply… is sent out, the agent has to manually add the tag. If they're not adding anything, then we're going to get notified.
+
+Udita P (udita.p@grexit.com):
+  That's right?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Okay.
+
+Udita P (udita.p@grexit.com):
+  That's right? I.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  See. Okay. Yeah, it's just that the manual part was what was concerning. I think Raghav and I kind of discussed that as well, like I wanted it to count down from when the reply is received because we have this, right? So, for example, I'll just save this so I can use it… but we have a way to tell if the other party has not replied correct. So if I send a response and the other person has not replied in 24 hours, then it's like an automated way to get notified. But the reverse is not possible. So it kind of has to be this manual way where we have to tag it as we reply.
+
+Udita P (udita.p@grexit.com):
+  Yes, if we are going with this automation, then it has to be manual. There's a couple of other ways that you can also do it. For example, we have something called the resolution field, which is the custom field. So if you enable that then, but again, the custom field needs to be updated. If it is not updated, again, that has to be done manually. So if it is not updated, then the automation will not trigger. So there are like two, three different ways of doing this. But yeah, at least one thing has to be done manually.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Okay. And then the other one, I think I just wanted, I know this is kind of unrelated but a way to purge the inboxes. I'm seeing that a lot of my agents are not really closing out there. However mailboxes some of them have like even I myself have to blame is just emails pile up sometimes and there should be a way to auto close once a certain time has passed right through the automation?
+
+Udita P (udita.p@grexit.com):
+  Auto close through the automation after a certain time has passed.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah. Is there a way?
+
+Udita P (udita.p@grexit.com):
+  You can do one thing? You can bulk close it from your inbox itself. That is something you can do. Is that something that interests you?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  No, I'm feeling like, you know, sometimes these emails, they just like it's again a manual task that we have to do. The problem is we have hiver on its own that then integrates with our CRM software, which is Netsuite. So it ends up being a lot of double work. So, we come in here, we close the case. These are a bunch of cases that are assigned to one of our customers. Then we often forget to go out and close out the hiver portion. So, I just wanted to see if there's a way to, because hiver is better at automation than Netsuite at least at the moment. So, I was hoping there's a way to, you know, just close it out. If, say, for example, there's no external reply received for a certain time, say two weeks or something and it just auto purges?
+
+Udita P (udita.p@grexit.com):
+  Ah, so one way that you can do it is if you click on no, at the very beginning, new conversation inbound or outbound is created?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Okay.
+
+Udita P (udita.p@grexit.com):
+  And we select the if condition again.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah.
+
+Udita P (udita.p@grexit.com):
+  If scroll down time pass since.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah.
+
+Udita P (udita.p@grexit.com):
+  No external reply is received. Yeah, and you can just put that as, you know, X number of hours like, so how long would you want it to be? I mean, say.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  We'll do to start off? I'll do two weeks. I'm just going to try and convert it one second. Let's.
+
+Udita P (udita.p@grexit.com):
+  see. So that's three 36.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah, three 36. Okay.
+
+Udita P (udita.p@grexit.com):
+  So, if that happens, then, yeah, you can do that, add business if you want to add step, Action… change, status update status that's right? And mark it as closed.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah. Before you.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Enable this for just a little disclaimer, if you say count it only during business hours, then one day is considered as eight hours or nine hours as per your business hour schedule.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  I see. Okay. So.
+
+Raghav Shankar (raghav@hiverhq.com):
+  The number of hours you've got to be a little careful with it when you're doing it. I mean, if you like what's your like what's your typical workday nine hours, right?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah, it's around nine hours. Yeah. Okay.
+
+Raghav Shankar (raghav@hiverhq.com):
+  So, if we're doing like nine hours, then maybe 126 hours should be sufficient.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Got it. Yeah.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  So, this is.
+
+Udita P (udita.p@grexit.com):
+  So, now, what happens is any email where there's no external reply received during this time, it's going to close?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah. And that's fine. At least it helps us kind of stay on top of the mailboxes. And that way I can implement, the first one that we did which is to tag their emails. So.
+
+Udita P (udita.p@grexit.com):
+  I would simply however request you afaa to just keep track for a while because we want to make sure that the automation is working the way it's supposed to work. And, you know, no email is sort of, you know, slipping through the cracks because obviously, that's the last thing we want. So if you could just keep track for a while, you know, just make sure the automation's working as it's supposed to. Then we're good to go.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yep. Yeah, definitely.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Brilliant. And afaa, the other, the only other thing that we had, I mean, at least I had on the agenda was on the AI add on piece as a whole, right? Did you have a chance to chat with your team about it on the pricing perspective?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Actually, my colleague mo, he's out at the moment. So he's returning next week. I'm gonna see what he thinks. The main piece on the AI portion is that sentiment analyzer I've been using that. Did you, I have to still kind of see if we have, you know, like we want to adopt it or not just because we have a paid license for gemini as well. So it's just a lot of a lot of AI. I just want to make sure that we're using it and if this is something that I can work around with what you've given me now. So, yeah. So I'll chat with mo and kind of get back to you with that.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Fair enough. All right. So, I mean the one bit of clarification I want to give you like the direction I want to leave you with on the AI pieces, you know, gemini is great when it comes to general email handling or like general Google based sort of scenarios with the hiver AI, we're making it more purpose built, which is apart from just composing replies for you based on context that's just, hey, I want to reschedule at a general context like that. You know, we've got a more straightforward approach when it comes to how the context is set. I think I showed you about the co pilot as well last time, right?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah, yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  So that's going to be like we've done enough tests comparing that internally because we expected a lot of these questions, right?
+
+Raghav Shankar (raghav@hiverhq.com):
+  So we're pretty confident in just the summarizing aspect of the co pilot and starting with that some of the other features we've got lined up as well. So let's you know, maybe do one thing, right? And the reason why I'm bringing this up is because we do have a kind of like a trial and timeline that we're working towards on AI feature usage for all of our customers. You know, the ones that we had enabled on early trial that you're using now. So for you, it says and I think the days might be a bit off, but effectively, we're looking at a month end confirmation on like the AI feature suite as a whole. So, and, you know, if we're able to work towards that timeline, I might be able to unlock a bit of additional incentives on, the 20 dollar piece. Cause last time that's what we spoke about, right? 20 dollar might be a bit steep given how you're using it today. So, yeah, that's the bit of clarity that I wanted to leave you with today as the last thing, right? Which is if we are able to look at like November 27, 28 kind of confirmation on whether you want to keep it, that will be able to unlock a bit more additional incentives and bring the sticker price down from 20 dollars.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah. Gotcha. Okay. Yeah, sounds good.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah, I'll leave you with that. What I'll do is I'll probably drop you an email a week or 20 fourth. Okay. You can let me know what that looks like. And if needed, we can hop on a quick call, see if there's any additional help we can do from like a, you know, from like a, an understanding AI features or getting it more useful for your team and how to tweak that things. And yeah, you know, if it makes sense, we can work towards a November end timeline. If not, we can look at what things look like in the last week of November for you?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Okay. Yeah, sounds good. Yeah, I was just going to ask you guys. So this AI tagging like I don't think we did. We go through this.
+
+Raghav Shankar (raghav@hiverhq.com):
+  I think we did, but yeah, let's just click on configure. I'll quickly give you a run time there as well.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah, I just want to understand how this is how this is used.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Definitely. So the general perspective here is with everything AI on hiver, we want you as the user to have control over the data it's being trained on or the kind of information it's being trained on. So, the way we've built AI tagging is a, it's going to be useful for your existing tags or new tags you want to create, right? But you click on add tag and we'll just use one as an example. And just like run, yeah, either button works. Yeah, I mean, if we want to pick any of these existing tags that will just, you know, be easier if you have a more common one.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  A more common one. Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Like something a bit more generic so you can test it in terms of the scope and breadth of it.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Okay. Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  So, yeah. So what it essentially does is firstly, you start by picking a tag you want the AI to be trained on the moment the tag is associated. The second thing you'll have got to do is give it 10 emails as training data. Just 10 emails only required. The first time you enable it, right? And what you need to do at this point is go to your mailbox, add the tag, auto alert to 10 conversations, new emails, old emails, whatever status, none of that makes a difference.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Okay. This is already applied through the automation piece.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah. So you can look at it. No, if it's done through the automation, you've got to either disable the automation and do it manually because that's you as the team training the model to have that bit of accuracy, right?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Got it.
+
+Raghav Shankar (raghav@hiverhq.com):
+  But essentially, what you're doing here is you're feeding the AI, 10 examples of emails that fit this category, which is auto alert as a tag, right? Once you've given it 10 examples, that description that you see at the bottom description will be generated after more use. You see that text, right? I see.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  I see, so.
+
+Raghav Shankar (raghav@hiverhq.com):
+  That will be automatically filled. It will say applied on 10 emails. The moment you do that, the tag will move from train AI to ready to use. And at that point, it's going to go under here called manage tag.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Okay. Got it. So it's more of a, yeah, I see the use for it like, you know, common emails and things like that, just training it to understand what type it is. Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah. And when you think about AI tagging, right? What I'd also recommend is look at it as a departure from automations. Look at it as a more wider net and a more larger coverage as opposed to automations, right? So you can definitely use the tag for more probabilistic scenarios and for anything that's very straightforward. And, you know, that's always going to be the case. Automations by themselves should be more than sufficient for you.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Like for example, if, you know, the word refund is going to be used by all of your customers all the time in every email, you can just have an automation for it. But if they're going to be using different terms to allude or talk about refunding as an action that's where you will do a better purpose for you.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Right, right. Yeah. So, I see the, I see what you mean. Okay?
+
+Raghav Shankar (raghav@hiverhq.com):
+  So that's the small bit of difference in terms of AI tagging versus automation, adding a tag, right? But yeah, I'll let you test this out as well. And as planned, what we'll do is I'll just send you an email the week of the week of November. If you have questions over the next week, once your colleague is back, feel free to write an email to both me and udita. We'll be sure to get back to you with specifics and details. And the week of November, the week of November, I'll plan to have some commercials sent over to you so you can have that discussion if you, if you'd like I can have a bit of a discounted rate or a discounted proposal sent over tomorrow as well, if that's easier. And if we, you know, we can work towards a month in timeline.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Let's go with the 20 fourth. I don't think it's like an urgent piece that we need. So, I think we're okay. I did want to say that like if, you know, if you guys are able to also ask for that feature request to, oh.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah, that's right?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  You know, just to have that elapsed time since we respond, because even now, like I'm okay with the workaround, but still, I have to go ask my agents like, hey, you got to go tag your emails once you send the reply. So having that kind of if I can flip that back instead of, you know, external reply received to internal reply sent out, that would be really nice or internal reply has not been sent basically. So.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Makes sense. Yeah, no, definitely. So I've already had a discussion with my team internally about it and, you know, it's like I said, the last time, the way you're using hiver is a bit unconventional as opposed to the larger customer base of us. So what I'll do is I'll you know, still go ahead and have it like, you know, we'll have it filed as a feature request and all that stuff at the same time. I just want to make sure I'm setting the right expectations like I told you last time, right? I don't want to tell you, hey, this is definitely coming. But on that note, we'll definitely chat about it internally. And if there's any change of movement that could fit your workflow, we'll be sure to reach out and let you know first thing.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yep. Yeah, all.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Right. Peaceful. That's it for me, udita, back to you in case you had any closing thoughts.
+
+Udita P (udita.p@grexit.com):
+  I had only one question because I think afat mentioned a couple of times about the AI sentiment and regarding negative sentiment. What were you hoping to do with that? Afat, can you explain that a little bit please?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  So, I basically managed the network operations team at Montgomery tech. So I was using that as a way to get alerted on any emails that need escalation or my intervention. So when agents are working with customers, you know, if they missed a deadline or there's any sort of, I guess negative feedback just to kind of have a quick look through the email and either assist my agent or step in and kind of like take on the escalation or escalate it to a different senior engineer? Something like that? So that's what I've been using it for.
+
+Udita P (udita.p@grexit.com):
+  Understood, have you set up an automation to be reminded whenever there's a negative sentiment?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah, this one right here.
+
+Udita P (udita.p@grexit.com):
+  Yeah, I think number 16 says.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah. So this is the one. So it's a basic automation just like whenever there's a negative or a very negative sentiment to send a notification and email to me.
+
+Udita P (udita.p@grexit.com):
+  Fantastic. That's what I wanted to check that's all. And yes, it's perfectly done. So thank you. That was all I wanted to check. Great. Nothing else from my side here.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah, yeah. I have, yeah, like a couple of months of hiver automation use. So I think I'm finally getting the hang of it.
+
+Udita P (udita.p@grexit.com):
+  Awesome. You're making our life easier then Afar. Thank you so much.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Thank you. Yeah, I didn't have anything else. I think we covered everything. I had this one instant this morning where we wanted to mass email at once. It's basically, we had a bunch of outages that we wanted to tell the customer to disregard through the mass email option, but I think I figured it out. So I did it through tagging so we could multi select a bunch of emails and then tag it as an alert or alert closure. And that was doing the job for us. I think that is probably what you guys will recommend as well say if we wanted to do the same email to, you know, 10 or 20 customers at once. Is there a better way other than tagging?
+
+Udita P (udita.p@grexit.com):
+  No, I mean that's how you would do it. Okay. Yeah. So you'd go ahead and draft the email and go ahead and just, you know, automate the response that if this tag is updated, then go ahead and send this response and then mark all of these and add the same tag. And so that's how you do it.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Right. Okay. Yeah. So that's what I got. Yeah, thank you. I think this is pretty much it. So tag it, send the reply and then close the email.
+
+Udita P (udita.p@grexit.com):
+  Exactly. You don't need either Raghav or me, arfat. You're good to go. No, no.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  I need you guys.
+
+Udita P (udita.p@grexit.com):
+  No, but that's pretty much it from my side as well. I have nothing else to add. But so Raghav, would you be emailing arfat about the next steps?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Oh, the next steps from my side is just commercials at this point. Udita, so on the internal product team in front, we'll just coordinate internally and we can see what that pans out like and arfat, I'll reach out to you on like November, you know, I'll drop you an email. You tell me what time works, and we can hop on a call for commercials, if it makes sense. Okay?
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah, sounds good. I'll have myself and mo, join that, so we can kind of come to a decision on that.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Sorted. I mean, do you have an availability ready? If you do, we can just book something in advance.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  I don't know his schedule so I can't really say, do you want to just reach out to me like maybe one or two days before? Yeah, let me do that Friday. Maybe. Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Perfect. All right. Cheers, arfat. Thanks again for your time. Have a good day.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Yeah, thank you guys. Thank you both. Appreciate.
+
+Udita P (udita.p@grexit.com):
+  It. Thank you. Take care. Now. Bye.
+
+Arfath Hussain (ahussain@montgomerytech.net):
+  Bye.

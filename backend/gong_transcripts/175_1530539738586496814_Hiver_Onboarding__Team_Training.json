@@ -1,0 +1,2454 @@
+{
+  "call_id": "1530539738586496814",
+  "title": "Hiver Onboarding + Team Training",
+  "started": "2025-11-05T15:31:34+05:30",
+  "duration_seconds": 1373,
+  "call_metadata": {
+    "id": "1530539738586496814",
+    "url": "https://us-31545.app.gong.io/call?id=1530539738586496814",
+    "title": "Hiver Onboarding + Team Training",
+    "scheduled": "2025-11-05T15:30:00+05:30",
+    "started": "2025-11-05T15:31:34+05:30",
+    "duration": 1373,
+    "primaryUserId": "1219092317799715224",
+    "direction": "Conference",
+    "system": "Zoom",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://us06web.zoom.us/j/85286080089?jst=3",
+    "isPrivate": false,
+    "calendarEventId": "oafv5inp90d758mdil9kps80q0@google.com"
+  },
+  "parties": [
+    {
+      "id": "2287149372812304535",
+      "emailAddress": "rakesh@grexit.com",
+      "name": "Rakesh Goyal",
+      "title": "Account Executive ",
+      "userId": "1219092317799715224",
+      "speakerId": "5794246768170922160",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "4248943678219721145",
+      "emailAddress": "manoj@grexit.com",
+      "name": "Manoj Kiran",
+      "userId": "7511681831751652100",
+      "speakerId": "1238076285730757573",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "5645471867350731248",
+      "name": "Phone Caller #1",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "7809417409238832180",
+      "emailAddress": "tom@broughtontransport.com",
+      "name": "Tom",
+      "title": "",
+      "speakerId": "2863330055527390682",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "171621716563",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "31819373234"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Tom"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82334087"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Outlook"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769777235.936
+                },
+                {
+                  "name": "createdate",
+                  "value": 1762253666.344
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1762253666.344
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1762300800.0
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "tom@broughtontransport.com"
+                },
+                {
+                  "name": "lastname",
+                  "value": "Rowe"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "1182269234695440249",
+      "emailAddress": "holly@broughtontransport.com",
+      "title": "",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "95234256756",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "31819373234"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Holly"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": ""
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769777241.667
+                },
+                {
+                  "name": "createdate",
+                  "value": 1744028401.957
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1744761600.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "Watson"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82334087"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "PAID_SEARCH"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Outlook"
+                },
+                {
+                  "name": "phone",
+                  "value": "+447930121571"
+                },
+                {
+                  "name": "recent_conversion_date",
+                  "value": 1746694220.924
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Deal Closed"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1744028401.957
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "customer"
+                },
+                {
+                  "name": "email",
+                  "value": "holly@broughtontransport.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "+447930121571",
+      "methods": [
+        "Invitee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "1530539738586496814",
+    "transcript": [
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 0,
+            "end": 436,
+            "text": "hey, Tom."
+          },
+          {
+            "start": 556,
+            "end": 1076,
+            "text": "Good morning."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1986,
+            "end": 2976,
+            "text": "Yeah, good morning, Rakesh."
+          },
+          {
+            "start": 3076,
+            "end": 3376,
+            "text": "Are you okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 4036,
+            "end": 4856,
+            "text": "Yeah, very well, sir."
+          },
+          {
+            "start": 4916,
+            "end": 5456,
+            "text": "How are you doing?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 6036,
+            "end": 6716,
+            "text": "I'm very well."
+          },
+          {
+            "start": 6756,
+            "end": 7656,
+            "text": "Thank you very much."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 8096,
+            "end": 8496,
+            "text": "Lovely."
+          },
+          {
+            "start": 8696,
+            "end": 9576,
+            "text": "Thank you for joining in."
+          },
+          {
+            "start": 9616,
+            "end": 11456,
+            "text": "I guess we've got."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 16386,
+            "end": 17066,
+            "text": "Sorry, say that again?"
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 17856,
+            "end": 19746,
+            "text": "I mean, do we have Holly joining in as well?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 20086,
+            "end": 21046,
+            "text": "Yeah, Holly's here."
+          },
+          {
+            "start": 21366,
+            "end": 21766,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 22766,
+            "end": 23586,
+            "text": "We are on the same computer."
+          },
+          {
+            "start": 23686,
+            "end": 24626,
+            "text": "Hey, nice to meet you."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 25916,
+            "end": 26166,
+            "text": "Hello."
+          },
+          {
+            "start": 26406,
+            "end": 30246,
+            "text": "I just want to do a quick thing and then whiz off."
+          },
+          {
+            "start": 30846,
+            "end": 35866,
+            "text": "So, as you've agreed, we've got a 30 minute slot with everyone in the team."
+          },
+          {
+            "start": 37286,
+            "end": 41406,
+            "text": "Can you please show everyone the system and the basic use of it?"
+          },
+          {
+            "start": 41486,
+            "end": 49166,
+            "text": "IE, how to assign… emails to people and how to get their accounts set up so we can start using it shortly."
+          },
+          {
+            "start": 49686,
+            "end": 50406,
+            "text": "Is that okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 51396,
+            "end": 52066,
+            "text": "Sure, absolutely."
+          },
+          {
+            "start": 52306,
+            "end": 53726,
+            "text": "So we're going to be using today's time."
+          },
+          {
+            "start": 53906,
+            "end": 60976,
+            "text": "Like I also noticed that we have a couple of more meetings scheduled with support team, so that'll be like a regular training for all of your other folks."
+          },
+          {
+            "start": 61236,
+            "end": 66356,
+            "text": "But now, to begin with, what we're going to do is like you mentioned on your email as well."
+          },
+          {
+            "start": 66416,
+            "end": 71436,
+            "text": "Holly, all you require is a very plain system set up because you want to get started with hiver."
+          },
+          {
+            "start": 71736,
+            "end": 84506,
+            "text": "So, essentially, you want to assign tickets to each other, drop them the notes and comments, make sure everybody log into their outlook accounts within hiver, and they know what they need to do on a regular basis on every day, right?"
+          },
+          {
+            "start": 84886,
+            "end": 85846,
+            "text": "Going forward."
+          },
+          {
+            "start": 86046,
+            "end": 90686,
+            "text": "We also discussed that we'll set up slas, we'll set up some automation rules and everything."
+          },
+          {
+            "start": 90866,
+            "end": 92286,
+            "text": "So that is a secondary thing."
+          },
+          {
+            "start": 92406,
+            "end": 108346,
+            "text": "But today, all we need is a basic looking at the emails, assigning ownership, changing the statuses, dropping them, comments, notes each other, and then making sure we have a complete transparency collaboration between the team and a visibility."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 109036,
+            "end": 109356,
+            "text": "Yeah."
+          },
+          {
+            "start": 109476,
+            "end": 111256,
+            "text": "And are you going to do that with each person?"
+          },
+          {
+            "start": 111366,
+            "end": 111486,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 113276,
+            "end": 114596,
+            "text": "Sorry, could you repeat that?"
+          },
+          {
+            "start": 114806,
+            "end": 114906,
+            "text": "Are?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 114916,
+            "end": 117356,
+            "text": "You going to do that with each person in their half an hour slot?"
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 118396,
+            "end": 123246,
+            "text": "For today, since we have Tom with us, that should not take more than 15 minutes."
+          },
+          {
+            "start": 123576,
+            "end": 125176,
+            "text": "Yeah, Manoj could rent us out."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 126206,
+            "end": 129736,
+            "text": "What I'm saying is I have a slot booked in with support for everyone else."
+          },
+          {
+            "start": 130016,
+            "end": 134736,
+            "text": "So I want them to see the same as what Tom's seeing now, which is what you've just said."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 135426,
+            "end": 136326,
+            "text": "That is right."
+          },
+          {
+            "start": 136486,
+            "end": 137506,
+            "text": "That is right."
+          },
+          {
+            "start": 137666,
+            "end": 140766,
+            "text": "We will go through with the basic training with Tom."
+          },
+          {
+            "start": 140846,
+            "end": 153946,
+            "text": "And for the remainder of the team, since you already have the setup meeting with support, I will inform support whoever is going to be moderating the training to keep it very simple and minimal to our agenda as we are doing it today now."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 154686,
+            "end": 155106,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 156556,
+            "end": 157516,
+            "text": "All right, Manoj."
+          },
+          {
+            "start": 157616,
+            "end": 162706,
+            "text": "I would like to introduce you to Manoj who's going to be the onboarding manager and taking care of this quick training."
+          },
+          {
+            "start": 162996,
+            "end": 163396,
+            "text": "Manoj."
+          },
+          {
+            "start": 163456,
+            "end": 166686,
+            "text": "Like I said, we do not want to need to go to advanced setup."
+          },
+          {
+            "start": 166836,
+            "end": 167656,
+            "text": "Nothing as such."
+          },
+          {
+            "start": 167726,
+            "end": 169896,
+            "text": "We want to make sure Tom logs in into hiver account."
+          },
+          {
+            "start": 170286,
+            "end": 174416,
+            "text": "Looks at the new emails coming into unassign, assign conversations to each other."
+          },
+          {
+            "start": 174546,
+            "end": 179526,
+            "text": "Look at the statuses, drop them, comments, notes and that's pretty much it along with the notifications."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 180666,
+            "end": 181276,
+            "text": "Okay, great."
+          },
+          {
+            "start": 181366,
+            "end": 181636,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 183576,
+            "end": 183976,
+            "text": "Got it."
+          },
+          {
+            "start": 184376,
+            "end": 185276,
+            "text": "Thank you, Rakesh."
+          },
+          {
+            "start": 185476,
+            "end": 186136,
+            "text": "Hi, Holly."
+          },
+          {
+            "start": 186216,
+            "end": 186596,
+            "text": "Hi, Tom."
+          },
+          {
+            "start": 186796,
+            "end": 187416,
+            "text": "How are you?"
+          },
+          {
+            "start": 187436,
+            "end": 187536,
+            "text": "Hello?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 188216,
+            "end": 188576,
+            "text": "Yeah."
+          },
+          {
+            "start": 188596,
+            "end": 189476,
+            "text": "Well, thank you yourself."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 190336,
+            "end": 190876,
+            "text": "I'm good man."
+          },
+          {
+            "start": 190896,
+            "end": 191136,
+            "text": "I'm good."
+          },
+          {
+            "start": 191576,
+            "end": 192156,
+            "text": "Thank you for asking."
+          },
+          {
+            "start": 193616,
+            "end": 194216,
+            "text": "So, yeah."
+          },
+          {
+            "start": 194256,
+            "end": 195516,
+            "text": "So let's get started right away."
+          },
+          {
+            "start": 195696,
+            "end": 206116,
+            "text": "Okay, Tom, I see on the back end that you… are already invited to the account."
+          },
+          {
+            "start": 206576,
+            "end": 212016,
+            "text": "And yeah, so Tom, can you share your screen?"
+          },
+          {
+            "start": 213706,
+            "end": 219846,
+            "text": "So I can just walk you through the steps and, you know, do an overview on your setup itself?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 221886,
+            "end": 226926,
+            "text": "It's not actually letting my share screen is not allowing me?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 227906,
+            "end": 228166,
+            "text": "Okay."
+          },
+          {
+            "start": 228226,
+            "end": 231566,
+            "text": "I think zoom does not have permission to do that."
+          },
+          {
+            "start": 231706,
+            "end": 231966,
+            "text": "Okay."
+          },
+          {
+            "start": 232026,
+            "end": 232426,
+            "text": "No worries."
+          },
+          {
+            "start": 234226,
+            "end": 234746,
+            "text": "Okay."
+          },
+          {
+            "start": 234866,
+            "end": 240606,
+            "text": "So, can… you confirm if you're logged into app?"
+          },
+          {
+            "start": 240606,
+            "end": 241806,
+            "text": "Hiverhq?"
+          },
+          {
+            "start": 241806,
+            "end": 242406,
+            "text": "Com?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 243706,
+            "end": 246566,
+            "text": "Well, I was, but it seems to have disappeared."
+          },
+          {
+            "start": 247026,
+            "end": 251206,
+            "text": "Can I have, if I hang on one sec?"
+          },
+          {
+            "start": 252106,
+            "end": 257386,
+            "text": "Hiver, yeah… software, complete bear with."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 259386,
+            "end": 259546,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 263926,
+            "end": 264406,
+            "text": "I've anyways."
+          },
+          {
+            "start": 264406,
+            "end": 268286,
+            "text": "Shared a link in the zoom chat as well."
+          },
+          {
+            "start": 268486,
+            "end": 272546,
+            "text": "So, if you're unable to find it, you can simply use the link to log back in."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 273596,
+            "end": 273776,
+            "text": "Okay."
+          },
+          {
+            "start": 273876,
+            "end": 276656,
+            "text": "Bear with me last line?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 281656,
+            "end": 282816,
+            "text": "Sorry, I'm just trying to find it."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 283576,
+            "end": 285156,
+            "text": "No, no, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 285946,
+            "end": 287496,
+            "text": "It's on the link in the zoom."
+          },
+          {
+            "start": 287596,
+            "end": 287856,
+            "text": "Is it?"
+          },
+          {
+            "start": 288716,
+            "end": 293686,
+            "text": "Yeah… I can't bloody see it."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 300666,
+            "end": 301446,
+            "text": "Hang on one second, mate."
+          },
+          {
+            "start": 301486,
+            "end": 302186,
+            "text": "I'll get onto it."
+          },
+          {
+            "start": 302226,
+            "end": 302426,
+            "text": "Hang on."
+          },
+          {
+            "start": 304286,
+            "end": 308546,
+            "text": "Let's get running… because it seems to, I was on it."
+          },
+          {
+            "start": 308566,
+            "end": 318006,
+            "text": "And then it seems because I unplugged my computer and everything it's then gone disappeared bear with one sec."
+          },
+          {
+            "start": 320846,
+            "end": 321726,
+            "text": "Where was it?"
+          },
+          {
+            "start": 323646,
+            "end": 327636,
+            "text": "Holly… hold on."
+          },
+          {
+            "start": 327796,
+            "end": 328976,
+            "text": "Hold on."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 337856,
+            "end": 339706,
+            "text": "Just go."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 346366,
+            "end": 348026,
+            "text": "And of the community?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 351396,
+            "end": 351746,
+            "text": "Have a good one."
+          },
+          {
+            "start": 353866,
+            "end": 355306,
+            "text": "I can't bloody find it now."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 366456,
+            "end": 366596,
+            "text": "Right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 372676,
+            "end": 374176,
+            "text": "Sorry, I was just thinking about it."
+          },
+          {
+            "start": 374236,
+            "end": 375116,
+            "text": "Yeah, I'm logged in."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 377146,
+            "end": 378036,
+            "text": "Okay, perfect."
+          },
+          {
+            "start": 379276,
+            "end": 384256,
+            "text": "So, as soon as you're logged in, you are seeing hiver's interface right now?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 385076,
+            "end": 385416,
+            "text": "Yep."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 385916,
+            "end": 386136,
+            "text": "Right."
+          },
+          {
+            "start": 386236,
+            "end": 389516,
+            "text": "With the shared mailbox on the left hand side."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 390326,
+            "end": 390676,
+            "text": "Yep."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 393016,
+            "end": 393496,
+            "text": "Got it."
+          },
+          {
+            "start": 393516,
+            "end": 393696,
+            "text": "Now."
+          },
+          {
+            "start": 393756,
+            "end": 402996,
+            "text": "Just give me a second since you're not able to share, I'll share my screen and I'll just walk… you through the features."
+          },
+          {
+            "start": 403516,
+            "end": 404516,
+            "text": "Just a second."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 416566,
+            "end": 417846,
+            "text": "Can you see my screen?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 420026,
+            "end": 420106,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 421496,
+            "end": 421966,
+            "text": "Okay, perfect."
+          },
+          {
+            "start": 422046,
+            "end": 423926,
+            "text": "So, you're seeing something similar to this, right?"
+          },
+          {
+            "start": 424606,
+            "end": 424866,
+            "text": "Yeah."
+          },
+          {
+            "start": 425646,
+            "end": 426166,
+            "text": "Okay."
+          },
+          {
+            "start": 426266,
+            "end": 426546,
+            "text": "Perfect."
+          },
+          {
+            "start": 426966,
+            "end": 432066,
+            "text": "Oops, this account doesn't have a mailbox, just a second."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 453026,
+            "end": 454196,
+            "text": "I was going to say, thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 484896,
+            "end": 490526,
+            "text": "So, you have seen a similar screen like this and this is how the other users are also going to see."
+          },
+          {
+            "start": 490586,
+            "end": 492906,
+            "text": "They just go to app, hiverhq."
+          },
+          {
+            "start": 492906,
+            "end": 499746,
+            "text": "Com, choose your email address, and that's… it."
+          },
+          {
+            "start": 499966,
+            "end": 509346,
+            "text": "That will be the first step of the installation part going forward… with the."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 516466,
+            "end": 522676,
+            "text": "You should see mine unassigned team and all views and tags if I'm not wrong."
+          },
+          {
+            "start": 524686,
+            "end": 525146,
+            "text": "Right?"
+          },
+          {
+            "start": 526546,
+            "end": 532966,
+            "text": "So all new emails, Tom, from this moment onwards, it's going to come up in the unassigned section."
+          },
+          {
+            "start": 533606,
+            "end": 534186,
+            "text": "Yeah."
+          },
+          {
+            "start": 534926,
+            "end": 535526,
+            "text": "Okay."
+          },
+          {
+            "start": 535606,
+            "end": 541606,
+            "text": "So unassigned is for all new emails and you pick any email, you assign this to yourself."
+          },
+          {
+            "start": 541766,
+            "end": 546166,
+            "text": "This email moves from the unassigned section into your mine folder."
+          },
+          {
+            "start": 547826,
+            "end": 548426,
+            "text": "Okay."
+          },
+          {
+            "start": 548446,
+            "end": 553426,
+            "text": "So mine is basically… the emails that are assigned to you."
+          },
+          {
+            "start": 554056,
+            "end": 554496,
+            "text": "Yeah."
+          },
+          {
+            "start": 554596,
+            "end": 556396,
+            "text": "And in the open status."
+          },
+          {
+            "start": 560266,
+            "end": 560726,
+            "text": "Okay."
+          },
+          {
+            "start": 560826,
+            "end": 568986,
+            "text": "Now, rest of the team, they might be working on any sorts of emails, but you will still be able to see them under the team section."
+          },
+          {
+            "start": 569466,
+            "end": 575446,
+            "text": "You will have the entire list of the team members and how many emails are assigned per person."
+          },
+          {
+            "start": 577186,
+            "end": 577786,
+            "text": "Okay."
+          },
+          {
+            "start": 578246,
+            "end": 585306,
+            "text": "The mine unassigned team will always have emails that are in the open status."
+          },
+          {
+            "start": 587116,
+            "end": 587456,
+            "text": "Okay."
+          },
+          {
+            "start": 587516,
+            "end": 592716,
+            "text": "Now, if you click on all views, then you have two more default statuses which is pending and closed."
+          },
+          {
+            "start": 595786,
+            "end": 596186,
+            "text": "Okay."
+          },
+          {
+            "start": 596666,
+            "end": 598986,
+            "text": "And this relates to the status of the email."
+          },
+          {
+            "start": 599126,
+            "end": 605626,
+            "text": "So if I move this to pending, this email moves from my mine folder into the pending section."
+          },
+          {
+            "start": 608456,
+            "end": 608776,
+            "text": "Okay?"
+          },
+          {
+            "start": 608836,
+            "end": 611036,
+            "text": "And the same thing happens to closed."
+          },
+          {
+            "start": 611916,
+            "end": 616356,
+            "text": "When I change it to close, it moves from, moves the email into the closed section."
+          },
+          {
+            "start": 617256,
+            "end": 617696,
+            "text": "Okay?"
+          },
+          {
+            "start": 617816,
+            "end": 619556,
+            "text": "As in complete, yes."
+          },
+          {
+            "start": 619916,
+            "end": 623636,
+            "text": "So open means basically, you're working on it pending."
+          },
+          {
+            "start": 623636,
+            "end": 625016,
+            "text": "Is you're putting things on hold?"
+          },
+          {
+            "start": 625196,
+            "end": 625636,
+            "text": "Closed?"
+          },
+          {
+            "start": 625636,
+            "end": 626596,
+            "text": "Is you have resolved the email?"
+          },
+          {
+            "start": 627156,
+            "end": 627596,
+            "text": "Yeah."
+          },
+          {
+            "start": 628676,
+            "end": 629116,
+            "text": "Okay."
+          },
+          {
+            "start": 632836,
+            "end": 646296,
+            "text": "So on top of that, the collaborative features is you have the tags, you have notes and while replying to the email, you have features like templates and share draft."
+          },
+          {
+            "start": 646476,
+            "end": 646876,
+            "text": "Right?"
+          },
+          {
+            "start": 647416,
+            "end": 668326,
+            "text": "Yeah, tags are basically categories that… you know, that you create on an email like you might so literally since it's a transport and everything, you might have different kinds of rates, different kinds of deliveries and whatnot."
+          },
+          {
+            "start": 668546,
+            "end": 674866,
+            "text": "But whatever categories that you have can be listed as tags and then added to an email."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 676786,
+            "end": 682386,
+            "text": "So to add on to what Manoj said guys, think about tags like different folders in your outlook."
+          },
+          {
+            "start": 682546,
+            "end": 685006,
+            "text": "Something like this is a refund request."
+          },
+          {
+            "start": 685286,
+            "end": 686646,
+            "text": "This is a cancellation request."
+          },
+          {
+            "start": 686846,
+            "end": 688146,
+            "text": "This is an urgent customer."
+          },
+          {
+            "start": 688366,
+            "end": 691326,
+            "text": "So all of these could be categories under tags."
+          },
+          {
+            "start": 691326,
+            "end": 694006,
+            "text": "And you don't have limitations on creating tags."
+          },
+          {
+            "start": 694306,
+            "end": 695846,
+            "text": "Anybody can create tags."
+          },
+          {
+            "start": 696026,
+            "end": 709426,
+            "text": "The idea is when you tag an email, it gets categorized and anybody looking at the same email, no matter if Tom is working, anybody can see what all different emails are there under these different categories of tags?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 710126,
+            "end": 710646,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 711446,
+            "end": 711966,
+            "text": "Right."
+          },
+          {
+            "start": 712086,
+            "end": 714006,
+            "text": "And it could be anything for that matter."
+          },
+          {
+            "start": 714186,
+            "end": 720786,
+            "text": "It could be urgent, non urgent customer, new customer looking for a discount cancellation request."
+          },
+          {
+            "start": 721166,
+            "end": 722226,
+            "text": "It's a new window."
+          },
+          {
+            "start": 722446,
+            "end": 728686,
+            "text": "Anything as long as you want to bucket those emails into categories that's what we use tags for."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 729846,
+            "end": 730066,
+            "text": "Okay."
+          },
+          {
+            "start": 730186,
+            "end": 731246,
+            "text": "Go."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 731246,
+            "end": 732246,
+            "text": "Ahead over to you, Manoj."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 733746,
+            "end": 733966,
+            "text": "Yeah."
+          },
+          {
+            "start": 734046,
+            "end": 741566,
+            "text": "And you have a separate tag section on the left where you have the entire list and the emails that are related to it."
+          },
+          {
+            "start": 744776,
+            "end": 749576,
+            "text": "Now, this… email, let's take this email as an example."
+          },
+          {
+            "start": 749716,
+            "end": 751876,
+            "text": "Now, this is tagged as a product bug."
+          },
+          {
+            "start": 751876,
+            "end": 754356,
+            "text": "And this is also assigned to me."
+          },
+          {
+            "start": 754736,
+            "end": 761516,
+            "text": "Now, if I want to create a separate view of all the product bug emails, but assigned to me."
+          },
+          {
+            "start": 761516,
+            "end": 773176,
+            "text": "And in open and pending status, I click on all views, click on the plus symbol here and use this hiver filters to create a custom view."
+          },
+          {
+            "start": 775296,
+            "end": 781096,
+            "text": "So I do open and pending contains tag, product… bug."
+          },
+          {
+            "start": 782016,
+            "end": 782616,
+            "text": "Oops."
+          },
+          {
+            "start": 782796,
+            "end": 785636,
+            "text": "Sorry, save this view."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 796076,
+            "end": 797776,
+            "text": "And I can save this as a custom view."
+          },
+          {
+            "start": 798396,
+            "end": 798876,
+            "text": "Yeah."
+          },
+          {
+            "start": 798956,
+            "end": 799316,
+            "text": "Go ahead."
+          },
+          {
+            "start": 799796,
+            "end": 800276,
+            "text": "Okay."
+          },
+          {
+            "start": 801136,
+            "end": 807756,
+            "text": "So similarly with any kinds of workflows that you have, if you want to have a separate view within the mailbox, you can use this."
+          },
+          {
+            "start": 810176,
+            "end": 810656,
+            "text": "Okay."
+          },
+          {
+            "start": 810736,
+            "end": 816096,
+            "text": "Now, coming back into the email, the notes field is going to be your internal conversation tool."
+          },
+          {
+            "start": 817816,
+            "end": 823016,
+            "text": "Now, anything that you want to communicate between your team members, you use this note field."
+          },
+          {
+            "start": 823556,
+            "end": 827526,
+            "text": "So I can, so this email regarding the password, Rakesh."
+          },
+          {
+            "start": 827616,
+            "end": 831076,
+            "text": "I can just simply say Rakesh, this is your custom."
+          },
+          {
+            "start": 834436,
+            "end": 838836,
+            "text": "So Rakesh gets notified on the bell icon, right?"
+          },
+          {
+            "start": 839556,
+            "end": 841336,
+            "text": "And he can reply to this note."
+          },
+          {
+            "start": 841336,
+            "end": 842816,
+            "text": "And I get notified back as well."
+          },
+          {
+            "start": 843616,
+            "end": 844256,
+            "text": "That's good."
+          },
+          {
+            "start": 845796,
+            "end": 848396,
+            "text": "Now, this is purely internal, right?"
+          },
+          {
+            "start": 849776,
+            "end": 851916,
+            "text": "The customers are not going to be able to see it."
+          },
+          {
+            "start": 851976,
+            "end": 859196,
+            "text": "And in case, if you have multiple actions and notes on an email, just switch it to only notes so that you can read them in a sequence."
+          },
+          {
+            "start": 860156,
+            "end": 860596,
+            "text": "Yeah."
+          },
+          {
+            "start": 861046,
+            "end": 865486,
+            "text": "And another thing, you have an option to add small attachments to the notes as well."
+          },
+          {
+            "start": 867966,
+            "end": 868406,
+            "text": "Okay."
+          },
+          {
+            "start": 868406,
+            "end": 868966,
+            "text": "Good."
+          },
+          {
+            "start": 871006,
+            "end": 882866,
+            "text": "Now, the features in the reply box… first thing templates are your canned or standard responses that you and the team uses."
+          },
+          {
+            "start": 883386,
+            "end": 888626,
+            "text": "Now, in case, if you have responses like that, just go into the email templates."
+          },
+          {
+            "start": 888626,
+            "end": 888966,
+            "text": "Folder."
+          },
+          {
+            "start": 890986,
+            "end": 893266,
+            "text": "Similar to this, you can create a folder."
+          },
+          {
+            "start": 894786,
+            "end": 898986,
+            "text": "And within the folder, you can add templates and share it with specific people."
+          },
+          {
+            "start": 899566,
+            "end": 900266,
+            "text": "Go ahead."
+          },
+          {
+            "start": 900426,
+            "end": 909786,
+            "text": "So, for example, I just did transport and I'm just going to share it with Jeevan and Rakesh, right?"
+          },
+          {
+            "start": 911546,
+            "end": 915866,
+            "text": "Created a folder, go into the folder, then I create a template."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 917096,
+            "end": 917426,
+            "text": "Very good."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 918256,
+            "end": 918586,
+            "text": "Yep."
+          },
+          {
+            "start": 918646,
+            "end": 925886,
+            "text": "I can use any of these options to… modify the template, save it."
+          },
+          {
+            "start": 925966,
+            "end": 926066,
+            "text": "Yep."
+          },
+          {
+            "start": 926546,
+            "end": 931706,
+            "text": "And within the reply box, it's again, it's just one click."
+          },
+          {
+            "start": 932726,
+            "end": 934006,
+            "text": "You open the email."
+          },
+          {
+            "start": 934206,
+            "end": 939246,
+            "text": "You click reply and choose the template that you want to send out."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 940656,
+            "end": 940926,
+            "text": "Yep."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 941996,
+            "end": 944406,
+            "text": "So, I put variables like hi, customer name and everything."
+          },
+          {
+            "start": 944706,
+            "end": 948126,
+            "text": "So just type in the customer name and the template is added."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 948626,
+            "end": 949586,
+            "text": "Very good."
+          },
+          {
+            "start": 950526,
+            "end": 951606,
+            "text": "Yeah, lucky."
+          },
+          {
+            "start": 952106,
+            "end": 953346,
+            "text": "Sorry, please."
+          },
+          {
+            "start": 953486,
+            "end": 954046,
+            "text": "I like it."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 955426,
+            "end": 957146,
+            "text": "I'm glad that you like it."
+          },
+          {
+            "start": 957206,
+            "end": 957766,
+            "text": "Okay?"
+          },
+          {
+            "start": 957886,
+            "end": 967686,
+            "text": "Now, additionally, let's say that you need somebody else to add… additional information to this email, right?"
+          },
+          {
+            "start": 967766,
+            "end": 971886,
+            "text": "But you don't want to copy paste this, right?"
+          },
+          {
+            "start": 971986,
+            "end": 973606,
+            "text": "You can simply use share draft."
+          },
+          {
+            "start": 975086,
+            "end": 978106,
+            "text": "And this live draft is left on the email chain."
+          },
+          {
+            "start": 979006,
+            "end": 981006,
+            "text": "Just switch back to the notes section."
+          },
+          {
+            "start": 981186,
+            "end": 984826,
+            "text": "And as you can see, Rakesh has replied to me on the notes."
+          },
+          {
+            "start": 986206,
+            "end": 994546,
+            "text": "Now, I can simply just tag somebody else and say, please add the necessary."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 999706,
+            "end": 1002026,
+            "text": "Information to this email."
+          },
+          {
+            "start": 1002266,
+            "end": 1003586,
+            "text": "Sorry to this draft."
+          },
+          {
+            "start": 1005646,
+            "end": 1013046,
+            "text": "Now, Jeevan gets notified, Jeevan opens this email and all he has to do is just click on, edit, make the changes."
+          },
+          {
+            "start": 1013506,
+            "end": 1015846,
+            "text": "And then again, let's say."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1020586,
+            "end": 1021146,
+            "text": "Save draft."
+          },
+          {
+            "start": 1024956,
+            "end": 1030276,
+            "text": "You will also know who has helped you edit it, who has made the changes."
+          },
+          {
+            "start": 1030536,
+            "end": 1037756,
+            "text": "And if you're satisfied with the change, you can simply click on the edit button again and send the email using a normal send option."
+          },
+          {
+            "start": 1037896,
+            "end": 1047116,
+            "text": "But let's say if this is your email that you're going to put on hold or if you are sending in the last email, you can simply use send and close or send and pending."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1047976,
+            "end": 1048356,
+            "text": "Very good."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1050866,
+            "end": 1061626,
+            "text": "Now, you don't have to worry about emails being in pending status or closed status because whenever you get a response from the client, hiver is going to change the status back to open."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1063726,
+            "end": 1063886,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1069416,
+            "end": 1076056,
+            "text": "Apart from that, Rakesh… do we have the AI features from the record?"
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1077546,
+            "end": 1082646,
+            "text": "Well, we do not, but I don't think we need to go for the advanced functionalities."
+          },
+          {
+            "start": 1083746,
+            "end": 1086266,
+            "text": "Let me just guide you through."
+          },
+          {
+            "start": 1087126,
+            "end": 1089346,
+            "text": "Can you take us through the personal settings?"
+          },
+          {
+            "start": 1089546,
+            "end": 1093006,
+            "text": "Show them the availability on off and email signature setup?"
+          },
+          {
+            "start": 1093066,
+            "end": 1093786,
+            "text": "Because that's important."
+          },
+          {
+            "start": 1093986,
+            "end": 1096606,
+            "text": "While everybody will start to working on the emails."
+          },
+          {
+            "start": 1096746,
+            "end": 1099986,
+            "text": "We want to make sure that their signatures are also set up."
+          },
+          {
+            "start": 1100476,
+            "end": 1104796,
+            "text": "All right, apart from that, we covered the pending status, closed status, open."
+          },
+          {
+            "start": 1105036,
+            "end": 1116936,
+            "text": "Something that I do want to add on to is the notifications and using of email templates, like maybe you can even show them how we use multiple templates, maybe creating templates and all of that."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1117216,
+            "end": 1118676,
+            "text": "Yeah, we have covered that."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1119076,
+            "end": 1119236,
+            "text": "Sure."
+          },
+          {
+            "start": 1119396,
+            "end": 1119856,
+            "text": "Okay."
+          },
+          {
+            "start": 1121096,
+            "end": 1125756,
+            "text": "So, personal settings and signatures is important if you could clear that please?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1128486,
+            "end": 1133086,
+            "text": "So, Tom, as you can see on my left hand panel, right?"
+          },
+          {
+            "start": 1133186,
+            "end": 1146206,
+            "text": "I have also connected my personal inbox to the hiver interface because after installing hiver apart from the shad mailbox, I don't want to go back into outlook to check out my personal emails."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1147816,
+            "end": 1148326,
+            "text": "Right."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1151206,
+            "end": 1156656,
+            "text": "So, what I've done is just simply clicking on the left hand bottom corner."
+          },
+          {
+            "start": 1157236,
+            "end": 1159976,
+            "text": "These are all certain settings that I have."
+          },
+          {
+            "start": 1160116,
+            "end": 1161276,
+            "text": "So I go into my settings."
+          },
+          {
+            "start": 1162816,
+            "end": 1163576,
+            "text": "First thing."
+          },
+          {
+            "start": 1163676,
+            "end": 1175556,
+            "text": "Excuse… me, I have my signature settings… add in the signature that you have in outlook and use that to reply to emails from here."
+          },
+          {
+            "start": 1176236,
+            "end": 1178996,
+            "text": "The next thing is connecting your personal inbox."
+          },
+          {
+            "start": 1181336,
+            "end": 1184296,
+            "text": "So I have also added this, which is my personal inbox."
+          },
+          {
+            "start": 1184356,
+            "end": 1189816,
+            "text": "So I have my personal emails on the top and I have the shad mailbox email at the bottom."
+          },
+          {
+            "start": 1192256,
+            "end": 1200676,
+            "text": "Now, one advantage over here is let's say that you get an email in your personal inbox and it's supposed to be shared with the team."
+          },
+          {
+            "start": 1201316,
+            "end": 1213096,
+            "text": "That's just a one click option where it says add to shad mailbox, and then you can simply add the personal email into the mailbox."
+          },
+          {
+            "start": 1213236,
+            "end": 1220056,
+            "text": "So, for example, this is here, it's here, just add it to sales and support, add that's it."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1222306,
+            "end": 1222526,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1229106,
+            "end": 1229296,
+            "text": "And."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1229996,
+            "end": 1232806,
+            "text": "then your notification settings, right?"
+          },
+          {
+            "start": 1232866,
+            "end": 1242166,
+            "text": "Sound notifications, because it might get, it might be easier to miss the numbers or the notification on the left."
+          },
+          {
+            "start": 1242306,
+            "end": 1249906,
+            "text": "So once you have the sound enabled every time you are assigned an email or somebody leaves your note, you get notified through sound."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1250466,
+            "end": 1251126,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1253416,
+            "end": 1253606,
+            "text": "Right."
+          },
+          {
+            "start": 1254166,
+            "end": 1258906,
+            "text": "And do you see this available for email and available for chat?"
+          },
+          {
+            "start": 1259046,
+            "end": 1262286,
+            "text": "So this is basically controlling your availability."
+          },
+          {
+            "start": 1264506,
+            "end": 1267646,
+            "text": "Admins can also control it by going into the team's availability."
+          },
+          {
+            "start": 1268786,
+            "end": 1279366,
+            "text": "But as soon as you log in, you just simply toggle this on for any sorts of automation or, you know, auto assignment and any of the advanced settings that Holly has set up?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1280356,
+            "end": 1280606,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1283496,
+            "end": 1286116,
+            "text": "Yeah, pretty much that's it."
+          },
+          {
+            "start": 1286716,
+            "end": 1292796,
+            "text": "Yeah, these are going to be your basic day to day features that you're going to put into put to use."
+          },
+          {
+            "start": 1294376,
+            "end": 1297116,
+            "text": "Now, if you have any questions, please let me know."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1298146,
+            "end": 1298636,
+            "text": "Lovely job."
+          },
+          {
+            "start": 1298996,
+            "end": 1299856,
+            "text": "Thank you very much."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1300646,
+            "end": 1300896,
+            "text": "Great."
+          },
+          {
+            "start": 1301036,
+            "end": 1308036,
+            "text": "Tom, and I want to make sure that you're logged in into your hiver account and you followed exactly what we shared and you have questions, let us know, please."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1308706,
+            "end": 1309556,
+            "text": "Yeah, no worries."
+          },
+          {
+            "start": 1309656,
+            "end": 1310876,
+            "text": "I am on my hiver account."
+          },
+          {
+            "start": 1311436,
+            "end": 1312616,
+            "text": "Yeah, no, it looks all good."
+          },
+          {
+            "start": 1312716,
+            "end": 1313376,
+            "text": "Thank you very much."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1315876,
+            "end": 1316236,
+            "text": "All right."
+          },
+          {
+            "start": 1316416,
+            "end": 1322376,
+            "text": "Now, since this meeting is recorded, I'll go ahead and share this recording with Holly as well, or should you need to refer to it later?"
+          },
+          {
+            "start": 1322496,
+            "end": 1324856,
+            "text": "You can always go through it and feel free to write back."
+          },
+          {
+            "start": 1325736,
+            "end": 1326276,
+            "text": "All right."
+          },
+          {
+            "start": 1326456,
+            "end": 1339486,
+            "text": "And for the remainder of the teams, we have also set up a couple of more individual training settings… that like I explained it to Holly, we'll go ahead and meet the rest of the team in individual sessions."
+          },
+          {
+            "start": 1340086,
+            "end": 1345726,
+            "text": "I've told my support engineers, the support folks, what exactly we're going to go through?"
+          },
+          {
+            "start": 1345806,
+            "end": 1347566,
+            "text": "Just like how we did the basic training."
+          },
+          {
+            "start": 1347746,
+            "end": 1350126,
+            "text": "We'll go for the rest of the team also in slots."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1351206,
+            "end": 1351646,
+            "text": "Yeah, cool."
+          },
+          {
+            "start": 1351786,
+            "end": 1353746,
+            "text": "I think the other one's coming in shortly."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1356546,
+            "end": 1356966,
+            "text": "All right."
+          },
+          {
+            "start": 1357006,
+            "end": 1358446,
+            "text": "Thank you so much for your time, Tom."
+          },
+          {
+            "start": 1358566,
+            "end": 1359666,
+            "text": "Lovely talking to you."
+          },
+          {
+            "start": 1359726,
+            "end": 1363846,
+            "text": "And like I said, again, if you come across any questions, please do not hesitate."
+          },
+          {
+            "start": 1364066,
+            "end": 1365266,
+            "text": "Feel free to write back to us."
+          }
+        ]
+      },
+      {
+        "speakerId": "2863330055527390682",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1365986,
+            "end": 1366286,
+            "text": "Lovely."
+          },
+          {
+            "start": 1366406,
+            "end": 1367246,
+            "text": "Thank you very much Jens."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1367506,
+            "end": 1368626,
+            "text": "You, take care, goodbye."
+          }
+        ]
+      },
+      {
+        "speakerId": "1238076285730757573",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1368986,
+            "end": 1369606,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "5794246768170922160",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1369606,
+            "end": 1370186,
+            "text": "Thank you, Manoj."
+          },
+          {
+            "start": 1370366,
+            "end": 1370746,
+            "text": "Bye bye."
+          },
+          {
+            "start": 1370966,
+            "end": 1371486,
+            "text": "Thank you."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 90
+}

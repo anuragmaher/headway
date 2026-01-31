@@ -1,0 +1,796 @@
+================================================================================
+Call: Hiver sync
+Date: 2025-11-14T01:06:25+05:30
+================================================================================
+
+Emily Hong (emily.hong@filtrous.com):
+  hi, Jeevan.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Hi, Emily. I'm so sorry about being late. My previous meeting ran too long.
+
+Emily Hong (emily.hong@filtrous.com):
+  Yeah, it's okay. I figured. So I just stayed on. I'm sorry. No, it's okay. It might just be me today because I think everyone else has meetings scheduled. No.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Worries.
+
+Emily Hong (emily.hong@filtrous.com):
+  yeah, that's okay. Because I can just show them no.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Worries. Yeah. So, yeah, I'm just looking to understand how things have been since we spoke last night, sorry, yesterday and any questions that we wanted to have. I know we wanted to dive into a little bit of the analytics, sorry, the automations today, but before we do that, any other questions that we have?
+
+Emily Hong (emily.hong@filtrous.com):
+  Yeah. So I have a couple of questions because after we were playing around with it, let me share my screen, you.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Can share your screen. Yeah, absolutely. Okay.
+
+Emily Hong (emily.hong@filtrous.com):
+  So, you see this?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Not yet.
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, okay. Try again. What about now? This screen, do you see this?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, I know. I can. Yep.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. Cool. Okay. So, I have a couple of questions. So we so, okay. So after seeing everything come in, it is really nice that it's divided out into these email or these inboxes over here. So, for like stuff like this, like let's say this is spam. I've noticed that it's always open, right? Will this affect analytics in any way like to spam emails?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Not. Yeah. I mean, it might a little bit. You might just want to close it out quickly or if you think that you're getting a lot of emails from this particular sender and you do not want to get emails from this sender at all, we can automatically set them up to close it.
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, really? Or I could just unsubscribe.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  You can do that. That's what that is.
+
+Emily Hong (emily.hong@filtrous.com):
+  Yeah. Okay. I was just wondering because I feel like it. Okay?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  We can set up rules. We can set up rules to definitely close them out.
+
+Emily Hong (emily.hong@filtrous.com):
+  I see. Okay. So they do kind of affect analytics if.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  it's just coming in and sitting there without a response then it will. But otherwise, we are able to, if you set up a rule to automatically close it in that scenario, it will not affect analytics. Okay?
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. Yeah, because we receive a lot of these which are not spam emails, but they're like, I don't know like just daily, whatever that we don't even look at. So this stuff, should we just?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Close it? Yeah, you can just close it and we can set up a rule for this as well.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. Also, some of these, so we start at eight a. M, Pacific Standard Time to five P. M Pacific Standard Time. So, does that affect analytics? If like let's say an email comes in overnight and we haven't responded to it for like, you know, five hours? Great question because we're not in yet, great.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Question. So it will not affect it, will impact it if you don't tell hiver that you're only working from nine to five or eight to five or whatever. So you can set that up. Emily, can I show you how you can do that?
+
+Emily Hong (emily.hong@filtrous.com):
+  Yeah, yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Can you just click on the admin panel on the top, right?
+
+Emily Hong (emily.hong@filtrous.com):
+  Wait, oops, this one? No this? Okay. Yeah, sorry.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Click on settings on the left… click on business hour templates. Click on, create business hour template. Now, you can just like, you can tell them though, that is working hours and you can create a schedule here for your team's working hours, and you can apply that schedule on mailboxes. Once you apply the schedule once that you've defined here, then hiver's analytics will only factor in emails that came in during that schedule.
+
+Emily Hong (emily.hong@filtrous.com):
+  Nice. Okay. So, what if, so, me and Mackenzie right now, it's just us two doing this. So, let's say I'm working eight to five, but she's working Eastern Standard Time and it'll be eight 30 to five 30.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. So, you can just do both. You can just do one collective, you scroll down, you will see what it looks like.
+
+Emily Hong (emily.hong@filtrous.com):
+  What is this?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  One second?
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, okay. Oh, that's great. Sorry, I didn't know.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. So if you scroll down, so this is the schedule that you put in, Emily, right? So if you want to say, let's.
+
+Emily Hong (emily.hong@filtrous.com):
+  say, I didn't put this in this?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Is just like a sample one for you to see what it looks like.
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, I see.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  You can modify it, save it, and then it'll you can go ahead and do it. Yeah. Okay. So, eight to five, so essentially, you might have to get rid of some of the, the smaller blocks above the two 30 to three 30 blocks. Yeah, just get rid of those. And then on Tuesday, we'll give, you can get rid of one of these blocks. The reason why it's broken is just to show you that it can be broken.
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, I see. So. Okay. So it'll be like lunch.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Or something you can have, yeah, if you want to have like give a lunch break or something you can.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. So, this one's only going to be for me personally, right? And then for Mackenzie.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, this will be for the entire mailbox. This is not just for you. Yeah, so this will be, this should cover all the emails, all the working hours of all the members in the mailbox. And because this will be applicable across the mailbox. So, if you scroll down even more, so this is, you can set a holiday calendar if required. Huh. But if you go up, I think you haven't named it yet. You might just have to scroll all the way up, give it a name right on top says template names, you can just say working hours or something like that. So.
+
+Emily Hong (emily.hong@filtrous.com):
+  But how we have different working hours for, our other location though. So you.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  can have multiple working hours for. So, wait, let me get this. So you have different working hours, for who else?
+
+Emily Hong (emily.hong@filtrous.com):
+  For Mackenzie, she's in Florida, and her working hours are eight 30 to five 30, Eastern Standard Time.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Okay. And she works, in the same mailboxes that you do. Yes. In that case, what I would recommend Emily is just like converted. So, for example, if she's working eight 30 to five 30 east, Eastern Standard Time, so, I would say you need to go up to like,
+
+Emily Hong (emily.hong@filtrous.com):
+  Five?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Five 30. So, you've got to start. So, you started at five 30, so that each day it kicks in at five 30 for her. And then it ends at five specific for you. So, it covers both of your working hours.
+
+Emily Hong (emily.hong@filtrous.com):
+  Perfect. That's beautiful. Okay. That makes sense. I see.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  And then you'll be able to save it. And then once you've saved it, this, these are your, these are the working hours. So, you want to go to the shared inboxes on the left there?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  You want to click on, let's say orders, mailbox where you want to apply this. So, click on the settings here, Emily… and then you, do, you see the second option there? Perfect. You can set a business hour, click save, and that's it.
+
+Emily Hong (emily.hong@filtrous.com):
+  Amazing.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  And if you scroll down below this, yeah, right here, these advanced settings here, they're actually interesting to look at. There are some, it's some very, it's some very, useful, few, little tools. So, when you've got some time, you can check this out as well.
+
+Emily Hong (emily.hong@filtrous.com):
+  I see remove conversation, remove reassignment. Okay. I see. And then I have to do it for the other one. No, yeah, you.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Can do this for the other one as well. Yes, settings, and then you can apply it here and click save and that's that.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. Those are the only ones here. OK? So, can I delete this one?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, you can. It's just the trash can and the file id. I'll go for it. I.
+
+Emily Hong (emily.hong@filtrous.com):
+  See… delete box?
+
+Emily Hong (emily.hong@filtrous.com):
+  Nice. Okay. Okay, cool. So, thank you for helping me with that. What else did I have? Oh, also, I had another question. So it's recommended to close out every single email.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yes.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. And… it'll stay open the second we come into work then, right? And then the analytics start calculating from our… working business hours.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, are you asking me? So let's say, for example, something comes in at nine P. M. When nobody's online, it will stay in open. It will wait for you all to log in but the clock on your analytics, the timer that will kick in only when your business hours kick in.
+
+Emily Hong (emily.hong@filtrous.com):
+  I see. Okay, I see. Okay. Also, so for the analytics, I also noticed that when I assign myself something, it doesn't always go to the assign to me section like this one, right here, this one I assigned to myself to work on and.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  The reason why that is, it's impending?
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, really?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  It only shows email. So if you open this email, it'll be in open.
+
+Emily Hong (emily.hong@filtrous.com):
+  Oops, maybe it doesn't like the back button. So, let's see.
+
+Emily Hong (emily.hong@filtrous.com):
+  Right here. So I'm currently working on this one?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. But if you notice on the right, the status is impending.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. So it'll be impending instead of assigned to me then?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. So assigned to me is essentially, what hiver is designed to make that happen. Is it is a dedicated folder for all your currently active open conversations across all mailboxes. So, if an email was assigned to you and an open status, it will be an assigned to me, it will be in mine, but the second it goes away from open, it goes away from those two sectors.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. I see. And then for every email reply. So I just got an email reply from this person, this person, right? So every time they reply, I have to click pending again and close it every time.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, the idea is that if a new reply comes in, for example, in this case, it's just thank you. So we can actually help you with this, right? In this case, it should not have opened up again because they've just said, thanks… right? So, the idea, Emily is let's say an email comes in, you've replied, the customer has replied, you've gone back and forth. Finally, the customer, you know, that the conversation is resolved. So, in that case, you mark it as closed or in some other scenario, mark it as pending. When a new reply comes in from that customer, that reply could be a new question, an answer, a response, whatever it could be. Essentially, it's a new reply. So, in those scenarios, hiver does bring it back into open. Okay? However, we don't want that to happen. If that reply is just thank you.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, we've, got our AI doing a thank you detection, where in those cases, it does not open it again, you just have to enable it.
+
+Emily Hong (emily.hong@filtrous.com):
+  I see. But technically, this one, it's still open because, I told them that I'll let him know something, right? So it's not, technically, yeah, I can check with like my manager or whatever. Yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Thanks. Yeah. Okay. So eight to any, when did you, so you replied to this, but you changed it to pending before that, right?
+
+Emily Hong (emily.hong@filtrous.com):
+  Yeah. So, I saw, so, yes. So I saw this email.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. So, on the right, the, what happened on that email? Is there as an audit log on the right? Just scroll down on the right? Oh.
+
+Emily Hong (emily.hong@filtrous.com):
+  I see. So.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  New email came in on the, eight to 821. You assigned it to Emily at 821. You changed the status to pending at 821. And then hiver changed the status to open at 10 47. Now, the reason why that happened at 10 47 is if you scroll down, you see at 10 47, they have sent a reply only when the external person, Jean knight sent a reply at that moment, hiver detected a new reply and it brought it back to open.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. So, then I have to click on pending again, right? You?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Would have to click on pending again. So, the way that typically helps you to do is if you hit reply, Emily on any of these emails, you will actually see that when replying, you have the option of sending and marking an email as closed at the same time, send an email, marking an email as pending. So, if you see the right at the bottom there, the send and closed to… send and pending, just hit that little arrow next to send and close. Oh, I see. So while you're sending the email, you can mark it.
+
+Emily Hong (emily.hong@filtrous.com):
+  As pending. Okay, I see.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, in this case, if you do want it to change the status because of thank, you can enable that right now.
+
+Emily Hong (emily.hong@filtrous.com):
+  Let's not, because I think there's a lot of instances where it'll stay open. Sure. And then we can just automatically close it later sounds.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Good. Okay.
+
+Emily Hong (emily.hong@filtrous.com):
+  Cool. Yeah, that works. Okay. And then I was looking at the analytics. It says that there's only six resolved conversations when they were a lot more. Do you know why that would be?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, resolved refers to a conversation that's completely done. But hiver is able to do that Emily, when an email is marked as closed. So, do you think we marked you marked more than six emails as closed?
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, 100 percent especially the spam ones. So let's see. Actually, let me check.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Just go to all views… click on closed.
+
+Emily Hong (emily.hong@filtrous.com):
+  Yeah. So I closed these.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, you've closed quite a bit. Can you just?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Exit out of this for me?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Can you go back to analytics for a second?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Click on, resolved. Yeah, that's because you're in the accounting inbox, Emily, can you just switch over to support sorry orders on the left?
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, can you do both?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  You can do both in the dashboards, but in the reports, it's one at a time. So, in this case, as you can tell there's 26 emails. When you click on dashboards, you can put one report in for support one for accounting, and we can help you set up these dashboards, but the reports are one mailbox at a time?
+
+Emily Hong (emily.hong@filtrous.com):
+  I see. Can we set this up right now?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Sure, you can click on, create new dashboard. Yeah, perfect.
+
+Emily Hong (emily.hong@filtrous.com):
+  Can I put them both together? You can.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  You can just call it, Emily's dashboard, yeah.
+
+Emily Hong (emily.hong@filtrous.com):
+  Click.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Next, so now, what you want to do is you want to see, let's say you want to see resolved conversation reports for both mailboxes. So can you click on, you can do resolution time for sure, and then you can select the mailbox. Let's say you want to do resolution time for accounting first, you want it to go down, you want it to be grouped by user. So you see… individual people in that, you can see what's happening there. And then you can click create… right? And then you want to, you can, so it'll look like this and you can add more cards to this and as many cards as you require. So yeah, you can click edit, add widget. Now, you can say resolution time again. And then now you want, instead of it saying accounting, you can say orders and then you can do it again by user. So now you can see a report for accounting and orders, I see. And then you can build reports like this again and these are all real time and they will get updated in real time. And if you want to switch this time period, you can switch the time period on the top, right?
+
+Emily Hong (emily.hong@filtrous.com):
+  Time period on the top, right? So.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, exactly that. So you can select that drop down and you can get as many as required. I see you can go back. You can set it first, but the reports here are by individual stuff. So you can see sentiment. You can see tags, users, contacts, all of it.
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, wow. Oh, okay. Can we get rid of these ones? These ones are just automated ones. It seems like it's like an error, but it's not.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So you can go in and report it. Let me show you, right? Can you just open one of these emails? So with our AI, Emily, you just have to tell it what's right? And what's wrong, and it will keep learning. So in this case, it says that it's negative. So let hiver just so this is no longer present here because Mckinsey has deleted it by trashing it as you can see on the right?
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, okay.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So it's no longer a part of hiver? But if you go in, you can find a part of hiver, find one that is part of hiver. Yeah.
+
+Emily Hong (emily.hong@filtrous.com):
+  Or can we just all these emails that come from no reply for our app? Can we just not have it be in our analytics at all? These are unimportant to us?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  You can. So here's, how you can do that. Can you just select copy that email address?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Go into the admin panel.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, click on the shared… inboxes on the left… click on orders… click on automations. Perfect. Click on, create from, yeah, perfect. So you will see whenever a new conversation comes in this, add a step right there, say, if condition is… from email, is that email? Perfect?
+
+Emily Hong (emily.hong@filtrous.com):
+  Wait, this is not. Oh, okay. Yeah, if.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  you wanted to just say farapp. Com, you can also do that.
+
+Emily Hong (emily.hong@filtrous.com):
+  No, just this one.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Okay, perfect. And then you want to say, yeah, you can choose it and then you can say, add a step that says add action… and then you can automatically update the status. So the fourth option there, update the status, but closed.
+
+Emily Hong (emily.hong@filtrous.com):
+  Amazing.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  And then you can just save and enable this. And from this point on, all emails will be automatically closed, will not impact analytics will not come into your view, will just come in and get our bed.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. I see now that's very helpful.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  And if you just go back and find one of those emails, Emily for me, Or just any email with hiver, any email with hiver in it? Just exit out of this. Yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, just maybe go to the first email there. The no reply. The first email, go back. Yeah. So now, do you see on, oh, this is, was it trashed? I don't know. It looks like it? Yeah. Okay. It looks like it was trashed.
+
+Emily Hong (emily.hong@filtrous.com):
+  This one wasn't trashed though. Oh, this one was trashed? Yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. So if you can just sort of like go into orders app, I just want to show you how you can report a sentimenter, go into orders app, open any of these emails. So on the top, you see this new neutral word there above the right there, you can actually like edit it and then, you can report it. So that hiver will automatically learn from this.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. I see.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  And if you give it a reason for the edit, it'll learn from that, and it'll factor that in for future scenarios.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. I see that's kind of scary. Yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  I'm sorry, it is, sometimes I get freaked out yesterday. I was typing out an email to a customer explaining their invoice. So, I was doing some math and I just said, yeah, yeah, our base rate. Is this our, but our discounted rate is this and you will require 30 users. So your total rate for the month for the year is, and I just typed it there and it just did the math for me. Yeah, I just did the math and it gave me a response. I was like, wow. Okay. That's scary.
+
+Emily Hong (emily.hong@filtrous.com):
+  No, it's gonna take over one day.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  For sure.
+
+Emily Hong (emily.hong@filtrous.com):
+  For.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  sure.
+
+Emily Hong (emily.hong@filtrous.com):
+  Yeah, it's yeah, it's really scary to think about, but it is nice for, when it's helpful like this, I would say, well.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Work, work related stuff. Keeps it. It keeps it easy. It saves us some, some, clicks and I'm always happy with that.
+
+Emily Hong (emily.hong@filtrous.com):
+  Yeah. Yeah, like these are spam?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, these are spam, you can just like do the same thing and unsubscribe or you can create the closed automation that we just showed you. Yeah.
+
+Emily Hong (emily.hong@filtrous.com):
+  Yeah. Okay. Yeah, I might just have to go in and clean all these emails on,
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, while you're cleaning up these emails, Emily, you don't have to do them one at a time. Can you just select two or three of them, in one shot now, from the,
+
+Emily Hong (emily.hong@filtrous.com):
+  Let me look at any like spam that we.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Can do it in the, I just want to show you, a bulk action thing that, within hiver, that we have. So, if you just go into orders or accounting for a second and just select one, two or three of these emails in this list in this view, like just select by hitting the box on the left.
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, I see. Yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, just those. Yeah, perfect. So, while you select that, let's say you want to, you're seeing a bunch of these spam emails all in one order. So, instead of going into each one to close them, Emily, you can select all of them in one shot on the top in the top of your screen under the search bar, where all those little tools are, where the delete and the red buttons are. You will also see on the same line, you'll also see three yellow colored hiver buttons on the same line. So, those are your way of doing bulk action. So, if you want to assign it to someone you want to manage tag or in this case, you want to mark something as closed, you can mark as closed in one shot.
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, okay. I see. And then what are the tags for the tags?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So tags are sort of like labels or folders for the mailbox. So they don't belong to any one individual person. They belong to the orders at inbox… right? So for example, I'll give you, I'll give you an example that makes you that you get it. And this is something I wanted to discuss yesterday. So this orders mailbox, Emily, based on our conversation yesterday, is getting orders, is getting info and is getting sales. Let's say you want to categorize all the sales emails separately?
+
+Emily Hong (emily.hong@filtrous.com):
+  Yes. So the,
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  way we are going to help you do that is just, follow my lead and I'm going to help you set up a structure that is going to be very useful. So on the left, do you see under orders, do you see tags? Can you just click on that and create a tag for me? So tags are essentially like labels or folders that you can create. Can you just click on the top left? Do you see a little small yellow color plus icon… that's all? Perfect. Now, you can just click on, let's say sales.
+
+Emily Hong (emily.hong@filtrous.com):
+  Type in sales. Yeah, let's do like support. Okay?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Perfect. We can do it. So in certain cases, you can also ask AI to automatically learn and tag your emails. But in this case, we are not going to be using AI because this is just meant to categorize all emails sent to the support alias that is inside orders, right? But in the future, if you want to say, hey, listen, I'm getting a lot of, I want to automatically ask the AI to process all the emails and tag all the refund emails accordingly. Okay. So in those cases, what you can do is you can create another tag called refund and give it a description that says any email requesting a refund or requesting a status of a refund needs to be tagged with this tag. And hiver, will, our AI will learn from your emails and will know which ones to do it. So that's something we can definitely set up. But in this case.
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, my God, that's even scarier.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  It, is, it is, so it's.
+
+Emily Hong (emily.hong@filtrous.com):
+  basically like, okay. So it's like this description section is chat gpt basically. So I just want to tell it what to do and then it'll do it.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, exactly. Okay. Right. So in this case, for support, we probably don't need the AI, but you can create it for other tags and we're happy to help you set it up. So in this case, let's say you, can you just give it a color and click create?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, now you've created a tag called support. Okay. Now, what you will do is essentially click on now, click on the admin panel and go back to the automations. And.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, click on the admin panel and click on shared inboxes on the left, click on orders, click on automations. So what you now you can do is now you can create a second automation that says, when a new conversation is received right now, you want to add a step and say, if condition now, what is the condition? What is the automation we're trying to do? We want all the emails that are sent to the support alias?
+
+Emily Hong (emily.hong@filtrous.com):
+  It is.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Not from it's to.
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, I see you're right?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Right. It's to support at filters. Com. And whenever an email comes into orders, but it was originally addressed to support as the alias, can?
+
+Emily Hong (emily.hong@filtrous.com):
+  I do and.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yes.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. Or can I do two emails? Yes. Oh, okay. Oh, sorry. Keep going. Sorry, I interrupted.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, no worries. So, you can have two emails, oh,
+
+Emily Hong (emily.hong@filtrous.com):
+  okay. But I want it to, okay?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  I see you want it to only tag it as support. You can create other tags and other automations for the other ones. But in this case, if an email comes to come comes to support, you want to automatically add the support tag. So, can you go into the add step and add a support tag?
+
+Emily Hong (emily.hong@filtrous.com):
+  Action?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yes. And then you want to add a tag that… says support?
+
+Emily Hong (emily.hong@filtrous.com):
+  Support amazing. Okay. And then save it and label save.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  And enable. So this is step two. There's one last step that makes things even better. So, can you exit out of this automation? Sorry, this admin panel?
+
+Emily Hong (emily.hong@filtrous.com):
+  Yes.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Now, once you exit out of this, now on, in the orders, can you click on all views for me under orders on the left? Can you click on all views? The fourth tab there? Yeah. So now, if you notice there are five default views that hiver comes with it's, called unassigned mine team. So unassigned refers to all the new emails in orders that have not been assigned to anybody yet. Mine refers to all the emails that have come in that have been assigned to you team refers to all the emails that have come in but have been assigned to someone else. In this case, Mackenzie or, you are included in the team as well. But it's just like a collection of all emails. And like I said, the only emails that are present in these three sections, Emily, are emails that are currently in the open status?
+
+Emily Hong (emily.hong@filtrous.com):
+  I see. Okay. So then where's the support?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Great. So now we'll create one. Now, these are the default views. Now, we can help you create one. Yeah, exactly. You create one. So you can create a view that says any email that is currently open… or pending. Let's say you want to see pending as well, just to see in the same place you don't want to choose close because that's just going to clutter up your view. And it doesn't matter who it's assigned to. Is it that's a question? Oh, oh, is it matter?
+
+Emily Hong (emily.hong@filtrous.com):
+  No.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Okay. So in that case, you can remove the selections on top. Yeah, you can just remove that. Yeah, just remove them. Click apply. Perfect. Now, you want to see all emails that are currently open and pending with the support tag?
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. Apply.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Click apply. Now, once you've clicked apply, you can actually save this on the top, right? It says save as… so you want to choose support emails… and then you want to save it for everybody and click save. And then like you have unassigned team pending and closed, you have support now, and you can actually bring support to the homepage by clicking on that little star next to it. So it even goes back to your homepage. So now you have unassigned.
+
+Emily Hong (emily.hong@filtrous.com):
+  Team. Oh, like here.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Right here. So what happens is Emily email will come to support. Hiver will bring it into orders, but will detect that it was originally sent to support, will automatically apply the tag. And once it automatically applies the tag, it will come into this folder automatically. And when you hit reply and finally close this email, because this folder does not show closed email, it goes away from this folder. So the idea is that you consider this like a dynamic list of only the emails and support that your team needs to work on.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. That makes a lot of sense. Okay. That's really helpful. So I can do that for info. I can do that for orders too. That way under this big orders, I can see them separately. To be honest, we don't really have to see it separately. That was just a nice thing to have actually.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. Okay. So this is generally how our automations work. So you can set up as many automations as required to consider all of these different scenarios.
+
+Emily Hong (emily.hong@filtrous.com):
+  I see. Okay. And then analytic wise. What else do people usually track?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, essentially, they are looking at a couple of different things. Number one is they want to look at a number of resolved conversation and resolution time at the bottom, right? This tells them if there are any major delays in emails getting resolved, right? So give this a couple of weeks so that it builds up some data. So then you can start looking at it. The other thing people do is look at tags because as you create different types of tags for different categories of emails that you're getting, for example, you can go in and see that in October, you got 35 refund requests, but in September, you only had 10 refund requests. So why did your number of refund requests go up? So you can start analyzing things like that. If you start tagging your emails and organizing them really well?
+
+Emily Hong (emily.hong@filtrous.com):
+  I see. Okay.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, tags are made for pattern recognition and a lot of our customers use it for pattern recognition?
+
+Emily Hong (emily.hong@filtrous.com):
+  I see, but those refund ones are hard to pick up. No, like sometimes people, yeah, I guess like return refund, RMA. Those are just like the keywords that.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  And either you can use keywords to like define it in the automation or our AI will just figure it out.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. Or can I also manually put that as like a refund?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  You can also, of course, that's the base of it, Emily, of course. Okay. I see you can manually apply everything, all the automation or the AI stuff that's just in addition.
+
+Emily Hong (emily.hong@filtrous.com):
+  I see. And then, okay. So we also, do you have a time a hard stop by?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  The way I do have another meeting starting in about five to 10 minutes, but that's fine.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. So we get a lot of these order confirmations from Shopify after someone places an order. Is there any way to just put all of these emails in one… of these views then I'm trying to think so would.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  I have.
+
+Emily Hong (emily.hong@filtrous.com):
+  to.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  you have a lot of, so what would you exactly want to do to this email?
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh, so, you know, how we have all these like order confirmations, right here? Yeah, like these orders? Is there a way to group all of these type of emails into one?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Into one tag? Yeah. What tag would that be called? Let's do it? I'll show you how you can do it.
+
+Emily Hong (emily.hong@filtrous.com):
+  Maybe we can try it like order confirmation. It's just an order confirmation. Yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Let's just create a tag called order confirmation. Okay?
+
+Emily Hong (emily.hong@filtrous.com):
+  Explain when to use and not use this tag for example.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. You can either, yeah, you can either choose to do this now or we can have, we can set up the AI tagging later as well. So you can just click done.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, now, it's going to just give you an order confirmation tag click apply. And then now that's going to pop up on this email right there. And now, if you go back to your homepage, Emily, if you select let's say four or five different order confirmation emails, just select the boxes.
+
+Emily Hong (emily.hong@filtrous.com):
+  Yeah… like that. I could just put it there.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  You can just click on tags, yes, order confirmation, I see, and you're applying it to all of these emails in one shot, just click apply and you'll see what it looks like. Now, it's going to apply on all of these emails and they'll all have order confirmation mentioned right next to them, right there. Okay?
+
+Emily Hong (emily.hong@filtrous.com):
+  Yeah. Hopefully there's a way for us to just automatically have this, say it whenever an order comes in like that.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  You can do that. So now that you've set this up and you've seen how it works, you can go to the admin panel, go to the AI tagging… and you can actually say, hey, whenever an email comes in from Shopify, you can always set that up, that's one. Secondly, I saw that you were using Shopify and maybe I don't know whether you were using Netsuite also, but you can just click on the, can you just click on the apps button on the top right? In the admin panel? Yeah, that's one right there. So you can click on enable apps. We've actually got a Shopify integration.
+
+Emily Hong (emily.hong@filtrous.com):
+  Oh my God, slack too. Okay. Oh, and zapier, and,
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  zapier and Shopify is right there. So you can actually enable Shopify and you can get the Shopify records for a particular order straight in Gmail without you going to search for it?
+
+Emily Hong (emily.hong@filtrous.com):
+  Amazing. Okay. Maybe I can play around with this then.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Definitely. So there's a help article there. You can always contact my support team here as well and they'll be here to help you set up Shopify.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. So, what does the, what does the Shopify app do on the side? What does it really do it? Just, it's just there or?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, essentially, let's say an email comes in with a particular order id about a particular order. Hiver will automatically grab all order information from Shopify regarding that order. And we'll show you that information next to that email in Gmail. All captured and done automatically. So, can you just click on the Shopify integration again? Yeah, and scroll down a little bit so you can see exactly, what is available right now and what is coming soon as well. You can actually edit very soon. You're going to be able to edit Shopify orders and customer information from inside hiver.
+
+Emily Hong (emily.hong@filtrous.com):
+  You can edit Shopify information from inside of hiver.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  That is that's something that's coming very soon. We're working on that, it says coming soon right now. So that is something that we're I've actually, it's actually live internally. We're just waiting on a few Shopify approvals on our app. And once they approve, we should be good to go.
+
+Emily Hong (emily.hong@filtrous.com):
+  Wow. Amazing. Okay. That's super cool. Too bad. We're not, we don't have Netsuite anymore or we're switching away from Netsuite. Okay. We also use Hubspot. We also use slack too.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Slack is really interesting because slack is.
+
+Emily Hong (emily.hong@filtrous.com):
+  What does it do?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Slack is sort of, oh.
+
+Emily Hong (emily.hong@filtrous.com):
+  Can we do this? Yeah. Can we do this? You?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Can do that? Yeah. So essentially, it's not really an integration. Emily, it's a bridge to your information. So, for example, if you at mention or assign an email to Mackenzie and Mackenzie is not looking at her Gmail inbox right now and she's in slack. Her, that notification will send her a slack message in slack that's pretty much what, the integration does.
+
+Emily Hong (emily.hong@filtrous.com):
+  I see. So that was one.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  of my other alerts from hiver into slack with this integration.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. I see.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. I'll play around with this. Yeah. And I will see if I have any issues with it. And if I have any other questions… and I'll kind of show the team how to do this. And then I'll see if there's anything else that I could probably set up. I feel like there's a lot you can do on here.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  There is, there definitely is a lot that you can do. So, is there.
+
+Emily Hong (emily.hong@filtrous.com):
+  a way to extend this that doesn't go into the weekend? Or because we're off on the weekends?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. So when does it? So it is running till the ninth. So this is running till. Oh, okay. Got it the middle of next week. So we have until then to make a decision and just to make sure that we don't like have to make a decision midweek I'm actually going to extend it till the end of next week. So right now it ends runs till the 20 first, which is next Friday.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay, perfect. Thank you so much.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  If you refresh your screen, you should be able to see that.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay, perfect.
+
+Emily Hong (emily.hong@filtrous.com):
+  Nice. Perfect. Thank you so much.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay. I think that is it.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Perfect. In terms of just like general feedback on how everything is going. Does the team feel good? Do we feel like we've we're sort of proceeding towards like a good solution for the team or are there still some gaps for us to address?
+
+Emily Hong (emily.hong@filtrous.com):
+  Sorry… it's going well. I think it's we just need to get used to everything being separated into these inboxes here because we have to check this one. And then we have to check this one. And then we also have to check our individual mailbox. But other than that, I, so what I've been doing is I've been like assigning Mackenzie something and then the second I assign it, I tell her to like if she starts working on it to click on pending. So, yeah, I think I'll look more into the analytics because before I didn't know that there were two views. Actually, I thought it was just one and then… we'll look at that. Let me see… like this one like these ones are like not, these… are spam ones. And this one was calculated into the analytics or two hour response when it was just spam.
+
+Emily Hong (emily.hong@filtrous.com):
+  But I think we changed it, right? We changed it. So it won't do that anymore. It'll just automatically be closed.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  That is correct. Moving forward. That could be the.
+
+Emily Hong (emily.hong@filtrous.com):
+  Case. Okay. I'll okay. I'll play around with it and see if there's anything else, I could do for it.
+
+Emily Hong (emily.hong@filtrous.com):
+  Sure.
+
+Emily Hong (emily.hong@filtrous.com):
+  Like these ones, dude, we were going to do front too. I'm going to unsubscribe. I'm.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  sorry.
+
+Emily Hong (emily.hong@filtrous.com):
+  We were going to try front too sure as well… but I… feel like we have too small of a team to do to utilize something like that, but yeah, I'll go ahead and play around with it. And then should we set up another meeting?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. So do you want to do like middle of next week just before the trial expires just to see how things are, and what if there are any other questions and then do like a check in and design? Oh.
+
+Emily Hong (emily.hong@filtrous.com):
+  Yeah. What about like the NPS surveys?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. You can set that up in the admin panel. It's called csat. On our end. You can definitely go in and set that up.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, in admin panel, same place where you went to find the automations. It will be in the exact same spot. So you click on shared inboxes.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Click on orders. There's csat right there. It says, updated. Yeah, that's the NPS survey. So you can, if you want to put it on, you have to toggle it on at the top, right? And then you can configure it.
+
+Emily Hong (emily.hong@filtrous.com):
+  Survey email after a conversation is closed.
+
+Emily Hong (emily.hong@filtrous.com):
+  So, when it says csat survey is added manually in the emails, it's just on the bottom of the reply or?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, you can manually add it or send it in all emails or you can also send a separate csat survey email at the end of, when a conversation is marked as closed.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So that's completely up to you. So you have three options. And then you can choose which ones they are, and you can send it.
+
+Emily Hong (emily.hong@filtrous.com):
+  I see. Okay, I'm going to play around with that later.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Sure.
+
+Emily Hong (emily.hong@filtrous.com):
+  And then, okay. And then if I have any other questions, can I reach out to you? You can reach out to.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Me and you can also like we mentioned yesterday, you also have access to our chat support team. Both of us are available to you. The chat support team is just in that little side panel on the top right? And then in terms of another call next week does maybe sometime on Tuesday at the same time work?
+
+Emily Hong (emily.hong@filtrous.com):
+  Yeah, that works. Let's do Tuesday at like 11 30?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  One second. I'm just checking.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, same time, right? Yeah, perfect. Same time that we started today. Perfect. So I just sent you an invite for Tuesday at the same time. And like you said, in the meantime, if any other questions come up, let us know.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay, perfect. Perfect. Okay. Thank you so much. Jeevan.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Thanks, Emily. Hope the testing goes well and we can talk next steps next week.
+
+Emily Hong (emily.hong@filtrous.com):
+  Okay, perfect. Thank you.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Have a good one.
+
+Emily Hong (emily.hong@filtrous.com):
+  You too. Bye.

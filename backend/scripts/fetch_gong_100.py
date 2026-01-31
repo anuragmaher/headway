@@ -65,7 +65,7 @@ def fetch_gong_calls(
     days_back: int = 90,
     base_url: str = "https://api.gong.io",
 ) -> List[Dict[str, Any]]:
-    """Fetch calls from Gong API."""
+    """Fetch calls from Gong API with pagination support."""
     try:
         to_date = datetime.now(timezone.utc)
         from_date = to_date - timedelta(days=days_back)
@@ -74,28 +74,56 @@ def fetch_gong_calls(
 
         url = f"{base_url}/v2/calls/extensive"
         auth = (credentials["access_key"], credentials["secret_key"])
-        payload = {
-            "filter": {"fromDateTime": from_datetime, "toDateTime": to_datetime},
-            "contentSelector": {
-                "context": "Extended",
-                "exposedFields": {
-                    "parties": True,
-                    "content": {"structure": True},
-                    "interaction": {"speakers": True},
-                },
-            },
-        }
 
-        response = requests.post(
-            url,
-            auth=auth,
-            headers={"Content-Type": "application/json"},
-            json=payload,
-            timeout=60,
+        all_calls = []
+        cursor = None
+
+        while len(all_calls) < limit:
+            payload = {
+                "filter": {"fromDateTime": from_datetime, "toDateTime": to_datetime},
+                "contentSelector": {
+                    "context": "Extended",
+                    "exposedFields": {
+                        "parties": True,
+                        "content": {"structure": True},
+                        "interaction": {"speakers": True},
+                    },
+                },
+            }
+
+            if cursor:
+                payload["cursor"] = cursor
+
+            response = requests.post(
+                url,
+                auth=auth,
+                headers={"Content-Type": "application/json"},
+                json=payload,
+                timeout=60,
+            )
+            response.raise_for_status()
+            data = response.json()
+            calls = data.get("calls", [])
+
+            if not calls:
+                break
+
+            all_calls.extend(calls)
+            print(f"  📥 Fetched {len(calls)} calls (total: {len(all_calls)})")
+
+            # Check for more pages
+            records_info = data.get("records", {})
+            cursor = records_info.get("cursor")
+            if not cursor:
+                break
+
+        # Sort by start date descending (latest first)
+        all_calls.sort(
+            key=lambda c: c.get("metaData", {}).get("started", ""),
+            reverse=True,
         )
-        response.raise_for_status()
-        calls = response.json().get("calls", [])
-        return calls[:limit]
+
+        return all_calls[:limit]
     except requests.exceptions.RequestException as e:
         print(f"❌ Error fetching Gong calls: {e}")
         return []

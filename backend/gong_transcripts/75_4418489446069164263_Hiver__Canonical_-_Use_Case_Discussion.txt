@@ -1,0 +1,415 @@
+================================================================================
+Call: Hiver <> Canonical - Use Case Discussion
+Date: 2025-11-12T17:29:46+05:30
+================================================================================
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  hey, Mukhtar. Hello. How are you?
+
+Leander F (leander.f@grexit.com):
+  Hey, I'm doing good. I'm doing good. How are you doing?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Good. I just came out of a vacation. So just trying to catch up on everything.
+
+Leander F (leander.f@grexit.com):
+  Nice. I know I asked you this last time, but for some reason, I can't remember where did you go on vacation?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  I'm staying home. I have a little baby, so.
+
+Leander F (leander.f@grexit.com):
+  Wow, the best time ever. Congratulations on that. Thank you. Awesome. I hope you've been getting some good amount of sleep though.
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  You wish?
+
+Leander F (leander.f@grexit.com):
+  Awesome. I'm wishing you all the best with that. Yeah, thanks. All right. So pleasure to meet you once again.
+
+Leander F (leander.f@grexit.com):
+  And while the primary focus of today's conversation is going to be, you know, just revisiting your team's use case since it's been over a year, I, you know, spoke about your team's use case. A couple of things. I also wanted to check with, you know, and I'm not sure if you would be the right person or if ban would be the right person. But nonetheless, you know, since you manage operations, I wanted to start by talking about the AI feature suite, you know, just looking at your usage, I know that your team, the accounts receivable team and the accounts payable team, you all use AI tagging pretty heavily. So how's that been working so far? Especially for the business service team right now?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  We've used it for a very specific case where we wanted to direct certain emails to our team. So we were tagging any escalations for our Vienna, upcoming Vienna sprint with a specific tag and then it would automatically route it to one of us. But I think that's the only one that we have been using, but it was a lot of emails, a lot of, you know, traffic going through that one. So yeah, it was pretty handy because… I don't think we were using tags a lot, and this kind of helped reintroduce it and simplify… sort of assigning these emails to the right people especially because we didn't want everybody to handle it and people are like not used to this, right? They're just handling whatever is coming to them. So, yeah… I think manually assigning it would be, really hard for us.
+
+Leander F (leander.f@grexit.com):
+  Yeah, pretty hard, pretty time consuming a lot of effort and that's what we intended to get done with the AI tagging, right? Take up emails like this which are not easy to automate through rule based automations which are keywords and enable the AI to go ahead and do that heavy lifting, sort, the right type of emails, tag it accordingly, through which you can then build a workflow in this in your particular use case. I know you have an automation to just automatically assign these tracks between two or three people that were in charge of that specific Vienna event, right? Cool. And by the likes of it, by what you mentioned, you're telling me for the most part, it worked really well. I know that initially it did not tag the historical tags but our engineering team worked on it as a special one time requirement and we, they went ahead and had those historical tags also tagged for the Vienna sprint escalation use case. Yeah.
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Thank you.
+
+Leander F (leander.f@grexit.com):
+  Awesome. Cool. So that's one thing that is definitely adding value. And the reason why I ask about this is right? Because we also having a conversation with Claudia, your colleague from the… procurement team because as you, as I did mention last time that the AI feature suite is an add on.
+
+Leander F (leander.f@grexit.com):
+  It's not included in your plan while it is priced at 20 dollars per user per month. We can definitely, we are definitely open to working out on a discounted pricing. So we are flexible on that front. As long as it's adding value to your team's use case. So in order to have this conversation in a deeper way, right? Especially from the commercial standpoint, how do you think we should proceed with it?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Well, I cannot make a decision on the financial side of things. What I can tell you is that is what I know, right? That we're pretty much locked in terms of our budget and it's extremely unlikely that we would be like we would be allowed to spend any extra on our tooling right now. On the usefulness side, it's of course, it's useful. It's something that, you know, we don't need to worry about asking people to do something. We just assign it to them directly. It's easy. But I, maybe if Iban comes, he can clarify a bit more but I'm pretty sure it's extremely unlikely that, you know, we would be able to afford extra spending now.
+
+Leander F (leander.f@grexit.com):
+  Okay, perfect. So yeah, we can dive deeper into the commercial side of things again. I'm not the one who manages this. I just wanted to set the right expectations. You know, when the time comes to have it, you all should have that at the back of your mind. Yeah, also another great use case that I thought for AI tagging, right? And this is one of the big pain points that you all had, you know, was these last minute changes that happened with flight bookings, visa related issues. And there's no way for your team to like kind of escalate, these scenarios so that you can have like a quick response time for these type of emails. And what can really help you is AI tagging escalating these emails so that if an email is tagged urgent through the definition of why it needs to be tagged urgent, then set up like maybe a 10 minute or a 15 minute SLA, so that if it's not responded to within the 10 15 minute timeframe selected notify.
+
+Leander F (leander.f@grexit.com):
+  So, and so within the team so that you all can quickly act upon it, I think that would be another great use case that you all should definitely give it a shot.
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  It's I would say yes when we're really swamped with stuff to do, right? I came to a realization, I guess that our volume is not as high and that is why whatever we do with prioritization doesn't help a lot because we always have people to answer almost immediately, right? So first response time I believe for us should be really low… you know, last a while to close the conversation, but it's almost always picked up. I would say immediately, that is why I feel like it's not like my efforts. I'm used to doing this kind of stuff, right? Doing the prioritization and stuff, but it just doesn't add much at this time. So I'm not exactly sure. I think that this automatic… tagging thing is most useful for us when we need to tag something like we specifically… want certain people to handle it, which is not very common in our usage.
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  But it almost always happens with this escalation, things which are for specific events specific, you know, sprints which we want to transfer from our executive assistance team to our travel team, which is much smaller, but it's kind of it's what's getting us a lot of insights lately.
+
+Leander F (leander.f@grexit.com):
+  Okay. And I believe that the travel assistance team is also a part of hiver, right? Is it the Ea?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Yeah, yeah. It's we have, it's like an internal thing. We don't have any differentiation I believe in inside hiver, okay?
+
+Leander F (leander.f@grexit.com):
+  Like it's like a smaller sub team within the existing team and no, not really a different shared inbox. That makes sense. Yeah… another thing that we're building with the AI feature suite is called AI tasks. This can be super useful when it comes to doing repetitive works work again and again, right? So, you know, something that follows a pretty linear set of steps in order to get an action done. What it would do is you can automate all of those one, two three four five steps and just have the AI task or the AI agent close the loop for you rather than having human intervention for these type of emails, right? So, but I'll come to this at a later time. I think today, when we are exploring your use case, once again, there may be a need for it, and I can highlight it if at all that need comes up.
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Okay.
+
+Leander F (leander.f@grexit.com):
+  Awesome. So, just based on my previous conversation, I know that whenever internal specifically internal stakeholders reach out to you, they reach out to your team either through Gmail, or mattermost, right? So in terms of a split, right? Let's say X amount of communication is done on Gmail. X amount is done within mattermost. What does that split look like today?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Let's see, give me a sec.
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Let's say yesterday, we received six only requests through mattermost. Okay. And I believe we must have received a lot more through email.
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  If I put yesterday's date… oh, it's only 12 new conversations yesterday through email, but yeah, I would say mostly it's through email… fewer through mattermost. But it's very much dependent on… time of the year because right now we're just finishing a sprint this week, people are coming back from an event. So we're not expecting much interaction at all. Whereas right before the sprint or when booking travel for sprints, it's our peak time. Let's see just out of curiosity. I want to look at a date when we were booking?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Not that much. It's 30 emails on the 20 second. So around 30 new conversations.
+
+Leander F (leander.f@grexit.com):
+  Okay. And in mattermost, was it like half of that or?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  I would say it's always static because in mattermost, we're not receiving requests to book it's. Usually, you know, smaller questions. So if I'm looking on the 20 second, I'm going to need to scroll a little bit.
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  It's seven requests on mattermost.
+
+Leander F (leander.f@grexit.com):
+  Okay. So mostly if I had to break it down very broadly, I would say like one third is in mattermost and two thirds in hiver through Gmail. Yeah, in.
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Normal times. Yeah, I would say it's a bit more in email during peak times.
+
+Leander F (leander.f@grexit.com):
+  Okay. So firstly, you know, just to revisit this conversation from the start or the use case from the start… you did mention you have busy times, right? Are there certain months in the year that is busy or is it like ad hoc depending on whenever the team decides?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  It's not always predetermined. It depends on when we send out the invitations for people to book, right? So, for Vienna, it was end of September through, you know, mid of October and that's where the peak happened. If it's you know, it could have been earlier. It could have been later, but that's when the invitations were sent out, but it could be different next year.
+
+Leander F (leander.f@grexit.com):
+  Understood. So there's no seasonality to this. It is, it keeps changing depending on whenever there's a requirement to get a certain event done. It's not like.
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  It's always four events, four large events per year. So one is usually happening in January, one in may, one in July and one in October, and about four months ahead of the event that's when we start booking the travel. But there is no specific set time when the event happens and when the invitation is called out, so it's more or less seasonal, but we cannot say the specific dates.
+
+Leander F (leander.f@grexit.com):
+  Understood. Now that makes sense. You know, so basically, at least once a quarter is when you have this peak time period for one or two weeks. And for the rest of the quarter, it's not that busy. That makes sense. Yep, hey, Iban, thanks for joining the call. I know it's a super busy day for you. Sorry. Hi… no, no, that's absolutely fine. I was just talking to Mukhtar about your use case just to understand, you know, when are the peak times, when are the low times for your team? And also understanding what is the split of communication between mattermost and Gmail. When your team, you know, is interacting with internal stakeholders, speaking of stakeholders, right? I wanted to understand like generally, who are the stakeholders? I know it's employees for the most part. But besides employees, when you have external stakeholders reaching out to you, who are they? Like, what are they?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  It's almost always our travel management company. So the partner we have for travel, we sometimes get communications from the venues, some communications with smaller vendors, things like airport lounges, visa support vendor, things like that.
+
+Leander F (leander.f@grexit.com):
+  Okay. And when these, you know, these travel agencies reach out to you whenever you're communicating with them. Do they have like a certain portal with canonical or is it just done through a Gmail interface or an email interface rather?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Mostly email interface? No?
+
+Leander F (leander.f@grexit.com):
+  Okay. Or what do you say like previously in the past, did they have access to a specific portal or something of that sort?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  No, but we might be changing the TMC soon and that might bring changes as well. So can't say for sure now, but currently, it's all going through emails. Yeah.
+
+Leander F (leander.f@grexit.com):
+  Okay. And just from my understanding, you know, for future reference, like when you say you're changing the TMC, do you all, have you all planned something different? That would, the way the communication would be done with the travel agents, for example?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  With the travel agent, it's unlikely we don't expect them to go through a portal and then select the reason of contacting us and stuff, right? We would expect them to just send an email to us and then we would just pick it up by the sender's domain, I guess.
+
+Leander F (leander.f@grexit.com):
+  Yeah. Okay. And for your internal stakeholders, for your employees, whenever they want to reach out to you, how does that workflow look like? Like let's say they have an, one of the requirements is to maybe issue assistance with a visa for an upcoming event, how does that look like?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  They typically can direct their request direct straight to the vendor. So for visa that's what happens if they get any additional questions, then they might reach out to our team with their questions and we would support them. But currently, I don't think there's anything separate for visa requests. I guess, the only separate like specific flow that we have is for travel booking, which is where people would submit a form. It would generate, automatically generate an email for them, which would come to their inbox, and then they would forward it to, the TMC or the person might, you know, forward this email to us with additional questions that they might have. So it's not like we participate in every single interaction. We only come in when there are questions issues, problems.
+
+Leander F (leander.f@grexit.com):
+  Understood. That makes sense. That makes sense. So when you say TMC, I'm just assuming this is travel management company. Yeah, yeah, clarifying, no, the reason why I was asking you about this is right? Because in hiver, we do have a customer portal type of an ability where, you know, you can host this customer portal on any of your platforms. And essentially, you can build a workflow which is again a form with a dropdown. So, you know, help them select specific categories and then build out an entire form which is then received as an email on your Gmail interface. In hiver. What I wanted to understand is if this can be added to your workflow at any point when it comes to capturing that information?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Well, we currently use Salesforce to capture the information from those forms and we have it integrated with our analytics tools, right? So, I think we're quite happy with how it works right now. I don't know, I assume it wouldn't be too hard to integrate it in terms of data collection with hiver, but… I don't know, if there is need for that right now because we're already getting that data, from the platform we use.
+
+Leander F (leander.f@grexit.com):
+  And so, just to take a step back, if let's say, if I was a part of your team, I needed to raise a request, I would log into my Salesforce interface, go to a specific section and then raise the form within Salesforce. Is it, or how does that work?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  They wouldn't need to log into Salesforce. It's like a backend thing for us. So they would just open a portal, a web page. Basically, there was a form there. Salesforce would collect it, but people wouldn't even know it's Salesforce, I guess.
+
+Leander F (leander.f@grexit.com):
+  Okay. And the reason why you prefer it this way is mainly for the way you all are collecting data through Salesforce, making it easier for you all to manage that data. Interesting. Okay. And the front end part, is it like a custom form that you'll have already built out or is it hosted on a platform or?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Yeah, it's already. I'm not very technical. So I'm not sure about the specifics, but yeah, it's a built out form. We customize it sometimes, you know, make tweak it a little bit, but, yeah.
+
+Leander F (leander.f@grexit.com):
+  Okay. Nonetheless, you know, in case you'll plan to make any changes, what I will let you know is that we do have a portal interface which can be again a web page you can share with your team members. It would have an initial sign in requirement. Once the sign in is done, they can then go ahead and fill in the form depending on your requirements. And then that data can be captured as a ticket within hiver, so that your team can then work on that ticket going ahead on the front end. The employees can also track the status of the ticket and show it's assigned to a specific person. And any communication on that ticket can be viewed within that specific interface. Yeah. So just wanted to let you know that is a possibility. And again, this is included in your plan. So it's not like I'm trying to sell you something else or something like that. It's included in your current plan. Cool. Now, once that, okay, I think Hira, I'd like to just understand what are the different type of emails that your team majorly manages within the shared inbox?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Yeah. Again, I was, I once attempted to categorize them and it's really difficult because it's a lot of, you know, nuanced ad hoc questions that just keep coming up, but it's usually related to travel events, expenses, visas. What else… that would make 95 percent of all the questions I'd say?
+
+Leander F (leander.f@grexit.com):
+  Got it. I also believe you'll deal with questions regarding reimbursements, personal, travel plans, and things like that, right? Like just based on, yeah.
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  So that would fall under expenses as well because.
+
+Leander F (leander.f@grexit.com):
+  Yeah, that makes sense. Makes sense. Yeah. And I think Iban that's one thing you really wanted to work on when we had initially met. That is the taxonomy of the type of emails that your team has managed, right? And at some point, I think you'll have moved away from this. You'll have stopped building on the tags, what had been the roadblock or what is the roadblock because of which you did not go into that direction of building tags and categorizing emails further helping you get the right data points?
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Well, I guess it's time on our side to really build a taxonomy and make sense. I mean your tool is still a labeling tool, right? So it requires on our side to have the taxonomy really well defined and well maintained. And we have time to do that.
+
+Leander F (leander.f@grexit.com):
+  That's a pretty valid point. And that's why I was also talking to Mukhtar earlier that the AI tagging can get that done.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  For me, yeah, the AI, I mean, I think I told you the last time the price point of that is way above what we expect. So we are not moving towards that.
+
+Leander F (leander.f@grexit.com):
+  Understood. And again, Iman, in terms of commercials, right? I know that 20 dollars is the price, but we are not going to sell it to you at 20 dollars. That's something we can discuss further at a price point that meets.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Leandro. We had plenty of discussions and I believe you had one with Claudio recently as well. We are not very comfortable with the current pricing either like the 51. It's still quite a jump on what we would expect to pay, right? So I'm not going to push even if it's five additional dollars per.
+
+Leander F (leander.f@grexit.com):
+  User.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  per month. I think it's still way too much for, I mean, we don't have such a big volume really to make this investment like half a good return. I think we can keep our head afloat with what we have today without the AI. So, but, you know, it's time on our side. I mean, we don't have time to do like really an AI taxonomy. We don't have time either to really be… you know, managing the AI.
+
+Leander F (leander.f@grexit.com):
+  Yeah, because Yvonne, when you say you don't have time, I'm helping you save time, I'm helping you recover time for your.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Team. I know it's more the prep work. I know it will save us time, in the after. But right now, we are really short staff. So we are really, this is not a priority for us.
+
+Leander F (leander.f@grexit.com):
+  Got it. Okay. So, I think the key reason here is because you all are kind of understaffed right now. That's why you don't have the time. Probably once your staffing has met the required levels, then you would have the time to set it up if we take away the expense factor that is.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Yeah, that's that could be the case. We don't have staff for a while. So, other staff for a while, so.
+
+Leander F (leander.f@grexit.com):
+  That's that's right? So.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  The priority, right? I mean, we have bigger Fish in the pond right now. Got it. No one in the company is asking me how many tickets I get from this specific thing?
+
+Leander F (leander.f@grexit.com):
+  Okay. So I'd just like to understand for your specific team again, this is the business service team that I'm concentrating on because you'll receive, you'll, tend to see one thing you mentioned is that the number of emails that come in are pretty low compared to what you were initially expecting. So, what takes up most of the time of the team that you're.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  what is the volume you mean?
+
+Leander F (leander.f@grexit.com):
+  I was asking like what takes up the most amount of time from your team? What activity?
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Yeah. I think we talked about this a few times. There is… a hybrid right now between mattermost and emails that we get… there is a lot of it really depends right now, like we just went through a big event like 2000 people attending. We are right now answering questions which are basically about expenses.
+
+Leander F (leander.f@grexit.com):
+  Okay. Two months?
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  From now, that's going to twist to only questions about travel. So it's really seasonal. Okay? It really depends on, so we are a very reactive team. If you ask me. I mean, we are not a team. I mean, I'm coming from a support background, right? So I used to manage like teams of 200 people with, you know, thousands of tickets per day. Obviously, if you don't have a taxonomy, you are not moving, right?
+
+Leander F (leander.f@grexit.com):
+  Yeah.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Here is not the same. I mean, this is a small volume from what I would say, like the return of the investment of really categorizing and finding like little niches of opportunity is not our top priority right now because we see priorities on other things, right? So, yeah, yeah.
+
+Leander F (leander.f@grexit.com):
+  And on those lines, also, I was talking to Mukhtar again, you know, earlier on the call, we are developing a new feature called AI tasks. Again. I know I keep coming to AI, so please forgive me for that. But yeah, we are developing a feature called AI tasks wherein it can automate an entire workflow end to end wherein a member just needs to look at the final outcome of the product of the email drafted. And just, you know, confirm if this is good to go and click on send, right? So to give you an example, let's say if it's a question regarding an expense, and if this is like a standard set of questions that your team manages with what the AI task would do is it would go through the body, read the email source, the right information from a knowledge source draft out that email, put the draft in place. The end user, your team member needs to just look at the email, ensure that the email drafted is correct and click on send at busy periods. Do you think such type of functionality will help your team save time?
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  I mean, we have something like that already. I mean, we use Jira internally, so we have some automations similar to those ones. Also, we have some Google apps script, yeah, automations built for some email automation, things for certain workflows. So we have a certain degree of that, okay, for very specific cases that we can really, we can use the help of automation.
+
+Leander F (leander.f@grexit.com):
+  Okay. So I think then what I would like to understand like when I'm also going through your use case right now, you know, what are the areas that are currently blocked in within hiver that I can help your team unblock itself? Yeah.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Price… come?
+
+Leander F (leander.f@grexit.com):
+  On, I think I want to have that conversation now only in July. I.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Mean, I want to be honest with you. I think we are going to get to a point into a renewal next year or that I cannot sustain? Like the price event that we had this year?
+
+Leander F (leander.f@grexit.com):
+  Okay.
+
+Leander F (leander.f@grexit.com):
+  Sorry, clear.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  And loud, I cannot price point.
+
+Leander F (leander.f@grexit.com):
+  I'm definitely happy to work with you and we can definitely have that conversation. In fact, we had a word with Claudio and we've also given him a couple of options wherein we can reduce the price for him based on the number of users he's adding. Because as one thing that's getting clear for us is that you all are definitely adding users and, you know, initially we had a conversation of having only 29 or 30 it's now come to 34. He did speak about getting up to like around between 45 to 48 users. So, we can definitely work on the pricing when we go towards a bucketed model that's something that we are open to. But yeah, keeping pricing aside a bond like as a, as your customer success manager, how can I be of a value to your team?
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  I don't know, give us the AI for free.
+
+Leander F (leander.f@grexit.com):
+  I'll try and get that done. I'll try and get that done. I don't know.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  I don't know, to be honest as I said, like right now we are more on different priorities. As Mukhtar was saying, like we are trying to redesign the whole travel program within the company that's our biggest spend… that's the biggest line of my spend. I'm not paying a lot of attention right now to the ticket management solution opportunities. I don't know if Mukhtar has any, anything top of mind, but our focus for the next, I would say six months is very clear needs to be all hands on deck on the travel side of the business. I don't think we'll be putting a lot of effort… or time into operational ticketing things right now.
+
+Leander F (leander.f@grexit.com):
+  Makes sense. That makes sense. Thanks. Thank you for giving me the direction in where you all are headed to. While, you know, the ticketing side of it is a large part of your operations. I see that you're trying to remodel the entire way things are working for your team. So that going ahead in the future, it's more streamlined and better designed out. Yeah, coming back to our conversation regarding the use case, right? So, I've got to understand the different type of emails your team manages. I also wanted to understand how your team interacts with tools like Jira, let's say they receive an email conversation. Why would a team member want to look at Jira when responding to an email?
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Do you want to go through that one?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Yeah. Well, we use it for projects mostly. So, I mean, what does Jira do, right? Track your projects? Track their status? So if there's anything that's related to projects that's where we look, if we get any requests from the vendors, oftentimes, we also can give them an update based on what the status of a certain thing is in Jira, the comments and, you know, so on… basically that's it, I wouldn't it's a lot of sources of information that we have, and that's you know, why I struggle a little bit to answer some of these questions of yours is because we don't have enough volume to say, hey, 20 percent of the requests require us to go here and check Jira for this kind of information, right? We have a fairly small volume, and that's why it seems like every interaction is new and kind of unusual. With the exception of the ones I mentioned, right? Where we get questions about travel, right? Can I book earlier? Can I book later? Can I change this booking? Do you approve my booking to be more expensive? So on expenses, things like can I spend more on this? When will I get dreamburst? But I would say that we get very few questions which are standard, right? Which can be covered by things like faqs, or covered by the policies that we have, oh, internal customers. So I would say they're doing a pretty good job at actually researching and checking the information available before actually coming to us and asking their questions.
+
+Leander F (leander.f@grexit.com):
+  Okay. That makes.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  sense. We got a 1,000 of conversations. Sorry?
+
+Leander F (leander.f@grexit.com):
+  Sorry, Ivan, can you please repeat that?
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  No, that we got, I was looking at the stats. We got a 1,000 conversations in October. Okay? And it's a busy month for us because we are in this event. Yeah. So it's not that many.
+
+Leander F (leander.f@grexit.com):
+  Yeah. Okay. A 1,000 conversations. Yeah.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  So about 30 per day, right? So, yeah, across 30 people that we are in the team roughly, One ticket per day.
+
+Leander F (leander.f@grexit.com):
+  Yeah, makes sense. That makes sense. It's not that large of any. I mean, it's a very minimal. I used to get.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  A 1,000 in an hour.
+
+Leander F (leander.f@grexit.com):
+  But again, you had like a 200 member team. So that was a different. Yeah, yeah.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  I mean, if you look at the scale, it's different.
+
+Leander F (leander.f@grexit.com):
+  Right. It's different. Yeah, that's right? That makes sense. Just a quick question. You know, since Jira is one of the tools that your team uses that you mentioned, I know integrations is kind of hard to get by when it comes to, you know, your organization because I'm trying to get an integration with the Netsuite ERP for the finance team and it's quite a hurdle. But just if that was not in the picture, do you think an integration with a tool like Jira would add value when managing email tickets?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Maybe eventually. But I think we're still pretty fresh in Jira, we started using it fairly recently, and we are still kind of designing our board and the workflows there. So potentially, once we are more confident in how we're using it then, yes. But right now, you know, complicating it would just be counterproductive.
+
+Leander F (leander.f@grexit.com):
+  Understood. Okay. And all right. And just coming back to the initial conversation, I know like for expenses, you'll use a tool like expensify. What are the other tools that your team would use? When, you know, let's say they're responding to a particular email or information to an email?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Usually just spreadsheets. Honestly. Yeah, just a lot of spreadsheets.
+
+Leander F (leander.f@grexit.com):
+  Okay. So they're referring to data from various spreadsheets, copying the data, pasting it and then responding to an email if it calls.
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  For it, yeah.
+
+Leander F (leander.f@grexit.com):
+  Okay. And let's take a very general email that comes in, you know, question regarding expensify or a specific ticket or anything on those lines. How does that entire email workflow look from right from start to end?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Well, usually they would need to understand the problem, right? What is the issue that the person has? If it's something that's already covered by the policy, then it's a very quick and simple answer to basically paste the policy or explain it, paraphrase it. I hope the person understand or refer them about where to look. If it doesn't have a policy or a question, you know, is about gray area, then we don't have a specific flow for approval, right? The person would make a decision or refer to someone ask someone for a second opinion and then respond to the person. Quite often, this would also be recorded internally for us to take note and potentially add it as a future guideline for updates in the policy itself.
+
+Leander F (leander.f@grexit.com):
+  Okay. And then your team member sends out the email communication, changes the status to close, assuming that email has been resolved, is that correct?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  Yeah. If they're not expecting any additional responses then, yeah, they would close it.
+
+Leander F (leander.f@grexit.com):
+  Okay. And the policies again, are all stored into Google docs, I believe, which they review that information and send it out. Makes sense. Cool. And lastly, in terms of any improvements that you would like to see in hiver, especially from a feature offering standpoint, or just to better your processes, what would that be?
+
+Mukhtar Mammadov (mukhtar.mammadov@canonical.com):
+  I don't have a very good sought out answer to that, to be honest as a personal user perspective thing, right? I'm finding it pretty hard to manage between my inbox and the hiver inbox in terms of if I'm searching, let's say for an email that was sent to a specific person… my results would be for both my emails and the team's emails. And I know I could, you know, manage through tags and settings and stuff. I think it would help to have… some sort of easy way to navigate between those. I'm not sure if there exists one yet.
+
+Leander F (leander.f@grexit.com):
+  Okay. For searching emails.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  I have an aesthetic one if you want Lando.
+
+Leander F (leander.f@grexit.com):
+  Sorry, Ivan. Yeah. Go ahead I.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Have a very aesthetic thing that bothers me quite a lot.
+
+Leander F (leander.f@grexit.com):
+  Yeah, yeah. Please go.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Ahead. Are your, so when you open a thread or an email that has been going through hiver, I really don't like to see your, let… me share my screen. That would be easier to tell you what? I don't like this is more aesthetic. Yeah, someone that has been working on Gmail for many.
+
+Leander F (leander.f@grexit.com):
+  Years. Yeah, I'm guessing you're going to say the tags at the top or the labels at the top this?
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Is terrible man.
+
+Leander F (leander.f@grexit.com):
+  Yeah. The labels on the top I.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Don't know who is doing this sign, but, you know, this needs to go away.
+
+Leander F (leander.f@grexit.com):
+  Oh, yeah. The code over there, right? That entire, I.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  mean, there is a lot of status things here. Yeah, I don't know you have it here. So why, Why?
+
+Leander F (leander.f@grexit.com):
+  Yeah. So just to confirm Ivan, you're referring to these Gmail labels that you see on the top, right? Yeah.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Yeah. You need to find a way. I don't know if that's a negotiation with Google… you need to find a way to clean up the user experience. I mean, this had few, but I have seen some.
+
+Leander F (leander.f@grexit.com):
+  There are many now, what you're saying is absolutely right. In fact, this is something we want to hide, but then it's the way we categorize our emails, we apply Gmail labels. And then unfortunately, there's no way to hide a Gmail label. In fact, what we're doing is we are building another product called hiver Omni that works outside of Gmail. That gives us many more liberties and it does not limit us because of the Gmail interface there, we can do a lot more. So there we can… no, not a new Gmail. That is, we're not building an email client but more of an email management platform that's independent of the Gmail interface. Yeah. Two quick updates that I want to give. I know we have two minutes just to be respectful of time. One is we did have a call with Devon. We were not really able to identify any email that was assigned to her outside of her working hours. I did ask her to look into it once again, send me a couple of emails. I believe Iban, you are a part of that email thread. If, in case you have any other team member that's facing that issue, right? Wherein an email is being assigned to them while they are offline, please let me know. I can definitely escalate that, get on a call and have that rectified as soon as possible. Yeah, that's one thing, the second thing is, you know, for future use cases wherein you want to assign an email that's tagged in a specific manner between a set of people, like for the automation you've set up for the Vienna tagging system. What you can now do is you can also assign emails not just on a load balancing system but you can also assign these emails on a round Robin basis. Yeah. So that this ensures emails are assigned equally within the set of two or three people in the team and not whoever has the least amount of emails in an open status. So that's a quick update that we've made to the team. Yeah. So now, when you select the assign amount feature, you'll get the option to choose between round Robin or load balancing, giving you a better way to assign that email amongst each other. Yeah. All right. Any other questions before we end today's? Meeting?
+
+Leander F (leander.f@grexit.com):
+  All right. Taking the silence as a, no cool. What I would like to do is again, you know, as your customer success manager, meet with you at least once a quarter. Can I put up a tentative meeting for sometime in Jan, come the new year? I know December might be a bit busy for you all.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  Yeah, my only ask if it's after… I'm on a business trip from the twelfth to the 20 fourth.
+
+Leander F (leander.f@grexit.com):
+  Okay. So.
+
+Iban Vazquez Cabeza (iban.vazquez@canonical.com):
+  It can be the week of the 20 sixth would be better?
+
+Leander F (leander.f@grexit.com):
+  Yeah, that works. Perfect for me. I can put up a call for the 20 eighth of Jan, around the same time, if that's okay for the both of you? Yep. All right. Thanks so much for your time. Really appreciate you taking the time out. I hope I was able to add value. And yeah, I'll see you soon. Have a great quality season ahead. Thank you, Leander. Bye.

@@ -1,0 +1,2946 @@
+{
+  "call_id": "8772136893263613489",
+  "title": "Hiver Demonstration",
+  "started": "2025-11-17T13:30:26.166+05:30",
+  "duration_seconds": 1912,
+  "call_metadata": {
+    "id": "8772136893263613489",
+    "url": "https://us-31545.app.gong.io/call?id=8772136893263613489",
+    "title": "Hiver Demonstration",
+    "scheduled": "2025-11-17T13:30:00+05:30",
+    "started": "2025-11-17T13:30:26.166+05:30",
+    "duration": 1912,
+    "primaryUserId": "494222434061005335",
+    "direction": "Conference",
+    "system": "Google Meet",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://meet.google.com/nci-ntwf-fgn",
+    "isPrivate": false,
+    "calendarEventId": "ccme0atic8l311ulnrjshn6tak@google.com"
+  },
+  "parties": [
+    {
+      "id": "3694310886231933892",
+      "emailAddress": "mike@primalvideo.com",
+      "name": "Mike Brown",
+      "title": "Co-Founder",
+      "speakerId": "205101224198738337",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "173054922057",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "44138597550"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Mike"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Co-Founder"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1764189644.752
+                },
+                {
+                  "name": "createdate",
+                  "value": 1762589918.474
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1763337600.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "Brown"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "83357455"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "ORGANIC_SEARCH"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "phone",
+                  "value": "+6590252075"
+                },
+                {
+                  "name": "mobilephone",
+                  "value": "+6590252075"
+                },
+                {
+                  "name": "recent_conversion_date",
+                  "value": 1762590080.956
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Product does not meet requirements"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1762589918.474
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "salesqualifiedlead"
+                },
+                {
+                  "name": "email",
+                  "value": "mike@primalvideo.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "+6590252075",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "3760359578214603527",
+      "emailAddress": "yukta.j@grexit.com",
+      "name": "Yukta Jain",
+      "title": "Sr. Account Executive",
+      "userId": "494222434061005335",
+      "speakerId": "3857768508055073448",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "5883566334583543149",
+      "emailAddress": "jb@primalvideo.com",
+      "name": "Justin Brown",
+      "title": "Production Coordinator",
+      "speakerId": "6914165095085342844",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "173028364412",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "44138597550"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Justin"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Production Coordinator"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1763439565.716
+                },
+                {
+                  "name": "createdate",
+                  "value": 1762598957.093
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1763337600.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "Brown"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "482816349"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "recent_conversion_date",
+                  "value": 1763366430.091
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Duplicate Prospect"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1763388224.148
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "jb@primalvideo.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "3734135749294832701",
+      "emailAddress": "rakesh@grexit.com",
+      "name": "Rakesh Goyal",
+      "title": "Account Executive ",
+      "userId": "1219092317799715224",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "8772136893263613489",
+    "transcript": [
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 4605,
+            "end": 5175,
+            "text": "thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 66305,
+            "end": 66745,
+            "text": "Hi, Justin."
+          },
+          {
+            "start": 67065,
+            "end": 67525,
+            "text": "How are you?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6914165095085342844",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 68225,
+            "end": 68445,
+            "text": "Good."
+          },
+          {
+            "start": 68485,
+            "end": 68865,
+            "text": "How are you?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 69885,
+            "end": 70485,
+            "text": "Doing well."
+          },
+          {
+            "start": 70645,
+            "end": 71125,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "6914165095085342844",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 72185,
+            "end": 74245,
+            "text": "So, my business partner will be joining us, Mike."
+          },
+          {
+            "start": 74325,
+            "end": 75345,
+            "text": "He's the one that booked the call."
+          },
+          {
+            "start": 75465,
+            "end": 77025,
+            "text": "He should be here any moment."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 78015,
+            "end": 78345,
+            "text": "Okay."
+          },
+          {
+            "start": 78385,
+            "end": 79005,
+            "text": "No worries."
+          },
+          {
+            "start": 79325,
+            "end": 81665,
+            "text": "Let's wait for him and then we can get started."
+          }
+        ]
+      },
+      {
+        "speakerId": "6914165095085342844",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 82235,
+            "end": 82885,
+            "text": "Yeah, perfect."
+          },
+          {
+            "start": 83125,
+            "end": 84505,
+            "text": "I'll just make sure he's joining him."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 85185,
+            "end": 85405,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 99315,
+            "end": 99675,
+            "text": "Okay."
+          },
+          {
+            "start": 99795,
+            "end": 100175,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "6914165095085342844",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 102585,
+            "end": 103135,
+            "text": "Here he is."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 103675,
+            "end": 104035,
+            "text": "Hello?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 104705,
+            "end": 105035,
+            "text": "Hello?"
+          },
+          {
+            "start": 105075,
+            "end": 105555,
+            "text": "Hi, Mike."
+          },
+          {
+            "start": 105735,
+            "end": 106175,
+            "text": "How are you?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 106815,
+            "end": 107235,
+            "text": "Yeah, good."
+          },
+          {
+            "start": 107255,
+            "end": 107435,
+            "text": "Thanks."
+          },
+          {
+            "start": 107495,
+            "end": 107815,
+            "text": "How are you?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 108615,
+            "end": 109175,
+            "text": "Good, good."
+          },
+          {
+            "start": 109195,
+            "end": 109695,
+            "text": "Doing well."
+          },
+          {
+            "start": 109815,
+            "end": 110715,
+            "text": "Thank you so much."
+          },
+          {
+            "start": 111415,
+            "end": 113515,
+            "text": "Shall we now get started with the discussion?"
+          },
+          {
+            "start": 114015,
+            "end": 115475,
+            "text": "Expecting more people as well to join?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 116095,
+            "end": 116835,
+            "text": "No, it's just us."
+          },
+          {
+            "start": 116975,
+            "end": 117755,
+            "text": "Yep, we're all good."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 118465,
+            "end": 118755,
+            "text": "Perfect."
+          },
+          {
+            "start": 118795,
+            "end": 119055,
+            "text": "Great."
+          },
+          {
+            "start": 119055,
+            "end": 119315,
+            "text": "Then."
+          },
+          {
+            "start": 119455,
+            "end": 123555,
+            "text": "So thank you first of all for scheduling this with us."
+          },
+          {
+            "start": 123985,
+            "end": 125795,
+            "text": "Let me just quickly introduce myself."
+          },
+          {
+            "start": 126275,
+            "end": 132775,
+            "text": "My name is Yukta and I'm the senior account executive here at hiver as well as your point of contact."
+          },
+          {
+            "start": 133555,
+            "end": 135295,
+            "text": "I'll be helping you with the evaluation."
+          },
+          {
+            "start": 136435,
+            "end": 149355,
+            "text": "So, before we get started, I know you did write the whole scenario to my colleague over the email which I got a chance to go through as well, if we could just build on that."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 149355,
+            "end": 159065,
+            "text": "And if you want to sort of specifically talk about certain areas that you're currently working with massive, and what makes you sort of look out for another tool?"
+          },
+          {
+            "start": 159175,
+            "end": 160985,
+            "text": "I think we can then get started from there."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 161665,
+            "end": 162005,
+            "text": "Yeah, cool."
+          },
+          {
+            "start": 162385,
+            "end": 168065,
+            "text": "So, I guess we're a pretty small team support is not a major issue for us."
+          },
+          {
+            "start": 168175,
+            "end": 172665,
+            "text": "We have a low ticket membership and I think a lot of that, we're going to automate anyway."
+          },
+          {
+            "start": 172675,
+            "end": 182075,
+            "text": "In terms of the support stuff, what we do really like about massive is the shared inboxes being able to collaborate on drafts, all of that stuff."
+          },
+          {
+            "start": 182255,
+            "end": 190655,
+            "text": "And their AI tooling has also, they really don't seem to have a plan for it and they haven't done too much with it recently."
+          },
+          {
+            "start": 190855,
+            "end": 205245,
+            "text": "So, looking at how much gemini is progressing and their integrations with all the Google suite and everything there, I mean, it just looks like they're going to eat a lot of the AI functionality and a lot of layered on software."
+          },
+          {
+            "start": 205525,
+            "end": 222585,
+            "text": "So we would like to get back into Gmail, if we can, and that's where we were looking into hiver as an alternative for basically introducing that shared inbox team collaboration functionality back into our Gmail to get us back into that interface."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 223735,
+            "end": 224615,
+            "text": "Understood understood."
+          },
+          {
+            "start": 225015,
+            "end": 226855,
+            "text": "And how long have you been using massive?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 227965,
+            "end": 235315,
+            "text": "Oh, I would… say maybe like just in something like that, it's been quite a while."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 236415,
+            "end": 236955,
+            "text": "Oh, okay."
+          },
+          {
+            "start": 237075,
+            "end": 238415,
+            "text": "It's been a long time for sure."
+          },
+          {
+            "start": 238475,
+            "end": 239955,
+            "text": "I think four or five years."
+          },
+          {
+            "start": 240155,
+            "end": 249015,
+            "text": "And yeah, I mean, it does make sense with Gmail having its native functionalities with gemini and other parts of it as well."
+          },
+          {
+            "start": 249355,
+            "end": 261335,
+            "text": "It becomes a lot easier and native and intuitive to work out of the inbox itself rather than having a standalone… software to sort of, you know, go back in terms."
+          },
+          {
+            "start": 261555,
+            "end": 263755,
+            "text": "If I don't if I'm not wrong."
+          },
+          {
+            "start": 263895,
+            "end": 265575,
+            "text": "It's a team of five people, right?"
+          },
+          {
+            "start": 265735,
+            "end": 267935,
+            "text": "Who are currently part of this."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 269115,
+            "end": 269355,
+            "text": "Yeah."
+          },
+          {
+            "start": 269495,
+            "end": 269835,
+            "text": "Yep."
+          },
+          {
+            "start": 269875,
+            "end": 273675,
+            "text": "I think we might have six users in massive, but some of them don't even need an email."
+          },
+          {
+            "start": 273795,
+            "end": 275835,
+            "text": "So it's literally have Justin myself."
+          },
+          {
+            "start": 276015,
+            "end": 277475,
+            "text": "And then we have an ops manager."
+          },
+          {
+            "start": 277715,
+            "end": 292475,
+            "text": "We have a support team member based in the Philippines, then we have a video editor and designer, but those last two are kind of like, I can't remember if they even have email addresses internally because they just don't need to have them."
+          },
+          {
+            "start": 292555,
+            "end": 292695,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 293625,
+            "end": 294095,
+            "text": "Got it."
+          },
+          {
+            "start": 294185,
+            "end": 299655,
+            "text": "And you also mentioned about different Google groups that you have, like, would you help me understand that as well?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 300245,
+            "end": 302965,
+            "text": "So we don't actually have Google groups in massive."
+          },
+          {
+            "start": 303025,
+            "end": 309085,
+            "text": "They have shared inboxes, which you guys have the same concept, but they're not mapped to Google groups."
+          },
+          {
+            "start": 309185,
+            "end": 315845,
+            "text": "So basically, we have one, we each have our own Google account, and then we have another Google account that we're paying for."
+          },
+          {
+            "start": 315845,
+            "end": 319065,
+            "text": "That is essentially all of the shared mailboxes going into one account."
+          },
+          {
+            "start": 319385,
+            "end": 327025,
+            "text": "And then in massive, we basically say if the inbound email is to support at, then put it into this team inbox."
+          },
+          {
+            "start": 327265,
+            "end": 329605,
+            "text": "If it's to admin at, put it into this team inbox."
+          },
+          {
+            "start": 329905,
+            "end": 341425,
+            "text": "So we have this effectively rules that divvy up the emails from one Google account into whichever shared inboxes we want them to go into."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 343155,
+            "end": 343435,
+            "text": "Okay."
+          },
+          {
+            "start": 344595,
+            "end": 348235,
+            "text": "That's interesting in terms of like how does it work?"
+          },
+          {
+            "start": 348435,
+            "end": 355455,
+            "text": "I mean, these general at the rate support at the rate admin at the rate, are these like aliases under one account or how is it?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 356475,
+            "end": 358115,
+            "text": "Yeah, they're all aliases under one account."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 359035,
+            "end": 362615,
+            "text": "And these are managed by multiple people within the team."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 362905,
+            "end": 364125,
+            "text": "Yeah, depending on the account."
+          },
+          {
+            "start": 364325,
+            "end": 368885,
+            "text": "So it's actually an inbox that only Justin and I have access to like the actual account."
+          },
+          {
+            "start": 369065,
+            "end": 371505,
+            "text": "So I think we'll just call it general at primal video."
+          },
+          {
+            "start": 372305,
+            "end": 379495,
+            "text": "And then essentially from there, it just gives us the ability to keep all the admin stuff for us and have our own inbox."
+          },
+          {
+            "start": 379625,
+            "end": 391025,
+            "text": "And then we can use rules to triage that inbox and assign stuff out to the support team, to the, you know, basically to people based on their level of access."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 391925,
+            "end": 392425,
+            "text": "Got it."
+          },
+          {
+            "start": 392465,
+            "end": 405285,
+            "text": "So under general inbox itself, these are the aliases which let's say if it's a support at the rate and the email is written to support at the rate you would, it would automatically get assigned to someone from the support, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 405465,
+            "end": 406425,
+            "text": "Yeah, that's correct."
+          },
+          {
+            "start": 406605,
+            "end": 413305,
+            "text": "So, I noticed that you guys do have that functionality, but it looks like it's in your top plan, the 75 dollar a month."
+          },
+          {
+            "start": 413465,
+            "end": 416725,
+            "text": "I think it said something about rules based assignment from an individual inbox."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 418295,
+            "end": 419495,
+            "text": "Yeah, that is true."
+          },
+          {
+            "start": 419575,
+            "end": 438975,
+            "text": "But that is for, yeah, if there are multiple people that you would want to assign among let's say, if two people are part of the support team and you would want to set up the automation, where in it, if the email is written to support, and you would want to assign it between more than one individual, then, yes, that'll be part of the, I think the pro plan that we have."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 439605,
+            "end": 439905,
+            "text": "Okay."
+          },
+          {
+            "start": 440105,
+            "end": 446025,
+            "text": "So now, just to confirm in our circumstance, we would basically want to, I mean this is with our current architecture, right?"
+          },
+          {
+            "start": 446125,
+            "end": 456745,
+            "text": "They may very well, if we do decide to go ahead with hiver, be a re engineering process where we have to migrate across to Google grips and have each of those mapped to a shared inbox separately."
+          },
+          {
+            "start": 457125,
+            "end": 466255,
+            "text": "But in the current build or the current setup, then we would essentially be using an individual inbox, which is the, our general ad account that nobody actively uses."
+          },
+          {
+            "start": 466375,
+            "end": 476715,
+            "text": "But as a catch all mailbox, and then assigning those emails out to shared mailboxes, being the support, shared mailbox, or the, you know, the admin mailbox."
+          },
+          {
+            "start": 477275,
+            "end": 478245,
+            "text": "Does that make sense?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 478965,
+            "end": 479635,
+            "text": "Yeah."
+          },
+          {
+            "start": 479855,
+            "end": 482795,
+            "text": "So in hiver, you don't necessarily have to have Google grips."
+          },
+          {
+            "start": 483235,
+            "end": 488655,
+            "text": "It could be a normal Gmail account as well that you can create a shared inbox on."
+          },
+          {
+            "start": 489275,
+            "end": 494475,
+            "text": "So that is something we can do the general at the rate inbox that you're talking about."
+          },
+          {
+            "start": 494595,
+            "end": 496255,
+            "text": "It's a Gmail account, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 496655,
+            "end": 497615,
+            "text": "It's a Gmail account."
+          },
+          {
+            "start": 497735,
+            "end": 503755,
+            "text": "Yeah, the only, the main thing that I could see is as a breaker there."
+          },
+          {
+            "start": 503915,
+            "end": 505015,
+            "text": "And maybe I'm completely wrong."
+          },
+          {
+            "start": 505155,
+            "end": 510775,
+            "text": "Is that it, from what I saw, you could only set up one shared inbox for each Google account."
+          },
+          {
+            "start": 511135,
+            "end": 513615,
+            "text": "So here we basically have, I don't know."
+          },
+          {
+            "start": 513615,
+            "end": 516255,
+            "text": "Let's say five shared inboxes in that one Google account?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 516725,
+            "end": 516905,
+            "text": "Yeah."
+          },
+          {
+            "start": 517025,
+            "end": 519865,
+            "text": "So you have created those inboxes with the aliases, right?"
+          },
+          {
+            "start": 519985,
+            "end": 527345,
+            "text": "I think, in hiver, also, you can create different inboxes, with aliases."
+          },
+          {
+            "start": 527465,
+            "end": 534985,
+            "text": "I'll just confirm that though in turn by checking internally once and then we can confirm whether it's possible."
+          },
+          {
+            "start": 535165,
+            "end": 541755,
+            "text": "But as far as I know… you cannot create shared mailbox with the aliases."
+          },
+          {
+            "start": 542015,
+            "end": 552495,
+            "text": "So the aliases are going to be like, you can create separate rules of course within hiver like I show you by sharing my screen and I think that will give you more context as well."
+          },
+          {
+            "start": 552935,
+            "end": 555075,
+            "text": "So can you guys see my screen?"
+          },
+          {
+            "start": 555535,
+            "end": 556035,
+            "text": "Yep."
+          },
+          {
+            "start": 556095,
+            "end": 556515,
+            "text": "Got it."
+          },
+          {
+            "start": 556775,
+            "end": 557215,
+            "text": "Perfect."
+          },
+          {
+            "start": 557315,
+            "end": 559815,
+            "text": "So this is how hiver looks like, right?"
+          },
+          {
+            "start": 559875,
+            "end": 565365,
+            "text": "It's natively sitting in the Gmail itself, everyone would log in using their Gmail accounts."
+          },
+          {
+            "start": 565495,
+            "end": 569035,
+            "text": "Do the, does your team have their own individual email addresses?"
+          },
+          {
+            "start": 569435,
+            "end": 569735,
+            "text": "Yeah."
+          },
+          {
+            "start": 569895,
+            "end": 570335,
+            "text": "Yep."
+          },
+          {
+            "start": 570415,
+            "end": 571155,
+            "text": "They do perfect."
+          },
+          {
+            "start": 571315,
+            "end": 571515,
+            "text": "Great."
+          },
+          {
+            "start": 571655,
+            "end": 577875,
+            "text": "So they would log in here and in these yellow boxes that you see, this is where hiver will be residing."
+          },
+          {
+            "start": 578155,
+            "end": 584455,
+            "text": "And let's say we create one of these shared mailbox which is going to be connected to your general at the rate email address."
+          },
+          {
+            "start": 584865,
+            "end": 591055,
+            "text": "Now, from here, we, of course, we would be having those aliases as well connected."
+          },
+          {
+            "start": 591245,
+            "end": 593795,
+            "text": "So we can set up the automation in the backend, right?"
+          },
+          {
+            "start": 594535,
+            "end": 603235,
+            "text": "And create those tags as well to categorize your emails or, you know, to separate from whether it's related to admin or support or someone else."
+          },
+          {
+            "start": 604035,
+            "end": 612635,
+            "text": "And then from the backend, we can go here into the general inbox and create these automations and the workflows for ourselves."
+          },
+          {
+            "start": 613415,
+            "end": 625965,
+            "text": "When we say, let's say, create this for support emails and let's say, you know, any email that comes in and it's written to let's say the support email address."
+          },
+          {
+            "start": 627025,
+            "end": 638305,
+            "text": "So I can put that email address or the alias here and then trigger the action wherein it gets tagged automatically to the, to support."
+          },
+          {
+            "start": 638585,
+            "end": 644405,
+            "text": "And we can assign to the people who are going to be working on the support emails."
+          },
+          {
+            "start": 644625,
+            "end": 645405,
+            "text": "Does that make sense?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 645825,
+            "end": 646725,
+            "text": "Yes, it does."
+          },
+          {
+            "start": 646805,
+            "end": 657835,
+            "text": "So I think the only, the difference in the outcome there would be that there's no, I mean, I didn't see any rights access restriction there, right?"
+          },
+          {
+            "start": 657955,
+            "end": 665795,
+            "text": "So, so we can basically in missive right now, we can say anything with support at drag it over to the support at inbox."
+          },
+          {
+            "start": 665995,
+            "end": 669795,
+            "text": "But the only people who have access to the support inbox are these three people."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 671215,
+            "end": 671355,
+            "text": "Yeah."
+          },
+          {
+            "start": 671495,
+            "end": 676175,
+            "text": "So here, do you have like separate teams out of these five people that two are part of support?"
+          },
+          {
+            "start": 676335,
+            "end": 678195,
+            "text": "Two are part of admin and like that?"
+          },
+          {
+            "start": 678535,
+            "end": 678975,
+            "text": "Yes."
+          },
+          {
+            "start": 679215,
+            "end": 679655,
+            "text": "Yeah."
+          },
+          {
+            "start": 679875,
+            "end": 680655,
+            "text": "Oh, yeah."
+          },
+          {
+            "start": 680735,
+            "end": 684755,
+            "text": "So that's going to be a thing here that everybody's going to be part of the same inbox."
+          },
+          {
+            "start": 684955,
+            "end": 685575,
+            "text": "The main inbox."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 686505,
+            "end": 688055,
+            "text": "And how did Google groups?"
+          },
+          {
+            "start": 688155,
+            "end": 690455,
+            "text": "Like, do you, does this hiver work with Google groups?"
+          },
+          {
+            "start": 690475,
+            "end": 698195,
+            "text": "If we were to farm out, you know, like to separate up these support at let's say finance at, and demo at your three accounts there."
+          },
+          {
+            "start": 698235,
+            "end": 704615,
+            "text": "If we were to put all of those into different Google groups, do those all become their own inbox?"
+          },
+          {
+            "start": 704615,
+            "end": 710475,
+            "text": "That we can say, okay, person a and B have access to support at Google group inbox."
+          },
+          {
+            "start": 710475,
+            "end": 714455,
+            "text": "And person C and D have access to the admin inbox."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 715885,
+            "end": 720405,
+            "text": "I mean, Google group is just another collaborative inbox, right?"
+          },
+          {
+            "start": 720565,
+            "end": 725145,
+            "text": "That people use in order to, you know, better collaborate on email."
+          },
+          {
+            "start": 725345,
+            "end": 726565,
+            "text": "So you're already using myself."
+          },
+          {
+            "start": 726785,
+            "end": 744925,
+            "text": "So Google group is not something that you have to have in order to change anything in, hiver supports both in terms of if your current setup is already Google group, when you have created a Google group, and you have, you know, certain people as part of the distribution list, that would be your current workflow that you're already following."
+          },
+          {
+            "start": 745165,
+            "end": 750145,
+            "text": "And then you're just coming to hiver and hiver connects directly with the Google group, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 752425,
+            "end": 753015,
+            "text": "I understand."
+          },
+          {
+            "start": 753095,
+            "end": 767655,
+            "text": "I guess what I'm getting at is does Google groups provide us with the ability to restrict access to certain inboxes in the same way that we have with missive with hiver, Google groups, we can use their restrictions to say only these two people have access to this Google group."
+          },
+          {
+            "start": 767825,
+            "end": 774265,
+            "text": "So then when it comes into hiver, they don't get to see the, you know, they don't get to see the admin inbox, if they're not part of that Google group."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 776495,
+            "end": 776635,
+            "text": "Yeah."
+          },
+          {
+            "start": 776855,
+            "end": 782535,
+            "text": "I mean, of course, then you'll be moving away from the aliases rather have individual Google groups created."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 783275,
+            "end": 783675,
+            "text": "That's right?"
+          },
+          {
+            "start": 783795,
+            "end": 786895,
+            "text": "I'm just trying to figure out, yeah, that you."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 788155,
+            "end": 791615,
+            "text": "don't necessarily have to, you know, create a Google group account."
+          },
+          {
+            "start": 791855,
+            "end": 799135,
+            "text": "You can just instead of aliases, you can just create separate email addresses with your support admin general."
+          },
+          {
+            "start": 799375,
+            "end": 803735,
+            "text": "And then when you create, when you connect those with hiver."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 804585,
+            "end": 808245,
+            "text": "Sorry, wouldn't that require a Google account for every one of our aliases."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 809135,
+            "end": 809905,
+            "text": "Yeah, exactly."
+          },
+          {
+            "start": 810125,
+            "end": 816105,
+            "text": "So instead of Google groups that's not going to be required, you can just have your accounts there, I."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 816105,
+            "end": 817265,
+            "text": "Understand that."
+          },
+          {
+            "start": 817265,
+            "end": 820525,
+            "text": "That would mean we need like another seven Google accounts or something."
+          },
+          {
+            "start": 820685,
+            "end": 824285,
+            "text": "It doesn't really make sense to be paying seven times 30 bucks a month for that."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 824345,
+            "end": 824505,
+            "text": "Right."
+          },
+          {
+            "start": 824745,
+            "end": 825145,
+            "text": "Yeah."
+          },
+          {
+            "start": 825385,
+            "end": 829085,
+            "text": "And even for Google groups, you're going to have to then do that additional cost."
+          },
+          {
+            "start": 829225,
+            "end": 830905,
+            "text": "So I would also not suggest that."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 831755,
+            "end": 835135,
+            "text": "Google groups, there's no additional cost for Google groups."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 836335,
+            "end": 842495,
+            "text": "I think they do charge for like each because that's also an email address that you are sort of buying from them, right?"
+          },
+          {
+            "start": 842755,
+            "end": 844095,
+            "text": "So that also comes."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 845035,
+            "end": 846635,
+            "text": "It's included, we've used them before."
+          },
+          {
+            "start": 846795,
+            "end": 849715,
+            "text": "There's no cost to a Google group versus a Google account."
+          }
+        ]
+      },
+      {
+        "speakerId": "6914165095085342844",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 850475,
+            "end": 853515,
+            "text": "If you're on a paid Google account, you can create unlimited Google groups."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 854055,
+            "end": 854295,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 855975,
+            "end": 856215,
+            "text": "Okay."
+          },
+          {
+            "start": 856315,
+            "end": 856795,
+            "text": "Yeah."
+          },
+          {
+            "start": 856835,
+            "end": 859015,
+            "text": "So you can probably then consider that as an option."
+          },
+          {
+            "start": 860415,
+            "end": 863515,
+            "text": "How many of such email addresses do you have currently?"
+          },
+          {
+            "start": 863655,
+            "end": 865075,
+            "text": "Like the shared inboxes in massive?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 865295,
+            "end": 869255,
+            "text": "We have quite a few from the year we set up in 2014."
+          },
+          {
+            "start": 869395,
+            "end": 874955,
+            "text": "So we've got like affiliate… ad partner ad, a bunch of different ones accounting."
+          },
+          {
+            "start": 876015,
+            "end": 883875,
+            "text": "We definitely wouldn't want to be paying for Google accounts for all these unused Google accounts that are just like email aliases?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 885925,
+            "end": 886215,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 887195,
+            "end": 890685,
+            "text": "The ability to be able to get, keep, who gets what?"
+          },
+          {
+            "start": 890845,
+            "end": 891925,
+            "text": "So, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 892065,
+            "end": 894605,
+            "text": "And do you have like separate team for each of these?"
+          },
+          {
+            "start": 894605,
+            "end": 896785,
+            "text": "Since you mentioned five people in total?"
+          },
+          {
+            "start": 897205,
+            "end": 898065,
+            "text": "So if you have,"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 898595,
+            "end": 903525,
+            "text": "I mean team, we just have people that we don't want access to certain HR emails."
+          },
+          {
+            "start": 903905,
+            "end": 907505,
+            "text": "We have people that we don't need to have access to certain accounting emails."
+          },
+          {
+            "start": 907605,
+            "end": 917725,
+            "text": "So when you say team, it's essentially just these two people need access to these and these other and these other three people don't so yeah, we have that concept, yes."
+          },
+          {
+            "start": 917765,
+            "end": 924155,
+            "text": "But it's not like with five people, we have a, you know, a HR function and they need whatever."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 924415,
+            "end": 924815,
+            "text": "Yeah."
+          },
+          {
+            "start": 924895,
+            "end": 925215,
+            "text": "No."
+          },
+          {
+            "start": 925305,
+            "end": 926905,
+            "text": "Now, it actually makes sense."
+          },
+          {
+            "start": 927025,
+            "end": 927835,
+            "text": "Makes a lot of sense."
+          },
+          {
+            "start": 927975,
+            "end": 928135,
+            "text": "Yeah."
+          },
+          {
+            "start": 928215,
+            "end": 939345,
+            "text": "Then in that case, it's going to be a little difficult for you to then create that in hiver because hiver unfortunately does not support aliases for you to be able to create these shared mailboxes."
+          },
+          {
+            "start": 939485,
+            "end": 940885,
+            "text": "So, yeah, okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 942705,
+            "end": 946685,
+            "text": "I'm interested also in the workflow here."
+          },
+          {
+            "start": 946785,
+            "end": 963665,
+            "text": "So, if you have an email in your personal inbox, I mean, I can show you how easy it is and missive for me to share an email with Justin that is like in my inbox, maybe I'll just share my screen quickly and you can show me what the closest… alternative is on your end."
+          },
+          {
+            "start": 964105,
+            "end": 969845,
+            "text": "So, if we go here, let me find that window that I just shared because it's hidden behind."
+          },
+          {
+            "start": 971015,
+            "end": 971455,
+            "text": "All right."
+          },
+          {
+            "start": 971515,
+            "end": 974975,
+            "text": "So, we've got this email here about a, it's only gone to me."
+          },
+          {
+            "start": 975155,
+            "end": 977355,
+            "text": "I can just write down here at Justin."
+          },
+          {
+            "start": 977355,
+            "end": 982815,
+            "text": "And now it's in his inbox and he can collaborate and chat on that thread."
+          },
+          {
+            "start": 982975,
+            "end": 988795,
+            "text": "We can essentially do a reply and we can collaborate on that draft reply."
+          },
+          {
+            "start": 989215,
+            "end": 996495,
+            "text": "So, if I was to like test reply… and close that, save it."
+          },
+          {
+            "start": 996515,
+            "end": 1002455,
+            "text": "And Justin can actually go in there, edit it, he can open it up and reply on my behalf because I created the draft."
+          },
+          {
+            "start": 1002915,
+            "end": 1007195,
+            "text": "Like, is there a workflow around this stuff that sits in a personal inbox?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1008435,
+            "end": 1009875,
+            "text": "So this is the personal inbox, right?"
+          },
+          {
+            "start": 1010195,
+            "end": 1011875,
+            "text": "This only?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1012615,
+            "end": 1018955,
+            "text": "Came to me personally in my personal account and there's no sharing for that as in like it's just, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1019855,
+            "end": 1023515,
+            "text": "Yeah, I think you can do it through shared labels in hiver."
+          },
+          {
+            "start": 1023675,
+            "end": 1025255,
+            "text": "I'll just show you how that looks like."
+          },
+          {
+            "start": 1025415,
+            "end": 1028635,
+            "text": "That's going to be, a different thing from the shared mailbox."
+          },
+          {
+            "start": 1028895,
+            "end": 1029235,
+            "text": "Of course."
+          },
+          {
+            "start": 1029335,
+            "end": 1042235,
+            "text": "So here, in order for me to be able to share specific emails with my colleague, I can create a shared label in hiver, wherein, let's say I have already created with my colleague Rakesh."
+          },
+          {
+            "start": 1042535,
+            "end": 1049495,
+            "text": "So whenever I feel that, this is an email that I would like to share with him, I would just add this label here."
+          },
+          {
+            "start": 1049495,
+            "end": 1054775,
+            "text": "And this now will be visible in his inbox as well."
+          },
+          {
+            "start": 1055095,
+            "end": 1064875,
+            "text": "And he would be able to see that email in this label, which is already created, that is, Rakesh slash Yukta."
+          },
+          {
+            "start": 1065015,
+            "end": 1072545,
+            "text": "So, this is one of the labels that I can show you right now wherein I have this email and I'm sharing it with everyone who's part of this table, right?"
+          },
+          {
+            "start": 1072705,
+            "end": 1079775,
+            "text": "So, currently, it's with Rakesh and from here, we both can collaborate, he would be able to see the reply that I am sending here."
+          },
+          {
+            "start": 1079775,
+            "end": 1082335,
+            "text": "And, you know, the opposite as well."
+          },
+          {
+            "start": 1082385,
+            "end": 1083825,
+            "text": "He can also reply here."
+          },
+          {
+            "start": 1084415,
+            "end": 1091395,
+            "text": "So, this is going to be the most, closest to how you're handling these personal collaboration on emails."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1091855,
+            "end": 1101615,
+            "text": "So, in this scenario, then, when you drop it into a shared label, will that appear in his inbox or do you have to go and step in to mention to him that you've shared an email, can you go check it out?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1102305,
+            "end": 1105275,
+            "text": "No, it will automatically appear in his inbox as well."
+          },
+          {
+            "start": 1105935,
+            "end": 1106335,
+            "text": "Okay."
+          },
+          {
+            "start": 1106655,
+            "end": 1111315,
+            "text": "Yeah, and he would be able to find it under this, in this section here in labels."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1111395,
+            "end": 1113975,
+            "text": "In addition to his inbox, yes."
+          },
+          {
+            "start": 1114355,
+            "end": 1114855,
+            "text": "Yep."
+          },
+          {
+            "start": 1115335,
+            "end": 1116015,
+            "text": "Okay."
+          },
+          {
+            "start": 1117135,
+            "end": 1118855,
+            "text": "All right."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1121505,
+            "end": 1129805,
+            "text": "Apart from this, like, like any other reason why you're specifically looking to switch from a server, you mentioned some of the AI functionalities as well."
+          },
+          {
+            "start": 1129845,
+            "end": 1138525,
+            "text": "I understand because hiver, something which sits within Gmail, that is one apart from it, is it like because of AI functionalities or anything specific?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1139295,
+            "end": 1144485,
+            "text": "Yeah, it's basically AI functionality, like we just want to be able to, to automate a lot of our workload."
+          },
+          {
+            "start": 1144625,
+            "end": 1146485,
+            "text": "I mean, I haven't even looked at how hiver's AI stuff."
+          },
+          {
+            "start": 1147345,
+            "end": 1151025,
+            "text": "And other than seeing that you've got a copilot coming, which I think would be helpful."
+          },
+          {
+            "start": 1151725,
+            "end": 1160705,
+            "text": "And what really, what I'm most interested in, is us getting back into Gmail, so we can start using gemini for, for email drafting, and everything else."
+          },
+          {
+            "start": 1160725,
+            "end": 1170405,
+            "text": "Even with Google's new flows, like our support function can largely be run by, the update with, Google flows and, gems."
+          },
+          {
+            "start": 1170865,
+            "end": 1173405,
+            "text": "So, you know, those sorts of things."
+          },
+          {
+            "start": 1175385,
+            "end": 1181365,
+            "text": "We basically just want the ability to collaborate on emails is, I guess is the, yeah… yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1181825,
+            "end": 1183505,
+            "text": "So, I think you,"
+          }
+        ]
+      },
+      {
+        "speakerId": "6914165095085342844",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1183505,
+            "end": 1196065,
+            "text": "showed us, like sharing an email, but if I was to write a draft response, how do I show Mike the draft response before it gets sent?"
+          },
+          {
+            "start": 1196245,
+            "end": 1198025,
+            "text": "Is there a way to share that draft?"
+          },
+          {
+            "start": 1199005,
+            "end": 1202385,
+            "text": "Like we didn't miss it, we were both collaborating on a draft."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1203355,
+            "end": 1203725,
+            "text": "Okay."
+          },
+          {
+            "start": 1206705,
+            "end": 1212955,
+            "text": "Oh, you can put your draft here… and you can just save this."
+          },
+          {
+            "start": 1213155,
+            "end": 1218215,
+            "text": "So, once you save this draft, he would be able to see it as well as this would be a shared draft."
+          }
+        ]
+      },
+      {
+        "speakerId": "6914165095085342844",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1219425,
+            "end": 1219655,
+            "text": "Okay."
+          },
+          {
+            "start": 1219775,
+            "end": 1220055,
+            "text": "Cool."
+          },
+          {
+            "start": 1220455,
+            "end": 1223655,
+            "text": "Yeah, I missed that, when we were doing some testing."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1224415,
+            "end": 1225255,
+            "text": "No worries at all."
+          },
+          {
+            "start": 1225975,
+            "end": 1242375,
+            "text": "I think, for the interest of time as well, in terms of the AI functionalities, I'll just give you a brief understanding of what all you can do in hiver, and how you can automate as much as possible with the respect to the workflow that you currently have."
+          },
+          {
+            "start": 1242695,
+            "end": 1247775,
+            "text": "So, here as I will take an example of this inbox here, which is support."
+          },
+          {
+            "start": 1247955,
+            "end": 1258565,
+            "text": "So, as soon as you get your email, the idea is to automate this or perform certain steps before an email gets assigned to an agent, right?"
+          },
+          {
+            "start": 1258745,
+            "end": 1267525,
+            "text": "So, you would notice currently, I have this email which is manually sitting in the, in here in the unassigned section, but we would want to automate this for most of our emails."
+          },
+          {
+            "start": 1267745,
+            "end": 1274945,
+            "text": "Now, as you can see, currently, as soon as the email has hit the inbox, there are certain things which have already happened."
+          },
+          {
+            "start": 1275145,
+            "end": 1276945,
+            "text": "Number one is the AI sentiment."
+          },
+          {
+            "start": 1277365,
+            "end": 1285085,
+            "text": "So, this will allow you and your teams to create workflows depending on the tonality of the emails, right?"
+          },
+          {
+            "start": 1285145,
+            "end": 1292385,
+            "text": "So, if an email has a negative sentiment attached to it, you could automatically sort of categorize them into a VIP customer."
+          },
+          {
+            "start": 1292605,
+            "end": 1299545,
+            "text": "You could automatically assign it to a separate team who looks after all such emails which needs, you know, immediate attention."
+          },
+          {
+            "start": 1299905,
+            "end": 1305185,
+            "text": "You could also sort of, you know, have a separate, SLA created for that."
+          },
+          {
+            "start": 1305345,
+            "end": 1312025,
+            "text": "So, as you can see this, currently, the SLA has already kicked in here as soon as the email has hit the inbox here, right?"
+          },
+          {
+            "start": 1312245,
+            "end": 1315985,
+            "text": "So when you open the email, you would have certain things already happened for you, right?"
+          },
+          {
+            "start": 1316285,
+            "end": 1321105,
+            "text": "And as it gets assigned to me, I already know that, okay, this is a VIP customer."
+          },
+          {
+            "start": 1321285,
+            "end": 1330485,
+            "text": "We have our AI tagging which automatically understands and loans the behavior on the emails and apply those tags for you so that you don't have to do it."
+          },
+          {
+            "start": 1330905,
+            "end": 1337285,
+            "text": "And as the email gets assigned to you now, I'm, all equipped to sort of, you know, start working on the email."
+          },
+          {
+            "start": 1337755,
+            "end": 1339175,
+            "text": "While I'm replying here."
+          },
+          {
+            "start": 1339315,
+            "end": 1354975,
+            "text": "I can use email templates which we can create as like approved repository for all of us to make sure that we are just replying and using the standard tone, you could use AI compose with any grammar, spelling, anything to make it better."
+          },
+          {
+            "start": 1355415,
+            "end": 1367375,
+            "text": "And if the email requires a lot more attention or it's a specific use case, anything like that, you could use AI copilot and hypo, which will help you drafting a response."
+          },
+          {
+            "start": 1367735,
+            "end": 1370335,
+            "text": "It will help you sort of summarize the conversation if you want."
+          },
+          {
+            "start": 1370555,
+            "end": 1375515,
+            "text": "And since this is something that is going to work as for what you feed into it."
+          },
+          {
+            "start": 1375595,
+            "end": 1378195,
+            "text": "So, this becomes your personal AI assistant, right?"
+          },
+          {
+            "start": 1378375,
+            "end": 1395265,
+            "text": "Where in any question that you're asking it's deriving those answers for you based on what you have put as the knowledge source in the backend, that could be anything like your knowledge base, any PDF notion, documents, anything that you would like for it to train itself on."
+          },
+          {
+            "start": 1395405,
+            "end": 1402025,
+            "text": "You could also add specific emails to the source here which are, you know, which AI can learn from."
+          },
+          {
+            "start": 1402345,
+            "end": 1406405,
+            "text": "So this is something that could be helpful for the agents to be more efficient."
+          },
+          {
+            "start": 1406405,
+            "end": 1411725,
+            "text": "And also making sure that, you know, we are a lot faster in terms of responding to these emails."
+          },
+          {
+            "start": 1411865,
+            "end": 1416885,
+            "text": "And of course, then once I have my answer, I just come here, change the status to closed."
+          },
+          {
+            "start": 1417325,
+            "end": 1421665,
+            "text": "So this would be the workflow in terms of how AI will come and automate this."
+          },
+          {
+            "start": 1421885,
+            "end": 1425165,
+            "text": "Just taking a pause and just trying to understand if it makes sense?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1425755,
+            "end": 1427155,
+            "text": "Yeah, no, that'll make sense."
+          },
+          {
+            "start": 1427435,
+            "end": 1427875,
+            "text": "Yeah."
+          },
+          {
+            "start": 1428335,
+            "end": 1428875,
+            "text": "Yep."
+          },
+          {
+            "start": 1428935,
+            "end": 1429395,
+            "text": "Cool."
+          },
+          {
+            "start": 1429475,
+            "end": 1432155,
+            "text": "I think you know, AI triage and those sorts of things."
+          },
+          {
+            "start": 1432235,
+            "end": 1437535,
+            "text": "I mean, having just now seen the updates for like Google's built in flows."
+          },
+          {
+            "start": 1437795,
+            "end": 1448755,
+            "text": "I mean, even that now you're just using plain language, it's like if email comes into support at then basically reference this gemini gem with our docs attached."
+          },
+          {
+            "start": 1449585,
+            "end": 1456425,
+            "text": "So a lot of that stuff is already like native Gmail now as well, which is pretty cool."
+          },
+          {
+            "start": 1457195,
+            "end": 1476425,
+            "text": "I did have some questions around like, so mobile access for this and the shared inbox and stuff I did see there's a hiver mobile app, but it seems very like… I mean purely sort of support focused is there whereas missive does work quite well on mobile."
+          },
+          {
+            "start": 1476645,
+            "end": 1494905,
+            "text": "Like in terms of like if I tag Justin, what you see on desktop, you see exactly the same on mobile, which is why I'm interested in your hiver Omni, which seems to be, I mean, it sounds like it was originally built for outlook and now it's expanding out as a dedicated interface outside of Gmail."
+          },
+          {
+            "start": 1495105,
+            "end": 1497485,
+            "text": "Is that kind of do I have that correct?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1498265,
+            "end": 1498465,
+            "text": "Yeah."
+          },
+          {
+            "start": 1498565,
+            "end": 1502945,
+            "text": "It was originally built for outlook and now it supports other email providers as well."
+          },
+          {
+            "start": 1503005,
+            "end": 1503525,
+            "text": "That is correct."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1504085,
+            "end": 1509325,
+            "text": "So that seems like it could be a good pathway for like a good mobile app experience."
+          },
+          {
+            "start": 1509685,
+            "end": 1512205,
+            "text": "Is that like what's the plan with Omni?"
+          },
+          {
+            "start": 1512305,
+            "end": 1517365,
+            "text": "How does that fit in with what you've been showing us today from the Gmail side of things."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1518615,
+            "end": 1522315,
+            "text": "So, Omni is as similar to Gmail."
+          },
+          {
+            "start": 1522615,
+            "end": 1530975,
+            "text": "It's just that it's if you are outside of Google workspace that's where you'll be able to use that or it will suit you as well, right?"
+          },
+          {
+            "start": 1531115,
+            "end": 1533795,
+            "text": "So all the functionalities will remain the same."
+          },
+          {
+            "start": 1533895,
+            "end": 1538355,
+            "text": "Is there anything specific that you want within Omni that Gmail does not have?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1539035,
+            "end": 1541395,
+            "text": "Just mostly a good mobile experience."
+          },
+          {
+            "start": 1541775,
+            "end": 1547075,
+            "text": "I think like the idea would be for us to be in Gmail whenever we're on desktop."
+          },
+          {
+            "start": 1547315,
+            "end": 1557555,
+            "text": "And then if there was a mobile alternative, like if this because I saw on your roadmap that Gmail is in the roadmap for Omni, it's not there yet, but apparently, it's in progress."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1557915,
+            "end": 1559495,
+            "text": "Yeah, it is going to be there."
+          },
+          {
+            "start": 1559655,
+            "end": 1567195,
+            "text": "And we do have mobile applications for both for Gmail and Omni in terms of the experience."
+          },
+          {
+            "start": 1567575,
+            "end": 1570655,
+            "text": "Have you tried Omni as well?"
+          },
+          {
+            "start": 1570755,
+            "end": 1571675,
+            "text": "I don't think so, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1571915,
+            "end": 1574075,
+            "text": "No, because we don't have the app stuff."
+          },
+          {
+            "start": 1574295,
+            "end": 1574955,
+            "text": "Yeah, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1575035,
+            "end": 1579435,
+            "text": "Because in terms of the interface, like both are quite similar."
+          },
+          {
+            "start": 1579975,
+            "end": 1582555,
+            "text": "So that is going to remain the same."
+          },
+          {
+            "start": 1584485,
+            "end": 1591565,
+            "text": "Anything specific that you want like from the app from like mobile, that apart from the interface that you're talking about."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1591665,
+            "end": 1592005,
+            "text": "Would be good."
+          },
+          {
+            "start": 1592005,
+            "end": 1604505,
+            "text": "Well, I mean the ideal scenario would be for us to have a mobile version of exactly what you're seeing right here, you know, like some, but obviously, that's a bit more difficult because you've got to manually recreate Gmail and whatever."
+          },
+          {
+            "start": 1605005,
+            "end": 1614065,
+            "text": "So that's where I'm trying to understand is the Omni experience any closer to this than the hiver for Gmail app is?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1615125,
+            "end": 1620485,
+            "text": "So hiver and Gmail application also is like as same as what you see in the browser version here."
+          },
+          {
+            "start": 1621125,
+            "end": 1623925,
+            "text": "So you would have all your shared mailboxes there."
+          },
+          {
+            "start": 1623985,
+            "end": 1630005,
+            "text": "The only thing that will be missing is going to be your shared labels, the emails that you're sharing personally, right?"
+          },
+          {
+            "start": 1630305,
+            "end": 1637605,
+            "text": "Yes, that is something which is not going to be there and it's not and shared labels as a feature we don't have in Omni yet."
+          },
+          {
+            "start": 1637945,
+            "end": 1641325,
+            "text": "So it's not available in the browser version as well."
+          },
+          {
+            "start": 1641715,
+            "end": 1646615,
+            "text": "So it's going to be released soon, but yeah, that is something that's going to be missing for sure in the mobile application."
+          },
+          {
+            "start": 1646915,
+            "end": 1649135,
+            "text": "Apart from it from the shared mailboxes perspective."
+          },
+          {
+            "start": 1649615,
+            "end": 1651755,
+            "text": "I think it replicates everything."
+          },
+          {
+            "start": 1651975,
+            "end": 1654815,
+            "text": "So you would have all the functionalities in the mobile app as well?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1655705,
+            "end": 1661975,
+            "text": "But you, so, with the shared labels and stuff, too, does it even show your personal inbox in that?"
+          },
+          {
+            "start": 1662095,
+            "end": 1665415,
+            "text": "Like do you, or do you go to it for basically to access your shared inboxes?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1665455,
+            "end": 1665955,
+            "text": "I don't know."
+          },
+          {
+            "start": 1665995,
+            "end": 1668475,
+            "text": "It does show you your personal inbox as well."
+          },
+          {
+            "start": 1668555,
+            "end": 1672855,
+            "text": "So if you want to just add any email to the shared inbox, you can do that, right?"
+          },
+          {
+            "start": 1673195,
+            "end": 1675715,
+            "text": "So it will show you your personal inbox as well."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1676305,
+            "end": 1676655,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1677975,
+            "end": 1678315,
+            "text": "Yep."
+          },
+          {
+            "start": 1678755,
+            "end": 1679295,
+            "text": "All right."
+          },
+          {
+            "start": 1679415,
+            "end": 1681975,
+            "text": "Which wants to have your shared labels as well, right?"
+          },
+          {
+            "start": 1682055,
+            "end": 1683555,
+            "text": "In the mobile that's your main ask here."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1684115,
+            "end": 1684475,
+            "text": "Yeah."
+          },
+          {
+            "start": 1684535,
+            "end": 1689875,
+            "text": "I mean, like again, the, that, that's kind of the experience we're used to."
+          },
+          {
+            "start": 1689935,
+            "end": 1694755,
+            "text": "So I'm just trying to see, where the shortcomings are."
+          },
+          {
+            "start": 1695655,
+            "end": 1696055,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1696205,
+            "end": 1701805,
+            "text": "Yeah, I think I can take this to the product team and I could sort of confirm it to you with the email."
+          },
+          {
+            "start": 1701905,
+            "end": 1715205,
+            "text": "If we are going to have shared labels be part of our mobile app so that I'm sure it'll be easier for you then to, you know, sort of manage that as well, within your phone itself and don't have to rely here."
+          },
+          {
+            "start": 1715765,
+            "end": 1724385,
+            "text": "Otherwise it'll be like you'll always have to log in here and then share your personal emails while your shared emails can be sort of, you know, managed through phone."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1724745,
+            "end": 1725185,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1725425,
+            "end": 1727245,
+            "text": "So that makes sense."
+          },
+          {
+            "start": 1727505,
+            "end": 1730645,
+            "text": "I will take it up and I can sort of confirm it to you with the email."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1730805,
+            "end": 1732585,
+            "text": "That'd be great."
+          },
+          {
+            "start": 1732765,
+            "end": 1733125,
+            "text": "Thank you."
+          },
+          {
+            "start": 1734565,
+            "end": 1735005,
+            "text": "Okay."
+          },
+          {
+            "start": 1735085,
+            "end": 1752345,
+            "text": "So I guess summarizing for us to have the same, I guess access controls that we're currently used to and the number of email aliases that we have, we would probably have to re engineer and move things into Google groups without setting up another X number?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1754285,
+            "end": 1754385,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1756245,
+            "end": 1760145,
+            "text": "And you're going to confirm on the mobile app side of things, what else do we have there?"
+          },
+          {
+            "start": 1760385,
+            "end": 1767945,
+            "text": "I mean, with… the Google group approach, I don't think we would need to jump up to the higher plan."
+          },
+          {
+            "start": 1769225,
+            "end": 1771465,
+            "text": "That was one thing I wanted to check."
+          },
+          {
+            "start": 1773325,
+            "end": 1773725,
+            "text": "Yeah."
+          },
+          {
+            "start": 1773905,
+            "end": 1774305,
+            "text": "Okay."
+          },
+          {
+            "start": 1774425,
+            "end": 1774885,
+            "text": "Cool."
+          },
+          {
+            "start": 1775465,
+            "end": 1778005,
+            "text": "I think that answers most of my questions."
+          },
+          {
+            "start": 1778085,
+            "end": 1779425,
+            "text": "Just, did you have any, anything?"
+          },
+          {
+            "start": 1780405,
+            "end": 1781485,
+            "text": "No, that's all good?"
+          },
+          {
+            "start": 1782105,
+            "end": 1782765,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 1783565,
+            "end": 1784185,
+            "text": "Perfect then."
+          },
+          {
+            "start": 1784725,
+            "end": 1787225,
+            "text": "So let me get these done as well."
+          },
+          {
+            "start": 1787305,
+            "end": 1794065,
+            "text": "I'll also just check just to make sure if there is a possibility to connect through aliases so that we are not missing on that?"
+          },
+          {
+            "start": 1794145,
+            "end": 1795745,
+            "text": "If that is possible, then why not?"
+          },
+          {
+            "start": 1796145,
+            "end": 1799965,
+            "text": "And yeah, we could reconnect and then discuss other things."
+          },
+          {
+            "start": 1800045,
+            "end": 1801265,
+            "text": "If everything aligns."
+          },
+          {
+            "start": 1801265,
+            "end": 1804145,
+            "text": "I could help you with the commercials pricing, and then we can take it forward."
+          },
+          {
+            "start": 1804345,
+            "end": 1804905,
+            "text": "What do you think?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 1805395,
+            "end": 1805585,
+            "text": "Great."
+          },
+          {
+            "start": 1805725,
+            "end": 1806305,
+            "text": "Yeah, it sounds good."
+          },
+          {
+            "start": 1806345,
+            "end": 1806665,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 1807545,
+            "end": 1812105,
+            "text": "Can we schedule it now for let's say on Wednesday or Thursday?"
+          },
+          {
+            "start": 1812245,
+            "end": 1812765,
+            "text": "If that's okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 1813255,
+            "end": 1816175,
+            "text": "Why don't we wait until we hear back from the dev team?"
+          },
+          {
+            "start": 1816335,
+            "end": 1817935,
+            "text": "Because I think, I mean, that's going to be the."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1818895,
+            "end": 1818905,
+            "text": "Okay."
+          },
+          {
+            "start": 1819275,
+            "end": 1820455,
+            "text": "It's going to be a must have for you."
+          },
+          {
+            "start": 1820695,
+            "end": 1821235,
+            "text": "Well, I think."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1821235,
+            "end": 1823455,
+            "text": "It's going, it's going just getting an understanding of how."
+          },
+          {
+            "start": 1823675,
+            "end": 1834745,
+            "text": "I mean, I don't think you have it right now but I'm interested like in the email aliases and those sorts of things as well because it kind of, I mean, obviously hiver is a support tool."
+          },
+          {
+            "start": 1835225,
+            "end": 1839505,
+            "text": "Missive is marked as the same, but it has a bunch of other stuff too, which hiver does as well."
+          },
+          {
+            "start": 1839645,
+            "end": 1845585,
+            "text": "But I think it just, it gives us more an indication of whether we're investing in the right ecosystem as well."
+          },
+          {
+            "start": 1845705,
+            "end": 1857705,
+            "text": "So, I'm interested to hear how that gets solved and then whether that's something that we want to dedicate resources to for a migration to get us into Gmail."
+          },
+          {
+            "start": 1857885,
+            "end": 1866065,
+            "text": "Because like I said, the biggest thing for us is like just unlocking the shared inbox and collaboration in Gmail, that's pretty much the number one thing we want to do."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1866705,
+            "end": 1867565,
+            "text": "Yeah, absolutely."
+          },
+          {
+            "start": 1867975,
+            "end": 1881495,
+            "text": "And I think from what you said, hiver is used of course, a lot by the support teams within different companies, but at the same time, it is heavily used by like other departments as well just as an email management tool, right?"
+          },
+          {
+            "start": 1881645,
+            "end": 1886885,
+            "text": "So it caters to both depending on, you know, what your requirements and needs are."
+          },
+          {
+            "start": 1887005,
+            "end": 1895155,
+            "text": "But I think it very well goes for almost all departments as long as we have a generic email address and multiple people are looking to sort of manage that."
+          },
+          {
+            "start": 1895955,
+            "end": 1896885,
+            "text": "So perfect."
+          },
+          {
+            "start": 1897025,
+            "end": 1900345,
+            "text": "I think, let me then conform on these things to you on the email."
+          },
+          {
+            "start": 1900525,
+            "end": 1904975,
+            "text": "And then depending on what we have, we can take the rest of the conversation from there."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1905425,
+            "end": 1905635,
+            "text": "Great."
+          },
+          {
+            "start": 1905795,
+            "end": 1906495,
+            "text": "Thank you very much."
+          }
+        ]
+      },
+      {
+        "speakerId": "3857768508055073448",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1906665,
+            "end": 1907065,
+            "text": "Perfect."
+          },
+          {
+            "start": 1907335,
+            "end": 1907845,
+            "text": "No worries."
+          },
+          {
+            "start": 1907855,
+            "end": 1908055,
+            "text": "Then."
+          },
+          {
+            "start": 1908145,
+            "end": 1909095,
+            "text": "Thank you so much for your time."
+          }
+        ]
+      },
+      {
+        "speakerId": "205101224198738337",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1909585,
+            "end": 1910135,
+            "text": "Thank you cheers."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 103
+}

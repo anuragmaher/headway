@@ -1,0 +1,307 @@
+================================================================================
+Call: Hiver & Cynthia with Kpler.com-3
+Date: 2025-11-14T20:03:25+05:30
+================================================================================
+
+Raghav Shankar (raghav@hiverhq.com):
+  hey, Cynthia. Can you hear me?
+
+Cynthia Xue (qxue@kpler.com):
+  Yes, I can.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Hi, how are you doing today?
+
+Cynthia Xue (qxue@kpler.com):
+  Doing good. How are you?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Doing good as well. Thanks for checking in, Cynthia. Just the two of us. I mean, just you from the Kepler team today?
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah, yes, yes. Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  All right. Brilliant. So, yeah, Cynthia, introducing myself. I'm Raghav, I'm going to be working with you on the… I'm sorry, I'm going to be working with you on exploring the AI features and capabilities on hiver. I've also been chatting with Lavinia I'm waiting to talk to Florian as well. And we're also parallelly working on like an entire consolidation and a growth effort across other departments. So, yeah. So Cynthia, for today's discussion, I wanted to have an understanding in terms of, you know, which specific AI features that you're interested in and, you know, before we even go down that road, could you tell me a little bit about your role at Kepler within the team and what you do?
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah, sure. So I am the team lead of the revenue operation teams here. And then, so we have part of the team who's doing due desk. So those are the, yeah, those are the users for hiver now. So we are using hiver as a tool to like to distribute the emails that we receive related to contract in our site. Yeah. Right now, I am just mainly using this, what is it called automation function and then also the tag function as well. So because we are supporting the whole global sales team on checking their contract on, you know, booking their dues. So whenever there is a contract or due booking request comes in based on where the sales, like who sends it, and then where they're based in. We attribute it internally to different team members. And also, you know, when they're taking days off, we, yeah, we are reattributed using those rules so that's the main use case for now. And then I see that you launched hiver AI and I like especially for the AI tagging. I… like, I'm quite interested in it because I think the current tagging system I'm using like I'm writing my own rules to, you know, attribute it to these and that I'm wondering if hiver is able to, for example, look at the content of email and then classify the topic of the email a little bit more for us. I think that would be, very helpful so that we could do more analysis like having more visibilities on what type of requests that we receive on a day to day basis?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Got it. So, you know, when it comes to these specific aspects, right? Especially when it comes to categorizing emails and having a more broad stroke approach on these conversations. Could you tell me a little bit about how you're handling categorization today? Like do you have like a lot of categories? Do you run them on the backs of automations and workflows or are you looking to start this from scratch?
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah, we don't have anything right now, but we do receive, you know, quite some like quite different requests. So like for example, the most common requests that we receive right now, we're using the attribution rules like the contract signature and contract checking request, but also on a day to day basis, we receive, I would say like 40 percent of our requests are for example, from Ar, about like changing an invoice or changing certain informations or it's just like a question from a sales on a specific thing or sometimes it's like legal team negotiating on contract and then just loop us in for us to have like a head up. So all these other like 40 percent of the things they are like right now, we don't have a classification rule for them and like people just go there and depending on their availability, they just pick them up. But I do want to, you know, have a more concrete like distribution over there.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Got. It. Makes sense. All right. So, you know, in terms of the AI perspective taking over the other thing I want to just quickly hear about, you know, before we jump into a quick little screen share and I can show you how to set it up on your account as well is as a result of these categories and these automations, right? Or rather the categories themselves. What kind of actions do you expect to happen within the team? I'm trying to see if the categories added the right way, would you like to reassign conversations, prioritize it a different way as an end goal?
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah, exactly. So I think if it works really well, I do like eventually, I do like to set prioritization for them, set priority for them. And maybe, yeah, like distribute them among the team? Yeah, that's the main goal.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Got it. All right. That makes sense. All right. So that should be pretty straightforward. Then Cynthia, could you share your screen and I can, you know, maybe give you like a sorry?
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah, sure.
+
+Raghav Shankar (raghav@hiverhq.com):
+  All right. So what I'm going to be doing right now is I'm going to be walking you through the AI tagging, how that works, what you can do to basically have it enabled, set it up. And then as an result of that also talk a little bit about some of the automation rules you could create for the desired outcome. Now, the other major piece of AI at this point is the ask AI, the one that's right on your screen. And I'll talk about that as the second main topic for today. Yeah.
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Great. All right. So Cynthia over here, could you click on AI agents?
+
+Cynthia Xue (qxue@kpler.com):
+  Yep.
+
+Raghav Shankar (raghav@hiverhq.com):
+  And then configure against the tagging piece. All right. We'll just give it a beat. All right. She hasn't started yet. All right. So, Cynthia, with the AI tagging leading from the front, what you're essentially and effectively looking at, right? Is basically a way where you could have hiver's AI do the heavy lifting, add the tags and basically auto categorize these emails. Now, the way we've got it configured and you can go ahead and click on, add a tag. If you had any example tags that you'd want to use, we could maybe pick one from here.
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah, for example, Ar general or like something related to like legal approvals, yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  All right. So let's just go ahead and add tags for now. We're going to get another pop up once it's there. All right. So now, if you notice what you've done is you've basically given the AI, these two tags as categories for it to be ready and get itself trained on. But, you know, when it comes to AI and LLM machines, you know, I'm sure you've experienced it in real life as well, where without proper training, it's going to be more generic and that's not effectively the experience we want to give our customers, right? So what we've done with the AI approach here at hiver is given you as a hiver customer, full control on the training in itself that goes into the AI taking the lead. Okay? All right. Now, this training is done by you and your team just manually adding this tag to 10 conversations total.
+
+Cynthia Xue (qxue@kpler.com):
+  Okay. Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Right. So from now, what you need to do is basically go back to your inbox. And I think we're doing this for the sales operations inbox, right? Yeah, yeah, it is. Sorry.
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah, it is.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Okay, perfect. So all you need to do from this point to train the AI model on this tag or what constitutes Ar general as a category is to go back to the sales operations inbox and add the Ar general tag manually to 10 emails. Now, these could be any kind of emails, right? Old emails, new emails, active closed. It doesn't make a difference.
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah. Okay. And I think.
+
+Raghav Shankar (raghav@hiverhq.com):
+  No, what I'd suggest is just in terms of perfect, you've got the gist of it.
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah. Right. Yeah. We didn't tag too much. Okay. So I can come here to tag like 10 different conversations using them as like a training data exactly. Can I change them later? Like if I change them, would the whole system like?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Run, it won't. It won't. So if you go back to the admin panel now that you know where to go and like how to quickly add the tags back to the hiver, admin panel.
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Oh, yeah.
+
+Cynthia Xue (qxue@kpler.com):
+  I'll go back to here.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yes. All right. AI agents and configure against the tagging.
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Right. So, what will happen basically is that the system only needs those first 10 conversations as sample sets, right? Okay. So once it's trained, what will happen is the Ar general tag will first have a message here that says applied on 10 emails and can you click on it? You do get like a training module as well?
+
+Cynthia Xue (qxue@kpler.com):
+  Right.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah. So basically, what will happen is while you're adding the 10 emails or after you've added that we can X out the pop up, right? If you click on this number here, that says zero out of 10, it's going to say 10 out of 10. And what will happen is, if you click on that, you're going to get a list of all the 10 emails, And from there, you can say, add more emails, remove this from the learning data and effectively have that refined till you're confident that these are the 10 correct emails that fit the Ar general, right? Once that happens, can you X this out, please? As soon as that happens, that email, Ar, general and approval legal will move away from train AI to manage tags, which means they will be ready and they will be active.
+
+Cynthia Xue (qxue@kpler.com):
+  I see.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah. What will also happen is the tags themselves? Oh, can you click on, cancel here? Oh, okay. Yeah. So if you go back to train, and if you look under Ar general, there's this part that says description will be generated after use, right?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Right below that. So what will happen is after the 10 emails are trained, the model will auto generate this description and you can for future state, go back here and just play with the description. And when I say play with the basic modifications, oh, I see this is a prompt, right? Excuse me.
+
+Cynthia Xue (qxue@kpler.com):
+  Is it like a prompt that says?
+
+Raghav Shankar (raghav@hiverhq.com):
+  It's basically a prompt? Yeah. Okay. That's effectively the same, right? Yeah. So the system will auto generate what it feels is the right prompt based on the data set you're supplying. Okay. And then afterwards, if you feel it has to be different, has to be modified. If there's one or two very specific cases you want to include to the AI, just have the prompt modified accordingly. And after that, you should be good to go. Okay, that's pretty much all you need to do for AI tagging.
+
+Cynthia Xue (qxue@kpler.com):
+  Okay.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Sounds good. Yeah, it's pretty straightforward. So now, once that's done, can you go to automations right now from the center here? Yeah.
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  All right. So if you click on create automation, you will notice that from the dropdown for the triggers, click on the dropdown for the triggers. You'll notice that tag being added as a trigger.
+
+Cynthia Xue (qxue@kpler.com):
+  Okay.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Right. So now, once you've got the AI trained that's the trigger, you can use to create actions, automations and workflows based on that.
+
+Cynthia Xue (qxue@kpler.com):
+  Okay. Makes sense.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Right. So that's the full picture in terms of AI being trained, adding the tag and what you can do after the tag is added.
+
+Cynthia Xue (qxue@kpler.com):
+  Okay. Right. Sounds good. I have a question here. Yes, please. So let's say I have enabled an AI tagging for the approval, legal. And then if one day that I find there's an email, that is, I don't want it to be in this tag? Like, I don't think it's like being correctly categorized. Can I tell the system that, you know this is wrong?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Definitely. You're going to have a small report button, and if you use that, the tag gets removed and the AI starts considering that, again, just like with the general training model, it might take a few times of it or prompt re, engineering to get it sorted out. Yeah. But on a single email level, anybody in the team can just report and that will remove the tag and that will be used by the AI to just have that as a note.
+
+Cynthia Xue (qxue@kpler.com):
+  Okay. Sounds good.
+
+Raghav Shankar (raghav@hiverhq.com):
+  All right. So that's the AI tagging piece. Now, the sentiment analysis is effectively a way for you to have a little sense of whether people writing into your team, what state and what kind of tonality they're using pretty much trying to gauge their sentiment based on the email. Do you think that's something that will be useful for your team?
+
+Cynthia Xue (qxue@kpler.com):
+  I haven't looked into this yet. So we have positive nurture, negative. Yeah, maybe not. Do you have any customers that use this for urgency or prioritization?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah, we do have quite a lot of customers that use sentiments for prioritization. And that's also why there's a whole reporting module built on back of sentiments and sentiments can also be a trigger on the automation. So just like you have the tag being added, you can be like, hey, if somebody is coming in with a negative sentiment, notify the team lead within hiver, okay, add a different tag that's some of the examples people have done, right?
+
+Cynthia Xue (qxue@kpler.com):
+  So, I, could I change them by myself?
+
+Cynthia Xue (qxue@kpler.com):
+  I don't know. Yeah, I don't know if they, so basically, we don't work on, you know, I don't think I will receive any complaints on a regular basis. Yeah, but we do have, for example, we do have let's say contracts that are a bit, you know, low value or contracts that are like super big value. And we are always trying to like during our like peak season, like the very busy time we want to prioritize based on the size of the deal. So I don't know if there's something maybe I don't think this can do it, but I don't know if you have like other functions that can.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Got it. No, that's a quick question. The deal value, the contract value, the dollar value of that, is that on the email subject or email body? Yeah.
+
+Cynthia Xue (qxue@kpler.com):
+  We could ask people to include them and, or we could… because some like most of the time salespeople include them or we could ask them to include the unique id of the deal.
+
+Cynthia Xue (qxue@kpler.com):
+  And we, I have never explored too much the connection with Salesforce. But I don't know if it could take those data from Salesforce if we connect them and then use the Salesforce data. I might be asking too much here.
+
+Raghav Shankar (raghav@hiverhq.com):
+  No, I mean the Salesforce data is actually a direction we're heading in. We are very close to launching a two way sync in hiver where email sync, right? Where emails received in hiver flow back into Salesforce. And you can do automations based on Salesforce. Although I'll have to check with my team in terms of the exact specifics on that. Could you run me through the workflow like a tentative workflow with an example one more time?
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah, like, so I'll show you, I can show you some examples like we have. So basically, we have Salesforce, right? And then we have, yeah, I just used a test. Okay, I've been locked out.
+
+Raghav Shankar (raghav@hiverhq.com):
+  So,
+
+Cynthia Xue (qxue@kpler.com):
+  yeah, we would have like for example, like an, yeah, an opportunity like this. And then we always have like an id here. So usually when people send us an email, you know, a lot of them have the habit of to say that this is for opportunity. Yeah, this id. And then, so if they include in the email, I could imagine that, you know, AI could extract this id, yes.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Okay.
+
+Cynthia Xue (qxue@kpler.com):
+  They extract this id. And then if we have like a synchronization with Salesforce data, then like if we think for example, this field and the contract value, this field?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Maybe.
+
+Cynthia Xue (qxue@kpler.com):
+  We could read this field and feed it back to hiver. And based on the number of this field, the value of this field, we auto tag, you know, priority one to.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Three that's yeah, got it. So you're essentially, no, that makes total sense. So, you know, in terms of AI capabilities as of today, both of these are two separate actions. The way I'm looking at it, right? Firstly, AI can definitely extract the id number that you want. Yeah, surface it within hiver in like a custom field or something. So that can be number that's available there in terms of the deal value or like the deal attribute in itself that's also something that you can fetch. The one thing I'm I need to check with my team and see if it's going to be like a feature request or something we're already working on is going to be the connectivity between the two, which is basically if the deal value is above 500 categorize the email, a certain way, you know, the deal value is less than 500, prioritize the email a different way. Now that's the one thing I want to make sure I double check with my team and give you that exact clarity in terms of what that looks like.
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah. Okay. Problem. Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  But what I can tell you though is that information of seeing this in hiver through Salesforce integration, that is capability that already exists.
+
+Cynthia Xue (qxue@kpler.com):
+  You.
+
+Raghav Shankar (raghav@hiverhq.com):
+  know, if it's easier, let me just quickly swap to my screen. I can show you like an example of the Salesforce data that flows into hiver. So if you look in the panel on my right side, I've got the Salesforce connector running. So it gives me like an entire account info, contact info and that's like net suite cards. But basically, it starts with account info, contact info and you can pretty much customize it from here, include any other fields you want. And in your case, you'd mention that the deal attribute and the deal value was a field you want. You can definitely have that tagged along.
+
+Cynthia Xue (qxue@kpler.com):
+  You question, like for example, for you, are you mainly using the recipient of the email, another recipient like the sender email to map it with the Salesforce record?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah. At this point, the primary measure of mapping for hiver is going to be based on the from address on the email, but you do have a way to have that swapped around as well. So if you notice I can switch it based on who's on the thread, if that's one route. And in your scenario, I'm assuming this works a little differently and it'll be internal sales team members sending this information over, right? Yeah. Got it. So again, in that sense, then let me again just double check with my team because I know we did a little enhancement recently. So let me check with the team in terms of whether we can have this switch to, you know, based on like a different id number or something else that needs to be on that email. And that way I can tell you what's needed. And if your team can have that included, that would make the integration auto, fetch the right data.
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah. Okay. Yeah, that would be, I think that would be like really great and really helpful. Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah, and yeah. So that's, the AI tagging of, the Salesforce integration piece, and then, the co pilot to the ask AI, which is the other piece, right? That I mentioned. Now that one effectively look at it as a, an entire reply drafting assistant for your team, right? So what it does is again, just like, with the AI tagging, we've given you full access on training the model so that it's always contextual and only goes through the information that you provided right now. In terms of giving it information, you have three options. You can either have your articles, and when I say articles, I'm talking about process documents, refund policies, sales, processes, contracts, things like that.
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah, you.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Can either have it on a knowledge base within hyper that's internal. If you use notion. Do you use notion as a business for any of this?
+
+Cynthia Xue (qxue@kpler.com):
+  We don't but we use confluence.
+
+Raghav Shankar (raghav@hiverhq.com):
+  That's great because confluence the next, so knowledge base on the list for us. So we've got notion out. First. Confluence is very mature and deep in the product development cycle. So I expect that to be the next enhancement, right? So once that's ready, you can connect confluence here. And additionally, you can copy paste specific data as snippets or upload documents as well, right? All of this becomes the training model for the co pilot. Yeah. Once that's ready in print, the way it all comes together is whenever your team gets an email, they can just open the co pilot and they can either do draft a reply. I was going to give them three scenarios. Now based on your process document and everything on hyper, you can be like, you know, I want it for the first scenario to enter it or tailor it based on Zendesk pricing, for instance. Like in my case, that's the knowledge base I've got. So what the co pilot will do is basically look at the email's content, the entire thread, understand, what the question in the email is about. And based on your request, it will go through the relevant article in your database on hyper and then give you that exact bit, right?
+
+Cynthia Xue (qxue@kpler.com):
+  I see.
+
+Raghav Shankar (raghav@hiverhq.com):
+  So, there you go. So like for instance, it's used in reports and Zendesk's plan. It talks about the pricing as well. So it went through two things. It said, hey, revenue numbers don't match. This is urgent. So, it's given me a data for the reporting discrepancy. It's told me how I can go about it. And because I also told it, I want about Zendesk pricing, it says, hey, this is the Zendesk pricing piece as well, right? So you can keep this more conversational. You can be like refine it… find it only for pricing maybe. And again, you know, just keep going back and forth, keep it conversational. And when ready insert just basically has a drafted reply that your team can review and send out. Okay?
+
+Cynthia Xue (qxue@kpler.com):
+  That's that looks very interesting. So, for example, let's yeah, use, so for example, if the conversation is about let's say refund and invoice, but maybe hiver, AI didn't detect that it's related to a refund request. Can I just go to the ask AI and prompt it to say that this email is related to a refund request? You know, give me the instructions.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Oh, definitely. Definitely. So, yeah. So totally. So, the learning model for the tagging and the ask AI at this point are kept separate because we want to understand a bit more about how our customers are using it. And don't want the training data to cross pollute itself. Basically, right? I see. Yeah. So the co pilot in itself will primarily be backed by your data sources. And that way anything you prompt here will be the result against which you get information for, right? So, the last one I said, refine it only for pricing. Has then told me, all right, confirm which plan you're on. This is the pricing database, right? So that would be similar in your case. And if the AI tagging is unable to detect it accurately, you'll get that report button I talk about, get that sorted out. And that becomes part of that everyday learning model as well. That refined.
+
+Cynthia Xue (qxue@kpler.com):
+  Okay. What I mean is that because that AI reply is based on my knowledge base, like can I ask a, the AI like a customized question like that is okay? So, I can for example, ask you like this is not, for example, if I ask a question like not related to your zendex? Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Okay. Right. So, so far, I was talking about Zendesk, but now I'm like, okay, what's high risk pricing? Okay? Because I have a data source or an article somewhere that talks about high risk pricing. It's you know, kind of straightforward, tell me, hey, this is what high risk pricing is like, right? So you can keep it conversational. You can keep going back and forth on the top of it. Yeah. So there you go. So it says like growth pro and all of that bits, right? And even tells you the sources it's getting that data from. Yeah. So you can always cross reference it and go from there. Okay. Yeah. So like, you know, you can keep going back and forth like this and we'll be able to give you that data.
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  So, yep. Those are, the three major AI elements or AI features of hiver that's out today. Right? On top of this, we're also gonna be launching, very soon AI suggested answers, which is gonna be the next step of copilot, where AI will have a drafted or pre drafted reply ready for your team to review, which you can then run through copilot and refine. Go ahead. From there, it's gonna be AI answers, which will be a way for hiver to automatically respond to emails. If you want to configure and create it the right way, right? Hybrid can basically do that auto response for straightforward questions like, hey, was my contract executed? Yeah, I would be able to quickly look at the information and be like, all right, this one has been executed or like, can I do a wire transfer payment for this contract value? So if somebody starts emailing you like that, you don't necessarily need to even prompt copilot to get that answer. AI can basically have that ready and sent out. And, you know, that could be the one thing. And then the last thing is AI tasks where you're now going to be able to have AI suggest tasks and workflows, you can create and seamlessly have them created for you as well. So right now, workflows and everything are things you discuss and you create from scratch. All of these are features we've lined up before the end of this year. So with us in specific, that's going to help you automate the whole automation workflow creation process too? All right. Sounds good. So those are some of the enhancements upcoming. So, yeah, back to you. Any other questions on the AI front? No?
+
+Cynthia Xue (qxue@kpler.com):
+  I think it's all good. I need to actually check. I think I need to test a bit like especially copilot parts, make sure just to make sure that it's not.
+
+Cynthia Xue (qxue@kpler.com):
+  Yeah, it's not hallucinating but this is, very, exciting. Yeah. My last question is that, so I see that our plan right now is pro. To be honest, I don't know which one that is on your like pricing scheme, but are these features all included in the pro plan?
+
+Raghav Shankar (raghav@hiverhq.com):
+  No, Cynthia. So the AI features as a whole is part of a separate standalone add on at, right? So it'll be additional irrespective of which tier you're on, you can get the add on suite as a single, you know, add on for the whole subscription, right? The one little update I wanted to tell on pricing is with my, or during my discussions with Lavinia, she'd shown interest of consolidating your team into the central contract. Okay. Right. We're negotiating on a reduced price for the bundle of AI and pro for the entire data set, right? Like I'm sorry, the entire user count as well. So, yeah, that's where it stands. And as of right now, I'm waiting to have a chat with Florian, your head of it to have that final clarity on budgets and whether sales ops is included or not. So at this point, I want to give you that little bit of heads up and, you know, that way if that, you know, if the contract is executed and we're proceeding with that, your team would get AI as part of the contract as well.
+
+Cynthia Xue (qxue@kpler.com):
+  Right. All right. Okay. I see. Yeah, I mean, I do would like to get the AI add on. So maybe let me also give Florian a head up internally?
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah, if you can, that would be great. Yeah. All right. So for the time being, what I've done is I've basically informed my team to have the AI enabled for your subscription for yours and the finance team on hiver.
+
+Raghav Shankar (raghav@hiverhq.com):
+  So I'll continue course on that. And when you have a discussion or chat with Florian internally, if, you know, if there's any additional time or time for when he'd like to meet to discuss the commercials as well that I'd appreciate if you can keep me posted as well on it. I've sent him an email, but if you could just, you know, check internally and see if there's a time or something we can do to meet. Okay?
+
+Cynthia Xue (qxue@kpler.com):
+  Sure. I'll give him a hello. Yeah.
+
+Raghav Shankar (raghav@hiverhq.com):
+  Yeah, for sure. All right, Cynthia. Anything else for today?
+
+Cynthia Xue (qxue@kpler.com):
+  No, that's all that's, very, helpful. Thank you for sharing my pleasure.
+
+Raghav Shankar (raghav@hiverhq.com):
+  So, after the call, what I'll do is I'll send over a couple of health particles on both the AI agents and the AI co pilot on hiver, check out the faq, articles, start training them and exploring them. Any questions along the way, feel free to write me an email directly and I'll be sure to help you out from there. Great. Brilliant. Hey, pleasure chatting with you, and I hope you have a good weekend. Bye, thank you.
+
+Cynthia Xue (qxue@kpler.com):
+  See you bye.

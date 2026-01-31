@@ -1,0 +1,202 @@
+================================================================================
+Call: Hiver Sync
+Date: 2025-11-12T23:32:07+05:30
+================================================================================
+
+Cole Miller (cole@grexit.com):
+  hey, what's going on?
+
+Alec Pool (apool@ecstuning.com):
+  Hey, Cole. How you doing?
+
+Cole Miller (cole@grexit.com):
+  Good, good. How are you?
+
+Alec Pool (apool@ecstuning.com):
+  Doing alright?
+
+Cole Miller (cole@grexit.com):
+  Nice. Okay, Manoj is on the call. Perfect. How has everything, I know we spoke yesterday, but has the team gotten on hiver yet and started kind of testing out a little bit the functionality?
+
+Manoj Kiran (manoj@grexit.com):
+  We've done a.
+
+Alec Pool (apool@ecstuning.com):
+  We got one person added on yesterday. We wanted to give him just like initial. My goal was to get a few more people loaded on today this morning, but I've just been completely bogged down with other stuff. So I'm going to try and get some more people on towards the end of the day today, get them using it for like tomorrow. And then after that just kind of keep adding people to it, keep getting opinions, keep kind of troubleshooting some random things we find. But other than that.
+
+Cole Miller (cole@grexit.com):
+  We'll see how it goes. Okay. Alright, perfect. That sounds like a good plan kind of ease into the, you know, the testing transition. And then in terms of those Gmail filters that you sent over, so we're not able to automatically map those into hiver, like, you know, through automation, but we can help create these for you, which shouldn't take too long from us to do so. Just something to keep in mind as well.
+
+Alec Pool (apool@ecstuning.com):
+  Okay. Is there something, is there a different format file that we can explore like exporting that you are able to automatically import into hiver? I.
+
+Cole Miller (cole@grexit.com):
+  Think excel, right? Manoj, that would be the best way to do it?
+
+Alec Pool (apool@ecstuning.com):
+  Yeah.
+
+Manoj Kiran (manoj@grexit.com):
+  Because… we need the actual user's email address, the names and, you know, the keywords because the XML file even though it has the mailbox name and everything, the rest of the data are everything in their unique identificators, right? And when we do that, the users are still not part of hiver. And again, when we do that, it's a whole lot of coding and everything. It's not… recommended. And also, you know, last time we talked, we spoke, you didn't mention that you want a cleaner version of those filters.
+
+Manoj Kiran (manoj@grexit.com):
+  Right. So, you know, if you could tell us the key identificators or is it like the from or to domains, email addresses or the subject line or anything in the body of the email and who it needs to go to and what tag needs to be added?
+
+Alec Pool (apool@ecstuning.com):
+  Okay.
+
+Cole Miller (cole@grexit.com):
+  Yeah. So if that can be, if you can provide those automations over in excel, right? That would probably be the best way for us to kind of move forward.
+
+Alec Pool (apool@ecstuning.com):
+  Okay. Yeah. I don't necessarily have a solution for getting it in excel right now, but I'm sure there's a way that we're able to get that information or can put it together. So I'll dig into getting that together and send that over as soon as I can. Are you aware of any other way that other customers have used to just export things or do they manually export create an excel sheet for these before they send it over to you? Do you know if there's any way to pull it from the system? I mean, we don't see anything other than export to this HTML?
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. So earlier as well, people who use a lot of filters again, we… have helped them create the same way that we just mentioned, right? We use our team's resources and then push it from the back end. Gotcha. Yeah. But having a XML file automatically… done through so many scripts is going to be a tedious task and it is something that we have to do a custom build like sorts. So.
+
+Alec Pool (apool@ecstuning.com):
+  Yeah. Okay. I just wasn't sure if you guys were aware of another way to get them out of Google that we weren't aware of. Yeah.
+
+Cole Miller (cole@grexit.com):
+  But it seems like there's not too many in general. So even if we, it shouldn't be too big of a lift just based on what I've reviewed.
+
+Alec Pool (apool@ecstuning.com):
+  Oh, really, we always look at that number and I'm always like holy crap. We have way too many filters that's light for you guys. That's good. Yeah, that's good.
+
+Cole Miller (cole@grexit.com):
+  And then in terms of, so, yeah, we're going to get the rest of the team on here. Testing. Is there anything else that we can help with in the meantime as you're testing, any questions like that have popped up? Would it be helpful to run through automations now with you now that we have Manoj on the call and run through some scenarios definitely just want to make this as useful as possible for you.
+
+Alec Pool (apool@ecstuning.com):
+  Yeah. So one of the things that was brought to my attention from the person that we have in the trial right now. So I created just, I created an automation just to pull like one vendor or one supplier email to be filed to him or to be assigned to him. And for the triggers on there, there's like the option of new conversation is received. But like it doesn't if we reply to that email and the vendor replies back to us, it looks like it's not getting assigned to that person. Again. And when I was looking in the automations, it doesn't look like there's like a way to assign like two triggers. Almost would we have to make another filter for like if someone I see like there's the reply option, do you have to start a whole other automation for any replies?
+
+Cole Miller (cole@grexit.com):
+  So if they, if someone replies to an email, the email should automatically assign to them. And then all responses from there on out from the external client should also be within that thread itself. So there shouldn't be any automation necessary to keep that conversation with that person. And then we also have a failsafe where let's say someone closes out that email communication and it's been a week. No one's replied to it, but the person comes back like a week later after it's been closed, it will automatically go back to that same person and put the status back into open.
+
+Alec Pool (apool@ecstuning.com):
+  Okay. Yeah. So I think.
+
+Cole Miller (cole@grexit.com):
+  I think if you don't want that, oh, go ahead.
+
+Alec Pool (apool@ecstuning.com):
+  No, I'm just talking more to Dylan here. But so, yeah, that should be when you're in conversation view. If it's already in a filter, it should just go straight to those filters even though it will likely come back into the inbox depending on how you have it set up. But so viral one of our other suppliers every time they respond to us, it becomes a new email thread even though we have conversation view on. So it's something that they have likely those ones wouldn't hit the filter properly… because they're not in that same, they don't end up in the same conversation. So say, like an email gets sent to the purchasing inbox and we have the automation that it assigns it to me. Would you say like the proper way to do that? Like say I complete the email, everything that I need to do is done with that email. I mark it closed. Should I still leave it assigned to me or do I unassign it?
+
+Cole Miller (cole@grexit.com):
+  So marking it as closed will throw it into the close folder and move it out of the assigned to me section. So it's basically our way of archiving it to getting it out of your view. Unless someone else, you know, obviously comes back on the thread and reopens it.
+
+Alec Pool (apool@ecstuning.com):
+  Okay. Because I think that was the issue is the person testing was marking it closed and manually removing them as an assigning, basically changing it to unassigned. And so then when that supplier would respond, it wouldn't follow the normal trigger because it was a reply and it was unassigned.
+
+Cole Miller (cole@grexit.com):
+  That's correct. So, yeah, you don't need to worry about unassigning because, you know, unless there's certain workflows, we do have like a button where it's like send close and unassigned. Because some customers that we do work with, they want it to go back to that unassigned section. But for it sounds like for your use case, you want the rep, whoever dealt with that communication to be assigned it if they reach back out. So in that case, just do send and closed and then don't unassign yourself and it will go back to that same person.
+
+Alec Pool (apool@ecstuning.com):
+  Okay. Right. Well, that's that one. The other thing that we noticed. So when he logged on and started testing and he would say compose like a new email, he had the option to like basically had like a, from section where he could select whether he was sending from his like personal email account or sending it through the shared inbox. However I didn't have that until this morning and I didn't change any settings. Okay? So I'm not entirely sure why it wasn't present before. Is there like a, do you know if there's a setting specifically for that? Just like when we start putting more people on this, we can make sure they have that functionality.
+
+Cole Miller (cole@grexit.com):
+  Yeah. Munoz, I think it's it has to be, yeah, you go ahead.
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. So, sorry about earlier that I think I lost, my tweet, but yeah. So the send mailers, okay? So as soon as a new user is added, you get a confirmation email from Gmail, that will sync to the shared mailbox. And every person as soon as they are added, a new confirmation email will be sent to the unassigned section. All they have to do is just find the email with their email address, click on the link and then confirm the alternate email address. Once they have that, they'll have both the email address present while replying. And while composing new emails?
+
+Cole Miller (cole@grexit.com):
+  Yeah. Okay. And, you want the shared inbox to be default, right? So people don't or how would you prefer that? I.
+
+Alec Pool (apool@ecstuning.com):
+  don't… I can't I don't really think it would probably be different by user, like most of the team works out of the shared inbox, but like myself and Alec work mostly out of like our personal inboxes. So, yeah, I did read a little bit. I was able to find like where you can make that change of like what, where it defaults to, is that by user? Is that by just like organization?
+
+Manoj Kiran (manoj@grexit.com):
+  Okay. So the Gmail part of setting where you have the send mailers set up right over there for your use case, you can actually select reply from the same address the message was sent to. That can be the default setting. And this has to be done on every user level because it's Gmail specific, right? And within hiver, you also have a setting called auto select shared mailbox email on compose. So once you enable that, if you are in any of the sections of the mailbox, like working out of unassigned or team, and then you hit compose, the mailbox address will be added as a default from address.
+
+Alec Pool (apool@ecstuning.com):
+  Okay.
+
+Alec Pool (apool@ecstuning.com):
+  And I think the last one that we brought up, so we had in our purchasing inbox, we have like a signature that goes on the bottom of the emails. When we send it out, we send it through like the hiver view and we're sending it out of the shared inbox, that signature doesn't appear to be present. Is there a way to add the signature for? Like the shared inbox?
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. And that as well is in your Gmail settings… let me just quickly show you.
+
+Manoj Kiran (manoj@grexit.com):
+  So where you have your Gmail signature set up under the general settings, you just have to simply select the alternate email address and then choose what signature that you want to add to it?
+
+Manoj Kiran (manoj@grexit.com):
+  So here, I have multiple signatures, but if I want to use this for every email, you simply click on the dropdown. Choose your purchasing email address, let's say I'm going to go for this?
+
+Alec Pool (apool@ecstuning.com):
+  One, okay. I see that I see that now.
+
+Manoj Kiran (manoj@grexit.com):
+  Yeah. So you just select which signature that you want to use.
+
+Alec Pool (apool@ecstuning.com):
+  Okay. Sounds good.
+
+Manoj Kiran (manoj@grexit.com):
+  And then you just say that is set. And this again, since this is Gmail setting specific. So every user has to… do that.
+
+Alec Pool (apool@ecstuning.com):
+  Okay.
+
+Cole Miller (cole@grexit.com):
+  Is there anything else team that we, can, you know, help clarify on the call today?
+
+Alec Pool (apool@ecstuning.com):
+  No, I think that's all the questions that we kind of put together from what we looked at the last point four hours since the last call, but yeah, I'll keep adding more questions as they come up.
+
+Alec Pool (apool@ecstuning.com):
+  When we get more of the team on there, I'll shoot them over to you guys. Okay. We'll keep you guys up to date on kind of what comes up as we explore.
+
+Cole Miller (cole@grexit.com):
+  Okay, perfect. And I figured maybe we'd throw something on the calendar for let's say like Tuesday next week just to give you more time with the platform as you're testing and you can come up with some more questions that we can kind of go over a live example again.
+
+Alec Pool (apool@ecstuning.com):
+  Let's do Wednesday if you can.
+
+Cole Miller (cole@grexit.com):
+  So, I am in Chicago for a conference, Wednesday and Thursday, okay?
+
+Alec Pool (apool@ecstuning.com):
+  Tuesday should be all right?
+
+Cole Miller (cole@grexit.com):
+  Does three PM est work for you on Tuesday? Actually? Let's do a little earlier than that. Let's actually do one 30 est, if that works.
+
+Alec Pool (apool@ecstuning.com):
+  So, we wouldn't be able to until two, two PM est.
+
+Cole Miller (cole@grexit.com):
+  Okay. So I'm pretty booked on Tuesday. How is Monday?
+
+Alec Pool (apool@ecstuning.com):
+  Monday, one PM?
+
+Cole Miller (cole@grexit.com):
+  One day a month. Let's see here. I can do… 12 30.
+
+Alec Pool (apool@ecstuning.com):
+  That's fine.
+
+Cole Miller (cole@grexit.com):
+  Okay, cool. So, I'll throw it for 12 30 next week. That works for Manoj and I and then, yeah, keep us posted as you're testing, but we appreciate, you know, the time today team looking forward to hearing about the progress next week.
+
+Alec Pool (apool@ecstuning.com):
+  Thanks, Cole. Thanks for addressing some of these pretty quickly too.
+
+Cole Miller (cole@grexit.com):
+  Thank.
+
+Alec Pool (apool@ecstuning.com):
+  you for Manoj as well?
+
+Manoj Kiran (manoj@grexit.com):
+  Thank you.
+
+Cole Miller (cole@grexit.com):
+  Thank you guys. I'll talk to you all soon. Have a great weekend.
+
+Alec Pool (apool@ecstuning.com):
+  Sounds good. You too. All.
+
+Cole Miller (cole@grexit.com):
+  Right. See you guys.

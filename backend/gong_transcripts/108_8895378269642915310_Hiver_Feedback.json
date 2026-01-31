@@ -1,0 +1,3056 @@
+{
+  "call_id": "8895378269642915310",
+  "title": "Hiver Feedback",
+  "started": "2025-11-10T19:15:47+05:30",
+  "duration_seconds": 1463,
+  "call_metadata": {
+    "id": "8895378269642915310",
+    "url": "https://us-31545.app.gong.io/call?id=8895378269642915310",
+    "title": "Hiver Feedback",
+    "scheduled": "2025-11-10T19:15:00+05:30",
+    "started": "2025-11-10T19:15:47+05:30",
+    "duration": 1463,
+    "primaryUserId": "1219092317799715224",
+    "direction": "Conference",
+    "system": "Zoom",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://us06web.zoom.us/j/85180230577?jst=3",
+    "isPrivate": false,
+    "calendarEventId": "4hnjnj1fqkodfprnfdiv1ooa31@google.com"
+  },
+  "parties": [
+    {
+      "id": "125332945384723720",
+      "name": "Jen",
+      "speakerId": "3618454563646813295",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "509687066865616472",
+      "name": "Support",
+      "speakerId": "6269761553718759168",
+      "context": [],
+      "affiliation": "Internal",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "2800601541542275542",
+      "emailAddress": "chris.liles@minervavirtual.com",
+      "name": "Chris Liles",
+      "title": "",
+      "speakerId": "2591912742065906847",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "166120701235",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "41716010519"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Chris"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82334087"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769777252.604
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Deal Closed"
+                },
+                {
+                  "name": "createdate",
+                  "value": 1761106806.77
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1761106806.77
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "other"
+                },
+                {
+                  "name": "email",
+                  "value": "chris.liles@minervavirtual.com"
+                },
+                {
+                  "name": "lastname",
+                  "value": "Liles"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "4117082570591167804",
+      "emailAddress": "kirsten.swan@minervavirtual.com",
+      "name": "Kirsten Swan",
+      "title": "Human Resources Assistant",
+      "speakerId": "7594363754807644479",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "164370492571",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "41716010519"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Kirsten"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Human Resources Assistant"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769505176.73
+                },
+                {
+                  "name": "createdate",
+                  "value": 1760607169.09
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1761177600.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "Swan"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82334087"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "phone",
+                  "value": "+44 (0) 203 637 6477"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1760607169.09
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "kirsten.swan@minervavirtual.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "+44 (0) 203 637 6477",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "6575986071587513963",
+      "emailAddress": "rakesh@grexit.com",
+      "name": "Rakesh Goyal",
+      "title": "Account Executive ",
+      "userId": "1219092317799715224",
+      "speakerId": "6547067118964184331",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "7346747156327307784",
+      "emailAddress": "philippa.iles@minervavirtual.com",
+      "title": "Head of Human Resources & Compliance",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "164615453347",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "41716010519"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Philippa"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82334087"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Head of Human Resources & Compliance"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769777241.962
+                },
+                {
+                  "name": "createdate",
+                  "value": 1760645850.209
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1760645850.209
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "philippa.iles@minervavirtual.com"
+                },
+                {
+                  "name": "lastname",
+                  "value": "Iles"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    },
+    {
+      "id": "8355323858343387260",
+      "emailAddress": "jennifer.griffin@minervavirtual.com",
+      "title": "HR Wellbeing & Performance Lead | ICF Accredited Coach",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "164539496505",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "41716010519"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Jennifer"
+                },
+                {
+                  "name": "hs_calculated_merged_vids",
+                  "value": "164139082290:1760633114994;164348398735:1760633114994"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "HR Wellbeing & Performance Lead | ICF Accredited Coach"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769072328.613
+                },
+                {
+                  "name": "createdate",
+                  "value": 1760605921.142
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1761177600.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "Griffin"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "482816349"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "ORGANIC_SEARCH"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "phone",
+                  "value": "+442036376477"
+                },
+                {
+                  "name": "mobilephone",
+                  "value": "+442036376477"
+                },
+                {
+                  "name": "recent_conversion_date",
+                  "value": 1760607206.439
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Deal Closed"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1764003342.183
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "customer"
+                },
+                {
+                  "name": "email",
+                  "value": "jennifer.griffin@minervavirtual.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "+442036376477",
+      "methods": [
+        "Invitee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "8895378269642915310",
+    "transcript": [
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 3,
+            "end": 423,
+            "text": "hi, Kristen."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1923,
+            "end": 2163,
+            "text": "Hi."
+          },
+          {
+            "start": 2183,
+            "end": 3083,
+            "text": "How are you doing?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 3463,
+            "end": 3903,
+            "text": "Good."
+          },
+          {
+            "start": 4023,
+            "end": 5163,
+            "text": "Thank you so much for asking."
+          },
+          {
+            "start": 5243,
+            "end": 5763,
+            "text": "How are you doing?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 7043,
+            "end": 7723,
+            "text": "I'm really good."
+          },
+          {
+            "start": 7763,
+            "end": 9383,
+            "text": "Thank you another week."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 10803,
+            "end": 11243,
+            "text": "Absolutely."
+          },
+          {
+            "start": 11783,
+            "end": 12503,
+            "text": "All right."
+          },
+          {
+            "start": 12583,
+            "end": 13583,
+            "text": "We've got Chris."
+          },
+          {
+            "start": 14003,
+            "end": 15283,
+            "text": "Hey, nice to meet you again."
+          },
+          {
+            "start": 15763,
+            "end": 16543,
+            "text": "Hi, Rakesh."
+          },
+          {
+            "start": 18703,
+            "end": 19703,
+            "text": "How are you doing, sir?"
+          },
+          {
+            "start": 20743,
+            "end": 21783,
+            "text": "Yeah, very well."
+          },
+          {
+            "start": 21823,
+            "end": 22243,
+            "text": "Thank you."
+          },
+          {
+            "start": 22283,
+            "end": 22623,
+            "text": "How are you?"
+          },
+          {
+            "start": 23123,
+            "end": 23843,
+            "text": "Good, good."
+          },
+          {
+            "start": 23923,
+            "end": 24823,
+            "text": "No complaints at all."
+          },
+          {
+            "start": 24983,
+            "end": 26063,
+            "text": "Thank you so much for joining."
+          },
+          {
+            "start": 27183,
+            "end": 32963,
+            "text": "Let's see if we are waiting for Jennifer and one of your colleagues as well."
+          },
+          {
+            "start": 33103,
+            "end": 33463,
+            "text": "Philippa?"
+          },
+          {
+            "start": 33463,
+            "end": 34603,
+            "text": "Is she joining in too?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 37013,
+            "end": 37823,
+            "text": "Not today."
+          },
+          {
+            "start": 37923,
+            "end": 38983,
+            "text": "She won't be able to make it."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 40833,
+            "end": 42503,
+            "text": "All right, great."
+          },
+          {
+            "start": 42963,
+            "end": 44283,
+            "text": "Do you guys want to tell me?"
+          },
+          {
+            "start": 44283,
+            "end": 47603,
+            "text": "How has it been so far with a couple of more days on testing?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 49593,
+            "end": 50833,
+            "text": "Yeah, it's been really good."
+          },
+          {
+            "start": 50953,
+            "end": 54613,
+            "text": "We had a bit of a chat earlier today about some of the bits we discussed last week."
+          },
+          {
+            "start": 54833,
+            "end": 58073,
+            "text": "So I think we've got a bit of a plan for some of the questions we had."
+          },
+          {
+            "start": 58653,
+            "end": 64513,
+            "text": "I know I'm very keen to get the spam folder set up like we discussed last week."
+          },
+          {
+            "start": 65313,
+            "end": 70773,
+            "text": "Other than that, I don't think there was anything else that we needed to query, Jen might have some questions."
+          },
+          {
+            "start": 70853,
+            "end": 71393,
+            "text": "I'm not sure."
+          },
+          {
+            "start": 72933,
+            "end": 75673,
+            "text": "So, yeah, shouldn't be too much today."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 77943,
+            "end": 78503,
+            "text": "All right."
+          },
+          {
+            "start": 78543,
+            "end": 79083,
+            "text": "Very clear."
+          },
+          {
+            "start": 79183,
+            "end": 83463,
+            "text": "All right now, should we go ahead and help you with the spam folder set up first of all?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 85313,
+            "end": 86223,
+            "text": "Yeah, that sounds great."
+          },
+          {
+            "start": 86343,
+            "end": 86923,
+            "text": "Yeah, thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 87083,
+            "end": 87403,
+            "text": "Okay."
+          },
+          {
+            "start": 87463,
+            "end": 88383,
+            "text": "Give me one minute."
+          },
+          {
+            "start": 88423,
+            "end": 96243,
+            "text": "Let me quickly bring in one of our engineers from support and they should be able to assist us with a quick setup on spam folder."
+          },
+          {
+            "start": 96383,
+            "end": 97843,
+            "text": "So just give me one minute, please."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 99063,
+            "end": 99663,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 100603,
+            "end": 101103,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 141563,
+            "end": 144703,
+            "text": "In the meanwhile, could you check internally if Jennifer is joining her?"
+          },
+          {
+            "start": 145243,
+            "end": 146443,
+            "text": "Oh, she's here already?"
+          },
+          {
+            "start": 146703,
+            "end": 146923,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 147703,
+            "end": 148163,
+            "text": "Oh, lovely."
+          },
+          {
+            "start": 148223,
+            "end": 148863,
+            "text": "I was about to message."
+          },
+          {
+            "start": 149903,
+            "end": 150383,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 156473,
+            "end": 156673,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "3618454563646813295",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 161723,
+            "end": 162023,
+            "text": "Hiya."
+          },
+          {
+            "start": 162263,
+            "end": 162603,
+            "text": "Sorry."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 163833,
+            "end": 164203,
+            "text": "No worries."
+          },
+          {
+            "start": 164263,
+            "end": 164363,
+            "text": "Jen."
+          },
+          {
+            "start": 164443,
+            "end": 165183,
+            "text": "Thank you so much for joining."
+          },
+          {
+            "start": 165343,
+            "end": 165843,
+            "text": "How are you doing?"
+          }
+        ]
+      },
+      {
+        "speakerId": "3618454563646813295",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 166523,
+            "end": 166963,
+            "text": "Yeah, good."
+          },
+          {
+            "start": 167163,
+            "end": 171703,
+            "text": "I was literally telling somebody how good hiver was, and then it was like God, I'm late to the hiver meeting."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 173363,
+            "end": 173823,
+            "text": "No worries."
+          },
+          {
+            "start": 174023,
+            "end": 174383,
+            "text": "All right."
+          },
+          {
+            "start": 174763,
+            "end": 181063,
+            "text": "So, Chris and I were just talking about sorting the spam inbox setting that we discussed last time around?"
+          },
+          {
+            "start": 181163,
+            "end": 190643,
+            "text": "So, I was just actually waiting for one of our support engineers to join us, but in the meanwhile, do you have any question or query that I can assist you with by the time?"
+          },
+          {
+            "start": 190643,
+            "end": 193403,
+            "text": "We're just waiting for somebody to just hop in on our call from support."
+          }
+        ]
+      },
+      {
+        "speakerId": "3618454563646813295",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 194803,
+            "end": 197223,
+            "text": "With the spam thing, I think it's a good idea."
+          },
+          {
+            "start": 197383,
+            "end": 212403,
+            "text": "I just wanted to double check, you know, how a Gmail spam filter ordinarily works when you pull something out of spam, and then you can say this isn't spam and it should train it to recognize and not put that user's email into spam again."
+          },
+          {
+            "start": 212663,
+            "end": 215423,
+            "text": "Will that still happen if we do?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 215423,
+            "end": 215803,
+            "text": "This?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 215923,
+            "end": 222843,
+            "text": "It will so think of it in a way the existing Gmail functionalities that does work for you today."
+          },
+          {
+            "start": 223123,
+            "end": 233733,
+            "text": "Hiver sitting on top of it would not interfere with it, meaning you can still use your tasks, your snooze your, to do the spam, the settings in Gmail."
+          },
+          {
+            "start": 233843,
+            "end": 237713,
+            "text": "The forwarding rules or whatnot would still remain as it is."
+          },
+          {
+            "start": 237833,
+            "end": 251143,
+            "text": "Hiver would not interrupt your existing Gmail workflow but what we want to make sure was that even if there is a spam filtering that we are doing today in hiver, these emails should absolutely land into hiver."
+          },
+          {
+            "start": 251143,
+            "end": 258003,
+            "text": "And then we could create maybe a quick folder or a tag that says these are no action needed tickets."
+          },
+          {
+            "start": 258143,
+            "end": 261293,
+            "text": "Hiver automatically tag them and close those tickets."
+          },
+          {
+            "start": 261463,
+            "end": 263793,
+            "text": "But the spam would still remain as it is with Gmail."
+          },
+          {
+            "start": 265043,
+            "end": 265483,
+            "text": "Okay."
+          },
+          {
+            "start": 265783,
+            "end": 274323,
+            "text": "Now, just to get more sense here, Kristen, do you have any idea as to what these emails are, which are primarily landing into your spam?"
+          },
+          {
+            "start": 274723,
+            "end": 281183,
+            "text": "Maybe if you could just share your screen, give us a quick idea about the spam and let's just quickly do a quick automation in hiver."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 284083,
+            "end": 285223,
+            "text": "Yeah, no problem."
+          },
+          {
+            "start": 285423,
+            "end": 292503,
+            "text": "So the emails that go into there, it really is a mix there's a lot of just typical hotmail or at Google email addresses."
+          },
+          {
+            "start": 292883,
+            "end": 299303,
+            "text": "One that I had recently, I'll just set up my screen share."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 300123,
+            "end": 300643,
+            "text": "Sure."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 301943,
+            "end": 302463,
+            "text": "Okay."
+          },
+          {
+            "start": 302543,
+            "end": 315233,
+            "text": "So one that we had recently was from a new employee of ours, Heather, let me just get her email address up so we can see if that had like a certain odd domain because it seemed like a bit of a normal email address."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 322293,
+            "end": 322593,
+            "text": "Sorry."
+          },
+          {
+            "start": 322733,
+            "end": 324273,
+            "text": "It's being really slow."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 325623,
+            "end": 326153,
+            "text": "No worries."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 326393,
+            "end": 326993,
+            "text": "Okay."
+          },
+          {
+            "start": 327113,
+            "end": 330193,
+            "text": "So these went into spam initially."
+          },
+          {
+            "start": 330193,
+            "end": 332913,
+            "text": "And sorry, not that one."
+          },
+          {
+            "start": 336393,
+            "end": 337713,
+            "text": "This one."
+          },
+          {
+            "start": 337873,
+            "end": 340593,
+            "text": "So personal email address is Gmail."
+          },
+          {
+            "start": 342693,
+            "end": 346113,
+            "text": "Com and that went into spam for some reason."
+          },
+          {
+            "start": 346213,
+            "end": 356173,
+            "text": "So there was about three emails that I didn't see, didn't reply to because I didn't get them email addresses that are being flagged, always different because it's always different staff members."
+          },
+          {
+            "start": 356233,
+            "end": 357913,
+            "text": "So it's really quite hard to pinpoint."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 359343,
+            "end": 359723,
+            "text": "Understood."
+          },
+          {
+            "start": 359983,
+            "end": 367663,
+            "text": "So hiver treated these emails as not important or spam, because these were like predominantly yahoo or Gmail."
+          },
+          {
+            "start": 367663,
+            "end": 368523,
+            "text": "Com, basically."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 370353,
+            "end": 371123,
+            "text": "yeah, absolutely."
+          },
+          {
+            "start": 371363,
+            "end": 377463,
+            "text": "Yeah, it just went to spam because I didn't have the folder access to the spam folder because I was using hiver, I just didn't see them at all."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 378043,
+            "end": 379263,
+            "text": "Understood, understood."
+          },
+          {
+            "start": 379423,
+            "end": 380283,
+            "text": "Give me one minute."
+          },
+          {
+            "start": 380323,
+            "end": 381923,
+            "text": "Let me see."
+          },
+          {
+            "start": 381943,
+            "end": 386923,
+            "text": "It looks like all my support engineers are occupied, but let me see who can actually join us real quick."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 441193,
+            "end": 441453,
+            "text": "All right."
+          },
+          {
+            "start": 441473,
+            "end": 445793,
+            "text": "Could you click here on the three folder?"
+          },
+          {
+            "start": 445913,
+            "end": 448313,
+            "text": "I mean, these three Gmail settings option here?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 451243,
+            "end": 454383,
+            "text": "Sorry, I'm struggling to see what is circled, is that this one here?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 455143,
+            "end": 457983,
+            "text": "Not here, but right next to the search bar."
+          },
+          {
+            "start": 459523,
+            "end": 459923,
+            "text": "Okay."
+          },
+          {
+            "start": 459963,
+            "end": 461363,
+            "text": "Do you see my cursor by the way?"
+          },
+          {
+            "start": 461443,
+            "end": 461603,
+            "text": "Okay."
+          },
+          {
+            "start": 461703,
+            "end": 468343,
+            "text": "Yeah, yeah, I want to look at the filters that you have created for spam."
+          },
+          {
+            "start": 468643,
+            "end": 474243,
+            "text": "I just want to make sure… could you take me to the Gmail settings please?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 475693,
+            "end": 475923,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 481783,
+            "end": 482443,
+            "text": "Okay."
+          },
+          {
+            "start": 482443,
+            "end": 483703,
+            "text": "See all settings?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 489903,
+            "end": 491223,
+            "text": "Filters and block email address."
+          },
+          {
+            "start": 491403,
+            "end": 495263,
+            "text": "This one, the fifth option, okay."
+          },
+          {
+            "start": 496203,
+            "end": 496803,
+            "text": "Now."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 501863,
+            "end": 501963,
+            "text": "Okay."
+          },
+          {
+            "start": 505593,
+            "end": 506913,
+            "text": "Let me just check."
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 512423,
+            "end": 513143,
+            "text": "Hey, Rakesh."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 514093,
+            "end": 514543,
+            "text": "Hi, Suhas."
+          },
+          {
+            "start": 514643,
+            "end": 515203,
+            "text": "How are you doing?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 515753,
+            "end": 516263,
+            "text": "Good, good."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 516903,
+            "end": 517113,
+            "text": "Great."
+          },
+          {
+            "start": 517233,
+            "end": 518093,
+            "text": "Thank you for joining."
+          },
+          {
+            "start": 518213,
+            "end": 527493,
+            "text": "I've got Kristen, Chris and Chen, we are actually struggling with management of emails via spam, there were certain emails that hiver treated as spam."
+          },
+          {
+            "start": 527633,
+            "end": 534433,
+            "text": "Of course, there was Gmail, but we want to make sure that these emails are not landing into spam any further."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 534873,
+            "end": 545433,
+            "text": "I'd had a quick discussion with Aishwarya the other day we spoke, but we wanted to make sure that in hiver, we could actually treat these emails with all the due diligence, Kristen."
+          },
+          {
+            "start": 545513,
+            "end": 548193,
+            "text": "Do you mind if you could share with me one more time?"
+          },
+          {
+            "start": 548193,
+            "end": 549953,
+            "text": "A quick example of the email that you showed?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 553063,
+            "end": 553243,
+            "text": "Yeah."
+          },
+          {
+            "start": 553363,
+            "end": 554843,
+            "text": "So it was just an at Gmail."
+          },
+          {
+            "start": 554843,
+            "end": 555563,
+            "text": "Com."
+          },
+          {
+            "start": 555563,
+            "end": 556303,
+            "text": "Email address."
+          },
+          {
+            "start": 556603,
+            "end": 557963,
+            "text": "It just happens with a lot."
+          },
+          {
+            "start": 558123,
+            "end": 564223,
+            "text": "So, essentially, we just want access to the spam folder, so we can go through and make sure we're not missing any important emails?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 565673,
+            "end": 566083,
+            "text": "Got it."
+          },
+          {
+            "start": 566183,
+            "end": 566583,
+            "text": "Rakesh."
+          },
+          {
+            "start": 566643,
+            "end": 567903,
+            "text": "Can you share their user details?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 568263,
+            "end": 569383,
+            "text": "Yeah, I will."
+          },
+          {
+            "start": 569463,
+            "end": 569763,
+            "text": "Kristen."
+          },
+          {
+            "start": 569883,
+            "end": 570423,
+            "text": "Give me a minute."
+          },
+          {
+            "start": 570503,
+            "end": 575203,
+            "text": "I am sharing this internally with my colleague about your accounts, so."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 586023,
+            "end": 615953,
+            "text": "So, basically, just so you know, Suhas, what Aishwarya and I discussed last time was that instead hiver Gmail treats any spam, let's just make sure that all of the emails do land into hiver mailbox and any email which is not needed to work upon, we could create a tag automatically say, hey, this is no action needed email, but we are still looking at those emails and not assuming that these are going to be spam because these are yahoo."
+          },
+          {
+            "start": 615953,
+            "end": 617113,
+            "text": "Com or Gmail."
+          },
+          {
+            "start": 617113,
+            "end": 617673,
+            "text": "Com."
+          },
+          {
+            "start": 618053,
+            "end": 627673,
+            "text": "We don't want to go through, you know, that even one percent of those emails which directly is treated as spam, we don't really need to miss anything actually."
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 628453,
+            "end": 628753,
+            "text": "Sure."
+          },
+          {
+            "start": 628973,
+            "end": 632233,
+            "text": "So, I just need to check if it is a group type mailbox or a user type mailbox?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 632593,
+            "end": 632873,
+            "text": "Sure."
+          },
+          {
+            "start": 633593,
+            "end": 634253,
+            "text": "All right."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 641953,
+            "end": 645153,
+            "text": "You're just reviewing your account, Kristen, at the back end, give us another minute, please?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 646373,
+            "end": 646933,
+            "text": "No problem."
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 647843,
+            "end": 648373,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 653633,
+            "end": 655873,
+            "text": "Yeah, it is a user type account."
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 656953,
+            "end": 670013,
+            "text": "Then in that case, we can create a filter within the source account that says, if an email is sent to the shared mailbox address, do not send it to spam, this will make sure the email will land."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 670613,
+            "end": 671273,
+            "text": "Into hiver."
+          },
+          {
+            "start": 671453,
+            "end": 673593,
+            "text": "And if we don't need to work on it, we just simply."
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 673643,
+            "end": 674123,
+            "text": "Close it."
+          },
+          {
+            "start": 674443,
+            "end": 678923,
+            "text": "Yeah, but this only works if it is a user type shared mailbox, it is okay."
+          },
+          {
+            "start": 679683,
+            "end": 683063,
+            "text": "Then, yeah, they'll have to log into the source account, right?"
+          },
+          {
+            "start": 683103,
+            "end": 685403,
+            "text": "The mailbox… no."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 685403,
+            "end": 687043,
+            "text": "Worries, I will."
+          },
+          {
+            "start": 687143,
+            "end": 688483,
+            "text": "Yeah, definitely let's do that."
+          },
+          {
+            "start": 689803,
+            "end": 690203,
+            "text": "Chris."
+          },
+          {
+            "start": 690263,
+            "end": 694543,
+            "text": "Do you have an access to HR inbox and the recruitment inbox for you?"
+          },
+          {
+            "start": 694703,
+            "end": 699723,
+            "text": "Like, do, you, can you log in into the HR inbox in a separate window?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 701473,
+            "end": 702523,
+            "text": "Yeah, yeah, absolutely."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 703333,
+            "end": 703773,
+            "text": "Sure."
+          },
+          {
+            "start": 703773,
+            "end": 704273,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 711973,
+            "end": 712113,
+            "text": "Okay."
+          },
+          {
+            "start": 712253,
+            "end": 720793,
+            "text": "And over here, can you show me some of the emails that are being spammed, are they being sent to HR or are they being sent to another address and then getting auto forward from there to HR?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 724323,
+            "end": 724583,
+            "text": "Okay."
+          },
+          {
+            "start": 724683,
+            "end": 731183,
+            "text": "So this is what's in spam at the moment and sent to quite a few email addresses in the company."
+          },
+          {
+            "start": 731863,
+            "end": 732903,
+            "text": "Same with this."
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 733283,
+            "end": 735283,
+            "text": "Can you expand the, from and to field?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 736803,
+            "end": 737103,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 738463,
+            "end": 738883,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 739143,
+            "end": 745063,
+            "text": "So, this is genuinely spam, it's just on the occasions that we just need to check it."
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 745823,
+            "end": 747263,
+            "text": "So, the second address, right?"
+          },
+          {
+            "start": 747303,
+            "end": 748603,
+            "text": "That's the shared mailboxes address?"
+          },
+          {
+            "start": 748783,
+            "end": 749203,
+            "text": "Is that correct?"
+          },
+          {
+            "start": 749683,
+            "end": 750183,
+            "text": "Yes."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 750383,
+            "end": 751543,
+            "text": "Yes, this one here?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 752223,
+            "end": 752523,
+            "text": "All right."
+          },
+          {
+            "start": 752603,
+            "end": 752823,
+            "text": "Okay."
+          },
+          {
+            "start": 752883,
+            "end": 756063,
+            "text": "Then, yeah, we can go ahead and go ahead and create the filter."
+          },
+          {
+            "start": 756343,
+            "end": 768223,
+            "text": "So click on the Gmail settings, the gear icon… see all settings and then click on filters and blocked address."
+          },
+          {
+            "start": 769043,
+            "end": 776903,
+            "text": "And here, click on create new filter… and in the to field type in the shared mailboxes address."
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 784153,
+            "end": 785413,
+            "text": "And then click on create filter."
+          },
+          {
+            "start": 789303,
+            "end": 795883,
+            "text": "And here there's an option that says never send it to spam right below deleted there."
+          },
+          {
+            "start": 796743,
+            "end": 797223,
+            "text": "Yeah."
+          },
+          {
+            "start": 797323,
+            "end": 797603,
+            "text": "Okay."
+          },
+          {
+            "start": 797703,
+            "end": 799043,
+            "text": "And then create filter."
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 803673,
+            "end": 803913,
+            "text": "Perfect."
+          },
+          {
+            "start": 804173,
+            "end": 810313,
+            "text": "So this will make sure emails sent to the specific Gmail account lands in the inbox."
+          },
+          {
+            "start": 810313,
+            "end": 811973,
+            "text": "And then hiver will sync it."
+          },
+          {
+            "start": 812273,
+            "end": 819253,
+            "text": "So since it was Gmail that was controlling the spam functionality, we just informed Gmail not to spam any emails going forward."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 821023,
+            "end": 821393,
+            "text": "Okay."
+          },
+          {
+            "start": 821433,
+            "end": 825613,
+            "text": "So they'll all now go in as normal emails to be allocated or closed."
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 826463,
+            "end": 826713,
+            "text": "Correct."
+          },
+          {
+            "start": 826813,
+            "end": 832353,
+            "text": "You'll have to use hiver automation to auto close to spam emails going forward or manually close them."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 832593,
+            "end": 832953,
+            "text": "Okay."
+          },
+          {
+            "start": 833233,
+            "end": 835193,
+            "text": "And how would hiver know that it's spam?"
+          },
+          {
+            "start": 835353,
+            "end": 837173,
+            "text": "How would it, how would it flag them?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 837973,
+            "end": 845073,
+            "text": "You'll have to define it for example, if it comes from a specific address, and if you believe it's a spam email, like usually no reply at domain."
+          },
+          {
+            "start": 845073,
+            "end": 846793,
+            "text": "Com, those are spam, right?"
+          },
+          {
+            "start": 846873,
+            "end": 849553,
+            "text": "Those are more like an educational email."
+          },
+          {
+            "start": 849733,
+            "end": 854613,
+            "text": "So you can go through some of the spam emails and declare it in the automation."
+          },
+          {
+            "start": 854773,
+            "end": 856153,
+            "text": "So hiver closes them."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 857943,
+            "end": 858443,
+            "text": "Okay."
+          },
+          {
+            "start": 858583,
+            "end": 859063,
+            "text": "I see."
+          },
+          {
+            "start": 859163,
+            "end": 859523,
+            "text": "Lovely."
+          },
+          {
+            "start": 859683,
+            "end": 861503,
+            "text": "So we've essentially just turned off spam."
+          },
+          {
+            "start": 861503,
+            "end": 863943,
+            "text": "So I can now decide what's spam or not."
+          },
+          {
+            "start": 863963,
+            "end": 865183,
+            "text": "That's absolutely fine."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 865383,
+            "end": 865863,
+            "text": "Yeah."
+          },
+          {
+            "start": 865983,
+            "end": 872943,
+            "text": "And what I can help you do is say we help you create a tag called spam oblique, no action needed."
+          },
+          {
+            "start": 872943,
+            "end": 882343,
+            "text": "Emails as in when anybody in your team looks at those emails which are still landing into hiver by default because now, we make sure that no email is bypassing hiver."
+          },
+          {
+            "start": 882503,
+            "end": 883923,
+            "text": "Everything is actually going to land."
+          },
+          {
+            "start": 884063,
+            "end": 891403,
+            "text": "And if there are emails which do not require attention, these are spam, you just simply add a tag called spam, no action needed."
+          },
+          {
+            "start": 891403,
+            "end": 896303,
+            "text": "And hiver auto closes that email for you or either you could just close it by yourself."
+          },
+          {
+            "start": 896443,
+            "end": 897783,
+            "text": "So both ways it is possible."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 899613,
+            "end": 900623,
+            "text": "Yeah, that's fantastic."
+          },
+          {
+            "start": 900783,
+            "end": 901503,
+            "text": "That sounds good."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 902043,
+            "end": 902263,
+            "text": "Yeah."
+          },
+          {
+            "start": 902323,
+            "end": 905103,
+            "text": "Now, this was one inbox HR at the rate."
+          },
+          {
+            "start": 905163,
+            "end": 907303,
+            "text": "And I believe we've got another inbox set up."
+          },
+          {
+            "start": 907403,
+            "end": 907803,
+            "text": "Now."
+          },
+          {
+            "start": 907863,
+            "end": 916503,
+            "text": "Do you also want to make sure for recruitment inbox, we follow the same because we don't want to miss any of those emails there also, or is this the main in question for now?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 918293,
+            "end": 925243,
+            "text": "I think I will do the same in recruitment just because we get so much random contact through there as well."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 926263,
+            "end": 926703,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "3618454563646813295",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 927323,
+            "end": 930903,
+            "text": "Sorry to interrupt, but Kirsten, I need to jump into this other meeting."
+          },
+          {
+            "start": 932003,
+            "end": 933693,
+            "text": "So, yeah, sorry."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 934273,
+            "end": 935173,
+            "text": "No, no worries."
+          },
+          {
+            "start": 935273,
+            "end": 935923,
+            "text": "No worries."
+          },
+          {
+            "start": 935983,
+            "end": 936343,
+            "text": "Thank you."
+          },
+          {
+            "start": 936393,
+            "end": 937813,
+            "text": "I'll take it up with Kirsten."
+          },
+          {
+            "start": 937913,
+            "end": 940853,
+            "text": "I think we would require another two or three minutes, but, yeah, take care."
+          },
+          {
+            "start": 941013,
+            "end": 941353,
+            "text": "All right."
+          }
+        ]
+      },
+      {
+        "speakerId": "3618454563646813295",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 941393,
+            "end": 941703,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 944853,
+            "end": 944933,
+            "text": "Bye."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 948953,
+            "end": 949373,
+            "text": "All right."
+          },
+          {
+            "start": 949713,
+            "end": 963543,
+            "text": "Create a new filter… and then two recruitment at the rate email… create filter and we want to make sure, never send it to spam."
+          },
+          {
+            "start": 964283,
+            "end": 965883,
+            "text": "Yeah, create."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 967763,
+            "end": 968483,
+            "text": "Pretty much there."
+          },
+          {
+            "start": 968483,
+            "end": 969103,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 969813,
+            "end": 970143,
+            "text": "All right."
+          },
+          {
+            "start": 970203,
+            "end": 977223,
+            "text": "Now, the last step is if you could now close these and take me to the main inbox for yourself, like hiver inbox actually."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 979833,
+            "end": 979843,
+            "text": "All."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 981183,
+            "end": 982943,
+            "text": "right now, let's first of all, go to HR inbox."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 984913,
+            "end": 985183,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 986773,
+            "end": 987483,
+            "text": "Go to the tags."
+          },
+          {
+            "start": 990953,
+            "end": 993133,
+            "text": "Let's quickly create a tag called spam."
+          },
+          {
+            "start": 995013,
+            "end": 1002613,
+            "text": "And this would definitely help you even, you know, at the end of the month, you want to run reports and understand how many spams were there, which should not be included in your actual reports."
+          },
+          {
+            "start": 1003213,
+            "end": 1007273,
+            "text": "You should be able to figure that out with the reporting, exclude the spam ones."
+          },
+          {
+            "start": 1007613,
+            "end": 1008353,
+            "text": "And here."
+          },
+          {
+            "start": 1009613,
+            "end": 1010013,
+            "text": "Okay."
+          },
+          {
+            "start": 1010713,
+            "end": 1012613,
+            "text": "We don't have to describe anything by the way."
+          },
+          {
+            "start": 1012673,
+            "end": 1018933,
+            "text": "Just give it a color and create it and similarly, let's create another tag under the recruitment inbox for you."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1027673,
+            "end": 1027893,
+            "text": "Okay."
+          },
+          {
+            "start": 1030513,
+            "end": 1033573,
+            "text": "Create now, in the automation workflows."
+          },
+          {
+            "start": 1033813,
+            "end": 1046393,
+            "text": "Now, either Kristen, you have got an option to simply close the email and mark it spam as a tag or you have got one easy step, which is the moment you realize this is spam, just simply add a tag called spam."
+          },
+          {
+            "start": 1046393,
+            "end": 1048353,
+            "text": "And hiver automatically closes it for you."
+          },
+          {
+            "start": 1050173,
+            "end": 1050873,
+            "text": "Meaning, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1050893,
+            "end": 1052733,
+            "text": "I think that's probably the best way to do it."
+          },
+          {
+            "start": 1052733,
+            "end": 1054293,
+            "text": "So I can kind of control spam."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1054813,
+            "end": 1055243,
+            "text": "Huh."
+          },
+          {
+            "start": 1055433,
+            "end": 1055833,
+            "text": "Absolutely."
+          },
+          {
+            "start": 1056253,
+            "end": 1056653,
+            "text": "Yeah."
+          },
+          {
+            "start": 1056783,
+            "end": 1061463,
+            "text": "So let's go to the automations workflow here in the settings, hiver settings, I'm."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1061473,
+            "end": 1063833,
+            "text": "just going to go into the HR one initially."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1064783,
+            "end": 1065713,
+            "text": "Yeah, fair enough."
+          },
+          {
+            "start": 1065803,
+            "end": 1067363,
+            "text": "Let's go to the hiver settings."
+          },
+          {
+            "start": 1068973,
+            "end": 1075583,
+            "text": "And unless you have any more technical questions, I think I can let my technical Guy go off the call and I can help you."
+          },
+          {
+            "start": 1076213,
+            "end": 1077293,
+            "text": "Do you have any, yeah, I."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1077283,
+            "end": 1077973,
+            "text": "had nothing else?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1078613,
+            "end": 1078983,
+            "text": "All right."
+          },
+          {
+            "start": 1079043,
+            "end": 1079563,
+            "text": "No worries."
+          },
+          {
+            "start": 1080043,
+            "end": 1081333,
+            "text": "Thank you, Suhas, thank you for your help."
+          }
+        ]
+      },
+      {
+        "speakerId": "6269761553718759168",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1081693,
+            "end": 1082093,
+            "text": "Welcome."
+          },
+          {
+            "start": 1082303,
+            "end": 1082633,
+            "text": "You guys."
+          },
+          {
+            "start": 1082633,
+            "end": 1083233,
+            "text": "Have a wonderful day."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1083243,
+            "end": 1084683,
+            "text": "Thank you so much."
+          },
+          {
+            "start": 1084823,
+            "end": 1085183,
+            "text": "Thank you."
+          },
+          {
+            "start": 1085183,
+            "end": 1085383,
+            "text": "All right."
+          },
+          {
+            "start": 1085503,
+            "end": 1097573,
+            "text": "Admin panel, please… shared in boxes… HR inbox, automation workflows."
+          },
+          {
+            "start": 1097973,
+            "end": 1100233,
+            "text": "Oh, let me just find where the automations are."
+          },
+          {
+            "start": 1100613,
+            "end": 1107993,
+            "text": "Oh, yeah, automations… create an automation, give it a name, spam."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1112523,
+            "end": 1112903,
+            "text": "All right."
+          },
+          {
+            "start": 1113043,
+            "end": 1115803,
+            "text": "Whenever the new conversation is coming in, yeah."
+          },
+          {
+            "start": 1115843,
+            "end": 1117523,
+            "text": "Can you drop down?"
+          },
+          {
+            "start": 1118483,
+            "end": 1119823,
+            "text": "I mean, can you click on the drop down here?"
+          },
+          {
+            "start": 1120903,
+            "end": 1124203,
+            "text": "Let me just see if tag is added?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1128593,
+            "end": 1145753,
+            "text": "Add a step… if… select condition tag is… any of instead of all of I would say is any of spam?"
+          },
+          {
+            "start": 1148743,
+            "end": 1165873,
+            "text": "Yeah, yeah, spam, then we want to do add step… action… simply status, update the status… to closed."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1168273,
+            "end": 1168753,
+            "text": "Wonderful."
+          },
+          {
+            "start": 1168813,
+            "end": 1169693,
+            "text": "That's fantastic."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1170953,
+            "end": 1171153,
+            "text": "Yeah."
+          },
+          {
+            "start": 1171253,
+            "end": 1174753,
+            "text": "And this is what you can replicate for your recruitment inbox as well."
+          },
+          {
+            "start": 1175973,
+            "end": 1192133,
+            "text": "Now, what hiver would ensure is that no email is going to go miss at all, everything by default will land into your HR inbox as in when you realize this is a spam email and you don't really need to work on it by the way, hiver can actually train himself as well."
+          },
+          {
+            "start": 1192193,
+            "end": 1201793,
+            "text": "Like after a couple of examples, when you try and mark them, spam, hiver will try and understand the sequence, the pattern through an AI, should we really want it."
+          },
+          {
+            "start": 1202033,
+            "end": 1205053,
+            "text": "Otherwise, you can always control it the moment you add a spam tag."
+          },
+          {
+            "start": 1205153,
+            "end": 1206373,
+            "text": "It automatically closes for you."
+          },
+          {
+            "start": 1206513,
+            "end": 1220653,
+            "text": "And you can always look at the closed emails and filter these emails with the spam tag so that you could understand how many of them are actual genuine closed by response, and how many of them were actually the spam ones, which probably was just like a clutter in our inbox."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1222663,
+            "end": 1223463,
+            "text": "That's great."
+          },
+          {
+            "start": 1223683,
+            "end": 1227803,
+            "text": "And the training itself to identify what spam does that happen automatically?"
+          },
+          {
+            "start": 1227803,
+            "end": 1229623,
+            "text": "Or is that something I have to enable myself?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1230263,
+            "end": 1232343,
+            "text": "That would be under the AI hiver AI."
+          },
+          {
+            "start": 1232563,
+            "end": 1239043,
+            "text": "So when we enable it, we can always look at the actual pattern of emails which were spammed by you guys."
+          },
+          {
+            "start": 1239323,
+            "end": 1247703,
+            "text": "And once that definition is pretty much defined in hiver AI, it would just start to configure these."
+          },
+          {
+            "start": 1247883,
+            "end": 1250003,
+            "text": "Let's say this is AI tagging."
+          },
+          {
+            "start": 1250043,
+            "end": 1251443,
+            "text": "Now, if you click on configure here."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1255083,
+            "end": 1255093,
+            "text": "You."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1255113,
+            "end": 1258853,
+            "text": "would be able to see, yeah, I mean recruitment tag is used for."
+          },
+          {
+            "start": 1258933,
+            "end": 1271633,
+            "text": "So as and when you create certain filters or educate hiver AI that these kind of emails are actual spam, hiver will then try to, you know, deflect those emails by its own."
+          },
+          {
+            "start": 1271833,
+            "end": 1274113,
+            "text": "But I would say let's not turn this on for now."
+          },
+          {
+            "start": 1274213,
+            "end": 1278113,
+            "text": "Let's just make sure first of all, we get to get those, you know, use cases."
+          },
+          {
+            "start": 1278233,
+            "end": 1279553,
+            "text": "We manually tag them."
+          },
+          {
+            "start": 1279793,
+            "end": 1288253,
+            "text": "And once we are very thorough with this and system tries and understand it, then we tag this one by the way because in this."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1288253,
+            "end": 1289313,
+            "text": "case, we are just very fantastic."
+          },
+          {
+            "start": 1289313,
+            "end": 1290753,
+            "text": "So just turn it on in here while it's ready."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1291363,
+            "end": 1300903,
+            "text": "We can absolutely, you know, because at this point in time, I am assuming that we are not very sure of what these emails are, which are spam, unless we literally go through a couple of examples in hiver."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1303303,
+            "end": 1303523,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1305033,
+            "end": 1305333,
+            "text": "All right."
+          },
+          {
+            "start": 1305373,
+            "end": 1309913,
+            "text": "But yeah, this is definitely possible without even having to have a lot of manual intervention."
+          },
+          {
+            "start": 1310053,
+            "end": 1313273,
+            "text": "You can absolutely have hiver AI start to tag email spam."
+          },
+          {
+            "start": 1313273,
+            "end": 1317973,
+            "text": "And yeah, it'll make sure that not only spam but think of any category of emails."
+          },
+          {
+            "start": 1318113,
+            "end": 1322953,
+            "text": "It would start to tag it for you automatically, something like refund which is very prominent, right?"
+          },
+          {
+            "start": 1323053,
+            "end": 1329773,
+            "text": "I can have either say give me my money back or I could say, hey, could you refund or I would say, hey, could you process the refund requested?"
+          },
+          {
+            "start": 1330273,
+            "end": 1335193,
+            "text": "All of this have a very specific fashion, but spam could be anything because we are not yet aware of it then."
+          },
+          {
+            "start": 1335293,
+            "end": 1336073,
+            "text": "So, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 1338153,
+            "end": 1338513,
+            "text": "Brilliant."
+          },
+          {
+            "start": 1338593,
+            "end": 1339333,
+            "text": "That's fantastic."
+          },
+          {
+            "start": 1339813,
+            "end": 1341393,
+            "text": "Then thank you for helping me get that set up."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 1341953,
+            "end": 1342313,
+            "text": "Lovely."
+          },
+          {
+            "start": 1343073,
+            "end": 1343393,
+            "text": "No worries."
+          },
+          {
+            "start": 1343393,
+            "end": 1343713,
+            "text": "All right."
+          },
+          {
+            "start": 1344073,
+            "end": 1345433,
+            "text": "And what is the next step?"
+          },
+          {
+            "start": 1345553,
+            "end": 1351373,
+            "text": "I mean, you said you had a quick chat internally and yeah, let me know."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 1352963,
+            "end": 1353263,
+            "text": "Yes."
+          },
+          {
+            "start": 1353543,
+            "end": 1355603,
+            "text": "So obviously Chris has gone as well."
+          },
+          {
+            "start": 1356443,
+            "end": 1360783,
+            "text": "So we had a chat with our manager again today this morning."
+          },
+          {
+            "start": 1360963,
+            "end": 1367943,
+            "text": "So, Jen is making an instructional video on how high is used so that we can pass that on to our chief of staff."
+          },
+          {
+            "start": 1368823,
+            "end": 1373843,
+            "text": "It's essentially already approved, but we just need that for the, you know, the paperwork basically."
+          },
+          {
+            "start": 1374103,
+            "end": 1380023,
+            "text": "So as soon as Jen's got that sent over, then it's all going to be approved and that's going to be going to be all set up properly."
+          },
+          {
+            "start": 1380163,
+            "end": 1382003,
+            "text": "Sorry, it's been such a long process."
+          },
+          {
+            "start": 1382083,
+            "end": 1384143,
+            "text": "It's very, you know, tick boxy."
+          },
+          {
+            "start": 1384143,
+            "end": 1385983,
+            "text": "There's so many things to go through to get it approved."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 1386463,
+            "end": 1387123,
+            "text": "No worries."
+          },
+          {
+            "start": 1387323,
+            "end": 1388943,
+            "text": "Should we go ahead and reconnect tomorrow?"
+          },
+          {
+            "start": 1389083,
+            "end": 1391263,
+            "text": "And until then, I'll make sure your account is active."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 1393143,
+            "end": 1393623,
+            "text": "Sure."
+          },
+          {
+            "start": 1393763,
+            "end": 1395143,
+            "text": "Yeah, that's no problem at all."
+          },
+          {
+            "start": 1395243,
+            "end": 1399363,
+            "text": "I believe Jen works tomorrow, so that should be good."
+          },
+          {
+            "start": 1399463,
+            "end": 1399643,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 1400193,
+            "end": 1400523,
+            "text": "Okay."
+          },
+          {
+            "start": 1400683,
+            "end": 1412643,
+            "text": "I am just taking 10, 15 minutes on calendar, probably the same time as today and let's just connect tomorrow, try and see if there's anything else that is pending that require attention."
+          },
+          {
+            "start": 1413403,
+            "end": 1417023,
+            "text": "And, yeah, sent you an invite, updated one for tomorrow."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 1419143,
+            "end": 1420163,
+            "text": "That is wonderful."
+          },
+          {
+            "start": 1420363,
+            "end": 1421523,
+            "text": "Let me just check that."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 1424383,
+            "end": 1426783,
+            "text": "I just want to make sure your trial is active."
+          },
+          {
+            "start": 1427083,
+            "end": 1429043,
+            "text": "Yeah, your trial is active until the twelfth."
+          },
+          {
+            "start": 1429063,
+            "end": 1437603,
+            "text": "I simply went ahead and extended for another day so that by the time we connect tomorrow, it is not suspended."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 1438983,
+            "end": 1439623,
+            "text": "That's brilliant."
+          },
+          {
+            "start": 1439743,
+            "end": 1440183,
+            "text": "Thank you."
+          },
+          {
+            "start": 1440203,
+            "end": 1442223,
+            "text": "I think I'd have a meltdown if it all came off now."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": "Next Steps",
+        "sentences": [
+          {
+            "start": 1443743,
+            "end": 1444443,
+            "text": "No worries."
+          },
+          {
+            "start": 1444543,
+            "end": 1446163,
+            "text": "Thank you so very much for your time again."
+          },
+          {
+            "start": 1446343,
+            "end": 1452573,
+            "text": "And should you still have any more questions you get across in any more doubts, do not hesitate like I always say, please feel free to write back to me."
+          },
+          {
+            "start": 1452573,
+            "end": 1455573,
+            "text": "I'm just an email away, but yeah, let's go ahead and reconnect tomorrow again."
+          }
+        ]
+      },
+      {
+        "speakerId": "7594363754807644479",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1456513,
+            "end": 1456953,
+            "text": "All right."
+          },
+          {
+            "start": 1456973,
+            "end": 1457213,
+            "text": "Brilliant."
+          },
+          {
+            "start": 1457293,
+            "end": 1458313,
+            "text": "Thank you so much again."
+          },
+          {
+            "start": 1458393,
+            "end": 1459233,
+            "text": "I hope you have a great day."
+          }
+        ]
+      },
+      {
+        "speakerId": "6547067118964184331",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1459773,
+            "end": 1460453,
+            "text": "Thank you so much."
+          },
+          {
+            "start": 1460473,
+            "end": 1460613,
+            "text": "Goodbye."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 124
+}

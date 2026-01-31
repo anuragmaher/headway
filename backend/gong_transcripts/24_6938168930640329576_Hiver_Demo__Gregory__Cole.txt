@@ -1,0 +1,115 @@
+================================================================================
+Call: Hiver Demo | Gregory <> Cole
+Date: 2025-11-14T19:57:28+05:30
+================================================================================
+
+Cole Miller (cole@grexit.com):
+  hey, what's going on Greg?
+
+Gregory Dubin (dubing@daisydata.com):
+  Do you hear me all right?
+
+Cole Miller (cole@grexit.com):
+  Yeah, I can hear you. So I do have… a hard stop at if that works for you or would it make sense to schedule this for another time?
+
+Gregory Dubin (dubing@daisydata.com):
+  Yeah, I think that's fine. I mean, I've got a pretty specific… use case. So I think maybe I can tell you what it is and if you think of the lines, it could be worth having a second contemplating it.
+
+Cole Miller (cole@grexit.com):
+  Okay. Yeah, perfect. Yeah, we can just hop into it. We'd love to just understand Greg from your perspective. You know, what you're looking to solve for potentially with hiver, and then we can just kind of take it from there.
+
+Gregory Dubin (dubing@daisydata.com):
+  Yeah. So as a quick background, I mean we're a manufacturing company like 40 some years old. So tons of institutional knowledge, people have been here 20 30 years. You know, different systems of record over different years… you know, thousands of tech support, emails and conversations and notebooks and stuff. So, one of my long term initiatives has been trying to build, you know, a company knowledge base that can be then accessed internally in various ways and, you know, tech support repairs… you know, the stuff we work in, it's like really they're computers designed for really hazardous and extreme environments. So it's you know, low volume customized stuff. It's not like we're getting, you know, grandma calling, how do I work my rom drive? It's like engineers calling and we're usually sending parts back and forth and drawing. I mean, it's like very low volume but highly technical. I'd say… so really my main purpose or one of my main goals is kind of using the tech support concept but internally facing, you know, so if we have a lot of, you know, newer techs and everything, who, if they get a call about a product, you know, I want them to look up the knowledge base and see, you know, all the previous support tickets, all the problems that happened, what the solutions were… and, you know, ideally like plain language interface. So that's more or less it, I mean, where all the knowledge sits and everything is obviously a lot more complicated but more or less a, but it's really highly technical that's a big part of it like it's and… it's gonna be a lot of like being… able to identify which drawings and diagrams to pull from, where, and what are relevant things like that?
+
+Cole Miller (cole@grexit.com):
+  Okay. And how can you walk me through like the channels of support that you're offering today? Like to your clients? Like how you're tracking… tickets issues? Are you using a system today? What does that look like?
+
+Gregory Dubin (dubing@daisydata.com):
+  Yeah. So everything's built on Salesforce, right? So, I mean, so it will either be, you know, a call will come in. It can be like a case and that could just be, you know, going back and forth, next level up would be part sales. So, you know, then you're actually they're purchasing parts and you're sending them and you're you know, verifying back and forth. And the third would be complete repair where they ship the unit back. We diagnose it. We, yeah, they prove it. We fix it up and mail it back out. So those would be kind of three levels. The cases were pretty standard Salesforce. They and part sales were pretty standard. And then the repairs module is all kind of custom objects and custom stuff to build.
+
+Cole Miller (cole@grexit.com):
+  Okay. So, but you're not looking to replace, like, so you're using service cloud to a degree maybe like field service or something?
+
+Gregory Dubin (dubing@daisydata.com):
+  Yeah. No, I think this would be to sit on top of everything as a tool for our repair techs as they're for our repair support techs as they're working really in any of those three types of support. You know, basically, they are using… it to get all the most relevant information they need from within our company knowledge, right?
+
+Cole Miller (cole@grexit.com):
+  And did you mention texting is a big channel today that the team is leveraging?
+
+Gregory Dubin (dubing@daisydata.com):
+  No, not really. I mean, we also, we do have a lot of overseas customers. Yeah. So I'd say it's mostly email. Now, it used to be a lot of phone calls, but it's really mostly email initially. We have a bunch of web forms a lot of times that's the initial. And then it will be all right. Let's set up a time to talk, let's.
+
+Cole Miller (cole@grexit.com):
+  And that, and those web forms funnel into like a Google group or like a Gmail client or outlet?
+
+Gregory Dubin (dubing@daisydata.com):
+  They feed right into Salesforce. They like automatically create, records and stuff.
+
+Cole Miller (cole@grexit.com):
+  Okay. But you, but you have general inboxes that people reach out to. So you're looking for more of like a front end management of those email communications?
+
+Gregory Dubin (dubing@daisydata.com):
+  No, I'm looking more of a backend management like, I don't really need this touching the customer. I want this as like an internal, like think of like the customer being our tech support.
+
+Cole Miller (cole@grexit.com):
+  So, you're just trying to glean data and insights from this like that's like the main thing you're looking for, yeah.
+
+Gregory Dubin (dubing@daisydata.com):
+  You know, just like if let's say you were like a simpler thing and, you know, the, an outside customer is talking to a bot about a tech support issue. Yeah, I would want our internal tech support people talking to a bot about how do I fix this product that this customer or this customer has this problem? Have we seen this before? Can you show me all the previous related cases and stuff?
+
+Cole Miller (cole@grexit.com):
+  Okay. Got it. So I can share my screen just to give you an idea and are using Gmail today, Greg.
+
+Gregory Dubin (dubing@daisydata.com):
+  No, we're really, we're basically a Microsoft and Salesforce environment, ERP… that's totally separate.
+
+Cole Miller (cole@grexit.com):
+  Got it. So, taking a look at our Omni solution, you know, hiver and why we were built was just for better shared inbox management. That's really where we play Greg in the market. So, think about like customer support, shared mailbox, sales, healthcare, HR. These are the different distribution lists, shared mailboxes that we're managing as an organization. And then above, our personal communications… from our personal mailbox. So you'll log into this with Microsoft sso, and have access to all this. But going into the support mailbox, right? I'll click into this email right here and how hiver works is like, it, it's a tracking mechanism for your emails to help with, you know, collaboration to help with assignments, to help with tracking, as well as, you know, provide those analytical purposes. But the first thing we can do on the right, Greg is assign conversations to people. We can also track the status whether it's open pending or close, adding those tags for organizational purposes, to put things in buckets, folders, or queues,
+
+Gregory Dubin (dubing@daisydata.com):
+  that's all right. I'm going to stop you. I mean, this is cool. I get it. We just have like, I mean, we get like three or four requests a day. Yeah, right. I guess this isn't really like it's like once getting and queuing the, ticket is not really the issue. It's like once they're open it's like it becomes a very long detailed technical process. Whereas right now our techs are either asking, you know, a person who's been there forever or digging through various different systems to try to find something relevant, you know? So I gotta say this is nice but not really what I'm looking for.
+
+Cole Miller (cole@grexit.com):
+  Yeah.
+
+Gregory Dubin (dubing@daisydata.com):
+  On your website, I was looking at like knowledge base, all that stuff like agents and things that's kind of more what I was curious about.
+
+Cole Miller (cole@grexit.com):
+  So, we do offer knowledge base. It can be internal external, so it can be publicly facing where they can like, you know, search for articles, things of that nature, find information on your product service processes, and this can be an internal external perspective. So, this is our knowledge base.
+
+Gregory Dubin (dubing@daisydata.com):
+  Yeah, yeah.
+
+Cole Miller (cole@grexit.com):
+  And then we also have that from the internal perspective, but from what, it sounds like you're looking for more of like a project management type tool just from what I'm hearing.
+
+Cole Miller (cole@grexit.com):
+  Cuz it sounds like you're looking for something to track progress of like a really long project over an extended, I mean,
+
+Gregory Dubin (dubing@daisydata.com):
+  all that's being tracked already. I need this. Yeah, we already are doing all that in Salesforce. I need, this is like truly think of our internal people needing their own support agent for our.
+
+Cole Miller (cole@grexit.com):
+  Product, right?
+
+Gregory Dubin (dubing@daisydata.com):
+  Yeah. So, I think I must've misunderstood like, it looked like what I got the sense was like, you're for most companies, hiver would create AI, customer support agents that are trained on your knowledge and everything.
+
+Cole Miller (cole@grexit.com):
+  So, we, that's where we're that's where we're going. Eventually, we're gonna have like agents that can run things end to end right now, where we stand with AI is more like a co pilot, so we can draft responses from our co pilot to draft replies, leveraging the data that we feed it. But the AI agent piece is not out yet. That's slated for the, the new year?
+
+Gregory Dubin (dubing@daisydata.com):
+  Okay. Well, you know what? Why don't we, if you wanna like put in my record ever to kind of what I'm looking for, you know, as a product evolves, maybe reach out again at some point. Yeah.
+
+Cole Miller (cole@grexit.com):
+  Yeah, I think it'll be more relevant once the AI agent comes out, so I can send a reminder, when that's released, and then, we can get back, and see a demonstration of it.
+
+Gregory Dubin (dubing@daisydata.com):
+  Okay. Yeah. I mean, I totally get that, if we were like super high volume, incoming stuff, lots of different reps requests, yeah, small, we're high value, low volume type thing. So.
+
+Cole Miller (cole@grexit.com):
+  Right, right. Okay. That makes total sense. But I'll but I'll keep you posted as that is being released, but it was great to meet you, Greg and I'll, I'll talk to you soon.
+
+Gregory Dubin (dubing@daisydata.com):
+  Yeah, you too. Okay.

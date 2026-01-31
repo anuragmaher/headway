@@ -1,0 +1,143 @@
+{
+  "call_id": "4913323376146281332",
+  "title": "Injured Call Today<>Hiver | Configuration",
+  "started": "2025-11-14T20:01:18.783+05:30",
+  "duration_seconds": 448,
+  "call_metadata": {
+    "id": "4913323376146281332",
+    "url": "https://us-31545.app.gong.io/call?id=4913323376146281332",
+    "title": "Injured Call Today<>Hiver | Configuration",
+    "scheduled": "2025-11-14T20:00:00+05:30",
+    "started": "2025-11-14T20:01:18.783+05:30",
+    "duration": 448,
+    "primaryUserId": "985641137843259904",
+    "direction": "Conference",
+    "system": "Zoom",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://us06web.zoom.us/j/85020674492?jst=2",
+    "isPrivate": false,
+    "calendarEventId": "pi6ut52s6h0qt1n76f89o6g91g@google.com"
+  },
+  "parties": [
+    {
+      "id": "2645120200232911569",
+      "emailAddress": "sonali.s@grexit.com",
+      "name": "Sonali Sahoo",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Internal",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "3061834761930350208",
+      "name": "S Notetaker",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Internal",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "632537363458534850",
+      "emailAddress": "pablo@injuredcalltoday.com",
+      "title": "",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "168519871030",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "42714563691"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Pablo"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1764871242.62
+                },
+                {
+                  "name": "createdate",
+                  "value": 1761578741.922
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1761696000.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "Romero"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "31281940"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "DIRECT_TRAFFIC"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "phone",
+                  "value": "+16468598606"
+                },
+                {
+                  "name": "recent_conversion_date",
+                  "value": 1764693826.706
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Invalid Use case"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1764871188.25
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "pablo@injuredcalltoday.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "+16468598606",
+      "methods": [
+        "Invitee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "4913323376146281332",
+    "transcript": []
+  },
+  "has_transcript": true,
+  "transcript_text": "",
+  "transcript_length": 0
+}

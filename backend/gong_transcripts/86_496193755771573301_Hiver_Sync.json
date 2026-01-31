@@ -1,0 +1,883 @@
+{
+  "call_id": "496193755771573301",
+  "title": "Hiver Sync",
+  "started": "2025-11-11T19:01:11+05:30",
+  "duration_seconds": 240,
+  "call_metadata": {
+    "id": "496193755771573301",
+    "url": "https://us-31545.app.gong.io/call?id=496193755771573301",
+    "title": "Hiver Sync",
+    "scheduled": "2025-11-11T19:00:00+05:30",
+    "started": "2025-11-11T19:01:11+05:30",
+    "duration": 240,
+    "primaryUserId": "1219092317799715224",
+    "direction": "Conference",
+    "system": "Zoom",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://us06web.zoom.us/j/88188049668?jst=3",
+    "isPrivate": false,
+    "calendarEventId": "1geuv34uj8g4v6k9hfljnl8d4p@google.com"
+  },
+  "parties": [
+    {
+      "id": "2862667878545318590",
+      "emailAddress": "kirsten.swan@minervavirtual.com",
+      "name": "Kirsten Swan",
+      "title": "Human Resources Assistant",
+      "speakerId": "1951591362943889946",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "164370492571",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "41716010519"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Kirsten"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Human Resources Assistant"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769505176.73
+                },
+                {
+                  "name": "createdate",
+                  "value": 1760607169.09
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1761177600.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "Swan"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82334087"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "phone",
+                  "value": "+44 (0) 203 637 6477"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1760607169.09
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "kirsten.swan@minervavirtual.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "+44 (0) 203 637 6477",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "4797670378324615037",
+      "emailAddress": "chris.liles@minervavirtual.com",
+      "name": "Chris Liles",
+      "title": "",
+      "speakerId": "6085997501064754456",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "166120701235",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "41716010519"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Chris"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82334087"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769777252.604
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Deal Closed"
+                },
+                {
+                  "name": "createdate",
+                  "value": 1761106806.77
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1761106806.77
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "other"
+                },
+                {
+                  "name": "email",
+                  "value": "chris.liles@minervavirtual.com"
+                },
+                {
+                  "name": "lastname",
+                  "value": "Liles"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "6332891955978278158",
+      "emailAddress": "rakesh@grexit.com",
+      "name": "Rakesh Goyal",
+      "title": "Account Executive ",
+      "userId": "1219092317799715224",
+      "speakerId": "4067624737087654592",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "7314162563278051671",
+      "emailAddress": "philippa.iles@minervavirtual.com",
+      "title": "Head of Human Resources & Compliance",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "164615453347",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "41716010519"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Philippa"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82334087"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Head of Human Resources & Compliance"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769777241.962
+                },
+                {
+                  "name": "createdate",
+                  "value": 1760645850.209
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1760645850.209
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "philippa.iles@minervavirtual.com"
+                },
+                {
+                  "name": "lastname",
+                  "value": "Iles"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "496193755771573301",
+    "transcript": [
+      {
+        "speakerId": "1951591362943889946",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 0,
+            "end": 296,
+            "text": "Hiya."
+          }
+        ]
+      },
+      {
+        "speakerId": "6085997501064754456",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 1156,
+            "end": 1336,
+            "text": "Hiya."
+          }
+        ]
+      },
+      {
+        "speakerId": "4067624737087654592",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 2236,
+            "end": 3496,
+            "text": "Nice to meet you."
+          }
+        ]
+      },
+      {
+        "speakerId": "6085997501064754456",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 6716,
+            "end": 7116,
+            "text": "Hi, Rakesh."
+          }
+        ]
+      },
+      {
+        "speakerId": "4067624737087654592",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 8256,
+            "end": 8516,
+            "text": "Good."
+          },
+          {
+            "start": 8536,
+            "end": 9316,
+            "text": "How are you doing, sir?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6085997501064754456",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 10876,
+            "end": 11256,
+            "text": "Yeah, good."
+          },
+          {
+            "start": 11336,
+            "end": 11696,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "4067624737087654592",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 12996,
+            "end": 13396,
+            "text": "Lovely."
+          },
+          {
+            "start": 13536,
+            "end": 14396,
+            "text": "Thank you for joining in."
+          },
+          {
+            "start": 15236,
+            "end": 16236,
+            "text": "We'll keep it quick."
+          },
+          {
+            "start": 16676,
+            "end": 20256,
+            "text": "We wanted to understand what the next steps would look like at your end."
+          },
+          {
+            "start": 20706,
+            "end": 25826,
+            "text": "I understand yesterday, we went over time because there were a couple of things we wanted to set up hiver on."
+          },
+          {
+            "start": 26296,
+            "end": 31096,
+            "text": "So we utilized time to do take care of the spams and certain automation workflows."
+          },
+          {
+            "start": 31216,
+            "end": 33526,
+            "text": "But yeah, today, I would want to understand."
+          },
+          {
+            "start": 33776,
+            "end": 36706,
+            "text": "Did you get a look at the pricing details?"
+          },
+          {
+            "start": 36966,
+            "end": 38886,
+            "text": "Do you have any questions around that?"
+          }
+        ]
+      },
+      {
+        "speakerId": "6085997501064754456",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 41206,
+            "end": 43506,
+            "text": "I think we're good around the pricing."
+          },
+          {
+            "start": 44126,
+            "end": 47766,
+            "text": "We just need permission basically from the finance department."
+          },
+          {
+            "start": 48066,
+            "end": 49366,
+            "text": "So we're just waiting to hear back."
+          },
+          {
+            "start": 49766,
+            "end": 50026,
+            "text": "Okay?"
+          },
+          {
+            "start": 51046,
+            "end": 54126,
+            "text": "I don't know Kirsten if you know, if pip's joining today or not?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1951591362943889946",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 55606,
+            "end": 56926,
+            "text": "I wouldn't have thought so."
+          },
+          {
+            "start": 57006,
+            "end": 57246,
+            "text": "No."
+          }
+        ]
+      },
+      {
+        "speakerId": "6085997501064754456",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 57626,
+            "end": 60226,
+            "text": "No, I'm meeting pip later."
+          },
+          {
+            "start": 60326,
+            "end": 62306,
+            "text": "So I can let you know later, Rakesh, if that's okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "4067624737087654592",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 64366,
+            "end": 64906,
+            "text": "No worries."
+          },
+          {
+            "start": 65426,
+            "end": 69866,
+            "text": "What we can do is, do you require a formal quotation from my side?"
+          },
+          {
+            "start": 69946,
+            "end": 73086,
+            "text": "Like maybe an order form that you could present internally?"
+          },
+          {
+            "start": 73326,
+            "end": 74026,
+            "text": "If that's okay."
+          },
+          {
+            "start": 74126,
+            "end": 75506,
+            "text": "I mean, should I send that across?"
+          },
+          {
+            "start": 76786,
+            "end": 77266,
+            "text": "Sure."
+          },
+          {
+            "start": 79166,
+            "end": 92226,
+            "text": "And if you'll be the signing authority once you get a green go like a clearance, I could route that through DocuSign and we can formally put in a date to kickstart with the team training part of things like to onboard your team."
+          }
+        ]
+      },
+      {
+        "speakerId": "6085997501064754456",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 93416,
+            "end": 93676,
+            "text": "Perfect."
+          },
+          {
+            "start": 93756,
+            "end": 94276,
+            "text": "Sounds great."
+          }
+        ]
+      },
+      {
+        "speakerId": "4067624737087654592",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 95276,
+            "end": 95536,
+            "text": "Sure."
+          },
+          {
+            "start": 95636,
+            "end": 99836,
+            "text": "In the meanwhile, let me make sure your trial remains active."
+          },
+          {
+            "start": 100056,
+            "end": 103696,
+            "text": "Let's not get that suspended and allow me with some time."
+          },
+          {
+            "start": 103716,
+            "end": 105896,
+            "text": "Let me prepare an order form and send that across to you Chris."
+          }
+        ]
+      },
+      {
+        "speakerId": "6085997501064754456",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 106726,
+            "end": 107056,
+            "text": "Awesome."
+          },
+          {
+            "start": 107196,
+            "end": 107916,
+            "text": "Thank you very much."
+          }
+        ]
+      },
+      {
+        "speakerId": "4067624737087654592",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 108456,
+            "end": 109176,
+            "text": "All right, Kirsten."
+          },
+          {
+            "start": 109256,
+            "end": 114156,
+            "text": "Do you have any more questions for me today with respect to the account or the working?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1951591362943889946",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 115686,
+            "end": 116856,
+            "text": "Actually, I do have one."
+          },
+          {
+            "start": 116956,
+            "end": 117996,
+            "text": "I know it's nonstop."
+          },
+          {
+            "start": 118056,
+            "end": 118836,
+            "text": "Sorry, go on, Chris."
+          },
+          {
+            "start": 119296,
+            "end": 119736,
+            "text": "No."
+          }
+        ]
+      },
+      {
+        "speakerId": "4067624737087654592",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 119736,
+            "end": 119996,
+            "text": "Worries."
+          },
+          {
+            "start": 120636,
+            "end": 121476,
+            "text": "Take your time."
+          },
+          {
+            "start": 121616,
+            "end": 123016,
+            "text": "Yeah, go ahead, please, let me know."
+          }
+        ]
+      },
+      {
+        "speakerId": "1951591362943889946",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 124676,
+            "end": 134476,
+            "text": "So, something that I've been doing a lot recently is when I have to search for an email from before we installed hiver, I have to open up the HR inbox separately and search in."
+          },
+          {
+            "start": 134476,
+            "end": 134676,
+            "text": "There."
+          },
+          {
+            "start": 134856,
+            "end": 138616,
+            "text": "Is there any way to basically import all of the older emails in?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4067624737087654592",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 138896,
+            "end": 140036,
+            "text": "Yeah, we are getting there."
+          },
+          {
+            "start": 140356,
+            "end": 142796,
+            "text": "This is a part of our paid subscription."
+          },
+          {
+            "start": 143116,
+            "end": 148596,
+            "text": "So once we are with hiver, we would look at how many old emails do you want to import?"
+          },
+          {
+            "start": 148856,
+            "end": 158596,
+            "text": "If these are like a bunch of emails, a handful of emails, let's say you want to say Rakesh take me six months ago and then import all the emails into the closed bucket in hiver."
+          }
+        ]
+      },
+      {
+        "speakerId": "4067624737087654592",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 158976,
+            "end": 160136,
+            "text": "We are okay to do that."
+          },
+          {
+            "start": 160316,
+            "end": 168816,
+            "text": "But if these are like, if these are so many, say hundreds and thousands of emails, then this may cost a little bit of import fee."
+          },
+          {
+            "start": 169176,
+            "end": 176736,
+            "text": "But do you want to tell me if you're okay to do like last six months emails and then all of the reference could be found in the closed bucket for you guys?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1951591362943889946",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 177946,
+            "end": 180256,
+            "text": "Yeah, I think six months would be more than enough."
+          },
+          {
+            "start": 180956,
+            "end": 187016,
+            "text": "I wouldn't have a number off the top of my head, but six months would definitely be fine, I think."
+          }
+        ]
+      },
+      {
+        "speakerId": "4067624737087654592",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 187666,
+            "end": 188076,
+            "text": "Okay."
+          },
+          {
+            "start": 188116,
+            "end": 188676,
+            "text": "Fair enough."
+          },
+          {
+            "start": 188776,
+            "end": 188936,
+            "text": "Yeah."
+          },
+          {
+            "start": 188996,
+            "end": 193006,
+            "text": "And on an average, I mean, do you have any idea how many emails do you get today?"
+          },
+          {
+            "start": 193116,
+            "end": 196976,
+            "text": "I mean that should give us an idea, but how many emails would there be in six months?"
+          },
+          {
+            "start": 197566,
+            "end": 199566,
+            "text": "Definitely not huge difference."
+          },
+          {
+            "start": 199716,
+            "end": 200076,
+            "text": "But, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "1951591362943889946",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 201366,
+            "end": 203606,
+            "text": "I would say maybe 20 emails a day, we get."
+          }
+        ]
+      },
+      {
+        "speakerId": "4067624737087654592",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 204096,
+            "end": 204896,
+            "text": "Not an issue."
+          },
+          {
+            "start": 204966,
+            "end": 206936,
+            "text": "I mean, I'll get that done for you for six months?"
+          },
+          {
+            "start": 206966,
+            "end": 207106,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "1951591362943889946",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 208336,
+            "end": 209176,
+            "text": "That would be incredible."
+          },
+          {
+            "start": 209376,
+            "end": 209876,
+            "text": "Thank you."
+          },
+          {
+            "start": 209886,
+            "end": 211076,
+            "text": "That was all I had today."
+          }
+        ]
+      },
+      {
+        "speakerId": "4067624737087654592",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 211926,
+            "end": 212886,
+            "text": "All right, great."
+          },
+          {
+            "start": 213066,
+            "end": 216106,
+            "text": "Thank you so much for your time again and Chris, give me some more time."
+          },
+          {
+            "start": 216166,
+            "end": 228186,
+            "text": "Let me put everything in formal writing, send you an auto form, and then you can let me know if there's anything else that we require to get started in the meanwhile, Kristen, for you and the team, I'll keep the account active for you guys."
+          }
+        ]
+      },
+      {
+        "speakerId": "1951591362943889946",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 229366,
+            "end": 229726,
+            "text": "Amazing."
+          },
+          {
+            "start": 229746,
+            "end": 230626,
+            "text": "Thank you so much."
+          }
+        ]
+      },
+      {
+        "speakerId": "4067624737087654592",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 231246,
+            "end": 232146,
+            "text": "You're very welcome, guys."
+          },
+          {
+            "start": 232226,
+            "end": 234706,
+            "text": "I look forward to working with you into the rest of your day."
+          },
+          {
+            "start": 234926,
+            "end": 236446,
+            "text": "I'll send an email to you, Chris."
+          },
+          {
+            "start": 237466,
+            "end": 238026,
+            "text": "All right."
+          },
+          {
+            "start": 238026,
+            "end": 238126,
+            "text": "Cheers."
+          },
+          {
+            "start": 238346,
+            "end": 238666,
+            "text": "Bye."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 27
+}
