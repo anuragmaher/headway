@@ -2,7 +2,7 @@
 """
 Build signals_by_theme.json from final.json.
 
-Reads signals/final.json (flat list with theme, sub_theme, ask, evidence, transcript_id, title, date),
+Reads signals/final.json (flat list with theme, sub_theme, ask, evidence, priority, transcript_id, title, date),
 builds the same structure as step 1.2 output: theme -> [ { sub_theme: [ signal items ] }, ... ],
 and overwrites signals/signals_by_theme.json.
 """
@@ -34,7 +34,7 @@ def load_final(signals_dir: Path) -> list[dict[str, Any]]:
 def build_signals_by_theme(data: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
     """
     Build theme -> [ { sub_theme: [ signal items ] }, ... ] from flat final.json.
-    Signal item: ask, evidence, transcript_id, transcript_title, started (no priority in final).
+    Signal item: ask, evidence, priority, transcript_id, transcript_title, started.
     """
     # theme -> sub_theme -> list of signal items
     view: dict[str, dict[str, list[dict[str, Any]]]] = {}
@@ -50,7 +50,7 @@ def build_signals_by_theme(data: list[dict[str, Any]]) -> dict[str, list[dict[st
             "transcript_id": sig.get("transcript_id") or "",
             "transcript_title": sig.get("title") or "",
             "started": sig.get("date") or "",
-            "priority": "Medium",  # final.json has no priority; default for dashboard
+            "priority": sig.get("priority") or "Medium",
         }
         if theme not in view:
             view[theme] = {}

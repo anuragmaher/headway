@@ -5,7 +5,7 @@ Stage 1.3: Final classification of each signal using taxonomy with ids.
 Reads all_signals.json and theme_consolidation.json. For each signal, fills
 prompts/step1_3_classify_final.txt with THEMES_WITH_IDS_JSON, ASK, EVIDENCE;
 LLM returns theme_id, sub_theme_id. Script maps ids to theme/sub_theme names.
-Writes final.json with schema: theme_id, sub_theme_id, theme, sub_theme, ask, evidence (+ transcript_id).
+Writes final.json with schema: theme_id, sub_theme_id, theme, sub_theme, ask, evidence, priority (+ transcript_id).
 """
 
 import argparse
@@ -78,7 +78,7 @@ def build_id_to_names(taxonomy: dict[str, Any]) -> tuple[dict[int, str], dict[st
 
 
 def load_signals_flat(signals_dir: Path) -> list[dict[str, Any]]:
-    """Load all_signals.json and flatten to list of { transcript_id, title, date, ask, evidence }."""
+    """Load all_signals.json and flatten to list of { transcript_id, title, date, ask, evidence, priority }."""
     path = signals_dir / "all_signals.json"
     if not path.exists():
         return []
@@ -91,12 +91,14 @@ def load_signals_flat(signals_dir: Path) -> list[dict[str, Any]]:
         for sig in rec.get("signals", []):
             ask = (sig.get("Ask") or sig.get("ask") or "").strip()
             evidence = (sig.get("Evidence") or sig.get("evidence") or "").strip()
+            priority = (sig.get("Priority") or sig.get("priority") or "Medium").strip()
             flat.append({
                 "transcript_id": transcript_id,
                 "title": title,
                 "date": date,
                 "ask": ask,
                 "evidence": evidence,
+                "priority": priority,
             })
     return flat
 
@@ -241,6 +243,7 @@ def main() -> None:
             "sub_theme": sub_theme_name,
             "ask": sig["ask"],
             "evidence": sig["evidence"],
+            "priority": sig.get("priority") or "Medium",
             "transcript_id": sig.get("transcript_id") or "",
             "title": sig.get("title") or "",
             "date": sig.get("date") or "",
