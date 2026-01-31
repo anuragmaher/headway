@@ -32,7 +32,7 @@ DEFAULT_DISTANCE_THRESHOLD = 0.5
 
 
 def load_all_signals(signals_dir: Path) -> tuple[list[dict], list[dict]]:
-    """Load signals from all_signals.json. Returns (flat_signals_with_ids, transcript_meta)."""
+    """Load signals from all_signals.json. Supports Langfuse format (Theme, Ask, Priority, Evidence) and legacy format."""
     all_path = signals_dir / "all_signals.json"
     if not all_path.exists():
         raise FileNotFoundError(f"Not found: {all_path}. Run Step 1 first.")
@@ -44,6 +44,7 @@ def load_all_signals(signals_dir: Path) -> tuple[list[dict], list[dict]]:
 
     flat: list[dict] = []
     meta_by_transcript: dict[str, dict] = {}
+    priority_to_confidence = {"High": "high", "Medium": "medium", "Low": "low"}
     for rec in transcripts:
         tid = rec.get("transcript_id", "")
         meta_by_transcript[tid] = {
@@ -54,16 +55,33 @@ def load_all_signals(signals_dir: Path) -> tuple[list[dict], list[dict]]:
         }
         for i, sig in enumerate(rec.get("signals", [])):
             sig_id = f"{tid}_{i}"
-            flat.append({
-                "signal_id": sig_id,
-                "transcript_id": tid,
-                "problem_statement": sig.get("problem_statement", ""),
-                "customer_ask": sig.get("customer_ask", ""),
-                "suggested_solution": sig.get("suggested_solution", ""),
-                "customer_role": sig.get("customer_role", ""),
-                "context": sig.get("context", ""),
-                "confidence": sig.get("confidence", "medium"),
-            })
+            # Langfuse format: Theme, Ask, Priority, Evidence
+            theme = sig.get("Theme") or sig.get("theme") or ""
+            ask = sig.get("Ask") or sig.get("ask") or ""
+            priority = sig.get("Priority") or sig.get("priority") or "Medium"
+            evidence = sig.get("Evidence") or sig.get("evidence") or ""
+            if theme or ask or evidence:
+                confidence = priority_to_confidence.get(str(priority).strip(), "medium")
+                flat.append({
+                    "signal_id": sig_id,
+                    "transcript_id": tid,
+                    "theme": theme,
+                    "ask": ask,
+                    "priority": priority,
+                    "evidence": evidence,
+                    "confidence": confidence,
+                })
+            else:
+                # Legacy format fallback
+                flat.append({
+                    "signal_id": sig_id,
+                    "transcript_id": tid,
+                    "theme": sig.get("customer_ask", "") or sig.get("problem_statement", ""),
+                    "ask": sig.get("customer_ask", "") or sig.get("problem_statement", ""),
+                    "priority": "Medium",
+                    "evidence": sig.get("context", ""),
+                    "confidence": sig.get("confidence", "medium"),
+                })
     return flat, list(meta_by_transcript.values())
 
 
@@ -119,14 +137,15 @@ def build_local_theme(
     batch_idx: int,
     cluster_idx: int,
 ) -> dict:
-    """Build one local theme from customer_ask (preferred) and problem_statement; include sample_phrasings and sample_customer_asks."""
+    """Build one local theme from Ask + Theme + Evidence (Langfuse format)."""
     local_theme_id = f"batch{batch_idx:03d}_cluster{cluster_idx}"
     sigs = [signals[i] for i in cluster_indices]
-    customer_asks = [s.get("customer_ask", "").strip() for s in sigs if s.get("customer_ask")]
-    problem_statements = [s.get("problem_statement", "").strip() for s in sigs if s.get("problem_statement")]
-    sample_phrasings = list(dict.fromkeys(customer_asks + problem_statements))[:5]
-    sample_customer_asks = list(dict.fromkeys(customer_asks))[:5]
-    canonical_problem = (customer_asks[0] if customer_asks else problem_statements[0] if problem_statements else "Unnamed cluster")[:200]
+    asks = [s.get("ask", "").strip() for s in sigs if s.get("ask")]
+    themes = [s.get("theme", "").strip() for s in sigs if s.get("theme")]
+    evidences = [s.get("evidence", "").strip() for s in sigs if s.get("evidence")]
+    sample_phrasings = list(dict.fromkeys(asks + themes))[:5]
+    sample_customer_asks = list(dict.fromkeys(asks))[:5]
+    canonical_problem = (asks[0] if asks else themes[0] if themes else "Unnamed cluster")[:200]
     signal_ids = [signals[i]["signal_id"] for i in cluster_indices]
     return {
         "local_theme_id": local_theme_id,
@@ -193,11 +212,11 @@ def main() -> None:
         if len(batch_signals) < 2:
             continue
 
-        # Use customer_ask for clustering when present (what customers actually said); else problem_statement
+        # Embed from Ask + Evidence (Langfuse format)
         texts = []
         for s in batch_signals:
-            primary = (s.get("customer_ask") or s.get("problem_statement") or "").strip()
-            extra = (s.get("suggested_solution") or "").strip()
+            primary = (s.get("ask") or "").strip()
+            extra = (s.get("evidence") or "").strip()
             texts.append((primary + " " + extra).strip()[:8000] or " ")
 
         embeddings = embed_texts(client, texts, args.embedding_model)

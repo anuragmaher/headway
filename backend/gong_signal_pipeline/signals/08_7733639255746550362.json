@@ -1,0 +1,38 @@
+{
+  "transcript_id": "08_7733639255746550362",
+  "call_id": "7733639255746550362",
+  "title": "Hiver Demo | Sara <> Matt",
+  "started": "2025-11-15T00:30:47+05:30",
+  "signals": [
+    {
+      "Theme": "Shared Inbox Functionality",
+      "Ask": "We need a shared inbox solution that is easier to use than Hubspot.",
+      "Priority": "High",
+      "Evidence": "Hubspot doesn't give us quite the ease of use that we need for handling shared inboxes."
+    },
+    {
+      "Theme": "Analytics and Reporting",
+      "Ask": "We require robust analytics and reporting capabilities to track email performance and customer interactions.",
+      "Priority": "High",
+      "Evidence": "The analytics aren't quite there with our current setup."
+    },
+    {
+      "Theme": "Integration with Tools",
+      "Ask": "We need integration with Aircall and Slack for notifications and call management.",
+      "Priority": "Medium",
+      "Evidence": "We have teams who don't necessarily live in their inbox, who are more on Slack."
+    },
+    {
+      "Theme": "User Adoption Conditions",
+      "Ask": "All team members must be on the same platform for effective use of the shared inbox.",
+      "Priority": "High",
+      "Evidence": "It's an all or nothing thing; everyone would have to use work out of here."
+    },
+    {
+      "Theme": "Custom Reporting Needs",
+      "Ask": "We need the ability to create custom reports based on specific tags and user interactions.",
+      "Priority": "Medium",
+      "Evidence": "We want to understand when those people are emailing in, who they're talking to, and how many different people they are having touch points with."
+    }
+  ]
+}

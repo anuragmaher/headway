@@ -20,18 +20,11 @@ sys.path.insert(0, str(BACKEND_DIR))
 from openai import OpenAI
 
 from app.core.config import Settings
+from app.services.langfuse_prompt_service import get_signal_extraction_prompt
 
 
 # Max chars to send to the model (leave room for prompt + response)
 MAX_TRANSCRIPT_CHARS = 60000
-
-# Prompt path relative to this script
-PROMPT_PATH = Path(__file__).resolve().parent / "prompts" / "step1_signal_extraction.txt"
-
-
-def load_prompt() -> str:
-    with open(PROMPT_PATH, "r", encoding="utf-8") as f:
-        return f.read().strip()
 
 
 def parse_filename(base: str) -> tuple[str, str]:
@@ -114,29 +107,108 @@ def load_transcript_and_metadata(txt_path: Path, input_dir: Path) -> tuple[str, 
     return text, meta
 
 
+# API expects few messages with large content blocks (system + user), not many small messages.
+OPENAI_MESSAGES_ARRAY_LIMIT = 16384
+
+
+def _get_message_role_and_content(msg: dict) -> tuple[str, str]:
+    """Extract role and content from a message dict or object."""
+    if isinstance(msg, dict):
+        return (msg.get("role", "user"), (msg.get("content") or ""))
+    if hasattr(msg, "role") and hasattr(msg, "content"):
+        return (getattr(msg, "role", "user"), getattr(msg, "content", "") or "")
+    return ("user", str(msg))
+
+
+def _consolidate_messages(messages: list) -> list[dict]:
+    """
+    Always send few messages with large content blocks.
+    Merge by role so we get at most one system and one user message (never many small messages).
+    """
+    system_parts: list[str] = []
+    user_parts: list[str] = []
+    for msg in messages:
+        role, content = _get_message_role_and_content(msg)
+        if not content:
+            continue
+        if role == "system":
+            system_parts.append(content)
+        else:
+            user_parts.append(content)
+    # Use "" when many parts (e.g. Langfuse split into chars) to reconstruct; else "\n\n"
+    sep = "" if len(system_parts) + len(user_parts) > 1000 else "\n\n"
+    out: list[dict] = []
+    if system_parts:
+        out.append({"role": "system", "content": sep.join(system_parts)})
+    if user_parts:
+        out.append({"role": "user", "content": sep.join(user_parts)})
+    return out if out else [{"role": "user", "content": ""}]
+
+
+def _messages_to_openai_format(messages: list) -> list[dict]:
+    """Convert Langfuse message list to OpenAI API format; consolidate if too long."""
+    consolidated = _consolidate_messages(messages)
+    out = []
+    for msg in consolidated:
+        if isinstance(msg, dict) and "role" in msg and "content" in msg:
+            out.append(msg)
+        else:
+            r, c = _get_message_role_and_content(msg) if isinstance(msg, dict) else ("user", str(msg))
+            out.append({"role": r, "content": c})
+    return out
+
+
+def _parse_asks_response(raw: str) -> list[dict]:
+    """Parse LLM response: array of {Theme, Ask, Priority, Evidence}. Accepts top-level array or object with a list value."""
+    try:
+        out = json.loads(raw)
+    except json.JSONDecodeError:
+        return []
+    if isinstance(out, list):
+        items = out
+    elif isinstance(out, dict):
+        for key in ("asks", "items", "signals", "refined", "list"):
+            if isinstance(out.get(key), list):
+                items = out[key]
+                break
+        else:
+            # First key whose value is a list
+            items = next((v for v in out.values() if isinstance(v, list)), [])
+    else:
+        return []
+    result = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        # Normalize keys (prompt uses Theme, Ask, Priority, Evidence)
+        theme = item.get("Theme") or item.get("theme") or ""
+        ask = item.get("Ask") or item.get("ask") or ""
+        priority = item.get("Priority") or item.get("priority") or "Medium"
+        evidence = item.get("Evidence") or item.get("evidence") or ""
+        result.append({
+            "Theme": theme,
+            "Ask": ask,
+            "Priority": priority,
+            "Evidence": evidence,
+        })
+    return result
+
+
 def extract_signals_for_transcript(
     client: OpenAI,
-    transcript_text: str,
-    prompt_template: str,
+    messages: list,
     model: str = "gpt-4o-mini",
 ) -> list[dict]:
-    user_content = prompt_template.replace("{{TRANSCRIPT_TEXT}}", transcript_text)
+    openai_messages = _messages_to_openai_format(messages)
     response = client.chat.completions.create(
         model=model,
-        messages=[
-            {"role": "system", "content": "Return valid JSON only. No markdown or explanations."},
-            {"role": "user", "content": user_content},
-        ],
+        messages=openai_messages,
         temperature=0,
         response_format={"type": "json_object"},
         max_tokens=4000,
     )
-    raw = response.choices[0].message.content
-    out = json.loads(raw)
-    signals = out.get("signals", [])
-    if not isinstance(signals, list):
-        return []
-    return signals
+    raw = response.choices[0].message.content or "[]"
+    return _parse_asks_response(raw)
 
 
 def main() -> None:
@@ -162,9 +234,11 @@ def main() -> None:
     if not settings.OPENAI_API_KEY:
         print("Error: OPENAI_API_KEY not set")
         sys.exit(1)
+    if not settings.LANGFUSE_SECRET_KEY or not settings.LANGFUSE_PUBLIC_KEY:
+        print("Error: Langfuse not configured. Set LANGFUSE_SECRET_KEY and LANGFUSE_PUBLIC_KEY (Signal prompt is loaded from Langfuse).")
+        sys.exit(1)
 
     client = OpenAI(api_key=settings.OPENAI_API_KEY)
-    prompt_template = load_prompt()
 
     if args.incremental:
         limit = args.limit or 50
@@ -187,14 +261,15 @@ def main() -> None:
         print(f"[{i}/{len(txt_files)}] {transcript_id}")
 
         text, meta = load_transcript_and_metadata(txt_path, input_dir)
-        signals = extract_signals_for_transcript(client, text, prompt_template, args.model)
+        messages = get_signal_extraction_prompt(text)
+        signals = extract_signals_for_transcript(client, messages, args.model)
 
         record = {
             "transcript_id": transcript_id,
             "call_id": meta["call_id"],
             "title": meta["title"],
             "started": meta["started"],
-            "signals": signals,
+            "signals": signals,  # Langfuse format: Theme, Ask, Priority, Evidence
         }
         all_records.append(record)
 

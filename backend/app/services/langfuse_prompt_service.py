@@ -68,6 +68,7 @@ class LangfusePromptService:
     # Prompt name mappings (local key -> Langfuse prompt name)
     PROMPT_NAMES = {
         "transcript_classification": "classification prompt",
+        "signal": "Signal",
     }
 
     def __init__(self):
@@ -183,4 +184,29 @@ def get_transcript_classification_prompt(**variables) -> List[Dict[str, str]]:
     messages = service.get_chat_prompt("transcript_classification", variables=variables)
     if not messages:
         raise ValueError("Failed to fetch 'classification prompt' from Langfuse. Check your Langfuse configuration.")
+    return messages
+
+
+# Appended to transcript so the model doesn't echo the prompt's example JSON
+_SIGNAL_EXTRACTION_SUFFIX = (
+    "\n\n---\nExtract real signals from the transcript above only. "
+    "Do not return the example placeholder text from the instructions."
+)
+
+
+def get_signal_extraction_prompt(transcript_text: str) -> List[Dict[str, str]]:
+    """
+    Get Signal extraction chat prompt from Langfuse.
+
+    Variables:
+        TRANSCRIPT_TEXT: Full transcript text to analyze
+
+    Returns:
+        List of messages ready for OpenAI chat completions API
+    """
+    service = get_langfuse_prompt_service()
+    transcript_with_nudge = transcript_text + _SIGNAL_EXTRACTION_SUFFIX
+    messages = service.get_chat_prompt("signal", variables={"TRANSCRIPT_TEXT": transcript_with_nudge})
+    if not messages:
+        raise ValueError("Failed to fetch 'Signal' prompt from Langfuse. Check your Langfuse configuration.")
     return messages

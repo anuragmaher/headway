@@ -1,0 +1,38 @@
+{
+  "transcript_id": "04_105032147065518287",
+  "call_id": "105032147065518287",
+  "title": "Hiver Demo | Jordan <> Cole",
+  "started": "2025-11-15T02:03:53+05:30",
+  "signals": [
+    {
+      "Theme": "Email Management",
+      "Ask": "We need a system to manage personal and shared emails effectively.",
+      "Priority": "High",
+      "Evidence": "I think we can... it could be a shared account."
+    },
+    {
+      "Theme": "Automation Features",
+      "Ask": "We require automation to categorize emails based on specific language.",
+      "Priority": "Medium",
+      "Evidence": "Are there rules that we could set, that if there's certain language, it goes to a certain mailbox?"
+    },
+    {
+      "Theme": "Analytics and Reporting",
+      "Ask": "We need to track response times and resolution times for compliance purposes.",
+      "Priority": "High",
+      "Evidence": "If I wanted to see all the communications within one shot that I can navigate between all of them?"
+    },
+    {
+      "Theme": "Trial Environment",
+      "Ask": "We prefer a sandbox environment to test the system before full implementation.",
+      "Priority": "Medium",
+      "Evidence": "Is there a test environment where we can try this instead of going live?"
+    },
+    {
+      "Theme": "Internal Collaboration",
+      "Ask": "We want to communicate internally about specific emails without confusion.",
+      "Priority": "High",
+      "Evidence": "I want to be able to communicate internally with the teams to talk about certain emails."
+    }
+  ]
+}
