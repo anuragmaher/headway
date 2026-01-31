@@ -1,0 +1,38 @@
+{
+  "transcript_id": "17_8397355654238360417",
+  "call_id": "8397355654238360417",
+  "title": "Blackbuck <> Hiver : Demo",
+  "started": "2026-01-30T15:50:54+05:30",
+  "signals": [
+    {
+      "Theme": "Invoice Management",
+      "Ask": "We need a solution to automate the management of our accounts payables emails.",
+      "Priority": "High",
+      "Evidence": "We do not have any solution... everything is outside the system as we speak today."
+    },
+    {
+      "Theme": "Integration with ERP",
+      "Ask": "We require integration with our existing Microsoft ERP for processing invoices.",
+      "Priority": "High",
+      "Evidence": "I don't even know whether that solution exists today."
+    },
+    {
+      "Theme": "Team Size Consideration",
+      "Ask": "We need to evaluate if the solution is suitable for our small team of two people.",
+      "Priority": "Medium",
+      "Evidence": "I personally may not really recommend you looking at a solution because you probably are much better at a phase where you are able to manage."
+    },
+    {
+      "Theme": "Task Visibility",
+      "Ask": "We need a way to ensure that no emails are missed or left untagged.",
+      "Priority": "Medium",
+      "Evidence": "What if they only miss to tag something and it just remains untagged."
+    },
+    {
+      "Theme": "Freemium Option",
+      "Ask": "We would like to explore a freemium plan to test the solution before committing.",
+      "Priority": "Low",
+      "Evidence": "You can have one payable inbox invite two people... without even incurring any cost."
+    }
+  ]
+}

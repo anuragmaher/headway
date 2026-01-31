@@ -1,0 +1,38 @@
+{
+  "transcript_id": "04_6529268741727685536",
+  "call_id": "6529268741727685536",
+  "title": "Hiver Demo | Mark <> Alex",
+  "started": "2026-01-30T23:01:46.302+05:30",
+  "signals": [
+    {
+      "Theme": "Warranty Tracking",
+      "Ask": "We need a better way to track our warranty process for products sold.",
+      "Priority": "High",
+      "Evidence": "We just need a better way to track our warranty process with products that we sell."
+    },
+    {
+      "Theme": "Integration Requirements",
+      "Ask": "The system must integrate with Shopify to track ticket statuses and resolutions.",
+      "Priority": "High",
+      "Evidence": "Integration... whether or not there's open APIs to maybe connect to Shopify."
+    },
+    {
+      "Theme": "Communication Channels",
+      "Ask": "We require support for voice communication as the primary contact method.",
+      "Priority": "High",
+      "Evidence": "Our main one that people communicate issues with us is via voice."
+    },
+    {
+      "Theme": "Push-Pull Functionality",
+      "Ask": "We need the ability to push order statuses and notes back to Shopify.",
+      "Priority": "Medium",
+      "Evidence": "We need to push the status of this order or even notes back to Shopify."
+    },
+    {
+      "Theme": "Scalability",
+      "Ask": "The system should be scalable to accommodate future team growth.",
+      "Priority": "Medium",
+      "Evidence": "I want to set up a system that will be conducive to scale."
+    }
+  ]
+}

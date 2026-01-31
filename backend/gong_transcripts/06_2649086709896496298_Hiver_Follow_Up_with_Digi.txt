@@ -1,0 +1,400 @@
+================================================================================
+Call: Hiver Follow Up with Digi
+Date: 2026-01-30T22:30:52+05:30
+================================================================================
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  hello, we have more AI recorders than people. I.
+
+Matthew P (matthew.p@grexit.com):
+  Was just going to say.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  New world, right?
+
+Matthew P (matthew.p@grexit.com):
+  Yeah, I actually, I saw this. I saw this Meme, the other day, it was this Guy, he entered a meeting and it was just him and like 12 AI recorders.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  Yeah. Ding, ding. You just keep hearing the things you're waiting for actual people to show up. Thank you.
+
+Matthew P (matthew.p@grexit.com):
+  Awesome. Looks like we're probably waiting for a couple other people from the digi side here.
+
+Robert Spielman (robert.spielman@digi.com):
+  It looks like we've got a lot of hiver people and maybe two of us digi people or three of us, I guess, yeah… hopefully we'll get more.
+
+Matthew P (matthew.p@grexit.com):
+  Yeah, we're outnumbering you guys today.
+
+Matthew P (matthew.p@grexit.com):
+  Awesome. Was that rob talking? Yeah, it was awesome. Rob, how are you doing?
+
+Robert Spielman (robert.spielman@digi.com):
+  Pretty good. How about you?
+
+Matthew P (matthew.p@grexit.com):
+  Doing well, doing well. Yeah, just like you said, you know, I've included a lot of people from the hiver side here. Looks like Jim's joining right now. Oh, good. Okay. And really rob the agenda for the call today. I know you've been kind of the one spearheading the testing here is to get your feedback from the testing and obviously you provided us with a lot of details. So I shared that with our team as well. And then I've included on the call here, you know, our CTO and other product leads to kind of address the feedback that you provided, and then to answer any other additional questions that you have.
+
+Robert Spielman (robert.spielman@digi.com):
+  Okay. Sounds good. Yeah, hopefully some of the support managers here on the call will kind of define what their feedback is and get some answers from that too. Yeah.
+
+Jim Freeland (jim.freeland@digi.com):
+  Definitely. My favorite part is we have three AI note takers going. Let's see how they all do battling one another here.
+
+Matthew P (matthew.p@grexit.com):
+  Yeah. We were saying that before we got on the call here, Jim, that's funny. It was just like five of us and many note takers.
+
+Jim Freeland (jim.freeland@digi.com):
+  That's great. Sorry, let's go.
+
+Matthew P (matthew.p@grexit.com):
+  But yeah, if there are any support managers or anybody who is testing it that want to just provide us with some general feedback or questions that you might have. We can address those. And then also we can address the details that you sent over as well.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  So, I sent some feedback over to Robert. This is Jerry. My guess is that some of the feedback that you've received, but I'm not 100 percent certain. I tested email in the platform since my team uses a lot of email about, I don't know, 45 percent of our volume is email and I uploaded very specific material. Four white papers for four pieces of hardware that we provide to customers and approached it as an inquiry as a customer, a potential customer who wanted to understand what the best hardware choice would be based on a set of requirements. I can share my screen. I'll show you the feedback that I provided, and maybe this will be familiar to you guys. If you've seen it. Just give me a second.
+
+Matthew P (matthew.p@grexit.com):
+  Yeah, perfect. Jerry.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  So I did this testing over the course of a couple of hours, two, three hours. And I compared hiver to docspot. In this testing, we use docspot today for some AI chatbot work. And so I sent an email… if you look at the docspot section here on the left where it says, I'm considering purchasing a ventus router that's the email that I sent. I also typed that up in docspot, so that it was exactly the same verbiage. Docspot gave us the correct information based on the same material that I uploaded into hiver. But hiver gave us this information on the right, which… was incorrect. Basically all of it was incorrect. None of it was correct. We see models referenced here that are not ventus models. They don't exist. As far as ventus is concerned, I suspect just out in the world, there is some device called a ventus dirty 150. It's just not our device. And so I kind of expected the bot to choose our training material as the first reliable source. I did this a couple of ways inside of hiver. In response to the email, I chose the option to generate a response via the AI chatbot inside of hiver. And this was the response that was given here on the right. The bad answer. I tried uploading additional material, removing material. I played around with the material that I kept uploading into hiver to see if that would get me a better answer. I think at some point, I did get a better answer but it was still mixed in terms of the results. And just for the sake of time, ultimately, I just didn't I wasn't able to get what I needed. And as an agent, you know, that can be an issue if I'm relying on that bot to give me a good response. So I don't know if you guys have seen this feedback or if you've had a chance to sort of investigate on your own at all? Yeah, Nitesh. Go ahead, please. Hi.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Nitesh. I'm CTO at hiver and thanks for sharing this feedback. One quick question. This screenshot that you put on the right? Is this the hiver co pilot feature where you uploaded the document and just putting this query there, which kind of appears alongside email?
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  Yes, correct.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Okay. Sure. And you compared it with this other tool docspot. So does this have access to the exactly same set of documents that was uploaded to hiver co pilot and the second one?
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  Yes. Okay. Sure.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  So a quick, I think clarification on the use case of what co pilot does, co pilot is more focused towards servicing the internal users, which means that when you receive an email query or a chat query, then you can query on co pilot to get some answers and respond to that, having said that, of course, it should not return wrong answers to begin with, right? And that is something we'll have to do it. But just to understand your use case, you are trying to plug in AI chatbot from a customer facing standpoint, or are you trying to use it for your internal teams, when they receive a query, they can look up an answer.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  So I think for speaking kind of for everybody and Jim and rob feel free to keep me honest. Ultimately, we want a customer facing AI experience that's going to make it easier for us to eliminate… more cases at, you know, let's say level one so that, you know, our team members can focus on the more advanced support in testing hiver for email again specifically email, you know, my tech support team, not every tech support team at digi, but my tech support team at digi handles a lot of email and our contact center functions and troubleshoots and answers questions about 50 percent of the time, 45 percent of the time based on email. So, yeah, I just, I figured I'd use that co pilot option. The co pilot option gives you the ability to generate a reply that's how the feature is presented in the tool. It says, hey, do you want to draft a reply? And yeah, I just didn't have a great experience with that particular feature. Sure. So, co.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Pilot also takes context of the currently open email for example, if you open an email and you try to do a query against the example that you just showed, which was, I think pure play query that you had typed. So it is possible that query that open email might have some role to play with. So, do you recall what email was open when you had clicked co pilot and pushed a query there?
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  Sure. Give me a second. I'll pull it up. I'm logged into the tool right now, yeah.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  So where I'm coming from is that co pilot is built with the objective of assisting the human agent based on the currently open query. So that is, that might change some of the responses. But of course, we'll have to look deeper, see what went wrong here to be able to understand this better.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  I can't.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  see it in the portal yet? I don't know what happened to it. I don't see it in the portal, but here's what I can tell you. I propose, I provided the same question in the same format, meaning even the bullet points were the same. I basically just copied and pasted what was in the email into my chat with docspot so that, you know, it was as close to the same experience as possible. And then the training material that I uploaded into hiver is the same that I uploaded into docspot.
+
+Jim Freeland (jim.freeland@digi.com):
+  Hey, Jerry, can you do it on the fly? Can you just go to the bot and start asking questions on the fly? And we can see how it does. Sure might as well. I mean, we've been using that so long that we might as well take a peek.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  Just looking for the hiver email address. I can't remember what it was looking it up… for the demo environment.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Is it testhyver at digi? Com?
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  That sounds right. Yeah.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  Okay.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  So, this was the question… and, you know, you have my email signature, but this was the original email. It's hiver. This is me responding, not using the AI, just responding and let's just try to do this again.
+
+Jim Freeland (jim.freeland@digi.com):
+  We're just seeing the email too in case you only shared that versus your screen.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  Yeah, I'm just trying to obscure some things.
+
+Jim Freeland (jim.freeland@digi.com):
+  Yeah, I figured. Okay.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  I'll ask the same question… peace.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  So, I'm considering purchasing a ventus router, but I have the following requirements and then I list some requirements… send.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  Let's go to hiver.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  All right. So it should end up in here. Somewhere. Let's see… signs.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  And it looks like I found the email. Let's look for a new one. There. It is all right. So, this is the email I just sent. Yeah, looks good by the way. I really appreciate that, you know, our contact center doesn't handle images well for some reason for email. So this is an improvement. All right, so we can change the status. But here's what we did here. Go here. You have draft to reply. And you have different options here? Yeah, I think initially, I chose option one.
+
+Suraj Sharma (suraj.s@grexit.com):
+  Jerry. Hi, this is Suraj here from the AI team. Will it be possible for you to just select option four?
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  Yes, I did that as well. Let's see if it's better. I tried that as well. And I think eventually we got it to kind of partially where we want it to be.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  So here it does reference the vrb a 42. This would not be the appropriate solution. It starts to talk about additional information that isn't relevant… talks about Poe. It gives me this very long answer. So this is similar to the best answer that I received. But if we compare that to the docspot answer, it's just not even close. Docspot gave the best possible answer using the same material in terms of how I provided the material I went to here in knowledge base… edits. Oh, maybe it was a knowledge base. One second. Is it here? Knowledge sources, this is where I came… and under documents, I uploaded the spec sheets for the different routers. And I also included additional information about that specific router here in this text file to try to help get… to where we needed to get. I think it was after I uploaded this that we got a little bit closer. But again, I didn't need to do this with docspot. This was sufficient, these three documents with docspot. Sure.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  The setup looks good to me. I don't think there is anything else which you might have missed. OK.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  So I didn't test a 1,000,000 questions. I didn't test a lot of questions. I tested one question… you know, I guess kind of the way I saw it is there were three, documents aren't particularly sophisticated. They're just detailing different hardware models that we have. There wasn't other material to sort of muddy things up related to ventus, where it might reference a completely different model that doesn't exist. And so that led me to wondering, is there a way to refine the bot itself? In other words, if I know the bot's giving bad answers, is there a way to, you know, adjust like a default prompt? Let's say that's happening in the background or, you know, change the, you know, which version of gpt we're using, you know, let's say thinking versus non thinking, five point o versus five point two, and so on. But I couldn't really find anything like that in there and, you know, I think even if I could, that's kind of the challenge we're having with docspot today is we have to do all of those tweaks, it takes up a lot of time and it's not easy. And maybe it's never going to be easy. But without having to tweak docspot that's the answer. I got… sure.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  See one area where we can collaborate together is tweak our engine which is built on model to surface your context specific answers better. And for that to happen, what we would need as a starting point. And if this is something that you are willing to collaborate with us is to come up with a set of question and answers. Maybe it can be just four or five answers, four or five questions and answers alongside the knowledge sources. So what happens usually is some systems are tweaked to be able to respond more accurately based… on the use cases. And what we can do is to work with you to figure out exactly what kind of responses do we need? What is a qualified correct response? What is a qualified incorrect response? And once we perfect the system for just maybe one or two workflows? My understanding is that it should start working for other parts of the knowledge sources too. So to get things started, if we could just get maybe three questions and what the three answers should be, and a sample knowledge source which we can tap into. I think that can be a great starting point for us to maybe do one quick iteration and come back and you can then try it again and see how this works. So, I think some tweaks here and there should help us to reach the level of accuracy that the product is showing.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  Okay. Were there, I don't know if anybody else had any feedback or their own experience testing the bot and how that worked for them?
+
+Jim Freeland (jim.freeland@digi.com):
+  Yeah, rob, Zach, Alex, Harold, anybody have any time to work with it similar to the way Jerry did?
+
+Alex German (alex@grexit.com):
+  Not with the bot. I wonder, rob, did you do comparison with the bot?
+
+Robert Spielman (robert.spielman@digi.com):
+  No, I didn't… we could probably talk about some of the feedback I sent though from everybody possibly. Yeah.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Thanks for that.
+
+Alex German (alex@grexit.com):
+  Jerry. Maybe I was simple just that to me at least, you know, in 20 26, I did not want to test the bot or didn't feel the need to test the bot because I would expect it to just be matching or be even better than what we have. So maybe that's my bad. And that's a good thing. You try Jerry, because we actually have even more complex product. So I can give it a try, but that might be not what we need until we have a bit more tweaks.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Which bot are you using today? The one that you just showed on the screen, docsbot?
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  Yes, that's what I used to test with.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  So maybe let's explore.
+
+Jim Freeland (jim.freeland@digi.com):
+  Some of the other feedback that.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  we have provided?
+
+Matthew P (matthew.p@grexit.com):
+  Yeah. Does anybody on the hiver side want to address some of the feedback that they shared?
+
+Suraj Sharma (suraj.s@grexit.com):
+  Hey, folks, this is Suraj here. Yeah. So Jerry, I think what we can do is once you share the answers with us, we can do a quick rca on that and then quite possibly get back to you with the reasons like why is it happening? So, and how can we tweak it further? Does that sound OK? Does it sound good?
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  It sounds OK? I guess I would just… you know, my fear is, you know, what if six months from now, there's another question and another question after that, and we can focus on three questions, but, you know, we have a relatively… complicated product. You know, we have different teams across our organization that support different products at multiple levels, right? Your kind of basic level one, level two and so on. But even at the level one layer, we're going to have different material. We're going to have different needs and requirements between, you know, say Alex and Zach's team and my own. And, you know… I just wonder how this looks long term or will we have to continue to, you know, meet with you guys to tweak every time we roll out a new product line. For instance, you know what I mean? That's that's where my mind is at?
+
+Suraj Sharma (suraj.s@grexit.com):
+  Yeah, no, that's totally.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  We definitely would not want to waste a lot of your time here. Right? Where we are coming from is we have customers who have uploaded hundreds of documents and things are running fine for them. This is what we hear, what we get feedback on, and we are confident that there is some tweak which is missing in the system at this point of time, which is probably throwing a wrong answer. And unfortunately, that happens with some of our customers. And once we tweak the system, we have not seen them usually come back with other requirements unless some conflicting document was uploaded somewhere, right? So I don't think this will be an ongoing recurring activity. I think you will get an answer right away whether this system is going to work for you or not going to work for you within one iteration.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  And then the team can take a call right away. And I don't think it's really worthy of your time to keep reaching out to us every time. So that is something that we are very sure that this iteration should give you the answer of whether you want to invest more time or you won't stop.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  OK. Yeah. I mean, I'd be happy to provide some more material and formulate a few more questions and see how it does and share my feedback. Sure.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  So, just to, I think summarize this point before we move ahead, it will be great if we can get the knowledge source file, the questions that you want to ask and the expected answer that you expect.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  If you could just help us with maybe three or four such question and answer pairs based on one or two documents, that will be immensely helpful, right? And I think you should be able to reach a stage to get a yes or no answer just based on this.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  So questions expected answers and the materials and.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Knowledge source that you will be uploading. So that's about it. OK. So can we go to the other feedback that we had? I don't know matt if you have that somewhere handy or?
+
+Matthew P (matthew.p@grexit.com):
+  Yeah. In slack.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  These are the ones, right? I'm just looking at the notes here. So I'll go from top to bottom… maybe just paste it.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, just in the interest of time, I wanted to sort of like pick teams there that maybe to see whether the digi team had any feedback on. So I saw that there were a lot of feedback on the knowledge base part of it. So any specific areas there that we can help you address? And of course, we're happy to sort of run through the list as well.
+
+Jim Freeland (jim.freeland@digi.com):
+  Yeah. I don't know. I don't know if there's anything else material enough. Maybe if Jerry's got concerns with the quality of the base functionality, I think we should kind of keep looking at that, make sure we address his concerns. I mean, that's got to work first and foremost before we dive into the other features in any more detail.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  I agree. One quick help that will be valuable if we continue our discussion is around Netsuite. I noticed a point saying that we have moved away from using email and all our team's work happening in Netsuite. Currently, I do not see how hiver would fit in our workflow. I'm trying to imagine the ideal state for the team and what would it look like? Like how would you want to operate in future? So you want still to respond to emails from Netsuite and not go to the help desk software that you would be using. Yeah.
+
+Jim Freeland (jim.freeland@digi.com):
+  That's a good question. Actually, we could talk about that. So, Netsuite is our primary case management tool for the tech support cases. We don't want to introduce another source of truth and source of record for any formal emails with customers. So, our vision for the tool is that the customers use it as a front line and they're interfacing with it. It's got an inbox that the team can use to process things that don't get answered for the customer completely. But then we have to find a way. If they're working in the hiver inbox, we'd have to find a way to move that over to Netsuite because that's where we do all of our metrics, all of our csat and NPS, everything flows out of Netsuite formal case records. So, I mean, depending on whether it can be automated for integration or whether the volume of emails that make their way into the hiver inbox is too overwhelming or if it's small enough that they can be just manually moved into Netsuite, I'm open to either discussion, but it is the source of truth for digi, and we don't want to have our AI tool like docspot today. Guys, for example, docspot is not a source of truth. All we use it for is deflection based metrics… cases themselves. So we've got the AI based deflection of cases through docspot. We report on that to our leadership board, and then we've got the actual cases that we report follow up with a human being all processed through Netsuite. And then we perform all of our metrics including csat and NPS off of those.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  I relate to the objective here. Single source of truth. Yeah. And one challenge in Netsuite would be for you is to not get access to the AI tooling and workflow tooling that a fully fledged helpdesk can provide you like hiver and other tools out there. So… but, you are not opinionated in where your human agent should operate from. You just want that the case history, everything gets synced to Netsuite at the end. Is that the right understanding that?
+
+Jim Freeland (jim.freeland@digi.com):
+  Is my preference? I will let the team who's in the tool every day chime in, but that's my objective.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  I see. So we have enabled this for a few of our customers and something we can pilot if the first hurdle is crossed, which was the AI answers. So we have an inbuilt sync built in our share mailboxes which means that every time a new email comes in, it automatically gets logged as a case in Netsuite under the hood, right? And as new replies keep flowing in into the same email conversation, it keeps getting logged into the Netsuite. Additionally, we also have capability to sync the statuses across these two systems. For example, say if you are using some status for a ticket, maybe open closed pending waiting on customer, we have the capability to sync that back to the hiver interface too. So that agent sees what is the status say in Netsuite and they can even modify things, write notes, right? Sitting inside hiver without going to Netsuite. And all this data gets synced back to Netsuite too. This is what a few of our customers are using, who are heavy Netsuite users too. So using hiver interface as their primary operation hub, while all data, all information keeps getting synced to Netsuite in the backend. I think this is a setup that might work well for you too. Any immediate thoughts?
+
+Jim Freeland (jim.freeland@digi.com):
+  Yeah. I think that makes sense. There'll be calls that come in and there'll be Netsuite native and only Netsuite native. There will be emails that come in that may or may not bypass this. Hopefully we can have them all flow through here. But if they do come in to Netsuite directly, we'll process them there. And then anything that the hiver environment can't handle for the customer itself, any cases that a human needs to get involved with that we would want that record to make as Netsuite?
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Sure. That works.
+
+Alex German (alex@grexit.com):
+  Yeah. No, that would even chime in. That would be 100 percent what I would imagine then because then I could see certain things where the workflow would be improved. Because otherwise I can't so I would highly love if you are able to show a demo of that because then I would be able at least for my customers team and use case, be able to provide feedback around the tool because unless I can really vision how that all thing could work, it's hard to then go deeper into the tool and usage but having the message sync constantly, having the status sync constantly and any other information that goes into Netsuite showing up into hiver. Then, yeah, that would start to be a much better vision to see where we can implement the flow and things definitely.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Perfect. This is supported out of the box. It will require a one time setup. But, yeah, one more question I think which came as a feedback was KB… articles showing up as suggestions. When a human agent is trying to respond to an email, would you need this even if you have something like a copilot, which an, assuming copilot is able to answer the questions correctly on its own? Yeah.
+
+Alex German (alex@grexit.com):
+  I'll take the lead and respond to that one. Definitely. So the vision, assuming that we have this Netsuite integration. So let's take this as the foundation for my answer, the case comments and the agent sees the case, I would click on copilot and copilot would start building the answer going like, hey, this would be my answer, but I found this KB which relates to it because I am not in a world where I can see the AI respond on my behalf. I would want the tech agent to validate and veto that answer and go like, yep, let's go ahead. But I would definitely want copilot to not just build the answer himself. You know, we have KBS which will have a lot of step by step instructions, pictures and things. I don't need the AI to go on and build a too long email. We know how customers react to very long emails. I would rather have copilot just go like a few words, two, three sentences and go like, hey, look, click on this KB. That will be your answer. Absolutely. The tech would also ask copilot and go like, hey, can you take the first two or three important bullet point of this KB and put it at the top of the email and then carry on sure. But we rely on very complicated knowledge base on our site and that would be unmanageable to send the whole KB as inside the email. I would rather copilot just take the suggestion, learn about it and go like this KB is exactly an answer to this question?
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  I see. So just to imagine the experience email came in, the human agent fired the copilot and you get this bunch of options that we just saw on Jerry's screen, right? One, two three four five. I mean, one of those options that has helped me respond. And as soon as you press help and respond, you get these three four KB articles with short summary that I think that you should be able to find answers here. And this is the answer, they can click on it and they can confirm the article. And then they come back to copilot again and type use point two three four to frame a response. And then they frame a response and they embed an email and go ahead. Is this how you're imagining the experience to be that?
+
+Alex German (alex@grexit.com):
+  Sounds like one that could. Yeah, definitely because that's how we pretty much work currently, but manually the tech will go and go, yeah, I know which KB works and they'll ask, you know, a 365 chat, gpt, hey, phrase an answer based on this KB and link it to the customer and they'll just have copy paste that and send it. So, yeah, I think your example would probably be exactly what I would envision.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Thanks. That's very helpful.
+
+Alex German (alex@grexit.com):
+  Awesome. Thank you.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Alongside that, there was one more comment that the content of the discussion with AI should become part of the created case. What does that mean? You would want the chat with AI's copilot to be stored in Netsuite?
+
+Alex German (alex@grexit.com):
+  Somehow. Yeah. Now that's a comment based on our current workflow. So, you know, a customer can be chatting with the AI for a while. You know, our AI bots like Jerry was showing, a customer can be chatting with our AI bot to get answer and not even go through a tech support ticket. But in a world where let's say the AI bot is not able to help the customer and has to open a ticket. I would want the whole discussion so that the tech coming up knows already what kind of answer the AI bot was provided. So they don't ask the same question again or they don't give them the same answer. Again, you know, if the AI bot suggested, hey, try this, try that or try this KB and the customer say, yeah, I tried it. Didn't work. The first answer from our support agent should not be this. So that's why the history that they just discussed about is extremely important for us in a future workflow.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Yeah, that definitely makes sense already supported in the product. So every interaction that the end customer does with an AI agent, that also kind of is a ticket, right? And it gets logged into the system and we can sync it back to Netsuite too.
+
+Alex German (alex@grexit.com):
+  Okay. That's perfect. That's something we want that we lack currently.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Yes, supported in the platform. One comment was on rudimentary analytics. Can someone try to elaborate what we are looking for in analytics? Where do you think hiver analytics fall short? If you can talk about maybe two or three matrices that you want to do or aggregations that you want to do, which you could not find on the platform?
+
+Alex German (alex@grexit.com):
+  I can speak to some now. I've not gone into details on which analytics hiver has. So maybe you'll say that we have, but I can try to think of a few that I would need. I would want to be able to have analytics on how many questions do we get a day, a week, a month, a quarter? Can I filter them by… product type? Like Jerry was asking, you know, a specific part number? Can I ask the analytics? Hey, I want analytics on how many times this keyword came into questions? I would also want to like you mentioned discussion with an AI bot goes into a case. If a discussion gets resolved right away, where the customer says, well, that was my answer so that the case never goes into the end of a tech agent because it gets closed right away as a solution. I want analytics on how many times does a ticket get closed directly by the bot? And how many have to be escalated and analytics on how many times does copilot give the correct answer that a tech agent can say, yeah, that was the answer. I closed the case in one response… that's the one I can think of right off my head, Jim or Zach, if you guys can think of others that you would want to see. But, yeah.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  That is fair. I think some parts of your requirements already supported out of the box. Copilot is something that we might want to build on the accuracy we have this under the hood, but we can definitely surface. But yeah, I think that's all from my end folks, Anurag, Suraj, anything else you want to ask?
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  I just wanted to add some additional context for my team. So we handle digiventus tech support, which uses some of the same products as Alex's team for instance. But we're not integrated into Netsuite at all. We have our own system called Genesys. It's a system that we built with the rest API that's where we handle our ticketing, that's where a chat bot would live for instance. So a customer would log in… or a partner would log in and if they're using chat, they would do it through that system. So I can send you the documentation if that's helpful for Genesys for that platform. In terms of contact center application. We use the same as everybody else here. Although we're in our own instance, we also use incontact via RingCentral. So that's where we're handling email today… just.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  To double down on the first point. Jerry you mentioned you use Genesys as your contact center software and you want AI agents to feel, let me.
+
+Jerry Cuevas (jerry.cuevas@digi.com):
+  clarify Genesys is just a web portal that we've created. It's not the Genesys that you're thinking of with a y. It's our diagnostic platform. It's our ticketing platform. It's where we, where customers can open tickets, where we open tickets. It's also where we troubleshoot.
+
+Jim Freeland (jim.freeland@digi.com):
+  It's the intake method on our side. Yeah, it's a very customer facing tool. They can see their devices and they can open a ticket through there. So if we were all in a room and we were whiteboarding this, each business at digi might have a different potential inbound customer endpoint. And what we would probably end up doing just like on digi. Com, is we'd probably put hiver's bot into that experience so that customers could work with it on their own. It's really if a customer does not want to deal with that AI bot interface, which could lead to an email in the hiver inbox, and, you know, digi tech support following up to that if they don't want to, and they just want to click support at digi or support at ventus or whatever we're talking about with the different intake points, they're skipping hiver anyhow, and then that thing's coming into our normal process.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  I see. Understood. So this chat agent would get embedded in Genesys. And probably this is the first place your end customer will come and ask a question?
+
+Jim Freeland (jim.freeland@digi.com):
+  Preferably, yeah, yeah, we'd love hiver or whatever we go with. I want that to be the first thing any customer sees customers that have our phone number or customers that have our email saved and just don't bother coming to our portals or websites. They're going to skip hiver, no matter what you guys. It's just, we will make it our effort to push it as a tool to as many of them as possible because we want them solving their own problems.
+
+Alex German (alex@grexit.com):
+  Sure. That makes sense. That's.
+
+Jim Freeland (jim.freeland@digi.com):
+  the architecture, the dumbest simplest architecture is hiver or whatever we go with is out in front on our portals and our email signatures, customers should go there first. They don't always go there first. If they've already got our support email. If they've already got our support numbers, they'll call us or email us directly. Maybe we follow up with a polite, hey, we'll take care of you. And by the way, do you know we have a new AI tool, blah, blah. So we just want to continue to push more work out and into your platform or whatever we choose. But those two traditional paths will always be around, people know that… Jim, which?
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Team is this, who uses Genesys as their it's.
+
+Jim Freeland (jim.freeland@digi.com):
+  our ventus, it's our ventus business, one of our six business units. Yeah. So we've got six total business units here and we want to leverage a tool like hiver or something for the whole company. Today. We have docspot out on digi. Com. So folks can come to that and answer their own questions. And then all six businesses have a support phone number, have support email. And then some of the businesses have a device management platform like Genesys. So customers log into that, they look at their devices, they make sure they're healthy. They do configuration changes. And then the same kind of support links are there for them. So they don't have to jump back out to digi. Com or somewhere else. It's just, we're putting that access to support right in front of them.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  You mentioned RingCentral as the calling platform for the phone number.
+
+Jim Freeland (jim.freeland@digi.com):
+  Yeah.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Okay. That.
+
+Jim Freeland (jim.freeland@digi.com):
+  Is correct. All?
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  The six businesses use RingCentral pretty.
+
+Jim Freeland (jim.freeland@digi.com):
+  Much not all, but pretty much it's not a concern for those that don't use it. They will eventually use it. That is our standard at digi. And.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Again, the ticketing platform uses Netsuite in that case. So assuming a customer called, the issue could not be resolved on call, someone has to go and create a case somewhere right?
+
+Jim Freeland (jim.freeland@digi.com):
+  On, right on. Yep. Exactly. Right. Yep. So as a digi standard, RingCentral is the phone based intake Netsuite and our support email that flows to Netsuite is the standard for email. And for case management, it's not always consistent. There's a few groups that have different tools, but they're not relevant for this. We're trying to architect around our standards sure.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Okay, great. That makes sense. Just to summarize now, I think we'll wrap up. Now, we are on long time. Now… first hurdle for the digi team is to ensure that the bot responses are top notch and very accurate and this is what any product that you're evaluating needs to qualify on. And as I mentioned, it will be very helpful if Jerry or someone can help us with some set of questions.
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Answers. I think that should be a starting point. Beyond this. What I am seeing based on our limited discussion that we have that we cover 80 to 90 percent of what the team needs. Of course, we'll have to put it into place, do some configurations to make that happen. But I am very excited to work with the entire team to make that happen. So let us focus on maybe the first hurdle. And as I mentioned, we will not waste a lot of your time. If you guys think after the first pilot that the responses are not great, we will stop there. We would not like you to also spend a lot of time there. So please help us in just getting across the first hurdle and we just need inputs. And once we have done that, I can quickly go through the remaining points that we mentioned and show how we can solve this on top of the product?
+
+Jim Freeland (jim.freeland@digi.com):
+  Absolutely. Yeah. If the AI bot interaction is solid and people like Jerry and Alex and rob all say, yep one to one that's solid that's just as good as what we've got with docspot, 100 percent, then we would move into and do a more deeper session on workflows and confirming where final records live and where we can place your tool in front of existing support process and intake. Yep, we'll do all that next?
+
+Nitesh Nandy (nitesh@hiverhq.com):
+  Okay. Matt, back to you.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Perfect. I have one small question. Sorry?
+
+Anurag M (anurag@grexit.com):
+  I have one small question regarding the volume. So how many chart queries you're expecting to come on the platform… it?
+
+Jim Freeland (jim.freeland@digi.com):
+  Varies by business. Why are you curious about that one? Just, is it a pricing based question?
+
+Anurag M (anurag@grexit.com):
+  No, no, it's not a pricing based question. Just wanted to understand how much percentage of L1 cases that we can deflect. Those are the simpler questions. Yeah, sure.
+
+Jim Freeland (jim.freeland@digi.com):
+  Yeah, I'll give you a high level on behalf of the team. I may not be 100 percent accurate, but let me just tell you that we've had docspot running now for about three years. Not every business uses it. So keep that in mind. We want everybody using it. Some only use it for internal support that's their internal AI bot where they can ask questions to quickly get back to customer on the phone or on email. So these vary. But for several of the businesses that have worked with rob and have expanded this out to be customer facing on digi. Com. Over the past three years, we have cut down on average around 53, 54 percent of the traditional support cases. So it's gone up. We've had a goal of 20 percent per year for docspot to continue to erode 20 percent of the standard inbound email and phone based cases. It's gotten better every year. So 53 percent was not an immediate win. It's just gotten to that over these last three years and we would hold the same goal. So year over year with hiver or whomever we would want to continue to say, okay, if we've got a 1,000 email and phone based support cases every year.
+
+Jim Freeland (jim.freeland@digi.com):
+  I want to knock 20 percent down off that by tuning with your tool and having it do more work for our agents.
+
+Anurag M (anurag@grexit.com):
+  Perfect. That helps. This was the only question that I had in my mind. Yeah, cool. Thank you so much.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Perfect. So thanks everyone for jumping on. Like they said, we want to be respectful of your time. So matt, will, matt and I can run point on sort of like helping gather feedback from the team on exactly what that first draft of the AI looks like. And we can sort of get back to you with improvements and recommendations that we've got. So we can reach out to you individually to make that happen. And once we've got a response, we'll be in touch to sort of schedule some more time to go through it.
+
+Jim Freeland (jim.freeland@digi.com):
+  Sounds good. Jerry, rob, are you guys okay with Jerry individually kind of being digi's representative to ensure the quality on that basic feature. I.
+
+Robert Spielman (robert.spielman@digi.com):
+  Can too, I can get some question answer pairs together. Nice all.
+
+Jim Freeland (jim.freeland@digi.com):
+  Right. Let's do it. That would be great. I think between Jerry and rob, then they can represent digi with this little test. Yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, perfect. So there we go, matt. We'll run point on that, and if there's anything else we can help with, let us know and thank you so much for everyone, for all the great feedback and we appreciate it. We'll be in touch.
+
+Jim Freeland (jim.freeland@digi.com):
+  Thanks guys. Thank you very much. Thanks bye.

@@ -1,0 +1,5037 @@
+{
+  "call_id": "5054136097359948351",
+  "title": "VSLC | Hiver - Workflow & automations review",
+  "started": "2026-01-30T01:58:38.085+05:30",
+  "duration_seconds": 2852,
+  "call_metadata": {
+    "id": "5054136097359948351",
+    "url": "https://us-31545.app.gong.io/call?id=5054136097359948351",
+    "title": "VSLC | Hiver - Workflow & automations review",
+    "scheduled": "2026-01-30T02:00:00+05:30",
+    "started": "2026-01-30T01:58:38.085+05:30",
+    "duration": 2852,
+    "primaryUserId": "985641137843259904",
+    "direction": "Conference",
+    "system": "Google Meet",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://meet.google.com/zxj-fjpt-khs",
+    "isPrivate": false,
+    "calendarEventId": "4h3blj0cgoum157q0op6nob8m4@google.com"
+  },
+  "parties": [
+    {
+      "id": "66066363987861402",
+      "emailAddress": "liz@victoriaspeechlanguage.ca",
+      "name": "Elizaba Abraham",
+      "title": "",
+      "speakerId": "4815720752105070012",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "338633101",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "17956028447"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Elizaba"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769022451.471
+                },
+                {
+                  "name": "createdate",
+                  "value": 1699296700.132
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1725494400.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "Abraham"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "1920381854"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "ORGANIC_SEARCH"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "phone",
+                  "value": "7786783623"
+                },
+                {
+                  "name": "mobilephone",
+                  "value": "+17786783623"
+                },
+                {
+                  "name": "recent_conversion_date",
+                  "value": 1725476248.47
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Deal Closed"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1699296699.225
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "customer"
+                },
+                {
+                  "name": "email",
+                  "value": "liz@victoriaspeechlanguage.ca"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "7786783623",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "1253701440371624210",
+      "name": "Daniel Stivane",
+      "speakerId": "5003035728143362288",
+      "context": [],
+      "affiliation": "Internal",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "2559743484838992040",
+      "name": "S Notetaker",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Internal",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "4373050726176317356",
+      "name": "Juliane Jurilla",
+      "speakerId": "1987095893486598537",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "5816475280596566272",
+      "emailAddress": "pavithra.s@grexit.com",
+      "name": "Pavithra Sundar",
+      "speakerId": "1975881872285333865",
+      "context": [],
+      "affiliation": "Internal",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "477668542655282436",
+      "emailAddress": "hr@victoriaspeechlanguage.ca",
+      "title": "",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "176073097813",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "17956028447"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "31281940"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769022346.476
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Duplicate Prospect"
+                },
+                {
+                  "name": "createdate",
+                  "value": 1763475370.728
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1763475370.728
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "hr@victoriaspeechlanguage.ca"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    },
+    {
+      "id": "1670785869460998445",
+      "emailAddress": "carla@victoriaspeechlanguage.ca",
+      "title": "Clinical Director",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "61207321378",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "17956028447"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Carla"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "31281940"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Clinical Director"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769450320.47
+                },
+                {
+                  "name": "createdate",
+                  "value": 1727157578.195
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1727157578.195
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "other"
+                },
+                {
+                  "name": "email",
+                  "value": "carla@victoriaspeechlanguage.ca"
+                },
+                {
+                  "name": "lastname",
+                  "value": "Willock"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    },
+    {
+      "id": "2487592103612145756",
+      "emailAddress": "afu@victoriaspeechlanguage.ca",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Invitee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "5054136097359948351",
+    "transcript": [
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1856,
+            "end": 4056,
+            "text": "so, just so."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 4056,
+            "end": 5136,
+            "text": "we are aligned also."
+          },
+          {
+            "start": 5136,
+            "end": 12616,
+            "text": "And now that we have the recorder, yeah, you will be taking us through how you're currently using hiver inside your system."
+          },
+          {
+            "start": 12616,
+            "end": 17296,
+            "text": "And then you'll also let me know what are the different kind of automations you're looking to create?"
+          },
+          {
+            "start": 17296,
+            "end": 17876,
+            "text": "Yeah."
+          },
+          {
+            "start": 17876,
+            "end": 22236,
+            "text": "And after that, I will be sharing the recording with you and I will be revisiting."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 22236,
+            "end": 22836,
+            "text": "Okay?"
+          },
+          {
+            "start": 22836,
+            "end": 26586,
+            "text": "And we will connect again later next week."
+          },
+          {
+            "start": 26586,
+            "end": 30406,
+            "text": "Yeah, to discuss on the next steps and have a live working session."
+          },
+          {
+            "start": 30406,
+            "end": 31006,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 31006,
+            "end": 35006,
+            "text": "Also one of my colleagues, Julian might join us."
+          },
+          {
+            "start": 35006,
+            "end": 37326,
+            "text": "He didn't accept the invitation but I."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 41536,
+            "end": 43156,
+            "text": "might just pop in."
+          },
+          {
+            "start": 43696,
+            "end": 47456,
+            "text": "I did send him a message just before this, but we'll get started."
+          },
+          {
+            "start": 47456,
+            "end": 51016,
+            "text": "I'll just share my screen and."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 51976,
+            "end": 53196,
+            "text": "I will go on mute."
+          },
+          {
+            "start": 53196,
+            "end": 57336,
+            "text": "I will raise my hand or let you know whenever I have a question."
+          },
+          {
+            "start": 57336,
+            "end": 57796,
+            "text": "All right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 57796,
+            "end": 58136,
+            "text": "Perfect."
+          },
+          {
+            "start": 58136,
+            "end": 58596,
+            "text": "Yeah."
+          },
+          {
+            "start": 62036,
+            "end": 62516,
+            "text": "Brilliant."
+          },
+          {
+            "start": 62936,
+            "end": 65916,
+            "text": "I'm just gonna assume, just give me one second."
+          },
+          {
+            "start": 65916,
+            "end": 68256,
+            "text": "I'm just gonna put you on a different, yes."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 68256,
+            "end": 69256,
+            "text": "Yes, I can see your screen."
+          },
+          {
+            "start": 69256,
+            "end": 69536,
+            "text": "Perfect."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 70476,
+            "end": 71036,
+            "text": "Awesome."
+          },
+          {
+            "start": 73016,
+            "end": 73676,
+            "text": "Yeah."
+          },
+          {
+            "start": 73676,
+            "end": 82616,
+            "text": "So right now, we initially started with just two inboxes with hiver about a year ago."
+          },
+          {
+            "start": 82616,
+            "end": 85236,
+            "text": "We just started, we were working out of two inboxes."
+          },
+          {
+            "start": 85236,
+            "end": 85656,
+            "text": "So, primarily."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 90066,
+            "end": 95286,
+            "text": "Reception inbox, which is our main, where all our inquiries, all of that come in that one."
+          },
+          {
+            "start": 95286,
+            "end": 104866,
+            "text": "And then we have the scheduling inbox, which is it's actually maintained by just one person that works out of the inbox."
+          },
+          {
+            "start": 104866,
+            "end": 109206,
+            "text": "So, okay… I think Julian's here too."
+          },
+          {
+            "start": 110806,
+            "end": 112126,
+            "text": "Hi, Julian."
+          },
+          {
+            "start": 112126,
+            "end": 112986,
+            "text": "Hey."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 112986,
+            "end": 113186,
+            "text": "Guys."
+          },
+          {
+            "start": 113186,
+            "end": 114506,
+            "text": "Nice to meet you."
+          },
+          {
+            "start": 114506,
+            "end": 115706,
+            "text": "Nice to meet you too."
+          },
+          {
+            "start": 115706,
+            "end": 116886,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 116886,
+            "end": 119396,
+            "text": "I'm just sorry, go ahead."
+          },
+          {
+            "start": 119396,
+            "end": 120936,
+            "text": "Sorry, so."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 120936,
+            "end": 122836,
+            "text": "I'm sorry, I have my video turned off."
+          },
+          {
+            "start": 122836,
+            "end": 130096,
+            "text": "I'm a little sick and Elizabeth is just taking me through how you're currently using hiver, the different shared mailboxes."
+          },
+          {
+            "start": 130096,
+            "end": 140536,
+            "text": "And after that, we will be discussing on the automations part that you reached out regarding and we will be scheduling a follow up call to do a working session together."
+          },
+          {
+            "start": 140536,
+            "end": 141316,
+            "text": "All right."
+          },
+          {
+            "start": 143196,
+            "end": 144096,
+            "text": "So, I'll."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 146156,
+            "end": 147776,
+            "text": "just get back into it then."
+          },
+          {
+            "start": 148496,
+            "end": 148816,
+            "text": "Yeah."
+          },
+          {
+            "start": 148816,
+            "end": 160656,
+            "text": "So basically, we have the scheduling inbox which is maintained by one person, but we all kind of access it just because we're all like emailing the same clients."
+          },
+          {
+            "start": 160656,
+            "end": 171956,
+            "text": "So we mainly have access to each other's inboxes just to make sure that you know, if one person has reached out just to like follow the threads that are going on."
+          },
+          {
+            "start": 171956,
+            "end": 178506,
+            "text": "Because, we basically have multiple services that one client will have at our clinic."
+          },
+          {
+            "start": 179426,
+            "end": 186806,
+            "text": "And then recently, as of very recently we added the afu inbox, which is what Julian primarily works out of."
+          },
+          {
+            "start": 186806,
+            "end": 188566,
+            "text": "So that's his inbox."
+          },
+          {
+            "start": 190376,
+            "end": 198076,
+            "text": "And we again, he's the sole user of this inbox in terms of the person like sending out emails and receiving emails."
+          },
+          {
+            "start": 198076,
+            "end": 202996,
+            "text": "But we do pop in there just to like see what email cards are going on."
+          },
+          {
+            "start": 202996,
+            "end": 211416,
+            "text": "And then we might also just like assign him or, you know, we use the assignment for each other, switching to each other's inboxes."
+          },
+          {
+            "start": 212176,
+            "end": 224076,
+            "text": "It is, we right now the only automations we have on the reception inbox, and the scheduling is in inbox is like weekend auto responders and stuff like that."
+          },
+          {
+            "start": 224076,
+            "end": 226156,
+            "text": "Like we're not really using too many automations."
+          },
+          {
+            "start": 226156,
+            "end": 234256,
+            "text": "We really want to optimize Julian's inbox for automations because he does have a lot of repetitive tasks where he doesn't need."
+          },
+          {
+            "start": 234256,
+            "end": 235796,
+            "text": "Like there's a lot of follow ups."
+          },
+          {
+            "start": 235796,
+            "end": 241976,
+            "text": "There's a lot of stuff that we have tried to make automated just to give you an example."
+          },
+          {
+            "start": 244166,
+            "end": 249516,
+            "text": "Julian, what's something… maybe?"
+          },
+          {
+            "start": 249516,
+            "end": 250256,
+            "text": "Yeah."
+          },
+          {
+            "start": 250936,
+            "end": 256996,
+            "text": "So let's say this, no, that's from, yeah, actually, that's a good that's actually something we have an automation on."
+          },
+          {
+            "start": 259276,
+            "end": 259436,
+            "text": "No."
+          },
+          {
+            "start": 259436,
+            "end": 260096,
+            "text": "Now, I lost it."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 260096,
+            "end": 263116,
+            "text": "Referring to the automation inside the afu inbox."
+          },
+          {
+            "start": 263116,
+            "end": 264136,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 264136,
+            "end": 267736,
+            "text": "So we have one where three?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 267736,
+            "end": 268936,
+            "text": "Right now, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 268936,
+            "end": 269476,
+            "text": "So, yeah."
+          },
+          {
+            "start": 269476,
+            "end": 271436,
+            "text": "So this is for example, the one from Megan."
+          },
+          {
+            "start": 272416,
+            "end": 300486,
+            "text": "So the automation here that we have set up is basically when Megan sends somebody an email with this subject line, I think it shouldn't show up on Julian's inbox until like a couple of a week later or something like that because he doesn't technically have an actionable for that until maybe a couple of days because Megan's email basically says, you know, set this up, let us know when you're done."
+          },
+          {
+            "start": 300486,
+            "end": 307186,
+            "text": "So he doesn't actually have any like, but then in a week, if they don't do it, he just needs to be telling them."
+          },
+          {
+            "start": 307186,
+            "end": 308526,
+            "text": "Hey, we haven't received it."
+          },
+          {
+            "start": 308526,
+            "end": 310666,
+            "text": "Can you just do the needful?"
+          },
+          {
+            "start": 311526,
+            "end": 314686,
+            "text": "I think that automation is working pretty well."
+          },
+          {
+            "start": 314686,
+            "end": 315166,
+            "text": "I believe."
+          },
+          {
+            "start": 315166,
+            "end": 315586,
+            "text": "So, right."
+          },
+          {
+            "start": 315586,
+            "end": 315906,
+            "text": "Julian."
+          },
+          {
+            "start": 315906,
+            "end": 321666,
+            "text": "Yeah… yeah, it is, that one is working pretty well."
+          },
+          {
+            "start": 322786,
+            "end": 337666,
+            "text": "The other two that we have set up is… again follow ups for let's quickly go into that… is again similar follow ups."
+          },
+          {
+            "start": 337666,
+            "end": 340326,
+            "text": "But for that one, we had set up auto replies."
+          },
+          {
+            "start": 342136,
+            "end": 354566,
+            "text": "So the automation we'd set up is like if this email goes out, sorry, my computer might just, I think there's a lag in the… no."
+          },
+          {
+            "start": 354566,
+            "end": 355386,
+            "text": "Now, it's just stuck."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 357486,
+            "end": 359226,
+            "text": "Wait, give me no worries."
+          },
+          {
+            "start": 359486,
+            "end": 365306,
+            "text": "I do have access to the back end if you'd like I can just look in the automations."
+          },
+          {
+            "start": 365306,
+            "end": 365766,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 366606,
+            "end": 369646,
+            "text": "So, basically, there are two more, one is a funding automation."
+          },
+          {
+            "start": 369646,
+            "end": 371226,
+            "text": "And then the other one that."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 371226,
+            "end": 373766,
+            "text": "says rta to add service."
+          },
+          {
+            "start": 373766,
+            "end": 379426,
+            "text": "Where if the subject is add new service, something you need to send an email."
+          },
+          {
+            "start": 379426,
+            "end": 385996,
+            "text": "And if the time passed since there's no reply received in five minutes, assign it to Julian."
+          },
+          {
+            "start": 385996,
+            "end": 386296,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 387536,
+            "end": 388996,
+            "text": "Is it five minutes let?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 390996,
+            "end": 392676,
+            "text": "Me, see, did you?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 392676,
+            "end": 394356,
+            "text": "Send a new set that up and you want to see?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 394356,
+            "end": 395216,
+            "text": "It five?"
+          },
+          {
+            "start": 395396,
+            "end": 403196,
+            "text": "Yeah, it says five minutes time passed since no external reply received is five minutes we."
+          }
+        ]
+      },
+      {
+        "speakerId": "1987095893486598537",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 404436,
+            "end": 406376,
+            "text": "Probably forgot to update it then when."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 406376,
+            "end": 406756,
+            "text": "we were."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 409096,
+            "end": 409356,
+            "text": "Playing."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 409356,
+            "end": 409956,
+            "text": "around with it."
+          },
+          {
+            "start": 409956,
+            "end": 414156,
+            "text": "This is the rta to add service automation that I'm referring to."
+          },
+          {
+            "start": 414156,
+            "end": 414396,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 415856,
+            "end": 417496,
+            "text": "We were playing around with some of them."
+          },
+          {
+            "start": 417496,
+            "end": 422196,
+            "text": "So maybe that one we didn't change the because we were trying to like do some test emails, but."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 423396,
+            "end": 423496,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 425076,
+            "end": 429396,
+            "text": "I think, is there one that says RTP for afu renewal?"
+          },
+          {
+            "start": 429396,
+            "end": 429996,
+            "text": "Let?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 430996,
+            "end": 433876,
+            "text": "Me look, yes, RTP renewable for January?"
+          },
+          {
+            "start": 433876,
+            "end": 434676,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 434676,
+            "end": 437116,
+            "text": "So, that one, I'm just going to share the tab."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 437116,
+            "end": 441026,
+            "text": "So that one, we basically set it up."
+          },
+          {
+            "start": 441026,
+            "end": 448046,
+            "text": "What our intention was that the email goes out within, I think 40 72 hours."
+          },
+          {
+            "start": 448046,
+            "end": 454106,
+            "text": "I think that we set it up for we, if they haven't done any, like there's no response, nothing, they'll."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 454526,
+            "end": 455126,
+            "text": "there'll be a,"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 455126,
+            "end": 456706,
+            "text": "reply that goes out."
+          },
+          {
+            "start": 456706,
+            "end": 464626,
+            "text": "And then if in another 72 hours, if there's no reply, then another auto reply for a check in goes out."
+          },
+          {
+            "start": 465456,
+            "end": 475636,
+            "text": "But what happened when we set that up and I've just shared a screenshot of basically the email thread that what happened is that both the auto replies went at the same time."
+          },
+          {
+            "start": 475636,
+            "end": 485396,
+            "text": "So if you can see here… but then in the email summary, it looks, I mean, in the automation summary, it looked correct to us."
+          },
+          {
+            "start": 485396,
+            "end": 492316,
+            "text": "But when it actually happened, what happened was that they both just went out at the same time, which was not our intention."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 495296,
+            "end": 496096,
+            "text": "Makes sense."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 497456,
+            "end": 506956,
+            "text": "And this is an email like we send Julian senses every month to about, I would say 100 150 clients to renew their funding."
+          },
+          {
+            "start": 508056,
+            "end": 517166,
+            "text": "So it's like, unfortunately, this one went out and then I think they all received the double email."
+          },
+          {
+            "start": 517166,
+            "end": 518166,
+            "text": "I think logically."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 518166,
+            "end": 536886,
+            "text": "we'll have to make a slight change here, but I'm gonna put this back to the table, test it out and come back because when I'm looking at the automation, it says, first the email goes out and then after that within 72 hours, if there's no response and a follower like that, we're doing it three times, right?"
+          },
+          {
+            "start": 536886,
+            "end": 537566,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 537566,
+            "end": 538286,
+            "text": "And."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 538286,
+            "end": 540126,
+            "text": "I'm also thinking out loud here."
+          },
+          {
+            "start": 540126,
+            "end": 540626,
+            "text": "Yeah."
+          },
+          {
+            "start": 540626,
+            "end": 542886,
+            "text": "So the first time it's 72 hours."
+          },
+          {
+            "start": 542886,
+            "end": 545226,
+            "text": "So the second time it should be more hours, right?"
+          },
+          {
+            "start": 545786,
+            "end": 547386,
+            "text": "Like 72 plus 72."
+          },
+          {
+            "start": 547386,
+            "end": 548126,
+            "text": "Something like that."
+          },
+          {
+            "start": 548126,
+            "end": 549226,
+            "text": "Maybe, yeah."
+          },
+          {
+            "start": 549226,
+            "end": 551866,
+            "text": "Did that, did you try that way?"
+          },
+          {
+            "start": 551866,
+            "end": 552646,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 552646,
+            "end": 559346,
+            "text": "I, we didn't touch this automation that's when we reached out to you because when we initially tested it out, we had put for."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 559346,
+            "end": 560306,
+            "text": "Like one."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 560306,
+            "end": 562766,
+            "text": "Minute two minutes and that seemed to work fine."
+          },
+          {
+            "start": 562766,
+            "end": 563086,
+            "text": "Okay?"
+          },
+          {
+            "start": 564046,
+            "end": 569606,
+            "text": "But when we did this, so we thought it was working and then when we did the actual 72 hours."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 571376,
+            "end": 571636,
+            "text": "It."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 571636,
+            "end": 573056,
+            "text": "like this is what happened."
+          },
+          {
+            "start": 573056,
+            "end": 580336,
+            "text": "So when we tested it out, we did like two minutes and then five minutes, I believe, and then it worked exactly how we wanted it to be."
+          },
+          {
+            "start": 580336,
+            "end": 591096,
+            "text": "But when, so we're like, and then if you see the automation summary, it clearly says after the next 20 72 hours is when the next email should go."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 591096,
+            "end": 592216,
+            "text": "Yes."
+          },
+          {
+            "start": 592216,
+            "end": 593816,
+            "text": "So we're."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 593816,
+            "end": 598436,
+            "text": "like we don't know where we made the error because logically we thought it made sense."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Pricing",
+        "sentences": [
+          {
+            "start": 600656,
+            "end": 601676,
+            "text": "It does make sense."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 601676,
+            "end": 603636,
+            "text": "And the summary does say the same."
+          },
+          {
+            "start": 603636,
+            "end": 605076,
+            "text": "Let me take this back."
+          },
+          {
+            "start": 605076,
+            "end": 610496,
+            "text": "Let me see where we are missing this and I'll course, correct it and bring it back to you."
+          },
+          {
+            "start": 610496,
+            "end": 611136,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 611136,
+            "end": 611616,
+            "text": "Perfect."
+          },
+          {
+            "start": 611616,
+            "end": 613736,
+            "text": "And then the other one was, I think."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 617716,
+            "end": 618036,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 618036,
+            "end": 628496,
+            "text": "This was another similar incident of another one that we have let me share this tab, the screenshot that Julian took, which was afu funding to cover completed and upcoming."
+          },
+          {
+            "start": 628496,
+            "end": 633216,
+            "text": "So this was another one where it went within four hours, I believe Julian, but,"
+          }
+        ]
+      },
+      {
+        "speakerId": "1987095893486598537",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 634416,
+            "end": 652816,
+            "text": "that's what… happened was I sent the email, the initial email and then four days later, it sent a follow up, but it wasn't supposed to show up on my end until after four days of not getting a response from the follow up, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 657586,
+            "end": 657966,
+            "text": "Okay."
+          },
+          {
+            "start": 657966,
+            "end": 662086,
+            "text": "This is with regards to the funding reminder automation."
+          },
+          {
+            "start": 662086,
+            "end": 662486,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 664446,
+            "end": 665626,
+            "text": "I think that's the one, right?"
+          },
+          {
+            "start": 665626,
+            "end": 666646,
+            "text": "Julian, correct?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 666646,
+            "end": 667246,
+            "text": "Yeah."
+          },
+          {
+            "start": 670146,
+            "end": 670686,
+            "text": "All right."
+          },
+          {
+            "start": 670686,
+            "end": 670946,
+            "text": "Okay."
+          },
+          {
+            "start": 671946,
+            "end": 677866,
+            "text": "So… to begin with, I will look into how the three automations are set."
+          },
+          {
+            "start": 677866,
+            "end": 681746,
+            "text": "And now I have a clear understanding of what you are trying to achieve as well."
+          },
+          {
+            "start": 681746,
+            "end": 682306,
+            "text": "Yeah."
+          },
+          {
+            "start": 682306,
+            "end": 684526,
+            "text": "So we'll see how we'll have to correct that."
+          },
+          {
+            "start": 685146,
+            "end": 688746,
+            "text": "You did mention there are a few more repetitive tasks, right?"
+          },
+          {
+            "start": 688966,
+            "end": 691126,
+            "text": "Can you just take me through a couple of them more?"
+          },
+          {
+            "start": 691326,
+            "end": 695726,
+            "text": "And then for our next session, I can bring in what automation we can do to set that up."
+          },
+          {
+            "start": 696306,
+            "end": 696706,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 696706,
+            "end": 702906,
+            "text": "Julian, do you have any other ideas in terms of, or like repetitive tasks that you would like to get automated?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1987095893486598537",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 709056,
+            "end": 710956,
+            "text": "I think I kind of let's."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 712896,
+            "end": 724256,
+            "text": "take a step back, take me through the type of emails that you handle inside the afu inbox, what are the different types of emails that you're currently handling well right now?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1987095893486598537",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 724336,
+            "end": 737336,
+            "text": "The emails that I send out are reminding parents to transfer… more funding, and I've already created an automation for that, reminding them to renew their contract."
+          },
+          {
+            "start": 737556,
+            "end": 741996,
+            "text": "There's already an automation for that… so."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 743336,
+            "end": 744736,
+            "text": "It's mostly outbound emails."
+          }
+        ]
+      },
+      {
+        "speakerId": "1987095893486598537",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 746436,
+            "end": 747936,
+            "text": "Yeah, that needs automation."
+          },
+          {
+            "start": 748176,
+            "end": 756336,
+            "text": "Yeah, I mean, if you have any ideas about… like inbound emails that would be great too."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 756736,
+            "end": 757536,
+            "text": "Of course."
+          },
+          {
+            "start": 757636,
+            "end": 767986,
+            "text": "Yes, take me through the different types of inbound emails… the type of emails that are just like click on that unassigned queue inside a few inbox, if you don't mind sharing?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1987095893486598537",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 768946,
+            "end": 769386,
+            "text": "Sure."
+          },
+          {
+            "start": 769506,
+            "end": 770406,
+            "text": "I can share my screen."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 770886,
+            "end": 772306,
+            "text": "No, I've got it here."
+          }
+        ]
+      },
+      {
+        "speakerId": "1987095893486598537",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 772566,
+            "end": 773006,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 774066,
+            "end": 774826,
+            "text": "I'll just say."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 774826,
+            "end": 775666,
+            "text": "No inbox."
+          },
+          {
+            "start": 776066,
+            "end": 776686,
+            "text": "Good one."
+          },
+          {
+            "start": 776766,
+            "end": 777206,
+            "text": "Yeah."
+          },
+          {
+            "start": 778686,
+            "end": 779126,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 779126,
+            "end": 792676,
+            "text": "This is another question I have which was on my list was, so both afu and scheduling, they work while the inbox exists on hiver."
+          },
+          {
+            "start": 792856,
+            "end": 795696,
+            "text": "Currently, Julian and Megan, who does scheduling?"
+          },
+          {
+            "start": 795916,
+            "end": 798156,
+            "text": "They work out of their regular inbox?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 799396,
+            "end": 800036,
+            "text": "Okay."
+          },
+          {
+            "start": 800376,
+            "end": 801016,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 801016,
+            "end": 811736,
+            "text": "I think this is not real like it's all showing like they haven't done it, but they've kind of responded to everything because they work out of their regular inbox."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 814096,
+            "end": 819316,
+            "text": "We'll have to do like… how do I put this?"
+          },
+          {
+            "start": 820356,
+            "end": 827036,
+            "text": "We have to rework on how they currently work out of it because the assigned to me, right?"
+          },
+          {
+            "start": 827096,
+            "end": 829376,
+            "text": "Can you go to assign to me that you see on the left?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 830096,
+            "end": 831036,
+            "text": "Oh, that's mine."
+          },
+          {
+            "start": 831236,
+            "end": 832016,
+            "text": "Does that matter?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 833536,
+            "end": 834776,
+            "text": "Shouldn't be a problem."
+          },
+          {
+            "start": 834936,
+            "end": 837256,
+            "text": "Just want to show it for the view of it."
+          },
+          {
+            "start": 837396,
+            "end": 838196,
+            "text": "Yeah, sure."
+          },
+          {
+            "start": 838236,
+            "end": 841996,
+            "text": "You see, because you have only emails from reception, you have it here."
+          },
+          {
+            "start": 842076,
+            "end": 846696,
+            "text": "Would you be able to take two emails from afu inbox and assign it to yourself?"
+          },
+          {
+            "start": 846976,
+            "end": 853496,
+            "text": "Yeah… just take one from here and two from scheduling, assign it to you."
+          },
+          {
+            "start": 853796,
+            "end": 855336,
+            "text": "Any random, two emails?"
+          },
+          {
+            "start": 855916,
+            "end": 856396,
+            "text": "I'm."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 856396,
+            "end": 863296,
+            "text": "just going to assign this one… because they're all Google emails you."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 863296,
+            "end": 864516,
+            "text": "Can do it right from the screen."
+          },
+          {
+            "start": 865696,
+            "end": 866736,
+            "text": "Let's go back."
+          },
+          {
+            "start": 867476,
+            "end": 868556,
+            "text": "I've always wondered."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 868556,
+            "end": 869196,
+            "text": "If you can."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 869956,
+            "end": 870676,
+            "text": "Yes, you can."
+          },
+          {
+            "start": 870796,
+            "end": 871056,
+            "text": "Okay."
+          },
+          {
+            "start": 871196,
+            "end": 878596,
+            "text": "Now, I think I know what I'm going to do next to let's go through one quick training session between the three offers itself."
+          },
+          {
+            "start": 878976,
+            "end": 883636,
+            "text": "I'll take you through all the things that you can do inside hiver to begin with."
+          },
+          {
+            "start": 883716,
+            "end": 885836,
+            "text": "And then we'll get into the automation side."
+          },
+          {
+            "start": 886756,
+            "end": 887196,
+            "text": "Okay?"
+          },
+          {
+            "start": 887216,
+            "end": 889566,
+            "text": "So like there we go."
+          },
+          {
+            "start": 890086,
+            "end": 890566,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 890666,
+            "end": 891806,
+            "text": "I forgot about this."
+          },
+          {
+            "start": 891866,
+            "end": 892226,
+            "text": "I never."
+          },
+          {
+            "start": 893606,
+            "end": 894086,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 894186,
+            "end": 895606,
+            "text": "You can add tag."
+          },
+          {
+            "start": 895786,
+            "end": 900086,
+            "text": "You can assign, you can change status from right to screen, right?"
+          },
+          {
+            "start": 901326,
+            "end": 901806,
+            "text": "Awesome."
+          },
+          {
+            "start": 902006,
+            "end": 902826,
+            "text": "And then you want."
+          },
+          {
+            "start": 902926,
+            "end": 910176,
+            "text": "So now we have to, from scheduling to… that's the new meaning?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 915186,
+            "end": 916246,
+            "text": "Let me find some."
+          },
+          {
+            "start": 916946,
+            "end": 917306,
+            "text": "Okay."
+          },
+          {
+            "start": 917466,
+            "end": 919946,
+            "text": "I'm just going to take these two because these are from me."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 921426,
+            "end": 924306,
+            "text": "Yeah, we can just unassign and it'll go back to that inbox."
+          },
+          {
+            "start": 924766,
+            "end": 926746,
+            "text": "So shouldn't be a problem?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 927846,
+            "end": 929186,
+            "text": "Yeah, those are emails from me."
+          },
+          {
+            "start": 929206,
+            "end": 930286,
+            "text": "So, I know she doesn't need it."
+          },
+          {
+            "start": 930806,
+            "end": 931166,
+            "text": "Perfect."
+          },
+          {
+            "start": 931766,
+            "end": 932126,
+            "text": "Oh."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 932126,
+            "end": 935186,
+            "text": "If you go to assign to me, give it a second to load."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 941236,
+            "end": 941596,
+            "text": "Yeah."
+          },
+          {
+            "start": 941656,
+            "end": 942216,
+            "text": "There we go."
+          },
+          {
+            "start": 942356,
+            "end": 958696,
+            "text": "This is the view that we want Julian and the other person working out of the two inboxes instead, you should separate it in a way where your primary should only be your personal emails that's addressed to you."
+          },
+          {
+            "start": 958976,
+            "end": 965636,
+            "text": "Everything else that comes into your shared email, which is afu inbox reception scheduling."
+          },
+          {
+            "start": 965876,
+            "end": 970406,
+            "text": "You need to work out of assign to me this way, right on the screen."
+          },
+          {
+            "start": 970526,
+            "end": 971646,
+            "text": "Can you see there's Elizabeth?"
+          },
+          {
+            "start": 971646,
+            "end": 975266,
+            "text": "And then reception, you know, which inbox it belongs to."
+          },
+          {
+            "start": 975586,
+            "end": 981726,
+            "text": "So from here, you're able to spot out the inbox as well as if it's assigned to you."
+          },
+          {
+            "start": 981786,
+            "end": 987766,
+            "text": "So it's more like a private view where you have visibility on all the inboxes you have."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 988206,
+            "end": 988726,
+            "text": "Right."
+          },
+          {
+            "start": 989066,
+            "end": 1003996,
+            "text": "So essentially, what you're saying is that Julian should, so right now, like Julian's only email that he uses is the afu at victoriaspeechlanguage, CA, which is the afu inbox email."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1008536,
+            "end": 1015476,
+            "text": "So, basically, he needs to be working out of Julian at victoriaspeechlanguage instead of afu at, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1019086,
+            "end": 1023606,
+            "text": "Yes, by afu at, are you referring to being logged in?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1024166,
+            "end": 1024686,
+            "text": "Yeah."
+          },
+          {
+            "start": 1024686,
+            "end": 1026746,
+            "text": "So he logs in as afu, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1027366,
+            "end": 1037026,
+            "text": "Julian, do you log into your Julian… at address or afu at address and work out of it?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1987095893486598537",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1037486,
+            "end": 1041426,
+            "text": "I use the autism funding at Victoria."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1041726,
+            "end": 1042826,
+            "text": "That's the afu?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1043526,
+            "end": 1044106,
+            "text": "Which."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1044106,
+            "end": 1048106,
+            "text": "is why I feel like we messed that up when we initially set it up."
+          },
+          {
+            "start": 1048796,
+            "end": 1057246,
+            "text": "So that's been the workflow for both Megan and Julian… because they are the only users of that inbox."
+          },
+          {
+            "start": 1057806,
+            "end": 1061066,
+            "text": "The rest of us don't ever send emails as them."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1062606,
+            "end": 1065186,
+            "text": "Just like how you're viewing it right now, right?"
+          },
+          {
+            "start": 1065346,
+            "end": 1074066,
+            "text": "We can do the same for Julian and Megan because they'll have, so the reception inbox is where everybody works out of correct?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1076286,
+            "end": 1077026,
+            "text": "Pretty much."
+          },
+          {
+            "start": 1077046,
+            "end": 1077266,
+            "text": "Yeah."
+          },
+          {
+            "start": 1077326,
+            "end": 1088806,
+            "text": "I mean, there's only like we all, there's two people that primarily work out of it, but we all just refer to each other just to keep track of, you know, the kind of threads that are going."
+          },
+          {
+            "start": 1088946,
+            "end": 1091286,
+            "text": "So everyone's added to all the inboxes."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1091906,
+            "end": 1092386,
+            "text": "okay."
+          },
+          {
+            "start": 1092466,
+            "end": 1107926,
+            "text": "In that case, Julian needs to be signed in only into his personal email id, which is Julian at email id and then have his hiver installed, which I know that since he's already working from the reception inbox too."
+          },
+          {
+            "start": 1108046,
+            "end": 1110566,
+            "text": "So he should have the same view that you're seeing."
+          },
+          {
+            "start": 1110826,
+            "end": 1117986,
+            "text": "And then he needs to start working out of assigned to me because he handles two to three shared mailboxes for him."
+          },
+          {
+            "start": 1118046,
+            "end": 1119326,
+            "text": "Assigned to me."
+          },
+          {
+            "start": 1119326,
+            "end": 1127636,
+            "text": "Would be the best view because he can go to afu, inbox, unassigned, take all the emails that belongs to him, assign it to him."
+          },
+          {
+            "start": 1127676,
+            "end": 1130736,
+            "text": "That one, we can automate it as next steps."
+          },
+          {
+            "start": 1130896,
+            "end": 1139676,
+            "text": "But to begin with, like from starting today, Julian, I'd recommend just go ahead and close all of these emails that you currently see."
+          },
+          {
+            "start": 1139896,
+            "end": 1140576,
+            "text": "All right."
+          },
+          {
+            "start": 1140716,
+            "end": 1151276,
+            "text": "And after that start fresh and every email that comes into this inbox assign it to yourself and then go to reception, whichever belongs to you."
+          },
+          {
+            "start": 1151316,
+            "end": 1153736,
+            "text": "Take it to yourself, same the same way for scheduling."
+          },
+          {
+            "start": 1154416,
+            "end": 1158576,
+            "text": "And then after that work out of assigned to me, right?"
+          },
+          {
+            "start": 1159296,
+            "end": 1164296,
+            "text": "All right, on the left side, the same assigned to me view so that, you know, the different inboxes."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1166516,
+            "end": 1170396,
+            "text": "So basically, it won't like it'll real time, close the."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1170396,
+            "end": 1170856,
+            "text": "Emails, correct?"
+          },
+          {
+            "start": 1170856,
+            "end": 1170956,
+            "text": "Correct?"
+          },
+          {
+            "start": 1170956,
+            "end": 1176856,
+            "text": "Yes, you'll be able to like if you're doing it's, an incoming email, say you received a request."
+          },
+          {
+            "start": 1176856,
+            "end": 1183076,
+            "text": "Now, you can respond to it, you can assign it to yourself and then you can respond on it on the same email."
+          },
+          {
+            "start": 1183176,
+            "end": 1184516,
+            "text": "Like can you open one email here?"
+          },
+          {
+            "start": 1184716,
+            "end": 1185436,
+            "text": "Elizabeth?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1185976,
+            "end": 1188216,
+            "text": "On the unassigned for afu?"
+          },
+          {
+            "start": 1188336,
+            "end": 1188656,
+            "text": "Yes."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1188676,
+            "end": 1189136,
+            "text": "Yes, please."
+          },
+          {
+            "start": 1189336,
+            "end": 1190556,
+            "text": "Yeah, I'm."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1190556,
+            "end": 1192796,
+            "text": "going to open this one that's already assigned to."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1192796,
+            "end": 1193036,
+            "text": "Julian."
+          },
+          {
+            "start": 1194556,
+            "end": 1194996,
+            "text": "Perfect."
+          },
+          {
+            "start": 1195216,
+            "end": 1200076,
+            "text": "Now, this email has come inside and now Julian has to respond to it."
+          },
+          {
+            "start": 1200096,
+            "end": 1204836,
+            "text": "Let's say, in that case, what he does is he goes ahead and replies to it."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1205936,
+            "end": 1208976,
+            "text": "And then he changes the status here."
+          },
+          {
+            "start": 1208976,
+            "end": 1214396,
+            "text": "In this way how you can treat the status is if it is an open, it means it's pending on you."
+          },
+          {
+            "start": 1215006,
+            "end": 1220806,
+            "text": "If, it's pending on the other person like the third party or you're waiting on somebody to get back to you."
+          },
+          {
+            "start": 1220886,
+            "end": 1225566,
+            "text": "So you can leave it on pending and closed is just closing and archiving it."
+          },
+          {
+            "start": 1225646,
+            "end": 1230006,
+            "text": "Yeah, this way, it keeps clearing out from your unassigned right?"
+          },
+          {
+            "start": 1230126,
+            "end": 1233686,
+            "text": "This way, you know, okay, all the open items are just pending on me."
+          },
+          {
+            "start": 1233726,
+            "end": 1234566,
+            "text": "I need to get them closed."
+          },
+          {
+            "start": 1234766,
+            "end": 1238686,
+            "text": "If no actions are required, we can auto close that as well."
+          },
+          {
+            "start": 1238706,
+            "end": 1240066,
+            "text": "That's an automation we can do."
+          },
+          {
+            "start": 1240206,
+            "end": 1242826,
+            "text": "So, these are a few things that you can think through."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1244786,
+            "end": 1246146,
+            "text": "Yeah, I think that would be useful."
+          },
+          {
+            "start": 1246206,
+            "end": 1255766,
+            "text": "The auto close automation for like Julian would be useful because sometimes like all he's saying is like, thanks for doing it."
+          },
+          {
+            "start": 1255826,
+            "end": 1257686,
+            "text": "And then there's nothing else there, right?"
+          },
+          {
+            "start": 1257786,
+            "end": 1258246,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1261176,
+            "end": 1261596,
+            "text": "Okay."
+          },
+          {
+            "start": 1261676,
+            "end": 1262276,
+            "text": "Let's do this."
+          },
+          {
+            "start": 1262356,
+            "end": 1266716,
+            "text": "I think as next steps, let's set up a call again for three minutes, catch up next week."
+          },
+          {
+            "start": 1267136,
+            "end": 1271876,
+            "text": "And Julian, I would request you to take me through one inbox at a time."
+          },
+          {
+            "start": 1271896,
+            "end": 1275396,
+            "text": "Let's do a few inbox on the next call."
+          },
+          {
+            "start": 1275616,
+            "end": 1283556,
+            "text": "Yeah, we threw a whole lot of queries that you're handling what type of incoming emails that you receive, what needs action?"
+          },
+          {
+            "start": 1283676,
+            "end": 1285036,
+            "text": "What doesn't need action?"
+          },
+          {
+            "start": 1285376,
+            "end": 1296296,
+            "text": "What needs to be moved to another inbox or just everything that you want to talk to me about the inbox, let's do that and then let's simplify it from there."
+          },
+          {
+            "start": 1296476,
+            "end": 1297316,
+            "text": "What do you think?"
+          },
+          {
+            "start": 1298276,
+            "end": 1300716,
+            "text": "Yeah, sounds like a plan to me."
+          },
+          {
+            "start": 1302176,
+            "end": 1302616,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1302736,
+            "end": 1324116,
+            "text": "And in the meantime, I think Julian, what we can work out is like how we can switch around the afu, like the way you log in because even I think the way pavitha suggesting it because that's how we do it out of reception because reception everyone set up as themselves and then they just like take the emails from there as needed."
+          },
+          {
+            "start": 1326096,
+            "end": 1329456,
+            "text": "So, I kind of understand what pavitha is saying in terms of."
+          },
+          {
+            "start": 1329456,
+            "end": 1335816,
+            "text": "And then what Julian, we can then do is also have a like Claire join in on the afu thing."
+          },
+          {
+            "start": 1336496,
+            "end": 1339076,
+            "text": "And then she can take away emails that she's dealing with."
+          },
+          {
+            "start": 1339196,
+            "end": 1344756,
+            "text": "So then you don't even have to like it's not an actionable for you to assign to her."
+          },
+          {
+            "start": 1346896,
+            "end": 1360696,
+            "text": "So, and I think this also goes back to what Carla was talking about like having, I mean if we're hiring this third person and they're also going to work out of the same inbox, we will actually need to separate you from that afu inbox."
+          },
+          {
+            "start": 1362876,
+            "end": 1369216,
+            "text": "So then essentially, pavitha, I would have to create a Google group for that afu website, right?"
+          },
+          {
+            "start": 1369336,
+            "end": 1373956,
+            "text": "I mean, for the afu handle… why?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1373956,
+            "end": 1374436,
+            "text": "Was that?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1374816,
+            "end": 1376636,
+            "text": "Because right now, it's not a Google group."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1377836,
+            "end": 1379696,
+            "text": "We already have it as an inbox here, right?"
+          },
+          {
+            "start": 1380036,
+            "end": 1383496,
+            "text": "This is the same email id that Julian works on every day, right?"
+          },
+          {
+            "start": 1383636,
+            "end": 1385756,
+            "text": "There are a few inbox that you see here, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1386176,
+            "end": 1386656,
+            "text": "Then."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1386656,
+            "end": 1387256,
+            "text": "It's good to go."
+          },
+          {
+            "start": 1387496,
+            "end": 1393456,
+            "text": "He's already part of hiver and he already has access to this to the shared inbox."
+          },
+          {
+            "start": 1393856,
+            "end": 1399656,
+            "text": "All that he has to do is install hiver and start seeing this on his left side, but,"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1399656,
+            "end": 1405976,
+            "text": "for him, he works like hiver, like his primary email is the afu at victoriaspeechlanguage."
+          },
+          {
+            "start": 1405976,
+            "end": 1406456,
+            "text": "CA?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1407006,
+            "end": 1409806,
+            "text": "Oh, now it all makes sense."
+          },
+          {
+            "start": 1409966,
+            "end": 1410246,
+            "text": "Okay?"
+          },
+          {
+            "start": 1410566,
+            "end": 1410826,
+            "text": "Then."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1410826,
+            "end": 1423186,
+            "text": "it'll have to, if we're going to use it as the common one, because if you notice reception at that is info at victoriaspeechlanguage, CA, which is a Google group, which I've then added as an inbox here."
+          },
+          {
+            "start": 1423946,
+            "end": 1429726,
+            "text": "But afu and scheduling are their Google ids like that's how they've been operating."
+          },
+          {
+            "start": 1430346,
+            "end": 1432926,
+            "text": "So then I'll have to create those as a group, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1436816,
+            "end": 1437816,
+            "text": "Let me clarify."
+          },
+          {
+            "start": 1437816,
+            "end": 1438616,
+            "text": "One more."
+          },
+          {
+            "start": 1438716,
+            "end": 1439716,
+            "text": "I'm just checking something."
+          },
+          {
+            "start": 1442096,
+            "end": 1442496,
+            "text": "Okay."
+          },
+          {
+            "start": 1443316,
+            "end": 1447036,
+            "text": "So now we're trying to figure out how Julian can log in, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1447356,
+            "end": 1447796,
+            "text": "Yeah."
+          },
+          {
+            "start": 1447876,
+            "end": 1449556,
+            "text": "Like what is the best way for Julian?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1449556,
+            "end": 1452776,
+            "text": "The shared inbox that's created on the left side that you see."
+          },
+          {
+            "start": 1452956,
+            "end": 1457836,
+            "text": "Yeah, the reception, the email id is info at victoriaspeechlanguage."
+          },
+          {
+            "start": 1457836,
+            "end": 1458316,
+            "text": "CA."
+          },
+          {
+            "start": 1458656,
+            "end": 1459396,
+            "text": "Good to go."
+          },
+          {
+            "start": 1460556,
+            "end": 1463016,
+            "text": "Scheduling is at victoriaspeechlanguage."
+          },
+          {
+            "start": 1463016,
+            "end": 1463456,
+            "text": "CA."
+          },
+          {
+            "start": 1463596,
+            "end": 1464476,
+            "text": "Good to go there."
+          },
+          {
+            "start": 1465236,
+            "end": 1468256,
+            "text": "Afu, autismfunding at victoriaspeechlanguage."
+          },
+          {
+            "start": 1468256,
+            "end": 1470056,
+            "text": "CA, we're good to go there as well."
+          },
+          {
+            "start": 1470656,
+            "end": 1471096,
+            "text": "Yeah."
+          },
+          {
+            "start": 1471136,
+            "end": 1480656,
+            "text": "Now, what has happened is Julian is a user inside hiver with the email id, autismfunding at victoriaspeechlanguage, CA."
+          },
+          {
+            "start": 1480816,
+            "end": 1481316,
+            "text": "Correct."
+          },
+          {
+            "start": 1481536,
+            "end": 1482016,
+            "text": "Yeah."
+          },
+          {
+            "start": 1482676,
+            "end": 1490456,
+            "text": "What we'll have to do is we'll have to add him as a new user or change the Julian's user."
+          },
+          {
+            "start": 1490676,
+            "end": 1491796,
+            "text": "Do you, are you an admin?"
+          },
+          {
+            "start": 1491896,
+            "end": 1494536,
+            "text": "Let's go to the admin panel from your dashboard."
+          },
+          {
+            "start": 1495596,
+            "end": 1496496,
+            "text": "Let's go there."
+          },
+          {
+            "start": 1496956,
+            "end": 1497556,
+            "text": "Okay."
+          },
+          {
+            "start": 1500876,
+            "end": 1501476,
+            "text": "There we go."
+          },
+          {
+            "start": 1501556,
+            "end": 1503456,
+            "text": "Perfect users and roles on the left side."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1505056,
+            "end": 1506876,
+            "text": "In the home, or in the shared inbox?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1507176,
+            "end": 1509336,
+            "text": "On the left side, right below integrations."
+          },
+          {
+            "start": 1509576,
+            "end": 1510696,
+            "text": "Yeah, there we go."
+          },
+          {
+            "start": 1512516,
+            "end": 1512956,
+            "text": "Perfect."
+          },
+          {
+            "start": 1513276,
+            "end": 1517156,
+            "text": "Like I was mentioning, so we need to change this email address."
+          },
+          {
+            "start": 1518616,
+            "end": 1527496,
+            "text": "So… edit inbox list or we can just remove him as… a user."
+          },
+          {
+            "start": 1527896,
+            "end": 1531356,
+            "text": "Just delete him as a user and add Julian's email id."
+          },
+          {
+            "start": 1531516,
+            "end": 1533556,
+            "text": "Yeah, delete this, so."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1533656,
+            "end": 1536856,
+            "text": "Another question I have before I do this, actual, did I remove it?"
+          },
+          {
+            "start": 1536936,
+            "end": 1537076,
+            "text": "Okay."
+          },
+          {
+            "start": 1538336,
+            "end": 1543676,
+            "text": "Julian's, basically Julian at Victoria, speech language is an alias for autismfunding."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1548156,
+            "end": 1552396,
+            "text": "But let's try adding Julian's email address and see what's happening."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1564296,
+            "end": 1565716,
+            "text": "I'm just going to make you an admin."
+          },
+          {
+            "start": 1567396,
+            "end": 1568876,
+            "text": "And then just afu."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1578526,
+            "end": 1578946,
+            "text": "Okay."
+          },
+          {
+            "start": 1579266,
+            "end": 1579786,
+            "text": "Julian."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1579906,
+            "end": 1584746,
+            "text": "Can you hard, refresh your Gmail and see if you have received an invite?"
+          },
+          {
+            "start": 1587296,
+            "end": 1587756,
+            "text": "All right."
+          },
+          {
+            "start": 1590046,
+            "end": 1591966,
+            "text": "Would you be able to share your screen?"
+          },
+          {
+            "start": 1592126,
+            "end": 1592326,
+            "text": "Julian?"
+          },
+          {
+            "start": 1593066,
+            "end": 1593826,
+            "text": "Stop sharing?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1603936,
+            "end": 1604336,
+            "text": "Okay."
+          },
+          {
+            "start": 1604356,
+            "end": 1606196,
+            "text": "Let me know if you guys see it."
+          },
+          {
+            "start": 1607776,
+            "end": 1609256,
+            "text": "Yes, I'll let you see it."
+          },
+          {
+            "start": 1611616,
+            "end": 1613456,
+            "text": "I'm assuming it's this one right here."
+          },
+          {
+            "start": 1613956,
+            "end": 1618116,
+            "text": "Yes, the first one that you've received, can I click on it, install hiver in Gmail?"
+          },
+          {
+            "start": 1618596,
+            "end": 1620496,
+            "text": "Yeah, it'll ask you to just log in."
+          },
+          {
+            "start": 1620496,
+            "end": 1620796,
+            "text": "Again."
+          },
+          {
+            "start": 1621896,
+            "end": 1622896,
+            "text": "It's already there."
+          },
+          {
+            "start": 1623156,
+            "end": 1624336,
+            "text": "Let's go back to Gmail."
+          },
+          {
+            "start": 1626136,
+            "end": 1627616,
+            "text": "Hard refresh here once."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1631756,
+            "end": 1636096,
+            "text": "Reload… are you logged in through Julian email address?"
+          },
+          {
+            "start": 1636676,
+            "end": 1638196,
+            "text": "No, it's through autismfunding."
+          },
+          {
+            "start": 1639216,
+            "end": 1640276,
+            "text": "Would you be able to switch?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1641636,
+            "end": 1642536,
+            "text": "So, that's what I meant."
+          },
+          {
+            "start": 1642616,
+            "end": 1643896,
+            "text": "It's an alias."
+          },
+          {
+            "start": 1643896,
+            "end": 1650896,
+            "text": "So, the way he logs… in is only at autismfunding at Gmail."
+          },
+          {
+            "start": 1650896,
+            "end": 1651336,
+            "text": "Com."
+          },
+          {
+            "start": 1653236,
+            "end": 1653676,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1653696,
+            "end": 1654876,
+            "text": "Can you click on the hiver icon?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1660186,
+            "end": 1660646,
+            "text": "Yeah."
+          },
+          {
+            "start": 1660646,
+            "end": 1663946,
+            "text": "Login to hiver, let's see what happens."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1667356,
+            "end": 1676216,
+            "text": "I feel like I'll have to remove autismfunding… as an alias for Julian."
+          },
+          {
+            "start": 1677836,
+            "end": 1678876,
+            "text": "I think I'm logged."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1678876,
+            "end": 1681956,
+            "text": "in or I can't suspend it."
+          },
+          {
+            "start": 1682396,
+            "end": 1684796,
+            "text": "No, no, no, that shouldn't be the case."
+          },
+          {
+            "start": 1687596,
+            "end": 1688436,
+            "text": "Can we go back?"
+          },
+          {
+            "start": 1688476,
+            "end": 1691336,
+            "text": "Can you hit hard refresh again?"
+          },
+          {
+            "start": 1697026,
+            "end": 1697446,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1706516,
+            "end": 1708616,
+            "text": "Can you relaunch your Google Chrome?"
+          },
+          {
+            "start": 1708616,
+            "end": 1713176,
+            "text": "Once there's an update available on your Google Chrome right above there?"
+          },
+          {
+            "start": 1713276,
+            "end": 1715096,
+            "text": "Yeah, relaunch to update."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1726996,
+            "end": 1728696,
+            "text": "He's relaunching."
+          },
+          {
+            "start": 1728916,
+            "end": 1729956,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1735756,
+            "end": 1736076,
+            "text": "Okay."
+          },
+          {
+            "start": 1736176,
+            "end": 1738136,
+            "text": "While he's coming back, I have one more question."
+          },
+          {
+            "start": 1738136,
+            "end": 1739816,
+            "text": "I want to quickly run through to you."
+          },
+          {
+            "start": 1739976,
+            "end": 1740356,
+            "text": "Just the."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1741936,
+            "end": 1742776,
+            "text": "When."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1742776,
+            "end": 1752696,
+            "text": "an email is sent, we are having like sometimes, like for example, in the reception inbox, we get an email."
+          },
+          {
+            "start": 1753096,
+            "end": 1753656,
+            "text": "Okay?"
+          },
+          {
+            "start": 1753956,
+            "end": 1764856,
+            "text": "One of the users is getting a copy of that without… actually being like on that thread at all."
+          },
+          {
+            "start": 1764876,
+            "end": 1768606,
+            "text": "Like it's just a random email that came into the inbox."
+          },
+          {
+            "start": 1768686,
+            "end": 1769606,
+            "text": "Actually, Julian's back."
+          },
+          {
+            "start": 1769786,
+            "end": 1771346,
+            "text": "We can I'll pin this question for later?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1772166,
+            "end": 1772646,
+            "text": "Okay."
+          },
+          {
+            "start": 1772746,
+            "end": 1773806,
+            "text": "I'll keep it in mind."
+          },
+          {
+            "start": 1773826,
+            "end": 1775066,
+            "text": "We'll definitely revisit that."
+          },
+          {
+            "start": 1775886,
+            "end": 1781026,
+            "text": "Yes, Julian, you can continue sharing your screen, but Elizabeth a copy of that."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1781146,
+            "end": 1784326,
+            "text": "Do you mean inside your personal, that the primary inbox?"
+          },
+          {
+            "start": 1784746,
+            "end": 1785226,
+            "text": "Yeah."
+          },
+          {
+            "start": 1785246,
+            "end": 1785466,
+            "text": "Okay."
+          },
+          {
+            "start": 1785766,
+            "end": 1790506,
+            "text": "There's a setting, I will go back and see if that is enabled on our next call."
+          },
+          {
+            "start": 1790606,
+            "end": 1791646,
+            "text": "We'll discuss that."
+          },
+          {
+            "start": 1791706,
+            "end": 1791886,
+            "text": "Okay?"
+          },
+          {
+            "start": 1791886,
+            "end": 1792306,
+            "text": "Sounds."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1792306,
+            "end": 1792486,
+            "text": "Good."
+          },
+          {
+            "start": 1794366,
+            "end": 1794846,
+            "text": "Yeah."
+          },
+          {
+            "start": 1795456,
+            "end": 1795836,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1795836,
+            "end": 1798456,
+            "text": "We're… back here."
+          },
+          {
+            "start": 1798516,
+            "end": 1799716,
+            "text": "Should we click on hiver again?"
+          },
+          {
+            "start": 1801596,
+            "end": 1807416,
+            "text": "Yeah, I think it's because he's logged into victo, the other email id."
+          },
+          {
+            "start": 1807616,
+            "end": 1808256,
+            "text": "Yeah."
+          },
+          {
+            "start": 1808396,
+            "end": 1811276,
+            "text": "And we sent invite to Julian's."
+          },
+          {
+            "start": 1811356,
+            "end": 1819936,
+            "text": "The alias doesn't look like it's supposed to let's reset the setting, Elizabeth, remove Julian and add autism."
+          },
+          {
+            "start": 1819936,
+            "end": 1830856,
+            "text": "And then we'll let Julian log in through the same autism email id and he'll be able to view all the three shared inboxes and he can start working from it."
+          },
+          {
+            "start": 1830856,
+            "end": 1831056,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1832376,
+            "end": 1844356,
+            "text": "So, my only worry is while I'm like right now, autism funding is the only email publicly that people know about like Julian's inbox is just internal."
+          },
+          {
+            "start": 1844356,
+            "end": 1847036,
+            "text": "So if I remove it now, where is it going to exist?"
+          },
+          {
+            "start": 1847036,
+            "end": 1847576,
+            "text": "No."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1849096,
+            "end": 1853356,
+            "text": "By removing it, I meant remember, we entered Julian's email address."
+          },
+          {
+            "start": 1853836,
+            "end": 1854996,
+            "text": "Okay."
+          },
+          {
+            "start": 1856446,
+            "end": 1863306,
+            "text": "Just undo and redo what we already did because I wanted to test out to see if we do the alias email."
+          },
+          {
+            "start": 1863306,
+            "end": 1874186,
+            "text": "If he has like access to his private inbox, but considering Julian doesn't have his own email address, it will not be a separate email id."
+          },
+          {
+            "start": 1874186,
+            "end": 1888616,
+            "text": "The best practice for you would be Julian to start working out of the shared inbox, leave the primary inbox right there so that any email that doesn't come inside the shared inbox."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1893826,
+            "end": 1900206,
+            "text": "That once Elizabeth changes it, let's log into hiver and have all the three inbox view for you."
+          },
+          {
+            "start": 1900206,
+            "end": 1900326,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1901786,
+            "end": 1910156,
+            "text": "So I, just… I just invited autism funding and removed perfect."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1914406,
+            "end": 1914746,
+            "text": "It won't."
+          },
+          {
+            "start": 1914746,
+            "end": 1919956,
+            "text": "Let me, it just says invited Julian… not letting me to move."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1933246,
+            "end": 1938646,
+            "text": "And also Elizabeth, make sure Julian has access to all the three inboxes."
+          },
+          {
+            "start": 1942146,
+            "end": 1942706,
+            "text": "Okay?"
+          },
+          {
+            "start": 1942706,
+            "end": 1943966,
+            "text": "Right near the user."
+          },
+          {
+            "start": 1943966,
+            "end": 1946826,
+            "text": "You'll see the last column is indexed."
+          },
+          {
+            "start": 1946826,
+            "end": 1949426,
+            "text": "So there'll be afu."
+          },
+          {
+            "start": 1949426,
+            "end": 1949686,
+            "text": "Yeah."
+          },
+          {
+            "start": 1952106,
+            "end": 1953926,
+            "text": "Just makes it all three are selected."
+          },
+          {
+            "start": 1954406,
+            "end": 1955206,
+            "text": "Okay."
+          },
+          {
+            "start": 1955206,
+            "end": 1957026,
+            "text": "Now, Julian, let's try to log in again."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1964716,
+            "end": 1970976,
+            "text": "On top the icon… we gotta log out of this."
+          },
+          {
+            "start": 1970976,
+            "end": 1973316,
+            "text": "Let's scroll down."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1982526,
+            "end": 1984986,
+            "text": "This is the first time I'm running into this issue as well."
+          },
+          {
+            "start": 1984986,
+            "end": 1987726,
+            "text": "So work with me you."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1989646,
+            "end": 1991626,
+            "text": "Want to do a refresh and see if it will change?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1992726,
+            "end": 1995546,
+            "text": "Or maybe just sign out of your Gmail and then sign back in."
+          },
+          {
+            "start": 1995546,
+            "end": 1997426,
+            "text": "I think that will be the easiest."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2008556,
+            "end": 2010216,
+            "text": "Did you find out of all accounts?"
+          },
+          {
+            "start": 2010516,
+            "end": 2010896,
+            "text": "I."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2010896,
+            "end": 2014176,
+            "text": "Think, no, I think there should be an easier way to do this."
+          },
+          {
+            "start": 2016796,
+            "end": 2019176,
+            "text": "Let's go back on, right on the center of the screen."
+          },
+          {
+            "start": 2019316,
+            "end": 2021076,
+            "text": "Can you see the back option, left side?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2023036,
+            "end": 2024836,
+            "text": "Oh, center of the screen below that."
+          },
+          {
+            "start": 2025576,
+            "end": 2026216,
+            "text": "Yeah, perfect."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2027076,
+            "end": 2027556,
+            "text": "Okay."
+          },
+          {
+            "start": 2027656,
+            "end": 2028556,
+            "text": "It's still taking us."
+          },
+          {
+            "start": 2028676,
+            "end": 2031296,
+            "text": "I see the email templates right there."
+          },
+          {
+            "start": 2033496,
+            "end": 2039216,
+            "text": "Let me see which email it's logged into… accounts."
+          },
+          {
+            "start": 2039216,
+            "end": 2042836,
+            "text": "Can you click on settings… Gmail settings?"
+          },
+          {
+            "start": 2043496,
+            "end": 2044656,
+            "text": "See all settings?"
+          },
+          {
+            "start": 2048386,
+            "end": 2049486,
+            "text": "Yeah, agones?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2067396,
+            "end": 2067756,
+            "text": "Okay."
+          },
+          {
+            "start": 2067836,
+            "end": 2070016,
+            "text": "Let's remove, go to extensions."
+          },
+          {
+            "start": 2070836,
+            "end": 2073456,
+            "text": "Let's remove hybrid and add hybrid again."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2078446,
+            "end": 2079226,
+            "text": "Manage extensions."
+          },
+          {
+            "start": 2079226,
+            "end": 2081106,
+            "text": "Yeah, remove."
+          },
+          {
+            "start": 2081106,
+            "end": 2081546,
+            "text": "Perfect."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2093296,
+            "end": 2100396,
+            "text": "Let's go to extensions again and search for hiver… in the Chrome web store itself."
+          },
+          {
+            "start": 2100756,
+            "end": 2100856,
+            "text": "Yeah?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2107556,
+            "end": 2110876,
+            "text": "Because this is your existing on."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2110876,
+            "end": 2118156,
+            "text": "The left side, can you see Chrome web store on the right below keyboard shortcuts to the left towards your extreme left?"
+          },
+          {
+            "start": 2118396,
+            "end": 2122896,
+            "text": "Yeah, right below that, there's a hyperlink, Chrome web store."
+          },
+          {
+            "start": 2123096,
+            "end": 2125696,
+            "text": "Yeah, that's the one search for hiver."
+          },
+          {
+            "start": 2125696,
+            "end": 2128076,
+            "text": "Here, there we go."
+          },
+          {
+            "start": 2130526,
+            "end": 2134566,
+            "text": "I took a room… that makes total sense."
+          },
+          {
+            "start": 2134866,
+            "end": 2135306,
+            "text": "Awesome."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2141456,
+            "end": 2141936,
+            "text": "Okay."
+          },
+          {
+            "start": 2142216,
+            "end": 2143856,
+            "text": "Let's see."
+          },
+          {
+            "start": 2146336,
+            "end": 2148316,
+            "text": "Let's give it a little bit."
+          },
+          {
+            "start": 2151796,
+            "end": 2152476,
+            "text": "Why is it?"
+          },
+          {
+            "start": 2152476,
+            "end": 2153076,
+            "text": "Suspended?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2159266,
+            "end": 2160546,
+            "text": "Does it still say the same?"
+          },
+          {
+            "start": 2161186,
+            "end": 2161626,
+            "text": "Okay."
+          },
+          {
+            "start": 2161706,
+            "end": 2165406,
+            "text": "I'm going to pull in our support now to troubleshoot this."
+          },
+          {
+            "start": 2166786,
+            "end": 2167526,
+            "text": "Let's fix."
+          },
+          {
+            "start": 2168266,
+            "end": 2170066,
+            "text": "Do you guys have 10 more minutes?"
+          },
+          {
+            "start": 2171346,
+            "end": 2174326,
+            "text": "Well, let's troubleshoot this, and then we can wrap up, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2174326,
+            "end": 2175806,
+            "text": "I'm good with that, Julian."
+          },
+          {
+            "start": 2175926,
+            "end": 2176406,
+            "text": "What about you?"
+          },
+          {
+            "start": 2176706,
+            "end": 2177146,
+            "text": "Sure."
+          },
+          {
+            "start": 2178266,
+            "end": 2178706,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2184846,
+            "end": 2187146,
+            "text": "I can just check from."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2187146,
+            "end": 2188226,
+            "text": "My end to it."
+          },
+          {
+            "start": 2199156,
+            "end": 2199976,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2229266,
+            "end": 2235926,
+            "text": "We have dropped a message to my support team and I'm also looking inside the backend."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2252496,
+            "end": 2252936,
+            "text": "Thank you."
+          },
+          {
+            "start": 2265716,
+            "end": 2266556,
+            "text": "Hi, Daniel."
+          },
+          {
+            "start": 2266676,
+            "end": 2267496,
+            "text": "Thank you for joining."
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2270786,
+            "end": 2271726,
+            "text": "Hey, everyone."
+          },
+          {
+            "start": 2273086,
+            "end": 2273726,
+            "text": "Hello."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2274346,
+            "end": 2277926,
+            "text": "So, we have Julian and Elizabeth here."
+          },
+          {
+            "start": 2278186,
+            "end": 2286266,
+            "text": "So, Julian is currently working out of a particular email address that is also the email address for the shad mailbox."
+          },
+          {
+            "start": 2286606,
+            "end": 2287286,
+            "text": "All right."
+          },
+          {
+            "start": 2287366,
+            "end": 2296556,
+            "text": "He's logged into that, and he's not able to view the shad mailbox on the left side, and we tried removing the extension."
+          },
+          {
+            "start": 2296816,
+            "end": 2297656,
+            "text": "Adding it back."
+          },
+          {
+            "start": 2297896,
+            "end": 2301536,
+            "text": "We tried logging in and out, but it still says account suspended."
+          },
+          {
+            "start": 2302596,
+            "end": 2306156,
+            "text": "I will share the user email id and the ug id."
+          },
+          {
+            "start": 2308196,
+            "end": 2309436,
+            "text": "Just give me a minute."
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2309936,
+            "end": 2310256,
+            "text": "Yeah."
+          },
+          {
+            "start": 2310356,
+            "end": 2315716,
+            "text": "And Julian, can you click the, your display picture towards your right?"
+          },
+          {
+            "start": 2315716,
+            "end": 2316456,
+            "text": "Where it says Google?"
+          },
+          {
+            "start": 2318846,
+            "end": 2319426,
+            "text": "Okay."
+          },
+          {
+            "start": 2321346,
+            "end": 2325666,
+            "text": "The email address is autismfunding at victoriaspeechlanguage."
+          },
+          {
+            "start": 2325666,
+            "end": 2326166,
+            "text": "CA."
+          },
+          {
+            "start": 2326726,
+            "end": 2327446,
+            "text": "Okay."
+          },
+          {
+            "start": 2327566,
+            "end": 2330066,
+            "text": "And is that a shad inbox?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2332306,
+            "end": 2338626,
+            "text": "Yes, it's also the shad inbox, email id, autismfunding at victoriaspeechlanguage."
+          },
+          {
+            "start": 2338626,
+            "end": 2339106,
+            "text": "CA?"
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2340226,
+            "end": 2340946,
+            "text": "Okay."
+          },
+          {
+            "start": 2341126,
+            "end": 2343066,
+            "text": "Let me check the account."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2347726,
+            "end": 2349626,
+            "text": "I've shared the two details yep."
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2350386,
+            "end": 2351086,
+            "text": "I got it."
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2357106,
+            "end": 2357426,
+            "text": "Okay."
+          },
+          {
+            "start": 2357426,
+            "end": 2359606,
+            "text": "Looks like there are two accounts."
+          },
+          {
+            "start": 2361206,
+            "end": 2363866,
+            "text": "One is actually suspended."
+          },
+          {
+            "start": 2363866,
+            "end": 2368406,
+            "text": "Let… me take a look at that."
+          },
+          {
+            "start": 2370686,
+            "end": 2370786,
+            "text": "Okay?"
+          },
+          {
+            "start": 2370786,
+            "end": 2371886,
+            "text": "This one looks like a duplicate."
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2380096,
+            "end": 2382536,
+            "text": "Alright, Julian, can you try reloading your page please?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 2383616,
+            "end": 2384056,
+            "text": "Alright."
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2396496,
+            "end": 2396896,
+            "text": "Okay."
+          },
+          {
+            "start": 2398516,
+            "end": 2399356,
+            "text": "All right."
+          },
+          {
+            "start": 2403136,
+            "end": 2403456,
+            "text": "Okay."
+          },
+          {
+            "start": 2403576,
+            "end": 2405136,
+            "text": "So, Julian, can you click hiver settings?"
+          },
+          {
+            "start": 2408676,
+            "end": 2409896,
+            "text": "So let's go to admin panel."
+          },
+          {
+            "start": 2410076,
+            "end": 2412336,
+            "text": "So we need to delete this duplicate trial."
+          },
+          {
+            "start": 2412336,
+            "end": 2415976,
+            "text": "And after that, you can log into the existing account."
+          },
+          {
+            "start": 2416216,
+            "end": 2422686,
+            "text": "So let's go to settings on the left hand side… and let's click delete organization."
+          },
+          {
+            "start": 2426556,
+            "end": 2435366,
+            "text": "Let's check all the boxes… and choose the option which says others in the last checkbox."
+          },
+          {
+            "start": 2435926,
+            "end": 2443286,
+            "text": "And in the text box, you can just type in duplicate trial and click delete hiver from my organization."
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2449216,
+            "end": 2455356,
+            "text": "And you can just copy and delete everything in the text box and, or you can type it in as well."
+          },
+          {
+            "start": 2457336,
+            "end": 2458736,
+            "text": "Do you see delete everything?"
+          },
+          {
+            "start": 2459536,
+            "end": 2462176,
+            "text": "Just copy that and paste it in the text box?"
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2469936,
+            "end": 2470356,
+            "text": "Yeah."
+          },
+          {
+            "start": 2471736,
+            "end": 2473016,
+            "text": "Let's go back to Gmail."
+          },
+          {
+            "start": 2473156,
+            "end": 2475596,
+            "text": "Do you see the Gmail icon at the top right?"
+          },
+          {
+            "start": 2475596,
+            "end": 2475836,
+            "text": "Left?"
+          },
+          {
+            "start": 2475936,
+            "end": 2476096,
+            "text": "Yep."
+          },
+          {
+            "start": 2476116,
+            "end": 2478756,
+            "text": "That's the one, can you reload the page please?"
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2486676,
+            "end": 2487016,
+            "text": "Okay."
+          },
+          {
+            "start": 2487056,
+            "end": 2490756,
+            "text": "Now, let's click login to hiver, click the hiver icon at the top."
+          },
+          {
+            "start": 2494446,
+            "end": 2496586,
+            "text": "Yep, that's the one click login to hiver."
+          },
+          {
+            "start": 2500416,
+            "end": 2500756,
+            "text": "Okay."
+          },
+          {
+            "start": 2500876,
+            "end": 2502576,
+            "text": "You can close this window."
+          },
+          {
+            "start": 2502716,
+            "end": 2505956,
+            "text": "You can close the window, reload the page once and try again."
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2512236,
+            "end": 2513416,
+            "text": "And let's log in again."
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2518846,
+            "end": 2519406,
+            "text": "There we go."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2522236,
+            "end": 2522656,
+            "text": "Perfect."
+          },
+          {
+            "start": 2524396,
+            "end": 2528976,
+            "text": "Yes, thank you so much, Daniel now."
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2528976,
+            "end": 2529616,
+            "text": "You have it."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2532756,
+            "end": 2541756,
+            "text": "And starting from now, you should be able to see as you can see, it shows your name tag as well as the particular inbox."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2542276,
+            "end": 2542836,
+            "text": "Right."
+          },
+          {
+            "start": 2543096,
+            "end": 2543656,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2543656,
+            "end": 2550546,
+            "text": "You can start working out of the particular inbox that you see and you can go to assign to me."
+          },
+          {
+            "start": 2550626,
+            "end": 2550966,
+            "text": "Yeah."
+          },
+          {
+            "start": 2551046,
+            "end": 2552366,
+            "text": "Can you click on assign to me?"
+          },
+          {
+            "start": 2552706,
+            "end": 2558046,
+            "text": "This will show you all the emails that are assigned to you from all the three inboxes."
+          },
+          {
+            "start": 2559686,
+            "end": 2560406,
+            "text": "All right."
+          },
+          {
+            "start": 2561086,
+            "end": 2561566,
+            "text": "These."
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2561566,
+            "end": 2562806,
+            "text": "Are the three inboxes?"
+          },
+          {
+            "start": 2563306,
+            "end": 2563786,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2564266,
+            "end": 2565966,
+            "text": "Deception scheduling and afu?"
+          },
+          {
+            "start": 2566186,
+            "end": 2574066,
+            "text": "And considering you mostly work out of afu, inbox, I'd suggest start working out of the shared inbox itself."
+          },
+          {
+            "start": 2574066,
+            "end": 2574646,
+            "text": "Directly."
+          },
+          {
+            "start": 2575006,
+            "end": 2584426,
+            "text": "Can you click on that afu inbox… just for the next two days, go to the unassigned and start assigning it to yourself?"
+          },
+          {
+            "start": 2584666,
+            "end": 2590226,
+            "text": "See the emails that requires action emails that just gets closed without any action?"
+          },
+          {
+            "start": 2590606,
+            "end": 2594706,
+            "text": "And if it requires action, can you select three emails?"
+          },
+          {
+            "start": 2594846,
+            "end": 2596426,
+            "text": "The first three, can you select them?"
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2597626,
+            "end": 2598386,
+            "text": "These ones?"
+          },
+          {
+            "start": 2598786,
+            "end": 2599306,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2599446,
+            "end": 2600786,
+            "text": "Just go ahead and select three."
+          },
+          {
+            "start": 2601146,
+            "end": 2601926,
+            "text": "Got it."
+          },
+          {
+            "start": 2603796,
+            "end": 2608576,
+            "text": "Can you click on the icon in the center of the screen, the man like icon?"
+          },
+          {
+            "start": 2608716,
+            "end": 2609476,
+            "text": "The first one?"
+          },
+          {
+            "start": 2610416,
+            "end": 2616536,
+            "text": "Okay, assign to select the user… select your name apply."
+          },
+          {
+            "start": 2617736,
+            "end": 2624436,
+            "text": "So now, what happens is it gets moved from this inbox, and it comes inside mine?"
+          },
+          {
+            "start": 2625076,
+            "end": 2629576,
+            "text": "Can you click on mine, right below unassigned, you'll see mine."
+          },
+          {
+            "start": 2631736,
+            "end": 2632616,
+            "text": "There we go."
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2633396,
+            "end": 2633796,
+            "text": "Perfect."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2634576,
+            "end": 2638456,
+            "text": "Give it a couple of seconds to load in the next few minutes."
+          },
+          {
+            "start": 2638516,
+            "end": 2641616,
+            "text": "You'll start seeing your name also appearing right here."
+          },
+          {
+            "start": 2641736,
+            "end": 2650296,
+            "text": "So, you know, okay, these emails that is inside mine are open and I need to action on them when you move it to pending."
+          },
+          {
+            "start": 2651056,
+            "end": 2655316,
+            "text": "Then it means it's depending on the other person to respond back to that."
+          },
+          {
+            "start": 2655476,
+            "end": 2664896,
+            "text": "So follow these assignment as well as stages to begin with and let's reconnect again next week and discuss the whole inbox."
+          },
+          {
+            "start": 2665756,
+            "end": 2667336,
+            "text": "Yeah, yeah."
+          },
+          {
+            "start": 2667476,
+            "end": 2668016,
+            "text": "Sounds."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2668016,
+            "end": 2668496,
+            "text": "Good."
+          },
+          {
+            "start": 2668836,
+            "end": 2680116,
+            "text": "Just before we drop her with her, do you think the best way to manage this is for me to make like… the afu and the scheduling a group id."
+          },
+          {
+            "start": 2682996,
+            "end": 2686236,
+            "text": "Do you think that way the flow of things would just be better?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2688156,
+            "end": 2688956,
+            "text": "Just because."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2688956,
+            "end": 2695376,
+            "text": "I feel like for example, the reception inbox right now, the shared inbox is a group id on Google."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2696116,
+            "end": 2696716,
+            "text": "Okay."
+          },
+          {
+            "start": 2697336,
+            "end": 2711256,
+            "text": "And I believe there is an individual id for the afu inbox and scheduling what I would suggest the best way is to give Julian an email id, yeah an individual email id."
+          },
+          {
+            "start": 2711376,
+            "end": 2718336,
+            "text": "I think that would be the best way to go about this because this way we have three different Gmail business accounts."
+          },
+          {
+            "start": 2718736,
+            "end": 2721556,
+            "text": "One actually two Gmail business accounts."
+          },
+          {
+            "start": 2721876,
+            "end": 2725896,
+            "text": "One is the autism email id and the scheduling email id, right?"
+          },
+          {
+            "start": 2725896,
+            "end": 2731356,
+            "text": "And Julian and the other person have their own personal email id."
+          },
+          {
+            "start": 2731416,
+            "end": 2738956,
+            "text": "This way they are logged in from their personal account and they work out of the shared inbox, which is the business email id that we have."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2739316,
+            "end": 2739716,
+            "text": "Gotcha."
+          },
+          {
+            "start": 2739816,
+            "end": 2741856,
+            "text": "So basically, I just have to remove right now."
+          },
+          {
+            "start": 2741976,
+            "end": 2748176,
+            "text": "Autism funding and Julian are aliases of like autism primary and Julian is an alias."
+          },
+          {
+            "start": 2748216,
+            "end": 2753276,
+            "text": "I just need to create Julian, like remove the alias and create his own, basically, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2753436,
+            "end": 2754016,
+            "text": "That's right?"
+          },
+          {
+            "start": 2754156,
+            "end": 2754416,
+            "text": "Yes."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2754696,
+            "end": 2755156,
+            "text": "Gotcha."
+          }
+        ]
+      },
+      {
+        "speakerId": "5003035728143362288",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2755736,
+            "end": 2756196,
+            "text": "Okay."
+          },
+          {
+            "start": 2756516,
+            "end": 2757116,
+            "text": "All right."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2757176,
+            "end": 2759796,
+            "text": "So, yeah, I'll work on that before our next call."
+          },
+          {
+            "start": 2759876,
+            "end": 2776356,
+            "text": "So I feel like the flow of that because I have like the way you're the, we work out of the reception inbox is kind of how you talk about it, but we just haven't done that for a, for the afu inbox in the scheduling inbox because only one there's only one primary user."
+          },
+          {
+            "start": 2776556,
+            "end": 2782036,
+            "text": "And we're also afraid that if we mess around with that, we won't get the emails from clients."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2782556,
+            "end": 2789536,
+            "text": "Because considering it's primarily dependent… on them as well, right?"
+          },
+          {
+            "start": 2789596,
+            "end": 2792696,
+            "text": "Say Julian will now be out of office for the next week."
+          },
+          {
+            "start": 2792916,
+            "end": 2797956,
+            "text": "In that case, how the emails are managed will also be very dependent on him."
+          },
+          {
+            "start": 2797996,
+            "end": 2806536,
+            "text": "So we need to take dependency out and treat this as a business email id itself so that it's all hands on deck whenever necessary."
+          },
+          {
+            "start": 2806776,
+            "end": 2806916,
+            "text": "Okay?"
+          },
+          {
+            "start": 2807016,
+            "end": 2807476,
+            "text": "Sounds?"
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2807476,
+            "end": 2807796,
+            "text": "Good."
+          },
+          {
+            "start": 2807936,
+            "end": 2808356,
+            "text": "All right."
+          },
+          {
+            "start": 2808376,
+            "end": 2809196,
+            "text": "I'll work on that."
+          },
+          {
+            "start": 2809216,
+            "end": 2812816,
+            "text": "So next time we meet, it's a bit more you."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2812816,
+            "end": 2816996,
+            "text": "Have my scheduling link so you can go and set up the next call and I'll see you."
+          },
+          {
+            "start": 2817656,
+            "end": 2817876,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2818716,
+            "end": 2819156,
+            "text": "Awesome."
+          },
+          {
+            "start": 2819276,
+            "end": 2820196,
+            "text": "Thank you so much."
+          },
+          {
+            "start": 2820196,
+            "end": 2825336,
+            "text": "This is so helpful and just to get like some because we're just like none of us are tech people."
+          },
+          {
+            "start": 2826216,
+            "end": 2828056,
+            "text": "I work in HR me."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2828056,
+            "end": 2834176,
+            "text": "Neither, but I tried my best, and that's why I see I did bring a tech person here to help us out."
+          },
+          {
+            "start": 2834636,
+            "end": 2840696,
+            "text": "So, thank you so much for your time and I definitely look forward to connecting with both of you again."
+          }
+        ]
+      },
+      {
+        "speakerId": "4815720752105070012",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2841476,
+            "end": 2841936,
+            "text": "For sure."
+          },
+          {
+            "start": 2842856,
+            "end": 2843636,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "1975881872285333865",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2843636,
+            "end": 2844056,
+            "text": "So much."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 211
+}

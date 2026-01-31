@@ -1,0 +1,898 @@
+================================================================================
+Call: Weekly Sales Review
+Date: 2026-01-29T22:04:21+05:30
+================================================================================
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  thank you.
+
+Alex German (alex@grexit.com):
+  Sorry, I was on call with a customer. Okay?
+
+Alex German (alex@grexit.com):
+  I'm going to need, I'm going to need a minute. I need to refill my coffee because I was just on back to back. Is that cool? One minute?
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Sorry?
+
+Alex German (alex@grexit.com):
+  Guys. Sorry, team. One minute, I need to refill Jeevan. Is there quarterly on that quote? I only gave direction points quarterly and 13 month.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  I'll change it one second. I.
+
+Alex German (alex@grexit.com):
+  Don't see it. All right? Bear back two seconds. Yeah. In.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  the meantime, Nitesh, maybe I'll just like explain what that requirement is just so that we can use the time productively. So they are currently like long term, like over 10 year customers of Zendesk and they're a third party three PL for E commerce brands. So they do fulfillment. Okay. So when they onboard a new client, they have client servicing, they have a client servicing team that takes care of ongoing support. They have an account rep that is assigned to the account, and they've got an onboarding team that sets them up. So, part of the onboarding team's job is to set them up as an account on Zendesk in the contacts module and assign a rep to it. Now, the purpose of creating that account is to start associating all the people that write in about that account to that thing. So it gets tagged automatically. And the one caveat is that sometimes there are people who write in regarding that account without that account's email address domain. So they need to be manually associated with it. The end goal with all of this is when anyone from all of their hundreds of clients write in their client servicing team, that is sort of L, one can respond, but they know who the account rep is because it's tagged there. So the account rep is put into a field so that if they need to escalate or bring them into a conversation, they know who to do that for because there are so many clients. And so the first part contact module piece slight small misses. The second part, I have already recommended custom objects and they're okay with it. The only concern now being that our objects is static. So they have a Google sheet where all the mapping is maintained. So we need to either tie into it. So I said we're working on it. And in the meantime, we can help you with a script or something. Worst case, we can update it manually once in two, three days.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  How frequently does it change?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  She said every few days. So maybe once a week.
+
+Nitesh N (nitesh@grexit.com):
+  Okay. The first part we discussed yesterday on the six K plus call, right?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  The contact part, yes. Yeah.
+
+Nitesh N (nitesh@grexit.com):
+  Which that non domain users need to be part of the same account, right? And the second one is this mapping that we want to do?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, if the contact module had everything, they don't even need custom objects, but the contact module, not being able to assign an account rep that's the issue. So.
+
+Nitesh N (nitesh@grexit.com):
+  They currently tag that account rep in inzendesk at mentioned.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. So, it's there as a either, I think it is mentioned on the ticket somewhere either as I think a field or in the note, but yes, they get tagged. So, when the ticket gets assigned to a client servicing rep before they reply, they know who the account rep is and.
+
+Nitesh N (nitesh@grexit.com):
+  they want to continue doing that in a manual way even today?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  They are not doing it manually right now.
+
+Alex German (alex@grexit.com):
+  Oh,
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  okay. How that happens?
+
+Nitesh N (nitesh@grexit.com):
+  Automatically in inzendesk.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  That mapping happens automatically. So, they're just trying to retain that and.
+
+Nitesh N (nitesh@grexit.com):
+  Why is follower? Not working?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Follower works but not in static form. Is the issue.
+
+Nitesh N (nitesh@grexit.com):
+  Understood custom object updating is hard, very, frequently for them.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Very frequently.
+
+Ankit Kanoria (ankit@grexit.com):
+  Jeevan, they have a use case for AI chat also, right? They.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Have a use case for AI chat also. Are you going to onboard them onto?
+
+Ankit Kanoria (ankit@grexit.com):
+  Omni as well?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  See, I am confused you.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Should do Omni for a customer like this. Okay. Yeah. From inzendesk. Let's try to avoid Gmail, but custom object is there in Omni already? So.
+
+Nitesh N (nitesh@grexit.com):
+  Custom object is not there in Omni, not ported.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Yet. Huh? Oh, no. See. I really not want to do Gmail for this customer, just think about it.
+
+Nitesh N (nitesh@grexit.com):
+  Do it then.
+
+Ankit Kanoria (ankit@grexit.com):
+  Alex, I think Vignesh is in the waiting room. Can you please let him in?
+
+Nitesh N (nitesh@grexit.com):
+  Okay. Let's start.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Okay. Let's continue, we'll discuss.
+
+Alex German (alex@grexit.com):
+  This.
+
+Alex German (alex@grexit.com):
+  all right. Sorry, I have to say Jeevan, do you want to share your screen? But I got it.
+
+Alex German (alex@grexit.com):
+  Were you able to resend that quote Jeevan?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  That's what I was doing?
+
+Alex German (alex@grexit.com):
+  All right, cool. Let's jump in. So we're sitting at about 7,500 after we booked some of the 70… 500 in chartmogul, we're still looking to get to 10 K as the floor. So we're committing 10 K and then we have some extreme outlier deals, but, you know, we're working on transactions. We have two business days left. It's 840 in the morning. So we're doing everything in our power to at least get to 10 K. Obviously, it's been a slower month and we've just picked it up over the last few weeks. We're approaching, you know, three figure deal creation month. So there should be, you know, much more aggressive performance in February and March. But the reality is the first two weeks were super slow and it's taken us a while to catch back up. So that's just the reality. We've lost a fair amount of deals lately that have been on, you know, first call, outbound when it comes to rip and replace Zendesk. We've had a tough time there, and we've given as much feedback and data as we can to the business. But overall, it just seems like complexity is picking up more than ever. And there's you know, every deal wants bespoke creativity when it comes to their AI needs. And everything that in the past may have been out of the box is all custom today. So that's kind of where we're at.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Alex, can you elaborate a bit on this last part on the AI as being custom?
+
+Alex German (alex@grexit.com):
+  Yeah, it seems like every kind of transaction that we're in, you… know, somebody might ask for, hey, we want email to convert to quote, or we want this subject line to route… to this platform or we want automation… maybe something Zendesk can do that we can't so it just seems like deals… that didn't care about AI at all period all have a specific use case or even a use case period even if we do fit into it, which is good and bad. Of course.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Okay. And are we tracking these AI requests anywhere so that our AI team can probably take a look and maybe be more reactive if there is a deal, we can make it happen. I think we can prioritize those things at least on the AI front. I think we are moving very fast on the AI roadmap and we are fluid there, right? We are prioritizing things every month.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Everything should be coming to the six K plus deal. I mean, yesterday, it would have come yesterday, right? We.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Didn't have any. I think we had one AI related one which was AI to code creation. Can we?
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Make sure that we bring all of these things. Also see, we need a central place, we'll make sure that Anurag attends every single time.
+
+Alex German (alex@grexit.com):
+  Sure.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Just in terms of like general feedback, we are probably only going to try to bring pressing deals to those conversations and pressing details. But general feedback, Gaurav is sort of, I think there's a tracker in Gong that picks all of it up. And I know Anurag had a like a stream going to him with all feature requests, like all feature requests, for example, we just got off the same Zendesk rip and replace call where they wanted to be, have their chat, learn from their knowledge base that they've got set up on their website and they've maintained that on a Wordpress site for 15 years.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  So, things.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  like that keep coming up apart from very like very niche requests. The standard ones are always around, where can it plug into, right? And if people are, not, if we say we have to bring it into our knowledge base. And if they've already got a knowledge base and that always brings up a, hey, what is our migration request? And that always turns into an area of friction. So that keeps coming up.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Can you take a look at this?
+
+Anurag M (anurag@grexit.com):
+  In Gong? Sorry?
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Neeraj, I'm saying, can you take a look at this in Gong?
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Yeah, yeah. Even I'll connect with you separately because.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  I understand that, you know, we cannot plug everything in the six K plus meeting, neither in the Zendesk, right? I mean, yeah.
+
+Anurag M (anurag@grexit.com):
+  Yeah, Neeraj, I have also seen the signals, right? The signals are more or less around the chat agents and the knowledge bases. Okay? So chat agents we have, yeah, chat agents have already picked it up. So we are coming up with prototypes. You will see a lot of movement coming in next couple of weeks. The second piece is the knowledge base and we are going to nail that down as well. So, next 15 days, you'll start seeing a lot of movement there. So.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Anurag as a knowledge source. We have added a couple of sources from our earlier discussion today. There was Google drive and email.
+
+Anurag M (anurag@grexit.com):
+  So we are laying a foundation for that. Now, there is notion that we have done in the past, but the foundation is not supporting right now, the G drive. So we are just working on the foundation piece.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Yeah, I think external knowledge sources will be a very important part. Anurag, as we are looking at grip and replace, right? External knowledge source will become a very important capability.
+
+Anurag M (anurag@grexit.com):
+  Two more things. One is the help center piece and the part where the internal knowledge base is there like guru people maintain internal knowledge bases. So these are the focus areas and that is where a lot of movement is going to happen. I.
+
+Nitesh N (nitesh@grexit.com):
+  think it can be internal. I'm sorry to interrupt. We should stay very close to the ground, right? And I have requested, I think multiple folks now to look back last couple of months, consolidate all the AI deals that we have lost, which came in. And I think this should guide us on exactly what we are seeing on the ground, right? So I asked sales, I asked Anurag, it will be great if someone takes an initiative to bring that up, like which deals are they asking for? And how does that consolidated intel look like, which are the hotspots, right? Because just because we take one feature in that area, does not mean that all future deals will be converted because every AI deal probably will have some nuances in terms of requirements. It's not like a cookie cutter approach where you build one feature and all AI deals in that segment of the product will close. That's not how it works in AI, right? We have to become stronger in certain areas of the product. And until we gather how our leads are looking like what patterns are we seeing? We can't choose our battles. We don't know whether to go stronger on KB or chat or workloads or what. So, please get that intel from the ground, right? I think this is what should guide us.
+
+Anurag M (anurag@grexit.com):
+  Yeah. Hitesh. I've gone through a lot of, you know, videos, a lot of transcripts and that is where this, you know, correlation I'm able to make that, you know, the groundwork which needs to be there for the chat agent part is not there, right? And that is where we have been putting a lot of effort in the chat agents part where we need the foundation at least most.
+
+Nitesh N (nitesh@grexit.com):
+  Deals we are losing AI based are because of chat today.
+
+Anurag M (anurag@grexit.com):
+  Chat and knowledge basis. Okay? If we nail these out properly, we are at a very good place in terms of Zendesk.
+
+Nitesh N (nitesh@grexit.com):
+  But again, chat and knowledge are two big pieces, right? It's not like a one one line.
+
+Anurag M (anurag@grexit.com):
+  Yeah. And in chat, nikish website ingestion is something that we don't support right now. And that is a killer thing that every tool has?
+
+Nitesh N (nitesh@grexit.com):
+  I'm sorry, we are taking time for this meeting. This was supposed to be some, I'll just take half minute more, see Anurag, the roadmap that you showed us yesterday, right? Or the day before. I forgot. I'm losing track of time. Can you back that up based on the lead data that you have seen that I am prioritizing this item because I saw four loss deals in this particular area?
+
+Anurag M (anurag@grexit.com):
+  Yes, I will do that great.
+
+Nitesh N (nitesh@grexit.com):
+  I think that'd be a great setting. Yeah, go back to you. Sorry… it's completely agreed with you. I think it's a.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Good thought process.
+
+Anurag M (anurag@grexit.com):
+  Go ahead, Jeevan?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  No, I was just coughing. Sorry. Yeah.
+
+Sushil Chaturvedi (sushil@hiverhq.com):
+  One other quick point. So, so Anurag, if there's you know, substantial reason to say that AI chat agent affair, is, you know, sort of top affair here. It would be good for us to also look at what is leading to, that understanding, right? Like, so you certainly seem to be very confident about the idea of that becoming, that being the top challenge. I generally would be very interested in understanding how we are arriving there. So maybe something we can discuss offline. But, yeah.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Nitesh, actually said the same thing, right? So, can you validate the roadmap using the input? So let's wait for that? Yeah… let's just wait for that.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Okay. Let's continue.
+
+Alex German (alex@grexit.com):
+  All right. So, jumping into the deals we've created a bunch over the last 10 plus days mostly for, of course, the rest of the year… I think we already talked about some… product stuff. So, maybe what we'll do is we'll schedule a separate meeting and just go deal by deal with product and see how we can… accelerate these versus doing it on this call today… because I think most of these we've talked about a lot of these are hig… any questions I guess for now?
+
+Nitesh N (nitesh@grexit.com):
+  Are you sharing anything on the screen we can't see?
+
+Anurag M (anurag@grexit.com):
+  I can see, I?
+
+Nitesh N (nitesh@grexit.com):
+  Think, yeah.
+
+Anurag M (anurag@grexit.com):
+  Can you?
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Tell us about this first coast cargo, Alex or Jeevan, exactly what in phone do they need?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, let me, I think that's also a different place if I'm not mistaken.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  I'll go to Omni.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. So our.
+
+Nitesh N (nitesh@grexit.com):
+  inbound is also pulling in 1,500 plus mr deals, right? So it's very good. I,
+
+Sushil Chaturvedi (sushil@hiverhq.com):
+  did it through all?
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Of Q to last year for?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Sure. For sure. I think we've had a I,
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  don't think a lot of dollar.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Plus, these last years, yeah. So there are another three PL, and they are currently using sort of a call center software which is not really contact center software, which is not really working with them where literally, their complaint is that they're spending too much time triaging calls and then with emails. So that is a it's a very large email phone use case. They email… and phone are the primary ones. They were really, they were really happy with the Gmail embedded Gmail setup, which they wanted, but they have a phone system that they have to… I'm just trying to just read through and see where the, which phones I think they mentioned it, you know, I mean even.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  If they're to build something, we'll never be able to fill the gap. They need a contact center software. You should push them towards a contact center software and tell them that, you know, we'll do an integration. Okay? Yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, they, essentially, what happens is a lot of their phones and emails are connected. The, the cases are connected. And their biggest issue right now is they're spending so much time figuring out this phone call. This was said, this email, this was said. So they're looking for sort of a integrated setup to do both where they can create tickets out of phone calls and then like manage all of it in one integrated place so that's the primary focus there.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  See if they need deep telephony, then they'll need have to go to a deep telephony. What we can work on is the integration. So if they can decide on a telephony provider, we can work on integration.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So we'll we're still, we've got our foot in the door. So we'll keep going.
+
+Ankit Kanoria (ankit@grexit.com):
+  Is that a logistics company? Jeevan?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. Three PL, three PL standard… phone as a use case never.
+
+Ankit Kanoria (ankit@grexit.com):
+  Came up in… logistics, very.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. Which one phone?
+
+Ankit Kanoria (ankit@grexit.com):
+  As a use case never came up in logistics ever, right? This is the first time I'm seeing telephony as a use case.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Yeah. It's just that most cases already, it is pre solved and people don't care, look at arrive and all telephony is a use case. They've already solved it using other methods anyway. Let's carry on. But in a case like this integration is probably the way to go. Yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, we'll keep, we have the door open. I don't think it's like a near term call. I think it's definitely into QT. So, we'll keep an eye on it yeah.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  On this slide, this carmelian assisted living, they also have a phone use case.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, that is very… like healthcare B to C, almost B to C. They have some B to B use cases with email, which is why they're still looking at hiver, but the phone is very B to C. So it's an assisted living facility, an assisted living sort of chain of facilities like close to visiting angels. So that's why that's a little bit more and.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Voice is they're looking at voice as a channel, not just a simple integration. Yeah. Again.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Similar things, voice as a channel leading into being able to track. So, for example, if they get a request for a change in schedule on phone, they need to be able to track, connect it, connect that to a ticket and then track that ticket with the particular consultant.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  I think we can do these kind of things in the future in Omni, but right now, in hig, it won't be possible.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  And this valis group just quickly, if you can, Alex, go back to the previous slide. Valis group, they're looking for whatsapp as a channel in Omni. Yeah. And is there any expectation on when they need this channel? It's not in our plans. It's.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  actually out for signature. Now, they actually have another more sort.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Of basic.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Feature request, which is more along the lines of how Omni formats their emails. So they have a very particular way of formatting their emails. So we've actually committed to building that by February. I think Sushil, I don't know whether you are aware of that, but they do require whatsapp it's not a pressing issue. Right now. They're about to sign a 13 month contract just for us to get us in the door. And then we'll take a call.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Okay. And are there any other whatsapp requests that you are seeing?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Primarily non, us, we see almost nothing. So it's like in other territories, we do see it come up but we do see it come up mostly in like maybe not in the biggest deals… slightly smaller deals. It does keep coming up.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Okay. And where is valis group based UK? UK? Okay?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Nitesh update on animation mentor. He wants to proceed. He just like wants to figure out migration right now. We showed him, the type form because of the way of the formatting and everything. They were not really keen. So, he's going to use zapier to figure out his own way with his own forms and just get them as emails into hiver. So that's off our plate at least. But that is another massive migration request. So they're really keen on understanding what can be migrated, what is the process?
+
+Nitesh N (nitesh@grexit.com):
+  What all they want to be migrated tickets?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Knowledge base, knowledge base tickets, organizations? Okay?
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  What are organizations like our?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Contact module?
+
+Nitesh N (nitesh@grexit.com):
+  Do we have?
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Mechanism to migrate? Can we run some background scripts and migrate it like one off activity?
+
+Nitesh N (nitesh@grexit.com):
+  We have done that. So we do that for, I think some parts, this is hig or only hig, right?
+
+Alex German (alex@grexit.com):
+  Has.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  to be, yeah.
+
+Alex German (alex@grexit.com):
+  Yeah. We're talking about animation mentor. Yeah, yeah. We need a one pager just for migration deployments as a whole. For all Zendesk even Monica pinged me about it today and I don't know. I wasn't able to help her. So I think that would be a pretty big priority just to be able to send a sales collateral right away. Like this is how you migrate from Zendesk to hiver. Yeah, from an sog perspective.
+
+Nitesh N (nitesh@grexit.com):
+  We need both for hig and only, right?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Sure. Yeah, yeah.
+
+Alex German (alex@grexit.com):
+  Yeah, of course for both. But we just, we need the one pager kind of like today as initial collateral because that's going to be a holdup for every deal and it already is, yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  We have exactly one help article which I just linked in the chat there that only talks about importing historical tickets and it tells exactly what it does and what it won't. So it's helpful. But then it opens up a lot more questions at the end of it. I just presented it to efulfillment… the outbound deal that we're going to talk about next. And they had a lot more questions at the end of it. So it comes, it's coming literally 100 percent of the time. Vignesh. I'm sorry, you were saying something. I cut you off.
+
+Vigneshwar N (vigneshwar.n@grexit.com):
+  Something unrelated. I wanted to ask for global logistics. What was the ask with respect to API integration for the transport management system?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  A TMS called marine logistics or something like that. I'll find, I'll tell you the exact name.
+
+Vigneshwar N (vigneshwar.n@grexit.com):
+  Okay. Because we just released API calls and automations, but it's on hig. So I just wanted to check if that's something that we can switch to this?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Is.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  different Vignesh, this is something very different. We'll need rest apis. On the only side we need to provide kind of developer apis. It's not related to the it's an API feature that we have released.
+
+Vigneshwar N (vigneshwar.n@grexit.com):
+  Got it.
+
+Nitesh N (nitesh@grexit.com):
+  This is Zendesk. We can migrate tickets in hig. I don't know how we'll do for contacts. We don't have anything readily available.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, and only, we have no capabilities, right?
+
+Nitesh N (nitesh@grexit.com):
+  So, you talked about contacts tickets. And the third one was KB… KB. We have nothing… in terms of priority or urgency. How does their stack rank look like? Which kind of unblocks them to start using hiver?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Tickets and KB one and two organizations. I'll talk them out of it's. Fine.
+
+Alex German (alex@grexit.com):
+  All right. Should we go to that one nils?
+
+Alex German (alex@grexit.com):
+  Walgreens should probably be out of our funnel.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah.
+
+Alex German (alex@grexit.com):
+  So,
+
+Monikaadarsh:
+  even today, if the migration has to happen, how does that happen? Is it done manually for all interested customers? Yeah?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  For hig, we have, we ask them for an XML file, and then we bring in some data which is tickets and notes and everything. But, yeah, we have to ask them and then ingest it on our end and then set it up for Omni. Correct me if I'm wrong Sushil, but I don't think we have anything. And while on to answer Monica's question, just to ask another one very quickly, can we import like no restrictions on email import into Omni, right? Because I'm not clear on that process as well.
+
+Nitesh N (nitesh@grexit.com):
+  What was the question coming in? Did we import?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  For Omni, I know there's no like script to ingest an XML file. But in terms of an email import, there's no restrictions, right? We can just like label and import. Is that the same process?
+
+Nitesh N (nitesh@grexit.com):
+  For an outlook user, I think Sushil might be able to confirm for Gmail. We don't have that.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  I don't know how the import works in Omni. Do we have an import in Omni, I think we have something, right?
+
+Nitesh N (nitesh@grexit.com):
+  No, no, like you will go and tag a few emails in your outlook inbox. And then it gets imported. We did this for one or two customers.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Okay. So, we have that even.
+
+Nitesh N (nitesh@grexit.com):
+  Okay. We have.
+
+Sushil Chaturvedi (sushil@hiverhq.com):
+  The mailbox import set up in Omni already, but in terms of tickets, right? Migrating Zendesk tickets via that XML situation that is not available on Omni at all. As of now, the solution we have built only works for hig. So nothing on Omni as of now there.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Okay. And just on the topic Sushil, no restrictions on that. So it doesn't matter what type of account they have on outlook right now, we can import emails.
+
+Sushil Chaturvedi (sushil@hiverhq.com):
+  Yeah, email import is generic and we can do it for.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  All types. Got it. Thank you.
+
+Sushil Chaturvedi (sushil@hiverhq.com):
+  Doesn't matter. Thanks.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Sushil. The email import supports both outlook and Gmail, or just outlook?
+
+Sushil Chaturvedi (sushil@hiverhq.com):
+  I think it supports Gmail too. I'll have to double check that, but, yeah, best of my knowledge, yes, it supports both. Okay.
+
+Nitesh N (nitesh@grexit.com):
+  See, I think for both products for import, we need a one pager, right? On the current capabilities. What is supported? What is not supported? Even if it's manual in nature, right? And the second part is, how does the roadmap look like for the migration for both products? And when I say roadmap in terms of when do we expect certain capabilities to appear in the product? I think that will change things a lot in understanding what to pitch, what not to pitch, right? So, let us do that. And for this deal, I think this contacts one is tricky. No, sorry, KB one is tricky. Can they live on their current KB for some time? More Jeevan, if you are willing to pick up that cost?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  It just opens up a lot more questions. I'm sure they can, and we can figure it out, right? But the issue is then how do we, so for example, for E fulfillment, they also asked about KB migration because they're like we have it on our Wordpress site. So how do we migrate? I said you have it on your Wordpress site, how can we migrate from that? Knowing that we could, but in those cases, sure, we just need to figure out how to plug our AI into it for them for it to learn for cases where they just want to get off Zendesk completely. Then we'll have to figure out another third party system and it just might.
+
+Nitesh N (nitesh@grexit.com):
+  This is coming. I'm not denying that we have to build this. I'm just asking for this specific deal that we talked about. I forgot the name.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Animation, mentor, animation.
+
+Nitesh N (nitesh@grexit.com):
+  Mentor, right? So because they have signed up already and we need to do something… yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  We literally, we have a call with them in 90 minutes to discuss just migration because everything else looks good. They had a big issue, not issue but ask with forms which we presented type form and everything. But then they went another direction. So, the only outstanding piece is migration.
+
+Sushil Chaturvedi (sushil@hiverhq.com):
+  So, regarding KB, right? We touched upon this a couple of days back and the idea there was that we still could pursue some, you know, third party tools or some other ways to get… the KB migrated and so on. So, is that something that sales team is already ready with as a solution? Or would you like to discuss? And do we want to find a solution on the KB migration aspect there?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Solution to use a software to migrate third party KBS to hiver?
+
+Nitesh N (nitesh@grexit.com):
+  How is that possible?
+
+Sushil Chaturvedi (sushil@hiverhq.com):
+  Now, so this is something that we discussed a couple of days ago, right? In the sense that tickets was a higher priority and KB, there were some pathways.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  I don't think so. All right.
+
+Sushil Chaturvedi (sushil@hiverhq.com):
+  Let, let me connect with you Jeevan, offline, right? And then let's try to understand, what could be the best solution here, and then we'll see… yeah.
+
+Nitesh N (nitesh@grexit.com):
+  But what are our sales folks telling them in the meantime for KB migration tickets? I think we have sorted, right? We know how to do that. But for KB, we have to tell something today, right? So the, we buy more time.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  We show them our interface and say we can do it manually, but that's the best that's the, and then we tell them it's easy to set up. That means.
+
+Nitesh N (nitesh@grexit.com):
+  You go open copy, paste and paste in rkb, oh… how many pages are there in the KB, right? So, hopefully.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Low. Okay. So that's why it becomes a question, but there's no other, I mean, I don't know any other option that we could potentially explore with them at the moment?
+
+Sushil Chaturvedi (sushil@hiverhq.com):
+  It's the safest option to bet.
+
+Nitesh N (nitesh@grexit.com):
+  On, for now… sure.
+
+Sushil Chaturvedi (sushil@hiverhq.com):
+  Even this.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Zendesk migration is something we are looking at from a KB perspective. It's part of the roadmap, sure. But we're focusing specifically on Zendesk. They also have API support. Does that solve the problem or you want like a wider approach there? A more generic approach and somehow, you know, bring in any kind of KB or have a more targeted approach for Zendesk?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  It's come up a lot more now in Zendesk reputable places?
+
+Nitesh N (nitesh@grexit.com):
+  So, can I answer?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  That?
+
+Nitesh N (nitesh@grexit.com):
+  Go?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Go.
+
+Nitesh N (nitesh@grexit.com):
+  We just need a way to support the exported data that's about it right now. That export can come from Zendesk. It can come from helpscout. It can come from front. And I think no customer will be apprehensive running an export on Zendesk, taking a dump and sharing with us because it's a one time activity. We somehow just need capability to run this on our end in next 24 hours. As soon as customer has signed off, get their KB and tickets and whatever up and running. I think if we can support two or three usual suspects that enter our funnel, one obviously will be Zendesk. And even you can point more, right? That should be good enough for us. We probably do not need to expand this beyond that.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Okay. But we'll have to look at those export formats, right? What formats these different providers are supporting. So it has to be provider specific, not be generic, for example, Wordpress, I don't know how, what kind of export will Wordpress generate? Maybe a bunch of HTML files? Your?
+
+Nitesh N (nitesh@grexit.com):
+  XML schema will be different. So, I'm hoping when we build the script, you will have a schema template, right? And your schema template can define where the respective data points are in the dump.
+
+Sushil Chaturvedi (sushil@hiverhq.com):
+  So, it's.
+
+Nitesh N (nitesh@grexit.com):
+  just changing the schema and supporting new providers.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Okay. Makes sense.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  It'll be.
+
+Monikaadarsh:
+  Helpful to have some documentation on what parts of it can be migrated, what parts cannot be migrated? So, for example, can automations be moved into Omni? So what parts can be migrated? And how much time would be ideally promised? Like can we promise migration in three days? Can we promise migration in one week? I think those two pieces of information will give a fair amount of information to put on the website or any copy that we are thinking of right now?
+
+Nitesh N (nitesh@grexit.com):
+  Yes, this is what I recommended as an enablement standpoint, we need two documents. One document talks about what is our status quo is, what can we migrate? What we can't migrate in both products? Hig and Omni. And second, we need a roadmap of when those respective capabilities are supposed to appear in this product. I think if we just keep this internal to our team, this?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Is good enough for now, right?
+
+Nitesh N (nitesh@grexit.com):
+  We don't need anything more?
+
+Trishya:
+  Yeah, thank you.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Nitesh for my clarity. What… all can we import today in?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Hig… I've just dropped a link there. Gaurav, just.
+
+Nitesh N (nitesh@grexit.com):
+  Emails. So, if you click on this link that Jeevan shared, this is a Zendesk migration guide. So you have to share your Zendesk dump and we will migrate just the emails or?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Tickets.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Emails or tickets. Okay. Yeah, Jeevan.
+
+Ankit Kanoria (ankit@grexit.com):
+  One more question since we are at the end of the month here, right? Has anything changed based… on the last one month from the sales conversations that you've had, right? Has anything changed any insights that you want to share or anything that the marketing team can take away from this call? I don't.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  know whether the marketing team has a takeaway here, Ankit, but for us, like Alex said, I think things have just gotten a lot more complicated. Every deal's just like got so many requests so many specific niches to like figure out a solution and work towards. I don't know whether that's a coincidence that it's the beginning of the year and everyone's got these big plans or whether that's just, we're going to go back to more. We've always had an element of this, but it's a lot higher this month. Almost every single deal we've not had a singular, I think large 500 plus deal which has been straightforward. So, hopefully that's something… we can either grapple with or it's just an outlier month. But yeah, we've had like, very complicated. Every single substantial deal has had an ask.
+
+Ankit Kanoria (ankit@grexit.com):
+  Yeah, adapt or die buddy.
+
+Monikaadarsh:
+  What to do we'll.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  do our best?
+
+Ankit Kanoria (ankit@grexit.com):
+  Alright, cool. Thanks for that. And.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Just while before we close out, I think last piece Gaurav on the Zendesk migration. I think one piece that there was some confusion on earlier today when I spoke to Akash and Harsha when we discussed it for this specific account, is these guys have a lot of tickets that are most of their tickets animation, mentor, most of their ticket via customer portal… on Zendesk. So.
+
+Vigneshwar N (vigneshwar.n@grexit.com):
+  If.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  they submit tickets via the portal tickets get created in Zendesk, the question was, would those tickets be part of the XML file? And can they be transferred as emails to hiver? Because they were never an email in the first place.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  I mean, if it is there in the Zendesk export, we can definitely import that, right?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Sure. That's all I need, perfect.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  If not, we'll figure out some custom work on the backend side and import that data. But from what I'm seeing from this, I just went through the articles you shared. Yeah, what I'm sensing from that, if we have data in the XML export, we are mapping that and importing that.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Into hiver amazing. Okay. All right.
+
+Alex German (alex@grexit.com):
+  Let's have Sonam give an update on SDR and outbound.
+
+Ankit Kanoria (ankit@grexit.com):
+  Sorry, just one last question. I know that, you know, we were in talks with walgreen from the last event that we did any update, any movement there?
+
+Alex German (alex@grexit.com):
+  Yeah, they're not timing isn't aligned. Unfortunately, they weren't able to get the project kicked off from a director plus level perspective. The person on the ground enjoyed it, but it got shut down at the director level, and they're open to reengaging in the future, but, you know, they were interested. They liked what they saw but there wasn't a big enough executive priority to continue the project now, but we have a touch point in February, I think.
+
+Trishya:
+  And Alex, do we know what tool they're using right now? If they're using one?
+
+Alex German (alex@grexit.com):
+  They don't have any. They don't have the team that we spoke to, what didn't have anything in place?
+
+Trishya:
+  Oh, okay. Sorry. So it's a.
+
+Alex German (alex@grexit.com):
+  Discretionary budget spend got.
+
+Trishya:
+  It. And to clarify what team did we speak at? Speak with at walgreens?
+
+Alex German (alex@grexit.com):
+  I need to double check.
+
+Trishya:
+  Sure. Okay.
+
+Alex German (alex@grexit.com):
+  Go ahead, Sana?
+
+Trishya:
+  Thanks, Alex. Hi.
+
+Ankit Kanoria (ankit@grexit.com):
+  Everyone.
+
+Trishya:
+  Alex, is this okay if I share the screen?
+
+Alex German (alex@grexit.com):
+  Yeah, of course, sure.
+
+Vigneshwar N (vigneshwar.n@grexit.com):
+  If we want to build out these documents, right? Who do we work with?
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  so, from hig side, you can work.
+
+Ankit Kanoria (ankit@grexit.com):
+  And for Omni, you can work with Sushil, or Sushil, you want to delegate it to someone?
+
+Ankit Kanoria (ankit@grexit.com):
+  Sushil? Are you there? I can… work… with the things… for sure.
+
+Sonam Aswal (sonam.a@grexit.com):
+  Cool. Thanks. All right. Thanks everyone. I'll start with outbound. These are the numbers for outbound. Where we stand. Currently, we have scheduled about 40 meetings in this month, 31 completed and we were able to create six opportunities. These are the six opportunities that we were able to create. These two conduit health storeforce are Zendesk ones. What we are doing differently this month is we have started sending emails on our own through Hubspot, CRM. We are using different email domains to send emails along with pseudonames of SDRS, bdrs. We are using helpdesk. Hiver. Com. We are using gethiver com to send emails. And this has worked well for us so far. We had started doing this for the past one week and we were able to get about seven to eight meetings. So far. All these meetings which are marked in yellow. These are the Zendesk one, last one week. All of these are B to B SaaS based companies based out of us customer success support folks we are reaching out to. And then these are lying between 100 to 1,000 size of companies. So this had been working well for us. We are getting like one positive reply every single day. So this is something that we have started other initiative that we are taking is right now, you know, humanly it's not possible to dial beyond 101 50 calls in a single day by one single BDR. So we are in process of talking to different vendors to get a power dialer, so that we can make more number of calls without adding more bdrs in the team. And we should be able to take a decision in one or two weeks because we have to do a little pilot with these folks. So we are in conversation with these people… talking about inbound. This is where we are and sushi. Last time you spoke about, if I can get this data in this format, hig hiver only and Gmail outlook bifurcation in terms of outbound, we are standing strong in terms of number of ops created. We are at 87 opportunities. And then we have today and tomorrow as well. In terms of pipeline. Also we are 30 K plus and this is our total revenue generated in inbound. We have one more rep whose onboarding is almost completed from February onwards. He will also start getting MQL. So, you know, a number of opportunities will become even better. So January started slow. Now we are picking up. February is going to be, very strong because we have got, and we are also seeing a spike in number of mqls and we are going to have one more STR starting next month. So, this is where we are in terms of inbound and outbound rise.
+
+Ankit Kanoria (ankit@grexit.com):
+  So, now, one question, right? So MQL to opt for this month stands at eight percent.
+
+Sonam Aswal (sonam.a@grexit.com):
+  This will become better. Ankit, I mean, right now, we all are working on these leads. We have scheduled, meetings are done also, but I think aes also take a little bit time to kind of create those opportunities.
+
+Ankit Kanoria (ankit@grexit.com):
+  Yeah, because last January, we had close to 100 opportunities just for that particular cohort, right? So I'm hoping we can bump this number back to 100?
+
+Sonam Aswal (sonam.a@grexit.com):
+  Yes, I mean, we'll see this number moving. Obviously, it will keep moving up from here. But when we'll see February first second week, this percentage will become better because we still have meetings on the calendar and we keep working on these leads even when the month comes to an end. So this will become better. Yeah, I.
+
+Ankit Kanoria (ankit@grexit.com):
+  think another analysis that will really help is if you can just look at the trend of lead statuses and how that has moved in the last three, four months as compared to the same month, last year, right? That will really help, right? I mean, are no replants increasing or are banned disqualifications, increasing what exactly is leading to MQL to operation, right? So some data analysis there will really help and you can take Jyoti's help to do this.
+
+Sonam Aswal (sonam.a@grexit.com):
+  Sure. Cool. Ankit, I'll do that. Okay?
+
+Ankit Kanoria (ankit@grexit.com):
+  So, one more question, right? It's great to see the positive replies from outbound. What sort of messaging is working when sending out these units, right? Because this is a good input for marketing to incorporate in the landing page and other.
+
+Sonam Aswal (sonam.a@grexit.com):
+  Content. Yeah.
+
+Ankit Kanoria (ankit@grexit.com):
+  So,
+
+Sonam Aswal (sonam.a@grexit.com):
+  at this moment, as we were doing earlier, Ankit, you remember, Zendesk sas, gift card. So we have, the first email is sas like the gift card one only. And then we have three, four more emails which talks about how we are better than Zendesk. Our onboarding is better. Our support is better, pricing is better. We can buy out your contract. All of those pointers. Are there, what we are kind of evaluating is, yes, we have got these meetings scheduled. One reply. We are getting every single day. What we are thinking is okay. Can we kind of cut down this customer success manager profile? And should we only focus on head director and plus profiles only, right now, we are just doing B to B sas, we have data already in the CRM, we just have to enroll these folks in the sequences. We will start getting replies there also. So this is just a starting point. We'll make the changes here and there right now. We are just talking to hundreds to thousands. We are also thinking, can we go to 1,000 to 1,500 bracket? Can we touch that bracket as well? So there is so much to do right now. It's just the starting point and the starting point is good because we are getting replies every single day. Yeah, there is.
+
+Ankit Kanoria (ankit@grexit.com):
+  Always so much to do. Good, good to see the movement.
+
+Nitesh N (nitesh@grexit.com):
+  One question, Sonam. How many playbooks are we running in outbound today? Is it just?
+
+Ankit Kanoria (ankit@grexit.com):
+  One, just one Nitesh?
+
+Nitesh N (nitesh@grexit.com):
+  Zendesk?
+
+Ankit Kanoria (ankit@grexit.com):
+  Yeah… please. Go ahead, Sonam.
+
+Sonam Aswal (sonam.a@grexit.com):
+  Sorry. Yeah. So Zendesk is something that we have started on our own right now, these, which you see event, you know, outbound is completely outbound that we are doing. Others are gift card campaigns run by marketing teams, this fibbler campaign, gift card… Nitesh.
+
+Ankit Kanoria (ankit@grexit.com):
+  The two large deals that you saw blue wine capital, which was two point two K and conduit, health, which was one K. Those came from the gift card campaigns, right? And I think the other four came from these Zendesk grip and replace campaigns. So one interesting point that we have always noticed is that most of the demos that we do from the gift card campaigns inherently have Zendesk grip and replace opportunity for us, right? So, I mean, even with a spray and pray approach, right? We are landing a lot of Zendesk demos.
+
+Sonam Aswal (sonam.a@grexit.com):
+  So, these 30 meetings, yes, these are SaaS gift card campaign, but these could be Zendesk as well. Other than these Zendesk that we are doing on our own.
+
+Sonam Aswal (sonam.a@grexit.com):
+  So, yeah, this is where we are guys. Thank you.
+
+Ankit Kanoria (ankit@grexit.com):
+  You know… all right?
+
+Alex German (alex@grexit.com):
+  Okay. I don't know if we have any other material updates. Thanks Sonam. Anybody else have any comments or questions? We'll definitely need to take next steps on all the product.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Alex, you know, for the next three four months, we need this aggressive back and forth between product and sales, you know, the new positioning, but I think, you know, we are on it after the, I think a bit chaotic three four months. We'll have it all in order. Yeah.
+
+Nitesh N (nitesh@grexit.com):
+  Absolutely. General guidance. Neeraj talked about it. See any Omni channel lead. We should try to push to Omni, right? I know we don't support phone and those things chat, but try to push there and then try to evaluate how important is that requirement for them. If it is very important, they will anyway drop off. We can't do much about it. But if this is something, they can wait for a month or two, try pushing them to Omni and not on hig?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  We'll do that, Neeraj, but my only thing is we've tried in the last, but what we, what the catch 22 we keep running into is even though they're multi channel and we want to push them there, their cold channel could still be email and we're still falling short in that, in some way or the other. So that's where my catch 22 is. And that's why I'm safer pushing them directly.
+
+Nitesh N (nitesh@grexit.com):
+  I totally understand you just that it's a very meta state. Once we have those channels, I think it will be easier, but we will have to one.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Point is about the email gaps. Nitesh, you know, I think the email gaps will be mostly sorted out. Sushil. Do you have some visibility or idea on the by when, you know, these critical email gaps will be kind?
+
+Nitesh N (nitesh@grexit.com):
+  Of see the big email gap is your automation workflow?
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  That's the primary thing automation.
+
+Nitesh N (nitesh@grexit.com):
+  Workflow is there in Omni. I think we are sorted for 80 90 percent and then you will have things like pi to SM and custom objects. Automation is something we need. I.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  Agree. So what's the timeline roughly? I think I keep hearing January and February sometime, right? What's the timeline for that? Maybe Sushil, you might, yeah.
+
+Sushil Chaturvedi (sushil@hiverhq.com):
+  Automations, two point, which is the canvas based automations for Omni, right? That is coming very soon… like early feb, first week of feb, sorts. And then we are going to support newer automations that are already available in hgt, right? Which is like automations parity with hgt affair. So, a whole lot of other automations are also coming in the first two weeks of February. And then there'll be immediately followed up with a lot of others as well. So.
+
+Monikaadarsh:
+  This is overall.
+
+Sushil Chaturvedi (sushil@hiverhq.com):
+  Right. A lot of automations that are missing in Omni are coming within feb, and we can look forward to that basically.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  See by feb and Jeevan, you'll have decent parity in Omni, that's what I understand, right? And then you should feel a lot more confident pushing Omni.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Pushing people, yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, once we were able to cover the basic use case and we can get our foot in the door, then we can scope out some of these other requirements and that should be fine. That should be fine.
+
+Niraj Ranjan Rout (niraj@grexit.com):
+  And I'll drop off here. I have another call to get to.
+
+Trishya:
+  Before we close, can we just have one POC who's happy to work with marketing on the enablement docs and the migration stuff? Because we need it for branding pages. And Vignesh also needs that help. Can somebody please own that up? What from.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  a GTM perspective?
+
+Trishya:
+  From an information perspective, who can tell us what migration capabilities we have right now and what docs and what messages?
+
+Ankit Kanoria (ankit@grexit.com):
+  We discussed that trishya.
+
+Nitesh N (nitesh@grexit.com):
+  Already Vignesh had asked and Gaurav answered for hig. I think he mentioned amithil.
+
+Monikaadarsh:
+  So, we work with Gaurav?
+
+Trishya:
+  Directly then? Yes.
+
+Nitesh N (nitesh@grexit.com):
+  Yes. And for Omni, he mentioned Sushil these.
+
+Ankit Kanoria (ankit@grexit.com):
+  Are the point of contacts?
+
+Monikaadarsh:
+  To discuss?
+
+Trishya:
+  Yeah, that's what I wanted. Thanks Nitesh. Also.
+
+Monikaadarsh:
+  Since everybody is on the call, I just wanted to take this moment to talk about the Zendesk rip and replace project that we are working on. So we've put some structure together on what kind of positioning we can take, how do we incorporate that in emails and websites and other marketing collaterals. I would love to share that document and related copy… with the team here. Please, please drop in your feedback and comments because it's going to be very helpful to build it together?
+
+Ankit Kanoria (ankit@grexit.com):
+  Sure. Yeah, absolutely. And one more update there is, you know, we're planning to, you know, put a significant amount of cash behind these Zendesk ads, right?
+
+Monikaadarsh:
+  Cautious amount.
+
+Trishya:
+  Of cash, Ankit, not significant amount, a cautious amount of cash, no.
+
+Ankit Kanoria (ankit@grexit.com):
+  It is significant, everything significant, cautiously. Significant.
+
+Monikaadarsh:
+  Yeah. So,
+
+Ankit Kanoria (ankit@grexit.com):
+  we'll probably spend around 10 to 15 K a month on these Zendesk ads and we'll try to make it work, right? By hook or crook. We'll try out different experiments. Monica will take the lead here, right? And we could all use your feedback and guidance, right?
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Ankit on the timing of these spends, right? I mean, looking at the state that meta is sorry, Omni, is it's in a meta state, we are still building out a lot of capabilities. Do you think it is a good time considering that we might not have a good product market, right? See I?
+
+Ankit Kanoria (ankit@grexit.com):
+  Think, you know, we'll have to try out these experiments, right? Because it will take us some time to figure what sort of messaging lands with our audience. It's not that, you know, we start spending and we, you know, generate meaningful demos. It will take a bit of iteration time and patience to get there, right? But we need to start soon next.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  Three, four months you are expecting will take on this experimentation and refining. Yeah.
+
+Ankit Kanoria (ankit@grexit.com):
+  At least one to two months Monica. What do you think I?
+
+Monikaadarsh:
+  Mean, I definitely see value in what Gaurav is saying? I just feel like the goal that we take for the next couple of months or three months should be more around seeing if we are getting the right kind of MQL, the quality of mqls we are driving from this and if it's leading to the right kind of conversations, that itself should be the success metric for this. And as the product catches up, we can move that metric down the funnel to seeing if it's creating pipeline. But I think as a group, we also need to align on the fact that the extra spends is more of an experimental spend and it's to test messaging and land in a place that resonates with the right audience.
+
+Gaurav Bhadoria (gaurav.bhadoria@grexit.com):
+  My only concern is that the closer it is to QT, it will be better because my only worry is you might be generating mqls but they won't convert to quality pipeline because our equipment might not be there. So maybe we are starting a bit early or maybe start spending on with a lower budget and see, you know, scale that up slowly because we are four or five months away from bringing the product in a good shape.
+
+Ankit Kanoria (ankit@grexit.com):
+  Well, that makes sense. We'll be cautious about it. Like trishya said, cautious spending. All right. Cool. Okay. All right. Thanks.

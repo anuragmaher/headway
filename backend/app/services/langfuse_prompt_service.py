@@ -69,6 +69,7 @@ class LangfusePromptService:
     PROMPT_NAMES = {
         "transcript_classification": "classification prompt",
         "signal": "Signal",
+        "signal_final_classification": "signal_final_classification",
     }
 
     def __init__(self):
@@ -209,4 +210,42 @@ def get_signal_extraction_prompt(transcript_text: str) -> List[Dict[str, str]]:
     messages = service.get_chat_prompt("signal", variables={"TRANSCRIPT_TEXT": transcript_with_nudge})
     if not messages:
         raise ValueError("Failed to fetch 'Signal' prompt from Langfuse. Check your Langfuse configuration.")
+    return messages
+
+
+# Langfuse prompt "signal_final_classification" must use these exact placeholders in the UI:
+#   {{THEMES_WITH_IDS_JSON}}  {{ASK}}  {{EVIDENCE}}
+# Variable names are case-sensitive.
+
+
+def get_signal_final_classification_prompt(
+    themes_with_ids_json: str,
+    ask: str,
+    evidence: str,
+) -> List[Dict[str, str]]:
+    """
+    Get signal_final_classification chat prompt from Langfuse.
+
+    Variables (must match Langfuse template placeholders exactly):
+        THEMES_WITH_IDS_JSON: JSON taxonomy with themes (id, name, sub_themes with id, name)
+        ASK: Signal ask text
+        EVIDENCE: Signal evidence text
+
+    Returns:
+        List of messages ready for OpenAI chat completions API
+    """
+    service = get_langfuse_prompt_service()
+    variables = {
+        "THEMES_WITH_IDS_JSON": themes_with_ids_json,
+        "ASK": ask or "",
+        "EVIDENCE": evidence or "",
+    }
+    messages = service.get_chat_prompt(
+        "signal_final_classification",
+        variables=variables,
+    )
+    if not messages:
+        raise ValueError(
+            "Failed to fetch 'signal_final_classification' from Langfuse. Check your Langfuse configuration."
+        )
     return messages

@@ -1,0 +1,38 @@
+{
+  "transcript_id": "09_8550599579641206013",
+  "call_id": "8550599579641206013",
+  "title": "The Economist (Legal) <> Hiver",
+  "started": "2026-01-30T21:00:46+05:30",
+  "signals": [
+    {
+      "Theme": "Email Management",
+      "Ask": "We need a more efficient way to manage our busy legal contracts inbox.",
+      "Priority": "High",
+      "Evidence": "It's a very busy inbox with a lot of requests coming in."
+    },
+    {
+      "Theme": "Search Functionality",
+      "Ask": "The system must provide a reliable search capability across all emails, including closed matters.",
+      "Priority": "High",
+      "Evidence": "The search is at the moment inexistent. We cannot find things."
+    },
+    {
+      "Theme": "Task Assignment",
+      "Ask": "We require clear visibility on task assignments to ensure accountability.",
+      "Priority": "Medium",
+      "Evidence": "How would the system know which one is my task? Which one is Sarah's task?"
+    },
+    {
+      "Theme": "Historical Data Access",
+      "Ask": "We need access to all historical emails and attachments for context in ongoing matters.",
+      "Priority": "High",
+      "Evidence": "We need everything. Yeah, completely."
+    },
+    {
+      "Theme": "Analytics and Reporting",
+      "Ask": "The system should provide analytics on email volume and handling times.",
+      "Priority": "Medium",
+      "Evidence": "Does the system give any analytics? Like for example, how many matters closed last year?"
+    }
+  ]
+}

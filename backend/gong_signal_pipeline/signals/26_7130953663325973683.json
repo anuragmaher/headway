@@ -1,0 +1,38 @@
+{
+  "transcript_id": "26_7130953663325973683",
+  "call_id": "7130953663325973683",
+  "title": "Hiver Call with Stephen",
+  "started": "2026-01-30T00:00:46+05:30",
+  "signals": [
+    {
+      "Theme": "Form Setup",
+      "Ask": "We need to have our forms set up before proceeding with the migration.",
+      "Priority": "High",
+      "Evidence": "I think we need that set up before anything else is ready."
+    },
+    {
+      "Theme": "Custom Fields Mapping",
+      "Ask": "I will create all the custom fields in Hiver prior to migration.",
+      "Priority": "High",
+      "Evidence": "So then I should go ahead, and create all the custom fields because those won't be here."
+    },
+    {
+      "Theme": "Migration Timing",
+      "Ask": "We prefer to kick off the migration on a Wednesday night to avoid disruption during peak times.",
+      "Priority": "Medium",
+      "Evidence": "Our student deadlines is actually on the weekend... midweek Wednesday, Thursday, Friday is actually a little bit calmer."
+    },
+    {
+      "Theme": "Ticket Status Handling",
+      "Ask": "We want open and pending tickets to be prioritized during the migration.",
+      "Priority": "High",
+      "Evidence": "Those are the ones that we actually want over there first."
+    },
+    {
+      "Theme": "User Account Creation",
+      "Ask": "All agent accounts must be created prior to the migration.",
+      "Priority": "High",
+      "Evidence": "You'll have to add them as users first."
+    }
+  ]
+}

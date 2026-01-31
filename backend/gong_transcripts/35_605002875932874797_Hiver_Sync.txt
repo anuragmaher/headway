@@ -1,0 +1,502 @@
+================================================================================
+Call: Hiver Sync
+Date: 2026-01-29T20:29:29+05:30
+================================================================================
+
+Cole Miller (cole@grexit.com):
+  hey, Angela.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Sorry, I didn't realize I was muted. How's it going?
+
+Cole Miller (cole@grexit.com):
+  Oh, I'm good. How are you?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  I'm good. Nice.
+
+Cole Miller (cole@grexit.com):
+  Appreciate you hopping on the call here. How's your week going? It's going. Yeah, we're back in the swing of the year, huh?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Yeah, it's just, you know, mother nature, she's not very nice.
+
+Cole Miller (cole@grexit.com):
+  Yeah, I know we got, I think like 16 inches of snow in New York last week. So, it's been, we're still kind of dealing with the leftovers of that.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Oh, wow. Yeah, we, I think we've gotten in the last week, probably 36 to 72 inches.
+
+Cole Miller (cole@grexit.com):
+  Oh, my goodness.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Yeah, we've gotten a lot.
+
+Cole Miller (cole@grexit.com):
+  That is a lot of snow.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  It's just, it just keeps coming. The whiteout conditions in Michigan have been unreal. We've had so many pileups and, yeah.
+
+Cole Miller (cole@grexit.com):
+  You.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  know, and we're used to driving in it, but when it's whiteout, you can't see in front of you.
+
+Cole Miller (cole@grexit.com):
+  Right. It's just so it's too dangerous to even be on the road. Yeah, I've never dealt with. I mean, the most I've seen is like maybe like max 20 inches of snow. I couldn't imagine getting up to like 36. That is a lot of snow.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  My, my plow Guy is making some great money right now.
+
+Cole Miller (cole@grexit.com):
+  Oh, yeah. Yeah. Plow the plow guys in, you know, the Michigan area. I'm sure do well for themselves.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  So, I have some questions to initially start.
+
+Cole Miller (cole@grexit.com):
+  Okay.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  When… we go to migrate from Zendesk to hiver, the previous ticket history. Is that something that you guys are gonna download for us? Or is that something that we need to download? Yeah.
+
+Cole Miller (cole@grexit.com):
+  That's something you would need to get on your side. So you'll just need to get an XML file from Zendesk so we can handle that data migration and then bring it into hiver. Okay. So we'd wanna understand, you know, the number, the size of tickets. So, if we can understand that, we can give you a more clear cut timeline.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Yeah, it's gonna be a lot. I mean, we've been on Zendesk for 14 years.
+
+Cole Miller (cole@grexit.com):
+  Okay. And would you want every conversation historically or just more like the last like year of conversation? I don't think you would need like every single conversation going back 14 years. So I'm sure some of those aren't as relevant anymore, but I'll let you kind of guide me on that.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Yeah, I, I'm gonna find out from the team, how far they want to go back yep, you know, what they feel would be valuable to them and then go from there.
+
+Cole Miller (cole@grexit.com):
+  Okay. And, and Jeevan actually just joined as well. Jeevan, we're just talking through like the XML file that they'll need to provide for the data migration from Zendesk and kind of like speaking about the timeline and how long, you know, they would potentially want to go back to retrieve those tickets and import them to hiver.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, just give me one second. Hi, Angela. How are you doing?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  I'm good. How are you?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Good. Thanks for jumping on. Let me just pull up. So, I had a conversation with my team just before jumping on. So wanted to be super prepped for this call to help you with information and everything. So I'm just gonna go in and… so, yeah, perfect. So let me just share my screen and then we'll walk you through that process. You should be able to see it right now. So, we do this all the time. So we've got a fairly set up template and a very standard process that we follow when you are exporting your ticket information out of Zendesk. They, by default part of their platform, give you the ability to export all relevant information, part of an XML file, right? It's sort of a sort of a package of data that is formatted in a way that we can import it. So so you can get, you can convert your Zendesk tickets into hiver conversations. We'll import email threads, attachments, notes, attachments, and notes, all the Zendesk specific items, they sort of block it, which is contacts and tags. So because those are Zendesk specific things those don't get brought over.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Okay. So they go back to that. Yeah, hiver will not import the tags or group organizations.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, we actually have tried to. So a little bit of context is we tried to, but Zendesk has that behind sort of a, as a private piece of data because it's part of their platform, but we can import everything else if you, if there are a list of tags that you can just export and give it to us in just like an excel sheet or a CSV file, we can have those created for you so that you don't have to create all of them again. But from Zendesk, that's just a block feature.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  That they have. Okay, they, I see that they also have, you can do the Json… but you would prefer the XML, correct?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  We prefer the XML, yes, because that way we can keep the sort of threading and everything. So, yeah, our script runs with the XML.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Okay.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  XML, they can't do tags or organizations.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. And those we could potentially consider like importing outside of this, like creating outside of this import.
+
+Cole Miller (cole@grexit.com):
+  So, yeah. Yeah. So we'll just need more information on your side on, you know, the, how far we want to go back historically what that might look like. So then we can deliver that timeline on that, you know, migration.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Okay.
+
+Cole Miller (cole@grexit.com):
+  And then in terms of some of the other pieces, so setting up the knowledge base automations, customer portal done… you know, throughout the implementation cycle. So you will get that dedicated customer success manager, right? Who's going to set up, you know, hiver end to end and cover those topics with you. So that will be a part of your implementation package with us, which is included in the licensing fee.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Okay. So like doing all the automization because one of the things that we have noticed like we, so, we have to be able to add to your system, new contacts. Yeah, because when we're onboarding, and right now, you guys go by the domain?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. And.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  we need the, we need to tie that domain… with the client care rep, just like with your onboarding, we have a onboarding team and somebody who manages that account throughout its life cycle here. And so we have to be able to tie them together.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, I tie contacts together with the, with onboarding?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Yep. With the account rep. So right now, in Zendesk, you know, when we onboard a new client, we add them as a organization in Zendesk. Sure. And then under the contacts, we're adding who the rep is with a tag, sure. Sure.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So we do it's like we do the exact same thing but we do it just in a different way because different tools are as you probably know, different ways of setting it up. So that exact piece is definitely possible. So the way we can help you associate the account rep is with something called like a customer mapping object which you can create with hiver. So let me show you one that we've created on our environment. So essentially, these are the names of the clients and these all exist as organizations. Of course, these are the names of the clients. These are the account reps that we have on our end. And if you have a tag associated with it, you can also have this tag. Now, once we've got this set up, what we allow you to do is we allow you to set up rules based on that. So, for example, if I want to tell hiver, hey, whenever a conversation comes in from any of the organizations or any of the contacts associated with the organizations in that particular, for that particular account, you can just create a rule that says, whenever a conversation comes in and the conversation comes in from the company or the organization that is present in the list that we just saw. So in my case, it will be present under the customer mapping list as client. And when that happens, you can automatically go ahead and assign that to the person who is the account rep or in our case, the owner of that account.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  So in our case, we would just tag it with the rep. Sure. Yeah, it's name. Okay? Because I mean if it's a regular customer service thing, you know, cancel an order. We don't want that to go to the account rep. Sure. Regular customer service team handles that.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Sure. So which kind of queries do you want that to go? You want to go to the rep?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  So, like we would want all we'd… want the organization tagged with the rep, so that customer service knows who handles the account. Should something go wrong? Okay? And they have to assign it to the rep. Does that make sense?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Got it. Understood. Perfect. So we've got a second layer of functionality meant exactly for that, right? So in this case, if you want the account to be… assigned to anybody in the mailbox, so it can go to the customer service reps, and then they can look at who the account rep is by checking who is added to that rep as a follower. So our follower functionality is exactly meant for this, where it's meant for things that are technically under someone's purview. But they don't need to be the one who is at least on the first level responding to that email or that ticket. So in those cases, they just become a follower… and the rest of, the ticket will actually get assigned to one of the other reps and then they, the other reps will know who the follower is by just checking the activity panel and then they can assign it to them if required down the line.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Okay.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Right. So that's we built this exactly for this purpose.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  So, when we have, when they're adding new clients to the system, they would… do, they would add to their list… that client.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  So when you go to your custom object where the list is, yeah. So they would need to put in there the,
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  new. So it's essentially, it runs off importing new data, right? At the moment, it will sort of like look up, you can sort of like upload a CSV file or somewhere where it is where it is mentioned. So you can upload a CSV file. We're actually working on an enhancement in the next couple of weeks where it can connect to a sort of a live sheet where like a Google sheet of sorts where you just need to go in and make changes to the sheet and it'll automatically reflect here. And that is something that's already in the works, but at the moment, yeah, you just have to upload a new list and then it'll get updated across all rules and all routing and everything.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  How long do you think it'll take you to have that sheet live? The?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Live sheet connection? Yeah.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  We're actually working on it as we speak. So Cole and I actually saw a run through on our environment recently. So I think they're just working out the key, so that should be out fairly soon, okay?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Because they would need that, sure that.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Makes sense. Yeah, that's a very standard ask and we work with a lot of companies in the fulfillment three PL, similar sort of setups. So we've heard the feedback before, which is why we're already knee deep in it and I will even get maybe perhaps get you a timeline at the end of the call. Okay?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  And then Jeevan, when we're creating these custom objects, yeah. So, we have three, three people in client care, they do the onboarding and everything. So, could they potentially have a separate list for each one of them… under the custom object? What?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Would that look like? Yeah.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Like, would they have a separate list for each one? They?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Could, or if you just want to have one major list with saying this person has all these clients and this person has all these clients, this person has all these clients. So, I mean, either works, okay?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Okay. I mean, if, because we already have that separated?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  And we could add the tag because we have a master account list that we keep, so which is in ex, well, Google sheet. Yeah, we could just add the tag and to that has the domain and everything in it.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Absolutely. And, and if you could give that to us, we can… do it as well. So, in the meantime, we're even happy to sort of like run a script that says, even though we might not be able to like sort of update it automatically. Just yet, we're still waiting for the release. But even in the meantime, what we can do is, if we get access to it, if you're comfortable with that, we can even run a script that can automatically update it just externally and not inherently in the product but, the result is the same thing and that's just like sort of in the meantime until it goes live in the product.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  So you could run, have a script run in the background where they wouldn't even have to do that. They.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Wouldn't they would just need to update the list and that would update the custom object here.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  That would be amazing. Absolutely.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So,
+
+Cole Miller (cole@grexit.com):
+  Angela, just curious as well, like on your perspective? Like, does it seem like the team will be moving forward with hiver, you know, if we can get these last outstanding pieces all tied together. Yeah.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  I think Steve is really pushing for that. So it's more of a matter of, you know, getting these last little quirks that… are so different that the team is unsure about it. So we're trying to get them to do more, playing around with it. I am going to do a training session tomorrow based off of just what I've been playing around in there. I did try to do an automatic automation for the tag but I never got to the custom object portion.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  So… I personally think that they'll like it once they're using it, but it's change. Yeah, you know, we've been in Zendesk for 14 years that's a long time. Yeah. No.
+
+Cole Miller (cole@grexit.com):
+  100 percent totally understand like, you know, no one likes change at the end of the day kind of changing what the operations are on a day to day basis. But that's where, you know, our success team and implementation process is really going to help close that gap because like we're going to provide those hands on training with your team like answer those outstanding questions, provide them with best practices. And, you know, we can continue doing that as we get the relationship up and running to ensuring that, you know, everyone's comfortable as we go.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Yeah. And that's one of the things that I like a lot about this system. I also like the fact that because, we only have… set personnel that communicate with the clients. So we have our customer service team, then we have the client care, they do all the onboarding, manage the accounts. And I'm client success. So I converse with clients here and there. And then, so it would need to be in there. And then our outbound inventory prep and counting the rest of the team out on operations. They'll be able to just use that note feature that you guys have. OK, yeah, because they don't they never communicate with the client.
+
+Cole Miller (cole@grexit.com):
+  Right. They just need to sometimes be, you know, privy of what's going on and pulled into conversations?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Or, you know, we can tag them and say, hey, this, you know, they want to do a inventory transfer? Can you please complete that and tag me back when, you know, it's completed?
+
+Cole Miller (cole@grexit.com):
+  Yeah. OK. So how many folks do you think would start off with hiver just so we can start kind of quoting on our end as well?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  So.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  My gosh, I can't even that, why are you making me count this early? I haven't even finished my coffee.
+
+Cole Miller (cole@grexit.com):
+  Rough estimates will do. We don't we don't need exact.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  OK. So there's three and three that's six… seven, eight, nine.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  I would say 11. OK, if I'm counting, right?
+
+Cole Miller (cole@grexit.com):
+  OK. So we sell in buckets of five. So like 510 15, 20. So buying 11 licenses would put you into the 15 bucket. But with that being said, since you would be buying additional licenses, we're able to provide a discount, you know, off the top of the per seat license cost to mitigate that.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  OK.
+
+Cole Miller (cole@grexit.com):
+  So we just have to go back to our team, create that proposal. We can share that your way.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  OK.
+
+Cole Miller (cole@grexit.com):
+  But, you know, let's say like we get the clearance on the dynamic. So the dynamic sheet is that like the one thing that's kind of outstanding here from your side, like once we have that clear, like we'll be good to move forward.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  OK. What's where's that located?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  The dynamic sheet is what we spoke about Angela. Because, before we spoke about the seats, which is like being able to automatically connect to your Google sheet if we'd have access to it so that we can run a script that automatically updates the mapping on our end so that whenever you onboard a new client, you just need to update the sheet, it reflects here and all the automations that we want to set up. All of that kicks in.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  OK. And then, so we would get you access to that.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Sure.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  And then you would need access, then we would export the tickets from… Zendesk now just in the last year just to kind of he did get back to me just in the last year. Hold on. I got to open my phone… we've done 35,992 tickets. OK. So if we went back seven years, yeah. So, let me find out.
+
+Cole Miller (cole@grexit.com):
+  Yeah, I was.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Just going to say, so typically, by our estimate, we import about six to eight tickets a minute… right? Depending on, how intense and how like attachment intensive and stuff like that.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  It is all of these tickets also reside as emails in Gmail or in Google, then that might be an alternate approach. And that might make things a lot easier as well because we're just picking up straight from Google, but we've got both options and we can work it out. And like I said, we've got like a, let me just pull up our onboarding plan so that you can, we can walk you through exactly what that looks like.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  OK. So I have given, if it, because we do have the copy that goes online to our Gmail accounts. So would that mean that you don't even need us to export it from senddesk? If?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  All of, so, so that depends. So when you pull it in from Gmail, it might be easier and quicker and, we can just create all of those and we can just bring all of that into email into hiver, so that when you search your email bar, search bar in hiver, you go back and you find all the holder tickets. So you want to reference and review and all that you get all of that. The one thing that it will miss is all Zendesk specific information, right? Like actually, I don't think there's any Zendesk specific information that comes through anywhere. Let me just check. Yeah. So notes, yeah, that's the one thing that you will miss and attachments and notes if that happens quite a bit. If you'd like the notes to be retained as well, then we'd prefer to go the Zendesk route because that is part of that part of the ticket there. So, yeah, we've.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  got, yeah, we would need that because that would be intercommunication. So, with like inventory control or the receiving department.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  That's fine.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  So, yeah, okay.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Then we just go down the, yeah. Yeah. And then would.
+
+Cole Miller (cole@grexit.com):
+  we recommend like, I guess we'd want to understand like Angela, like what is the threshold of, you know, tickets you would want to bring in? Like how far back we'd want to go? I don't think we'd want to go the 14 years route because I don't think, you know, a lot of that data would be like relevant based on how old some of it might be. So, maybe just having that conversation internally on how far back makes sense? And then we can just kind of go from there.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Yeah. We're that's what we're planning on doing kind of tomorrow. The biggest, the biggest thing is to get them to play around with it a little bit.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Right. Yeah. And for us, we want to make that process. So we do this, like I said, do this quite a bit. So a couple of things that really help us is sort of to get buy in because like you said, nobody likes change. A couple of things that work for us is being able to give them the idea of what makes hiver maybe an easier step for them. So, one of the things that we've really tried to do is make responding to tickets and to emails really easy and really intuitive. So, for example, this is an email that I've never opened before, right? It's coming from a customer. It's we've picked up that it is not a happy email. We've sent them like an apology automatically. This, I didn't send this out. This went out automatically. And we've also got a notification on the right. If you saw about emails, let me just come back in here… having a negative sentiment and whether hiver wants me to hiver wants to draft a response for me. So this says email has a negative sentiment. I can pinpoint what caused it and help you draft a thoughtful response. So I just have to click draft a reply and then automatically sets up our AI to read the conversation. Give you four options. And all you have to do to come up with an actual business specific response is choose the option that you want, and our AI engine will go through all the other tickets, will go through the knowledge source or the knowledge base that you set up with hiver and will be able to give you an actual response and you can send that out.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Okay. So that kind of goes with one of the questions that Steve and I had sure.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So,
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  we have our own knowledge base page on our website. What is that on? I know that you have the knowledge base in here so that it can do those responses. Like you were just outlining. Yeah. Would we need to… have both knowledge base pages set… up? Not?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Necessarily, right? If you'd like to move everything over to one space, whether that's the existing one. What is that hosted on by the way? Is that Zendesk?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  No, that is on our website.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  It's just like self created?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Yeah, fantastic.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  I.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  can actually let me see. Let me, I think I have it open. Sure. Yes, I do hold on. I'll send you.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  There is a no… chat right here.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  This is what happens when you have to work on a laptop and not used to it. He would like it to tie that knowledge base in with the chat bot. Yeah. So that when we're getting those frequently asked questions like how to enter an order or how to, you know… how does the order process flow work? This is all our knowledge base here.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Right. Okay. So, is this primarily how they submit tickets as well?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  They can, that ticket form is connected. So if you click on, that goes to Zendesk, okay, we would want it to go to hiver, sure, or that customer portal that you guys have. Yes within hiver, sure. Okay. So… it's aesthetically pleasing because as you can see, this is not right. This is, it's just like a Wordpress form.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Wordpress, it's like a simple website. Yeah. So absolutely. So we can create the exact same thing. We can link that button from here to our portal, and that will create a ticket in hiver if you'd like to also host. So what about the chat piece that you asked about?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  So, we would like for frequently asked questions, the AI chat bot to answer those sure, like how to enter an order and it to say here from this knowledge base, you can enter an order. This is how you enter an order.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Got it. Yeah, perfect. So all of that depends. So we can absolutely do that. So all of that depends on. So the knowledge base is a feature. So this is our knowledge base that is hosted on hiver's platform that you can also set up, right? But since you've all got this set up already, I assume that all of these articles that are here also exist as content somewhere else. Is that right? Is that fair?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Well, there there are contents in Wordpress. Okay?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  But there are no. So the reason is, of course, you can host it on hiver. And if you do host it on hiver, we can directly link into that and have our AI learn from that. If you host it on hiver, a lot of people already, like you already have it hosted externally. So you don't have to host it on hiver, but we still have to get access to that information in some way. Now, the issue is for us to pull a pull straight, from a site like this is that the information is usually not indexed. So the AI has a hard time reading it and learning from it. So we actually have built other external sources like notion, which is like a repository that you can connect or you can just upload information or files directly as PDFS onto hiver. So we can learn from it. So we just need to figure out how to connect our AI to whatever knowledge repository that you have. If that's hosted on hiver, it's seamless. If it isn't we'll have to figure out that stuff.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Okay. So you can do… external?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Sources. Sure. Or we can take those sheets, those Wordpress sheets and upload them here, you?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Can upload them.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Here.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Okay. Just making some notes, yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So you can either upload documents directly or you can add… little texts here as snippets and that can get saved. Okay? And we're also working on expanding as you can imagine as many sources here as possible.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  We.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  actually add the ability to link it to actual web pages. And what we realized was we run on openai's, LLM. So gbd, five point two, I think it is. Now, it was having a tough time ingesting information from non indexed websites, which is most websites because for information, they sort of design it and not index it. So in those scenarios, it found it difficult and we found that the accuracy was sort of like taking a hit. So, which is why we sort of like took that option out and we're figuring out a better way to connect to it.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Oh, okay. I can understand that, yes, you know, with all this stuff with AI, you know, it's… evolving faster than what I think changing.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Every.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  day, yes, yes, every single day, if it's used correctly, you know, to allow your team to not have to answer those questions.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Exactly. So.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Much, yeah, and freeze them up to answer the harder questions. I think it's great 100.
+
+Cole Miller (cole@grexit.com):
+  Percent. Yeah. Try to deflect the lower level conversation so the team can spend more time on the more meaningful ones. 100 percent. Yeah, that is the name of the game… but I know we are at time here, Angela. So from our side of the house, we will get back to our team and speak to them about the dynamic form and about setting that up for you and your organization. You know, when you come over to hiver? Is.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  there anything else that is a pressing item or is that the only, is that the final piece that we need clarity on?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Well, we wanted to know that. Oh, the other thing that they… had questioned was how… they would. So everything goes into from a support email right now, it's connected to my email address, okay? So that we could demo it… and we might need more data.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Can you say that one again? I'm sorry.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Lost you in the middle right now. Yep, the hiver is connected to my email address. So we have like a support at that I just created and it's actually my email address. So they're seeing everything come in to my email and it's going into that hiver dashboard. They are worried that people are going to see their other emails and I've told them a couple times. Oh, yeah, this is connected to, my email address. So if you don't want something, not everything like if somebody emails them directly, yeah, that's private, that's not going to go into the hiver.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  No chance. So, the only time, so, let me make this very clear. There are only three scenarios. If an email is sent to you directly, it will go to your inbox. No one else gets access to it. It's private even in our list of permissions. Hiver doesn't even have access to your inbox, right? Okay. Below that, if an email scenario to an email is sent to support or a ticket is submitted by the portal that goes to the support mailbox right here, that is the only thing that hiver provides and has access to and everyone else can work out of there to respond to tickets. When an email is sent to both you and the support, where one of you, it's sent to you and the support is on CC or vice versa. In those scenarios, the same copy goes to both places because it's addressed in two places. Just because an email from hiver is in your main inbox, doesn't mean that all the other emails are automatically shared. Just that one is because it was also addressed to support. And the only way in which an email in your inbox can actually make it way into hiver is if someone actually goes in and adds it to a shared inbox, manually, that's.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  that's what I explained, but I wanted to just confirm.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  And, that, was it. That was the only other question that we had? Perfect.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, just… summarize, I'll hand it back to Cole in a second, but just to summarize, so our out, one outstanding item before we sort of like are ready to go ahead and talk about like migration and stuff, is the piece. So I'm fairly certain that we can give you a sort of a, the script even in the meantime while the release goes live and make sure that it's automatically updated. And we'll also get back to you about sort of, I know that you had a previous question about linking conversations like email addresses to domains even when they're not part of the account domain. Yeah.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  We'll get.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Back to you on both those fronts. Okay? Perfect.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  That's all I have, okay?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Awesome.
+
+Cole Miller (cole@grexit.com):
+  And then, yeah, we'll be waiting on you for the additional amount of tickets and volume we'd want to bring over. And then what would be a good time Angela to reconnect next week on pricing?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Let me, I took my calendar that's… where it's been. It's… been tricky lately.
+
+Cole Miller (cole@grexit.com):
+  Yeah, it's been a, busy couple weeks. Yeah.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  I'm wide open actually on next Thursday.
+
+Cole Miller (cole@grexit.com):
+  Okay, cool. So, we did 10, I can do same exact time on Thursday, okay?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Go ahead and send me over invite for that time, okay?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  And in the meantime, Angela, we know how these things work. We've done this like I said many times. So we want to make sure that we make, of course, the product and the experience we want to, we want that to be compelling number one. But also, we want to make sure that we give you a compelling offer. So any chance you could let us know ballpark, if you know, of course, like what you're paying for Zendesk right now. So Cole and I can take that back and use that as like sort of yardstick?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Yeah, yeah. I just been working with them and asking them like if we have to give them like a 30 day notice and they haven't gotten back to me, but we're currently, we're paying 11,000, 880 dollars a year, got.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  It? Okay for.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Like 11? I'm… sorry for.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  How many licenses that?
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Is for they call it seats that's 18 seats gotcha?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Got it. Okay. Yeah, we'll keep that in mind. Okay? Perfect.
+
+Cole Miller (cole@grexit.com):
+  No, thanks, Angela. We'll talk to you on Thursday next week and we appreciate the time today, we.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Appreciate it. Thank you guys. All.
+
+Cole Miller (cole@grexit.com):
+  Right. Take care you.
+
+Angela Davenport (davenport.a@efulfillmentservice.com):
+  Too.

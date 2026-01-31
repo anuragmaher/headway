@@ -1,0 +1,346 @@
+================================================================================
+Call: Persefoni | Hiver - Workflow review
+Date: 2026-01-29T23:31:47.321+05:30
+================================================================================
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  hi, matt. Hi, Suhail.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Hey, how's it going?
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Pretty good. Sorry about my voice. I'm going to be talking a little less today and I will have my support person. We went through a list of requirements that you wanted to address today.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Perfect. And on top of getting that address, if the team has any questions, we'll open the floor for the next last 15 minutes and we can get them addressed as well. I hope that works.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Yeah, sounds good. So we have a couple of new folks on the team who will be supporting this project with ash and matt. I don't know if there's another matt who's going to join, but ash and matt will be taking over. So we'll be working on this together to make sure everything is kind of lined up to the way we want it to be. The other two I had for you today is on shared drafts. When I create a shared draft. It's not, I don't know if we'll be able to get through all of this today, but we can continue with configuration. But shared drafts are not showing up in my shared drafts folder. And I'm curious to learn about csat. It sounds like you can crack csat in here as well. That might be something useful for us. And there's the other matt, so sorry, it might get a little bit confusing but I think we can figure it out. Yeah, we'll.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  just go ahead and answer matt.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Whichever matt comes up with the question, we're going to get that addressed. Hi, Suhas. Thank you for joining. I was just setting the stage for suhayl and team. I have Suhas here from hiver support. He's going to lead the discussion for us. There is a list of requirements that suhayl had earlier shared with us and we'll initially address that and give you updates workarounds or if it's not feasible and a product feature we'll let you know. And right after that, we will discuss about the shared drafts and if time permits, we'll also cover csat all.
+
+Suhas Rao:
+  Right.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Open to having a follow up discussion. So we can set up regular cadence as time is convenient for all of us. Thank you.
+
+Suhas Rao:
+  All right. So, yeah, suhayl, I went through your email and let's go with the first one. You said you want automatic email routing when someone is out of office, right? So, can you explain what exactly is it that you want the automation to do? Let's just say somebody is out of office and they receive a response. Do you want that email to get assigned to somebody else? Because that person is out of office? Yeah.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  I think more. So what I'm curious about and this might just be like a learning opportunity for us is when a colleague is out of office, I don't see any kind of routing and we might want to set that up because it might not already be there, but how should teammates be thinking about setting their out of office status when they are leaving? Do they have to do that specifically in hiver or is there a way in which it can read automatically from their Google settings?
+
+Suhas Rao:
+  Got it. OK. So on hiver, we have a feature called out of office. So, what this feature does is let's just say there is an email assigned to you and you turn your availability off, it means you're out of office right now, if one of your clients responds to your email, an email that is assigned to you, hiver will unassign, it goes to the unassigned view. This means other people can see that there is an email that was assigned to a member, but now it's unassigned because they're out of office. So here, they can either open the email and assign it to themselves or we can set up an automation that would automatically reassign the email to the available agents. Yeah. So for this, you have to enable the out of office feature. And under the out of office feature, there are three other options. If you could share your screen, I can show you what option you'll have to select for this type.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Of workflow? OK, I can do that. Do I need to have admin access? Yes, or does it not matter?
+
+Suhas Rao:
+  Yeah, you have to be an admin, matt?
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Then, do you want to share instead, matt palmer?
+
+Matt Palmer (matt.palmer@persefoni.com):
+  Sorry… we've got some things going on in it, and I'm working on other things related to some events this morning. Yeah. So I can't.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  OK. That's fine.
+
+Matt Palmer (matt.palmer@persefoni.com):
+  I cannot share my screen.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  That's fine. Suhas, if you want to give me temporary admin access, I can do that and share.
+
+Suhas Rao:
+  Sure. Yeah, that works. So right now, your role is power user, right? I'm just going to make you the admin.
+
+Ash Hannig (ash.hannig@persefoni.com):
+  And suhayl, just to confirm and how it's like already configured unassigned is rolling into support.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  I'm not sure. OK.
+
+Suhas Rao:
+  OK. Suhayl, I've made you the admin, can you refresh your Gmail page and share?
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Yeah. OK. So, would that be in the settings? It looks like?
+
+Suhas Rao:
+  Yeah, it's going to be in the admin panel of the first stop.
+
+Suhas Rao:
+  And then click on settings. It's on the left hand side, the last option… and then features access.
+
+Suhas Rao:
+  OK. So here, you can see that the out of office is enabled and there are three options under it, right? It says unassign the conversation. If a new customer, if a new reply comes up. So, if you select this option, and if the agent turns their availability away, then hiver will automatically unassign the email. When their client responds to the email assigned to them. The second option, what it does is, even if the agent is unavailable, the email remains assigned to them, when their clients respond to their email. So, this will, only the round Robin will not assign the email to them, but existing emails. When they receive a reply, the email remains assigned to them. The third option is similar to the first option. But in the third one, they get an option whether to, you know, keep the email assigned to them or unassign it when the response comes. So, which, so you have to go with the first option or the second one here. So that comes.
+
+Ash Hannig (ash.hannig@persefoni.com):
+  Up, allow engines to control there's a prompt where they get to select.
+
+Suhas Rao:
+  That's right?
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  So, can I turn this on temporarily? So we can see what that looks like.
+
+Suhas Rao:
+  Sure. Yeah, you could do that.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  For matt, yeah.
+
+Suhas Rao:
+  You can go to the last option, the third one, yes.
+
+Ash Hannig (ash.hannig@persefoni.com):
+  Matt, I think you're muted if you're chatting with us miller?
+
+Matt Miller (matt.miller@persefoni.com):
+  That's awkward. Can you hear me now? There we go. Yeah, my goodness. Okay. Sorry about that. At what point does that prompt trigger? Is that like when the message comes in when they're already out of office? Or is that something that they can preconfigure prior to going out?
+
+Suhas Rao:
+  Yeah. When they're about to change their availability from available to away, right? When they click on, it will prompt them, I can show you how it works, so.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Now, we have this.
+
+Suhas Rao:
+  Yeah. So I'll go to Gmail. Now. Do you see the availability there? I can click on it, click on away. Okay. That's the prompt. So the agents have to check this option. Only then will the email get auto assigned after we set up the automation when the response comes back in? So once you do this anytime you receive an email assigned to you, the email will go to unassigned you. And.
+
+Matt Miller (matt.miller@persefoni.com):
+  Then that's when the automation would catch it and assign it to the correct person that we've identified, correct?
+
+Suhas Rao:
+  Got it. Yeah. So we need to do this. The email will remain assigned to them. That's another thing which you'll have to notify the members.
+
+Matt Miller (matt.miller@persefoni.com):
+  So just some training we've got to keep in mind there for the team obviously, suhayl?
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Yeah. And, I just would go back to Suhas's point like if I go back to the admin panel, I wonder this is something for us to think about internally, matt and ash, but if we, where did it go? Oh feature access? So if we just set it to automatically unassign the conversation, if a new customer replies received, is there any automations we can build into there that will do?
+
+Suhas Rao:
+  The auto?
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Assignment, yes.
+
+Suhas Rao:
+  So, the first one, the second, the third one, this is one and the same only thing is only differences on the third one, they get to choose what to do, but you can go with the first one as well. Like sometimes they might forget to check the box and then just close it right? Then the automation won't work if their clients respond to that. So the first one works. The first one is what makes sense in your case. So you don't have to train the agents. Yeah. So.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  That way it automatically gets assigned. And for matt and ash, I'm just thinking like I'll give you a use case here. Erin is out of office. She gets an email. I am the person that… it should be routed to when she's out of office. And so if this is the option that we go with, then when she's out of office and she sets it there, it just automatically routes to me on those accounts. So we can either have that or we can have this where the CSM gets the option to pick whether emails get routed to them or follows the automation… matt, I can't hear you, right?
+
+Matt Miller (matt.miller@persefoni.com):
+  I know, I just eventually I'll figure it out. I'm sorry, I would probably vote to go with option one where it would just be automatic. Yeah, they don't have to select anything. It's just one less thing that they have that we're relying on them to do. Yeah, in my opinion, we.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  have.
+
+Ash Hannig (ash.hannig@persefoni.com):
+  that default, in your example, we have that default available of like per this customer, per this alias that's coming over instead of Aaron, it's going to route to you. Suhayl, we can specifically pick you or is it all routing into the unassigned? And then it's in the round Robin.
+
+Suhas Rao:
+  Great question. It's the second one it will automatically assign to the available agent. Okay? Yeah.
+
+Matt Miller (matt.miller@persefoni.com):
+  We will need, I think we'll want the first use case, right? Suhayl, we want to be able to be specific because essentially what we're looking to do, we have a two person team that supports our accounts. When one of them goes out of the office, we want the emails to automatically route to the other person on the team that's essentially what we're looking to do.
+
+Suhas Rao:
+  Okay.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  That's one use case. And then there's another use case which is around Robin. There will be some accounts that follow what matt just said, and there will be some accounts that follow the round Robin approach that I think is the biggest thing that we need to try and figure out how to solve.
+
+Suhas Rao:
+  With you. Okay. Is the customer defined? For example, let's just say there's an agent and this agent handles a specific set of clients, right? So the specific set of clients have their own email, so we can set up an automation that says, if an email comes from, so and so domain, and if it is in the unassigned view, assign it to suhayl.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Yeah. So maybe let me show you what we do today and this might help set the scene. So we have customer account names and their email domains and who the CSM it goes to right now in hiver, what matt palmer does is he gets an updated version of this file every time we get a new customer. And then he uploads it to wherever you have to upload that CSV and that does the assignments based on the domains. So this is currently how accounts are assigned to csms?
+
+Suhas Rao:
+  Got it. It.
+
+Matt Palmer (matt.palmer@persefoni.com):
+  Opened the custom object in the admin panel, okay?
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  So in here, we just go and we add a new or we just update this. So what it looks like is that there's an account and then there is one person assigned to it. But I guess what we need to do. So what we have in mind is that these are all going to be separated into different categories. So let's say this is, category one will be accounts… that get like it's either matt and ash and not round Robin. And then category two would be round Robin. So we kind of need to bucket customers like that. Is there a way we can store that sort of logic in here? Not over here, no, not over here, but somewhere.
+
+Suhas Rao:
+  Yeah. In the automation, you can set it up, you have to define or you have to mention all the domains in the automation, and then you can set it up in such a way that if an email comes from xyz domain, assign it among these two agents. I can show you how it looks like as well go to shared inbox?
+
+Suhas Rao:
+  And then you can, we can open the support testing mailbox if you need, or you can go with the main one as well. Okay. And now go to automation.
+
+Suhas Rao:
+  Create automation… create from scratch. Okay. So under the trigger, it says new conversation received, right? Click on it and then select external reply received from anyone… add step… if condition… and then select the condition. And here you can mention the from domain or from email in the list. So you can go with the from, and instead of E, you can go with is present in… wait. Just give me one moment here. You're getting the customer. Can you go to email from email instead of from domain? Okay, click on is, and then check if you have the option to select contains any of, okay. There we go. Contains any of, and then here you can mention their domains. Well?
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  You know, I kind of I kind of like what you had before. I wonder if we just have two lists one. So hang on. What was I in before it was from?
+
+Suhas Rao:
+  Domain?
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  From domain is present in custom objects. So basically the custom object would be like we essentially maintain two lists and I'm curious to get matt P, matt, M and ash, your thoughts on this, but we will have one list that's going to be around Robin and one list that's not around Robin. And so if we just maintain those lists, then these, if conditions?
+
+Matt Palmer (matt.palmer@persefoni.com):
+  What about the domains that are not on either list? Could you just do emails on the list? Go specifically to the users and all of their emails go round Robin?
+
+Suhas Rao:
+  Like it does not contain.
+
+Matt Palmer (matt.palmer@persefoni.com):
+  Right? If it was not on the list, it goes around Robin. If it is on the list, it goes to the email assigned to the domain.
+
+Suhas Rao:
+  No, there's only ease and ease present. Those are two options.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Sorry, give me one second. I'll put my screen back up in a second.
+
+Ash Hannig (ash.hannig@persefoni.com):
+  I'm wondering where the catch all bucket would be, say we have a new customer. We wouldn't want them to go.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  I mean, I guess they would just live in unassigned, like how they currently do.
+
+Suhas Rao:
+  Right? For that, you can create the other automation that will just auto, assign it to whoever's available. But then for right now, what's happening is you'll be creating multiple automation and there's a chance that they might just conflict. There's going to be this automation that assigns it. And then there's going to be the other one which will got it, reassign it once again. So.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  You think it's better than from email contains… and then we,
+
+Suhas Rao:
+  put all of these.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  In here. Yeah. Well, at least the ones that… handle by specific. Yeah. So.
+
+Suhas Rao:
+  You have certain agents that are handling a specific set of clients, right? And just filter those. So address and just mention here. So.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Let me just put one in for an example. So we know how to do this and… what? Yeah, what's the next step here? Yeah.
+
+Suhas Rao:
+  From con of okay. And click on and condition… and then assignee.
+
+Suhas Rao:
+  Is none… understand the sign? Yeah, scroll down, add action, add.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  A step or, and condition. Yeah, add.
+
+Suhas Rao:
+  Step, sorry, add step and then action, and… then select the action, then go with assign among… and then select the agency.
+
+Suhas Rao:
+  Like, if agent three and agent four are backup for agent one, if agent one is out of office, you can select agent two, three and four from the list. And even here, you have two options for the round Robin and load balancing Robin will equally distribute the email among those two agents, whereas load balancing will assign it to the person who has the least amount of open emails. So, I believe round Robin is what would make more sense.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Okay. So this makes sense for the round Robin one. And what happens to all the other ones? So the use case we described is matt and I work on an account. Matt is out of office. Those emails go to me instead. I'm not sure how we set that up but what we just set up here would work really well for round Robin where I think it might have challenges. With the first approach we talked about is… like in this assign among, I can't really describe it but… it would only be assigning it to one other person. So matt and I share accounts, but I can't add ash to this list because if matt is out, that email should go to me, not ash, does that make sense?
+
+Suhas Rao:
+  Oh, okay. So you, there's an order, right? You want this email, if matt is out, then email needs to go to you. And if you and matt are out, then it has to go to the other person… that's a.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Different use case. But let's say matt manages 20 accounts on those 20 accounts. I am his support on five of them. Ash is the support on another five of them. If matt is out of office, the five accounts that I'm supporting him with those emails should get routed to me. The other five emails that ash is supporting him with should go to her.
+
+Suhas Rao:
+  Then there's a mapping. Yeah, you don't need to go with assign number. You have to just go with assign, click on assign number and then go with assign to and let's just say the five emails that you're handling, you can mention at the top under from email contains any of. And then you get those emails assigned to you.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Okay. So, does this need to be done for every agent then?
+
+Suhas Rao:
+  Yes. So you'll have to create another automation for the other person with the five emails and then select their name in the assign… to field. This way hiver will know who exactly to assign it to the first approach. The assign among will just assign it to one of you guys. Yeah.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Okay. So like this is nice because it's customizable per CSM. You had mentioned something about creating too many automations and there being challenges with that, would there be any challenges with setting up multiple automations per, I guess a rep?
+
+Suhas Rao:
+  No. If you, again, do you have any existing automation that assigns email to the agent? I think so. Yeah, they're all matched right now per each customer domain, email domain. Yeah, there's one more thing I'd like to mention if an agent is out of office, right? The automation won't assign it to the person. Let's just say there's an automation that says, if subject contains urgent, assign it to agent a, right now, if the agent a is out of office, if he changes his availability to away, then if you receive an email with the words urgent in it, automation won't trigger because the person is away, right? So the email just remains in the unassigned view. So that's how the out of office feature works. So if the person is out of office, even not just round Robin, even automations won't, work automations that are designed to auto assign the agent to that specification?
+
+Suhas Rao:
+  so that's one thing. And yeah, if you have any other automation, right? That would assign it, to another person, then you just need to make sure there is no conflict, whatever condition that you mention over here. Shouldn't be mentioned over there as well. Otherwise both will work. And at the end, it will work from the top to bottom. So there is an automation list, right? So if there's two similar automations, the first one gets triggered and then the second one gets triggered. So if the first one says assign it to Suhail, and the second one says assign it to mark. If the subject contains urgent, it will assign it to Suhail, and then immediately it will assign it to mark. So this can be avoided by, you know, correcting the conditions. Make sure you just check which condition was it that triggered the email? And then you just correct it in one of the two automations. So that going forward, two automations doesn't trigger on one single email? Yeah, I.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  think that would be easy to avoid because for the use cases we're talking about, we can definitely set that up. I know we spent a lot of time. This is just the first one. I do have to hop in four minutes. But is this something we think we can set up internally? Matt P, do you want to give us the ability to try and configure these as well? And should we move on to the next item on this list? Is there a way to?
+
+Suhas Rao:
+  Bulk upload this… versus this individual cascade, the automation? Yeah, they'll have to be manually created, agent by agent. Can you copy?
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  The like, let's say, can I create a template of this and just change the criteria within the conditions?
+
+Suhas Rao:
+  No, you'll have to create the automation from the scratch. Okay?
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  That would be a cool feature if you could templatize your automations.
+
+Suhas Rao:
+  Let me check if there is actually a template option because when you create an automation, you do get an option, right? And here, let's create an assignment, not, it's not the one center. Okay, we can go with assign based on center. Let me just check new and bound. We.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Do have preset templates, suhayl. So if you go back one step, you'll be able to see it.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Yeah, I just mean, like if we create a custom template, if we can make a copy of that.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Like a duplicate option of?
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Templates exactly. Exactly. Makes.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  sense. Yeah.
+
+Suhas Rao:
+  So, we don't have any template for replies received, external replies received. So we'll have to take it as a feature request.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  That's okay. Sorry, matt, I saw you came off mute for a second.
+
+Matt Palmer (matt.palmer@persefoni.com):
+  Yeah, I've been listening, but I haven't been totally paying attention what the automation is here. So hopefully we have this recorded, but yeah… we'll have.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  To look into it. Yes, matt. So what I'm thinking as next steps here is suhayl, let me know if this works. I'll share the recording of this call. You can revisit on this particular automation and then we'll schedule another cadence sometime early next week, Monday, Tuesday again and continue addressing the pending items. What do you think?
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Yeah, I think that makes sense. I feel like with ash and matt on the call, what would be really useful is if we can even try with some of our accounts because I know we wanted to test this out. And then matt, if it's okay, we can just create these automations. I think I get how it works.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Thank you.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Okay. Does that sound good for everyone? So we're going to circle back again early next week, suhayl, if you're able to just coordinate the time and help me with a couple of slots that would be great or you have my scheduler with you, so you can go ahead and directly book a time with me and we'll reconvene again and discuss on how the automations goes as well as the pending items.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Okay. Sounds good.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Perfect. All right, folks. I think we can wrap up for today and I'll see you all again next.
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Week. Yeah, thanks for working through this one and we'll continue to plug through.
+
+Pavithra Sundar (pavithra.s@grexit.com):
+  Absolutely, looking forward to it, all, right?
+
+Suhayl Meghji (suhayl.meghji@persefoni.com):
+  Please send the recording. Thanks. Bye, bye, bye bye.

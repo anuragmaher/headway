@@ -1,0 +1,340 @@
+================================================================================
+Call: Hiver Call with Stephen
+Date: 2026-01-30T00:00:46+05:30
+================================================================================
+
+Matthew P (matthew.p@grexit.com):
+  hey, Stephen, long time. No talk. Hey?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Matt, morning. How you doing?
+
+Matthew P (matthew.p@grexit.com):
+  Good. How are you?
+
+Stephen Maloney (stephen@animationmentor.com):
+  We're doing alright?
+
+Matthew P (matthew.p@grexit.com):
+  Awesome. Yep. Just talked to Jeevan here. He's going to join in a minute.
+
+Matthew P (matthew.p@grexit.com):
+  Yeah, we got some updates for you.
+
+Matthew P (matthew.p@grexit.com):
+  I told him that I told him since yesterday, I told him that you might be like a couple minutes late to our meeting today, so he took it as an opportunity to go grab something. And now he's late.
+
+Stephen Maloney (stephen@animationmentor.com):
+  That's totally fair. Yeah, I was that call I'm on it's variable. It sometimes wraps on time and sometimes does not, right?
+
+Matthew P (matthew.p@grexit.com):
+  Yeah, exactly. Exactly. Yeah. I caught him up to speed with everything that we talked about yesterday.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. I haven't moved anything since yesterday. I did reach out to one of our developers to talk about what we can do for forms because it sounds like we'll just handle forms and so it might sound like Manoj is only a little bit ahead of us and so we'll figure out some stuff.
+
+Matthew P (matthew.p@grexit.com):
+  Okay. Got it.
+
+Matthew P (matthew.p@grexit.com):
+  Hey, Jeevan. Can you hear us?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, loud and clear. Hi, Jeevan. Can you hear me okay?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah, we got you. How you doing?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Good. How are you? We're.
+
+Stephen Maloney (stephen@animationmentor.com):
+  good. How are you? How was your holiday week?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Not bad. Just getting back into the swing of things. Thanks for jumping on.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  I know I was double booked yesterday, which is why I couldn't jump on, but matt tells me that we had a productive discussion and the agenda primarily today is to sort of clear up any questions and sort of walk you through the migration piece.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah. I think that takeaways from yesterday was like actually from the form setup. I think we're going to handle the forms just for right now. I think we got an update that hey, maybe the end of Q1, we might have something full fledged in the product. In the meantime. I think we're probably just going to host something we use, not that typeform isn't super helpful, but we have other marketing forms that we could simulate this. And if we're using zapier, we'll just keep it in our branded things. If it's temporary. For right now. I've reached out to one of our front end devs to see what it would take to get that lift up in there. I did request that like on the zapier side of the house, maybe we could get you once we've gotten that handshake together, make sure that the zapier stuff is in line with what you expect to push that over if that's reasonable.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  100 percent very reasonable. Yeah. So we're happy to see, make sure that plays well with our side of things and make sure that it comes in. So, I think the major piece with zapier is to make sure that the form submissions come in a format that we can read, that our AI can read and make sure it's sort of playing well and conducive. So, yeah, we're happy to help with that.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. So I'll try and get us some of the forms set up and then we can see if you're familiar with. Have you guys heard of gravity forms? It's a Wordpress. It's kind of the most standard form collector in Wordpress. So like I imagine you guys will probably touch on it. And if it's not with us, somebody else down the road is going to ask you about it too. It's nothing rocket science. It's super simple. It's API is pretty straightforward. So I feel like we'll probably be able to get it working with you all.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, I think so.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Then I think that we did cut over. We did kill off what was the trial instance. And like we had member two Google orgs kind of the old company and the new one, we killed off the trial. In the old netops one. We've got it now in the primary Google org with the shared inbox that's a Google group underneath the hood. And I think we've tested that and that's all working better. So I've got some work to do to go in there and configure things. I was speaking with Manoj and matt yesterday about the import and the migration and how does that work? Just double checking? It sounds like the import can be idempotent. We could do, hey, a big batch and another export and it's not going to duplicate stuff. It should go over the top of it. Just want to say that out loud again. It.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Would be good. Yeah, Steve. So you absolutely can having said that because so let me give you 30 seconds of context. So what we're trying to do is we're using Google, we're using API calls to sync emails on the backend while your frontend operations are unaffected. Right? What I mean by that is historical emails are coming in underground, new tickets and new tickets are coming in as they come in real time, right? Everything depends on API calls. So the one thing to keep in mind with multiple imports is it does put a strain on your account. So based on what we've decided we've got about, let me just like pull up the numbers that we've got. So our threshold just to make sure everything works well, is that underground, we import about eight, six to eight tickets a minute.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. So you just, you throttle it on the import and that's fine. You know, if I tell people like, hey, it's going to start building over time and you'll see more of the historical tickets in there, you know, over time, I think that's reasonable.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  And did your first XML have about 450 tickets? Is that, does that sound accurate?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Well, I gave you a couple. So like I gave you in Zendesk, there's like a, hey give you the last month. There's the full XML is just like everything and I can't set a date range on it, right in Zendesk. So I can give you everything. So that's what I've given you most recently. Prior to that, I did give you a subset of I think user data and ticket data, you know, and those were on a smaller date range and that could be around 400 or so, but I suspect that I don't know off the top of my head, but the main one's going to have, you know, probably 10,000 tickets in it in the full one that's fine. That's okay.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  That's fine. So it's going to just like sort of throttle it just to make sure that. So what happens is Google just to make sure that we're not suspicious and doing stuff that we're not supposed to has a throttle. I'm sure you've seen on their API calls API limits. So if we hit, it sort of shuts the account down which we don't want to do. So our imports are designed to make sure that it's a background activity. It never gets you get close to the API limits. So you're what is the priority there? Is your real time, the new tickets coming in, there's no disruption with that. So we'll so.
+
+Stephen Maloney (stephen@animationmentor.com):
+  What's your recommendation on timing of it, right? Obviously new tickets are going to keep flowing in at what point should we kick off the migration versus, you know, cut over like should we wait and, you know, cut over everything live? And then there's really no more tickets going to Zendesk. And then do the historic migration that's your recommendation? I.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Would recommend that because that just like does it one time and we're not really, we're not really like going through an entire process and then going through another process. So what our engineering team said is it does factor in the fact that these might be overlapping tickets, but the fact that it has to check every time the script has to check every time it's going to take longer.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, their recommendation is that it's possible we're okay with both options. But the recommendation is to wait till our cutoff date. That typically is the way we've done. It is on a Friday evening. If that makes sense, you cut, you stop Zendesk Friday evening, Monday morning, we've got everything set up. So they come into hiver, they start Monday morning and that Friday evening, you can generate the XML file and give it to us. We'll figure the import right then and there and it can get started.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. Just on that end, our business is a little bit different. Just our student deadlines is actually on the weekend just the way that our operates. So actually Saturday and Sunday tend to be busier times for us midweek Wednesday, Thursday, Friday is actually a little bit calmer. So like I'll talk to our peeps about when we decide to do it, but that might even, you know, it might be more like a Wednesday night or something like that. That's.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  fine.
+
+Stephen Maloney (stephen@animationmentor.com):
+  To that end, if I give the full XML, there is a not a ton but several 12 custom fields that we got in there, right? And like how would those come across and read across? And is the recommendation that I should make the corresponding custom field in hiver ahead of time? And then you guys just map to that field? And do I need to give you some sort of a matrix for that mapping of what the old field and the new field are? Or can you guys, I mean, it's going to, they're going to be named very similarly. So, so.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. So any custom sort of like build, right? Which is not default in every single Zendesk account and a hiver account that you probably will have to probably map out and a matrix would be helpful. But by default based on what Zendesk's standard XML file comes out with, and what we can take in, these are the standard four items that we get across, which is if it's too small, let me just, yeah.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Sorry, I'm looking just looking at your screen there. Okay?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Give me a second. I'm just, I've got a bigger monitor where it looks all tiny.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So, yeah. So this should be a lot better, right? Yeah.
+
+Stephen Maloney (stephen@animationmentor.com):
+  I can see that. So this.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  is the general guide we've got and I'm sure you saw this already, but we've got four items that comes by default from a standard XML file which is threads, attachments, notes, and attachments, and notes. Apart from that, any sort of custom categorization, for example, tags or anything like that, those are not imported automatically. But if there is a specific mapping that is, very crucial, we can sort of do that as a custom development for you.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. We use tags sparingly, it's basically like, is it a staff? Is it a student? Is it an instructor, right? Like the pretty top level tags on those type of things?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Even.
+
+Stephen Maloney (stephen@animationmentor.com):
+  if we went and said like set everyone to student, and then I'd go back in there and change the mentors and the staff. Like I could do that. If we need to groups and organizations, we don't rely on those heavily that's fine. That's not an issue. When you say you don't bring along contacts. Can you tell me more about that? So.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Zendesk maintains a contact directory. We have our own contact directory, right? And from what we've seen from an engineer, from what the XML files, it doesn't provide a direct API link to the contact directory. So we can't bring that over. But, yeah, okay. But.
+
+Stephen Maloney (stephen@animationmentor.com):
+  I mean, it's going to be creating a hiver account for that person in the migration. Okay. So, okay. I'm just confused like, I mean, we're still going?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  To contacts are people who reach out to use it.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah. But like that's going to be all of the end users, right? End.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Users and they, when they reach out to hiver, they get created in hiver anyway. Yeah.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah. Okay. We're saying the same thing. Cool. So then I should go ahead, and create all the custom fields because those won't be here. That will probably be, the bigger part of the lift, right? Honestly. Yeah. And it's everything from like, you know, what's your mac OS, what's your Maya version? What's your thing? You know, like all the stuff that helps our technical support, answer all those tickets that are, you know, filled into those various forms that are coming in that's the stuff that's probably most prescient, that said on historic tickets that are closed out, maybe not as relevant and urgent. Most of them that are closed like, oh,
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  for the new ones, for the new ones, we can help you. Like even like our AI can analyze it and tag it and assign the field, the new ones. No problem. It's just historical stuff and.
+
+Stephen Maloney (stephen@animationmentor.com):
+  And I want to see kind of what your AI smarts is capable of doing. Cause that also dovetails into like how elaborate do we make our forms, right? Cause there's going to be direct information required in the forms and whether that's getting, you know, pushed from a mapping from the forms in the zap or the AI is inferring it based on the information that's going there. Could be something that we just play with, as we're going on, yeah.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Absolutely. So if the content comes in, our AI is going to be able to read it for both across subject line, body, whatever it needs to do. So, for example, so, what are something that are our AI tasks? What we call them tasks which are essentially just like workflows that you can set up? Let me just find one that is easy. Okay. So new conversation is received. It searches the subject and the body of the email and the prompt, right? This is where it gets away from keywords, centric, just like very one dimensional prompts. It goes into like where you can actually give it like a subjective prompt which is check if there's any product feedback in the email. If, yes, apply the product feedback tag and extract the feedback as a note. So, this is just an example of what, so you can do a lot more, you can add tag, you can add feedback. There's a lot more that you can do.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. No, I mean, I think that's going to be helpful stuff like I think we're going to, I don't know how much out of the gate. I'm I've got a couple folks that will need, to convince on the process of stuff, but I think we'll get over those hurdles. What else then on the migration? So recommendation is we pick an X date X time. What we'll do is we'll have form set up in the meantime. Those forms will cut over. We'll no longer take tickets from the Zendesk forms. We also do have pass through emails in Zendesk. I'm assuming they'll you know, we'll cut those over and route those to our new Google group. And those start coming through that's fine. Then we'll have you kick off a migration effort, which is reasonable. I can provide a matrix for custom fields that are in there. I'll build out those custom fields already in our hiver instance. Now that we're in kind of, our prod go live version of stuff, so that all smells on the level. In terms of the migration stuff, what do we do for like historic tickets versus stuff that's like active, right? We are going to have tickets that from the Zendesk perspective are, you know, open or pending or, you know, more active, they're not closed. If we're kicking off a migration, those are the ones that we actually want over there first. And that matter the most, right? Of course, in the historic one. Is that just all taken by that XML export and you?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  XML export and they will come into hiver as open tickets. And then all the closed ones will go as closed tickets?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. That pending status in between the it'll infer those as well, right? It'll look for those.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, whatever it is. So, if it's open pending and closed, it's very straightforward. It comes in the same way.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. I mean, Zendesk has that silly thing where it's closed versus archived and are solved versus closed. Like, I mean, you're going to map those conflate those together and just put them to closed in hiver, right? Yeah. Okay. What other things, do you recommend for, you know, migration of this nature now that I'm getting into it?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. So essentially, what we want to do now, Stephen, is we have a standard onboarding plan that I just shared, we'll if everything looks good and we're we agreed and we want to move forward. We'll we just need sort of confirmation of that. And then once we have that confirmation of partnership, we'll raise a request with our CS team. They'll assign a CS rep to you, that will involve four phases. Kickoff and scoping is fairly kickoff is fairly simple. We've already done that a little bit. We want to primarily focus on the configuration and the optimization piece, which is making sure that all your workflows and all the AI, everything that you need for this to work is running smoothly. And then of course, we train the team parallelly. The idea is we get most of this done before that go live date. And then on that go live date, we cut the email traffic over. We start like sort of routing stuff to the Google groups and to hiver, and we also get the XML imported over, okay? And.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Just, we were talking about yesterday, but we're going forward with your recommendation. So, I've created essentially as a separate Google group one, Google group, that's gonna be the main one and we're gonna have everything added to that Google group one inbox. And then we're basically just gonna route people into different views, okay?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  So,
+
+Stephen Maloney (stephen@animationmentor.com):
+  that keeps it simple because all of the customer information isn't split across inboxes.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Across inboxes. So, this is a new Google group, Stephen, that's not receiving any traffic at the moment.
+
+Stephen Maloney (stephen@animationmentor.com):
+  I created it earlier in the week and there's been like three or four test things in there, but yeah, no, it's pretty.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah. That's no. I meant like actual customer information, cool. No.
+
+Stephen Maloney (stephen@animationmentor.com):
+  No, no, that, that's like. So basically everything historically has been supported animation mentor. This one I'm using help at animation mentor and we're gonna route support and bursar and billing and all those things to help at. So then, so then it all just goes to this new one. I don't think outward facing me, we're ever going to tell anyone that it's help at underneath the hood, right? Like it's going to be those other ones. Now, I don't know what that means for sendaz, but I believe sendaz is mostly just what I'm going to call the agent, right? Is what it's going to come back as, right? So the person might email support an animation mentor. It's going to get forwarded to help at animation mentor, which creates the hiver ticket. It's going to get signed to an individual. Whoever replies. It's going to be mars at animation mentor replying, right? It.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  And if that's what you want, but we also give you the option of sending emails as help at and support that because they're all part of the same domain. So you can choose. So hiver takes care of it.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Can you show me where that is? I'm okay. So here's sendaz. Okay. Yeah. So.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  I've got Jeevan which is my default, of course, but I've also got support and finance and HR and success. Now, success is actually connected to support as an alias, right? But I've got the ability to send that, send emails as success as well. Now, the idea is if an email is sent to success, it comes into support. But when I hit reply, I've chosen this option and this is the one toggle that is beautiful. It works really well with hiver, which is reply from the same address the message is sent to. So Gmail takes care of switching. And the best part is, it understands that the first email came into success originally. So it replies from success.
+
+Stephen Maloney (stephen@animationmentor.com):
+  That's super slick. I'm trying to think it that makes a lot of sense. And if they want to reply as themselves.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  It's easy. It's as simple as they'd.
+
+Stephen Maloney (stephen@animationmentor.com):
+  just be switching, their sendaz and if I don't want them to have it, I here's… the thing, there are some team members that like having their name out there as part of the sales, the admissions that those things definitely want to have it. Whereas, you know, the technical support side of the house, they love to max themselves as much as possible, which I think we all on the call understand right? Where it's like, you know, they'll reply as technical support and not their own name. That less they get hit up with all the kinds of things.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Of course. So, it's a per person setting, which is great, Stephen, right? Okay. So with the people that want to be replied from their own email address, they just have to make that default and then choose that always reply from the default email address. And that applies to them. For people who are not who don't want that to necessarily happen. What they can do is they can simply go into here and just choose this one. And then hiver takes care of choosing it. Okay?
+
+Stephen Maloney (stephen@animationmentor.com):
+  So, per user, I can tell people set this flag set, don't set this flag and that's it. Okay. They can always change the other aliases that they've got and, you know, under their account though exactly.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Okay.
+
+Stephen Maloney (stephen@animationmentor.com):
+  That's helpful. What does that mean for historic or in flight tickets? Same thing. Maybe I should re, ask my question, historic tickets that are like open or pending. Well, maybe I'll even back up even another level. Do I need to create all of the agent accounts I expect prior to the migration or will it recognize? Hey, the requester is Jeevan, the assignee is. Stephen doesn't exist in the system. When you migrate, create an account for Stephen?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  No, you'll have to add them as users first. I'll.
+
+Stephen Maloney (stephen@animationmentor.com):
+  have to add them as users first. Yeah, prior to the migration that.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Is correct. And I.
+
+Stephen Maloney (stephen@animationmentor.com):
+  should do that for, I mean, we have active staff. And then there's obviously historic staff that like aren't here anymore. If I don't those would.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Just be unassigned. So, I would assume that, those would have closed tickets assigned to them. They would just be unassigned. Okay?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Well, you will be able to see who their responses though, and who the individual was responding to all of.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Those responses, are tracked. Now, the best part is Stephen. So let's say, I want to like let you close the ticket six months ago and somehow it gets a reply. However, all it does is it realizes that it gets a new reply and it'll bring it back home. Yeah, yeah.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. And if it's unassigned from somebody way historic, that's no longer here and they reply to that, just come back unassigned, in the bucket. Yeah. Okay. That makes sense. Trying to think of other things that we should do. What other recommendations might you all have for me? As I, as I dive in here.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Just trying to think through some of the other items. I think we've covered most of it. I think apart from that, what we want to do Stephen, is essentially, we get to a space where all of your team members are added. They're trained, they know what they're talking about. So, when that cut off date happens when we sort of route traffic start routing traffic to hiver for the first time, when incoming emails or incoming tickets start hitting hiver, we are essentially in a space where we can go in and your team knows exactly what to do. So that's what we work towards. So we'll set a date and work backwards from there. And my team and I will be able to support you, get up and running up until that date.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Okay. Well, then I think that the biggest next hurdle then is probably for me to work around and get our form set up.
+
+Stephen Maloney (stephen@animationmentor.com):
+  I think we need that set up before anything else is ready. And… yeah, I don't think I have too many other hurdles beyond that.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Sure. Sounds good.
+
+Stephen Maloney (stephen@animationmentor.com):
+  But maybe I'll see if I can get him to do some of that tomorrow. And then maybe we can touch base on a zap, you know, review maybe the first part of next week and make sure that's coming across.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Yeah, absolutely. Okay.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Maybe we can pause for now then.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  I'm sorry, I coughed right as.
+
+Stephen Maloney (stephen@animationmentor.com):
+  You were saying, no, I said, let's go ahead and pause for now, then appreciate you guys time. No.
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  Worries. Yeah, sounds good. Maybe we can have some time for next week to review the forms and how everything goes. And then we'll pick it up from there.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Sounds good. Thanks, fellas. Appreciate it.
+
+Matthew P (matthew.p@grexit.com):
+  Yeah, Stephen, can we put something on?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Oh, no. Did matt cut out for you guys? Hey?
+
+Matthew P (matthew.p@grexit.com):
+  Sorry, can you hear me?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Yeah, you paused.
+
+Matthew P (matthew.p@grexit.com):
+  Awesome. Yeah. I just want to put something in the calendar since we got everybody on the call. It's easier right now. Let me pull this up here next.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Week is February already? Look at that. Where'd that go?
+
+Matthew P (matthew.p@grexit.com):
+  Yeah, right. January was just, I don't know we.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Just came back from things. It's crazy it.
+
+Matthew P (matthew.p@grexit.com):
+  Was a haze that's the word I was looking for. I was like, what?
+
+Stephen Maloney (stephen@animationmentor.com):
+  Can we do Tuesday? Give me a little bit of time. If we don't have our forms together, I might wave off the call. I think we need to get that ready on our side before I circle back and waste you guys time, but let's maybe pencil in. Tuesday. Does nine 30 my time work for you all?
+
+Matthew P (matthew.p@grexit.com):
+  Let's see here Tuesday at nine 30. Yeah, it's like, no, it looks like Jeevan's double booked here. Jeevan, are you available Tuesday on the third or are you out at that time?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  What time are we saying?
+
+Matthew P (matthew.p@grexit.com):
+  It's going to be well. I know you're busy at nine 30, but what about 10? I can do 10, 10 pacific,, 10 pacific on the third?
+
+Jeevan Radhakrishna (jeevan@grexit.com):
+  I think we should be fine.
+
+Matthew P (matthew.p@grexit.com):
+  Okay. Yeah, we'll put that there if we need to move. I don't think we will, but I think that'll work. So, let's do that 10 am pacific on Tuesday, the third.
+
+Stephen Maloney (stephen@animationmentor.com):
+  That sounds good. Okay?
+
+Matthew P (matthew.p@grexit.com):
+  Perfect. We'll all send that over and then, yeah, if any questions come up in the meantime, let us know, Jeevan.
+
+Stephen Maloney (stephen@animationmentor.com):
+  Sounds good. Fellas. Appreciate it. Thanks. Bye. Take care.

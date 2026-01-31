@@ -1,0 +1,44 @@
+{
+  "transcript_id": "06_2649086709896496298",
+  "call_id": "2649086709896496298",
+  "title": "Hiver Follow Up with Digi",
+  "started": "2026-01-30T22:30:52+05:30",
+  "signals": [
+    {
+      "Theme": "AI Response Accuracy",
+      "Ask": "The AI must provide accurate responses based on uploaded training materials.",
+      "Priority": "High",
+      "Evidence": "Hiver gave us this information on the right, which… was incorrect. Basically all of it was incorrect."
+    },
+    {
+      "Theme": "Customer-Facing AI",
+      "Ask": "We want a customer-facing AI experience to handle level one support cases.",
+      "Priority": "High",
+      "Evidence": "Ultimately, we want a customer facing AI experience that's going to make it easier for us to eliminate… more cases at level one."
+    },
+    {
+      "Theme": "Integration with Netsuite",
+      "Ask": "Hiver must integrate seamlessly with Netsuite for case management.",
+      "Priority": "High",
+      "Evidence": "We don't want to introduce another source of truth and source of record for any formal emails with customers."
+    },
+    {
+      "Theme": "Knowledge Base Utilization",
+      "Ask": "The AI should suggest relevant knowledge base articles during customer interactions.",
+      "Priority": "Medium",
+      "Evidence": "I would want copilot to not just build the answer himself."
+    },
+    {
+      "Theme": "Long-Term Support",
+      "Ask": "We need assurance that ongoing adjustments to the AI will not be a recurring burden.",
+      "Priority": "Medium",
+      "Evidence": "I just wonder how this looks long term or will we have to continue to, you know, meet with you guys to tweak every time we roll out a new product line."
+    },
+    {
+      "Theme": "Analytics Requirements",
+      "Ask": "We require detailed analytics on AI interactions and case resolutions.",
+      "Priority": "Medium",
+      "Evidence": "I would want to be able to have analytics on how many questions do we get a day, a week, a month, a quarter?"
+    }
+  ]
+}

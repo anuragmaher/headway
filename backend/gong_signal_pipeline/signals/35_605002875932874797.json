@@ -1,0 +1,44 @@
+{
+  "transcript_id": "35_605002875932874797",
+  "call_id": "605002875932874797",
+  "title": "Hiver Sync",
+  "started": "2026-01-29T20:29:29+05:30",
+  "signals": [
+    {
+      "Theme": "Data Migration",
+      "Ask": "We need to understand the timeline for migrating ticket history from Zendesk to Hiver.",
+      "Priority": "High",
+      "Evidence": "If we can understand that, we can give you a more clear cut timeline."
+    },
+    {
+      "Theme": "Historical Data",
+      "Ask": "We want to determine how far back we should retrieve ticket history for migration.",
+      "Priority": "High",
+      "Evidence": "I'm gonna find out from the team, how far they want to go back."
+    },
+    {
+      "Theme": "Client Onboarding",
+      "Ask": "We need to tie new client domains with the respective client care representatives.",
+      "Priority": "High",
+      "Evidence": "We have to be able to tie that domain with the client care rep."
+    },
+    {
+      "Theme": "Dynamic Sheet Access",
+      "Ask": "We need to connect a live sheet for automatic updates of client information.",
+      "Priority": "High",
+      "Evidence": "Because they would need that."
+    },
+    {
+      "Theme": "Knowledge Base Integration",
+      "Ask": "We want to integrate our existing knowledge base with Hiver's system.",
+      "Priority": "Medium",
+      "Evidence": "We would want it to go to Hiver, sure, or that customer portal that you guys have."
+    },
+    {
+      "Theme": "Email Privacy",
+      "Ask": "We need assurance that private emails will not be visible to other users in Hiver.",
+      "Priority": "Medium",
+      "Evidence": "I wanted to just confirm that... if somebody emails them directly, that's private."
+    }
+  ]
+}

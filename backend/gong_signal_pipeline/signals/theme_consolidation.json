@@ -1,0 +1,674 @@
+{
+  "themes": [
+    {
+      "id": 1,
+      "name": "AI Capabilities",
+      "sub_themes": [
+        {
+          "id": "1_1",
+          "name": "AI Automation"
+        },
+        {
+          "id": "1_2",
+          "name": "AI Chat Use Case"
+        },
+        {
+          "id": "1_3",
+          "name": "AI Feature Timing"
+        },
+        {
+          "id": "1_4",
+          "name": "AI Functionality Testing"
+        },
+        {
+          "id": "1_5",
+          "name": "AI Response Accuracy"
+        },
+        {
+          "id": "1_6",
+          "name": "AI Tool Requirements"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Analytics and Reporting",
+      "sub_themes": [
+        {
+          "id": "2_1",
+          "name": "Analytics Needs"
+        },
+        {
+          "id": "2_2",
+          "name": "Analytics Requirements"
+        },
+        {
+          "id": "2_3",
+          "name": "Analytics and Reporting"
+        },
+        {
+          "id": "2_4",
+          "name": "Reporting and Analytics"
+        },
+        {
+          "id": "2_5",
+          "name": "Reporting and Visibility"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Automation Features",
+      "sub_themes": [
+        {
+          "id": "3_1",
+          "name": "Automation Features"
+        },
+        {
+          "id": "3_2",
+          "name": "Automation Functionality"
+        },
+        {
+          "id": "3_3",
+          "name": "Automation Optimization"
+        },
+        {
+          "id": "3_4",
+          "name": "Automation Templates"
+        },
+        {
+          "id": "3_5",
+          "name": "Automation Workflow"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Billing and Pricing",
+      "sub_themes": [
+        {
+          "id": "4_1",
+          "name": "Billing Flexibility"
+        },
+        {
+          "id": "4_2",
+          "name": "Billing Integration"
+        },
+        {
+          "id": "4_3",
+          "name": "Cost Clarity"
+        },
+        {
+          "id": "4_4",
+          "name": "Cost Efficiency"
+        },
+        {
+          "id": "4_5",
+          "name": "Cost Flexibility"
+        },
+        {
+          "id": "4_6",
+          "name": "Cost-Effectiveness"
+        },
+        {
+          "id": "4_7",
+          "name": "Pricing Assurance"
+        },
+        {
+          "id": "4_8",
+          "name": "Pricing Concerns"
+        },
+        {
+          "id": "4_9",
+          "name": "Pricing Flexibility"
+        },
+        {
+          "id": "4_10",
+          "name": "Pricing Structure"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Client Communication",
+      "sub_themes": [
+        {
+          "id": "5_1",
+          "name": "Client Communication"
+        },
+        {
+          "id": "5_2",
+          "name": "Client Onboarding"
+        },
+        {
+          "id": "5_3",
+          "name": "Communication"
+        },
+        {
+          "id": "5_4",
+          "name": "Communication Channels"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Contract and Negotiation",
+      "sub_themes": [
+        {
+          "id": "6_1",
+          "name": "Contract Flexibility"
+        },
+        {
+          "id": "6_2",
+          "name": "Negotiation Avoidance"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Customer Support",
+      "sub_themes": [
+        {
+          "id": "7_1",
+          "name": "Customer Satisfaction Features"
+        },
+        {
+          "id": "7_2",
+          "name": "Customer Service Transition"
+        },
+        {
+          "id": "7_3",
+          "name": "Customer Support"
+        },
+        {
+          "id": "7_4",
+          "name": "Customer Support Focus"
+        },
+        {
+          "id": "7_5",
+          "name": "Support Availability"
+        },
+        {
+          "id": "7_6",
+          "name": "Support System"
+        },
+        {
+          "id": "7_7",
+          "name": "Support Team Structure"
+        },
+        {
+          "id": "7_8",
+          "name": "Support and Onboarding"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Customization and Integration",
+      "sub_themes": [
+        {
+          "id": "8_1",
+          "name": "Custom Domain Routing"
+        },
+        {
+          "id": "8_2",
+          "name": "Custom Fields Mapping"
+        },
+        {
+          "id": "8_3",
+          "name": "Custom Fields and Analytics"
+        },
+        {
+          "id": "8_4",
+          "name": "Custom Objects Integration"
+        },
+        {
+          "id": "8_5",
+          "name": "Customization Needs"
+        },
+        {
+          "id": "8_6",
+          "name": "Customization of Reports"
+        },
+        {
+          "id": "8_7",
+          "name": "Integration Capabilities"
+        },
+        {
+          "id": "8_8",
+          "name": "Integration Flexibility"
+        },
+        {
+          "id": "8_9",
+          "name": "Integration Requirements"
+        },
+        {
+          "id": "8_10",
+          "name": "Integration with AI"
+        },
+        {
+          "id": "8_11",
+          "name": "Integration with EMRs"
+        },
+        {
+          "id": "8_12",
+          "name": "Integration with ERP"
+        },
+        {
+          "id": "8_13",
+          "name": "Integration with Existing Systems"
+        },
+        {
+          "id": "8_14",
+          "name": "Integration with HubSpot"
+        },
+        {
+          "id": "8_15",
+          "name": "Integration with Netsuite"
+        },
+        {
+          "id": "8_16",
+          "name": "Integration with Other Tools"
+        },
+        {
+          "id": "8_17",
+          "name": "Integration with Zendesk"
+        },
+        {
+          "id": "8_18",
+          "name": "Integration with Zoho"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Data Management",
+      "sub_themes": [
+        {
+          "id": "9_1",
+          "name": "Data Migration"
+        },
+        {
+          "id": "9_2",
+          "name": "Data Storage"
+        },
+        {
+          "id": "9_3",
+          "name": "Historical Data"
+        },
+        {
+          "id": "9_4",
+          "name": "Historical Data Access"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Decision Making",
+      "sub_themes": [
+        {
+          "id": "10_1",
+          "name": "Decision Timeline"
+        },
+        {
+          "id": "10_2",
+          "name": "Management Decision"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Email Management",
+      "sub_themes": [
+        {
+          "id": "11_1",
+          "name": "Email Assignability"
+        },
+        {
+          "id": "11_2",
+          "name": "Email Automation"
+        },
+        {
+          "id": "11_3",
+          "name": "Email Confirmation"
+        },
+        {
+          "id": "11_4",
+          "name": "Email Management"
+        },
+        {
+          "id": "11_5",
+          "name": "Email Privacy"
+        },
+        {
+          "id": "11_6",
+          "name": "Email Sync"
+        },
+        {
+          "id": "11_7",
+          "name": "Email and Ticket Integration"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Feedback and Evaluation",
+      "sub_themes": [
+        {
+          "id": "12_1",
+          "name": "Feedback Mechanism"
+        },
+        {
+          "id": "12_2",
+          "name": "Evaluation Timeline"
+        },
+        {
+          "id": "12_3",
+          "name": "Trial and Evaluation"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Freemium and Trial",
+      "sub_themes": [
+        {
+          "id": "13_1",
+          "name": "Freemium Option"
+        },
+        {
+          "id": "13_2",
+          "name": "Trial Extension"
+        },
+        {
+          "id": "13_3",
+          "name": "Trial Period"
+        },
+        {
+          "id": "13_4",
+          "name": "Trial Period Issues"
+        },
+        {
+          "id": "13_5",
+          "name": "Trial and Onboarding"
+        },
+        {
+          "id": "13_6",
+          "name": "Trial and Pricing Clarity"
+        },
+        {
+          "id": "13_7",
+          "name": "Trial and Subscription"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Functionality and Features",
+      "sub_themes": [
+        {
+          "id": "14_1",
+          "name": "Future Functionality Discussion"
+        },
+        {
+          "id": "14_2",
+          "name": "Help Desk Functionality"
+        },
+        {
+          "id": "14_3",
+          "name": "Short-term Functionality"
+        },
+        {
+          "id": "14_4",
+          "name": "Testing Efficiency"
+        },
+        {
+          "id": "14_5",
+          "name": "Testing and Flexibility"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Knowledge Base",
+      "sub_themes": [
+        {
+          "id": "15_1",
+          "name": "Knowledge Base Access"
+        },
+        {
+          "id": "15_2",
+          "name": "Knowledge Base Creation"
+        },
+        {
+          "id": "15_3",
+          "name": "Knowledge Base Integration"
+        },
+        {
+          "id": "15_4",
+          "name": "Knowledge Base Limitations"
+        },
+        {
+          "id": "15_5",
+          "name": "Knowledge Base Migration"
+        },
+        {
+          "id": "15_6",
+          "name": "Knowledge Base Utilization"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Language and Support",
+      "sub_themes": [
+        {
+          "id": "16_1",
+          "name": "Language Support"
+        },
+        {
+          "id": "16_2",
+          "name": "Long-Term Support"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Mobile and User Access",
+      "sub_themes": [
+        {
+          "id": "17_1",
+          "name": "Mobile Access"
+        },
+        {
+          "id": "17_2",
+          "name": "User Access"
+        },
+        {
+          "id": "17_3",
+          "name": "User Account Creation"
+        },
+        {
+          "id": "17_4",
+          "name": "User Availability"
+        },
+        {
+          "id": "17_5",
+          "name": "User Experience"
+        },
+        {
+          "id": "17_6",
+          "name": "User Licensing"
+        },
+        {
+          "id": "17_7",
+          "name": "User Management"
+        },
+        {
+          "id": "17_8",
+          "name": "User Onboarding"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Scalability and Reliability",
+      "sub_themes": [
+        {
+          "id": "18_1",
+          "name": "Scalability"
+        },
+        {
+          "id": "18_2",
+          "name": "System Reliability"
+        },
+        {
+          "id": "18_3",
+          "name": "System Setup"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Task Management",
+      "sub_themes": [
+        {
+          "id": "19_1",
+          "name": "Centralized Task Tracking"
+        },
+        {
+          "id": "19_2",
+          "name": "Task Assignment"
+        },
+        {
+          "id": "19_3",
+          "name": "Task Management"
+        },
+        {
+          "id": "19_4",
+          "name": "Task Visibility"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Team Dynamics",
+      "sub_themes": [
+        {
+          "id": "20_1",
+          "name": "Team Access"
+        },
+        {
+          "id": "20_2",
+          "name": "Team Feedback"
+        },
+        {
+          "id": "20_3",
+          "name": "Team Size Consideration"
+        },
+        {
+          "id": "20_4",
+          "name": "Team Size Suitability"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Visibility and Tracking",
+      "sub_themes": [
+        {
+          "id": "21_1",
+          "name": "Visibility Issues"
+        },
+        {
+          "id": "21_2",
+          "name": "Status Tracking"
+        },
+        {
+          "id": "21_3",
+          "name": "Sentiment Tracking"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Warranty and Compliance",
+      "sub_themes": [
+        {
+          "id": "22_1",
+          "name": "HIPAA Compliance"
+        },
+        {
+          "id": "22_2",
+          "name": "Security Compliance"
+        },
+        {
+          "id": "22_3",
+          "name": "Warranty Tracking"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "name": "Miscellaneous",
+      "sub_themes": [
+        {
+          "id": "23_1",
+          "name": "Investment in Current Tools"
+        },
+        {
+          "id": "23_2",
+          "name": "Proposal Request"
+        },
+        {
+          "id": "23_3",
+          "name": "Rapid Deployment"
+        },
+        {
+          "id": "23_4",
+          "name": "Real Inbox Connection"
+        },
+        {
+          "id": "23_5",
+          "name": "Spam Management"
+        },
+        {
+          "id": "23_6",
+          "name": "Shared Drafts"
+        },
+        {
+          "id": "23_7",
+          "name": "Shared Inbox Management"
+        },
+        {
+          "id": "23_8",
+          "name": "Shared Inbox Solution"
+        },
+        {
+          "id": "23_9",
+          "name": "Tagging Functionality"
+        },
+        {
+          "id": "23_10",
+          "name": "Tagging System"
+        },
+        {
+          "id": "23_11",
+          "name": "Ticket Status Handling"
+        },
+        {
+          "id": "23_12",
+          "name": "Ticketing Structure"
+        },
+        {
+          "id": "23_13",
+          "name": "Training Support"
+        },
+        {
+          "id": "23_14",
+          "name": "WhatsApp Channel Request"
+        }
+      ]
+    }
+  ]
+}

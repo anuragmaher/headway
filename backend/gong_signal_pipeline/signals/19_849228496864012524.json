@@ -1,0 +1,38 @@
+{
+  "transcript_id": "19_849228496864012524",
+  "call_id": "849228496864012524",
+  "title": "Hiver Demo | Huseni <> Yukta",
+  "started": "2026-01-30T15:00:20+05:30",
+  "signals": [
+    {
+      "Theme": "Knowledge Base Creation",
+      "Ask": "The system must allow for easy creation and management of an internal knowledge base.",
+      "Priority": "High",
+      "Evidence": "I just want to create a system where we can respond very quickly to the emails."
+    },
+    {
+      "Theme": "Email Management",
+      "Ask": "The tool should enable quick responses to customer emails by integrating with our existing email system.",
+      "Priority": "High",
+      "Evidence": "I wanted a tool which helps us initially at least for the ticketing purpose."
+    },
+    {
+      "Theme": "Automation Features",
+      "Ask": "The system must support automation to filter and close non-actionable emails.",
+      "Priority": "Medium",
+      "Evidence": "There are a couple of emails which does not require our like mostly someone like notification."
+    },
+    {
+      "Theme": "User Licensing",
+      "Ask": "We need to start with a minimum of two user licenses for the tool.",
+      "Priority": "High",
+      "Evidence": "Initially, we'll go ahead with the two."
+    },
+    {
+      "Theme": "Integration with Other Tools",
+      "Ask": "The tool should integrate seamlessly with our existing Gmail setup without forwarding emails to a separate server.",
+      "Priority": "High",
+      "Evidence": "I can't like because all the sent messages also, I can't have a track."
+    }
+  ]
+}

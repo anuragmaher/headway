@@ -1,0 +1,118 @@
+================================================================================
+Call: Hiver Demo | Mark <> Alex
+Date: 2026-01-30T23:01:46.302+05:30
+================================================================================
+
+Alex Krumm (alexander.k@grexit.com):
+  one of the senior account executives over here at hiver, been in the help desk space for the last about 11 years. So I have a fair amount of experience here. We can take the conversation a few different ways. But my thought would love to learn about yourself what's bringing you to the table and see if we can solve some of your problems. Yeah sure. No problem. I'll kick it over to you.
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  Yeah, I mean, we have an E commerce I'm joined here by Vlad. I don't know if he's on the screen. He's too handsome to be on the camera. Anyway, we're an E commerce company… gotduckless. Com. We just need a better way to track our warranty process with products that we sell. We sell a track equipment. And so there's a couple different touch points for product issue or technical support resolution. Sometimes it requires there to be interaction with distributors as well as manufacturers. There's different touch points. Sometimes the issues can be resolved without contacting anyone. And sometimes it requires parts to be issued from the manufacturer. We need a better system. We use Shopify right now. I probably should have included that we use Shopify for our order management system. And that's where obviously, if someone has ordered from us, that's where we're actually dealing with a technical support issue. I guess the main things that we care about is integration. So whether or not there's open apis to maybe connect to Shopify, to kind of better track the process of ticket, kind of whether there's resolutions or whether there's still outstanding items. So that's a little bit about us just in a nutshell why we contacted you and what we're looking for? Okay?
+
+Alex Krumm (alexander.k@grexit.com):
+  And in terms of the systems you're using today, are you on outlook or Gmail… we're on?
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  Gmail, yes, for email, yes.
+
+Alex Krumm (alexander.k@grexit.com):
+  And I guess kind of like the core problem is somebody writes in over email, says that they have a warranty problem or an equipment problem, then you'll go to Shopify to see if, you know, the order's already being managed or I guess tell me a little bit about the flow of how people reach out and how we solve for it. Yeah.
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  That's a voice actually not chat, not email. We can keep, we can consider emailing but I think it's a voice basically activated. Yeah, I mean, we have two. Well… I'll say all three because it happens in all three but let's integrate just one voice first. And then we'll add chat and email later on. Voice is the hardest. The email and the chat are kind of the easiest. Oh, that's okay. Then email just one for now. Okay. Whatever we have. Yeah, we have people contacting us all three ways. Our main one that people communicate issues with us is via email or, sorry, via voice. So people call in, they explain, hey, this is what's going on. It's way too much to email way too much to chat. And so people call in saying, hey, my compressor's not working. I've tried this. I've tried that. I've tried this. What else can I do at some point? There's you know, at some point we need to contact further technical support from other parties and that's where things are starting to get convoluted, where, you know, we lose track of statuses. And then at the end of the day, the end user or the end consumer is scratching their heads because they have no idea what's going on. So we need a better way to track it ourselves if we do want to. If it's easier integration with just one, then yes, we can start with, I'd say voice and then we can just input manually if something comes in through chat or email. That way, it's you know, not, there's not any oversight and, or it's easier to integrate. I'd rather do that but up to you. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  And for voice, is it who's your voice provider today?
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  I mean, we use nextiva as a VIP. So if, yeah, a phone call comes in, then it would come through nextiva.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. Okay. Thank you for this. I'll tell you a little bit about hiver. I'm not sure if we're going to be the perfect solution for it. What you're trying to solve for sure. The reason being is you almost want more like a pure plate ticketing system. Is what I'm hearing that might integrate with Shopify. The reason being is like phone calls are so heavy and most ticketing platforms don't do a great, the ticketing platform for like email chat and other channels and the telephony platform have historically been separated like two different vendors build this. And, you know, today's day and age, like sure, there's a lot of integrations of things, but there's still a gap… and hiver does have a gap in that. We only work with Aircall.
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  But.
+
+Alex Krumm (alexander.k@grexit.com):
+  how this could potentially work with Gmail? We have actually two different programs. We have a Gmail, where we can set up a shared inbox domain or Google group, where all support related emails will come into here. It'll… start off as unassigned. So like all emails come here, they're unassigned. Here are caches writing in for some sort of billing support. But what makes this interesting is on the right hand rail, we're creating a ticketing experience. So like who's this assigned to statuses?
+
+Alex Krumm (alexander.k@grexit.com):
+  Being able to have custom attributes. So this is like related to your business. Then… we do have a connected app ecosystem. So we could be showing like a Shopify card related to this order with like a single click out there. But… the biggest thing here is being able to have statuses on the conversation and then being able to manage the conversation directly from this view. And then anyone else in your team could come in, see this open ticket or closed ticket and hop in and join the conversation that's… kind of our value prop. I'm wondering if you're more looking for something that's I don't know more akin to like a Jira Monday or something like that where you're creating an internal ticket to track something and it's less about like the communication hub with the client. So… I would love to hear that.
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  Yes, and no, I think it's both. I think I agree with you whether it's Trello or Monday or whatever the case is for. I guess the various stages of communication. I think… with the way I want to build it out is I want to build it out for a team rather than an individual. So, in this case, I see that there is some value, but yes… I, I'm not sure that this would be the perfect solution. Yeah. And.
+
+Alex Krumm (alexander.k@grexit.com):
+  I do have integrations to Trello and other apps like I can create an object or card directly in Trello from this view.
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  Okay. But it's not integrated with Shopify, right? It.
+
+Alex Krumm (alexander.k@grexit.com):
+  Is integrated with shop? Are my solutions integrated with Shopify?
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  And how does that… look like integration?
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  So, this is.
+
+Alex Krumm (alexander.k@grexit.com):
+  The Salesforce card, but it's the same concept of showing me like order information and then a deep link to the order. Is.
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  it pulling information from Shopify or actually pushing it's.
+
+Alex Krumm (alexander.k@grexit.com):
+  just, it's pulling information from Shopify. Okay?
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  Yeah, we need, yeah, we need actually push pull and pull, push you.
+
+Alex Krumm (alexander.k@grexit.com):
+  Want to push an order to Shopify. We.
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  Need to push the status of this order or even nodes back to Shopify?
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  That's an interesting concept. And this is based on email, right?
+
+Alex Krumm (alexander.k@grexit.com):
+  Email and chat. So we also have a chat solution. Got it.
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  Okay. All right. Yeah, we need actually push information back to sort trying to figure out, you know, this is what, exactly what we're trying to figure out to make sure if trust in a tackle support will give some notes or whatever. Then salespeople can actually read the status from Shopify instead of going back to another software, another app to follow up on the ticket.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. Do.
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  You know, any apps that like integrates with Shopify, you could recommend. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  So, I actually used to work at a bunch of these companies or work at one of these companies. So customer with a K, how many seats do you need or users need access to this?
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  As… of right now, we only have one tech support manager and he's responsible for pretty much all things tech support. That would probably change. But as of right now, I'd like to I'm just building it for him. Essentially, I could go girl boy, I would want to set up a system that will be.
+
+Alex Krumm (alexander.k@grexit.com):
+  Conducive.
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  to scale. But as of right now, I only have a need for one technical support Guy. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  Then customer is not going to be the right fit. They only want to sell you 10 seats or more. I would say Zendesk is your best option because it combines both the communication channels, level of integrations to other systems like nextiva, Shopify, and has the internal workspace of being able to leave notes on like internal notes on a ticket. You could also look at like Freshdesk or zoho.
+
+Alex Krumm (alexander.k@grexit.com):
+  Those would be kind of my directions.
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  Got it. Okay. Well, thanks for your, thanks for your help and sorry, it's, not a perfect fit, but it's all good. Do these calls? Yeah. Well.
+
+Alex Krumm (alexander.k@grexit.com):
+  Nice to meet you. Good luck in your journey I.
+
+Mark Duchev (mark.duchev@elmarcorp.com):
+  Appreciate it, man. All right. See you.

@@ -1,0 +1,439 @@
+================================================================================
+Call: Hiver Sync
+Date: 2026-01-29T20:32:26+05:30
+================================================================================
+
+Alex Krumm (alexander.k@grexit.com):
+  good morning or? Good evening.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  Good morning.
+
+Alex Krumm (alexander.k@grexit.com):
+  I'm Alex. I'm Jeevan's, colleague. He's technically my boss, but I'm one of the account executives over here in New York.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  Okay. I'm Eugene, I'm a colleague of Alejandra and I'm located in Minsk.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Oh, nice. I.
+
+Alex Krumm (alexander.k@grexit.com):
+  Have not been to Belarus yet, but I want to go. Minsk is in Belarus, right?
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  Yep. It's the capital of Belarus.
+
+Alex Krumm (alexander.k@grexit.com):
+  Right. I thought it was.
+
+Alex Krumm (alexander.k@grexit.com):
+  And how have the conversations been going? I know that you were looking at a few other softwares to potentially replace zoho?
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  Yes, we are looking for some AI tools that we need to use in tickets qualifying maybe to suggest some answers to the clients and something else. We are trying to use zoho AI tools, but we don't satisfy with that because a lot of questions need to be manually replaced, maybe something like this.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  I see. Yeah, hey, Alex and Eugene, I'm sorry, we're late. Hey.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  Alejandra. Good morning doing.
+
+Alex Krumm (alexander.k@grexit.com):
+  Well, good, double, Alex.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Yes. Well.
+
+Alex Krumm (alexander.k@grexit.com):
+  It's very nice to meet you. I'm Jeevan's counterpart.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Thank you so much. So, Jeevan did an intro and showed us a little bit about the product that you guys have.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  I wanted to deep dive on, you know, how can we really implement this to our platform? How would it look, you know, if it's going to work for everything we need? I'm not sure if evgeny gave you a little intro of what we're looking for?
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  Just a little bit.
+
+Alex Krumm (alexander.k@grexit.com):
+  I listened to the last call recording as well. So, okay, perfect. It sounds like to summarize… what I've heard you're looking for a platform to help fully automate L1 interactions, empower the L2 team to, you know, resolve more conversations? And it sounds like your L3 team overall, kills it in a good way.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Then in,
+
+Alex Krumm (alexander.k@grexit.com):
+  regards to other systems. It sounded like Jira Salesforce are like kind of the two main ones you also use slack internally or we could use for like a notification hub. And yeah, that's kind of my lay of the land that I understand.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Yeah, perfect. That's mainly what we need to do.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  Okay. And,
+
+Alex Krumm (alexander.k@grexit.com):
+  I guess, you know, there is like kind of a big difference in hiver versus zoho where our solution is very email centric and we're creating tickets surrounding the emails versus zoho is a little bit more like I would say ticket centric where everything is being created as a ticket. And then you go action things in other systems. I was, I'm curious to hear about your opinion of kind of that bifurcation of ideology. I.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Think that the best person to answer that would be Eugene because he's more, you know, hands on the everyday resolution and overseeing the team that does that, you know,
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  Last year, when we were trying to use the voho, AI agent, we had a lot of trouble because they use gpt light model on the backend. And we have a lot of misunderstood questions and answers from AI tool. And this was a great problem because our lto agents are not so qualified was not so qualified to summarize. And we have a lot of tickets that need to be reviewed by lco.
+
+Alex Krumm (alexander.k@grexit.com):
+  I see. Well, I think we could probably help you out. Maybe we go into a couple use cases of like what does an lto ticket look like in terms of, you know, the challenge that the customer might be facing?
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  We can share a ticket, but how I can?
+
+Alex Krumm (alexander.k@grexit.com):
+  It should be at the bottom of the window. In the middle. There's a green share button.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  Yeah. Give me a second, please.
+
+Alex Krumm (alexander.k@grexit.com):
+  Of course.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  We don't usually use zoom that's why I had trouble getting it in time because it asks for so many things at the beginning. We usually use Google meets.
+
+Alex Krumm (alexander.k@grexit.com):
+  Okay. We'll make the next one a Google meet.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Thank you. We.
+
+Alex Krumm (alexander.k@grexit.com):
+  Also work with a lot of Microsoft accounts and it seems like zoom's even worse for.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  them. Yeah… especially if you're in a mac computer even ask you to like restart just to give permissions for microphone and things that are just like super easy. So, it does take a bit if you're joining at the top of the hour… yes.
+
+Alex Krumm (alexander.k@grexit.com):
+  And Alex, are you in Costa? Rica? Did I hear that right?
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  That is correct. Yes. Wow. I am 100 percent Costa Rican born and raised.
+
+Alex Krumm (alexander.k@grexit.com):
+  Where in Costa Rica, are you from? So?
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  I am from a province that's called derelia that's in the central valley very close to San Jose. Now, I live in San Jose, but I mean to go from here to that province. I'm talking about a 20 minute stop. So it's pretty close by. Everything's close here. We're a small country.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. I've been to Costa Rica twice. Oh, that's nice. I'm an American. So, you know, it's the farthest south. I've ever been. I'm from Massachusetts, but I live in, I've been living in New York City the last 10 years.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Gotcha. It's pretty cold right now, huh?
+
+Alex Krumm (alexander.k@grexit.com):
+  It's super cold. I'm jealous of Costa Rica.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  We're in the mid of summer. So, everything here is beautiful right now. We've been having chilly, well, chilly for us evenings, but I mean, everything, everything's super nice at this time of year from here to may. Perfect weather.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  Yeah.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  That's where we start our rainy season and the rainy season is basically just like a little rain in the afternoon. Yeah. Let's see. Where did I go?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. I went in may once and then the other time I went in November… okay?
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Both a little chilly for a regular December's perfect because you get the winds from the north which is, you know, but it's still sunny. So you get perfect sunsets in December. It's really good.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, it's a beautiful country.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  And, you know, our headquarter office is in New York in white plains. Yeah, no way. Yeah, so.
+
+Alex Krumm (alexander.k@grexit.com):
+  Jeevan's actually moving to white plains.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Oh, okay. That's that's where we have our headquarters.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. And my brother lives in a town called south Salem. So, white plains is kind of the closest major.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  You know, city. Good. Were you able to share Eugene?
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  I need to reload zoom because I just got two permissions for the sharing.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  No problem. You see that's the, when you use mac, that's what happens?
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  Yep. Yeah.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  One of the challenges that we have also, it's with regards to language and understanding because, our RD office is in Minsk, as you know, Eugene is part of that team. There's like 115. It's it's actually, the biggest part of our team, the rest of us are just like probably 20 other people that are located around the world and we work remotely. So, we have offices in definitely… Minsk, which is the biggest one, headquarters in white plains. And we also have an office in leeds in the UK. Here in Costa Rica, there's three, three team members… the director of product myself, and also an account manager that handles everything. But we're a small company. We're a small company, but we really need to, well, I've been appointed to this team. So, my main goal is to automate as much as I can, and to make support more robust for our clients, you know, to be able to resolve quicker.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, that makes sense.
+
+Alex Krumm (alexander.k@grexit.com):
+  And what types of clients do you serve? Is it mostly businesses that are doing like large scale like video editing and delivery. So.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Mostly, we go from TV channels that want to have all their applications, and transmit from there. A lot of isps that have their let's say cable operators, isps. Those are mostly our clients. And then we have like specific ones, for example, if someone has the rights, for example, we had a client in Bolivia, that was the federation, the soccer, the national soccer federation, right? So they have the rights to transmit all the games, national games, that kind of things that are the ones that we carry.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  But.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  mostly, independent channels and isps, is, our go to cable… operators. We're very strong in latin America. We have clients around the world. For example, one of our biggest clients is TVS. They're in Thailand, one of the main channels, so, pretty… much a little bit all over the globe.
+
+Alex Krumm (alexander.k@grexit.com):
+  That's a pretty interesting business.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Yes.
+
+Alex Krumm (alexander.k@grexit.com):
+  And Eugene, it looked like you were sharing.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  I just lost myself.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  Right now… are you able to see me? Yes… for example, our most important client, it's a TVS and the tickets depend on end user subscribers, permissions to connect extra devices to the subscriptions… to analyze the tickets. We need to check the subscriptions, add ons and something else and see logs of connected devices and trying to find out why the customers can't be able to connect the tickets devices. When the subscriptions are allowed… to use 10 devices.
+
+Alex Krumm (alexander.k@grexit.com):
+  So… where do we go from here? So we, you know, we have five subscriptions of 10. How do you start seeing?
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  More, we need to check subscriptions. We need to check add ons. And after that, we need to check… logs of connected devices, and we need to ask… client for the IP addresses and something else of the affected devices that they can connect to these subscriptions.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  So,
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  all the tickets are responded through the same ticket in soho, right? Which is what you were mentioning that it's very ticket centric. So, everything's done from there, for example, if an escalation is needed or anything or they need me to step in or they need to send this to our sales department because the inquiry that they have is not technical support, then we can do internal comments within it or, you know, close a ticket or advise a client that we're going to contact them separately. But most of the conversation, it's done through the ticket which goes to their email as well.
+
+Alex Krumm (alexander.k@grexit.com):
+  okay.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  For example, this ticket is about payment… system and payment errors for specified customers.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  We got information from the ticket and then share this information via slack directly to our team.
+
+Alex Krumm (alexander.k@grexit.com):
+  I see. So, are you sharing that with the truvizion team or internally to your team?
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  Internally to our team, and then we, when we get answers, we transfer to the soho.
+
+Alex Krumm (alexander.k@grexit.com):
+  I see. Okay. This gives me a good idea.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  It's about some… player error for the separate… customers?
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  You say internal comments and then share answers to the truevision team. This is an answer that we got from our team after rechecking in our logs on the same devices… and got it from slack.
+
+Alex Krumm (alexander.k@grexit.com):
+  Did slack populate that message in here or did someone copy and paste it from slack?
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  We just started to use slack a long time ago, and right now we use it like our main messenger between teams.
+
+Alex Krumm (alexander.k@grexit.com):
+  Okay. That makes sense.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  And it's the fastest way to get an answer from a team.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  Like you can see this is the main flow that we use for the ticketing sharing between teams and between levels of support and between clients.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yep. Yeah. So we can definitely support this workflow and I think show a little bit more info about these folks and keep the conversation more centralized with… some like suggested response. I think one of the harder pieces is, you know, this is like technical troubleshooting with the client. So yeah… you know, if there's like a framework of the types of questions or information that the client must share, and that if that information's missing, maybe we start, we send like automated emails to the client asking for the missing information or things like that. Those are some of the things I'm thinking about.
+
+Alex Krumm (alexander.k@grexit.com):
+  So, for example,
+
+Alex Krumm (alexander.k@grexit.com):
+  you know, our system, it does live within Gmail. So I think Jeevan showed this where this is a Google Chrome extension. And then everything that's coming to support or whatever domain would be populated here. So we have our normal inbox, personal inbox, as well as the shared ticket inbox. And then before I click into a ticket, we're going to have sentiment analysis of the customer tagging… so we can start like deciding… who which team should receive this ticket.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  And then if.
+
+Alex Krumm (alexander.k@grexit.com):
+  we click into here this.
+
+Evgeny Zhuchkov (evgenyz@setplex.com):
+  One's kind.
+
+Alex Krumm (alexander.k@grexit.com):
+  Of basic.
+
+Alex Krumm (alexander.k@grexit.com):
+  You know, they're having a tax question. What I would do is a conversation has come in. I would come, you know, assign it to myself to let people know that I'm working on it, you could reassign this to different members at a later time. You know, very similar to zoho status of the ticket, open pending and closed… but where I think we could do some extra value is down here in our notes and activity section… you can add mention your colleagues.
+
+Alex Krumm (alexander.k@grexit.com):
+  And then this is going to post to slack. So they're going to get a, you know, a link directly to the ticket where they can come in. Now leave their activity feed in one spot. And then additionally, we have custom fields. So like, and this could be like a dropdown on like device number, free text. So we have a lot of flexibility here in terms of gathering extra information about the ticket or device.
+
+Alex Krumm (alexander.k@grexit.com):
+  We also have a connected app to Jira. I don't know if Jeevan showed this one… where we can create a Jira ticket directly from here.
+
+Alex Krumm (alexander.k@grexit.com):
+  So that's just kind of the front of the shared inbox. We also have the ability for AI agents to come read through the message and it can read any language and then come draft a response. Right now. It is a couple of clicks. So it's gonna say draft a reply. Let's, say… one.
+
+Alex Krumm (alexander.k@grexit.com):
+  So this ask, AI will come, yeah, read through the conversation… and, you know, it could even help you summarize in a different language. So if we had a Spanish email come in and your team's trying to respond to it, we could say something like.
+
+Alex Krumm (alexander.k@grexit.com):
+  This one's silly… because I wrote it in English.
+
+Alex Krumm (alexander.k@grexit.com):
+  But yeah, you can have a draft in different languages.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Usually our clients are all the support is done in English. Fully, this would work probably for internal conversations… but for the clients, it's 100 percent English even if they're in latin America… great.
+
+Alex Krumm (alexander.k@grexit.com):
+  Well, then you don't need that feature, but yeah, you're right? We're able to you?
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Know it works in the case that we get something because sometimes if our clients are not very proficient in English, it's very difficult for them to give us a lot of detailing to what we're asking, you know, when the issues are more complicated. So that creates a little bit of back and forth because I mean, my guys in Minsk, the first language would be Russian and then our clients would be in Spanish and we're communicated in English, right? So it can work, it can work as well. Yeah, yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  It's kind of a nice to have. But the biggest piece in this draft reply is being able to refer to knowledge sources internally. So what that looks like? We're going to go into the admin panel of the shared inboxes. So you could have multiple shared inboxes… whether it's like for various levels of technical support, one type one customer, like your most important customer could have their own inbox, things like that.
+
+Alex Krumm (alexander.k@grexit.com):
+  So there's four pieces of AI that I think are worth going through. One is AI tagging. So this is going to be configuring tags to be amended to conversations as they come in order to kind of route them to the right group of people. So you'll come in here, create your tags and then you'll train the AI on 10 emails and then it'll automatically start applying. So pretty straightforward. How do we get conversations to the right people quickly? Then we have the co pilot, which is what we call ask AI and ask AI allows you to use various knowledge sources. So hiver has an internal knowledge base that you can create. This is like the external facing version of it, but it's the same concept of just like a multi level knowledge base. So.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Basically, for example, we have our knowledge base in zoho, we would have to completely move everything to hiver, correct?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yes, if you were going to get rid of zoho.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  But there's no way that it can connect to zoho and just check out what's there not.
+
+Alex Krumm (alexander.k@grexit.com):
+  Right now, you could like upload documents from zoho here. So it's just like a simple upload like PDFS or, you know, word docs… and then you can also connect to notion. We're going to be releasing a connection to Google drive shortly as well. Okay. Yeah. So these are all the inputs of how to make the knowledge base smart enough to help answer some of the more technical questions.
+
+Alex Krumm (alexander.k@grexit.com):
+  So, you know, so… you know, we've routed it. Now, we've helped reply to the conversation with the composer, the ask AI and the summarizer tools. Now, after that, we have what we call AI quality assurance which allows you to kind of measure every team member on a six point scale and you can turn any of these off. But the big ones that we're seeing demand for are clarity and completeness, you know, essentially ensuring that we have fully resolved the conversation. And then we have reporting on a per person basis on all of this. And if you would like, we could include this in the kind of the agent experience. So they know how they're being ranked as well, just to, you… know, help them ensure that they're you know, responding in a complete and clear way. Good.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Yeah, it can work for our internal metrics as well.
+
+Alex Krumm (alexander.k@grexit.com):
+  Precisely. So that's kind of the AI functionality in terms of getting conversations to the right place, helping respond and measuring. I also have another AI functionality which is what we call AI extract and I know we're over by one minute. Do you guys have a couple more minutes or should we table this?
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  I don't have a problem. Eugene, no, no problem.
+
+Alex Krumm (alexander.k@grexit.com):
+  Okay, great. So AI extract, so we have this workflow engine that's like if this, then that logic based on various trigger events happening within the system. So, for example, we're saying a new email comes in or out, and this is kind of silly. But like the subject contains any of the following keywords?
+
+Alex Krumm (alexander.k@grexit.com):
+  What we could do is do an AI extract where we're extracting pieces of information from the body of the email and then amending it on the right hand side as a custom field.
+
+Alex Krumm (alexander.k@grexit.com):
+  So, what this should allow you to do if there are device numbers, plan numbers, like anything… that the client like needs to share in order for you to resolve a certain type of ticket… we could help categorize that in the right hand rail. And… if, for some reason, you know, we don't have everything that we need, you know, we could like add a step like if, you… know, then.
+
+Alex Krumm (alexander.k@grexit.com):
+  If our AI variable does not contain the invoice number?
+
+Alex Krumm (alexander.k@grexit.com):
+  Then I could do an action step of sending an email back to the customer.
+
+Alex Krumm (alexander.k@grexit.com):
+  And then, yeah, and then this email will, you know, automatically send to the customer on the same thread. So that way we're just like making sure that we're collecting everything that we need in one place.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  We're just going to avoid a lot of the back and forth because for example, if Jenny, if they only send us a ticket that says, my Amazon app is not working, then we're going to need, you know, the device model, the version of the app they're using all of that. Like if we get something that we can automate in this space, it's probably going to be easier for the guys to get the information faster, right? Instead of level two, going to level three and saying, hey, they're saying that this is not working. What do we need? I'm telling you, okay, but we need, this and that this part can be automated. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, exactly. And kind of the whole concept there. Yeah. Is now that we've collected the device number and everything else. When we go back to the interaction, the AI assistant will be able to craft kind of more correct responses because we've uploaded, you know, the Amazon, you know, way of doing it and everything that we need. So… okay. Yeah. But yeah, that's kind of what I wanted to cover today. Is there anything else that you'd like to learn about with hiver?
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  I think that you showed us most of the toys that you have. So it aligns to what we're needing. I'd like to see a proposal that includes like, you know, everything that you showed us. I don't know if you have it by tiers or by licenses. How does it work?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah, by both. So I'll send you a proposal as well. Okay? But we offer month to month, no commitment plans or, you know, annual plans depending on your preferred flexibility. It sounded like you had about eight people that needed access to this. Is that right? Yeah.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  It could be eight, but if we need to include as well, our level three support is going to be probably at least 10 to 15 more people.
+
+Alex Krumm (alexander.k@grexit.com):
+  Okay. So potentially like 20 to 25 people? Yeah.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  25. And of course, some… people from the commercial part may need access as well. So I would say 30 in total, okay?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. And in terms of, you know, flexibility, do you currently have like an annual contract with zoho or are you month to month?
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  I think we have the annual one. Okay. Yeah.
+
+Alex Krumm (alexander.k@grexit.com):
+  Well, then I'll send over an annual proposal for like 30 users to start?
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Just so we can compare, you know, how it goes. And we also do everything by iteration. So… we mostly use like the agile module just to see if something's working if it's not working if the team's adapting to it. However. So I think the monthly one could work for us at the beginning. And if we see that this is a tool that we want to continue with, then we can go with the annual one. But in the beginning, I think that we'll do probably some testing or just like, you know, to realize that this is the best approach for our team.
+
+Alex Krumm (alexander.k@grexit.com):
+  That's very fair. Well, then I'll send this over. The things that push you to elite are that AI quality assurance tool?
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  And then,
+
+Alex Krumm (alexander.k@grexit.com):
+  AI extract, which is like what we're doing in the workflow. Those are like the only two pieces that really come to mind for me. So maybe we could include that in the kind of the pro package? Okay?
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Yeah, perfect. Yeah, please send it over and I'll review it just to see if we can move over with an integration just to test?
+
+Alex Krumm (alexander.k@grexit.com):
+  Perfect. Well, sounds like a plan. Thank you so much Alex.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  For your time?
+
+Alex Krumm (alexander.k@grexit.com):
+  Yeah. Should we, I'll have that over to you later today? But should we set up some time to potentially regroup next week or the following?
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  I'm still going over because we're meeting with different providers, right? For this. I still have two more weeks of meetings with them if you want in a couple more weeks, then we can regroup and just like, you know, to go over, you know, our decision, anything that we're seeing in comparison just to see, for example, there's something that we miss here that someone else is bringing to the table that I can talk to you about. Maybe you have it. And we haven't seen it that kind of stuff. So I think two more weeks would be perfect for me.
+
+Alex Krumm (alexander.k@grexit.com):
+  Cool. Would that be like the February twelfth or like the week of February sixteenth?
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Sixteenth would be better. Great.
+
+Alex Krumm (alexander.k@grexit.com):
+  I'll shoot some time over for the same time on like February eighteenth, if that works. Perfect.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  This time is perfect because as eugenius and minz come here, this is the time that, we only have like two, three hours that we're working at the same time.
+
+Alex Krumm (alexander.k@grexit.com):
+  That makes sense. Yeah, we have an international team as well. So, I get it.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Okay. Thank you. Of course.
+
+Alex Krumm (alexander.k@grexit.com):
+  Well, it was great to meet you both and look forward to staying in touch.
+
+Alejandra Saenz (alejandra.s@setplex.com):
+  Thank you so much, Alex for your time and for the detailed explanation. Thank you, Alex. Have a… good one.

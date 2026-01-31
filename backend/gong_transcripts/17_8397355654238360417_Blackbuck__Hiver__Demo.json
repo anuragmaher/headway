@@ -1,0 +1,1975 @@
+{
+  "call_id": "8397355654238360417",
+  "title": "Blackbuck <> Hiver : Demo",
+  "started": "2026-01-30T15:50:54+05:30",
+  "duration_seconds": 1240,
+  "call_metadata": {
+    "id": "8397355654238360417",
+    "url": "https://us-31545.app.gong.io/call?id=8397355654238360417",
+    "title": "Blackbuck <> Hiver : Demo",
+    "scheduled": "2026-01-30T15:45:00+05:30",
+    "started": "2026-01-30T15:50:54+05:30",
+    "duration": 1240,
+    "primaryUserId": "1219092317799715224",
+    "direction": "Conference",
+    "system": "Zoom",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://us06web.zoom.us/j/84163522398?jst=2",
+    "isPrivate": false,
+    "calendarEventId": "0qna2ccecv6rq9fuajtl2k4tla@google.com"
+  },
+  "parties": [
+    {
+      "id": "3676163185415520612",
+      "emailAddress": "rakesh@grexit.com",
+      "name": "Rakesh Goyal",
+      "title": "Account Executive ",
+      "userId": "1219092317799715224",
+      "speakerId": "9145906039920272967",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "5953977300137813994",
+      "emailAddress": "vikram.agrawal@blackbuck.com",
+      "name": "Vikram Agrawal",
+      "title": "Finance Controller",
+      "speakerId": "7313796789677586338",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "196783097699",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "1010506194"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82334087"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Finance Controller"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769591875.377
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Duplicate Prospect"
+                },
+                {
+                  "name": "createdate",
+                  "value": 1769591449.934
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "vikram.agrawal@blackbuck.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "7082310661343560529",
+      "emailAddress": "mohan.ms@blackbuck.com",
+      "name": "Mohan Kumar M S",
+      "title": "IT Admin Operator",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "195402051626",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "1010506194"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Mohan Kumar"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "IT Admin Operator"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769769884.995
+                },
+                {
+                  "name": "createdate",
+                  "value": 1769143879.99
+                },
+                {
+                  "name": "lastname",
+                  "value": "M S"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82334087"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "AI_REFERRALS"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "phone",
+                  "value": "+91 8884222120"
+                },
+                {
+                  "name": "recent_conversion_date",
+                  "value": 1769147619.086
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "BANT Disqualified"
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "salesqualifiedlead"
+                },
+                {
+                  "name": "email",
+                  "value": "mohan.ms@blackbuck.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "+91 8884222120",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "7140100738955178238",
+      "name": "Lukesh",
+      "speakerId": "8362791137170280125",
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "1902391293659762886",
+      "emailAddress": "harianand.a@grexit.com",
+      "userId": "3822045321633317235",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    },
+    {
+      "id": "2195333244570048350",
+      "emailAddress": "satyakam.n@blackbuck.com",
+      "title": "Chief Financial Officer",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "196783097701",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "1010506194"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82334087"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Chief Financial Officer"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769591873.523
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Duplicate Prospect"
+                },
+                {
+                  "name": "createdate",
+                  "value": 1769591449.934
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "satyakam.n@blackbuck.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    },
+    {
+      "id": "3111376184173152473",
+      "emailAddress": "dhruv.mundra@blackbuck.com",
+      "title": "",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "196783097698",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "1010506194"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82334087"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769591873.523
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Duplicate Prospect"
+                },
+                {
+                  "name": "createdate",
+                  "value": 1769591449.934
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "dhruv.mundra@blackbuck.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    },
+    {
+      "id": "6818468644502768976",
+      "emailAddress": "plukesh.amca@blackbuck.com",
+      "title": "",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "196783097700",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "1010506194"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "82334087"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769591873.523
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Duplicate Prospect"
+                },
+                {
+                  "name": "createdate",
+                  "value": 1769591449.934
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "plukesh.amca@blackbuck.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "8397355654238360417",
+    "transcript": [
+      {
+        "speakerId": "7313796789677586338",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 296,
+            "end": 2056,
+            "text": "Rakesh, I tried to reach Mohan."
+          },
+          {
+            "start": 2116,
+            "end": 3336,
+            "text": "I'm not able to reach him."
+          },
+          {
+            "start": 3496,
+            "end": 11736,
+            "text": "I think let's start and then if he joins in between, probably we'll try to fill him as much as possible because I think we have positive time today."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": "Call Setup",
+        "sentences": [
+          {
+            "start": 12216,
+            "end": 13776,
+            "text": "Yeah, yeah, no worries at all."
+          },
+          {
+            "start": 13816,
+            "end": 15556,
+            "text": "I think that's a good idea to begin."
+          },
+          {
+            "start": 15876,
+            "end": 18636,
+            "text": "Of course, we'll discuss the use cases and challenges."
+          },
+          {
+            "start": 18636,
+            "end": 20876,
+            "text": "And anyways, I'm recording this conversation."
+          },
+          {
+            "start": 21076,
+            "end": 26896,
+            "text": "Should you need to just maybe, you know, re, sync internally, regroup should be able to send you the recording of our call as well."
+          },
+          {
+            "start": 29096,
+            "end": 29496,
+            "text": "Perfect."
+          },
+          {
+            "start": 30016,
+            "end": 36556,
+            "text": "All right now to begin with, I would like to understand how are you currently managing all of these?"
+          },
+          {
+            "start": 36556,
+            "end": 40016,
+            "text": "You know, finance inboxes, like do you have a solution today?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 42286,
+            "end": 45066,
+            "text": "To be very Frank, we do not have any solution."
+          },
+          {
+            "start": 45386,
+            "end": 54846,
+            "text": "We, what we have is we have an ERP, of course, which is Microsoft 360 where the invoices get booked and basis which we make the payment."
+          },
+          {
+            "start": 54846,
+            "end": 65486,
+            "text": "While when you say tracking of all the invoices generally do come on emails to us with a common email ids as you mentioned, we have one."
+          },
+          {
+            "start": 65486,
+            "end": 78786,
+            "text": "And… and to be Frank with you, probably they just use some Google mail taggings to identify something which is pending or not pending et cetera."
+          },
+          {
+            "start": 79366,
+            "end": 81666,
+            "text": "But as such, we are not using any specific tool."
+          },
+          {
+            "start": 82006,
+            "end": 83846,
+            "text": "See from an account receivable perspective."
+          },
+          {
+            "start": 84186,
+            "end": 87906,
+            "text": "Our, we have only four or five customers to start with."
+          },
+          {
+            "start": 88066,
+            "end": 92826,
+            "text": "And these are my, last ticket items and very easy to track for me."
+          },
+          {
+            "start": 93246,
+            "end": 94826,
+            "text": "There's not much follow up et cetera."
+          },
+          {
+            "start": 95046,
+            "end": 99426,
+            "text": "So I don't see any challenges in terms of receivables."
+          },
+          {
+            "start": 100286,
+            "end": 107826,
+            "text": "The question is where we are trying to find a solution, where my payables are managed in a weekly basis."
+          },
+          {
+            "start": 108046,
+            "end": 110986,
+            "text": "I would say I process around 100 or 200 invoices."
+          },
+          {
+            "start": 113136,
+            "end": 114336,
+            "text": "So, yep."
+          },
+          {
+            "start": 114436,
+            "end": 117436,
+            "text": "And everything is outside the system as we speak today."
+          },
+          {
+            "start": 117576,
+            "end": 122616,
+            "text": "Other than accounting for and generating the payments file, which is from my Microsoft ERP."
+          },
+          {
+            "start": 122936,
+            "end": 132096,
+            "text": "And please feel free to add anything if I'm going wrong or if you think any additional information is required here."
+          }
+        ]
+      },
+      {
+        "speakerId": "8362791137170280125",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 133456,
+            "end": 134196,
+            "text": "No, sir."
+          },
+          {
+            "start": 134216,
+            "end": 135076,
+            "text": "What you said is correct."
+          },
+          {
+            "start": 135216,
+            "end": 137656,
+            "text": "That is what we have, the common email id has mentioned."
+          },
+          {
+            "start": 138036,
+            "end": 141776,
+            "text": "So that email id will keep receiving the, all the invoices."
+          },
+          {
+            "start": 142456,
+            "end": 145576,
+            "text": "And currently it is everything is in manual process."
+          },
+          {
+            "start": 145776,
+            "end": 149256,
+            "text": "There is no tool that which we are using has mentioned."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 151576,
+            "end": 152336,
+            "text": "Understood."
+          },
+          {
+            "start": 152656,
+            "end": 154376,
+            "text": "Now, there's a quick catch here."
+          },
+          {
+            "start": 154436,
+            "end": 157536,
+            "text": "Vikram if I were to be more candid and transparent here."
+          },
+          {
+            "start": 157816,
+            "end": 188296,
+            "text": "Now, like you said, ERP, Microsoft 365 is a solution that processes your invoices and everything, which is pretty much understood now when it comes to these invoices and emails that you get into your accounts, payables inbox, you're clearly saying that this is so manual process that we read the email, look at the invoice, what it is about, and then you triage it and maybe, you know, you label it, this should go to this person or what is it about X y Z, who is the vendor who is contacting us for it?"
+          },
+          {
+            "start": 188356,
+            "end": 189596,
+            "text": "Who processes it?"
+          },
+          {
+            "start": 189676,
+            "end": 198156,
+            "text": "And maybe you just forward those emails or maybe CC the other team members so that there is a collaboration in a manual fashion that you're doing so."
+          },
+          {
+            "start": 198156,
+            "end": 219676,
+            "text": "You're saying the piece where the client communication is concerned, when it comes to the management of accounts, payables, emails, that is what you're trying to solve or am I correct in understanding that you also want to make sure that your ERP, Microsoft 360 process is also automated with the auto payments of, you know, invoices and everything?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 222516,
+            "end": 224776,
+            "text": "Part one, I'm completely aligned with you."
+          },
+          {
+            "start": 224856,
+            "end": 234236,
+            "text": "A small nuance would be that the, we don't have a very large team where we assign a lot of things to a lot of people."
+          },
+          {
+            "start": 234276,
+            "end": 239576,
+            "text": "My, my payables team consists of only two people and they internally take care of things."
+          },
+          {
+            "start": 239976,
+            "end": 256846,
+            "text": "The only tracker would be where they don't miss something or they forget to read an email, or probably they have read an email but not taken an action on it, but we don't add such to a lot of assignment of tasks within the team."
+          },
+          {
+            "start": 257226,
+            "end": 257726,
+            "text": "Okay?"
+          },
+          {
+            "start": 257726,
+            "end": 271236,
+            "text": "As I mentioned, because the team is small and answering your question number two where you said whether I'm looking for a complete integration, I don't even know whether that solution exists today, so that."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 271236,
+            "end": 280356,
+            "text": "Is where I was actually coming to because every company has their own ways to manage erps that's how they've designed it, right?"
+          },
+          {
+            "start": 280476,
+            "end": 286476,
+            "text": "You define whether this customer needs to be processed immediately or after some time or whatever."
+          },
+          {
+            "start": 286616,
+            "end": 289776,
+            "text": "So your ERP would continue to function the way it is."
+          },
+          {
+            "start": 289876,
+            "end": 297396,
+            "text": "Hiver, can help you manage your invoices, manage your emails, better help your team allocate those emails to the right set of people."
+          },
+          {
+            "start": 297496,
+            "end": 304096,
+            "text": "Of course, like you said, only if two people are looking at the payables in box, let's say one takes a day off, another still has a good visibility."
+          },
+          {
+            "start": 304456,
+            "end": 308156,
+            "text": "If something has to be approved, you can be the approver of that email."
+          },
+          {
+            "start": 308196,
+            "end": 314516,
+            "text": "So everything that you're doing manually when it comes to the management of those emails, this is what we can do for you."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 315776,
+            "end": 316136,
+            "text": "Sure."
+          },
+          {
+            "start": 316336,
+            "end": 317776,
+            "text": "So this is what I'm looking for."
+          },
+          {
+            "start": 317836,
+            "end": 321696,
+            "text": "So go ahead and let us know what is the product and how does it feel?"
+          },
+          {
+            "start": 321696,
+            "end": 324176,
+            "text": "And what kind of solutions it can actually provide for."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 324996,
+            "end": 325456,
+            "text": "Absolutely."
+          },
+          {
+            "start": 325456,
+            "end": 328416,
+            "text": "Let me quickly share my screen and we'll quickly go over it."
+          },
+          {
+            "start": 332416,
+            "end": 337896,
+            "text": "Please confirm if you are able to see my Gmail inbox, my test account, I'm logged into my hiver account."
+          },
+          {
+            "start": 338356,
+            "end": 338936,
+            "text": "We are good."
+          },
+          {
+            "start": 339516,
+            "end": 347536,
+            "text": "Lovely now on the top, if you notice I have my private emails coming in similarly, you know, Vikram, you get a private email in your inbox."
+          },
+          {
+            "start": 347616,
+            "end": 348776,
+            "text": "Nothing is going to be changing."
+          },
+          {
+            "start": 348916,
+            "end": 353356,
+            "text": "You still see all of those emails which are to you personally, right?"
+          },
+          {
+            "start": 353396,
+            "end": 356076,
+            "text": "And you're not sharing these emails with your team because these are not ap emails."
+          },
+          {
+            "start": 356536,
+            "end": 374136,
+            "text": "But if you see that into the finance inbox, let's say this is an accounts payables inbox, which is actually going to be synced once we create this ap inbox for you or a finance inbox, we would sync this email, connect this inbox with your existing accounts payables at blackbuck."
+          },
+          {
+            "start": 375376,
+            "end": 382596,
+            "text": "So you have all your brand new requests for accounts payable come into the unassigned meaning, these are the new requests."
+          },
+          {
+            "start": 383236,
+            "end": 390576,
+            "text": "You open a request, your agent would be able to see what is it about, literally, look at the hiver, summarize of the conversation."
+          },
+          {
+            "start": 390596,
+            "end": 397716,
+            "text": "If this is a long email chain with a complex nature of query, look at it in a quick manner."
+          },
+          {
+            "start": 397936,
+            "end": 407416,
+            "text": "And then maybe just when they want to work on it, assign it to themselves, automatically pick it, you know, if it is a vendor number one or whatever it is like payment method, it's a wire transfer."
+          },
+          {
+            "start": 407696,
+            "end": 416356,
+            "text": "And if this requires an approval of xyz issue, then you can just simply, they can just simply choose a specific refund approval."
+          },
+          {
+            "start": 416356,
+            "end": 422196,
+            "text": "And it actually gets a notification triggered for Vikram because he's going to be the manager to approve of it."
+          },
+          {
+            "start": 422376,
+            "end": 424696,
+            "text": "They don't have to forward emails to each other."
+          },
+          {
+            "start": 425276,
+            "end": 437236,
+            "text": "Rather, your team would just add mention collaborate internally with the other second colleague or just add mention, bring you into the question and say, hey, Vikram, can you look at this one?"
+          },
+          {
+            "start": 437356,
+            "end": 451056,
+            "text": "I need your assistance and this is how they collaborate internally and you get a notification on, the, you know, because… I'm assuming the two people are going to be primary people to manage the finance inbox."
+          },
+          {
+            "start": 451496,
+            "end": 451926,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 451926,
+            "end": 452626,
+            "text": "Yes, right."
+          },
+          {
+            "start": 452686,
+            "end": 454226,
+            "text": "So just a couple of questions here."
+          },
+          {
+            "start": 454506,
+            "end": 468186,
+            "text": "So when I, when you say that I can tag someone or ask for an approval through hiver, they need to have those hiver app or this API kind of license in their laptops as well, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 470236,
+            "end": 471076,
+            "text": "Good question."
+          },
+          {
+            "start": 471176,
+            "end": 472416,
+            "text": "One quick catch."
+          },
+          {
+            "start": 472536,
+            "end": 483876,
+            "text": "If these people are on everyday basis, logging into hiver, looking at new requests, assign requests to each other, close requests on customer's behalf."
+          },
+          {
+            "start": 483996,
+            "end": 491606,
+            "text": "Meaning if they take care of the entire email, closed request, yes, they need to be a part of the licensing."
+          },
+          {
+            "start": 492006,
+            "end": 499406,
+            "text": "But in case, if it is just a finance controller approving a request, then finance controller doesn't need to be a part of it."
+          },
+          {
+            "start": 499406,
+            "end": 523216,
+            "text": "Because all you do is your agents will add mention, invite you as an email address saying, hey add mention, you know, your name Vikram adurit, blackbuck, like as long as your colleague who is a part of your domain, blackbuck has been invited and as a collaborator, they would be able to collaborate on a specific email, still be able to drop notes, collaborate."
+          },
+          {
+            "start": 523356,
+            "end": 528516,
+            "text": "And, you know, then your agent will be able to, your finance agent will be able to work on it and reply to the customer."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 531486,
+            "end": 531806,
+            "text": "Understood."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 532146,
+            "end": 546786,
+            "text": "And for them, for the external collaborators, for our ad hoc basis, people who would need to just collaborate once in a while or whenever they don't need to be a part of, licensing is only needed for people who need to be actively a part of the finance payables inbox."
+          },
+          {
+            "start": 546786,
+            "end": 549106,
+            "text": "And when they need to reply to the customers."
+          },
+          {
+            "start": 549106,
+            "end": 552426,
+            "text": "And then all of the other functionalities that you're looking at right here."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 554606,
+            "end": 555746,
+            "text": "Understood fair enough."
+          },
+          {
+            "start": 555826,
+            "end": 560516,
+            "text": "So this is one one one part of it great."
+          },
+          {
+            "start": 560856,
+            "end": 561256,
+            "text": "Now."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 561316,
+            "end": 569196,
+            "text": "When you're replying, you get, you know, all of those templates for all the repetitive nature of queries, so that your team doesn't have to type in so much again."
+          },
+          {
+            "start": 569196,
+            "end": 573836,
+            "text": "And again, you just simply use these templates which can be shared between these two folks."
+          },
+          {
+            "start": 574076,
+            "end": 577396,
+            "text": "You want to make it more improvisations on it, make it more professional."
+          },
+          {
+            "start": 577516,
+            "end": 578696,
+            "text": "Everything is right inside it."
+          },
+          {
+            "start": 578696,
+            "end": 585116,
+            "text": "And the best part is your team is not moving away from the Gmail interface customer asking for a ticket number."
+          },
+          {
+            "start": 585236,
+            "end": 587436,
+            "text": "You can quickly generate it from the conversation id."
+          },
+          {
+            "start": 587556,
+            "end": 588616,
+            "text": "This is going to be a ticket number."
+          },
+          {
+            "start": 588616,
+            "end": 593676,
+            "text": "And then anybody coming back to you and asking for what's happening with this ticket number."
+          },
+          {
+            "start": 593776,
+            "end": 596216,
+            "text": "Let's say I happen to work on this ticket and close it."
+          },
+          {
+            "start": 596316,
+            "end": 605636,
+            "text": "Next time somebody contacts me, all I do is just simply search for a ticket number and it actually confirms a quick search and I should be able to search that within this."
+          },
+          {
+            "start": 606336,
+            "end": 610896,
+            "text": "And again, like I said, dropping each other, the notes comments is a part of internal collaboration."
+          },
+          {
+            "start": 610896,
+            "end": 616236,
+            "text": "When you're replying to the clients, you can always choose to reply from your accounts, payables at the rate email address."
+          },
+          {
+            "start": 616236,
+            "end": 617516,
+            "text": "With the signatures at the bottom."
+          },
+          {
+            "start": 617516,
+            "end": 620096,
+            "text": "There is a new response from the customer."
+          },
+          {
+            "start": 620096,
+            "end": 621596,
+            "text": "It again opens up in the mind section."
+          },
+          {
+            "start": 621596,
+            "end": 630776,
+            "text": "So all in all, you have your brand new requests for accounts, payables into the unassigned and you can select these emails, reassign it to the people."
+          },
+          {
+            "start": 630776,
+            "end": 633856,
+            "text": "If they need to work on a specific task, want to process those emails."
+          },
+          {
+            "start": 633856,
+            "end": 636256,
+            "text": "You don't want to do any of those emails."
+          },
+          {
+            "start": 636256,
+            "end": 640036,
+            "text": "Let's say, you know, a lot of emails are just noise fyi emails."
+          },
+          {
+            "start": 640036,
+            "end": 652576,
+            "text": "All you do is just simply close those and make sure when you look at the team section, it literally tells you how many total accounts, payables emails are opened up for the team, which representative in your finance team is working on?"
+          },
+          {
+            "start": 652576,
+            "end": 654256,
+            "text": "What sort of accounts, payable receivables, emails."
+          },
+          {
+            "start": 654256,
+            "end": 662556,
+            "text": "So you have a complete distribution of workload and… let's say, if Jeevan takes a day off, I know these are the 10 emails he's working on."
+          },
+          {
+            "start": 662556,
+            "end": 665916,
+            "text": "One of them looks very important about approval."
+          },
+          {
+            "start": 667086,
+            "end": 668066,
+            "text": "This is a customer."
+          },
+          {
+            "start": 668066,
+            "end": 670806,
+            "text": "Can I simply go ahead and what is this po about?"
+          },
+          {
+            "start": 670806,
+            "end": 678386,
+            "text": "I can go ahead and, you know, search for a quick summary of the email, look at what is exactly is happening here on the ticket."
+          },
+          {
+            "start": 678386,
+            "end": 687226,
+            "text": "Be the owner of the conversation and reply on behalf of my colleague Jeevan and say, hey, Jeevan, while, you were on a day off yesterday, I took care of your customer."
+          },
+          {
+            "start": 687226,
+            "end": 692046,
+            "text": "This is just for your information and I can then, you know, write back to the customer."
+          },
+          {
+            "start": 695756,
+            "end": 696156,
+            "text": "Okay."
+          },
+          {
+            "start": 696156,
+            "end": 697516,
+            "text": "Any questions?"
+          },
+          {
+            "start": 697516,
+            "end": 698176,
+            "text": "Any doubts?"
+          },
+          {
+            "start": 698176,
+            "end": 698656,
+            "text": "The?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 698656,
+            "end": 717336,
+            "text": "Only thing I'm trying to get my head around is this seems like a tool where a large team is managing a, something a centralized process like for a payments, or R to R, for example, how will it be really useful in terms of a small team?"
+          },
+          {
+            "start": 717336,
+            "end": 722096,
+            "text": "As I mentioned, there are only two people who are actually doing the payments for the whole organization."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 724436,
+            "end": 724776,
+            "text": "That."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 724776,
+            "end": 727056,
+            "text": "that is where I'm trying to understand this."
+          },
+          {
+            "start": 727056,
+            "end": 727536,
+            "text": "I agree."
+          },
+          {
+            "start": 727536,
+            "end": 729456,
+            "text": "Whatever you said is it's making sense to me."
+          },
+          {
+            "start": 729456,
+            "end": 730556,
+            "text": "It's making sense."
+          },
+          {
+            "start": 730556,
+            "end": 733156,
+            "text": "When there's the last team there's 10 members plus."
+          },
+          {
+            "start": 733156,
+            "end": 742436,
+            "text": "And where the task assignment is a very critical part of the job here instead of task assignment."
+          },
+          {
+            "start": 742436,
+            "end": 751716,
+            "text": "What I was actually more interested in getting the tasks done from those folks and kind of the don't miss the emails or something like that."
+          },
+          {
+            "start": 752216,
+            "end": 759476,
+            "text": "But I mean, you can continue the story if there's anything else to talk about or you can maybe focus on what I just said."
+          },
+          {
+            "start": 759476,
+            "end": 760376,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 760376,
+            "end": 767116,
+            "text": "Again, now, when I speak to even small teams again, I'm not trying to convince you you're absolutely right?"
+          },
+          {
+            "start": 767116,
+            "end": 774676,
+            "text": "If it is a larger, makes a lot of sense because there's a better collaboration and cohesiveness through which they would work with each other."
+          },
+          {
+            "start": 775226,
+            "end": 779506,
+            "text": "If it is just a team of two member, we can just label those emails in Gmail and start to work on it."
+          },
+          {
+            "start": 779506,
+            "end": 786986,
+            "text": "But the problem is when everybody like both of these two people log in into their login into accounts, payables inbox with a common password."
+          },
+          {
+            "start": 786986,
+            "end": 790726,
+            "text": "I would just keep manually assigning labels to those emails."
+          },
+          {
+            "start": 790726,
+            "end": 793586,
+            "text": "And what if I just assign a label and don't work on it?"
+          },
+          {
+            "start": 794066,
+            "end": 799566,
+            "text": "My finance controller will have no visibility if it is a worked email, the closed ones."
+          },
+          {
+            "start": 799566,
+            "end": 800806,
+            "text": "What was the response?"
+          },
+          {
+            "start": 800806,
+            "end": 802666,
+            "text": "Did we do it on time or not?"
+          },
+          {
+            "start": 802666,
+            "end": 805586,
+            "text": "Because in hiver, we can even look at these slas, right?"
+          },
+          {
+            "start": 805586,
+            "end": 815106,
+            "text": "I mean, when you go into the shared inbox setup, I could show that to you, give me one minute… and."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 815106,
+            "end": 816806,
+            "text": "Who would generally tag this?"
+          },
+          {
+            "start": 816806,
+            "end": 823266,
+            "text": "Let's say, do you expect a finance controller to do these taggings or the, my finance agents who are making the payments?"
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 823266,
+            "end": 827206,
+            "text": "This, this has to be the finance agents only that, I mean, if you,"
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 827206,
+            "end": 832226,
+            "text": "look at these, what if they only miss to tag something and it just remains untagged."
+          },
+          {
+            "start": 832226,
+            "end": 833986,
+            "text": "Where where I don't even have a visibility?"
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 835116,
+            "end": 842676,
+            "text": "I mean, you would simply create those tags, let hiver know that we get variety of emails."
+          },
+          {
+            "start": 842676,
+            "end": 850196,
+            "text": "And when these emails are received into your payables inbox, hiver AI tagging will automatically function."
+          },
+          {
+            "start": 850196,
+            "end": 854996,
+            "text": "Looking at the context of the email, hiver is able to tag those emails automatically for you."
+          },
+          {
+            "start": 854996,
+            "end": 858096,
+            "text": "So your agents don't even really need to manually tag those emails."
+          },
+          {
+            "start": 858096,
+            "end": 858816,
+            "text": "For an example."
+          },
+          {
+            "start": 859686,
+            "end": 862326,
+            "text": "If I go into the support inbox, and that'll make a lot of sense."
+          },
+          {
+            "start": 862326,
+            "end": 867626,
+            "text": "Now, if you see these are the neutral customer sentiments, these are the automatic taggings about hiver."
+          },
+          {
+            "start": 867626,
+            "end": 871106,
+            "text": "This is the first response already overdue on these emails."
+          },
+          {
+            "start": 871106,
+            "end": 875406,
+            "text": "Now, all of this is a functionality where I know that these emails are not going to be missed."
+          },
+          {
+            "start": 875406,
+            "end": 877626,
+            "text": "I have some more time to reply to this email."
+          },
+          {
+            "start": 877626,
+            "end": 881406,
+            "text": "This customer sentiment is just okay, not really sad or happy."
+          },
+          {
+            "start": 881406,
+            "end": 887486,
+            "text": "But even if it is coming to the finance inboxes, I know this is a happy customer like not really."
+          },
+          {
+            "start": 887486,
+            "end": 888866,
+            "text": "I mean, worried about anything."
+          },
+          {
+            "start": 888866,
+            "end": 889966,
+            "text": "No payment delayed."
+          },
+          {
+            "start": 889966,
+            "end": 894266,
+            "text": "And as such, the tagging automatically can happen through the hiver AI."
+          },
+          {
+            "start": 894266,
+            "end": 894606,
+            "text": "Yeah."
+          },
+          {
+            "start": 896806,
+            "end": 898206,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 902466,
+            "end": 910826,
+            "text": "So, I can say that if the email is come from mr a from admin team, it should get assigned to my finance agent one."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 911806,
+            "end": 913846,
+            "text": "Yes, yes, absolutely."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 913846,
+            "end": 915306,
+            "text": "Those."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 917366,
+            "end": 920966,
+            "text": "Are workflow, you know, workflow setup, which is absolutely possible."
+          },
+          {
+            "start": 920966,
+            "end": 925026,
+            "text": "Not only just the emails but even if I were to show you the admin console?"
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 930426,
+            "end": 932486,
+            "text": "I can tag email conversations."
+          },
+          {
+            "start": 933166,
+            "end": 935726,
+            "text": "Oops, looks like my internet today."
+          },
+          {
+            "start": 936186,
+            "end": 937186,
+            "text": "Give me one minute."
+          },
+          {
+            "start": 937266,
+            "end": 942326,
+            "text": "So, okay, I go into the admin panel, go into the shared inboxes for my finance."
+          },
+          {
+            "start": 943046,
+            "end": 945696,
+            "text": "And here, if you notice the AI."
+          },
+          {
+            "start": 945996,
+            "end": 953696,
+            "text": "So when I just simply turn this hiver, AI tagging, I would say payment disputes, refund requests and vice issues."
+          },
+          {
+            "start": 954016,
+            "end": 962956,
+            "text": "So all I do is just simply add a couple of emails manually in the beginning and then hiver can train the tagging system automatically and it will automatically tag the emails."
+          },
+          {
+            "start": 963096,
+            "end": 965416,
+            "text": "Looking at the tonality and the context of the email."
+          },
+          {
+            "start": 965676,
+            "end": 966456,
+            "text": "Number two."
+          },
+          {
+            "start": 966516,
+            "end": 967696,
+            "text": "In the automation workflows."
+          },
+          {
+            "start": 967996,
+            "end": 977896,
+            "text": "You go ahead and say any email with the subject content when these coming in from a specific person simply gets assigned to a representative for an example."
+          },
+          {
+            "start": 977916,
+            "end": 990276,
+            "text": "If a condition says any email which has a specific domain called abc limited because these are the vendors we work with, then all you do is just simply go ahead."
+          },
+          {
+            "start": 990396,
+            "end": 1007066,
+            "text": "All of these emails should get assigned to your person number one or say, whenever the only two people are working, let's say Cole and Anurag, you'll be able to say, you know, on the round Robin basis, just assign these folks these emails just not from, but even the subject of the email."
+          },
+          {
+            "start": 1007206,
+            "end": 1015246,
+            "text": "And if it is also the content of the email body of the email says, xyz refund or whatever, right?"
+          },
+          {
+            "start": 1015346,
+            "end": 1020826,
+            "text": "You get an option to assign conversations automatically, simply reply to these emails."
+          },
+          {
+            "start": 1020946,
+            "end": 1026866,
+            "text": "If it is a standard response that you need to send out and then add the tags to those emails."
+          },
+          {
+            "start": 1027346,
+            "end": 1031426,
+            "text": "So all of that is a part of workflow automations."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1039376,
+            "end": 1040276,
+            "text": "Does that make sense?"
+          },
+          {
+            "start": 1041556,
+            "end": 1041956,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1041976,
+            "end": 1043076,
+            "text": "No, no, I get it."
+          },
+          {
+            "start": 1043116,
+            "end": 1046836,
+            "text": "What you said, this is what actually I was asking and that's what you've demonstrated."
+          },
+          {
+            "start": 1047296,
+            "end": 1047696,
+            "text": "Perfect."
+          },
+          {
+            "start": 1047916,
+            "end": 1048856,
+            "text": "This makes sense."
+          },
+          {
+            "start": 1048956,
+            "end": 1050136,
+            "text": "This is one good use."
+          },
+          {
+            "start": 1050136,
+            "end": 1051096,
+            "text": "I can actually see."
+          },
+          {
+            "start": 1051516,
+            "end": 1052416,
+            "text": "Yeah, but."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1052416,
+            "end": 1056516,
+            "text": "Given that like you said very well, it is a valid point."
+          },
+          {
+            "start": 1056576,
+            "end": 1071876,
+            "text": "If it is just a team of two people, I personally may not really recommend you looking at a solution because you probably are much better at a phase where you are able to manage and have collaboration between these two folks because they may be just sitting right next to each other, right?"
+          },
+          {
+            "start": 1072036,
+            "end": 1073156,
+            "text": "Exactly that's."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1073156,
+            "end": 1073256,
+            "text": "true."
+          },
+          {
+            "start": 1073456,
+            "end": 1073936,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1074116,
+            "end": 1088856,
+            "text": "But think about a scenario where you will have a scalable team maybe six months down the line, but changing a system or adapting to a system when there is a bigger team that might be a challenge versus you having to have a plain solution today."
+          },
+          {
+            "start": 1089256,
+            "end": 1093536,
+            "text": "And then maybe, you know, scaling the solution up with the scaling up your team?"
+          },
+          {
+            "start": 1094736,
+            "end": 1095216,
+            "text": "No?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1095296,
+            "end": 1095476,
+            "text": "Agreed."
+          },
+          {
+            "start": 1095676,
+            "end": 1101216,
+            "text": "I'm completely aligned with you with the larger team, this looks like a very great solution."
+          },
+          {
+            "start": 1101936,
+            "end": 1112646,
+            "text": "And, but with a small team as you just mentioned, better to do face to face rather than, and to be very Frank, the finance is a very lean team and we all sit across the same floor."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1113646,
+            "end": 1113806,
+            "text": "Huh."
+          },
+          {
+            "start": 1115636,
+            "end": 1115816,
+            "text": "Great."
+          },
+          {
+            "start": 1116016,
+            "end": 1116656,
+            "text": "All right."
+          },
+          {
+            "start": 1116716,
+            "end": 1120256,
+            "text": "And in that case, is there anything else in particular?"
+          },
+          {
+            "start": 1120376,
+            "end": 1127336,
+            "text": "I mean, of course, I do have hundreds of other functionalities, but I'm not fond of showing so much and confuse my clients for sure."
+          },
+          {
+            "start": 1127556,
+            "end": 1130856,
+            "text": "But this is a very simple use case of finance management."
+          },
+          {
+            "start": 1131136,
+            "end": 1139926,
+            "text": "But if you still think that, hey, with the two people team, it's easier for us to manage manually, very well for you guys."
+          },
+          {
+            "start": 1140026,
+            "end": 1145466,
+            "text": "I would stay in touch with you and then wait for you to scale up your team and then show more use cases then."
+          },
+          {
+            "start": 1145666,
+            "end": 1151446,
+            "text": "But again, if you still want to just start with a freemium license because we don't charge for freemium plan."
+          },
+          {
+            "start": 1151666,
+            "end": 1154606,
+            "text": "Like you can have one payable inbox invite two people."
+          },
+          {
+            "start": 1154706,
+            "end": 1161086,
+            "text": "They can still manage all of those, you know, conversations, assign them each other, close the tags conversations."
+          },
+          {
+            "start": 1161166,
+            "end": 1163946,
+            "text": "That is also possible without even incurring any cost."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1164556,
+            "end": 1165016,
+            "text": "Sure."
+          },
+          {
+            "start": 1165016,
+            "end": 1165376,
+            "text": "Rakesh."
+          },
+          {
+            "start": 1165456,
+            "end": 1174336,
+            "text": "So let me huddle back with my it team, understand the use case more in terms whether can we really make good out of it."
+          },
+          {
+            "start": 1174596,
+            "end": 1178956,
+            "text": "And from there, then let's connect again and see how can we proceed further?"
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1179436,
+            "end": 1179836,
+            "text": "Absolutely."
+          },
+          {
+            "start": 1179936,
+            "end": 1181136,
+            "text": "We are connected on email already."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1181956,
+            "end": 1184196,
+            "text": "See, I get the use case."
+          },
+          {
+            "start": 1184316,
+            "end": 1187736,
+            "text": "I think I'm very clear on what hiver has to offer me."
+          },
+          {
+            "start": 1188226,
+            "end": 1190786,
+            "text": "Now, I have to just convince myself whether do I?"
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 1190786,
+            "end": 1197046,
+            "text": "Need it today, whether if it is a good time or maybe we need to wait until we grow bigger and then it makes a lot of sense for us to invest."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1197486,
+            "end": 1206326,
+            "text": "I think that's the only question I have for myself today, but otherwise, at least with the tool, I am convinced what it can offer me… yep."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1207326,
+            "end": 1207606,
+            "text": "Absolutely."
+          },
+          {
+            "start": 1208066,
+            "end": 1208486,
+            "text": "Yep."
+          },
+          {
+            "start": 1208546,
+            "end": 1209206,
+            "text": "Absolutely."
+          },
+          {
+            "start": 1209206,
+            "end": 1209546,
+            "text": "Great."
+          },
+          {
+            "start": 1209746,
+            "end": 1210986,
+            "text": "Well, lovely talking to you."
+          },
+          {
+            "start": 1211066,
+            "end": 1213726,
+            "text": "Keep me posted with whatever discussion that you have."
+          },
+          {
+            "start": 1213846,
+            "end": 1214926,
+            "text": "I'm just an email away."
+          },
+          {
+            "start": 1215006,
+            "end": 1219486,
+            "text": "Should you need any further assistance or you want more opinion recommendations?"
+          },
+          {
+            "start": 1219766,
+            "end": 1221686,
+            "text": "I'm more than happy to help you with that."
+          },
+          {
+            "start": 1222736,
+            "end": 1223096,
+            "text": "No."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1223576,
+            "end": 1223856,
+            "text": "Sure."
+          },
+          {
+            "start": 1223996,
+            "end": 1225136,
+            "text": "Rakesh, this was amazing."
+          },
+          {
+            "start": 1225396,
+            "end": 1228216,
+            "text": "I mean, thank you so much for taking time out for running us this through."
+          },
+          {
+            "start": 1228276,
+            "end": 1229176,
+            "text": "Really appreciate that."
+          },
+          {
+            "start": 1229736,
+            "end": 1233076,
+            "text": "And we'll stay in touch and of course, give you an update."
+          }
+        ]
+      },
+      {
+        "speakerId": "9145906039920272967",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1233576,
+            "end": 1233936,
+            "text": "Lovely."
+          },
+          {
+            "start": 1234156,
+            "end": 1234516,
+            "text": "You."
+          },
+          {
+            "start": 1234516,
+            "end": 1234896,
+            "text": "Take care."
+          },
+          {
+            "start": 1234936,
+            "end": 1235796,
+            "text": "Enjoy the rest of your day."
+          },
+          {
+            "start": 1235916,
+            "end": 1236536,
+            "text": "Have a good Friday."
+          },
+          {
+            "start": 1236856,
+            "end": 1237056,
+            "text": "Thank."
+          }
+        ]
+      },
+      {
+        "speakerId": "7313796789677586338",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 1237056,
+            "end": 1237156,
+            "text": "you."
+          },
+          {
+            "start": 1237156,
+            "end": 1237496,
+            "text": "Bye bye."
+          },
+          {
+            "start": 1237496,
+            "end": 1237736,
+            "text": "Thank you."
+          },
+          {
+            "start": 1237776,
+            "end": 1238016,
+            "text": "Bye bye."
+          },
+          {
+            "start": 1238016,
+            "end": 1238356,
+            "text": "Take care."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 43
+}

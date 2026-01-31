@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signal analysis – themes & transcripts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Signal analysis</h1>
+    <p>Themes and signals from Gong transcripts (signals_by_theme)</p>
+  </header>
+
+  <main>
+    <div id="loading" class="loading">Loading data…</div>
+    <div id="error-msg" class="error hidden"></div>
+
+    <div id="main-content" class="hidden">
+      <div id="summary-cards" class="summary-cards"></div>
+
+      <div class="charts-row">
+        <div class="chart-container">
+          <h3>Signals by canonical theme</h3>
+          <div class="chart-wrapper">
+            <canvas id="chart-theme"></canvas>
+          </div>
+        </div>
+        <div class="chart-container">
+          <h3>Priority</h3>
+          <div class="chart-wrapper">
+            <canvas id="chart-priority"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">Themes → raw themes → signals (click to expand)</div>
+      <div id="theme-list" class="theme-list"></div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

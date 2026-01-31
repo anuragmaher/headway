@@ -1,0 +1,1051 @@
+{
+  "call_id": "6529268741727685536",
+  "title": "Hiver Demo | Mark <> Alex",
+  "started": "2026-01-30T23:01:46.302+05:30",
+  "duration_seconds": 719,
+  "call_metadata": {
+    "id": "6529268741727685536",
+    "url": "https://us-31545.app.gong.io/call?id=6529268741727685536",
+    "title": "Hiver Demo | Mark <> Alex",
+    "scheduled": "2026-01-30T23:00:00+05:30",
+    "started": "2026-01-30T23:01:46.302+05:30",
+    "duration": 719,
+    "primaryUserId": "1259980819651044985",
+    "direction": "Conference",
+    "system": "Google Meet",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://meet.google.com/mps-bhdr-fkb",
+    "isPrivate": false,
+    "calendarEventId": "jac9pmcr2v01hjndd5es22e2f4@google.com"
+  },
+  "parties": [
+    {
+      "id": "492477824208993271",
+      "emailAddress": "alexander.k@grexit.com",
+      "name": "Alex Krumm",
+      "userId": "1259980819651044985",
+      "speakerId": "15077245129097724",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "4409708756633845593",
+      "emailAddress": "mark.duchev@elmarcorp.com",
+      "name": "Mark Duchev",
+      "speakerId": "7946916053848336911",
+      "context": [],
+      "affiliation": "External",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "6529268741727685536",
+    "transcript": [
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 296,
+            "end": 7136,
+            "text": "one of the senior account executives over here at hiver, been in the help desk space for the last about 11 years."
+          },
+          {
+            "start": 7336,
+            "end": 10316,
+            "text": "So I have a fair amount of experience here."
+          },
+          {
+            "start": 11216,
+            "end": 13376,
+            "text": "We can take the conversation a few different ways."
+          },
+          {
+            "start": 13496,
+            "end": 20176,
+            "text": "But my thought would love to learn about yourself what's bringing you to the table and see if we can solve some of your problems."
+          },
+          {
+            "start": 20716,
+            "end": 21416,
+            "text": "Yeah sure."
+          },
+          {
+            "start": 21596,
+            "end": 22276,
+            "text": "No problem."
+          },
+          {
+            "start": 24056,
+            "end": 25216,
+            "text": "I'll kick it over to you."
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 26446,
+            "end": 30926,
+            "text": "Yeah, I mean, we have an E commerce I'm joined here by Vlad."
+          },
+          {
+            "start": 31186,
+            "end": 32386,
+            "text": "I don't know if he's on the screen."
+          },
+          {
+            "start": 35846,
+            "end": 38326,
+            "text": "He's too handsome to be on the camera."
+          },
+          {
+            "start": 39726,
+            "end": 45736,
+            "text": "Anyway, we're an E commerce company… gotduckless."
+          },
+          {
+            "start": 46256,
+            "end": 46676,
+            "text": "Com."
+          },
+          {
+            "start": 46956,
+            "end": 52876,
+            "text": "We just need a better way to track our warranty process with products that we sell."
+          },
+          {
+            "start": 52936,
+            "end": 55016,
+            "text": "We sell a track equipment."
+          },
+          {
+            "start": 55236,
+            "end": 63876,
+            "text": "And so there's a couple different touch points for product issue or technical support resolution."
+          },
+          {
+            "start": 64656,
+            "end": 70856,
+            "text": "Sometimes it requires there to be interaction with distributors as well as manufacturers."
+          },
+          {
+            "start": 71316,
+            "end": 73436,
+            "text": "There's different touch points."
+          },
+          {
+            "start": 74176,
+            "end": 77356,
+            "text": "Sometimes the issues can be resolved without contacting anyone."
+          },
+          {
+            "start": 77456,
+            "end": 82336,
+            "text": "And sometimes it requires parts to be issued from the manufacturer."
+          },
+          {
+            "start": 83076,
+            "end": 84756,
+            "text": "We need a better system."
+          },
+          {
+            "start": 84916,
+            "end": 86456,
+            "text": "We use Shopify right now."
+          },
+          {
+            "start": 86976,
+            "end": 92256,
+            "text": "I probably should have included that we use Shopify for our order management system."
+          },
+          {
+            "start": 92516,
+            "end": 99896,
+            "text": "And that's where obviously, if someone has ordered from us, that's where we're actually dealing with a technical support issue."
+          },
+          {
+            "start": 101446,
+            "end": 105186,
+            "text": "I guess the main things that we care about is integration."
+          },
+          {
+            "start": 105566,
+            "end": 121406,
+            "text": "So whether or not there's open apis to maybe connect to Shopify, to kind of better track the process of ticket, kind of whether there's resolutions or whether there's still outstanding items."
+          },
+          {
+            "start": 121606,
+            "end": 127526,
+            "text": "So that's a little bit about us just in a nutshell why we contacted you and what we're looking for?"
+          },
+          {
+            "start": 128146,
+            "end": 128766,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 129356,
+            "end": 137856,
+            "text": "And in terms of the systems you're using today, are you on outlook or Gmail… we're on?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 137856,
+            "end": 140656,
+            "text": "Gmail, yes, for email, yes."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 141856,
+            "end": 165526,
+            "text": "And I guess kind of like the core problem is somebody writes in over email, says that they have a warranty problem or an equipment problem, then you'll go to Shopify to see if, you know, the order's already being managed or I guess tell me a little bit about the flow of how people reach out and how we solve for it."
+          },
+          {
+            "start": 165666,
+            "end": 166066,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 166146,
+            "end": 168546,
+            "text": "That's a voice actually not chat, not email."
+          },
+          {
+            "start": 168706,
+            "end": 174626,
+            "text": "We can keep, we can consider emailing but I think it's a voice basically activated."
+          },
+          {
+            "start": 174726,
+            "end": 175546,
+            "text": "Yeah, I mean, we have two."
+          },
+          {
+            "start": 175726,
+            "end": 184536,
+            "text": "Well… I'll say all three because it happens in all three but let's integrate just one voice first."
+          },
+          {
+            "start": 184656,
+            "end": 188036,
+            "text": "And then we'll add chat and email later on."
+          },
+          {
+            "start": 188236,
+            "end": 189956,
+            "text": "Voice is the hardest."
+          },
+          {
+            "start": 189996,
+            "end": 192216,
+            "text": "The email and the chat are kind of the easiest."
+          },
+          {
+            "start": 192536,
+            "end": 192996,
+            "text": "Oh, that's okay."
+          },
+          {
+            "start": 193116,
+            "end": 196316,
+            "text": "Then email just one for now."
+          },
+          {
+            "start": 196966,
+            "end": 197326,
+            "text": "Okay."
+          },
+          {
+            "start": 197406,
+            "end": 199266,
+            "text": "Whatever we have."
+          },
+          {
+            "start": 199266,
+            "end": 201526,
+            "text": "Yeah, we have people contacting us all three ways."
+          },
+          {
+            "start": 201606,
+            "end": 209546,
+            "text": "Our main one that people communicate issues with us is via email or, sorry, via voice."
+          },
+          {
+            "start": 209746,
+            "end": 213106,
+            "text": "So people call in, they explain, hey, this is what's going on."
+          },
+          {
+            "start": 213186,
+            "end": 215066,
+            "text": "It's way too much to email way too much to chat."
+          },
+          {
+            "start": 215226,
+            "end": 218506,
+            "text": "And so people call in saying, hey, my compressor's not working."
+          },
+          {
+            "start": 218626,
+            "end": 219306,
+            "text": "I've tried this."
+          },
+          {
+            "start": 219306,
+            "end": 219786,
+            "text": "I've tried that."
+          },
+          {
+            "start": 219806,
+            "end": 220326,
+            "text": "I've tried this."
+          },
+          {
+            "start": 220686,
+            "end": 223286,
+            "text": "What else can I do at some point?"
+          },
+          {
+            "start": 223306,
+            "end": 236766,
+            "text": "There's you know, at some point we need to contact further technical support from other parties and that's where things are starting to get convoluted, where, you know, we lose track of statuses."
+          },
+          {
+            "start": 236786,
+            "end": 244646,
+            "text": "And then at the end of the day, the end user or the end consumer is scratching their heads because they have no idea what's going on."
+          },
+          {
+            "start": 244766,
+            "end": 249386,
+            "text": "So we need a better way to track it ourselves if we do want to."
+          },
+          {
+            "start": 249406,
+            "end": 260096,
+            "text": "If it's easier integration with just one, then yes, we can start with, I'd say voice and then we can just input manually if something comes in through chat or email."
+          },
+          {
+            "start": 260576,
+            "end": 267176,
+            "text": "That way, it's you know, not, there's not any oversight and, or it's easier to integrate."
+          },
+          {
+            "start": 267376,
+            "end": 269456,
+            "text": "I'd rather do that but up to you."
+          },
+          {
+            "start": 269896,
+            "end": 270376,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 270496,
+            "end": 274156,
+            "text": "And for voice, is it who's your voice provider today?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 275076,
+            "end": 277336,
+            "text": "I mean, we use nextiva as a VIP."
+          },
+          {
+            "start": 277716,
+            "end": 282536,
+            "text": "So if, yeah, a phone call comes in, then it would come through nextiva."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 283276,
+            "end": 283636,
+            "text": "Yeah."
+          },
+          {
+            "start": 283756,
+            "end": 284196,
+            "text": "Okay."
+          },
+          {
+            "start": 284676,
+            "end": 285576,
+            "text": "Thank you for this."
+          },
+          {
+            "start": 287736,
+            "end": 289036,
+            "text": "I'll tell you a little bit about hiver."
+          },
+          {
+            "start": 289216,
+            "end": 291576,
+            "text": "I'm not sure if we're going to be the perfect solution for it."
+          },
+          {
+            "start": 291596,
+            "end": 293416,
+            "text": "What you're trying to solve for sure."
+          },
+          {
+            "start": 294296,
+            "end": 299936,
+            "text": "The reason being is you almost want more like a pure plate ticketing system."
+          },
+          {
+            "start": 299936,
+            "end": 304876,
+            "text": "Is what I'm hearing that might integrate with Shopify."
+          },
+          {
+            "start": 305956,
+            "end": 327796,
+            "text": "The reason being is like phone calls are so heavy and most ticketing platforms don't do a great, the ticketing platform for like email chat and other channels and the telephony platform have historically been separated like two different vendors build this."
+          },
+          {
+            "start": 328716,
+            "end": 338016,
+            "text": "And, you know, today's day and age, like sure, there's a lot of integrations of things, but there's still a gap… and hiver does have a gap in that."
+          },
+          {
+            "start": 338136,
+            "end": 339516,
+            "text": "We only work with Aircall."
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 342066,
+            "end": 342746,
+            "text": "But."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 342746,
+            "end": 345866,
+            "text": "how this could potentially work with Gmail?"
+          },
+          {
+            "start": 345866,
+            "end": 348386,
+            "text": "We have actually two different programs."
+          },
+          {
+            "start": 348386,
+            "end": 358986,
+            "text": "We have a Gmail, where we can set up a shared inbox domain or Google group, where all support related emails will come into here."
+          },
+          {
+            "start": 358986,
+            "end": 362906,
+            "text": "It'll… start off as unassigned."
+          },
+          {
+            "start": 362906,
+            "end": 365786,
+            "text": "So like all emails come here, they're unassigned."
+          },
+          {
+            "start": 368386,
+            "end": 371206,
+            "text": "Here are caches writing in for some sort of billing support."
+          },
+          {
+            "start": 371206,
+            "end": 376946,
+            "text": "But what makes this interesting is on the right hand rail, we're creating a ticketing experience."
+          },
+          {
+            "start": 376946,
+            "end": 380286,
+            "text": "So like who's this assigned to statuses?"
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 384316,
+            "end": 386096,
+            "text": "Being able to have custom attributes."
+          },
+          {
+            "start": 386096,
+            "end": 388216,
+            "text": "So this is like related to your business."
+          },
+          {
+            "start": 388216,
+            "end": 392456,
+            "text": "Then… we do have a connected app ecosystem."
+          },
+          {
+            "start": 392456,
+            "end": 399696,
+            "text": "So we could be showing like a Shopify card related to this order with like a single click out there."
+          },
+          {
+            "start": 399696,
+            "end": 411196,
+            "text": "But… the biggest thing here is being able to have statuses on the conversation and then being able to manage the conversation directly from this view."
+          },
+          {
+            "start": 412256,
+            "end": 423256,
+            "text": "And then anyone else in your team could come in, see this open ticket or closed ticket and hop in and join the conversation that's… kind of our value prop."
+          },
+          {
+            "start": 425536,
+            "end": 445876,
+            "text": "I'm wondering if you're more looking for something that's I don't know more akin to like a Jira Monday or something like that where you're creating an internal ticket to track something and it's less about like the communication hub with the client."
+          },
+          {
+            "start": 445876,
+            "end": 448696,
+            "text": "So… I would love to hear that."
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 450556,
+            "end": 453196,
+            "text": "Yes, and no, I think it's both."
+          },
+          {
+            "start": 453196,
+            "end": 461976,
+            "text": "I think I agree with you whether it's Trello or Monday or whatever the case is for."
+          },
+          {
+            "start": 461976,
+            "end": 465256,
+            "text": "I guess the various stages of communication."
+          },
+          {
+            "start": 465256,
+            "end": 473036,
+            "text": "I think… with the way I want to build it out is I want to build it out for a team rather than an individual."
+          },
+          {
+            "start": 473036,
+            "end": 484596,
+            "text": "So, in this case, I see that there is some value, but yes… I, I'm not sure that this would be the perfect solution."
+          },
+          {
+            "start": 484596,
+            "end": 484936,
+            "text": "Yeah."
+          },
+          {
+            "start": 485936,
+            "end": 486896,
+            "text": "And."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 486896,
+            "end": 495816,
+            "text": "I do have integrations to Trello and other apps like I can create an object or card directly in Trello from this view."
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 499536,
+            "end": 499916,
+            "text": "Okay."
+          },
+          {
+            "start": 499916,
+            "end": 502536,
+            "text": "But it's not integrated with Shopify, right?"
+          },
+          {
+            "start": 502536,
+            "end": 503516,
+            "text": "It."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 503516,
+            "end": 504456,
+            "text": "Is integrated with shop?"
+          },
+          {
+            "start": 504456,
+            "end": 506496,
+            "text": "Are my solutions integrated with Shopify?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 510316,
+            "end": 515416,
+            "text": "And how does that… look like integration?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 528866,
+            "end": 530526,
+            "text": "So, this is."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 530526,
+            "end": 538246,
+            "text": "The Salesforce card, but it's the same concept of showing me like order information and then a deep link to the order."
+          },
+          {
+            "start": 538246,
+            "end": 538466,
+            "text": "Is."
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 540126,
+            "end": 544666,
+            "text": "it pulling information from Shopify or actually pushing it's."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 545726,
+            "end": 547506,
+            "text": "just, it's pulling information from Shopify."
+          },
+          {
+            "start": 547506,
+            "end": 548206,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 548206,
+            "end": 552806,
+            "text": "Yeah, we need, yeah, we need actually push pull and pull, push you."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 552806,
+            "end": 554186,
+            "text": "Want to push an order to Shopify."
+          },
+          {
+            "start": 554946,
+            "end": 555186,
+            "text": "We."
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 555186,
+            "end": 561466,
+            "text": "Need to push the status of this order or even nodes back to Shopify?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 567026,
+            "end": 568506,
+            "text": "That's an interesting concept."
+          },
+          {
+            "start": 569706,
+            "end": 572426,
+            "text": "And this is based on email, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 573866,
+            "end": 575106,
+            "text": "Email and chat."
+          },
+          {
+            "start": 575346,
+            "end": 577806,
+            "text": "So we also have a chat solution."
+          },
+          {
+            "start": 581156,
+            "end": 581656,
+            "text": "Got it."
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 582996,
+            "end": 583256,
+            "text": "Okay."
+          },
+          {
+            "start": 584856,
+            "end": 587376,
+            "text": "All right."
+          },
+          {
+            "start": 588276,
+            "end": 601916,
+            "text": "Yeah, we need actually push information back to sort trying to figure out, you know, this is what, exactly what we're trying to figure out to make sure if trust in a tackle support will give some notes or whatever."
+          },
+          {
+            "start": 601916,
+            "end": 614056,
+            "text": "Then salespeople can actually read the status from Shopify instead of going back to another software, another app to follow up on the ticket."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 616336,
+            "end": 616656,
+            "text": "Yeah."
+          },
+          {
+            "start": 616656,
+            "end": 617276,
+            "text": "Do."
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 617276,
+            "end": 622136,
+            "text": "You know, any apps that like integrates with Shopify, you could recommend."
+          },
+          {
+            "start": 622396,
+            "end": 622776,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 622776,
+            "end": 626196,
+            "text": "So, I actually used to work at a bunch of these companies or work at one of these companies."
+          },
+          {
+            "start": 626196,
+            "end": 633276,
+            "text": "So customer with a K, how many seats do you need or users need access to this?"
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 634956,
+            "end": 644116,
+            "text": "As… of right now, we only have one tech support manager and he's responsible for pretty much all things tech support."
+          },
+          {
+            "start": 644956,
+            "end": 646996,
+            "text": "That would probably change."
+          },
+          {
+            "start": 646996,
+            "end": 650736,
+            "text": "But as of right now, I'd like to I'm just building it for him."
+          },
+          {
+            "start": 650736,
+            "end": 658976,
+            "text": "Essentially, I could go girl boy, I would want to set up a system that will be."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 658976,
+            "end": 659596,
+            "text": "Conducive."
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 659596,
+            "end": 660776,
+            "text": "to scale."
+          },
+          {
+            "start": 660776,
+            "end": 664056,
+            "text": "But as of right now, I only have a need for one technical support Guy."
+          },
+          {
+            "start": 664056,
+            "end": 664336,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 665496,
+            "end": 667176,
+            "text": "Then customer is not going to be the right fit."
+          },
+          {
+            "start": 667176,
+            "end": 668956,
+            "text": "They only want to sell you 10 seats or more."
+          },
+          {
+            "start": 670216,
+            "end": 687646,
+            "text": "I would say Zendesk is your best option because it combines both the communication channels, level of integrations to other systems like nextiva, Shopify, and has the internal workspace of being able to leave notes on like internal notes on a ticket."
+          },
+          {
+            "start": 689626,
+            "end": 693806,
+            "text": "You could also look at like Freshdesk or zoho."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 699666,
+            "end": 701086,
+            "text": "Those would be kind of my directions."
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 703136,
+            "end": 703656,
+            "text": "Got it."
+          },
+          {
+            "start": 703656,
+            "end": 704736,
+            "text": "Okay."
+          },
+          {
+            "start": 704736,
+            "end": 710996,
+            "text": "Well, thanks for your, thanks for your help and sorry, it's, not a perfect fit, but it's all good."
+          },
+          {
+            "start": 710996,
+            "end": 711776,
+            "text": "Do these calls?"
+          },
+          {
+            "start": 711776,
+            "end": 712716,
+            "text": "Yeah."
+          },
+          {
+            "start": 712716,
+            "end": 713356,
+            "text": "Well."
+          }
+        ]
+      },
+      {
+        "speakerId": "15077245129097724",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 713356,
+            "end": 714416,
+            "text": "Nice to meet you."
+          },
+          {
+            "start": 715056,
+            "end": 716996,
+            "text": "Good luck in your journey I."
+          }
+        ]
+      },
+      {
+        "speakerId": "7946916053848336911",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 716996,
+            "end": 717836,
+            "text": "Appreciate it, man."
+          },
+          {
+            "start": 717836,
+            "end": 718236,
+            "text": "All right."
+          },
+          {
+            "start": 718236,
+            "end": 718596,
+            "text": "See you."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 37
+}

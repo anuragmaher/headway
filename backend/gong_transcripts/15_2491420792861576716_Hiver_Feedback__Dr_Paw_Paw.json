@@ -1,0 +1,1337 @@
+{
+  "call_id": "2491420792861576716",
+  "title": "Hiver Feedback <> Dr Paw Paw",
+  "started": "2026-01-30T16:59:57+05:30",
+  "duration_seconds": 421,
+  "call_metadata": {
+    "id": "2491420792861576716",
+    "url": "https://us-31545.app.gong.io/call?id=2491420792861576716",
+    "title": "Hiver Feedback <> Dr Paw Paw",
+    "scheduled": "2026-01-30T17:00:00+05:30",
+    "started": "2026-01-30T16:59:57+05:30",
+    "duration": 421,
+    "primaryUserId": "494222434061005335",
+    "direction": "Conference",
+    "system": "Zoom",
+    "scope": "External",
+    "media": "Video",
+    "language": "eng",
+    "workspaceId": "1798487362128922829",
+    "sdrDisposition": null,
+    "clientUniqueId": null,
+    "customData": null,
+    "purpose": null,
+    "meetingUrl": "https://us06web.zoom.us/j/81012702645",
+    "isPrivate": false,
+    "calendarEventId": "4ltlnd8ehuup8i5lm90dq562le@google.com"
+  },
+  "parties": [
+    {
+      "id": "4263584909530000000",
+      "emailAddress": "yukta.j@grexit.com",
+      "name": "Yukta Jain",
+      "title": "Sr. Account Executive",
+      "userId": "494222434061005335",
+      "speakerId": "2616037257223395521",
+      "context": [],
+      "affiliation": "Internal",
+      "phoneNumber": "",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "6659963321169358227",
+      "emailAddress": "karla@drpawpaw.com",
+      "name": "Karla Chance",
+      "title": "Head of Customer Services",
+      "speakerId": "477789186077227891",
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "183947828047",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "47013122904"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Karla"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Head of Customer Services"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769773147.87
+                },
+                {
+                  "name": "createdate",
+                  "value": 1765445957.519
+                },
+                {
+                  "name": "demo_completed",
+                  "value": 1765843200.0
+                },
+                {
+                  "name": "lastname",
+                  "value": "Chance"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "1048983399"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "ORGANIC_SEARCH"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "phone",
+                  "value": "+447783520029"
+                },
+                {
+                  "name": "recent_conversion_date",
+                  "value": 1765446034.751
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Deal Lost"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1765445957.519
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "opportunity"
+                },
+                {
+                  "name": "email",
+                  "value": "karla@drpawpaw.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "+447783520029",
+      "methods": [
+        "Invitee",
+        "Attendee"
+      ]
+    },
+    {
+      "id": "8083736097126570226",
+      "name": "Read.Ai Meeting Notes",
+      "speakerId": null,
+      "context": [],
+      "affiliation": "Unknown",
+      "methods": [
+        "Attendee"
+      ]
+    },
+    {
+      "id": "2676971041128618037",
+      "emailAddress": "lillie@drpawpaw.com",
+      "title": "Sales Administrator",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "194322307763",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "47013122904"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Lillie"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Sales Administrator"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769488633.067
+                },
+                {
+                  "name": "createdate",
+                  "value": 1768833819.093
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1768833819.093
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "lillie@drpawpaw.com"
+                },
+                {
+                  "name": "lastname",
+                  "value": "Morelli"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    },
+    {
+      "id": "4184607565406240395",
+      "emailAddress": "jessica@drpawpaw.com",
+      "title": "Sales Administrator",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "185426201938",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "47013122904"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Jessica"
+                },
+                {
+                  "name": "jobtitle",
+                  "value": "Sales Administrator"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769108865.154
+                },
+                {
+                  "name": "createdate",
+                  "value": 1765898195.678
+                },
+                {
+                  "name": "lastname",
+                  "value": "Watts"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "1048983399"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "recent_conversion_date",
+                  "value": 1768833511.797
+                },
+                {
+                  "name": "hs_lead_status",
+                  "value": "Secondary Deal Contact"
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1765898195.678
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "other"
+                },
+                {
+                  "name": "email",
+                  "value": "jessica@drpawpaw.com"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    },
+    {
+      "id": "4709738035152618401",
+      "emailAddress": "sarah@drpawpaw.com",
+      "title": "",
+      "speakerId": null,
+      "context": [
+        {
+          "system": "HubSpot",
+          "objects": [
+            {
+              "objectType": "Contact",
+              "objectId": "194404064139",
+              "fields": [
+                {
+                  "name": "associatedcompanyid",
+                  "value": "47013122904"
+                },
+                {
+                  "name": "firstname",
+                  "value": "Sarah"
+                },
+                {
+                  "name": "hubspot_owner_id",
+                  "value": "1048983399"
+                },
+                {
+                  "name": "hs_analytics_source",
+                  "value": "OFFLINE"
+                },
+                {
+                  "name": "choose_your_email_provider",
+                  "value": "Gmail"
+                },
+                {
+                  "name": "lastmodifieddate",
+                  "value": 1769158346.344
+                },
+                {
+                  "name": "createdate",
+                  "value": 1768834287.329
+                },
+                {
+                  "name": "hs_lifecyclestage_lead_date",
+                  "value": 1768834287.329
+                },
+                {
+                  "name": "lifecyclestage",
+                  "value": "lead"
+                },
+                {
+                  "name": "email",
+                  "value": "sarah@drpawpaw.com"
+                },
+                {
+                  "name": "lastname",
+                  "value": "Newman"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "affiliation": "External",
+      "phoneNumber": "",
+      "methods": [
+        "Invitee"
+      ]
+    }
+  ],
+  "transcript": {
+    "callId": "2491420792861576716",
+    "transcript": [
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 304,
+            "end": 664,
+            "text": "hey, Carla."
+          },
+          {
+            "start": 764,
+            "end": 1204,
+            "text": "How are you?"
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 2104,
+            "end": 2784,
+            "text": "How are you?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 3864,
+            "end": 4484,
+            "text": "I'm good."
+          },
+          {
+            "start": 4564,
+            "end": 5044,
+            "text": "How are you?"
+          },
+          {
+            "start": 5304,
+            "end": 5704,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 5724,
+            "end": 6024,
+            "text": "Not bad."
+          },
+          {
+            "start": 6104,
+            "end": 6604,
+            "text": "Thank you."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 7864,
+            "end": 8264,
+            "text": "Perfect."
+          },
+          {
+            "start": 8344,
+            "end": 8624,
+            "text": "Great."
+          },
+          {
+            "start": 8804,
+            "end": 9984,
+            "text": "I saw your email."
+          },
+          {
+            "start": 10584,
+            "end": 11544,
+            "text": "What happened?"
+          },
+          {
+            "start": 12624,
+            "end": 15024,
+            "text": "So basically?"
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 17374,
+            "end": 21794,
+            "text": "Unfortunately, we have decided that we're not going to go ahead with the implementation."
+          },
+          {
+            "start": 22074,
+            "end": 25494,
+            "text": "There's too many things that just don't work for us as a business."
+          },
+          {
+            "start": 25674,
+            "end": 38294,
+            "text": "And actually, what we found over the last two weeks is that we've ended up with less visibility now because what's happening is because a lot of the emails are going into assigned and then they're being closed."
+          },
+          {
+            "start": 39634,
+            "end": 42354,
+            "text": "Then for me to view them, I've got going to closed."
+          },
+          {
+            "start": 42374,
+            "end": 48614,
+            "text": "I've got to view them that way and I'm not seeing the whole visibility so it could be closed before I've even seen the email."
+          },
+          {
+            "start": 49954,
+            "end": 64614,
+            "text": "And then the other issues we've got as well as obviously the slas, don't really work for us because of the way the logistics email is, and also the conversation view is just not working for us."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 65034,
+            "end": 66514,
+            "text": "Yeah, that could be an issue for."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 66514,
+            "end": 66734,
+            "text": "Sure."
+          },
+          {
+            "start": 67814,
+            "end": 73414,
+            "text": "So at this, I mean, you know, it is a good platform."
+          },
+          {
+            "start": 73814,
+            "end": 79274,
+            "text": "I just think for us at the moment as a business, we're quite small and I feel like it's not really."
+          },
+          {
+            "start": 79334,
+            "end": 82534,
+            "text": "It's just making it even more work for the team."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 83534,
+            "end": 83654,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 84194,
+            "end": 94014,
+            "text": "So the issue I've got is obviously we did disconnect or Sarah disconnected hers, but then obviously, I know it sets up all these filters and tags in the background."
+          },
+          {
+            "start": 95574,
+            "end": 103234,
+            "text": "So disconnect it without because when we done it, we then was not getting any emails to logistics or info."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 104314,
+            "end": 104714,
+            "text": "Yeah."
+          },
+          {
+            "start": 104794,
+            "end": 108234,
+            "text": "So you can just delete your account, I can help you doing that if you want to share your screen."
+          },
+          {
+            "start": 108874,
+            "end": 109274,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 122754,
+            "end": 123734,
+            "text": "Can you see my screen?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 124314,
+            "end": 129314,
+            "text": "Yes, or if you could go to your Gmail and go into the admin panel."
+          },
+          {
+            "start": 133034,
+            "end": 136834,
+            "text": "Yeah, go to settings at the bottom."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 137694,
+            "end": 138514,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 140174,
+            "end": 142154,
+            "text": "Click on delete organization."
+          },
+          {
+            "start": 143634,
+            "end": 149654,
+            "text": "Yeah… just check all these boxes."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 153054,
+            "end": 153434,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 154854,
+            "end": 155334,
+            "text": "Okay."
+          },
+          {
+            "start": 155434,
+            "end": 158894,
+            "text": "Just scroll down… as a reason."
+          },
+          {
+            "start": 159034,
+            "end": 160554,
+            "text": "You can type."
+          },
+          {
+            "start": 160654,
+            "end": 168254,
+            "text": "Like you can choose complex to use if that, I don't know it's right there, in the options there."
+          },
+          {
+            "start": 168334,
+            "end": 168654,
+            "text": "Oh, is it?"
+          },
+          {
+            "start": 168874,
+            "end": 169354,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 169394,
+            "end": 169734,
+            "text": "Oh, yeah."
+          },
+          {
+            "start": 169794,
+            "end": 169934,
+            "text": "Yeah."
+          },
+          {
+            "start": 169934,
+            "end": 170194,
+            "text": "Fine."
+          },
+          {
+            "start": 170454,
+            "end": 170934,
+            "text": "Okay."
+          },
+          {
+            "start": 171174,
+            "end": 171654,
+            "text": "Easier."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 172054,
+            "end": 176414,
+            "text": "Now, it should be able to."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 178594,
+            "end": 179534,
+            "text": "So, I need to put anything."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 179574,
+            "end": 182614,
+            "text": "Just type na or like not applicable or something."
+          },
+          {
+            "start": 182774,
+            "end": 183254,
+            "text": "Just type."
+          },
+          {
+            "start": 183254,
+            "end": 183514,
+            "text": "Na."
+          },
+          {
+            "start": 183854,
+            "end": 184414,
+            "text": "Okay."
+          },
+          {
+            "start": 184634,
+            "end": 185194,
+            "text": "Yeah."
+          },
+          {
+            "start": 187214,
+            "end": 187774,
+            "text": "Okay."
+          },
+          {
+            "start": 188214,
+            "end": 193844,
+            "text": "Now, delete hybrid… type, delete everything."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 196064,
+            "end": 197764,
+            "text": "This won't delete emails over there."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 200444,
+            "end": 205304,
+            "text": "So, now, once we have deleted this now, you would no longer be part of hiver."
+          },
+          {
+            "start": 205424,
+            "end": 210064,
+            "text": "So your emails are not going to be, in the respective inbox as they were before in Gmail."
+          },
+          {
+            "start": 210164,
+            "end": 210544,
+            "text": "So."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 210764,
+            "end": 212264,
+            "text": "Can I do that with you on the front?"
+          },
+          {
+            "start": 212324,
+            "end": 215184,
+            "text": "Because this is okay, because this is set up a lot of tags."
+          },
+          {
+            "start": 215684,
+            "end": 215944,
+            "text": "Yeah."
+          },
+          {
+            "start": 218834,
+            "end": 220314,
+            "text": "Does that work, right?"
+          },
+          {
+            "start": 220514,
+            "end": 220994,
+            "text": "Okay?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 221294,
+            "end": 223574,
+            "text": "This is, this is done, right?"
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 223714,
+            "end": 227574,
+            "text": "So, if I go back into my G, now, do I have to log out for it too?"
+          },
+          {
+            "start": 228294,
+            "end": 228814,
+            "text": "You?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 228814,
+            "end": 231834,
+            "text": "Can just refresh this and remove the extension."
+          },
+          {
+            "start": 232074,
+            "end": 234314,
+            "text": "So you see the extension is still there."
+          },
+          {
+            "start": 234414,
+            "end": 238294,
+            "text": "So you can just remove the extension from the extension bar here."
+          },
+          {
+            "start": 239674,
+            "end": 243094,
+            "text": "Just remove this by clicking on these three dots."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 244034,
+            "end": 245154,
+            "text": "Remove from Chrome."
+          },
+          {
+            "start": 245294,
+            "end": 245494,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 245874,
+            "end": 246394,
+            "text": "Yes."
+          },
+          {
+            "start": 246754,
+            "end": 247174,
+            "text": "Okay."
+          },
+          {
+            "start": 248404,
+            "end": 249684,
+            "text": "And this should be done."
+          },
+          {
+            "start": 251044,
+            "end": 251484,
+            "text": "Okay."
+          },
+          {
+            "start": 251564,
+            "end": 254384,
+            "text": "You can also just remove the extension, and that's it."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 255284,
+            "end": 256484,
+            "text": "So, this here is."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 257684,
+            "end": 258984,
+            "text": "It's going to not be there."
+          },
+          {
+            "start": 258984,
+            "end": 261464,
+            "text": "Now, you just refresh this once it'll be removed?"
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 262764,
+            "end": 267044,
+            "text": "Can I just make sure if I do a test email just to make sure?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 267264,
+            "end": 268244,
+            "text": "Yeah, you can do that."
+          },
+          {
+            "start": 268384,
+            "end": 268824,
+            "text": "You can do."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 268824,
+            "end": 271764,
+            "text": "That, yeah, it's just bear with me."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 278604,
+            "end": 280944,
+            "text": "Just because it did set up a lot of."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 282664,
+            "end": 283064,
+            "text": "labels."
+          },
+          {
+            "start": 284084,
+            "end": 286924,
+            "text": "Yeah, for the historical emails are going to remain as it is."
+          },
+          {
+            "start": 286984,
+            "end": 294664,
+            "text": "But from now onwards, there is no hiver, so you wouldn't see those labels anymore, the gray labels, but."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 294664,
+            "end": 295524,
+            "text": "We'll okay."
+          },
+          {
+            "start": 295604,
+            "end": 301144,
+            "text": "Let me just see if I get this email then because this is what happened yesterday, and then we just wasn't receiving any email."
+          },
+          {
+            "start": 301304,
+            "end": 302124,
+            "text": "Oh, it's come through."
+          },
+          {
+            "start": 302484,
+            "end": 302884,
+            "text": "Okay."
+          },
+          {
+            "start": 302984,
+            "end": 303224,
+            "text": "Fine."
+          },
+          {
+            "start": 304324,
+            "end": 306004,
+            "text": "Yeah, let me just test."
+          },
+          {
+            "start": 306064,
+            "end": 307184,
+            "text": "Sorry, it must have just been."
+          },
+          {
+            "start": 308514,
+            "end": 309814,
+            "text": "We just test the other one."
+          },
+          {
+            "start": 312144,
+            "end": 315584,
+            "text": "So, should I just get the other users just to remove the Chrome extension?"
+          },
+          {
+            "start": 316284,
+            "end": 316684,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 316744,
+            "end": 317884,
+            "text": "That's all they need to do now."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 318664,
+            "end": 322304,
+            "text": "So, where all of the ones that were in assigned?"
+          },
+          {
+            "start": 322364,
+            "end": 324924,
+            "text": "They just you?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 324924,
+            "end": 331404,
+            "text": "Will just find them on your, in your respective inboxes of logistics and info as they would before they're just going to remain as it is."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": null,
+        "sentences": [
+          {
+            "start": 331984,
+            "end": 332384,
+            "text": "Right."
+          },
+          {
+            "start": 332544,
+            "end": 332884,
+            "text": "Okay."
+          },
+          {
+            "start": 333024,
+            "end": 333544,
+            "text": "All right."
+          },
+          {
+            "start": 333584,
+            "end": 334964,
+            "text": "Let me just make sure."
+          },
+          {
+            "start": 336104,
+            "end": 340164,
+            "text": "Yeah, so that's logistics, just make sure I've got the info one."
+          },
+          {
+            "start": 350864,
+            "end": 351284,
+            "text": "Okay."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 360724,
+            "end": 361564,
+            "text": "Just check the info."
+          },
+          {
+            "start": 361564,
+            "end": 361944,
+            "text": "One."
+          },
+          {
+            "start": 367184,
+            "end": 369004,
+            "text": "Sorry, it's a bit of a delay when sending?"
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 370664,
+            "end": 371804,
+            "text": "Are you sending from?"
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 372324,
+            "end": 372864,
+            "text": "That's fine."
+          },
+          {
+            "start": 372924,
+            "end": 375064,
+            "text": "It's just from my personal, but now it's come through now."
+          },
+          {
+            "start": 376344,
+            "end": 376624,
+            "text": "Perfect."
+          },
+          {
+            "start": 376704,
+            "end": 377324,
+            "text": "Thank you."
+          },
+          {
+            "start": 377404,
+            "end": 379864,
+            "text": "Yeah, and we appreciate all your help and support."
+          },
+          {
+            "start": 380424,
+            "end": 384904,
+            "text": "It's just, I just think it's we're just too small at the moment to really benefit from it."
+          },
+          {
+            "start": 384984,
+            "end": 390464,
+            "text": "And it was just becoming a lot more work team to find but no, thank you."
+          },
+          {
+            "start": 390484,
+            "end": 390684,
+            "text": "Yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 391564,
+            "end": 392844,
+            "text": "Yeah, you're welcome, Carla."
+          },
+          {
+            "start": 393044,
+            "end": 395664,
+            "text": "It was pleasure sort of assisting you throughout the process."
+          },
+          {
+            "start": 396404,
+            "end": 399684,
+            "text": "So let us know if in future you decide to sort of expand."
+          },
+          {
+            "start": 399784,
+            "end": 400764,
+            "text": "And at that time, if you."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 400764,
+            "end": 414884,
+            "text": "need, I do think if you've got a larger team, it's brilliant and, you know, it's just because we're so small, it, we just lost, that visibility that we all because we all sort of deal with the same, all of the projects, yeah."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 415244,
+            "end": 416264,
+            "text": "No worries at all."
+          }
+        ]
+      },
+      {
+        "speakerId": "477789186077227891",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 416384,
+            "end": 416984,
+            "text": "Thanks for your time."
+          },
+          {
+            "start": 417364,
+            "end": 417764,
+            "text": "Thanks."
+          }
+        ]
+      },
+      {
+        "speakerId": "2616037257223395521",
+        "topic": "Wrap-up",
+        "sentences": [
+          {
+            "start": 417884,
+            "end": 418824,
+            "text": "Thank you so much."
+          },
+          {
+            "start": 418944,
+            "end": 419164,
+            "text": "Carla."
+          },
+          {
+            "start": 419244,
+            "end": 419624,
+            "text": "Take care."
+          },
+          {
+            "start": 419684,
+            "end": 420624,
+            "text": "Bye, bye, bye bye."
+          }
+        ]
+      }
+    ]
+  },
+  "has_transcript": true,
+  "transcript_text": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "transcript_length": 48
+}
