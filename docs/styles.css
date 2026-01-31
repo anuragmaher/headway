@@ -1,0 +1,261 @@
+/* Signal analysis dashboard */
+:root {
+  --bg: #0f1419;
+  --surface: #1a2332;
+  --surface-hover: #243044;
+  --border: #2d3a4d;
+  --text: #e6edf3;
+  --text-muted: #8b9cb3;
+  --accent: #58a6ff;
+  --accent-dim: #388bfd66;
+  --high: #f85149;
+  --medium: #d29922;
+  --low: #3fb950;
+  --radius: 8px;
+  --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+header p {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+}
+
+.error {
+  color: var(--high);
+}
+
+/* Summary cards */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+.card .value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.card .label {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Charts row */
+.charts-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 900px) {
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  height: 380px;
+}
+
+.chart-container h3 {
+  margin: 0 0 1rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 300px;
+}
+
+/* Theme table */
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-muted);
+}
+
+.theme-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.theme-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.theme-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.theme-header:hover {
+  background: var(--surface-hover);
+}
+
+.theme-header .name {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.theme-header .badge {
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+}
+
+.theme-header .toggle {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-left: 0.5rem;
+}
+
+.theme-body {
+  display: none;
+  border-top: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+}
+
+.theme-block.open .theme-body {
+  display: block;
+}
+
+.theme-block.open .theme-header .toggle::before {
+  content: "▼";
+}
+
+.theme-block .theme-header .toggle::before {
+  content: "▶";
+}
+
+/* Raw theme row */
+.raw-theme-row {
+  margin-bottom: 1rem;
+}
+
+.raw-theme-row:last-child {
+  margin-bottom: 0;
+}
+
+.raw-theme-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.signal-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.signal-item {
+  font-size: 0.8125rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 0.25rem;
+  background: var(--bg);
+  border-left: 3px solid var(--border);
+}
+
+.signal-item.high {
+  border-left-color: var(--high);
+}
+
+.signal-item.medium {
+  border-left-color: var(--medium);
+}
+
+.signal-item.low {
+  border-left-color: var(--low);
+}
+
+.signal-item .ask {
+  color: var(--text);
+}
+
+.signal-item .meta {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.signal-item .evidence {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  margin-top: 0.125rem;
+  font-style: italic;
+}
